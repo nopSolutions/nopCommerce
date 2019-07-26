@@ -1,31 +1,6 @@
 ﻿@model EstimateShippingModel
 <div class="shipping">
     <script asp-location="Footer">
-        $(document).ready(function () {
-            $("#@Html.IdFor(model => model.CountryId)").on('change', function() {
-                var selectedItem = $(this).val();
-                var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
-                var estimateProgress = $("#estimate-shipping-loading-progress");
-                estimateProgress.show();
-                $.ajax({
-                    cache: false,
-                    type: "GET",
-                    url: "@(Url.RouteUrl("GetStatesByCountryId"))",
-                    data: { "countryId": selectedItem, "addSelectStateItem": "false" },
-                    success: function(data) {
-                        ddlStates.html('');
-                        $.each(data, function(id, option) {
-                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
-                        });
-                        estimateProgress.hide();
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        alert('Failed to retrieve states.');
-                        estimateProgress.hide();
-                    }
-                });
-            });
-        });
     
         $(document).ready(function () {
             $('#estimate-shipping-button').on('click', function() {
@@ -35,13 +10,14 @@
                     type: "POST",
                     url: "@(Url.RouteUrl("EstimateShipping"))",
                     data: $("#shopping-cart-form").serialize(),
-                    success: function(data) {
-                        displayAjaxLoading();
+                    success: function (data, textStatus, jqXHR) {
                         $('.estimate-shipping-result').html(data);
                     },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        displayAjaxLoading();
+                    error: function (jqXHR, textStatus, errorThrown) {
                         alert('Failed to retrieve estimate shipping.');
+                    },
+                    complete: function (jqXHR, textStatus) {
+                        displayAjaxLoading();
                     }
                 });
             });
@@ -62,7 +38,12 @@
         <div class="shipping-options">
             <div class="inputs">
                 <label asp-for="CountryId" asp-postfix=":"></label>
-                <select asp-for="CountryId" asp-items="Model.AvailableCountries" class="country-input"></select>
+                <select asp-for="CountryId" asp-items="Model.AvailableCountries"
+                        class="country-input"
+                        data-trigger="country-select"
+                        data-url="@(Url.RouteUrl("GetStatesByCountryId"))"
+                        data-stateprovince="#@Html.IdFor(model => model.StateProvinceId)"
+                        data-loading="#estimate-shipping-loading-progress"></select>
                 <nop-required />
             </div>
             <div class="inputs">

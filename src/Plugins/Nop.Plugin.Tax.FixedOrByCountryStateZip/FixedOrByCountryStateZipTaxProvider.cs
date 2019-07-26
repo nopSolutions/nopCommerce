@@ -2,12 +2,12 @@
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Plugins;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Data;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Plugins;
 using Nop.Services.Tax;
 
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
@@ -41,14 +41,14 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             ITaxCategoryService taxCategoryService,
             IWebHelper webHelper)
         {
-            this._objectContext = objectContext;
-            this._countryStateZipSettings = countryStateZipSettings;
-            this._taxRateService = taxRateService;
-            this._localizationService = localizationService;
-            this._settingService = settingService;
-            this._cacheManager = cacheManager;
-            this._taxCategoryService = taxCategoryService;
-            this._webHelper = webHelper;
+            _objectContext = objectContext;
+            _countryStateZipSettings = countryStateZipSettings;
+            _taxRateService = taxRateService;
+            _localizationService = localizationService;
+            _settingService = settingService;
+            _cacheManager = cacheManager;
+            _taxCategoryService = taxCategoryService;
+            _webHelper = webHelper;
         }
 
         #endregion
@@ -93,8 +93,8 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
 
             var storeId = calculateTaxRequest.CurrentStoreId;
             var taxCategoryId = calculateTaxRequest.TaxCategoryId;
-            var countryId = calculateTaxRequest.Address.Country?.Id ?? 0;
-            var stateProvinceId = calculateTaxRequest.Address.StateProvince?.Id ?? 0;
+            var countryId = calculateTaxRequest.Address.CountryId;
+            var stateProvinceId = calculateTaxRequest.Address.StateProvinceId;
             var zip = calculateTaxRequest.Address.ZipPostalCode?.Trim() ?? string.Empty;
 
             var existingRates = allTaxRates.Where(taxRate => taxRate.CountryId == countryId && taxRate.TaxCategoryId == taxCategoryId);

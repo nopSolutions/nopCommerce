@@ -2,6 +2,7 @@
 
 @using System.Text
 @using Nop.Core.Domain.Catalog;
+@using Nop.Web.Framework.Controllers;
 @inject CatalogSettings catalogSettings
 
 @if (Model.Count > 0)
@@ -20,9 +21,9 @@
         <div class="panel-body">
             @foreach (var attribute in Model)
             {
-                <div id="product_attribute_row_@(attribute.Id)" class="form-group">
+                <div id="@(NopAttributePrefixDefaults.Product)row_@(attribute.Id)" class="form-group">
                     @{
-                        var controlId = $"product_attribute_{attribute.Id}";
+                        var controlId = $"{NopAttributePrefixDefaults.Product}{attribute.Id}";
                         var textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
                     }
                     <div class="col-md-3">
@@ -58,9 +59,9 @@
                                             </div>
                                         }
                                         <script>
-                        $(document).ready(function() {
-                            showHideDropdownQuantity("@controlId");
-                        });
+                                            $(document).ready(function() {
+                                                showHideDropdownQuantity("@controlId");
+                                            });
                                         </script>
                                     }
                                     break;
@@ -73,7 +74,7 @@
                                             <div class="radio">
                                                 <label for="@(controlId)_@(attributeValue.Id)">
                                                     <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected"
-                                                           @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}')\"") : null)/>
+                                                           @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}')\"") : null) />
                                                     @getAttributeValueName(attributeValue)
                                                 </label>
 
@@ -86,9 +87,9 @@
                                                 }
                                             </div>
                                             <script>
-                            $(document).ready(function() {
-                                showHideRadioQuantity("@controlId");
-                            });
+                                                $(document).ready(function() {
+                                                    showHideRadioQuantity("@controlId");
+                                                });
                                             </script>
                                         }
                                     }
@@ -101,7 +102,7 @@
                                             <div class="checkbox">
                                                 <label for="@(controlId)_@(attributeValue.Id)">
                                                     <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null)
-                                                           @(attributeValue.CustomerEntersQty ? Html.Raw($"onchange=\"showHideCheckboxQuantity('{controlId}_{attributeValue.Id}')\"") : null)/>
+                                                           @(attributeValue.CustomerEntersQty ? Html.Raw($"onchange=\"showHideCheckboxQuantity('{controlId}_{attributeValue.Id}')\"") : null) />
                                                     @getAttributeValueName(attributeValue)
                                                 </label>
 
@@ -111,9 +112,9 @@
                                                         <label class="margin-l-10 margin-r-5" for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
                                                         <input class="qty-box form-control" type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                                         <script>
-                                        $(document).ready(function() {
-                                            showHideCheckboxQuantity('@(controlId)_@(attributeValue.Id)');
-                                        })
+                                                            $(document).ready(function() {
+                                                                showHideCheckboxQuantity('@(controlId)_@(attributeValue.Id)');
+                                                            })
                                                         </script>
                                                     </div>
                                                 }
@@ -133,13 +134,11 @@
                                     break;
                                 case AttributeControlType.Datepicker:
                                     {
-                                        <nop-date-picker 
-                                            asp-day-name="@(controlId + "_day")" 
-                                            asp-month-name="@(controlId + "_month")" 
-                                            asp-year-name="@(controlId + "_year")"
-                                            asp-begin-year="@(DateTime.Now.Year)"
-                                            asp-end-year="@(DateTime.Now.Year + catalogSettings.CountDisplayedYearsDatePicker)"
-                                        />
+                                        <nop-date-picker asp-day-name="@(controlId + "_day")"
+                                                         asp-month-name="@(controlId + "_month")"
+                                                         asp-year-name="@(controlId + "_year")"
+                                                         asp-begin-year="@(DateTime.Now.Year)"
+                                                         asp-end-year="@(DateTime.Now.Year + catalogSettings.CountDisplayedYearsDatePicker)" />
                                     }
                                     break;
                                 case AttributeControlType.FileUpload:
@@ -189,50 +188,51 @@
                                             </div>
                                         </script>
                                         <script>
-                        $(document).ready(function() {
-                            $("#@(controlId)uploader").fineUploader({
-                                request: {
-                                    endpoint: '@(Url.RouteUrl("UploadFileProductAttribute", new {attributeId = attribute.Id}))'
-                                },
-                                template: "@(controlId)-qq-template",
-                                multiple: false,
-                                validation: {
-                                    @{
-                                        if (!string.IsNullOrEmpty(allowedFileExtensions))
-                                        {
-                                            @Html.Raw("allowedExtensions: [" + allowedFileExtensions + "]")
-                                            ;
-                                        }
-                                    }
+                                            $(document).ready(function() {
+                                                $("#@(controlId)uploader").fineUploader({
+                                                    request: {
+                                                        endpoint: '@(Url.RouteUrl("UploadFileProductAttribute", new {attributeId = attribute.Id}))'
+                                                    },
+                                                    template: "@(controlId)-qq-template",
+                                                    multiple: false,
+                                                    validation: {
+                                                        @{
+                                                            if (!string.IsNullOrEmpty(allowedFileExtensions))
+                                                            {
+                                                                @Html.Raw("allowedExtensions: [" + allowedFileExtensions + "]")
+                                                                ;
+                                                            }
+                                                        }
+                                                    }
+                                                }).on("complete", function(event, id, name, responseJSON, xhr) {
+                                                    $("#@(controlId)").val(responseJSON.downloadGuid);
+                                                    if (responseJSON.success) {
+                                                        $("#@(controlId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Common.FileUploader.DownloadUploadedFile")</a>");
+                                                        $("#@(controlId + "remove")").show();
+                                                    }
+                                                    
+                                                    if (responseJSON.message) {
+                                                        $('#uploadFileProductAttributeFailed-info').text((responseJSON.message).Text.replace(/<[^>]+>/g, ''));
+                                                        $("#uploadFileProductAttributeFailed").click();
+                                                    }
+                                                });
 
-
-                                }
-                            }).on("complete", function(event, id, name, responseJSON, xhr) {
-                                $("#@(controlId)").val(responseJSON.downloadGuid);
-                                if (responseJSON.success) {
-                                    $("#@(controlId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Common.FileUploader.DownloadUploadedFile")</a>");
-                                    $("#@(controlId + "remove")").show();
-                                }
-                                if (responseJSON.message) {
-                                    alert(responseJSON.message);
-                                }
-                            });
-
-                            $("#@(controlId + "remove")").click(function(e) {
-                                $("#@(controlId + "downloadurl")").html("");
-                                $("#@(controlId)").val('');
-                                $(this).hide();
-                            });
-                        });
+                                                $("#@(controlId + "remove")").click(function(e) {
+                                                    $("#@(controlId + "downloadurl")").html("");
+                                                    $("#@(controlId)").val('');
+                                                    $(this).hide();
+                                                });
+                                            });
                                         </script>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <span id="@(controlId + "remove")" class="btn btn-default margin-t-5" style="display: none;">@T("Admin.Download.RemoveDownload")</span>
                                             </div>
                                         </div>
-        }
-        break;
-    }
+                                        <nop-alert asp-alert-id="uploadFileProductAttributeFailed" />
+                                    }
+                                    break;
+                            }
                             <div class="input-group-btn">
                                 @if (attribute.IsRequired)
                                 {
@@ -242,12 +242,12 @@
                         </div>
                     </div>
                 </div>
-    }
+            }
 
             @*generate change event script*@
             @foreach (var attribute in Model)
             {
-                var controlId = $"product_attribute_{attribute.Id}";
+                var controlId = $"{NopAttributePrefixDefaults.Product}{attribute.Id}";
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -286,35 +286,37 @@
 
             @*render scripts*@
             <script>
-        function @(attributeChangeHandlerFuncName)() {
-            $.ajax({
-                cache: false,
-                url: '@Html.Raw(Url.Action("productdetails_attributechange", "Order", new {productId = productId, validateAttributeConditions = attributesHaveConditions}))',
-                data: $('#product-details-form').serialize(),
-                type: 'post',
-                success: function(data) {
-                    if (data.enabledattributemappingids) {
-                        for (var i = 0; i < data.enabledattributemappingids.length; i++) {
-                            $('#product_attribute_row_' + data.enabledattributemappingids[i]).show();
+                function @(attributeChangeHandlerFuncName)() {
+                    $.ajax({
+                        cache: false,
+                        url: "@Html.Raw(Url.Action("productdetails_attributechange", "Order", new {productId = productId, validateAttributeConditions = attributesHaveConditions}))",
+                        data: $('#product-details-form').serialize(),
+                        type: "POST",
+                        success: function (data, textStatus, jqXHR) {
+                            if (data.enabledattributemappingids) {
+                                for (var i = 0; i < data.enabledattributemappingids.length; i++) {
+                                    $('#product_attribute_row_' + data.enabledattributemappingids[i]).show();
+                                }
+                            }
+                            if (data.disabledattributemappingids) {
+                                for (var i = 0; i < data.disabledattributemappingids.length; i++) {
+                                    $('#product_attribute_row_' + data.disabledattributemappingids[i]).hide();
+                                }
+                            }
+                            if (data.message) {
+                                $('#productdetails_attributechangeMessage-info').text(data.message);
+                                $("#productdetails_attributechangeMessage").click();
+                            }
                         }
-                    }
-                    if (data.disabledattributemappingids) {
-                        for (var i = 0; i < data.disabledattributemappingids.length; i++) {
-                            $('#product_attribute_row_' + data.disabledattributemappingids[i]).hide();
-                        }
-                    }
-                    if (data.message) {
-                        alert(data.message);
-                    }
+                    });
                 }
-            });
-        }
 
-        $(document).ready(function() {
-            @(attributeChangeHandlerFuncName)();
-            @Html.Raw(attributeChangeScriptsBuilder.ToString())
-        });
+                $(document).ready(function() {
+                    @(attributeChangeHandlerFuncName)();
+                    @Html.Raw(attributeChangeScriptsBuilder.ToString())
+                });
             </script>
+            <nop-alert asp-alert-id="productdetails_attributechangeMessage" />
         </div>
 
         <script>
@@ -340,4 +342,4 @@
             };
         </script>
     </div>
-    }
+ }

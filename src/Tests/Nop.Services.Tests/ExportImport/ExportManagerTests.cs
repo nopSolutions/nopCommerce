@@ -48,6 +48,7 @@ namespace Nop.Services.Tests.ExportImport
         private Mock<IVendorService> _vendorService;
         private Mock<IProductTemplateService> _productTemplateService;
         private Mock<IDateRangeService> _dateRangeService;
+        private Mock<IStoreMappingService> _storeMappingService;
         private Mock<IStoreService> _storeService;
         private Mock<IProductAttributeService> _productAttributeService;
         private Mock<IProductTagService> _productTagService;
@@ -83,6 +84,7 @@ namespace Nop.Services.Tests.ExportImport
             _vendorService = new Mock<IVendorService>();
             _productTemplateService = new Mock<IProductTemplateService>();
             _dateRangeService = new Mock<IDateRangeService>();
+            _storeMappingService = new Mock<IStoreMappingService>();
             _storeService = new Mock<IStoreService>();
             _productAttributeService = new Mock<IProductAttributeService>();
             _productTagService = new Mock<IProductTagService>();
@@ -137,6 +139,7 @@ namespace Nop.Services.Tests.ExportImport
 
             EngineContext.Replace(nopEngine.Object);
            
+
             _exportManager = new ExportManager(_addressSettings,
                 _catalogSettings,
                 _customerSettings,
@@ -163,6 +166,7 @@ namespace Nop.Services.Tests.ExportImport
                 _productTemplateService.Object,
                 _specificationAttributeService.Object,
                 _stateProvinceService.Object,
+                _storeMappingService.Object,
                 _storeService.Object,
                 _taxCategoryService.Object,
                 _urlRecordService.Object,
@@ -411,7 +415,7 @@ namespace Nop.Services.Tests.ExportImport
                     { "OrderStatusId", "OrderStatus" },
                     { "PaymentStatusId", "PaymentStatus" },
                     { "ShippingStatusId", "ShippingStatus" },
-                    { "ShippingPickUpInStore", "PickUpInStore" }
+                    { "ShippingPickupInStore", "PickupInStore" }
                 };
 
             var order = orders.First();
@@ -566,7 +570,7 @@ namespace Nop.Services.Tests.ExportImport
                     AllowCustomersToSelectPageSize = true,
                     PageSizeOptions = "10;20;30",
                     PriceRanges = "100;200;300",
-                    ShowOnHomePage = true,
+                    ShowOnHomepage = true,
                     IncludeInTopMenu = true,
                     Published = true,
                     DisplayOrder = 1
@@ -625,7 +629,7 @@ namespace Nop.Services.Tests.ExportImport
                     FullDescription = "TestFullDescription",
                     VendorId = 1,
                     ProductTemplateId = 1,
-                    ShowOnHomePage = true,
+                    ShowOnHomepage = true,
                     MetaKeywords = "TestMetaKeywords",
                     MetaDescription = "TestMetaDescription",
                     MetaTitle = "TestMetaTitle",

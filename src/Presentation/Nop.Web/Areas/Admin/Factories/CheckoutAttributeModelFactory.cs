@@ -9,8 +9,8 @@ using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -47,16 +47,16 @@ namespace Nop.Web.Areas.Admin.Factories
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             MeasureSettings measureSettings)
         {
-            this._currencySettings = currencySettings;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._currencyService = currencyService;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._measureService = measureService;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            this._measureSettings = measureSettings;
+            _currencySettings = currencySettings;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _checkoutAttributeService = checkoutAttributeService;
+            _currencyService = currencyService;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _measureService = measureService;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _measureSettings = measureSettings;
         }
 
         #endregion
@@ -77,8 +77,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(checkoutAttribute));
 
             model.EnableCondition = !string.IsNullOrEmpty(checkoutAttribute.ConditionAttributeXml);
-            if (!model.EnableCondition)
-                return;
 
             //get selected checkout attribute
             var selectedAttribute = _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttribute.ConditionAttributeXml).FirstOrDefault();
@@ -160,12 +158,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get checkout attributes
-            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes();
+            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CheckoutAttributeListModel
+            var model = new CheckoutAttributeListModel().PrepareToGrid(searchModel, checkoutAttributes, () =>
             {
-                Data = checkoutAttributes.PaginationByRequestModel(searchModel).Select(attribute =>
+                return checkoutAttributes.Select(attribute =>
                 {
                     //fill in model values from the entity
                     var attributeModel = attribute.ToModel<CheckoutAttributeModel>();
@@ -174,9 +172,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     attributeModel.AttributeControlTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeControlType);
 
                     return attributeModel;
-                }),
-                Total = checkoutAttributes.Count
-            };
+                });
+            });
 
             return model;
         }
@@ -206,6 +203,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     locale.Name = _localizationService.GetLocalized(checkoutAttribute, entity => entity.Name, languageId, false, false);
                     locale.TextPrompt = _localizationService.GetLocalized(checkoutAttribute, entity => entity.TextPrompt, languageId, false, false);
+                    locale.DefaultValue = _localizationService.GetLocalized(checkoutAttribute, entity => entity.DefaultValue, languageId, false, false);
                 };
 
                 //whether to fill in some of properties
@@ -248,24 +246,26 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(checkoutAttribute));
 
             //get checkout attribute values
-            var checkoutAttributeValues = _checkoutAttributeService.GetCheckoutAttributeValues(checkoutAttribute.Id);
+            var checkoutAttributeValues = _checkoutAttributeService
+                .GetCheckoutAttributeValues(checkoutAttribute.Id).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CheckoutAttributeValueListModel
+            var model = new CheckoutAttributeValueListModel().PrepareToGrid(searchModel, checkoutAttributeValues, () =>
             {
-                Data = checkoutAttributeValues.PaginationByRequestModel(searchModel).Select(value =>
+                return checkoutAttributeValues.Select(value =>
                 {
                     //fill in model values from the entity
                     var checkoutAttributeValueModel = value.ToModel<CheckoutAttributeValueModel>();
 
                     //fill in additional values (not existing in the entity)
-                    checkoutAttributeValueModel.Name = value.CheckoutAttribute.AttributeControlType != AttributeControlType.ColorSquares
-                        ? value.Name : $"{value.Name} - {value.ColorSquaresRgb}";
+                    checkoutAttributeValueModel.Name =
+                        value.CheckoutAttribute.AttributeControlType != AttributeControlType.ColorSquares
+                            ? value.Name
+                            : $"{value.Name} - {value.ColorSquaresRgb}";
 
                     return checkoutAttributeValueModel;
-                }),
-                Total = checkoutAttributeValues.Count
-            };
+                });
+            });
 
             return model;
         }

@@ -1,9 +1,8 @@
-﻿@using Nop.Core
-@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+﻿@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject IWorkContext workContext
 @{
     const string panelId = "order-incomplete-report-box";
-    const string hidePanelAttributeName = "HideOrderIncompleteReportPanel";
+    const string hidePanelAttributeName = "Reports.HideOrderIncompleteReportPanel";
     var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
 }
 
@@ -26,70 +25,46 @@
             </button>
         </div>
     </div>
-    <div class="box-body">
-        <div id="incomplete-order-report-grid"></div>
-
-        <script>
-            $(document).ready(function () {
-                $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
-                    var collapsed = !$('#@panelId').hasClass('collapsed-box');
-                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
-                });
-
-                $("#incomplete-order-report-grid").kendoGrid({
-                    dataSource: {
-                        type: "json",
-                        transport: {
-                            read: {
-                                url: "@Html.Raw(Url.Action("OrderIncompleteReportList", "Order"))",
-                                type: "POST",
-                                dataType: "json",
-                                data: addAntiForgeryToken
-                            }
-                        },
-                        schema: {
-                            data: "Data",
-                            total: "Total",
-                            errors: "Errors"
-                        },
-                        error: function (e) {
-                            display_kendoui_grid_error(e);
-                            // Cancel the changes
-                            this.cancelChanges();
-                        },
-                        serverPaging: true,
-                        serverFiltering: true,
-                        serverSorting: true
-                    },
-                    pageable: {
-                        refresh: true,
-                        numeric: false,
-                        previousNext: false,
-                        info: false,
-                        @await Html.PartialAsync("_GridPagerMessages")
-                    },
-                    editable: {
-                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                        mode: "inline"
-                    },
-                    scrollable: false,
-                    columns: [{
-                        field: "Item",
-                        title: "@T("Admin.SalesReport.Incomplete.Item")"
-                    }, {
-                        field: "Total",
-                        title: "@T("Admin.SalesReport.Incomplete.Total")",
-                        width: 150
-                    }, {
-                        field: "Count",
-                        title: "@T("Admin.SalesReport.Incomplete.Count")",
-                        width: 100,
-                        headerAttributes: { style: "text-align:center" },
-                        attributes: { style: "text-align:center" },
-                        template: '<a class="btn btn-xs btn-default" href="#=ViewLink#"><i class="fa fa-eye"></i>#=Count# - @T("Admin.SalesReport.Incomplete.View")</a>'
-                    }]
-                });
+    <script>
+        $(document).ready(function () {
+            $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
+                var collapsed = !$('#@panelId').hasClass('collapsed-box');
+                saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
             });
+        });
+    </script>
+    <div class="box-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "incomplete-order-report-grid",
+            UrlRead = new DataUrl("OrderIncompleteReportList", "Order", null),
+            Length = int.MaxValue,
+            Paging = false,
+            Info = false,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(OrderIncompleteReportModel.Item))
+                {
+                    Title = T("Admin.SalesReport.Incomplete.Item").Text
+                },
+                new ColumnProperty(nameof(OrderIncompleteReportModel.Total))
+                {
+                    Title = T("Admin.SalesReport.Incomplete.Total").Text,
+                    Width = "50"
+                },
+                new ColumnProperty(nameof(OrderIncompleteReportModel.Count))
+                {
+                    Title = T("Admin.SalesReport.Incomplete.Count").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderCustom("renderColumnOrderIncompleteReportCount")
+                }
+            }
+        })
+        <script>
+            function renderColumnOrderIncompleteReportCount(data, type, row, meta) {
+                return '<a class="btn btn-default" href="' + row.ViewLink +'"><i class="fa fa-eye"></i>' + row.Count + ' - @T("Admin.SalesReport.Incomplete.View")</a>';
+            }
         </script>
     </div>
 </div>

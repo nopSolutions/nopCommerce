@@ -2,7 +2,7 @@
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure.Mapper;
-using Nop.Core.Plugins;
+using Nop.Services.Plugins;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions

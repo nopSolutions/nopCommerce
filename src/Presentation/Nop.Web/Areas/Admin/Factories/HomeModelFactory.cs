@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
-using System.Xml;
-using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Web.Areas.Admin.Infrastructure.Cache;
 using Nop.Web.Areas.Admin.Models.Home;
-using Nop.Web.Framework.Mvc.Rss;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -18,31 +15,15 @@ namespace Nop.Web.Areas.Admin.Factories
     /// </summary>
     public partial class HomeModelFactory : IHomeModelFactory
     {
-        #region Constants
-
-        /// <summary>
-        /// nopCommerce news URL
-        /// </summary>
-        /// <remarks>
-        /// {0} : nopCommerce version
-        /// {1} : whether the store based is on the localhost
-        /// {2} : whether advertisements are hidden
-        /// {3} : store URL
-        /// </remarks>
-        private const string NOP_COMMERCE_NEWS_URL = "https://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}";
-
-        #endregion
-
         #region Fields
 
         private readonly AdminAreaSettings _adminAreaSettings;
         private readonly ICommonModelFactory _commonModelFactory;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IOrderModelFactory _orderModelFactory;
         private readonly ISettingService _settingService;
         private readonly IStaticCacheManager _cacheManager;
-        private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
+        private readonly NopHttpClient _nopHttpClient;
 
         #endregion
 
@@ -50,21 +31,19 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public HomeModelFactory(AdminAreaSettings adminAreaSettings,
             ICommonModelFactory commonModelFactory,
-            IHttpContextAccessor httpContextAccessor,
             IOrderModelFactory orderModelFactory,
             ISettingService settingService,
             IStaticCacheManager cacheManager,
-            IWebHelper webHelper,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            NopHttpClient nopHttpClient)
         {
-            this._adminAreaSettings = adminAreaSettings;
-            this._commonModelFactory = commonModelFactory;
-            this._httpContextAccessor = httpContextAccessor;
-            this._orderModelFactory = orderModelFactory;
-            this._settingService = settingService;
-            this._cacheManager = cacheManager;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
+            _adminAreaSettings = adminAreaSettings;
+            _commonModelFactory = commonModelFactory;
+            _orderModelFactory = orderModelFactory;
+            _settingService = settingService;
+            _cacheManager = cacheManager;
+            _workContext = workContext;
+            _nopHttpClient = nopHttpClient;
         }
 
         #endregion
@@ -102,26 +81,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 HideAdvertisements = _adminAreaSettings.HideAdvertisementsOnAdminArea
             };
 
-            var rssData = _cacheManager.Get(ModelCacheEventConsumer.OFFICIAL_NEWS_MODEL_KEY, () =>
-            {
-                //compose nopCommerce news RSS feed URL
-                var nopCommerceNewsUrl = string.Format(NOP_COMMERCE_NEWS_URL,
-                    NopVersion.CurrentVersion,
-                    _webHelper.IsLocalRequest(_httpContextAccessor.HttpContext.Request),
-                    _adminAreaSettings.HideAdvertisementsOnAdminArea,
-                    _webHelper.GetStoreLocation()).ToLowerInvariant();
-
-                //create request
-                var request = WebRequest.Create(nopCommerceNewsUrl);
-
-                //specify request timeout
-                request.Timeout = 3000;
-
-                //try to get nopCommerce news RSS feed
-                using (var response = request.GetResponse())
-                    using (var reader = XmlReader.Create(response.GetResponseStream()))
-                        return RssFeed.Load(reader);
-            });
+            var rssData = _cacheManager.Get(NopModelCacheDefaults.OfficialNewsModelKey, () => _nopHttpClient.GetNewsRssAsync().Result);
 
             for (var i = 0; i < rssData.Items.Count; i++)
             {

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using FluentValidation.Attributes;
 
 namespace Nop.Web.MVC.Tests.Public.Validators
 {
-    [Validator(typeof(TestValidator))]
     public class Person
     {
         public string NameField;
@@ -40,6 +38,8 @@ namespace Nop.Web.MVC.Tests.Public.Validators
         public int AnotherInt { get; set; }
 
         public string CreditCard { get; set; }
+
+        public string Password { get; set; }
     }
 
 

@@ -28,8 +28,8 @@ namespace Nop.Services.Common
         public AddressAttributeParser(IAddressAttributeService addressAttributeService,
             ILocalizationService localizationService)
         {
-            this._addressAttributeService = addressAttributeService;
-            this._localizationService = localizationService;
+            _addressAttributeService = addressAttributeService;
+            _localizationService = localizationService;
         }
 
         #endregion

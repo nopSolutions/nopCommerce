@@ -7,7 +7,12 @@
     Html.SetActiveMenuItemSystemName("Campaigns");
 }
 
-<nop-antiforgery-token/>
+@{
+    const string hideSearchBlockAttributeName = "CampaignPage.HideSearchBlock";
+    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+}
+
+<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Promotions.Campaigns")
@@ -25,117 +30,79 @@
     <div class="form-horizontal">
         <div class="panel-group">
             @*hide the entire search block if no elements are displayed*@
-            <div class="panel panel-default panel-search" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+            <div class="panel panel-default panel-search" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="StoreId" />
+                    <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="StoreId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <nop-select asp-for="StoreId" asp-items="Model.AvailableStores"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-8 col-md-offset-4">
-                                    <button type="button" id="search-campaigns" class="btn btn-primary btn-search">
-                                        <i class="fa fa-search"></i>
-                                        @T("Admin.Common.Search")
-                                    </button>
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <button type="button" id="search-campaigns" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="campaigns-grid"></div>
-
-                    <script>
-                        $(document).ready(function() {
-                            $("#campaigns-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("List", "Campaign"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: function() {
-                                                var data = {
-                                                    StoreId: $('#@Html.IdFor(model => model.StoreId)').val()
-                                                };
-                                                addAntiForgeryToken(data);
-                                                return data;
-                                            }
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [
-                                    {
-                                        field: "Name",
-                                        title: "@T("Admin.Promotions.Campaigns.Fields.Name")"
-                                    }, {
-                                        field: "CreatedOn",
-                                        title: "@T("Admin.Promotions.Campaigns.Fields.CreatedOn")",
-                                        width: 200,
-                                        type: "date",
-                                        format: "{0:G}"
-                                    }, {
-                                        field: "DontSendBeforeDate",
-                                        title: "@T("Admin.Promotions.Campaigns.Fields.DontSendBeforeDate")",
-                                        width: 200,
-                                        type: "date",
-                                        format: "{0:G}"
-                                    }, {
-                                        field: "Id",
-                                        title: "@T("Admin.Common.Edit")",
-                                        width: 100,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
-                                    }
-                                ]
-                            });
-                        });
-                    </script>
-
-                    <script>
-                        $(document).ready(function () {
-                            $('#search-campaigns').click(function () {
-                                var grid = $('#campaigns-grid').data('kendoGrid');
-                                grid.dataSource.page(1); //new search. Set page size to 1
-                                //grid.dataSource.read(); we already loaded the grid above using "page" function
-                                return false;
-                            });
-                        });
-                    </script>
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "campaigns-grid",
+                        UrlRead = new DataUrl("List", "Campaign", null),
+                        SearchButtonId = "search-campaigns",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.StoreId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(CampaignModel.Name))
+                            {
+                                Title = T("Admin.Promotions.Campaigns.Fields.Name").Text
+                            },
+                            new ColumnProperty(nameof(CampaignModel.CreatedOn))
+                            {
+                                Title = T("Admin.Promotions.Campaigns.Fields.CreatedOn").Text,
+                                Width = "200",
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(CampaignModel.DontSendBeforeDate))
+                            {
+                                Title = T("Admin.Promotions.Campaigns.Fields.DontSendBeforeDate").Text,
+                                Width = "200",
+                                Render = new RenderDate()
+                            },
+                            new ColumnProperty(nameof(CampaignModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })
                 </div>
             </div>
         </div>

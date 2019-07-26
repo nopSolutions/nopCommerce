@@ -1,158 +1,87 @@
-@model CategoryModel
+﻿@model CategoryModel
 
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsProductsTop, additionalData = Model })
-    @if (Model.Id > 0)
-    {
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div id="products-grid"></div>
-
-                <script>
-                    $(document).ready(function() {
-                        $("#products-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("ProductList", "Category"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: function() {
-                                            var data = {
-                                                CategoryId: '@(Model.Id)'
-                                            };
-                                            addAntiForgeryToken(data);
-                                            return data;
-                                        }
-                                    },
-                                    update: {
-                                        url: "@Html.Raw(Url.Action("ProductUpdate", "Category"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    },
-                                    destroy: {
-                                        url: "@Html.Raw(Url.Action("ProductDelete", "Category"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors",
-                                    model: {
-                                        id: "Id",
-                                        fields: {
-                                            ProductName: { editable: false, type: "string" },
-                                            IsFeaturedProduct: { editable: true, type: "boolean" },
-                                            DisplayOrder: { editable: true, type: "number" },
-                                            ProductId: { editable: false, type: "number" }
-                                        }
-                                    }
-                                },
-                                requestEnd: function(e) {
-                                    if (e.type == "update") {
-                                        this.read();
-                                    }
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(Model.CategoryProductSearchModel.PageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(Model.CategoryProductSearchModel.AvailablePageSizes)],
-                                @await Html.PartialAsync("_GridPagerMessages")
-                            },
-                            editable: {
-                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [
-                                {
-                                    field: "ProductName",
-                                    title: "@T("Admin.Catalog.Categories.Products.Fields.Product")"
-                                }, {
-                                    field: "IsFeaturedProduct",
-                                    title: "@T("Admin.Catalog.Categories.Products.Fields.IsFeaturedProduct")",
-                                    width: 150,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(IsFeaturedProduct) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                }, {
-                                    field: "DisplayOrder",
-                                    title: "@T("Admin.Catalog.Categories.Products.Fields.DisplayOrder")",
-                                    //integer format
-                                    format: "{0:0}",
-                                    width: 150
-                                }, {
-                                    field: "ProductId",
-                                    title: "@T("Admin.Common.View")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
-                                }, {
-                                    command: [
-                                        {
-                                            name: "edit",
-                                            text: {
-                                                edit: "@T("Admin.Common.Edit")",
-                                                update: "@T("Admin.Common.Update")",
-                                                cancel: "@T("Admin.Common.Cancel")"
-                                            }
-                                        }, {
-                                            name: "destroy",
-                                            text: "@T("Admin.Common.Delete")"
-                                        }
-                                    ],
-                                    width: 200
-                                }
-                            ]
-                        });
-                    });
-                </script>
-            </div>
-
-            <div class="panel-footer">
-                <button type="submit" id="btnAddNewProduct"
-                        onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Category", new { categoryId = Model.Id, btnId = "btnRefreshProducts", formId = "category-form" }))', 800, 800, true); return false;"
-                        class="btn btn-primary">
-                    @T("Admin.Catalog.Categories.Products.AddNew")
-                </button>
-                <input type="submit" id="btnRefreshProducts" style="display: none" />
-                <script>
-                    $(document).ready(function () {
-                        $('#btnRefreshProducts').click(function () {
-                            //refresh grid
-                            var grid = $("#products-grid").data('kendoGrid');
-                            grid.dataSource.read();
-
-                            //return false to don't reload a page
-                            return false;
-                        });
-                    });
-                </script>
-            </div>
-        </div>
-    }
-    else
-    {
-        <div class="panel panel-default">
-            <div class="panel-body">
-                @T("Admin.Catalog.Categories.Products.SaveBeforeEdit")
-            </div>
-        </div>
-    }
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsProductsBottom, additionalData = Model })
+@if (Model.Id > 0)
+{
+<div class="panel-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+{
+    Name = "products-grid",
+    UrlRead = new DataUrl("ProductList", "Category", new RouteValueDictionary { [nameof(Model.CategoryProductSearchModel.CategoryId)] = Model.CategoryProductSearchModel.CategoryId }),
+    UrlDelete = new DataUrl("ProductDelete", "Category", null),
+    UrlUpdate = new DataUrl("ProductUpdate", "Category", null),
+    Length = Model.CategoryProductSearchModel.PageSize,
+    LengthMenu = Model.CategoryProductSearchModel.AvailablePageSizes,
+    ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(CategoryProductModel.ProductName))
+            {
+                Title = T("Admin.Catalog.Categories.Products.Fields.Product").Text
+            },
+            new ColumnProperty(nameof(CategoryProductModel.IsFeaturedProduct))
+            {
+                Title = T("Admin.Catalog.Categories.Products.Fields.IsFeaturedProduct").Text,
+                Width = "150",
+                ClassName = NopColumnClassDefaults.CenterAll,
+                Render = new RenderBoolean(),
+                Editable = true,
+                EditType = EditType.Checkbox
+            },
+            new ColumnProperty(nameof(CategoryProductModel.DisplayOrder))
+            {
+                Title = T("Admin.Catalog.Categories.Products.Fields.DisplayOrder").Text,
+                Width = "150",
+                ClassName = NopColumnClassDefaults.CenterAll,
+                Editable = true,
+                EditType = EditType.Number
+            },
+            new ColumnProperty(nameof(CategoryProductModel.ProductId))
+            {
+                Title = T("Admin.Common.View").Text,
+                Width = "150",
+                ClassName = NopColumnClassDefaults.Button,
+                Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/", nameof(CategoryProductModel.ProductId)))
+            },
+            new ColumnProperty(nameof(CategoryProductModel.Id))
+            {
+                Title = T("Admin.Common.Edit").Text,
+                Width = "200",
+                ClassName =  NopColumnClassDefaults.Button,
+                Render = new RenderButtonsInlineEdit()
+            },
+            new ColumnProperty(nameof(CategoryProductModel.Id))
+            {
+                Title = T("Admin.Common.Delete").Text,
+                Width = "100",
+                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                ClassName = NopColumnClassDefaults.Button
+            }
+        }
+})
 </div>
+    <div class="panel-footer">
+        <button type="submit" id="btnAddNewProduct"
+                onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Category", new { categoryId = Model.Id, btnId = "btnRefreshProducts", formId = "category-form" }))', 800, 800, true); return false;"
+                class="btn btn-primary">
+            @T("Admin.Catalog.Categories.Products.AddNew")
+        </button>
+        <input type="submit" id="btnRefreshProducts" style="display: none" />
+        <script>
+            $(document).ready(function () {
+                $('#btnRefreshProducts').click(function () {
+                    //refresh grid
+                    updateTable('#products-grid');
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+    </script>
+</div>
+}
+else
+{
+    <div class="panel-body">
+        @T("Admin.Catalog.Categories.Products.SaveBeforeEdit")
+    </div>
+}
+

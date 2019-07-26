@@ -5,7 +5,7 @@ using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Forums;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -23,11 +23,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public ForumModelFactory(IDateTimeHelper dateTimeHelper,
-            IForumService forumService)
+        public ForumModelFactory(IDateTimeHelper dateTimeHelper, IForumService forumService)
         {
-            this._dateTimeHelper = dateTimeHelper;
-            this._forumService = forumService;
+            _dateTimeHelper = dateTimeHelper;
+            _forumService = forumService;
         }
 
         #endregion
@@ -84,12 +83,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get forum groups
-            var forumGroups = _forumService.GetAllForumGroups();
+            var forumGroups = _forumService.GetAllForumGroups().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ForumGroupListModel
+            var model = new ForumGroupListModel().PrepareToGrid(searchModel, forumGroups, () =>
             {
-                Data = forumGroups.PaginationByRequestModel(searchModel).Select(forumGroup =>
+                return forumGroups.Select(forumGroup =>
                 {
                     //fill in model values from the entity
                     var forumGroupModel = forumGroup.ToModel<ForumGroupModel>();
@@ -98,9 +97,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     forumGroupModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(forumGroup.CreatedOnUtc, DateTimeKind.Utc);
 
                     return forumGroupModel;
-                }),
-                Total = forumGroups.Count
-            };
+                });
+            });
 
             return model;
         }
@@ -140,12 +138,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(forumGroup));
 
             //get forums
-            var forums = forumGroup.Forums;
+            var forums = forumGroup.Forums.ToList().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ForumListModel
+            var model = new ForumListModel().PrepareToGrid(searchModel, forums, () =>
             {
-                Data = forums.PaginationByRequestModel(searchModel).Select(forum =>
+                return forums.Select(forum =>
                 {
                     //fill in model values from the entity
                     var forumModel = forum.ToModel<ForumModel>();
@@ -154,9 +152,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     forumModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(forum.CreatedOnUtc, DateTimeKind.Utc);
 
                     return forumModel;
-                }),
-                Total = forums.Count
-            };
+                });
+            });
 
             return model;
         }

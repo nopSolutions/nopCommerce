@@ -28,7 +28,7 @@ namespace Nop.Web.Factories
         /// Prepare the home page news items model
         /// </summary>
         /// <returns>Home page news items model</returns>
-        HomePageNewsItemsModel PrepareHomePageNewsItemsModel();
+        HomepageNewsItemsModel PrepareHomepageNewsItemsModel();
 
         /// <summary>
         /// Prepare the news item list model

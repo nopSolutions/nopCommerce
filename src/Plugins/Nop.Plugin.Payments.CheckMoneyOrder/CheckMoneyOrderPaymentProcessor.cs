@@ -1,13 +1,13 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Plugins;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Plugins;
 
 namespace Nop.Plugin.Payments.CheckMoneyOrder
 {
@@ -36,12 +36,12 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             IShoppingCartService shoppingCartService,
             IWebHelper webHelper)
         {
-            this._checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
-            this._localizationService = localizationService;
-            this._paymentService = paymentService;
-            this._settingService = settingService;
-            this._shoppingCartService = shoppingCartService;
-            this._webHelper = webHelper;
+            _checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
+            _localizationService = localizationService;
+            _paymentService = paymentService;
+            _settingService = settingService;
+            _shoppingCartService = shoppingCartService;
+            _webHelper = webHelper;
         }
 
         #endregion

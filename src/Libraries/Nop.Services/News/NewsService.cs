@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -22,7 +22,6 @@ namespace Nop.Services.News
         private readonly IRepository<NewsComment> _newsCommentRepository;
         private readonly IRepository<NewsItem> _newsItemRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly string _entityName;
 
         #endregion
 
@@ -34,12 +33,11 @@ namespace Nop.Services.News
             IRepository<NewsItem> newsItemRepository,
             IRepository<StoreMapping> storeMappingRepository)
         {
-            this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
-            this._newsCommentRepository = newsCommentRepository;
-            this._newsItemRepository = newsItemRepository;
-            this._storeMappingRepository = storeMappingRepository;
-            this._entityName = typeof(NewsItem).Name;
+            _catalogSettings = catalogSettings;
+            _eventPublisher = eventPublisher;
+            _newsCommentRepository = newsCommentRepository;
+            _newsItemRepository = newsItemRepository;
+            _storeMappingRepository = storeMappingRepository;
         }
 
         #endregion
@@ -117,7 +115,7 @@ namespace Nop.Services.News
             {
                 query = from n in query
                         join sm in _storeMappingRepository.Table
-                        on new { c1 = n.Id, c2 = _entityName } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into n_sm
+                        on new { c1 = n.Id, c2 = nameof(NewsItem) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into n_sm
                         from sm in n_sm.DefaultIfEmpty()
                         where !n.LimitedToStores || storeId == sm.StoreId
                         select n;

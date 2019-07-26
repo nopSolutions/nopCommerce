@@ -34,11 +34,11 @@ namespace Nop.Web.Factories
             IStaticCacheManager cacheManager,
             IWorkContext workContext)
         {
-            this._countryService = countryService;
-            this._localizationService = localizationService;
-            this._stateProvinceService = stateProvinceService;
-            this._cacheManager = cacheManager;
-            this._workContext = workContext;
+            _countryService = countryService;
+            _localizationService = localizationService;
+            _stateProvinceService = stateProvinceService;
+            _cacheManager = cacheManager;
+            _workContext = workContext;
         }
 
         #endregion
@@ -56,7 +56,7 @@ namespace Nop.Web.Factories
             if (string.IsNullOrEmpty(countryId))
                 throw new ArgumentNullException(nameof(countryId));
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.STATEPROVINCES_BY_COUNTRY_MODEL_KEY, countryId, addSelectStateItem, _workContext.WorkingLanguage.Id);
+            var cacheKey = string.Format(NopModelCacheDefaults.StateProvincesByCountryModelKey, countryId, addSelectStateItem, _workContext.WorkingLanguage.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 var country = _countryService.GetCountryById(Convert.ToInt32(countryId));

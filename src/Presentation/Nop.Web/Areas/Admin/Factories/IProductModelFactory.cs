@@ -129,6 +129,14 @@ namespace Nop.Web.Areas.Admin.Factories
             ProductSpecificationAttributeSearchModel searchModel, Product product);
 
         /// <summary>
+        /// Prepare paged product specification attribute model
+        /// </summary>
+        /// <param name="productId">Product id</param>
+        /// <param name="specificationId">Specification attribute id</param>
+        /// <returns>Product specification attribute model</returns>
+        AddSpecificationAttributeModel PrepareAddSpecificationAttributeModel(int productId, int? specificationId);
+
+        /// <summary>
         /// Prepare product tag search model
         /// </summary>
         /// <param name="searchModel">Product tag search model</param>
@@ -158,20 +166,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="product">Product</param>
         /// <returns>Product order list model</returns>
         ProductOrderListModel PrepareProductOrderListModel(ProductOrderSearchModel searchModel, Product product);
-        
-        /// <summary>
-        /// Prepare bulk edit product search model
-        /// </summary>
-        /// <param name="searchModel">Bulk edit product search model</param>
-        /// <returns>Bulk edit product search model</returns>
-        BulkEditProductSearchModel PrepareBulkEditProductSearchModel(BulkEditProductSearchModel searchModel);
-
-        /// <summary>
-        /// Prepare paged bulk edit product list model
-        /// </summary>
-        /// <param name="searchModel">Bulk edit product search model</param>
-        /// <returns>Bulk edit product list model</returns>
-        BulkEditProductListModel PrepareBulkEditProductListModel(BulkEditProductSearchModel searchModel);
 
         /// <summary>
         /// Prepare paged tier price list model

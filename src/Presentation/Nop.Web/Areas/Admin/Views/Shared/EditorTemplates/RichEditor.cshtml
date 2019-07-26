@@ -56,7 +56,7 @@
                 cache: false,
                 type: "GET",
                 url: "@(Url.Action("CreateConfiguration", "RoxyFileman"))",
-                success: function (data) {
+                success: function (data, textStatus, jqXHR) {
                     var roxyFileman = '@Url.Content("~/lib/Roxy_Fileman/index.html")';
                     if (roxyFileman.indexOf("?") < 0) {
                         roxyFileman += "?type=" + type;
@@ -76,8 +76,9 @@
                     }, { window: win, input: field_name });
                     return false;
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert(thrownError);
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('#createConfigurationFailed-info').text(errorThrown);
+                    $("#createConfigurationFailed").click();
                 }
             });
         }
@@ -153,3 +154,4 @@
 </script>
 
 <textarea asp-for="@Model">@ViewData.TemplateInfo.FormattedModelValue</textarea>
+<nop-alert asp-alert-id="createConfigurationFailed" />

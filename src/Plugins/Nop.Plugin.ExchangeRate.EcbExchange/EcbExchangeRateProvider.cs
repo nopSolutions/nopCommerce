@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Net;
+using System.Net.Http;
 using System.Xml;
 using Nop.Core;
-using Nop.Core.Plugins;
+using Nop.Core.Http;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Plugins;
 
 namespace Nop.Plugin.ExchangeRate.EcbExchange
 {
@@ -16,6 +17,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
     {
         #region Fields
 
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
 
@@ -23,11 +25,13 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
 
         #region Ctor
 
-        public EcbExchangeRateProvider(ILocalizationService localizationService,
+        public EcbExchangeRateProvider(IHttpClientFactory httpClientFactory,
+            ILocalizationService localizationService,
             ILogger logger)
         {
-            this._localizationService = localizationService;
-            this._logger = logger;
+            _httpClientFactory = httpClientFactory;
+            _localizationService = localizationService;
+            _logger = logger;
         }
 
         #endregion
@@ -56,41 +60,40 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
             };
 
             //get exchange rates to euro from European Central Bank
-            var request = (HttpWebRequest)WebRequest.Create("http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml");
             try
             {
-                using (var response = request.GetResponse())
+                var httpClient = _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient);
+                var stream = httpClient.GetStreamAsync("http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml").Result;
+
+                //load XML document
+                var document = new XmlDocument();
+                document.Load(stream);
+
+                //add namespaces
+                var namespaces = new XmlNamespaceManager(document.NameTable);
+                namespaces.AddNamespace("ns", "http://www.ecb.int/vocabulary/2002-08-01/eurofxref");
+                namespaces.AddNamespace("gesmes", "http://www.gesmes.org/xml/2002-08-01");
+
+                //get daily rates
+                var dailyRates = document.SelectSingleNode("gesmes:Envelope/ns:Cube/ns:Cube", namespaces);
+                if (!DateTime.TryParseExact(dailyRates.Attributes["time"].Value, "yyyy-MM-dd", null, DateTimeStyles.None, out var updateDate))
+                    updateDate = DateTime.UtcNow;
+
+                foreach (XmlNode currency in dailyRates.ChildNodes)
                 {
-                    //load XML document
-                    var document = new XmlDocument();
-                    document.Load(response.GetResponseStream());
+                    //get rate
+                    if (!decimal.TryParse(currency.Attributes["rate"].Value, out var currencyRate))
+                        continue;
 
-                    //add namespaces
-                    var namespaces = new XmlNamespaceManager(document.NameTable);
-                    namespaces.AddNamespace("ns", "http://www.ecb.int/vocabulary/2002-08-01/eurofxref");
-                    namespaces.AddNamespace("gesmes", "http://www.gesmes.org/xml/2002-08-01");
-
-                    //get daily rates
-                    var dailyRates = document.SelectSingleNode("gesmes:Envelope/ns:Cube/ns:Cube", namespaces);
-                    if (!DateTime.TryParseExact(dailyRates.Attributes["time"].Value, "yyyy-MM-dd", null, DateTimeStyles.None, out DateTime updateDate))
-                        updateDate = DateTime.UtcNow;
-
-                    foreach (XmlNode currency in dailyRates.ChildNodes)
+                    ratesToEuro.Add(new Core.Domain.Directory.ExchangeRate()
                     {
-                        //get rate
-                        if (!decimal.TryParse(currency.Attributes["rate"].Value, out decimal currencyRate))
-                            continue;
-
-                        ratesToEuro.Add(new Core.Domain.Directory.ExchangeRate()
-                        {
-                            CurrencyCode = currency.Attributes["currency"].Value,
-                            Rate = currencyRate,
-                            UpdatedOn = updateDate
-                        });
-                    }
+                        CurrencyCode = currency.Attributes["currency"].Value,
+                        Rate = currencyRate,
+                        UpdatedOn = updateDate
+                    });
                 }
             }
-            catch (WebException ex)
+            catch (Exception ex)
             {
                 _logger.Error("ECB exchange rate provider", ex);
             }

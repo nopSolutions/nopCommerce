@@ -1,88 +1,53 @@
 ﻿@model VendorAttributeSearchModel
 
-<div class="panel panel-default advanced-setting">
-    <div class="panel-heading">
-        @T("Admin.Vendors.VendorAttributes")
-    </div>
-    <div class="panel-body">
-        <p>
-            <em>@T("Admin.Vendors.VendorAttributes.Description")</em>
-        </p>
-        <div id="vendorattributes-grid"></div>
-
-        <script>
-                $(document).ready(function () {
-                    $("#vendorattributes-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("List", "VendorAttribute"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(Model.PageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(Model.AvailablePageSizes)],
-                            @await Html.PartialAsync("_GridPagerMessages")
-                        },
-                        editable: {
-                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "Name",
-                            title: "@T("Admin.Vendors.VendorAttributes.Fields.Name")",
-                            width: 300
-                        }, {
-                            field: "AttributeControlTypeName",
-                            title: "@T("Admin.Vendors.VendorAttributes.Fields.AttributeControlType")",
-                            width: 200
-                        },{
-                            field: "IsRequired",
-                            title: "@T("Admin.Vendors.VendorAttributes.Fields.IsRequired")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '# if(IsRequired) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                        }, {
-                            field: "DisplayOrder",
-                            title: "@T("Admin.Vendors.VendorAttributes.Fields.DisplayOrder")",
-                            width: 100
-                        }, {
-                            field: "Id",
-                            title: "@T("Admin.Common.Edit")",
-                            width: 80,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/VendorAttribute/Edit/")#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
-                        }]
-                    });
-                });
-        </script>
-    </div>
-    <div class="panel-footer">
-        <a class="btn btn-primary" href="@Url.Action("Create", "VendorAttribute")">
-            <i class="fa fa-plus-square"></i>
-            @T("Admin.Common.AddNew")
-        </a>
-    </div>
+<div class="panel-body">
+    <p>
+        <em>@T("Admin.Vendors.VendorAttributes.Description")</em>
+    </p>
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "vendorattributes-grid",
+        UrlRead = new DataUrl("List", "VendorAttribute", null),
+        Length = Model.PageSize,
+        LengthMenu = Model.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(VendorAttributeModel.Name))
+            {
+                Title = T("Admin.Vendors.VendorAttributes.Fields.Name").Text,
+                Width = "300"
+            },
+            new ColumnProperty(nameof(VendorAttributeModel.AttributeControlTypeName))
+            {
+                Title = T("Admin.Vendors.VendorAttributes.Fields.AttributeControlType").Text,
+                Width = "200"
+            },
+            new ColumnProperty(nameof(VendorAttributeModel.IsRequired))
+            {
+                Title = T("Admin.Vendors.VendorAttributes.Fields.IsRequired").Text,
+                Width = "100",
+                ClassName =  NopColumnClassDefaults.CenterAll,
+                Render = new RenderBoolean()
+            },
+            new ColumnProperty(nameof(VendorAttributeModel.DisplayOrder))
+            {
+                Title = T("Admin.Vendors.VendorAttributes.Fields.DisplayOrder").Text,
+                Width = "100",
+                ClassName = NopColumnClassDefaults.CenterAll
+            },
+            new ColumnProperty(nameof(VendorAttributeModel.Id))
+            {
+                Title = T("Admin.Common.Edit").Text,
+                Width = "100",
+                ClassName =  NopColumnClassDefaults.Button,
+                Render = new RenderButtonEdit(new DataUrl("~/Admin/VendorAttribute/Edit/"))
+            }
+        }
+    })
+</div>
+<div class="panel-footer">
+    <a class="btn btn-primary" href="@Url.Action("Create", "VendorAttribute")">
+        <i class="fa fa-plus-square"></i>
+        @T("Admin.Common.AddNew")
+    </a>
 </div>

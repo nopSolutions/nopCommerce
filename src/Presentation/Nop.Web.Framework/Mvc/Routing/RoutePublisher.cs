@@ -2,7 +2,6 @@
 using System.Linq;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Infrastructure;
-using Nop.Core.Plugins;
 
 namespace Nop.Web.Framework.Mvc.Routing
 {
@@ -16,7 +15,7 @@ namespace Nop.Web.Framework.Mvc.Routing
         /// <summary>
         /// Type finder
         /// </summary>
-        protected readonly ITypeFinder typeFinder;
+        protected readonly ITypeFinder _typeFinder;
 
         #endregion
 
@@ -28,7 +27,7 @@ namespace Nop.Web.Framework.Mvc.Routing
         /// <param name="typeFinder">Type finder</param>
         public RoutePublisher(ITypeFinder typeFinder)
         {
-            this.typeFinder = typeFinder;
+            _typeFinder = typeFinder;
         }
 
         #endregion
@@ -42,11 +41,10 @@ namespace Nop.Web.Framework.Mvc.Routing
         public virtual void RegisterRoutes(IRouteBuilder routeBuilder)
         {
             //find route providers provided by other assemblies
-            var routeProviders = typeFinder.FindClassesOfType<IRouteProvider>();
+            var routeProviders = _typeFinder.FindClassesOfType<IRouteProvider>();
 
             //create and sort instances of route providers
             var instances = routeProviders
-                .Where(routeProvider => PluginManager.FindPlugin(routeProvider)?.Installed ?? true) //ignore not installed plugins
                 .Select(routeProvider => (IRouteProvider)Activator.CreateInstance(routeProvider))
                 .OrderByDescending(routeProvider => routeProvider.Priority);
 

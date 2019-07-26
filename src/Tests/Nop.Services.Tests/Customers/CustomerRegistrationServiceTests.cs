@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -34,6 +34,7 @@ namespace Nop.Services.Tests.Customers
         private Mock<IStoreService> _storeService;
         private Mock<IRepository<CustomerRole>> _customerRoleRepo;
         private Mock<IRepository<GenericAttribute>> _genericAttributeRepo;
+        private Mock<IRepository<ShoppingCartItem>> _shoppingCartRepo;
         private Mock<IGenericAttributeService> _genericAttributeService;
         private Mock<INewsLetterSubscriptionService> _newsLetterSubscriptionService;
         private Mock<IRewardPointService> _rewardPointService;
@@ -156,6 +157,7 @@ namespace Nop.Services.Tests.Customers
             _storeService = new Mock<IStoreService>();
             _customerRoleRepo = new Mock<IRepository<CustomerRole>>();
             _genericAttributeRepo = new Mock<IRepository<GenericAttribute>>();
+            _shoppingCartRepo = new Mock<IRepository<ShoppingCartItem>>();
             _genericAttributeService = new Mock<IGenericAttributeService>();
             _newsLetterSubscriptionService = new Mock<INewsLetterSubscriptionService>();
             _rewardPointService = new Mock<IRewardPointService>();
@@ -165,8 +167,8 @@ namespace Nop.Services.Tests.Customers
             _workflowMessageService = new Mock<IWorkflowMessageService>();
             _customerCustomerRoleMappingRepo = new Mock<IRepository<CustomerCustomerRoleMapping>>();
             
-             _customerService = new CustomerService(new CustomerSettings(), 
-                new NopNullCache(), 
+             _customerService = new CustomerService(new CustomerSettings(),
+                new TestCacheManager(),
                 null,
                 null,
                 _eventPublisher.Object,
@@ -176,6 +178,8 @@ namespace Nop.Services.Tests.Customers
                 _customerPasswordRepo.Object,
                 _customerRoleRepo.Object,
                 _genericAttributeRepo.Object,
+                 _shoppingCartRepo.Object,
+                 new TestCacheManager(),
                 null);
 
             _customerRegistrationService = new CustomerRegistrationService(_customerSettings,

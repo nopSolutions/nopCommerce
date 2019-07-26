@@ -1,25 +1,23 @@
 ﻿@model VendorAttributeModel
 
-@inject IEventPublisher eventPublisher
+@{
+    const string hideInfoBlockAttributeName = "VendorAttributePage.HideInfoBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+
+    const string hideValuesBlockAttributeName = "VendorAttributePage.HideValuesBlock";
+    var hideValuesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideValuesBlockAttributeName, defaultValue: true);
+}
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 
 <div class="content">
     <div class="form-horizontal">
-        <nop-tabs id="vendorattribute-edit">
-            <nop-tab asp-name="tab-info" asp-title="@T("Admin.Vendors.VendorAttributes.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
-            <nop-tab asp-name="tab-values" asp-title="@T("Admin.Vendors.VendorAttributes.Values")">@await Html.PartialAsync("_CreateOrUpdate.Values", Model)</nop-tab>
-        </nop-tabs>
+        <nop-panels id="vendorattribute-panels">
+            <nop-panel asp-name="vendorattribute-info" asp-icon="fa fa-info" asp-title="@T("Admin.Vendors.VendorAttributes.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            <nop-panel asp-name="vendorattribute-values" asp-icon="fa fa-check-square-o" asp-title="@T("Admin.Vendors.VendorAttributes.Values")" asp-hide-block-attribute-name="@hideValuesBlockAttributeName" asp-hide="@hideValuesBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Values", Model)</nop-panel>
+            
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.AdminVendorAttributeDetailsBlock, additionalData = Model })
+        </nop-panels>
     </div>
 </div>
-
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "vendorattribute-edit");
-    eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}

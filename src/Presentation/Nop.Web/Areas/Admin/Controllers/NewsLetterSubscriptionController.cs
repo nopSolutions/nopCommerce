@@ -12,8 +12,8 @@ using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -43,14 +43,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             INotificationService notificationService,
             IPermissionService permissionService)
         {
-            this._dateTimeHelper = dateTimeHelper;
-            this._exportManager = exportManager;
-            this._importManager = importManager;
-            this._localizationService = localizationService;
-            this._newsletterSubscriptionModelFactory = newsletterSubscriptionModelFactory;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
+            _dateTimeHelper = dateTimeHelper;
+            _exportManager = exportManager;
+            _importManager = importManager;
+            _localizationService = localizationService;
+            _newsletterSubscriptionModelFactory = newsletterSubscriptionModelFactory;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -77,7 +77,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult SubscriptionList(NewsletterSubscriptionSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _newsletterSubscriptionModelFactory.PrepareNewsletterSubscriptionListModel(searchModel);
@@ -92,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
 
             var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionById(model.Id);
 
@@ -140,7 +140,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var result = _exportManager.ExportNewsletterSubscribersToTxt(subscriptions);
 
-            var fileName = $"newsletter_emails_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(4)}.txt";
+            var fileName = $"newsletter_emails_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(4)}.csv";
 
             return File(Encoding.UTF8.GetBytes(result), MimeTypes.TextCsv, fileName);
         }

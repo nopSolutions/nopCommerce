@@ -26,6 +26,7 @@
                 $("#advanced-settings-mode").click(function() {
                     checkAdvancedSettingsMode($(this).is(':checked'));
                     saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@Model.ModeName', $(this).is(':checked'));
+                    ensureDataTablesRendered();
                 });
             });
         </script>

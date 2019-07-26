@@ -9,7 +9,7 @@ namespace Nop.Core.Domain.Customers
     {
         public CustomerPassword()
         {
-            this.PasswordFormat = PasswordFormat.Clear;
+            PasswordFormat = PasswordFormat.Clear;
         }
 
         /// <summary>

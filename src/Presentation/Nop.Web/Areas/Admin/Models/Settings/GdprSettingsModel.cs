@@ -34,6 +34,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool LogNewsletterConsent { get; set; }
         public bool LogNewsletterConsent_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Gdpr.LogUserProfileChanges")]
+        public bool LogUserProfileChanges { get; set; }
+        public bool LogUserProfileChanges_OverrideForStore { get; set; }
+
         public GdprConsentSearchModel GdprConsentSearchModel { get; set; }
 
         #endregion

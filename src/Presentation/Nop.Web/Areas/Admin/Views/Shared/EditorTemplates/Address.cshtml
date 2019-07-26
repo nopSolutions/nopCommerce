@@ -11,15 +11,18 @@
                     cache: false,
                     type: "GET",
                     url: "@(Url.Action("GetStatesByCountryId", "Country"))",
-                    data: { "countryId": selectedItem, "addSelectStateItem": "false" },
-                    success: function (data) {
+                    data: {
+                        "countryId": selectedItem,
+                        "addSelectStateItem": "false"
+                    },
+                    success: function (data, textStatus, jqXHR) {
                         ddlStates.html('');
                         $.each(data, function (id, option) {
                             ddlStates.append($('<option></option>').val(option.id).html(option.name));
                         });
                     },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        alert('Failed to retrieve states.');
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $("#statesAlert").click();
                     }
                 });
             });
@@ -212,3 +215,4 @@
 {
     @await Html.PartialAsync("_AddressAttributes", Model.CustomAddressAttributes)
 }
+<nop-alert asp-alert-id="statesAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />

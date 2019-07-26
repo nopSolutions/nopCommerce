@@ -18,32 +18,36 @@
     </div>
 </div>
 <script>
-            function checkAdvancedSettingsMode(advanced) {
-                if (advanced) {
-                    $("body").addClass("advanced-settings-mode");
-                    $("body").removeClass("basic-settings-mode");
-                } else {
-                    $("body").removeClass("advanced-settings-mode");
-                    $("body").addClass("basic-settings-mode");
+    function checkAdvancedSettingsMode(advanced) {
+        if (advanced) {
+            $("body").addClass("advanced-settings-mode");
+            $("body").removeClass("basic-settings-mode");
+        } else {
+            $("body").removeClass("advanced-settings-mode");
+            $("body").addClass("basic-settings-mode");
+        }
+    }
+    checkAdvancedSettingsMode($("#advanced-settings-mode").is(':checked'));
+    $(document).ready(function() {
+        $("#advanced-settings-mode").click(function() {
+            checkAdvancedSettingsMode($(this).is(':checked'));
+            $.ajax({
+                cache: false,
+                url: "@Url.Action("SaveMode", "FixedOrByCountryStateZip")",
+                type: "POST",
+                data: {
+                    value: $(this).is(':checked')
+                },
+                dataType: "json",
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $("#saveModeAlert").click();
                 }
-            }
-            checkAdvancedSettingsMode($("#advanced-settings-mode").is(':checked'));
-            $(document).ready(function() {
-                $("#advanced-settings-mode").click(function() {
-                    checkAdvancedSettingsMode($(this).is(':checked'));
-                    $.ajax({
-                        cache: false,
-                        url: '@Url.Action("SaveMode", "FixedOrByCountryStateZip")',
-                        type: 'post',
-                        data: {value: $(this).is(':checked')},
-                        dataType: 'json',
-                        error: function(xhr, ajaxOptions, thrownError) {
-                            alert('Failed to save preferences.');
-                        }
-                    });
-                });
             });
+            ensureDataTablesRendered();
+        });
+    });
 </script>
+<nop-alert asp-alert-id="saveModeAlert" asp-alert-message="@T("Admin.Common.Alert.Save.Error")" />
 
 @await Html.PartialAsync("~/Plugins/Tax.FixedOrByCountryStateZip/Views/_FixedRate.cshtml")
 @await Html.PartialAsync("~/Plugins/Tax.FixedOrByCountryStateZip/Views/_CountryStateZip.cshtml", Model)

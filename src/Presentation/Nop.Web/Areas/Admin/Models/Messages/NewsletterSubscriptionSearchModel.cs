@@ -53,6 +53,8 @@ namespace Nop.Web.Areas.Admin.Models.Messages
         [UIHint("DateNullable")]
         public DateTime? EndDate { get; set; }
 
+        public bool HideStoresList { get; set; }
+
         #endregion
     }
 }

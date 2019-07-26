@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Html;
@@ -7,6 +8,8 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Logging;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -31,10 +34,10 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             ILogger logger)
         {
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._logger = logger;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _logger = logger;
         }
 
         #endregion
@@ -85,10 +88,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new LogListModel
+            var model = new LogListModel().PrepareToGrid(searchModel, logItems, () =>
             {
                 //fill in model values from the entity
-                Data = logItems.Select(logItem =>
+                return logItems.Select(logItem =>
                 {
                     //fill in model values from the entity
                     var logModel = logItem.ToModel<LogModel>();
@@ -103,9 +106,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     logModel.CustomerEmail = logItem.Customer?.Email ?? string.Empty;
 
                     return logModel;
-                }),
-                Total = logItems.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -130,7 +132,6 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.ShortMessage = HtmlHelper.FormatText(log.ShortMessage, false, true, false, false, false, false);
                     model.FullMessage = HtmlHelper.FormatText(log.FullMessage, false, true, false, false, false, false);
                     model.CreatedOn = _dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc);
-                    model.FullMessage = string.Empty;
                     model.CustomerEmail = log.Customer?.Email ?? string.Empty;
                 }
             }

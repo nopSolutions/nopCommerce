@@ -1,12 +1,8 @@
 ﻿using Moq;
 using Nop.Core;
 using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Memory;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
@@ -31,7 +27,7 @@ namespace Nop.Tests
             PriceCalculationService = new PriceCalculationService(new CatalogSettings(), new CurrencySettings(), 
                 new Mock<ICategoryService>().Object, new Mock<ICurrencyService>().Object, new Mock<IDiscountService>().Object,
                 new Mock<IManufacturerService>().Object, new Mock<IProductAttributeParser>().Object,
-                new Mock<IProductService>().Object, new MemoryCacheManager(new Mock<IMemoryCache>().Object), new Mock<IStoreContext>().Object, WorkContext.Object, new ShoppingCartSettings());
+                new Mock<IProductService>().Object, new TestCacheManager(), new Mock<IStoreContext>().Object, WorkContext.Object, new ShoppingCartSettings());
 
             LocalizationService.Setup(l => l.GetResource(It.IsAny<string>())).Returns("Invalid");
             WorkContext.Setup(p => p.WorkingLanguage).Returns(new Language {Id = 1});
@@ -40,13 +36,13 @@ namespace Nop.Tests
             CurrencyService = new Mock<ICurrencyService>();
             CurrencyService.Setup(x => x.GetCurrencyById(1, true)).Returns(new Currency {Id = 1, RoundingTypeId = 0});
 
-            GenericAttributeService.Setup(p => p.GetAttribute<bool>(It.IsAny<Customer>(), "product-advanced-mode", It.IsAny<int>()))
+            GenericAttributeService.Setup(p => p.GetAttribute<bool>(It.IsAny<Customer>(), "product-advanced-mode", It.IsAny<int>(), false))
                 .Returns(true);
 
-            GenericAttributeService.Setup(p => p.GetAttribute<bool>(It.IsAny<Customer>(), "manufacturer-advanced-mode", It.IsAny<int>()))
+            GenericAttributeService.Setup(p => p.GetAttribute<bool>(It.IsAny<Customer>(), "manufacturer-advanced-mode", It.IsAny<int>(), false))
                 .Returns(true);
 
-            GenericAttributeService.Setup(p => p.GetAttribute<bool>(It.IsAny<Customer>(), "category-advanced-mode", It.IsAny<int>()))
+            GenericAttributeService.Setup(p => p.GetAttribute<bool>(It.IsAny<Customer>(), "category-advanced-mode", It.IsAny<int>(), false))
                 .Returns(true);
         }
 
@@ -69,6 +65,9 @@ namespace Nop.Tests
 
             if (serviceType == typeof(CurrencySettings))
                 return new CurrencySettings {PrimaryStoreCurrencyId = 1};
+
+            if (serviceType == typeof(CatalogSettings))
+                return new CatalogSettings();
 
             if (serviceType == typeof(ICurrencyService))
                 return CurrencyService.Object;

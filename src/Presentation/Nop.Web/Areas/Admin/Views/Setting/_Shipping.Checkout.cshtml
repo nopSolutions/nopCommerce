@@ -1,0 +1,80 @@
+@model ShippingSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="EstimateShippingEnabled_OverrideForStore" asp-input="EstimateShippingEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="EstimateShippingEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="EstimateShippingEnabled" />
+            <span asp-validation-for="EstimateShippingEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="HideShippingTotal_OverrideForStore" asp-input="HideShippingTotal" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="HideShippingTotal" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="HideShippingTotal" />
+            <span asp-validation-for="HideShippingTotal"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShipToSameAddress_OverrideForStore" asp-input="ShipToSameAddress" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShipToSameAddress" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShipToSameAddress" />
+            <span asp-validation-for="ShipToSameAddress"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="BypassShippingMethodSelectionIfOnlyOne_OverrideForStore" asp-input="BypassShippingMethodSelectionIfOnlyOne" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="BypassShippingMethodSelectionIfOnlyOne" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="BypassShippingMethodSelectionIfOnlyOne" />
+            <span asp-validation-for="BypassShippingMethodSelectionIfOnlyOne"></span>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.AllowPickupInStore)").click(toggleAllowPickupInStore);
+        $("#@Html.IdFor(model => model.DisplayPickupPointsOnMap)").click(toggleAllowPickupInStore);
+        $("#@Html.IdFor(model => model.FreeShippingOverXEnabled)").click(toggleFreeShippingOverX);
+        toggleAllowPickupInStore();
+        toggleFreeShippingOverX();
+    });
+
+    function toggleAllowPickupInStore() {
+        if ($('#@Html.IdFor(model => model.AllowPickupInStore)').is(':checked')) {
+            $('#pnlDisplayPickupPointsOnMap').show();
+            $('#pnlIgnoreAdditionalShippingChargeForPickupInStore').show();
+            if ($('#@Html.IdFor(model => model.DisplayPickupPointsOnMap)').is(':checked')) {
+                $('#pnlGoogleMapsApiKey').show();
+            } else {
+                $('#pnlGoogleMapsApiKey').hide();
+            }
+        } else {
+            $('#pnlDisplayPickupPointsOnMap').hide();
+            $('#pnlIgnoreAdditionalShippingChargeForPickupInStore').hide();
+            $('#pnlGoogleMapsApiKey').hide();
+        }
+    }
+
+    function toggleFreeShippingOverX() {
+        if ($('#@Html.IdFor(model => model.FreeShippingOverXEnabled)').is(':checked')) {
+            $('#pnlValueOfX').show();
+            $('#pnlValueOfXincltax').show();
+        } else {
+            $('#pnlValueOfX').hide();
+            $('#pnlValueOfXincltax').hide();
+        }
+    }
+</script>

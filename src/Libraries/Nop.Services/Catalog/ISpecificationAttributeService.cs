@@ -27,6 +27,12 @@ namespace Nop.Services.Catalog
         IPagedList<SpecificationAttribute> GetSpecificationAttributes(int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
+        /// Gets specification attributes that have options
+        /// </summary>
+        /// <returns>Specification attributes that have available options</returns>
+        IList<SpecificationAttribute> GetSpecificationAttributesWithOptions();
+
+        /// <summary>
         /// Deletes a specification attribute
         /// </summary>
         /// <param name="specificationAttribute">The specification attribute</param>

@@ -23,7 +23,5 @@ namespace Nop.Web.Models.Topics
         public string SeName { get; set; }
 
         public int TopicTemplateId { get; set; }
-
-        public bool Published { get; set; }
     }
 }

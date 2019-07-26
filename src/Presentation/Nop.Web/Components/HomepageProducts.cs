@@ -20,19 +20,21 @@ namespace Nop.Web.Components
             IProductService productService,
             IStoreMappingService storeMappingService)
         {
-            this._aclService = aclService;
-            this._productModelFactory = productModelFactory;
-            this._productService = productService;
-            this._storeMappingService = storeMappingService;
+            _aclService = aclService;
+            _productModelFactory = productModelFactory;
+            _productService = productService;
+            _storeMappingService = storeMappingService;
         }
 
         public IViewComponentResult Invoke(int? productThumbPictureSize)
         {
-            var products = _productService.GetAllProductsDisplayedOnHomePage();
+            var products = _productService.GetAllProductsDisplayedOnHomepage();
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
             //availability dates
             products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
+
+            products = products.Where(p => p.VisibleIndividually).ToList();
 
             if (!products.Any())
                 return Content("");

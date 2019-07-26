@@ -49,16 +49,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IUrlRecordService urlRecordService)
         {
-            this._blogModelFactory = blogModelFactory;
-            this._blogService = blogService;
-            this._customerActivityService = customerActivityService;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
-            this._urlRecordService = urlRecordService;
+            _blogModelFactory = blogModelFactory;
+            _blogService = blogService;
+            _customerActivityService = customerActivityService;
+            _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
+            _urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -97,10 +97,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public virtual IActionResult Index()
         {
-            return RedirectToAction("List");
+            return RedirectToAction("BlogPosts");
         }
 
-        public virtual IActionResult List(int? filterByBlogPostId)
+        public virtual IActionResult BlogPosts(int? filterByBlogPostId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(BlogPostSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _blogModelFactory.PrepareBlogPostListModel(searchModel);
@@ -160,11 +160,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Added"));
 
                 if (!continueEditing)
-                    return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                    return RedirectToAction("BlogPosts");
+                
                 return RedirectToAction("BlogPostEdit", new { id = blogPost.Id });
             }
 
@@ -183,7 +180,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //try to get a blog post with the specified id
             var blogPost = _blogService.GetBlogPostById(id);
             if (blogPost == null)
-                return RedirectToAction("List");
+                return RedirectToAction("BlogPosts");
 
             //prepare model
             var model = _blogModelFactory.PrepareBlogPostModel(null, blogPost);
@@ -200,7 +197,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //try to get a blog post with the specified id
             var blogPost = _blogService.GetBlogPostById(model.Id);
             if (blogPost == null)
-                return RedirectToAction("List");
+                return RedirectToAction("BlogPosts");
 
             if (ModelState.IsValid)
             {
@@ -221,11 +218,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Updated"));
 
                 if (!continueEditing)
-                    return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                    return RedirectToAction("BlogPosts");
+                
                 return RedirectToAction("BlogPostEdit", new { id = blogPost.Id });
             }
 
@@ -245,7 +239,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //try to get a blog post with the specified id
             var blogPost = _blogService.GetBlogPostById(id);
             if (blogPost == null)
-                return RedirectToAction("List");
+                return RedirectToAction("BlogPosts");
 
             _blogService.DeleteBlogPost(blogPost);
 
@@ -255,14 +249,14 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Deleted"));
 
-            return RedirectToAction("List");
+            return RedirectToAction("BlogPosts");
         }
 
         #endregion
 
         #region Comments
 
-        public virtual IActionResult Comments(int? filterByBlogPostId)
+        public virtual IActionResult BlogComments(int? filterByBlogPostId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
@@ -270,7 +264,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //try to get a blog post with the specified id
             var blogPost = _blogService.GetBlogPostById(filterByBlogPostId ?? 0);
             if (blogPost == null && filterByBlogPostId.HasValue)
-                return RedirectToAction("List");
+                return RedirectToAction("BlogComments");
 
             //prepare model
             var model = _blogModelFactory.PrepareBlogCommentSearchModel(new BlogCommentSearchModel(), blogPost);
@@ -282,7 +276,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult Comments(BlogCommentSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _blogModelFactory.PrepareBlogCommentListModel(searchModel, searchModel.BlogPostId);

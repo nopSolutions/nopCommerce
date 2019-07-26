@@ -21,8 +21,8 @@ namespace Nop.Web.Factories
         public NewsletterModelFactory(CustomerSettings customerSettings,
             ILocalizationService localizationService)
         {
-            this._customerSettings = customerSettings;
-            this._localizationService = localizationService;
+            _customerSettings = customerSettings;
+            _localizationService = localizationService;
         }
 
         #endregion

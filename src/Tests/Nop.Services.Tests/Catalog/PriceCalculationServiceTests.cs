@@ -62,7 +62,7 @@ namespace Nop.Services.Tests.Catalog
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
 
-            _cacheManager = new MemoryCacheManager(new Mock<IMemoryCache>().Object);
+            _cacheManager = new TestCacheManager();
             _workContext = new Mock<IWorkContext>();
 
             _discountService = TestDiscountService.Init();
@@ -188,28 +188,32 @@ namespace Nop.Services.Tests.Catalog
                 Price = 10,
                 Quantity = 2,
                 Product= product,
-                CustomerRole = customerRole1
+                CustomerRole = customerRole1,
+                CustomerRoleId = customerRole1.Id
             });
             product.TierPrices.Add(new TierPrice
             {
                 Price = 9,
                 Quantity = 2,
                 Product = product,
-                CustomerRole = customerRole2
+                CustomerRole = customerRole2,
+                CustomerRoleId = customerRole2.Id
             });
             product.TierPrices.Add(new TierPrice
             {
                 Price = 8,
                 Quantity = 5,
                 Product= product,
-                CustomerRole = customerRole1
+                CustomerRole = customerRole1,
+                CustomerRoleId = customerRole1.Id
             });
             product.TierPrices.Add(new TierPrice
             {
                 Price = 5,
                 Quantity = 10,
                 Product = product,
-                CustomerRole = customerRole2
+                CustomerRole = customerRole2,
+                CustomerRoleId = customerRole2.Id
             });
             //set HasTierPrices property
             product.HasTierPrices = true;
@@ -467,13 +471,13 @@ namespace Nop.Services.Tests.Catalog
                 IRepository<RelatedProduct> relatedProductRepository,
                 IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
                 IRepository<StoreMapping> storeMappingRepository, IRepository<TierPrice> tierPriceRepository,
-                IStoreMappingService storeMappingService, IWorkContext workContext,
+                IStoreService storeService, IStoreMappingService storeMappingService, IWorkContext workContext,
                 LocalizationSettings localizationSettings) : base(catalogSettings, commonSettings, aclService,
                 cacheManager, dataProvider, dateRangeService, dbContext, eventPublisher, languageService,
                 localizationService, productAttributeParser, productAttributeService, aclRepository,
                 crossSellProductRepository, productRepository, productPictureRepository, productReviewRepository,
                 productWarehouseInventoryRepository, relatedProductRepository, stockQuantityHistoryRepository,
-                storeMappingRepository, tierPriceRepository, storeMappingService, workContext, localizationSettings)
+                storeMappingRepository,  tierPriceRepository, storeService, storeMappingService, workContext, localizationSettings)
             {
             }
 
@@ -481,7 +485,7 @@ namespace Nop.Services.Tests.Catalog
             {
                 return new TestProductService(new CatalogSettings(), new CommonSettings(), null,
                     null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-                    null, null, null, null, null, new LocalizationSettings());
+                    null, null, null, null, null, null, new LocalizationSettings());
             }
         }
     }

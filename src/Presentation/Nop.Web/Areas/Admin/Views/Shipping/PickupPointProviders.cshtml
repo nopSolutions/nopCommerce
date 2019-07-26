@@ -23,119 +23,73 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="pickup-point-providers-grid"></div>
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "pickup-point-providers-grid",
+                        UrlRead = new DataUrl("PickupPointProviders", "Shipping", null),
+                        UrlUpdate = new DataUrl("PickupPointProviderUpdate", "Shipping", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(PickupPointProviderModel.FriendlyName))
+                                {
+                                    Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.FriendlyName").Text,
+                                    Width = "250"
+                                },
+                                new ColumnProperty(nameof(PickupPointProviderModel.SystemName))
+                                {
+                                    Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.SystemName").Text,
+                                    Width = "250"
+                                },
+                                new ColumnProperty(nameof(PickupPointProviderModel.LogoUrl))
+                                {
+                                    Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.Logo").Text,
+                                    Width = "100",
+                                    Render = new RenderPicture()
+                                },
+                                new ColumnProperty(nameof(PickupPointProviderModel.DisplayOrder))
+                                {
+                                    Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.DisplayOrder").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Editable = true,
+                                    EditType = EditType.Number
+                                },
+                                new ColumnProperty(nameof(PickupPointProviderModel.IsActive))
+                                {
+                                    Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.IsActive").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean(),
+                                    Editable = true,
+                                    EditType = EditType.Checkbox
+                                },
+                                new ColumnProperty(nameof(PickupPointProviderModel.SystemName))
+                                {
+                                    Title = T("Admin.Configuration.Shipping.PickupPointProviders.Configure").Text,
+                                    Width = "150",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderCustom("renderColumnConfigure")
+                                },
+                                new ColumnProperty(nameof(PickupPointProviderModel.SystemName))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "200",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonsInlineEdit()
+                                }
+                            }
+                    })
 
                     <script>
-                        $(document).ready(function() {
-                            $("#pickup-point-providers-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("PickupPointProviders", "Shipping"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        },
-                                        update: {
-                                            url: "@Html.Raw(Url.Action("PickupPointProviderUpdate", "Shipping"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors",
-                                        model: {
-                                            id: "SystemName",
-                                            fields: {
-                                                FriendlyName: { editable: false, type: "string" },
-                                                SystemName: { editable: false, type: "string" },
-                                                LogoUrl: { editable: false, type: "string" },
-                                                DisplayOrder: { editable: true, type: "number" },
-                                                IsActive: { editable: true, type: "boolean" }
-                                            }
-                                        }
-                                    },
-                                    requestEnd: function(e) {
-                                        if (e.type == "update") {
-                                            this.read();
-                                        }
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [
-                                {
-                                    field: "FriendlyName",
-                                    title: "@T("Admin.Configuration.Shipping.PickupPointProviders.Fields.FriendlyName")",
-                                    width: 250
-                                }, {
-                                    field: "SystemName",
-                                    title: "@T("Admin.Configuration.Shipping.PickupPointProviders.Fields.SystemName")",
-                                    width: 250
-                                }, {
-                                    field: "LogoUrl",
-                                    title: "@T("Admin.Configuration.Shipping.PickupPointProviders.Fields.Logo")",
-                                    width: 100,
-                                    template: '<img src="#=LogoUrl#" />',
-                                    attributes: { style: "text-align:center" }
-                                }, {
-                                    field: "DisplayOrder",
-                                    title: "@T("Admin.Configuration.Shipping.PickupPointProviders.Fields.DisplayOrder")",
-                                    //integer format
-                                    format: "{0:0}",
-                                    width: 100
-                                }, {
-                                    field: "IsActive",
-                                    title: "@T("Admin.Configuration.Shipping.PickupPointProviders.Fields.IsActive")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(IsActive) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                }, {
-                                    field: "SystemName",
-                                    title: "@T("Admin.Configuration.Shipping.PickupPointProviders.Configure")",
-                                    width: 150,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn btn-default" href="#=ConfigurationUrl#"><i class="fa fa-cog"></i>@T("Admin.Configuration.Shipping.PickupPointProviders.Configure")</a>#} #'
-                                }, {
-                                    command: {
-                                        name: "edit",
-                                        text: {
-                                            edit: "@T("Admin.Common.Edit")",
-                                            update: "@T("Admin.Common.Update")",
-                                            cancel: "@T("Admin.Common.Cancel")"
-                                        }
-                                    },
-                                    title: "@T("Admin.Common.Edit")",
-                                    width: 150,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" }
-                                    }
-                                ]
-                            });
-                        });
+                        function renderColumnConfigure(data, type, row, meta) {
+                            if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
+                                return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.Configuration.Shipping.PickupPointProviders.Configure")</a>';
+                            } else {
+                                return '';
+                            }
+                        }
                     </script>
                 </div>
             </div>

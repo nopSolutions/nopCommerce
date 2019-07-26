@@ -29,10 +29,10 @@ namespace Nop.Services.Vendors
             IRepository<VendorAttribute> vendorAttributeRepository,
             IRepository<VendorAttributeValue> vendorAttributeValueRepository)
         {
-            this._cacheManager = cacheManager;
-            this._eventPublisher = eventPublisher;
-            this._vendorAttributeRepository = vendorAttributeRepository;
-            this._vendorAttributeValueRepository = vendorAttributeValueRepository;
+            _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _vendorAttributeRepository = vendorAttributeRepository;
+            _vendorAttributeValueRepository = vendorAttributeValueRepository;
         }
 
         #endregion
@@ -80,8 +80,8 @@ namespace Nop.Services.Vendors
 
             _vendorAttributeRepository.Insert(vendorAttribute);
 
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(vendorAttribute);
@@ -98,8 +98,8 @@ namespace Nop.Services.Vendors
 
             _vendorAttributeRepository.Update(vendorAttribute);
 
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(vendorAttribute);
@@ -116,8 +116,8 @@ namespace Nop.Services.Vendors
 
             _vendorAttributeRepository.Delete(vendorAttribute);
 
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(vendorAttribute);
@@ -169,8 +169,8 @@ namespace Nop.Services.Vendors
 
             _vendorAttributeValueRepository.Insert(vendorAttributeValue);
 
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(vendorAttributeValue);
@@ -187,8 +187,8 @@ namespace Nop.Services.Vendors
 
             _vendorAttributeValueRepository.Update(vendorAttributeValue);
 
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(vendorAttributeValue);
@@ -205,8 +205,8 @@ namespace Nop.Services.Vendors
 
             _vendorAttributeValueRepository.Delete(vendorAttributeValue);
 
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopVendorsServiceDefaults.VendorAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(vendorAttributeValue);

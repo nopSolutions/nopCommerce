@@ -1,29 +1,32 @@
 ﻿@model SpecificationAttributeModel
 
-@inject IEventPublisher eventPublisher
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+@{
+    const string hideInfoBlockAttributeName = "SpecificationAttributePage.HideInfoBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+
+    const string hideOptionsBlockAttributeName = "SpecificationAttributePage.HideOptionsBlock";
+    var hideOptionsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideOptionsBlockAttributeName, defaultValue: true);
+
+    const string hideUsedByProductsBlockAttributeName = "SpecificationAttributePage.HideUsedByProductsBlock";
+    var hideUsedByProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideUsedByProductsBlockAttributeName, defaultValue: true);
+}
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
 
 <div class="content">
     <div class="form-horizontal">
-        <nop-tabs id="specificationattribute-edit">
-            <nop-tab asp-name="tab-info" asp-default="true" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes.Info")">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
-            <nop-tab asp-name="tab-options" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes.Options")">@await Html.PartialAsync("_CreateOrUpdate.Options", Model)</nop-tab>
+        
+        <nop-panels id="specification-attribute-panels">
+            <nop-panel asp-name="specification-attribute-info" asp-icon="fa fa-info" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            <nop-panel asp-name="specification-attribute-options" asp-icon="fa fa-object-group" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes.Options")" asp-hide-block-attribute-name="@hideOptionsBlockAttributeName" asp-hide="@hideOptionsBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Options", Model)</nop-panel>
             @if (Model.Id > 0)
             {
-                <nop-tab asp-name="tab-used-by-products" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts")">@await Html.PartialAsync("_CreateOrUpdate.UsedByProducts", Model)</nop-tab>
+                <nop-panel asp-name="specification-attribute-usedbyproducts" asp-icon="fa fa-check-square-o" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes.UsedByProducts")" asp-hide-block-attribute-name="@hideUsedByProductsBlockAttributeName" asp-hide="@hideUsedByProductsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.UsedByProducts", Model)</nop-panel>
             }
-        </nop-tabs>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsBlock, additionalData = Model })
+        </nop-panels>
     </div>
 </div>
-
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "specificationattribute-edit");
-    eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}

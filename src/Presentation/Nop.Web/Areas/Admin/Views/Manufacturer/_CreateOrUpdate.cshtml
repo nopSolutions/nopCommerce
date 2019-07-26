@@ -1,6 +1,24 @@
 ﻿@model ManufacturerModel
 
-@inject IEventPublisher eventPublisher
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+
+@{
+	const string hideInfoBlockAttributeName = "ManufacturerPage.HideInfoBlock";
+	var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+
+	const string hideDisplayBlockAttributeName = "ManufacturerPage.HideDisplayBlock";
+	var hideDisplayBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDisplayBlockAttributeName, defaultValue: true);
+
+	const string hideMappingsBlockAttributeName = "ManufacturerPage.HideMappingsBlock";
+	var hideMappingsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideMappingsBlockAttributeName, defaultValue: true);
+
+	const string hideSeoBlockAttributeName = "ManufacturerPage.HideSEOBlock";
+	var hideSeoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSeoBlockAttributeName, defaultValue: true);
+
+	const string hideProductsBlockAttributeName = "ManufacturerPage.HideProductsBlock";
+	var hideProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductsBlockAttributeName, defaultValue: true);
+}
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
@@ -14,20 +32,15 @@
                 </div>
             </div>
         </div>
-        <nop-tabs id="manufacturer-edit">
-            <nop-tab asp-name="tab-info" asp-title="@T("Admin.Catalog.Manufacturers.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
-            <nop-tab asp-name="tab-seo" asp-title="@T("Admin.Common.SEO")">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-tab>
-            <nop-tab asp-name="tab-products" asp-title="@T("Admin.Catalog.Manufacturers.Products")">@await Html.PartialAsync("_CreateOrUpdate.Products", Model)</nop-tab>
-        </nop-tabs>
+
+        <nop-panels id="manufacturer-panels">
+            <nop-panel asp-name="manufacturer-info" asp-icon="fa fa-info" asp-title="@T("Admin.Catalog.Manufacturers.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            <nop-panel asp-name="manufacturer-display" asp-icon="fa fa-television" asp-title="@T("Admin.Catalog.Manufacturers.Display")" asp-hide-block-attribute-name="@hideDisplayBlockAttributeName" asp-hide="@hideDisplayBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Display", Model)</nop-panel>
+            <nop-panel asp-name="manufacturer-mappings" asp-icon="fa fa-bookmark" asp-title="@T("Admin.Catalog.Manufacturers.Mappings")" asp-hide-block-attribute-name="@hideMappingsBlockAttributeName" asp-hide="@hideMappingsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Mappings", Model)</nop-panel>
+            <nop-panel asp-name="manufacturer-seo" asp-icon="fa fa-search-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-panel>
+            <nop-panel asp-name="manufacturer-products" asp-icon="fa fa-th-list" asp-title="@T("Admin.Catalog.Manufacturers.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Products", Model)</nop-panel>
+                    
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerDetailsBlock, additionalData = Model })
+        </nop-panels>
     </div>
 </div>
-
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "manufacturer-edit");
-    eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}

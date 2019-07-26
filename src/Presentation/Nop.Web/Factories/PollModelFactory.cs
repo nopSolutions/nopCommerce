@@ -31,10 +31,10 @@ namespace Nop.Web.Factories
             IStoreContext storeContext,
             IWorkContext workContext)
         {
-            this._pollService = pollService;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._workContext = workContext;
+            _pollService = pollService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _workContext = workContext;
         }
 
         #endregion
@@ -85,7 +85,7 @@ namespace Nop.Web.Factories
             if (string.IsNullOrWhiteSpace(systemKeyword))
                 return null;
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.POLL_BY_SYSTEMNAME_MODEL_KEY, 
+            var cacheKey = string.Format(NopModelCacheDefaults.PollBySystemNameModelKey, 
                 systemKeyword, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
 
             var cachedModel = _cacheManager.Get(cacheKey, () =>
@@ -115,13 +115,13 @@ namespace Nop.Web.Factories
         /// Prepare the home page poll models
         /// </summary>
         /// <returns>List of the poll model</returns>
-        public virtual List<PollModel> PrepareHomePagePollModels()
+        public virtual List<PollModel> PrepareHomepagePollModels()
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_POLLS_MODEL_KEY, 
+            var cacheKey = string.Format(NopModelCacheDefaults.HomepagePollsModelKey, 
                 _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
 
             var cachedPolls = _cacheManager.Get(cacheKey, () =>
-                _pollService.GetPolls(_storeContext.CurrentStore.Id, _workContext.WorkingLanguage.Id, loadShownOnHomePageOnly: true)
+                _pollService.GetPolls(_storeContext.CurrentStore.Id, _workContext.WorkingLanguage.Id, loadShownOnHomepageOnly: true)
                     .Select(poll => PreparePollModel(poll, false)).ToList());
 
             //"AlreadyVoted" property of "PollModel" object depends on the current customer. Let's update it.

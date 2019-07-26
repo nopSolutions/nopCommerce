@@ -13,9 +13,9 @@ namespace Nop.Web.Areas.Admin.Models.Home
 
         public DashboardModel()
         {
-            this.PopularSearchTerms = new PopularSearchTermSearchModel();
-            this.BestsellersByAmount = new BestsellerBriefSearchModel();
-            this.BestsellersByQuantity = new BestsellerBriefSearchModel();
+            PopularSearchTerms = new PopularSearchTermSearchModel();
+            BestsellersByAmount = new BestsellerBriefSearchModel();
+            BestsellersByQuantity = new BestsellerBriefSearchModel();
         }
 
         #endregion

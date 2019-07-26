@@ -1,12 +1,15 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Nop.Core.Configuration;
@@ -24,20 +27,29 @@ namespace Nop.Core
         #region Fields 
 
         private readonly HostingConfig _hostingConfig;
+        private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IApplicationLifetime _applicationLifetime;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly INopFileProvider _fileProvider;
+        private readonly IUrlHelperFactory _urlHelperFactory;
 
         #endregion
 
         #region Ctor
 
         public WebHelper(HostingConfig hostingConfig,
+            IActionContextAccessor actionContextAccessor,
+            IApplicationLifetime applicationLifetime,
             IHttpContextAccessor httpContextAccessor,
-            INopFileProvider fileProvider)
+            INopFileProvider fileProvider,
+            IUrlHelperFactory urlHelperFactory)
         {
-            this._hostingConfig = hostingConfig;
-            this._httpContextAccessor = httpContextAccessor;
-            this._fileProvider = fileProvider;
+            _hostingConfig = hostingConfig;
+            _actionContextAccessor = actionContextAccessor;
+            _applicationLifetime = applicationLifetime;
+            _httpContextAccessor = httpContextAccessor;
+            _fileProvider = fileProvider;
+            _urlHelperFactory = urlHelperFactory;
         }
 
         #endregion
@@ -284,7 +296,7 @@ namespace Nop.Core
             //source: https://github.com/aspnet/StaticFiles/blob/dev/src/Microsoft.AspNetCore.StaticFiles/FileExtensionContentTypeProvider.cs
             //if it can return content type, then it's a static file
             var contentTypeProvider = new FileExtensionContentTypeProvider();
-            return contentTypeProvider.TryGetContentType(path, out string _);
+            return contentTypeProvider.TryGetContentType(path, out var _);
         }
 
         /// <summary>
@@ -302,17 +314,27 @@ namespace Nop.Core
             if (string.IsNullOrEmpty(key))
                 return url;
 
+            //prepare URI object
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+            var isLocalUrl = urlHelper.IsLocalUrl(url);
+            var uri = new Uri(isLocalUrl ? $"{GetStoreLocation().TrimEnd('/')}{url}" : url, UriKind.Absolute);
+
             //get current query parameters
-            var uri = new Uri(url);
             var queryParameters = QueryHelpers.ParseQuery(uri.Query);
 
             //and add passed one
-            queryParameters[key] = new StringValues(values);
+            queryParameters[key] = string.Join(",", values);
+
+            //add only first value
+            //two the same query parameters? theoretically it's not possible.
+            //but MVC has some ugly implementation for checkboxes and we can have two values
+            //find more info here: http://www.mindstorminteractive.com/topics/jquery-fix-asp-net-mvc-checkbox-truefalse-value/
+            //we do this validation just to ensure that the first one is not overridden
             var queryBuilder = new QueryBuilder(queryParameters
-                .ToDictionary(parameter => parameter.Key, parameter => parameter.Value.ToString()));
+                .ToDictionary(parameter => parameter.Key, parameter => parameter.Value.FirstOrDefault()?.ToString() ?? string.Empty));
 
             //create new URL with passed query parameters
-            url = $"{uri.GetLeftPart(UriPartial.Path)}{queryBuilder.ToQueryString()}{uri.Fragment}";
+            url = $"{(isLocalUrl ? uri.LocalPath : uri.GetLeftPart(UriPartial.Path))}{queryBuilder.ToQueryString()}{uri.Fragment}";
 
             return url;
         }
@@ -332,8 +354,12 @@ namespace Nop.Core
             if (string.IsNullOrEmpty(key))
                 return url;
 
+            //prepare URI object
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+            var isLocalUrl = urlHelper.IsLocalUrl(url);
+            var uri = new Uri(isLocalUrl ? $"{GetStoreLocation().TrimEnd('/')}{url}" : url, UriKind.Absolute);
+
             //get current query parameters
-            var uri = new Uri(url);
             var queryParameters = QueryHelpers.ParseQuery(uri.Query)
                 .SelectMany(parameter => parameter.Value, (parameter, queryValue) => new KeyValuePair<string, string>(parameter.Key, queryValue))
                 .ToList();
@@ -350,8 +376,10 @@ namespace Nop.Core
                 queryParameters.RemoveAll(parameter => parameter.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase));
             }
 
+            var queryBuilder = new QueryBuilder(queryParameters);
+
             //create new URL without passed query parameters
-            url = $"{uri.GetLeftPart(UriPartial.Path)}{new QueryBuilder(queryParameters).ToQueryString()}{uri.Fragment}";
+            url = $"{(isLocalUrl ? uri.LocalPath : uri.GetLeftPart(UriPartial.Path))}{queryBuilder.ToQueryString()}{uri.Fragment}";
 
             return url;
         }
@@ -380,8 +408,6 @@ namespace Nop.Core
         public virtual void RestartAppDomain(bool makeRedirect = false)
         {
             //the site will be restarted during the next request automatically
-            //_applicationLifetime.StopApplication();
-
             //"touch" web.config to force restart
             var success = TryWriteWebConfig();
             if (!success)
@@ -391,6 +417,9 @@ namespace Nop.Core
                     "- run the application in a full trust environment, or" + Environment.NewLine +
                     "- give the application write access to the 'web.config' file.");
             }
+
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+                _applicationLifetime.StopApplication();
         }
 
         /// <summary>
@@ -466,6 +495,22 @@ namespace Nop.Core
                 rawUrl = $"{request.PathBase}{request.Path}{request.QueryString}";
 
             return rawUrl;
+        }
+
+        /// <summary>
+        /// Gets whether the request is made with AJAX 
+        /// </summary>
+        /// <param name="request">HTTP request</param>
+        /// <returns>Result</returns>
+        public virtual bool IsAjaxRequest(HttpRequest request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            if (request.Headers == null)
+                return false;
+
+            return request.Headers["X-Requested-With"] == "XMLHttpRequest";
         }
 
         #endregion

@@ -33,11 +33,11 @@ namespace Nop.Services.Orders
             IRepository<RewardPointsHistory> rewardPointsHistoryRepository,
             RewardPointsSettings rewardPointsSettings)
         {
-            this._dateTimeHelper = dateTimeHelper;
-            this._eventPublisher = eventPublisher;
-            this._localizationService = localizationService;
-            this._rewardPointsHistoryRepository = rewardPointsHistoryRepository;
-            this._rewardPointsSettings = rewardPointsSettings;
+            _dateTimeHelper = dateTimeHelper;
+            _eventPublisher = eventPublisher;
+            _localizationService = localizationService;
+            _rewardPointsHistoryRepository = rewardPointsHistoryRepository;
+            _rewardPointsSettings = rewardPointsSettings;
         }
 
         #endregion

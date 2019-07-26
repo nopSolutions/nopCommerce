@@ -10,7 +10,7 @@ namespace Nop.Web.Components
 
         public NewsRssHeaderLinkViewComponent(NewsSettings newsSettings)
         {
-            this._newsSettings = newsSettings;
+            _newsSettings = newsSettings;
         }
 
         public IViewComponentResult Invoke(int currentCategoryId, int currentProductId)

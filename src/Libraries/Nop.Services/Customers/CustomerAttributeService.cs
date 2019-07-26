@@ -29,10 +29,10 @@ namespace Nop.Services.Customers
             IRepository<CustomerAttribute> customerAttributeRepository,
             IRepository<CustomerAttributeValue> customerAttributeValueRepository)
         {
-            this._cacheManager = cacheManager;
-            this._eventPublisher = eventPublisher;
-            this._customerAttributeRepository = customerAttributeRepository;
-            this._customerAttributeValueRepository = customerAttributeValueRepository;
+            _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _customerAttributeRepository = customerAttributeRepository;
+            _customerAttributeValueRepository = customerAttributeValueRepository;
         }
 
         #endregion
@@ -50,8 +50,8 @@ namespace Nop.Services.Customers
 
             _customerAttributeRepository.Delete(customerAttribute);
 
-            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCustomerServiceDefaults.CustomerAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCustomerServiceDefaults.CustomerAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(customerAttribute);
@@ -97,8 +97,8 @@ namespace Nop.Services.Customers
 
             _customerAttributeRepository.Insert(customerAttribute);
 
-            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCustomerServiceDefaults.CustomerAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCustomerServiceDefaults.CustomerAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(customerAttribute);
@@ -115,8 +115,8 @@ namespace Nop.Services.Customers
 
             _customerAttributeRepository.Update(customerAttribute);
 
-            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCustomerServiceDefaults.CustomerAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCustomerServiceDefaults.CustomerAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(customerAttribute);
@@ -133,8 +133,8 @@ namespace Nop.Services.Customers
 
             _customerAttributeValueRepository.Delete(customerAttributeValue);
 
-            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCustomerServiceDefaults.CustomerAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCustomerServiceDefaults.CustomerAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(customerAttributeValue);
@@ -184,8 +184,8 @@ namespace Nop.Services.Customers
 
             _customerAttributeValueRepository.Insert(customerAttributeValue);
 
-            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCustomerServiceDefaults.CustomerAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCustomerServiceDefaults.CustomerAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(customerAttributeValue);
@@ -202,8 +202,8 @@ namespace Nop.Services.Customers
 
             _customerAttributeValueRepository.Update(customerAttributeValue);
 
-            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCustomerServiceDefaults.CustomerAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCustomerServiceDefaults.CustomerAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCustomerServiceDefaults.CustomerAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(customerAttributeValue);

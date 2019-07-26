@@ -72,24 +72,24 @@ namespace Nop.Web.Areas.Admin.Controllers
             IUrlRecordService urlRecordService,
             IWorkContext workContext)
         {
-            this._aclService = aclService;
-            this._categoryModelFactory = categoryModelFactory;
-            this._categoryService = categoryService;
-            this._customerActivityService = customerActivityService;
-            this._customerService = customerService;
-            this._discountService = discountService;
-            this._exportManager = exportManager;
-            this._importManager = importManager;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._pictureService = pictureService;
-            this._productService = productService;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
-            this._urlRecordService = urlRecordService;
-            this._workContext = workContext;
+            _aclService = aclService;
+            _categoryModelFactory = categoryModelFactory;
+            _categoryService = categoryService;
+            _customerActivityService = customerActivityService;
+            _customerService = customerService;
+            _discountService = discountService;
+            _exportManager = exportManager;
+            _importManager = importManager;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _pictureService = pictureService;
+            _productService = productService;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -210,7 +210,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(CategorySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _categoryModelFactory.PrepareCategoryListModel(searchModel);
@@ -281,10 +281,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = category.Id });
             }
 
@@ -383,10 +380,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = category.Id });
             }
 
@@ -501,7 +495,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ProductList(CategoryProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a category with the specified id
             var category = _categoryService.GetCategoryById(searchModel.CategoryId)
@@ -558,7 +552,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ProductAddPopupList(AddProductToCategorySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _categoryModelFactory.PrepareAddProductToCategoryListModel(searchModel);

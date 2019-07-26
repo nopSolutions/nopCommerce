@@ -55,5 +55,11 @@ namespace Nop.Core.Http
         /// Gets a cookie name of the external authentication
         /// </summary>
         public static string ExternalAuthenticationCookie => ".ExternalAuthentication";
+
+        /// <summary>
+        /// Gets a cookie name of the Eu Cookie Law Warning
+        /// </summary>
+        public static string IgnoreEuCookieLawWarning => ".IgnoreEuCookieLawWarning";
+
     }
 }

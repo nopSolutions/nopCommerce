@@ -39,12 +39,12 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string CustomerAttributesPatternCacheKey => "Nop.customerattribute.";
+        public static string CustomerAttributesPrefixCacheKey => "Nop.customerattribute.";
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string CustomerAttributeValuesPatternCacheKey => "Nop.customerattributevalue.";
+        public static string CustomerAttributeValuesPrefixCacheKey => "Nop.customerattributevalue.";
 
         #endregion
 
@@ -69,7 +69,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string CustomerRolesPatternCacheKey => "Nop.customerrole.";
+        public static string CustomerRolesPrefixCacheKey => "Nop.customerrole.";
 
         #endregion
 
@@ -90,5 +90,10 @@
         /// Gets a max username length
         /// </summary>
         public static int CustomerUsernameLength => 100;
+
+        /// <summary>
+        /// Gets a default hash format for customer password
+        /// </summary>
+        public static string DefaultHashedPasswordFormat => "SHA512";
     }
 }

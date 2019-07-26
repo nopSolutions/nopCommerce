@@ -11,7 +11,7 @@ namespace Nop.Web.Components
 
         public ForumActiveDiscussionsSmallViewComponent(IForumModelFactory forumModelFactory)
         {
-            this._forumModelFactory = forumModelFactory;
+            _forumModelFactory = forumModelFactory;
         }
 
         public IViewComponentResult Invoke()

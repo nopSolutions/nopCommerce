@@ -116,39 +116,39 @@ namespace Nop.Web.Controllers
             OrderSettings orderSettings,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._captchaSettings = captchaSettings;
-            this._customerSettings = customerSettings;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._currencyService = currencyService;
-            this._customerActivityService = customerActivityService;
-            this._customerService = customerService;
-            this._discountService = discountService;
-            this._downloadService = downloadService;
-            this._genericAttributeService = genericAttributeService;
-            this._giftCardService = giftCardService;
-            this._localizationService = localizationService;
-            this._fileProvider = fileProvider;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._pictureService = pictureService;
-            this._priceCalculationService = priceCalculationService;
-            this._priceFormatter = priceFormatter;
-            this._productAttributeParser = productAttributeParser;
-            this._productAttributeService = productAttributeService;
-            this._productService = productService;
-            this._shoppingCartModelFactory = shoppingCartModelFactory;
-            this._shoppingCartService = shoppingCartService;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._taxService = taxService;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._mediaSettings = mediaSettings;
-            this._orderSettings = orderSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _captchaSettings = captchaSettings;
+            _customerSettings = customerSettings;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _checkoutAttributeService = checkoutAttributeService;
+            _currencyService = currencyService;
+            _customerActivityService = customerActivityService;
+            _customerService = customerService;
+            _discountService = discountService;
+            _downloadService = downloadService;
+            _genericAttributeService = genericAttributeService;
+            _giftCardService = giftCardService;
+            _localizationService = localizationService;
+            _fileProvider = fileProvider;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _pictureService = pictureService;
+            _priceCalculationService = priceCalculationService;
+            _priceFormatter = priceFormatter;
+            _productAttributeParser = productAttributeParser;
+            _productAttributeService = productAttributeService;
+            _productService = productService;
+            _shoppingCartModelFactory = shoppingCartModelFactory;
+            _shoppingCartService = shoppingCartService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _taxService = taxService;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _mediaSettings = mediaSettings;
+            _orderSettings = orderSettings;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
@@ -366,7 +366,7 @@ namespace Nop.Web.Controllers
             var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
             foreach (var attribute in productAttributes)
             {
-                var controlId = $"product_attribute_{attribute.Id}";
+                var controlId = $"{NopAttributePrefixDefaults.Product}{attribute.Id}";
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -382,7 +382,7 @@ namespace Nop.Web.Controllers
                                 {
                                     //get quantity entered by customer
                                     var quantity = 1;
-                                    var quantityStr = form[$"product_attribute_{attribute.Id}_{selectedAttributeId}_qty"];
+                                    var quantityStr = form[$"{NopAttributePrefixDefaults.Product}{attribute.Id}_{selectedAttributeId}_qty"];
                                     if (!StringValues.IsNullOrEmpty(quantityStr) &&
                                         (!int.TryParse(quantityStr, out quantity) || quantity < 1))
                                         errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
@@ -406,7 +406,7 @@ namespace Nop.Web.Controllers
                                     {
                                         //get quantity entered by customer
                                         var quantity = 1;
-                                        var quantityStr = form[$"product_attribute_{attribute.Id}_{item}_qty"];
+                                        var quantityStr = form[$"{NopAttributePrefixDefaults.Product}{attribute.Id}_{item}_qty"];
                                         if (!StringValues.IsNullOrEmpty(quantityStr) &&
                                             (!int.TryParse(quantityStr, out quantity) || quantity < 1))
                                             errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
@@ -429,7 +429,7 @@ namespace Nop.Web.Controllers
                             {
                                 //get quantity entered by customer
                                 var quantity = 1;
-                                var quantityStr = form[$"product_attribute_{attribute.Id}_{selectedAttributeId}_qty"];
+                                var quantityStr = form[$"{NopAttributePrefixDefaults.Product}{attribute.Id}_{selectedAttributeId}_qty"];
                                 if (!StringValues.IsNullOrEmpty(quantityStr) &&
                                     (!int.TryParse(quantityStr, out quantity) || quantity < 1))
                                     errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
@@ -808,7 +808,7 @@ namespace Nop.Web.Controllers
                             shoppingCarts.Sum(item => item.Quantity));
 
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                            ? this.RenderViewComponentToString("FlyoutShoppingCart")
+                            ? RenderViewComponentToString("FlyoutShoppingCart")
                             : "";
 
                         return Json(new
@@ -832,7 +832,7 @@ namespace Nop.Web.Controllers
             {
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("HomePage")
+                    redirect = Url.RouteUrl("Homepage")
                 });
             }
 
@@ -954,6 +954,27 @@ namespace Nop.Web.Controllers
             var mpn = _productService.FormatMpn(product, attributeXml);
             var gtin = _productService.FormatGtin(product, attributeXml);
 
+            // calculating weight adjustment
+            var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributeXml);
+            var totalWeight = product.BasepriceAmount;
+
+            foreach (var attributeValue in attributeValues)
+            {
+                switch (attributeValue.AttributeValueType)
+                {
+                    case AttributeValueType.Simple:
+                        //simple attribute
+                        totalWeight += attributeValue.WeightAdjustment;
+                        break;
+                    case AttributeValueType.AssociatedToProduct:
+                        //bundled product
+                        var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
+                        if (associatedProduct != null)
+                            totalWeight += associatedProduct.BasepriceAmount * attributeValue.Quantity;
+                        break;
+                }
+            }
+
             //price
             var price = "";
             //base price
@@ -971,7 +992,7 @@ namespace Nop.Web.Controllers
                 var finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out decimal _);
                 var finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
                 price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
-                basepricepangv = _priceFormatter.FormatBasePrice(product, finalPriceWithDiscountBase);
+                basepricepangv = _priceFormatter.FormatBasePrice(product, finalPriceWithDiscountBase, totalWeight);
             }
 
             //stock
@@ -1013,7 +1034,7 @@ namespace Nop.Web.Controllers
 
                 if (pictureId > 0)
                 {
-                    var productAttributePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_PICTURE_MODEL_KEY,
+                    var productAttributePictureCacheKey = string.Format(NopModelCacheDefaults.ProductAttributePictureModelKey,
                         pictureId, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                     var pictureModel = _cacheManager.Get(productAttributePictureCacheKey, () =>
                     {
@@ -1060,7 +1081,12 @@ namespace Nop.Web.Controllers
         public virtual IActionResult CheckoutAttributeChange(IFormCollection form, bool isEditable)
         {
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
-            
+
+            //performance optimization workaround (for Entity Framework)
+            //load all products at once (one SQL command)
+            //if not loaded right now, then anyway the code below will load each product separately (multiple SQL commands)
+            _productService.GetProductsByIds(cart.Select(sci => sci.ProductId).ToArray());
+
             //save selected attributes
             ParseAndSaveCheckoutAttributes(cart, form);
             var attributeXml = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
@@ -1084,8 +1110,8 @@ namespace Nop.Web.Controllers
             }
 
             //update blocks
-            var ordetotalssectionhtml = this.RenderViewComponentToString("OrderTotals", new { isEditable });
-            var selectedcheckoutattributesssectionhtml = this.RenderViewComponentToString("SelectedCheckoutAttributes");
+            var ordetotalssectionhtml = RenderViewComponentToString("OrderTotals", new { isEditable });
+            var selectedcheckoutattributesssectionhtml = RenderViewComponentToString("SelectedCheckoutAttributes");
 
             return Json(new
             {
@@ -1262,7 +1288,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Cart()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
             var model = new ShoppingCartModel();
@@ -1275,7 +1301,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult UpdateCart(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
 
@@ -1342,7 +1368,7 @@ namespace Nop.Web.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToRoute("HomePage");
+            return RedirectToRoute("Homepage");
         }
 
         [HttpPost, ActionName("Cart")]
@@ -1366,20 +1392,22 @@ namespace Nop.Web.Controllers
                 return View(model);
             }
 
-            //everything is OK
-            if (_workContext.CurrentCustomer.IsGuest())
+            var anonymousPermissed = _orderSettings.AnonymousCheckoutAllowed 
+                                     && _customerSettings.UserRegistrationType == UserRegistrationType.Disabled;
+
+            if (anonymousPermissed || !_workContext.CurrentCustomer.IsGuest())
+                return RedirectToRoute("Checkout");
+            
+            var downloadableProductsRequireRegistration =
+                _customerSettings.RequireRegistrationForDownloadableProducts && cart.Any(sci => sci.Product.IsDownload);
+
+            if (!_orderSettings.AnonymousCheckoutAllowed || downloadableProductsRequireRegistration)
             {
-                var downloadableProductsRequireRegistration =
-                    _customerSettings.RequireRegistrationForDownloadableProducts && cart.Any(sci => sci.Product.IsDownload);
-
-                if (!_orderSettings.AnonymousCheckoutAllowed
-                    || downloadableProductsRequireRegistration)
-                    return Challenge();
-
-                return RedirectToRoute("LoginCheckoutAsGuest", new { returnUrl = Url.RouteUrl("ShoppingCart") });
+                //verify user identity (it may be facebook login page, or google, or local)
+                return Challenge();
             }
 
-            return RedirectToRoute("Checkout");
+            return RedirectToRoute("LoginCheckoutAsGuest", new { returnUrl = Url.RouteUrl("ShoppingCart") });
         }
 
         [HttpPost, ActionName("Cart")]
@@ -1576,13 +1604,13 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Wishlist(Guid? customerGuid)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var customer = customerGuid.HasValue ?
                 _customerService.GetCustomerByGuid(customerGuid.Value)
                 : _workContext.CurrentCustomer;
             if (customer == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var cart = _shoppingCartService.GetShoppingCart(customer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id);
 
@@ -1596,7 +1624,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult UpdateWishlist(IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id);
 
@@ -1657,16 +1685,16 @@ namespace Nop.Web.Controllers
         public virtual IActionResult AddItemsToCartFromWishlist(Guid? customerGuid, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var pageCustomer = customerGuid.HasValue
                 ? _customerService.GetCustomerByGuid(customerGuid.Value)
                 : _workContext.CurrentCustomer;
             if (pageCustomer == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var pageCart = _shoppingCartService.GetShoppingCart(pageCustomer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id);
 
@@ -1726,12 +1754,12 @@ namespace Nop.Web.Controllers
         public virtual IActionResult EmailWishlist()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id);
 
             if (!cart.Any())
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = new WishlistEmailAFriendModel();
             model = _shoppingCartModelFactory.PrepareWishlistEmailAFriendModel(model, false);
@@ -1745,17 +1773,17 @@ namespace Nop.Web.Controllers
         public virtual IActionResult EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id);
 
             if (!cart.Any())
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnEmailWishlistToFriendPage && !captchaValid)
             {
-                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
             //check whether the current customer is guest and ia allowed to email wishlist

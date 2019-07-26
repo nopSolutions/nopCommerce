@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -12,7 +13,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.UI;
@@ -55,14 +55,14 @@ namespace Nop.Web.Framework.Controllers
 
             var viewComponentResult = ViewComponent(componentName, arguments);
 
-            var viewData = this.ViewData;
+            var viewData = ViewData;
             if (viewData == null)
             {
                 throw new NotImplementedException();
                 //TODO viewData = new ViewDataDictionary(_modelMetadataProvider, context.ModelState);
             }
 
-            var tempData = this.TempData;
+            var tempData = TempData;
             if (tempData == null)
             {
                 throw new NotImplementedException();
@@ -133,11 +133,11 @@ namespace Nop.Web.Framework.Controllers
             var razorViewEngine = EngineContext.Current.Resolve<IRazorViewEngine>();
 
             //create action context
-            var actionContext = new ActionContext(this.HttpContext, this.RouteData, this.ControllerContext.ActionDescriptor, this.ModelState);
+            var actionContext = new ActionContext(HttpContext, RouteData, ControllerContext.ActionDescriptor, ModelState);
 
             //set view name as action name in case if not passed
             if (string.IsNullOrEmpty(viewName))
-                viewName = this.ControllerContext.ActionDescriptor.ActionName;
+                viewName = ControllerContext.ActionDescriptor.ActionName;
 
             //set model
             ViewData.Model = model;
@@ -166,20 +166,30 @@ namespace Nop.Web.Framework.Controllers
         #region Notifications
 
         /// <summary>
-        /// Error's JSON data for kendo grid
+        /// Error's JSON data
         /// </summary>
-        /// <param name="errorMessage">Error message</param>
+        /// <param name="error">Error text</param>
         /// <returns>Error's JSON data</returns>
-        protected JsonResult ErrorForKendoGridJson(string errorMessage)
+        protected JsonResult ErrorJson(string error)
         {
-            var gridModel = new DataSourceResult
+            return Json(new
             {
-                Errors = errorMessage
-            };
-
-            return Json(gridModel);
+                error = error
+            });
         }
 
+        /// <summary>
+        /// Error's JSON data
+        /// </summary>
+        /// <param name="errors">Error messages</param>
+        /// <returns>Error's JSON data</returns>
+        protected JsonResult ErrorJson(object errors)
+        {
+            return Json(new
+            {
+                error = errors
+            });
+        }
         /// <summary>
         /// Display "Edit" (manage) link (in public store)
         /// </summary>
@@ -243,19 +253,124 @@ namespace Nop.Web.Framework.Controllers
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 
             //return Challenge();
-            return RedirectToAction("AccessDenied", "Security", new { pageUrl = webHelper.GetRawUrl(this.Request) });
+            return RedirectToAction("AccessDenied", "Security", new { pageUrl = webHelper.GetRawUrl(Request) });
         }
 
         /// <summary>
-        /// Access denied JSON data for kendo grid
+        /// Access denied JSON data for DataTables
         /// </summary>
         /// <returns>Access denied JSON data</returns>
-        protected JsonResult AccessDeniedKendoGridJson()
+        protected JsonResult AccessDeniedDataTablesJson()
         {
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            return ErrorForKendoGridJson(localizationService.GetResource("Admin.AccessDenied.Description"));
+            return ErrorJson(localizationService.GetResource("Admin.AccessDenied.Description"));
         }
-        
+
+        #endregion
+
+        #region Panels and tabs
+
+        /// <summary>
+        /// Save selected panel name
+        /// </summary>
+        /// <param name="panelName">Panel name to save</param>
+        /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request. Pass null to ignore</param>
+        public virtual void SaveSelectedPanelName(string tabName, bool persistForTheNextRequest = true)
+        {
+            //keep this method synchronized with
+            //"GetSelectedPanelName" method of \Nop.Web.Framework\Extensions\HtmlExtensions.cs
+            if (string.IsNullOrEmpty(tabName))
+                throw new ArgumentNullException(nameof(tabName));
+
+            const string dataKey = "nop.selected-panel-name";
+            if (persistForTheNextRequest)
+            {
+                TempData[dataKey] = tabName;
+            }
+            else
+            {
+                ViewData[dataKey] = tabName;
+            }
+        }
+
+        /// <summary>
+        /// Save selected tab name
+        /// </summary>
+        /// <param name="tabName">Tab name to save; empty to automatically detect it</param>
+        /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request. Pass null to ignore</param>
+        public virtual void SaveSelectedTabName(string tabName = "", bool persistForTheNextRequest = true)
+        {
+            //default root tab
+            SaveSelectedTabName(tabName, "selected-tab-name", null, persistForTheNextRequest);
+            //child tabs (usually used for localization)
+            //Form is available for POST only
+            if (!Request.Method.Equals(WebRequestMethods.Http.Post, StringComparison.InvariantCultureIgnoreCase))
+                return;
+
+            foreach (var key in Request.Form.Keys)
+                if (key.StartsWith("selected-tab-name-", StringComparison.InvariantCultureIgnoreCase))
+                    SaveSelectedTabName(null, key, key.Substring("selected-tab-name-".Length), persistForTheNextRequest);
+        }
+
+        /// <summary>
+        /// Save selected tab name
+        /// </summary>
+        /// <param name="tabName">Tab name to save; empty to automatically detect it</param>
+        /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request. Pass null to ignore</param>
+        /// <param name="formKey">Form key where selected tab name is stored</param>
+        /// <param name="dataKeyPrefix">A prefix for child tab to process</param>
+        protected virtual void SaveSelectedTabName(string tabName, string formKey, string dataKeyPrefix, bool persistForTheNextRequest)
+        {
+            //keep this method synchronized with
+            //"GetSelectedTabName" method of \Nop.Web.Framework\Extensions\HtmlExtensions.cs
+            if (string.IsNullOrEmpty(tabName))
+            {
+                tabName = Request.Form[formKey];
+            }
+
+            if (string.IsNullOrEmpty(tabName))
+                return;
+
+            var dataKey = "nop.selected-tab-name";
+            if (!string.IsNullOrEmpty(dataKeyPrefix))
+                dataKey += $"-{dataKeyPrefix}";
+
+            if (persistForTheNextRequest)
+            {
+                TempData[dataKey] = tabName;
+            }
+            else
+            {
+                ViewData[dataKey] = tabName;
+            }
+        }
+
+        #endregion
+
+        #region DataTables
+
+        /// <summary>
+        /// Creates an object that serializes the specified object to JSON
+        /// Used to serialize data for DataTables
+        /// </summary>
+        /// <typeparam name="T">Model type</typeparam>
+        /// <param name="model">The model to serialize.</param>
+        /// <returns>The created object that serializes the specified data to JSON format for the response.</returns>
+        public JsonResult Json<T>(BasePagedListModel<T> model) where T : BaseNopModel
+        {
+            return Json(new
+            {
+                draw = model.Draw,
+                recordsTotal = model.RecordsTotal,
+                recordsFiltered = model.RecordsFiltered,
+                data = model.Data,
+
+                //TODO: remove after moving to DataTables grids
+                Total = model.Total,
+                Data = model.Data
+            });
+        }
+
         #endregion
     }
 }

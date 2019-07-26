@@ -37,12 +37,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             INotificationService notificationService,
             IPermissionService permissionService)
         {
-            this._affiliateModelFactory = affiliateModelFactory;
-            this._affiliateService = affiliateService;
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
+            _affiliateModelFactory = affiliateModelFactory;
+            _affiliateService = affiliateService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -69,7 +69,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(AffiliateSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _affiliateModelFactory.PrepareAffiliateListModel(searchModel);
@@ -184,9 +184,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (!continueEditing)
                     return RedirectToAction("List");
 
-                //selected tab
-                SaveSelectedTabName();
-
                 return RedirectToAction("Edit", new { id = affiliate.Id });
             }
 
@@ -224,7 +221,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult AffiliatedOrderListGrid(AffiliatedOrderSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get an affiliate with the specified id
             var affiliate = _affiliateService.GetAffiliateById(searchModel.AffliateId)
@@ -240,7 +237,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult AffiliatedCustomerList(AffiliatedCustomerSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get an affiliate with the specified id
             var affiliate = _affiliateService.GetAffiliateById(searchModel.AffliateId)

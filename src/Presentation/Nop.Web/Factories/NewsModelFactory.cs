@@ -56,19 +56,19 @@ namespace Nop.Web.Factories
             MediaSettings mediaSettings,
             NewsSettings newsSettings)
         {
-            this._captchaSettings = captchaSettings;
-            this._customerSettings = customerSettings;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._genericAttributeService = genericAttributeService;
-            this._newsService = newsService;
-            this._pictureService = pictureService;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._urlRecordService = urlRecordService;
-            this._workContext = workContext;
-            this._mediaSettings = mediaSettings;
-            this._newsSettings = newsSettings;
+            _captchaSettings = captchaSettings;
+            _customerSettings = customerSettings;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _genericAttributeService = genericAttributeService;
+            _newsService = newsService;
+            _pictureService = pictureService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
+            _mediaSettings = mediaSettings;
+            _newsSettings = newsSettings;
         }
 
         #endregion
@@ -89,7 +89,7 @@ namespace Nop.Web.Factories
             {
                 Id = newsComment.Id,
                 CustomerId = newsComment.CustomerId,
-                CustomerName = _customerService.FormatUserName(newsComment.Customer),
+                CustomerName = _customerService.FormatUsername(newsComment.Customer),
                 CommentTitle = newsComment.CommentTitle,
                 CommentText = newsComment.CommentText,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc),
@@ -134,7 +134,7 @@ namespace Nop.Web.Factories
 
             //number of news comments
             var storeId = _newsSettings.ShowNewsCommentsPerStore ? _storeContext.CurrentStore.Id : 0;
-            var cacheKey = string.Format(ModelCacheEventConsumer.NEWS_COMMENTS_NUMBER_KEY, newsItem.Id, storeId, true);
+            var cacheKey = string.Format(NopModelCacheDefaults.NewsCommentsNumberKey, newsItem.Id, storeId, true);
             model.NumberOfComments = _cacheManager.Get(cacheKey, () => _newsService.GetNewsCommentsCount(newsItem, storeId, true));
 
             if (prepareComments)
@@ -157,13 +157,13 @@ namespace Nop.Web.Factories
         /// Prepare the home page news items model
         /// </summary>
         /// <returns>Home page news items model</returns>
-        public virtual HomePageNewsItemsModel PrepareHomePageNewsItemsModel()
+        public virtual HomepageNewsItemsModel PrepareHomepageNewsItemsModel()
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_NEWSMODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cacheKey = string.Format(NopModelCacheDefaults.HomepageNewsModelKey, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id, 0, _newsSettings.MainPageNewsCount);
-                return new HomePageNewsItemsModel
+                return new HomepageNewsItemsModel
                 {
                     WorkingLanguageId = _workContext.WorkingLanguage.Id,
                     NewsItems = newsItems
@@ -180,7 +180,7 @@ namespace Nop.Web.Factories
             //"Comments" property of "NewsItemModel" object depends on the current customer.
             //Furthermore, we just don't need it for home page news. So let's reset it.
             //But first we need to clone the cached model (the updated one should not be cached)
-            var model = (HomePageNewsItemsModel)cachedModel.Clone();
+            var model = (HomepageNewsItemsModel)cachedModel.Clone();
             foreach (var newsItemModel in model.NewsItems)
                 newsItemModel.Comments.Clear();
             return model;

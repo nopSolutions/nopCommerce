@@ -1,30 +1,31 @@
-﻿//------------------------------------------------------------------------------
-// Contributor(s): oskar.kjellin 
-//------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using Nop.Services.Localization;
-using Nop.Services.Logging;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using Nop.Plugin.Shipping.UPS.Services;
 using Nop.Services.Shipping.Tracking;
-using UpsTracking;
 
 namespace Nop.Plugin.Shipping.UPS
 {
+    /// <summary>
+    /// Represents the USP shipment tracker
+    /// </summary>
     public class UPSShipmentTracker : IShipmentTracker
     {
-        private readonly ILogger _logger;
-        private readonly ILocalizationService _localizationService;
-        private readonly UPSSettings _upsSettings;
+        #region Fields
 
-        public UPSShipmentTracker(ILogger logger, ILocalizationService localizationService, UPSSettings upsSettings)
+        private readonly UPSService _upsService;
+
+        #endregion
+
+        #region Ctor
+
+        public UPSShipmentTracker(UPSService upsService)
         {
-            this._logger = logger;
-            this._localizationService = localizationService;
-            this._upsSettings = upsSettings;
+            _upsService = upsService;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Gets if the current tracker can track the tracking number.
@@ -33,11 +34,14 @@ namespace Nop.Plugin.Shipping.UPS
         /// <returns>True if the tracker can track, otherwise false.</returns>
         public virtual bool IsMatch(string trackingNumber)
         {
-            if (string.IsNullOrWhiteSpace(trackingNumber))
+            if (string.IsNullOrEmpty(trackingNumber))
                 return false;
 
-            //Not sure if this is true for every shipment, but it is true for all of our shipments
-            return trackingNumber.ToUpperInvariant().StartsWith("1Z");
+            //details on https://www.ups.com/us/en/tracking/help/tracking/tnh.page
+            return Regex.IsMatch(trackingNumber, "^1Z[A-Z0-9]{16}$", RegexOptions.IgnoreCase) ||
+                Regex.IsMatch(trackingNumber, "^\\d{9}$", RegexOptions.IgnoreCase) ||
+                Regex.IsMatch(trackingNumber, "^T\\d{10}$", RegexOptions.IgnoreCase) ||
+                Regex.IsMatch(trackingNumber, "^\\d{12}$", RegexOptions.IgnoreCase);
         }
 
         /// <summary>
@@ -47,9 +51,7 @@ namespace Nop.Plugin.Shipping.UPS
         /// <returns>URL of a tracking page.</returns>
         public virtual string GetUrl(string trackingNumber)
         {
-            var url = "http://wwwapps.ups.com/WebTracking/track?trackNums={0}&track.x=Track";
-            url = string.Format(url, trackingNumber);
-            return url;
+            return $"https://www.ups.com/track?&tracknum={trackingNumber}";
         }
 
         /// <summary>
@@ -59,83 +61,16 @@ namespace Nop.Plugin.Shipping.UPS
         /// <returns>List of Shipment Events.</returns>
         public virtual IList<ShipmentStatusEvent> GetShipmentEvents(string trackingNumber)
         {
-            if (string.IsNullOrEmpty(trackingNumber))
-                return new List<ShipmentStatusEvent>();
-
             var result = new List<ShipmentStatusEvent>();
-            try
-            {
-                //use try-catch to ensure exception won't be thrown is web service is not available
 
-                var track = new TrackPortTypeClient();
-                var tr = new TrackRequest();
-                var upss = new UPSSecurity();
-                var upssSvcAccessToken = new UPSSecurityServiceAccessToken
-                {
-                    AccessLicenseNumber = _upsSettings.AccessKey
-                };
-                upss.ServiceAccessToken = upssSvcAccessToken;
-                var upssUsrNameToken = new UPSSecurityUsernameToken
-                {
-                    Username = _upsSettings.Username,
-                    Password = _upsSettings.Password
-                };
-                upss.UsernameToken = upssUsrNameToken;
-                var request = new RequestType();
-                string[] requestOption = { "15" };
-                request.RequestOption = requestOption;
-                tr.Request = request;
-                tr.InquiryNumber = trackingNumber;
-                System.Net.ServicePointManager.ServerCertificateValidationCallback += delegate { return true; };
-                var trackResponse = track.ProcessTrackAsync(upss, tr).Result.TrackResponse;
-                result.AddRange(trackResponse.Shipment.SelectMany(c => c.Package[0].Activity.Select(ToStatusEvent)).ToList());
-            }
-            catch (Exception exc)
-            {
-                _logger.Error($"Error while getting UPS shipment tracking info - {trackingNumber}", exc);
-            }
+            if (string.IsNullOrEmpty(trackingNumber))
+                return result;
+
+            result.AddRange(_upsService.GetShipmentEvents(trackingNumber));
+
             return result;
         }
 
-        private ShipmentStatusEvent ToStatusEvent(ActivityType activity)
-        {
-            var ev = new ShipmentStatusEvent();
-            switch (activity.Status.Type)
-            {
-                case "I":
-                    if (activity.Status.Code == "DP")
-                    {
-                        ev.EventName = _localizationService.GetResource("Plugins.Shipping.UPS.Tracker.Departed");
-                    }
-                    else if (activity.Status.Code == "EP")
-                    {
-                        ev.EventName = _localizationService.GetResource("Plugins.Shipping.UPS.Tracker.ExportScanned");
-                    }
-                    else if (activity.Status.Code == "OR")
-                    {
-                        ev.EventName = _localizationService.GetResource("Plugins.Shipping.UPS.Tracker.OriginScanned");
-                    }
-                    else
-                    {
-                        ev.EventName = _localizationService.GetResource("Plugins.Shipping.UPS.Tracker.Arrived");
-                    }
-                    break;
-                case "X":
-                    ev.EventName = _localizationService.GetResource("Plugins.Shipping.UPS.Tracker.NotDelivered");
-                    break;
-                case "M":
-                    ev.EventName = _localizationService.GetResource("Plugins.Shipping.UPS.Tracker.Booked");
-                    break;
-                case "D":
-                    ev.EventName = _localizationService.GetResource("Plugins.Shipping.UPS.Tracker.Delivered");
-                    break;
-            }
-            var dateString = string.Concat(activity.Date, " ", activity.Time);
-            ev.Date = DateTime.ParseExact(dateString, "yyyyMMdd HHmmss", CultureInfo.InvariantCulture);
-            ev.CountryCode = activity.ActivityLocation.Address.CountryCode;
-            ev.Location = activity.ActivityLocation.Address.City;
-            return ev;
-        }
+        #endregion
     }
-
 }

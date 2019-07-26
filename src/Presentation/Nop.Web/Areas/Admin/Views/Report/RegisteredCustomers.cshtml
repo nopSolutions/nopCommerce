@@ -1,0 +1,46 @@
+﻿@model CustomerReportsSearchModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Reports.Customers.RegisteredCustomers").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Registered customers");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Reports.Customers.RegisteredCustomers")
+    </h1>
+</div>
+
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "registered-customers-grid",
+                        UrlRead = new DataUrl("ReportRegisteredCustomersList", "Report", null),
+                        Length = Model.RegisteredCustomers.PageSize,
+                        LengthMenu = Model.RegisteredCustomers.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(RegisteredCustomersReportModel.Period))
+                            {
+                                Title = T("Admin.Reports.Customers.RegisteredCustomers.Fields.Period").Text
+                            },
+                            new ColumnProperty(nameof(RegisteredCustomersReportModel.Customers))
+                            {
+                                Title = T("Admin.Reports.Customers.RegisteredCustomers.Fields.Customers").Text,
+                                Width = "150"
+                            }
+                        }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

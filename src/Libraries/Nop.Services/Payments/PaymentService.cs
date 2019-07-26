@@ -1,18 +1,15 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
-using Nop.Services.Configuration;
 using Nop.Services.Orders;
-using Nop.Services.Plugins;
 
 namespace Nop.Services.Payments
 {
@@ -23,8 +20,7 @@ namespace Nop.Services.Payments
     {
         #region Fields
 
-        private readonly IPluginFinder _pluginFinder;
-        private readonly ISettingService _settingService;
+        private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
@@ -32,132 +28,18 @@ namespace Nop.Services.Payments
 
         #region Ctor
 
-        public PaymentService(IPluginFinder pluginFinder,
-            ISettingService settingService,
+        public PaymentService(IPaymentPluginManager paymentPluginManager,
             PaymentSettings paymentSettings,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._pluginFinder = pluginFinder;
-            this._settingService = settingService;
-            this._paymentSettings = paymentSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _paymentPluginManager = paymentPluginManager;
+            _paymentSettings = paymentSettings;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
 
         #region Methods
-
-        #region Payment methods
-
-        /// <summary>
-        /// Load active payment methods
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <param name="filterByCountryId">Load records allowed only in a specified country; pass 0 to load all records</param>
-        /// <returns>Payment methods</returns>
-        public virtual IList<IPaymentMethod> LoadActivePaymentMethods(Customer customer = null, int storeId = 0, int filterByCountryId = 0)
-        {
-            return LoadAllPaymentMethods(customer, storeId, filterByCountryId)
-                .Where(provider => _paymentSettings.ActivePaymentMethodSystemNames
-                    .Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase)).ToList();
-        }
-
-        /// <summary>
-        /// Load payment provider by system name
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        /// <returns>Found payment provider</returns>
-        public virtual IPaymentMethod LoadPaymentMethodBySystemName(string systemName)
-        {
-            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IPaymentMethod>(systemName);
-            return descriptor?.Instance<IPaymentMethod>();
-        }
-
-        /// <summary>
-        /// Load all payment providers
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <param name="filterByCountryId">Load records allowed only in a specified country; pass 0 to load all records</param>
-        /// <returns>Payment providers</returns>
-        public virtual IList<IPaymentMethod> LoadAllPaymentMethods(Customer customer = null, int storeId = 0, int filterByCountryId = 0)
-        {
-            var paymentMethods = _pluginFinder.GetPlugins<IPaymentMethod>(customer: customer, storeId: storeId).ToList();
-            if (filterByCountryId == 0)
-                return paymentMethods;
-
-            //filter by country
-            var paymentMetodsByCountry = new List<IPaymentMethod>();
-            foreach (var pm in paymentMethods)
-            {
-                var restictedCountryIds = GetRestictedCountryIds(pm);
-                if (!restictedCountryIds.Contains(filterByCountryId))
-                {
-                    paymentMetodsByCountry.Add(pm);
-                }
-            }
-
-            return paymentMetodsByCountry;
-        }
-
-        /// <summary>
-        /// Is payment method active?
-        /// </summary>
-        /// <param name="paymentMethod">Payment method</param>
-        /// <returns>Result</returns>
-        public virtual bool IsPaymentMethodActive(IPaymentMethod paymentMethod)
-        {
-            if (paymentMethod == null)
-                throw new ArgumentNullException(nameof(paymentMethod));
-
-            if (_paymentSettings.ActivePaymentMethodSystemNames == null)
-                return false;
-
-            foreach (var activeMethodSystemName in _paymentSettings.ActivePaymentMethodSystemNames)
-                if (paymentMethod.PluginDescriptor.SystemName.Equals(activeMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
-                    return true;
-
-            return false;
-        }
-
-        #endregion
-
-        #region Restrictions
-
-        /// <summary>
-        /// Gets a list of country identifiers in which a certain payment method is now allowed
-        /// </summary>
-        /// <param name="paymentMethod">Payment method</param>
-        /// <returns>A list of country identifiers</returns>
-        public virtual IList<int> GetRestictedCountryIds(IPaymentMethod paymentMethod)
-        {
-            if (paymentMethod == null)
-                throw new ArgumentNullException(nameof(paymentMethod));
-
-            var settingKey = $"PaymentMethodRestictions.{paymentMethod.PluginDescriptor.SystemName}";
-            var restictedCountryIds = _settingService.GetSettingByKey<List<int>>(settingKey) ?? new List<int>();
-            return restictedCountryIds;
-        }
-
-        /// <summary>
-        /// Saves a list of country identifiers in which a certain payment method is now allowed
-        /// </summary>
-        /// <param name="paymentMethod">Payment method</param>
-        /// <param name="countryIds">A list of country identifiers</param>
-        public virtual void SaveRestictedCountryIds(IPaymentMethod paymentMethod, List<int> countryIds)
-        {
-            if (paymentMethod == null)
-                throw new ArgumentNullException(nameof(paymentMethod));
-
-            //we should be sure that countryIds is of type List<int> (not IList<int>)
-            var settingKey = $"PaymentMethodRestictions.{paymentMethod.PluginDescriptor.SystemName}";
-            _settingService.SetSetting(settingKey, countryIds);
-        }
-
-        #endregion
-
-        #region Processing
 
         /// <summary>
         /// Process a payment
@@ -182,9 +64,8 @@ namespace Nop.Services.Payments
                 processPaymentRequest.CreditCardNumber = processPaymentRequest.CreditCardNumber.Replace("-", string.Empty);
             }
 
-            var paymentMethod = LoadPaymentMethodBySystemName(processPaymentRequest.PaymentMethodSystemName);
-            if (paymentMethod == null)
-                throw new NopException("Payment method couldn't be loaded");
+            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(processPaymentRequest.PaymentMethodSystemName)
+                ?? throw new NopException("Payment method couldn't be loaded");
 
             return paymentMethod.ProcessPayment(processPaymentRequest);
         }
@@ -199,9 +80,8 @@ namespace Nop.Services.Payments
             if (postProcessPaymentRequest.Order.PaymentStatus == PaymentStatus.Paid)
                 return;
 
-            var paymentMethod = LoadPaymentMethodBySystemName(postProcessPaymentRequest.Order.PaymentMethodSystemName);
-            if (paymentMethod == null)
-                throw new NopException("Payment method couldn't be loaded");
+            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(postProcessPaymentRequest.Order.PaymentMethodSystemName)
+                ?? throw new NopException("Payment method couldn't be loaded");
 
             paymentMethod.PostProcessPayment(postProcessPaymentRequest);
         }
@@ -219,7 +99,7 @@ namespace Nop.Services.Payments
             if (!_paymentSettings.AllowRePostingPayments)
                 return false;
 
-            var paymentMethod = LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
+            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(order.PaymentMethodSystemName);
             if (paymentMethod == null)
                 return false; //Payment method couldn't be loaded (for example, was uninstalled)
 
@@ -249,7 +129,7 @@ namespace Nop.Services.Payments
             if (string.IsNullOrEmpty(paymentMethodSystemName))
                 return decimal.Zero;
 
-            var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
+            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
                 return decimal.Zero;
 
@@ -257,7 +137,7 @@ namespace Nop.Services.Payments
             if (result < decimal.Zero)
                 result = decimal.Zero;
 
-            if (!_shoppingCartSettings.RoundPricesDuringCalculation) 
+            if (!_shoppingCartSettings.RoundPricesDuringCalculation)
                 return result;
 
             var priceCalculationService = EngineContext.Current.Resolve<IPriceCalculationService>();
@@ -273,7 +153,7 @@ namespace Nop.Services.Payments
         /// <returns>A value indicating whether capture is supported</returns>
         public virtual bool SupportCapture(string paymentMethodSystemName)
         {
-            var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
+            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
                 return false;
             return paymentMethod.SupportCapture;
@@ -286,9 +166,9 @@ namespace Nop.Services.Payments
         /// <returns>Capture payment result</returns>
         public virtual CapturePaymentResult Capture(CapturePaymentRequest capturePaymentRequest)
         {
-            var paymentMethod = LoadPaymentMethodBySystemName(capturePaymentRequest.Order.PaymentMethodSystemName);
-            if (paymentMethod == null)
-                throw new NopException("Payment method couldn't be loaded");
+            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(capturePaymentRequest.Order.PaymentMethodSystemName)
+                ?? throw new NopException("Payment method couldn't be loaded");
+
             return paymentMethod.Capture(capturePaymentRequest);
         }
 
@@ -299,7 +179,7 @@ namespace Nop.Services.Payments
         /// <returns>A value indicating whether partial refund is supported</returns>
         public virtual bool SupportPartiallyRefund(string paymentMethodSystemName)
         {
-            var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
+            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
                 return false;
             return paymentMethod.SupportPartiallyRefund;
@@ -312,7 +192,7 @@ namespace Nop.Services.Payments
         /// <returns>A value indicating whether refund is supported</returns>
         public virtual bool SupportRefund(string paymentMethodSystemName)
         {
-            var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
+            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
                 return false;
             return paymentMethod.SupportRefund;
@@ -325,9 +205,9 @@ namespace Nop.Services.Payments
         /// <returns>Result</returns>
         public virtual RefundPaymentResult Refund(RefundPaymentRequest refundPaymentRequest)
         {
-            var paymentMethod = LoadPaymentMethodBySystemName(refundPaymentRequest.Order.PaymentMethodSystemName);
-            if (paymentMethod == null)
-                throw new NopException("Payment method couldn't be loaded");
+            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(refundPaymentRequest.Order.PaymentMethodSystemName)
+                ?? throw new NopException("Payment method couldn't be loaded");
+
             return paymentMethod.Refund(refundPaymentRequest);
         }
 
@@ -338,7 +218,7 @@ namespace Nop.Services.Payments
         /// <returns>A value indicating whether void is supported</returns>
         public virtual bool SupportVoid(string paymentMethodSystemName)
         {
-            var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
+            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
                 return false;
             return paymentMethod.SupportVoid;
@@ -351,9 +231,9 @@ namespace Nop.Services.Payments
         /// <returns>Result</returns>
         public virtual VoidPaymentResult Void(VoidPaymentRequest voidPaymentRequest)
         {
-            var paymentMethod = LoadPaymentMethodBySystemName(voidPaymentRequest.Order.PaymentMethodSystemName);
-            if (paymentMethod == null)
-                throw new NopException("Payment method couldn't be loaded");
+            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(voidPaymentRequest.Order.PaymentMethodSystemName)
+                ?? throw new NopException("Payment method couldn't be loaded");
+
             return paymentMethod.Void(voidPaymentRequest);
         }
 
@@ -364,7 +244,7 @@ namespace Nop.Services.Payments
         /// <returns>A recurring payment type of payment method</returns>
         public virtual RecurringPaymentType GetRecurringPaymentType(string paymentMethodSystemName)
         {
-            var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
+            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
                 return RecurringPaymentType.NotSupported;
             return paymentMethod.RecurringPaymentType;
@@ -386,9 +266,9 @@ namespace Nop.Services.Payments
                 return result;
             }
 
-            var paymentMethod = LoadPaymentMethodBySystemName(processPaymentRequest.PaymentMethodSystemName);
-            if (paymentMethod == null)
-                throw new NopException("Payment method couldn't be loaded");
+            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(processPaymentRequest.PaymentMethodSystemName)
+                ?? throw new NopException("Payment method couldn't be loaded");
+
             return paymentMethod.ProcessRecurringPayment(processPaymentRequest);
         }
 
@@ -402,9 +282,9 @@ namespace Nop.Services.Payments
             if (cancelPaymentRequest.Order.OrderTotal == decimal.Zero)
                 return new CancelRecurringPaymentResult();
 
-            var paymentMethod = LoadPaymentMethodBySystemName(cancelPaymentRequest.Order.PaymentMethodSystemName);
-            if (paymentMethod == null)
-                throw new NopException("Payment method couldn't be loaded");
+            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(cancelPaymentRequest.Order.PaymentMethodSystemName)
+                ?? throw new NopException("Payment method couldn't be loaded");
+
             return paymentMethod.CancelRecurringPayment(cancelPaymentRequest);
         }
 
@@ -518,8 +398,6 @@ namespace Nop.Services.Payments
                 }
             }
         }
-
-        #endregion
 
         #endregion
     }

@@ -43,8 +43,8 @@ namespace Nop.Web.Framework.Mvc.Filters
             public SaveLastActivityFilter(ICustomerService customerService,
                 IWorkContext workContext)
             {
-                this._customerService = customerService;
-                this._workContext = workContext;
+                _customerService = customerService;
+                _workContext = workContext;
             }
 
             #endregion

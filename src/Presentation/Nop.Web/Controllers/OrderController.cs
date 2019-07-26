@@ -46,15 +46,15 @@ namespace Nop.Web.Controllers
             IWorkContext workContext,
             RewardPointsSettings rewardPointsSettings)
         {
-            this._orderModelFactory = orderModelFactory;
-            this._orderProcessingService = orderProcessingService;
-            this._orderService = orderService;
-            this._paymentService = paymentService;
-            this._pdfService = pdfService;
-            this._shipmentService = shipmentService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._rewardPointsSettings = rewardPointsSettings;
+            _orderModelFactory = orderModelFactory;
+            _orderProcessingService = orderProcessingService;
+            _orderService = orderService;
+            _paymentService = paymentService;
+            _pdfService = pdfService;
+            _shipmentService = shipmentService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _rewardPointsSettings = rewardPointsSettings;
         }
 
         #endregion

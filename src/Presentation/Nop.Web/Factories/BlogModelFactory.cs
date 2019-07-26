@@ -57,19 +57,19 @@ namespace Nop.Web.Factories
             IWorkContext workContext,
             MediaSettings mediaSettings)
         {
-            this._blogSettings = blogSettings;
-            this._captchaSettings = captchaSettings;
-            this._customerSettings = customerSettings;
-            this._blogService = blogService;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._genericAttributeService = genericAttributeService;
-            this._pictureService = pictureService;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._urlRecordService = urlRecordService;
-            this._workContext = workContext;
-            this._mediaSettings = mediaSettings;
+            _blogSettings = blogSettings;
+            _captchaSettings = captchaSettings;
+            _customerSettings = customerSettings;
+            _blogService = blogService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _genericAttributeService = genericAttributeService;
+            _pictureService = pictureService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
+            _mediaSettings = mediaSettings;
         }
 
         #endregion
@@ -90,7 +90,7 @@ namespace Nop.Web.Factories
             {
                 Id = blogComment.Id,
                 CustomerId = blogComment.CustomerId,
-                CustomerName = _customerService.FormatUserName(blogComment.Customer),
+                CustomerName = _customerService.FormatUsername(blogComment.Customer),
                 CommentText = blogComment.CommentText,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc),
                 AllowViewingProfiles = _customerSettings.AllowViewingProfiles && blogComment.Customer != null && !blogComment.Customer.IsGuest()
@@ -134,7 +134,7 @@ namespace Nop.Web.Factories
 
             //number of blog comments
             var storeId = _blogSettings.ShowBlogCommentsPerStore ? _storeContext.CurrentStore.Id : 0;
-            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_COMMENTS_NUMBER_KEY, blogPost.Id, storeId, true);
+            var cacheKey = string.Format(NopModelCacheDefaults.BlogCommentsNumberKey, blogPost.Id, storeId, true);
             model.NumberOfComments = _cacheManager.Get(cacheKey, () => _blogService.GetBlogCommentsCount(blogPost, storeId, true));
 
             if (prepareComments)
@@ -205,7 +205,7 @@ namespace Nop.Web.Factories
         /// <returns>Blog post tag list model</returns>
         public virtual BlogPostTagListModel PrepareBlogPostTagListModel()
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_TAGS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cacheKey = string.Format(NopModelCacheDefaults.BlogTagsModelKey, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 var model = new BlogPostTagListModel();
@@ -236,7 +236,7 @@ namespace Nop.Web.Factories
         /// <returns>List of blog post year model</returns>
         public virtual List<BlogPostYearModel> PrepareBlogPostYearModel()
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_MONTHS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cacheKey = string.Format(NopModelCacheDefaults.BlogMonthsModelKey, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 var model = new List<BlogPostYearModel>();

@@ -30,8 +30,8 @@ namespace Nop.Web.Infrastructure.Installation
         public InstallationLocalizationService(IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider)
         {
-            this._httpContextAccessor = httpContextAccessor;
-            this._fileProvider = fileProvider;
+            _httpContextAccessor = httpContextAccessor;
+            _fileProvider = fileProvider;
         }
 
         #endregion

@@ -47,7 +47,7 @@ namespace Nop.Services.Tax
 
             _taxCategoryRepository.Delete(taxCategory);
 
-            _cacheManager.RemoveByPattern(NopTaxDefaults.TaxCategoriesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopTaxDefaults.TaxCategoriesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(taxCategory);
@@ -94,7 +94,7 @@ namespace Nop.Services.Tax
 
             _taxCategoryRepository.Insert(taxCategory);
 
-            _cacheManager.RemoveByPattern(NopTaxDefaults.TaxCategoriesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopTaxDefaults.TaxCategoriesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(taxCategory);
@@ -111,7 +111,7 @@ namespace Nop.Services.Tax
 
             _taxCategoryRepository.Update(taxCategory);
 
-            _cacheManager.RemoveByPattern(NopTaxDefaults.TaxCategoriesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopTaxDefaults.TaxCategoriesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(taxCategory);

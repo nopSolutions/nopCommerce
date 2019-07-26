@@ -7,7 +7,7 @@ namespace Nop.Web.Models.Boards
     {
         public ForumGroupModel()
         {
-            this.Forums = new List<ForumRowModel>();
+            Forums = new List<ForumRowModel>();
         }
         public int Id { get; set; }
         public string Name { get; set; }

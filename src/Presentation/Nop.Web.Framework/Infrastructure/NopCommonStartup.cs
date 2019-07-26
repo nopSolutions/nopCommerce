@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using EasyCaching.Core;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
@@ -24,14 +25,17 @@ namespace Nop.Web.Framework.Infrastructure
             //add options feature
             services.AddOptions();
 
-            //add memory cache
-            services.AddMemoryCache();
+            //add Easy caching
+            services.AddEasyCaching();
 
             //add distributed memory cache
             services.AddDistributedMemoryCache();
 
             //add HTTP sesion state feature
             services.AddHttpSession();
+
+            //add default HTTP clients
+            services.AddNopHttpClients();
 
             //add anti-forgery
             services.AddAntiForgery();
@@ -65,16 +69,18 @@ namespace Nop.Web.Framework.Infrastructure
             application.UseSession();
 
             //use request localization
-            application.UseRequestLocalization();
+            application.UseNopRequestLocalization();
+
+            //set request culture
+            application.UseCulture();
+
+            //easy caching
+            application.UseEasyCaching();
         }
 
         /// <summary>
         /// Gets order of this startup configuration implementation
         /// </summary>
-        public int Order
-        {
-            //common services should be loaded after error handlers
-            get { return 100; }
-        }
+        public int Order => 100; //common services should be loaded after error handlers
     }
 }

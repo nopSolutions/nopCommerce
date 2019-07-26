@@ -31,7 +31,7 @@
         <div class="breadcrumb">
             <ul itemscope itemtype="http://schema.org/BreadcrumbList">
                 <li>
-                    <a href="@Url.RouteUrl("HomePage")" title="@T("Categories.Breadcrumb.Top")">@T("Categories.Breadcrumb.Top")</a>
+                    <a href="@Url.RouteUrl("Homepage")" title="@T("Categories.Breadcrumb.Top")">@T("Categories.Breadcrumb.Top")</a>
                     <span class="delimiter">@breadcrumbDelimiter</span>
                 </li>
                 @{ int position = 1; }
@@ -42,8 +42,8 @@
                         @if (isLastCategory)
                         {
                             <strong class="current-item" itemprop="name">@cat.Name</strong>
-                            <span itemprop="item" itemscope itemtype="http://schema.org/Thing">
-                                <link itemprop="url" href="@Url.RouteUrl("Category", new {SeName = cat.SeName})" />
+                            <span itemprop="item" itemscope itemtype="http://schema.org/Thing"
+                                  id="@Url.RouteUrl("Category", new {SeName = cat.SeName})">
                             </span>
                         }
                         else

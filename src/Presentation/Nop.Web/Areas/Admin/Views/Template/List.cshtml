@@ -9,33 +9,37 @@
     Html.SetActiveMenuItemSystemName("Templates");
 }
 
+@{
+    const string hideCategoryBlockAttributeName = "Templates.HideCategoryBlock";
+    var hideCategoryBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCategoryBlockAttributeName);
+
+    const string hideManufacturerBlockAttributeName = "Templates.HideManufacturerBlock";
+    var hideManufacturerBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideManufacturerBlockAttributeName);
+
+    const string hideProductBlockAttributeName = "Templates.HideProductBlock";
+    var hideProductBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductBlockAttributeName);
+
+    const string hideTopicBlockAttributeName = "Templates.HideTopicBlock";
+    var hideTopicBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideTopicBlockAttributeName);
+}
+
 <nop-antiforgery-token />
 
-<form asp-controller="Templates" asp-action="List" method="post">
-    <div class="content-header clearfix">
-        <h1 class="pull-left">
-            @T("Admin.System.Templates")
-        </h1>
-    </div>
-
-    <div class="content">
-        <div class="form-horizontal">
-            <nop-tabs id="templates-tabs">
-                <nop-tab asp-name="tab-templates-category" asp-title="@T("Admin.System.Templates.Category")" asp-default="true">@await Html.PartialAsync("_List.Category", Model.TemplatesCategory)</nop-tab>
-                <nop-tab asp-name="tab-templates-manufacturer" asp-title="@T("Admin.System.Templates.Manufacturer")">@await Html.PartialAsync("_List.Manufacturer", Model.TemplatesManufacturer)</nop-tab>
-                <nop-tab asp-name="tab-templates-product" asp-title="@T("Admin.System.Templates.Product")">@await Html.PartialAsync("_List.Product", Model.TemplatesProduct)</nop-tab>
-                <nop-tab asp-name="tab-templates-topic" asp-title="@T("Admin.System.Templates.Topic")">@await Html.PartialAsync("_List.Topic", Model.TemplatesTopic)</nop-tab>
-            </nop-tabs>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="content-header clearfix">
+            <h1 class="pull-left">
+                @T("Admin.System.Templates")
+            </h1>
         </div>
-    </div>
 
-    @{
-        //custom tabs
-        var eventMessage = new AdminTabStripCreated(this.Html, "templates-tabs");
-        eventPublisher.Publish(eventMessage);
-        foreach (var eventBlock in eventMessage.BlocksToRender)
-        {
-            @eventBlock
-        }
-    }
-</form>
+        <nop-panels id="templates-panels">
+            <nop-panel asp-name="templates-category" asp-icon="fa fa-sitemap" asp-title="@T("Admin.System.Templates.Category")" asp-hide-block-attribute-name="@hideCategoryBlockAttributeName" asp-hide="@hideCategoryBlock">@await Html.PartialAsync("_List.Category", Model)</nop-panel>
+            <nop-panel asp-name="templates-manufacturer" asp-icon="fa fa-industry" asp-title="@T("Admin.System.Templates.Manufacturer")" asp-hide-block-attribute-name="@hideManufacturerBlockAttributeName" asp-hide="@hideManufacturerBlock">@await Html.PartialAsync("_List.Manufacturer", Model)</nop-panel>
+            <nop-panel asp-name="templates-product" asp-icon="fa fa-cube" asp-title="@T("Admin.System.Templates.Product")" asp-hide-block-attribute-name="@hideProductBlockAttributeName" asp-hide="@hideProductBlock">@await Html.PartialAsync("_List.Product", Model)</nop-panel>
+            <nop-panel asp-name="templates-topic" asp-icon="fa fa-book" asp-title="@T("Admin.System.Templates.Topic")" asp-hide-block-attribute-name="@hideTopicBlockAttributeName" asp-hide="@hideTopicBlock">@await Html.PartialAsync("_List.Topic", Model)</nop-panel>
+                
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TemplatesDetailsBlock, additionalData = Model })
+        </nop-panels>
+    </div>
+</div>

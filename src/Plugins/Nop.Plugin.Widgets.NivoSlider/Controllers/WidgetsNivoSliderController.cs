@@ -30,12 +30,12 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
             ISettingService settingService,
             IStoreContext storeContext)
         {
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._pictureService = pictureService;
-            this._settingService = settingService;
-            this._storeContext = storeContext;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _pictureService = pictureService;
+            _settingService = settingService;
+            _storeContext = storeContext;
         }
 
         public IActionResult Configure()

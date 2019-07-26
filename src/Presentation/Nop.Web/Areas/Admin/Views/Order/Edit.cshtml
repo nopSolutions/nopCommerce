@@ -1,11 +1,24 @@
 @model OrderModel
-@inject IEventPublisher eventPublisher
 
 @{
     //page title
     ViewBag.Title = T("Admin.Orders.EditOrderDetails").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Orders");
+}
+
+@{
+    const string hideInfoBlockAttributeName = "OrderPage.HideInfoBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+
+    const string hideBillingAndShippingBlockAttributeName = "OrderPage.HideBillingAndShippingBlock";
+    var hideBillingAndShippingBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideBillingAndShippingBlockAttributeName);
+
+    const string hideProductsBlockAttributeName = "OrderPage.HideProductsBlock";
+    var hideProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductsBlockAttributeName);
+
+    const string hideNotesBlockAttributeName = "OrderPage.HideNotesBlock";
+    var hideNotesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideNotesBlockAttributeName);
 }
 
 <form asp-controller="Order" asp-action="Edit" method="post" id="order-form">
@@ -46,26 +59,20 @@
 
     <div class="content">
         <div class="form-horizontal">
-            <nop-tabs id="order-edit">
-                <nop-tab asp-name="tab-info" asp-title="@T("Admin.Orders.Info")" asp-default="true">@await Html.PartialAsync("_OrderDetails.Info", Model)</nop-tab>
-                <nop-tab asp-name="tab-billing-shipping-info" asp-title="@T("Admin.Orders.BillingShippingInfo")">@await Html.PartialAsync("_OrderDetails.BillingShipping", Model)</nop-tab>
-                <nop-tab asp-name="tab-products" asp-title="@T("Admin.Orders.Products")">@await Html.PartialAsync("_OrderDetails.Products", Model)</nop-tab>
+            
+            <nop-panels id="order-panels">
+                <nop-panel asp-name="order-info" asp-icon="fa fa-info" asp-title="@T("Admin.Orders.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_OrderDetails.Info", Model)</nop-panel>
+                <nop-panel asp-name="order-billing-shipping" asp-icon="fa fa-truck" asp-title="@T("Admin.Orders.BillingShippingInfo")" asp-hide-block-attribute-name="@hideBillingAndShippingBlockAttributeName" asp-hide="@hideBillingAndShippingBlock" asp-advanced="false">@await Html.PartialAsync("_OrderDetails.BillingShipping", Model)</nop-panel>
+                <nop-panel asp-name="order-products" asp-icon="fa fa-th-list" asp-title="@T("Admin.Orders.Products")" asp-hide-block-attribute-name="@hideProductsBlockAttributeName" asp-hide="@hideProductsBlock" asp-advanced="true">@await Html.PartialAsync("_OrderDetails.Products", Model)</nop-panel>
+                
                 @if (!Model.IsLoggedInAsVendor)
                 {
-                    <nop-tab asp-name="tab-order-notes" asp-title="@T("Admin.Orders.OrderNotes")">@await Html.PartialAsync("_OrderDetails.Notes", Model)</nop-tab>
+                    <nop-panel asp-name="order-notes" asp-icon="fa fa-sticky-note-o" asp-title="@T("Admin.Orders.OrderNotes")" asp-hide-block-attribute-name="@hideNotesBlockAttributeName" asp-hide="@hideNotesBlock" asp-advanced="true">@await Html.PartialAsync("_OrderDetails.Notes", Model)</nop-panel>
                 }
-            </nop-tabs>
+                
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderDetailsBlock, additionalData = Model })
+            </nop-panels>
         </div>
     </div>
-
-    @{
-        //custom tabs
-        var eventMessage = new AdminTabStripCreated(this.Html, "order-edit");
-        eventPublisher.Publish(eventMessage);
-        foreach (var eventBlock in eventMessage.BlocksToRender)
-        {
-            @eventBlock
-        }
-    }
 </form>
 <nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="order-delete" />

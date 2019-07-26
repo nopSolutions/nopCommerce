@@ -1,10 +1,10 @@
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 using Nop.Plugin.Payments.Square.Domain;
 
 namespace Nop.Plugin.Payments.Square
 {
     /// <summary>
-    /// Represents a Square payment settings
+    /// Represents plugin settings
     /// </summary>
     public class SquarePaymentSettings : ISettings
     {
@@ -52,5 +52,10 @@ namespace Nop.Plugin.Payments.Square
         /// Gets or sets a value indicating whether to "additional fee" is specified as percentage
         /// </summary>
         public bool AdditionalFeePercentage { get; set; }
+
+        /// <summary>
+        /// Gets or sets refresh token
+        /// </summary>
+        public string RefreshToken { get; set; }
     }
 }

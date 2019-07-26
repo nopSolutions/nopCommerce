@@ -74,6 +74,17 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Gets specification attributes that have options
+        /// </summary>
+        /// <returns>Specification attributes that have available options</returns>
+        public virtual IList<SpecificationAttribute> GetSpecificationAttributesWithOptions()
+        {
+            return GetSpecificationAttributes()
+                .Where(sa => sa.SpecificationAttributeOptions.Any())
+                .ToList();
+        }
+
+        /// <summary>
         /// Deletes a specification attribute
         /// </summary>
         /// <param name="specificationAttribute">The specification attribute</param>
@@ -84,7 +95,7 @@ namespace Nop.Services.Catalog
 
             _specificationAttributeRepository.Delete(specificationAttribute);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductSpecificationAttributePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductSpecificationAttributePrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(specificationAttribute);
@@ -101,7 +112,7 @@ namespace Nop.Services.Catalog
 
             _specificationAttributeRepository.Insert(specificationAttribute);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductSpecificationAttributePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductSpecificationAttributePrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(specificationAttribute);
@@ -118,7 +129,7 @@ namespace Nop.Services.Catalog
 
             _specificationAttributeRepository.Update(specificationAttribute);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductSpecificationAttributePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductSpecificationAttributePrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(specificationAttribute);
@@ -193,7 +204,7 @@ namespace Nop.Services.Catalog
 
             _specificationAttributeOptionRepository.Delete(specificationAttributeOption);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductSpecificationAttributePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductSpecificationAttributePrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(specificationAttributeOption);
@@ -210,7 +221,7 @@ namespace Nop.Services.Catalog
 
             _specificationAttributeOptionRepository.Insert(specificationAttributeOption);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductSpecificationAttributePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductSpecificationAttributePrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(specificationAttributeOption);
@@ -227,7 +238,7 @@ namespace Nop.Services.Catalog
 
             _specificationAttributeOptionRepository.Update(specificationAttributeOption);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductSpecificationAttributePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductSpecificationAttributePrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(specificationAttributeOption);
@@ -264,7 +275,7 @@ namespace Nop.Services.Catalog
 
             _productSpecificationAttributeRepository.Delete(productSpecificationAttribute);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductSpecificationAttributePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductSpecificationAttributePrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(productSpecificationAttribute);
@@ -328,7 +339,7 @@ namespace Nop.Services.Catalog
 
             _productSpecificationAttributeRepository.Insert(productSpecificationAttribute);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductSpecificationAttributePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductSpecificationAttributePrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(productSpecificationAttribute);
@@ -345,7 +356,7 @@ namespace Nop.Services.Catalog
 
             _productSpecificationAttributeRepository.Update(productSpecificationAttribute);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductSpecificationAttributePatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductSpecificationAttributePrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(productSpecificationAttribute);

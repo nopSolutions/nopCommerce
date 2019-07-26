@@ -6,10 +6,12 @@ using System.Text;
 using BundlerMinifier;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
 using Nop.Services.Seo;
@@ -23,14 +25,17 @@ namespace Nop.Web.Framework.UI
     {
         #region Fields
 
-        private static readonly object s_lock = new object();
+        private static readonly object _lock = new object();
 
-        private readonly SeoSettings _seoSettings;
-        private readonly IHostingEnvironment _hostingEnvironment;
-        private readonly IStaticCacheManager _cacheManager;
-        private readonly INopFileProvider _fileProvider;
-        private readonly IUrlRecordService _urlRecordService;
         private readonly BundleFileProcessor _processor;
+        private readonly CommonSettings _commonSettings;
+        private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly INopFileProvider _fileProvider;
+        private readonly IStaticCacheManager _cacheManager;
+        private readonly IUrlHelperFactory _urlHelperFactory;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly SeoSettings _seoSettings;
 
         private readonly List<string> _titleParts;
         private readonly List<string> _metaDescriptionParts;
@@ -41,46 +46,46 @@ namespace Nop.Web.Framework.UI
         private readonly List<string> _canonicalUrlParts;
         private readonly List<string> _headCustomParts;
         private readonly List<string> _pageCssClassParts;
-        private string _editPageUrl;
         private string _activeAdminMenuSystemName;
+        private string _editPageUrl;
 
         //in minutes
-        private const int RecheckBundledFilesPeriod = 120;
+        private const int RECHECK_BUNDLED_FILES_PERIOD = 120;
 
         #endregion
 
         #region Ctor
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="seoSettings">SEO settings</param>
-        /// <param name="hostingEnvironment">Hosting environment</param>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="fileProvider">File provider</param>
-        /// <param name="urlRecordService">Url record service</param>
-        public PageHeadBuilder(SeoSettings seoSettings,
+        
+        public PageHeadBuilder(
+            CommonSettings commonSettings,
+            IActionContextAccessor actionContextAccessor,
             IHostingEnvironment hostingEnvironment,
-            IStaticCacheManager cacheManager,
             INopFileProvider fileProvider,
-            IUrlRecordService urlRecordService)
+            IStaticCacheManager cacheManager,
+            IUrlHelperFactory urlHelperFactory,
+            IUrlRecordService urlRecordService,
+            SeoSettings seoSettings         
+            )
         {
-            this._seoSettings = seoSettings;
-            this._hostingEnvironment = hostingEnvironment;
-            this._cacheManager = cacheManager;
-            this._fileProvider = fileProvider;
-            this._urlRecordService = urlRecordService;
-            this._processor = new BundleFileProcessor();
+            _processor = new BundleFileProcessor();
+            _commonSettings = commonSettings;
+            _actionContextAccessor = actionContextAccessor;
+            _hostingEnvironment = hostingEnvironment;
+            _fileProvider = fileProvider;
+            _cacheManager = cacheManager;            
+            _urlHelperFactory = urlHelperFactory;
+            _urlRecordService = urlRecordService;
+            _seoSettings = seoSettings;
 
-            this._titleParts = new List<string>();
-            this._metaDescriptionParts = new List<string>();
-            this._metaKeywordParts = new List<string>();
-            this._scriptParts = new Dictionary<ResourceLocation, List<ScriptReferenceMeta>>();
-            this._inlineScriptParts = new Dictionary<ResourceLocation, List<string>>();
-            this._cssParts = new Dictionary<ResourceLocation, List<CssReferenceMeta>>();
-            this._canonicalUrlParts = new List<string>();
-            this._headCustomParts = new List<string>();
-            this._pageCssClassParts = new List<string>();
+            _titleParts = new List<string>();
+            _metaDescriptionParts = new List<string>();
+            _metaKeywordParts = new List<string>();
+            _scriptParts = new Dictionary<ResourceLocation, List<ScriptReferenceMeta>>();
+            _inlineScriptParts = new Dictionary<ResourceLocation, List<string>>();
+            _cssParts = new Dictionary<ResourceLocation, List<CssReferenceMeta>>();
+            _canonicalUrlParts = new List<string>();
+            _headCustomParts = new List<string>();
+            _pageCssClassParts = new List<string>();
         }
 
         #endregion
@@ -311,11 +316,10 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Generate all script parts
         /// </summary>
-        /// <param name="urlHelper">URL Helper</param>
         /// <param name="location">A location of the script element</param>
         /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
         /// <returns>Generated string</returns>
-        public virtual string GenerateScripts(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
+        public virtual string GenerateScripts(ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_scriptParts.ContainsKey(location) || _scriptParts[location] == null)
                 return "";
@@ -323,12 +327,14 @@ namespace Nop.Web.Framework.UI
             if (!_scriptParts.Any())
                 return "";
 
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+
             var debugModel = _hostingEnvironment.IsDevelopment();
 
             if (!bundleFiles.HasValue)
             {
                 //use setting if no value is specified
-                bundleFiles = _seoSettings.EnableJsBundling;
+                bundleFiles = _commonSettings.EnableJsBundling;
             }
 
             if (bundleFiles.Value)
@@ -363,29 +369,34 @@ namespace Nop.Web.Framework.UI
 
                         bundle.InputFiles.Add(src);
                     }
+
                     //output file
                     var outputFileName = GetBundleFileName(partsToBundle.Select(x => debugModel ? x.DebugSrc : x.Src).ToArray());
                     bundle.OutputFileName = "wwwroot/bundles/" + outputFileName + ".js";
                     //save
                     var configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
                     bundle.FileName = configFilePath;
-                    lock (s_lock)
+
+                    //performance optimization. do not bundle and minify for each HTTP request
+                    //we periodically re-check already bundles file
+                    //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
+                    var cacheKey = $"Nop.minification.shouldrebuild.js-{outputFileName}";
+                    var shouldRebuild = _cacheManager.Get(cacheKey, () => true, RECHECK_BUNDLED_FILES_PERIOD);
+
+                    if (shouldRebuild)
                     {
-                        //performance optimization. do not bundle and minify for each HTTP request
-                        //we periodically re-check already bundles file
-                        //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
-                        var cacheKey = $"Nop.minification.shouldrebuild.js-{outputFileName}";
-                        var shouldRebuild = _cacheManager.Get(cacheKey, () => true, RecheckBundledFilesPeriod);
-                        if (shouldRebuild)
+                        lock (_lock)
                         {
                             //store json file to see a generated config file (for debugging purposes)
                             //BundleHandler.AddBundle(configFilePath, bundle);
 
                             //process
-                            _processor.Process(configFilePath, new List<Bundle> { bundle });
-                            _cacheManager.Set(cacheKey, false, RecheckBundledFilesPeriod);
+                            _processor.Process(configFilePath, new List<Bundle> {bundle});
                         }
+
+                        _cacheManager.Set(cacheKey, false, RECHECK_BUNDLED_FILES_PERIOD);
                     }
+
                     //render
                     result.AppendFormat("<script src=\"{0}\"></script>", urlHelper.Content("~/bundles/" + outputFileName + ".min.js"));
                     result.Append(Environment.NewLine);
@@ -398,6 +409,7 @@ namespace Nop.Web.Framework.UI
                     result.AppendFormat("<script {1}src=\"{0}\"></script>", urlHelper.Content(src), item.IsAsync ? "async " : "");
                     result.Append(Environment.NewLine);
                 }
+
                 return result.ToString();
             }
             else
@@ -447,10 +459,9 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Generate all inline script parts
         /// </summary>
-        /// <param name="urlHelper">URL Helper</param>
         /// <param name="location">A location of the script element</param>
         /// <returns>Generated string</returns>
-        public virtual string GenerateInlineScripts(IUrlHelper urlHelper, ResourceLocation location)
+        public virtual string GenerateInlineScripts(ResourceLocation location)
         {
             if (!_inlineScriptParts.ContainsKey(location) || _inlineScriptParts[location] == null)
                 return "";
@@ -520,11 +531,10 @@ namespace Nop.Web.Framework.UI
         /// <summary>
         /// Generate all CSS parts
         /// </summary>
-        /// <param name="urlHelper">URL Helper</param>
         /// <param name="location">A location of the script element</param>
         /// <param name="bundleFiles">A value indicating whether to bundle script elements</param>
         /// <returns>Generated string</returns>
-        public virtual string GenerateCssFiles(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
+        public virtual string GenerateCssFiles(ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_cssParts.ContainsKey(location) || _cssParts[location] == null)
                 return "";
@@ -532,13 +542,14 @@ namespace Nop.Web.Framework.UI
             if (!_cssParts.Any())
                 return "";
 
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
             var debugModel = _hostingEnvironment.IsDevelopment();
 
             if (!bundleFiles.HasValue)
             {
                 //use setting if no value is specified
-                bundleFiles = _seoSettings.EnableCssBundling;
+                bundleFiles = _commonSettings.EnableCssBundling;
             }
 
             //CSS bundling is not allowed in virtual directories
@@ -590,22 +601,25 @@ namespace Nop.Web.Framework.UI
                     //save
                     var configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
                     bundle.FileName = configFilePath;
-                    lock (s_lock)
+
+                    //performance optimization. do not bundle and minify for each HTTP request
+                    //we periodically re-check already bundles file
+                    //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
+                    var cacheKey = $"Nop.minification.shouldrebuild.css-{outputFileName}";
+                    var shouldRebuild = _cacheManager.Get(cacheKey, () => true, RECHECK_BUNDLED_FILES_PERIOD);
+
+                    if (shouldRebuild)
                     {
-                        //performance optimization. do not bundle and minify for each HTTP request
-                        //we periodically re-check already bundles file
-                        //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
-                        var cacheKey = $"Nop.minification.shouldrebuild.css-{outputFileName}";
-                        var shouldRebuild = _cacheManager.Get(cacheKey, () => true, RecheckBundledFilesPeriod);
-                        if (shouldRebuild)
+                        lock (_lock)
                         {
                             //store json file to see a generated config file (for debugging purposes)
                             //BundleHandler.AddBundle(configFilePath, bundle);
 
                             //process
-                            _processor.Process(configFilePath, new List<Bundle> { bundle });
-                            _cacheManager.Set(cacheKey, false, RecheckBundledFilesPeriod);
+                            _processor.Process(configFilePath, new List<Bundle> {bundle});
                         }
+
+                        _cacheManager.Set(cacheKey, false, RECHECK_BUNDLED_FILES_PERIOD);
                     }
 
                     //render
@@ -820,7 +834,7 @@ namespace Nop.Web.Framework.UI
             {
                 if (item == null)
                     return false;
-                return this.Src.Equals(item.Src) && this.DebugSrc.Equals(item.DebugSrc);
+                return Src.Equals(item.Src) && DebugSrc.Equals(item.DebugSrc);
             }
             /// <summary>
             /// Get hash code
@@ -858,7 +872,7 @@ namespace Nop.Web.Framework.UI
             {
                 if (item == null)
                     return false;
-                return this.Src.Equals(item.Src) && this.DebugSrc.Equals(item.DebugSrc);
+                return Src.Equals(item.Src) && DebugSrc.Equals(item.DebugSrc);
             }
             /// <summary>
             /// Get hash code

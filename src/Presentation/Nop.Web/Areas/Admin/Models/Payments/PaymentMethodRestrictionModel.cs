@@ -15,7 +15,7 @@ namespace Nop.Web.Areas.Admin.Models.Payments
         {
             AvailablePaymentMethods = new List<PaymentMethodModel>();
             AvailableCountries = new List<CountryModel>();
-            Resticted = new Dictionary<string, IDictionary<int, bool>>();
+            Restricted = new Dictionary<string, IDictionary<int, bool>>();
         }
 
         #endregion
@@ -27,7 +27,7 @@ namespace Nop.Web.Areas.Admin.Models.Payments
         public IList<CountryModel> AvailableCountries { get; set; }
 
         //[payment method system name] / [customer role id] / [restricted]
-        public IDictionary<string, IDictionary<int, bool>> Resticted { get; set; }
+        public IDictionary<string, IDictionary<int, bool>> Restricted { get; set; }
 
         #endregion
     }

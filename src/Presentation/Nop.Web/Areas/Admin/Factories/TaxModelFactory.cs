@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Domain.Tax;
+using Nop.Services.Localization;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tax;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -15,21 +17,21 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly ILocalizationService _localizationService;
         private readonly ITaxCategoryService _taxCategoryService;
-        private readonly ITaxService _taxService;
-        private readonly TaxSettings _taxSettings;
+        private readonly ITaxPluginManager _taxPluginManager;
 
         #endregion
 
         #region Ctor
 
-        public TaxModelFactory(ITaxCategoryService taxCategoryService,
-            ITaxService taxService,
-            TaxSettings taxSettings)
+        public TaxModelFactory(ILocalizationService localizationService, 
+            ITaxCategoryService taxCategoryService,
+            ITaxPluginManager taxPluginManager)
         {
-            this._taxCategoryService = taxCategoryService;
-            this._taxService = taxService;
-            this._taxSettings = taxSettings;
+            _localizationService = localizationService;
+            _taxCategoryService = taxCategoryService;
+            _taxPluginManager = taxPluginManager;
         }
 
         #endregion
@@ -80,26 +82,23 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get tax providers
-            var taxProviders = _taxService.LoadAllTaxProviders();
+            var taxProviders = _taxPluginManager.LoadAllPlugins().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new TaxProviderListModel
+            var model = new TaxProviderListModel().PrepareToGrid(searchModel, taxProviders, () =>
             {
-                Data = taxProviders.PaginationByRequestModel(searchModel).Select(provider =>
+                return taxProviders.Select(provider =>
                 {
                     //fill in model values from the entity
                     var taxProviderModel = provider.ToPluginModel<TaxProviderModel>();
 
                     //fill in additional values (not existing in the entity)
                     taxProviderModel.ConfigurationUrl = provider.GetConfigurationPageUrl();
-                    taxProviderModel.IsPrimaryTaxProvider = taxProviderModel.SystemName
-                        .Equals(_taxSettings.ActiveTaxProviderSystemName, StringComparison.InvariantCultureIgnoreCase);
+                    taxProviderModel.IsPrimaryTaxProvider = _taxPluginManager.IsPluginActive(provider);
 
                     return taxProviderModel;
-                }),
-                Total = taxProviders.Count
-            };
-
+                });
+            });
             return model;
         }
 
@@ -130,15 +129,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get tax categories
-            var taxCategories = _taxCategoryService.GetAllTaxCategories();
+            var taxCategories = _taxCategoryService.GetAllTaxCategories().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new TaxCategoryListModel
+            var model = new TaxCategoryListModel().PrepareToGrid(searchModel, taxCategories, () =>
             {
                 //fill in model values from the entity
-                Data = taxCategories.PaginationByRequestModel(searchModel).Select(taxCategory => taxCategory.ToModel<TaxCategoryModel>()),
-                Total = taxCategories.Count
-            };
+                return taxCategories.Select(taxCategory => taxCategory.ToModel<TaxCategoryModel>());
+            });
 
             return model;
         }

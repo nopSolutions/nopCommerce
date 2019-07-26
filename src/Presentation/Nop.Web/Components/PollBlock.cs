@@ -10,7 +10,7 @@ namespace Nop.Web.Components
 
         public PollBlockViewComponent(IPollModelFactory pollModelFactory)
         {
-            this._pollModelFactory = pollModelFactory;
+            _pollModelFactory = pollModelFactory;
         }
 
         public IViewComponentResult Invoke(string systemKeyword)

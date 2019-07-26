@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Validators.Catalog;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -11,7 +9,6 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// <summary>
     /// Represents a category model
     /// </summary>
-    [Validator(typeof(CategoryValidator))]
     public partial class CategoryModel : BaseNopEntityModel, IAclSupportedModel, IDiscountSupportedModel,
         ILocalizedModel<CategoryLocalizedModel>, IStoreMappingSupportedModel
     {
@@ -84,8 +81,8 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.PriceRanges")]
         public string PriceRanges { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.ShowOnHomePage")]
-        public bool ShowOnHomePage { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.ShowOnHomepage")]
+        public bool ShowOnHomepage { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.IncludeInTopMenu")]
         public bool IncludeInTopMenu { get; set; }

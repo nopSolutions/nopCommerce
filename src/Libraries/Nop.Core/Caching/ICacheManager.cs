@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Nop.Core.Caching
 {
@@ -39,10 +39,10 @@ namespace Nop.Core.Caching
         void Remove(string key);
 
         /// <summary>
-        /// Removes items by key pattern
+        /// Removes items by key prefix
         /// </summary>
-        /// <param name="pattern">String key pattern</param>
-        void RemoveByPattern(string pattern);
+        /// <param name="prefix">String key prefix</param>
+        void RemoveByPrefix(string prefix);
 
         /// <summary>
         /// Clear all cache data

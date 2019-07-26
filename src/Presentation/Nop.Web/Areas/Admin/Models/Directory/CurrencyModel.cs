@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Validators.Directory;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -11,7 +9,6 @@ namespace Nop.Web.Areas.Admin.Models.Directory
     /// <summary>
     /// Represents a currency model
     /// </summary>
-    [Validator(typeof(CurrencyValidator))]
     public partial class CurrencyModel : BaseNopEntityModel, ILocalizedModel<CurrencyLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor

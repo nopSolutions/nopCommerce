@@ -13,8 +13,7 @@ namespace Nop.Web.Framework.Models
         public BaseSearchModel()
         {
             //set the default values
-            this.Page = 1;
-            this.PageSize = 10;
+            Length = 10;
         }
 
         #endregion
@@ -22,19 +21,34 @@ namespace Nop.Web.Framework.Models
         #region Properties
 
         /// <summary>
-        /// Gets or sets a page number
+        /// Gets a page number
         /// </summary>
-        public int Page { get; set; }
+        public int Page => (Start / Length) + 1;
 
         /// <summary>
-        /// Gets or sets a page size
+        /// Gets a page size
         /// </summary>
-        public int PageSize { get; set; }
+        public int PageSize => Length;
 
         /// <summary>
         /// Gets or sets a comma-separated list of available page sizes
         /// </summary>
         public string AvailablePageSizes { get; set; }
+
+        /// <summary>
+        /// Gets or sets draw. Draw counter. This is used by DataTables to ensure that the Ajax returns from server-side processing requests are drawn in sequence by DataTables (Ajax requests are asynchronous and thus can return out of sequence).
+        /// </summary>
+        public string Draw { get; set; }
+
+        /// <summary>
+        /// Gets or sets skiping number of rows count. Paging first record indicator.
+        /// </summary>
+        public int Start { get; set; }
+
+        /// <summary>
+        /// Gets or sets paging length. Number of records that the table can display in the current draw. 
+        /// </summary>
+        public int Length { get; set; }
 
         #endregion
 
@@ -46,10 +60,7 @@ namespace Nop.Web.Framework.Models
         public void SetGridPageSize()
         {
             var adminAreaSettings = EngineContext.Current.Resolve<AdminAreaSettings>();
-
-            this.Page = 1;
-            this.PageSize = adminAreaSettings.DefaultGridPageSize;
-            this.AvailablePageSizes = adminAreaSettings.GridPageSizes;
+            SetGridPageSize(adminAreaSettings.DefaultGridPageSize, adminAreaSettings.GridPageSizes);
         }
 
         /// <summary>
@@ -58,10 +69,19 @@ namespace Nop.Web.Framework.Models
         public void SetPopupGridPageSize()
         {
             var adminAreaSettings = EngineContext.Current.Resolve<AdminAreaSettings>();
+            SetGridPageSize(adminAreaSettings.PopupGridPageSize, adminAreaSettings.GridPageSizes);
+        }
 
-            this.Page = 1;
-            this.PageSize = adminAreaSettings.PopupGridPageSize;
-            this.AvailablePageSizes = adminAreaSettings.GridPageSizes;
+        /// <summary>
+        /// Set grid page parameters
+        /// </summary>
+        /// <param name="pageSize">Page size; pass null to use default value</param>
+        /// <param name="availablePageSizes">Available page sizes; pass null to use default value</param>
+        public void SetGridPageSize(int pageSize, string availablePageSizes = null)
+        {
+            Start = 0;
+            Length = pageSize;
+            AvailablePageSizes = availablePageSizes;
         }
 
         #endregion

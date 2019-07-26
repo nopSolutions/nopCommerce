@@ -1,8 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
@@ -36,6 +43,7 @@ namespace Nop.Web.Factories
         private readonly CatalogSettings _catalogSettings;
         private readonly DisplayDefaultMenuItemSettings _displayDefaultMenuItemSettings;
         private readonly ForumSettings _forumSettings;
+        private readonly IActionContextAccessor _actionContextAccessor;
         private readonly ICategoryService _categoryService;
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly ICurrencyService _currencyService;
@@ -54,6 +62,7 @@ namespace Nop.Web.Factories
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly ITopicService _topicService;
+        private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
         private readonly IWebHelper _webHelper;
@@ -69,6 +78,7 @@ namespace Nop.Web.Factories
             CatalogSettings catalogSettings,
             DisplayDefaultMenuItemSettings displayDefaultMenuItemSettings,
             ForumSettings forumSettings,
+            IActionContextAccessor actionContextAccessor,
             ICategoryService categoryService,
             ICategoryTemplateService categoryTemplateService,
             ICurrencyService currencyService,
@@ -87,6 +97,7 @@ namespace Nop.Web.Factories
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
             ITopicService topicService,
+            IUrlHelperFactory urlHelperFactory,
             IUrlRecordService urlRecordService,
             IVendorService vendorService,
             IWebHelper webHelper,
@@ -94,34 +105,36 @@ namespace Nop.Web.Factories
             MediaSettings mediaSettings,
             VendorSettings vendorSettings)
         {
-            this._blogSettings = blogSettings;
-            this._catalogSettings = catalogSettings;
-            this._displayDefaultMenuItemSettings = displayDefaultMenuItemSettings;
-            this._forumSettings = forumSettings;
-            this._categoryService = categoryService;
-            this._categoryTemplateService = categoryTemplateService;
-            this._currencyService = currencyService;
-            this._eventPublisher = eventPublisher;
-            this._httpContextAccessor = httpContextAccessor;
-            this._localizationService = localizationService;
-            this._manufacturerService = manufacturerService;
-            this._manufacturerTemplateService = manufacturerTemplateService;
-            this._pictureService = pictureService;
-            this._priceFormatter = priceFormatter;
-            this._productModelFactory = productModelFactory;
-            this._productService = productService;
-            this._productTagService = productTagService;
-            this._searchTermService = searchTermService;
-            this._specificationAttributeService = specificationAttributeService;
-            this._cacheManager = cacheManager;
-            this._storeContext = storeContext;
-            this._topicService = topicService;
-            this._urlRecordService = urlRecordService;
-            this._vendorService = vendorService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._mediaSettings = mediaSettings;
-            this._vendorSettings = vendorSettings;
+            _blogSettings = blogSettings;
+            _catalogSettings = catalogSettings;
+            _displayDefaultMenuItemSettings = displayDefaultMenuItemSettings;
+            _forumSettings = forumSettings;
+            _actionContextAccessor = actionContextAccessor;
+            _categoryService = categoryService;
+            _categoryTemplateService = categoryTemplateService;
+            _currencyService = currencyService;
+            _eventPublisher = eventPublisher;
+            _httpContextAccessor = httpContextAccessor;
+            _localizationService = localizationService;
+            _manufacturerService = manufacturerService;
+            _manufacturerTemplateService = manufacturerTemplateService;
+            _pictureService = pictureService;
+            _priceFormatter = priceFormatter;
+            _productModelFactory = productModelFactory;
+            _productService = productService;
+            _productTagService = productTagService;
+            _searchTermService = searchTermService;
+            _specificationAttributeService = specificationAttributeService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _topicService = topicService;
+            _urlHelperFactory = urlHelperFactory;
+            _urlRecordService = urlRecordService;
+            _vendorService = vendorService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _mediaSettings = mediaSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -357,7 +370,7 @@ namespace Nop.Web.Factories
             {
                 model.DisplayCategoryBreadcrumb = true;
 
-                var breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_BREADCRUMB_KEY,
+                var breadcrumbCacheKey = string.Format(NopModelCacheDefaults.CategoryBreadcrumbKey,
                     category.Id,
                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                     _storeContext.CurrentStore.Id,
@@ -376,7 +389,7 @@ namespace Nop.Web.Factories
             var pictureSize = _mediaSettings.CategoryThumbPictureSize;
 
             //subcategories
-            var subCategoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_SUBCATEGORIES_KEY,
+            var subCategoriesCacheKey = string.Format(NopModelCacheDefaults.CategorySubcategoriesKey,
                 category.Id,
                 pictureSize,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
@@ -396,7 +409,7 @@ namespace Nop.Web.Factories
                     };
 
                     //prepare picture model
-                    var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+                    var categoryPictureCacheKey = string.Format(NopModelCacheDefaults.CategoryPictureModelKey, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                     subCatModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
                     {
                         var picture = _pictureService.GetPictureById(x.PictureId);
@@ -420,7 +433,7 @@ namespace Nop.Web.Factories
             {
                 //We cache a value indicating whether we have featured products
                 IPagedList<Product> featuredProducts = null;
-                var cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, category.Id,
+                var cacheKey = string.Format(NopModelCacheDefaults.CategoryHasFeaturedProductsKey, category.Id,
                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id);
                 var hasFeaturedProductsCache = _cacheManager.Get(cacheKey, () =>
                 {
@@ -489,7 +502,7 @@ namespace Nop.Web.Factories
         /// <returns>Category template view path</returns>
         public virtual string PrepareCategoryTemplateViewPath(int templateId)
         {
-            var templateCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_TEMPLATE_MODEL_KEY, templateId);
+            var templateCacheKey = string.Format(NopModelCacheDefaults.CategoryTemplateModelKey, templateId);
             var templateViewPath = _cacheManager.Get(templateCacheKey, () =>
             {
                 var template = _categoryTemplateService.GetCategoryTemplateById(templateId);
@@ -542,11 +555,13 @@ namespace Nop.Web.Factories
         /// <returns>Top menu model</returns>
         public virtual TopMenuModel PrepareTopMenuModel()
         {
+            var cachedCategoriesModel = new List<CategorySimpleModel>();
             //categories
-            var cachedCategoriesModel = PrepareCategorySimpleModels();
+            if (!_catalogSettings.UseAjaxLoadMenu)
+                cachedCategoriesModel = PrepareCategorySimpleModels();
 
             //top menu topics
-            var topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TOP_MENU_MODEL_KEY,
+            var topicCacheKey = string.Format(NopModelCacheDefaults.TopicTopMenuModelKey,
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
@@ -568,13 +583,14 @@ namespace Nop.Web.Factories
                 NewProductsEnabled = _catalogSettings.NewProductsEnabled,
                 BlogEnabled = _blogSettings.Enabled,
                 ForumEnabled = _forumSettings.ForumsEnabled,
-                DisplayHomePageMenuItem = _displayDefaultMenuItemSettings.DisplayHomePageMenuItem,
+                DisplayHomepageMenuItem = _displayDefaultMenuItemSettings.DisplayHomepageMenuItem,
                 DisplayNewProductsMenuItem = _displayDefaultMenuItemSettings.DisplayNewProductsMenuItem,
                 DisplayProductSearchMenuItem = _displayDefaultMenuItemSettings.DisplayProductSearchMenuItem,
                 DisplayCustomerInfoMenuItem = _displayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem,
                 DisplayBlogMenuItem = _displayDefaultMenuItemSettings.DisplayBlogMenuItem,
                 DisplayForumsMenuItem = _displayDefaultMenuItemSettings.DisplayForumsMenuItem,
-                DisplayContactUsMenuItem = _displayDefaultMenuItemSettings.DisplayContactUsMenuItem
+                DisplayContactUsMenuItem = _displayDefaultMenuItemSettings.DisplayContactUsMenuItem,
+                UseAjaxMenu = _catalogSettings.UseAjaxLoadMenu
             };
             return model;
         }
@@ -587,7 +603,7 @@ namespace Nop.Web.Factories
         {
             var pictureSize = _mediaSettings.CategoryThumbPictureSize;
 
-            var categoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HOMEPAGE_KEY,
+            var categoriesCacheKey = string.Format(NopModelCacheDefaults.CategoryHomepageKey,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 pictureSize,
                 _storeContext.CurrentStore.Id,
@@ -595,7 +611,7 @@ namespace Nop.Web.Factories
                 _webHelper.IsCurrentConnectionSecured());
 
             var model = _cacheManager.Get(categoriesCacheKey, () =>
-                _categoryService.GetAllCategoriesDisplayedOnHomePage()
+                _categoryService.GetAllCategoriesDisplayedOnHomepage()
                 .Select(category =>
                 {
                     var catModel = new CategoryModel
@@ -610,7 +626,7 @@ namespace Nop.Web.Factories
                     };
 
                     //prepare picture model
-                    var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, category.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+                    var categoryPictureCacheKey = string.Format(NopModelCacheDefaults.CategoryPictureModelKey, category.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                     catModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
                     {
                         var picture = _pictureService.GetPictureById(category.PictureId);
@@ -639,7 +655,7 @@ namespace Nop.Web.Factories
         public virtual List<CategorySimpleModel> PrepareCategorySimpleModels()
         {
             //load and cache them
-            var cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_ALL_MODEL_KEY,
+            var cacheKey = string.Format(NopModelCacheDefaults.CategoryAllModelKey,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -676,7 +692,7 @@ namespace Nop.Web.Factories
                 //number of products in each category
                 if (_catalogSettings.ShowCategoryProductNumber)
                 {
-                    var cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY,
+                    var cacheKey = string.Format(NopModelCacheDefaults.CategoryNumberOfProductsModelKey,
                         string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                         _storeContext.CurrentStore.Id,
                         category.Id);
@@ -696,10 +712,77 @@ namespace Nop.Web.Factories
                     var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategories);
                     categoryModel.SubCategories.AddRange(subCategories);
                 }
+
+                categoryModel.HaveSubCategories = categoryModel.SubCategories.Count > 0 &
+                    categoryModel.SubCategories.Any(x => x.IncludeInTopMenu);
+
                 result.Add(categoryModel);
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Prepare category (simple) xml document
+        /// </summary>
+        /// <returns>Xml document of category (simple) models</returns>
+        public virtual XDocument PrepareCategoryXmlDocument()
+        {
+            var cacheKey = string.Format(NopModelCacheDefaults.CategoryXmlAllModelKey,
+                _workContext.WorkingLanguage.Id,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
+
+            return _cacheManager.Get(cacheKey, () => {
+
+                var categories = PrepareCategorySimpleModels();
+
+                var xsSubmit = new XmlSerializer(typeof(List<CategorySimpleModel>));
+
+                using (var strWriter = new StringWriter())
+                {
+                    using (var writer = XmlWriter.Create(strWriter))
+                    {
+                        xsSubmit.Serialize(writer, categories);
+                        var xml = strWriter.ToString();
+
+                        return XDocument.Parse(xml);
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// Prepare root categories for menu
+        /// </summary>
+        /// <returns>List of category (simple) models</returns>
+        public virtual List<CategorySimpleModel> PrepareRootCategories()
+        {
+            var doc = PrepareCategoryXmlDocument();
+
+            var models = from xe in doc.Element("ArrayOfCategorySimpleModel").Elements("CategorySimpleModel")
+                         select GetCategorySimpleModel(xe);
+
+            return models.ToList();
+        }
+
+        /// <summary>
+        /// Prepare subcategories for menu
+        /// </summary>
+        /// <param name="id">Id of category to get subcategory</param>
+        /// <returns></returns>
+        public virtual List<CategorySimpleModel> PrepareSubCategories(int id)
+        {
+            var doc = PrepareCategoryXmlDocument();
+
+            var model = from xe in doc.Descendants("CategorySimpleModel")
+                        where xe.Element("Id").Value == id.ToString()
+                        select xe;
+
+            var models = from xe in model.First().Elements("SubCategories").Elements("CategorySimpleModel")
+                         select GetCategorySimpleModel(xe);
+
+            return models.ToList();
         }
 
         #endregion
@@ -758,7 +841,7 @@ namespace Nop.Web.Factories
                 IPagedList<Product> featuredProducts = null;
 
                 //We cache a value indicating whether we have featured products
-                var cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_HAS_FEATURED_PRODUCTS_KEY,
+                var cacheKey = string.Format(NopModelCacheDefaults.ManufacturerHasFeaturedProductsKey,
                     manufacturer.Id,
                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                     _storeContext.CurrentStore.Id);
@@ -814,7 +897,7 @@ namespace Nop.Web.Factories
         /// <returns>Manufacturer template view path</returns>
         public virtual string PrepareManufacturerTemplateViewPath(int templateId)
         {
-            var templateCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_TEMPLATE_MODEL_KEY, templateId);
+            var templateCacheKey = string.Format(NopModelCacheDefaults.ManufacturerTemplateModelKey, templateId);
             var templateViewPath = _cacheManager.Get(templateCacheKey, () =>
             {
                 var template = _manufacturerTemplateService.GetManufacturerTemplateById(templateId);
@@ -851,7 +934,7 @@ namespace Nop.Web.Factories
 
                 //prepare picture model
                 var pictureSize = _mediaSettings.ManufacturerThumbPictureSize;
-                var manufacturerPictureCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_PICTURE_MODEL_KEY, manufacturer.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+                var manufacturerPictureCacheKey = string.Format(NopModelCacheDefaults.ManufacturerPictureModelKey, manufacturer.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                 modelMan.PictureModel = _cacheManager.Get(manufacturerPictureCacheKey, () =>
                 {
                     var picture = _pictureService.GetPictureById(manufacturer.PictureId);
@@ -877,7 +960,7 @@ namespace Nop.Web.Factories
         /// <returns>Manufacturer navigation model</returns>
         public virtual ManufacturerNavigationModel PrepareManufacturerNavigationModel(int currentManufacturerId)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MODEL_KEY,
+            var cacheKey = string.Format(NopModelCacheDefaults.ManufacturerNavigationModelKey,
                 currentManufacturerId,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
@@ -987,7 +1070,7 @@ namespace Nop.Web.Factories
 
                 //prepare picture model
                 var pictureSize = _mediaSettings.VendorThumbPictureSize;
-                var pictureCacheKey = string.Format(ModelCacheEventConsumer.VENDOR_PICTURE_MODEL_KEY, vendor.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+                var pictureCacheKey = string.Format(NopModelCacheDefaults.VendorPictureModelKey, vendor.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                 vendorModel.PictureModel = _cacheManager.Get(pictureCacheKey, () =>
                 {
                     var picture = _pictureService.GetPictureById(vendor.PictureId);
@@ -1012,7 +1095,7 @@ namespace Nop.Web.Factories
         /// <returns>Vendor navigation model</returns>
         public virtual VendorNavigationModel PrepareVendorNavigationModel()
         {
-            var cacheKey = ModelCacheEventConsumer.VENDOR_NAVIGATION_MODEL_KEY;
+            var cacheKey = NopModelCacheDefaults.VendorNavigationModelKey;
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 var vendors = _vendorService.GetAllVendors(pageSize: _vendorSettings.VendorsBlockItemsToDisplay);
@@ -1046,7 +1129,7 @@ namespace Nop.Web.Factories
         /// <returns>Product tags model</returns>
         public virtual PopularProductTagsModel PreparePopularProductTagsModel()
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_POPULAR_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cacheKey = string.Format(NopModelCacheDefaults.ProductTagPopularModelKey, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 var model = new PopularProductTagsModel();
@@ -1184,7 +1267,7 @@ namespace Nop.Web.Factories
                 _catalogSettings.SearchPagePageSizeOptions,
                 _catalogSettings.SearchPageProductsPerPage);
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.SEARCH_CATEGORIES_MODEL_KEY,
+            var cacheKey = string.Format(NopModelCacheDefaults.SearchCategoriesModelKey,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -1397,6 +1480,31 @@ namespace Nop.Web.Factories
                 SearchTermMinimumLength = _catalogSettings.ProductSearchTermMinimumLength
             };
             return model;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        protected virtual CategorySimpleModel GetCategorySimpleModel(XElement elem)
+        {
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+
+            return new CategorySimpleModel()
+            {
+
+                Id = Convert.ToInt32(elem.Element("Id").Value),
+                Name = elem.Element("Name").Value,
+                SeName = elem.Element("SeName").Value,
+
+                NumberOfProducts = elem.Element("NumberOfProducts").Value != ""
+                    ? Convert.ToInt32(elem.Element("NumberOfProducts").Value)
+                    : (int?)null,
+
+                IncludeInTopMenu = Convert.ToBoolean(elem.Element("IncludeInTopMenu").Value),
+                HaveSubCategories = Convert.ToBoolean(elem.Element("HaveSubCategories").Value),
+                Route = urlHelper.RouteUrl("Category", new { SeName = elem.Element("SeName").Value })
+            };
         }
 
         #endregion

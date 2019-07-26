@@ -8,76 +8,46 @@
         <p>
             <em>@T("Admin.Customers.CustomerAttributes.Description")</em>
         </p>
-        <div id="customerattributes-grid"></div>
-
-        <script>
-                $(document).ready(function () {
-                    $("#customerattributes-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("List", "CustomerAttribute"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(Model.PageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(Model.AvailablePageSizes)],
-                            @await Html.PartialAsync("_GridPagerMessages")
-                        },
-                        editable: {
-                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "Name",
-                            title: "@T("Admin.Customers.CustomerAttributes.Fields.Name")",
-                            width: 300
-                        }, {
-                            field: "AttributeControlTypeName",
-                            title: "@T("Admin.Customers.CustomerAttributes.Fields.AttributeControlType")",
-                            width: 200
-                        },{
-                            field: "IsRequired",
-                            title: "@T("Admin.Customers.CustomerAttributes.Fields.IsRequired")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '# if(IsRequired) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                        }, {
-                            field: "DisplayOrder",
-                            title: "@T("Admin.Customers.CustomerAttributes.Fields.DisplayOrder")",
-                            width: 100
-                        }, {
-                            field: "Id",
-                            title: "@T("Admin.Common.Edit")",
-                            width: 80,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/CustomerAttribute/Edit/")#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
-                        }]
-                    });
-                });
-        </script>
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "customerattributes-grid",
+            UrlRead = new DataUrl("List", "CustomerAttribute", null),
+            Length = Model.PageSize,
+            LengthMenu = Model.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(CustomerAttributeModel.Name))
+                {
+                    Title = T("Admin.Customers.CustomerAttributes.Fields.Name").Text,
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(CustomerAttributeModel.AttributeControlTypeName))
+                {
+                    Title = T("Admin.Customers.CustomerAttributes.Fields.AttributeControlType").Text,
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(CustomerAttributeModel.IsRequired))
+                {
+                    Title = T("Admin.Customers.CustomerAttributes.Fields.IsRequired").Text,
+                    Width = "200",
+                    ClassName =  NopColumnClassDefaults.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(CustomerAttributeModel.DisplayOrder))
+                {
+                    Title = T("Admin.Customers.CustomerAttributes.Fields.DisplayOrder").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.CenterAll
+                },
+                new ColumnProperty(nameof(CustomerAttributeModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonEdit(new DataUrl("~/Admin/CustomerAttribute/Edit/"))
+                }
+            }
+        })
     </div>
     <div class="panel-footer">
         <a class="btn btn-primary" href="@Url.Action("Create", "CustomerAttribute")">

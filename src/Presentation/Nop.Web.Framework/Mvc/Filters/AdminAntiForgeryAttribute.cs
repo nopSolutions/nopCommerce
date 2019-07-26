@@ -29,8 +29,8 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
         public AdminAntiForgeryAttribute(bool ignore = false) : base(typeof(AdminAntiForgeryFilter))
         {
-            this._ignoreFilter = ignore;
-            this.Arguments = new object[] {ignore};
+            _ignoreFilter = ignore;
+            Arguments = new object[] {ignore};
         }
         
         #endregion
@@ -65,8 +65,8 @@ namespace Nop.Web.Framework.Mvc.Filters
                 IAntiforgery antiforgery,
                 ILoggerFactory loggerFactory) : base(antiforgery, loggerFactory)
             {
-                this._ignoreFilter = ignoreFilter;
-                this._securitySettings = securitySettings;
+                _ignoreFilter = ignoreFilter;
+                _securitySettings = securitySettings;
             }
 
             #endregion

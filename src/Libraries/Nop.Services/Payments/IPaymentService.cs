@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using Nop.Core.Domain.Customers;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.Payments
@@ -9,62 +8,6 @@ namespace Nop.Services.Payments
     /// </summary>
     public partial interface IPaymentService
     {
-        #region Payment methods
-
-        /// <summary>
-        /// Load active payment methods
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <param name="filterByCountryId">Load records allowed only in a specified country; pass 0 to load all records</param>
-        /// <returns>Payment methods</returns>
-        IList<IPaymentMethod> LoadActivePaymentMethods(Customer customer = null, int storeId = 0, int filterByCountryId = 0);
-
-        /// <summary>
-        /// Load payment provider by system name
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        /// <returns>Found payment provider</returns>
-        IPaymentMethod LoadPaymentMethodBySystemName(string systemName);
-
-        /// <summary>
-        /// Load all payment providers
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <param name="filterByCountryId">Load records allowed only in a specified country; pass 0 to load all records</param>
-        /// <returns>Payment providers</returns>
-        IList<IPaymentMethod> LoadAllPaymentMethods(Customer customer = null, int storeId = 0, int filterByCountryId = 0);
-
-        /// <summary>
-        /// Is payment method active?
-        /// </summary>
-        /// <param name="paymentMethod">Payment method</param>
-        /// <returns>Result</returns>
-        bool IsPaymentMethodActive(IPaymentMethod paymentMethod);
-
-        #endregion
-
-        #region Restrictions
-
-        /// <summary>
-        /// Gets a list of country identifiers in which a certain payment method is now allowed
-        /// </summary>
-        /// <param name="paymentMethod">Payment method</param>
-        /// <returns>A list of country identifiers</returns>
-        IList<int> GetRestictedCountryIds(IPaymentMethod paymentMethod);
-
-        /// <summary>
-        /// Saves a list of country identifiers in which a certain payment method is now allowed
-        /// </summary>
-        /// <param name="paymentMethod">Payment method</param>
-        /// <param name="countryIds">A list of country identifiers</param>
-        void SaveRestictedCountryIds(IPaymentMethod paymentMethod, List<int> countryIds);
-
-        #endregion
-
-        #region Processing
-
         /// <summary>
         /// Process a payment
         /// </summary>
@@ -192,7 +135,5 @@ namespace Nop.Services.Payments
         /// <param name="order">Order</param>
         /// <returns>Serialized CustomValues CustomValues</returns>
         Dictionary<string, object> DeserializeCustomValues(Order order);
-
-        #endregion
     }
 }

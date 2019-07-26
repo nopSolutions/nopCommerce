@@ -19,6 +19,13 @@ x64/
 [Bb]in/
 [Oo]bj/
 
+# Build scripts folder
+[Aa]pp[Bb]uild/
+[Oo]ut/
+
+# Visual Studio Code files
+.vscode/
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
@@ -160,6 +167,7 @@ glob:*.user
 *.hg
 src/Presentation/Nop.Web/App_Data/browscap.crawlersonly.xml
 src/Presentation/Nop.Web/App_Data/installedPlugins.json
+src/Presentation/Nop.Web/App_Data/plugins.json
 src/Presentation/Nop.Web/App_Data/dataSettings.json
 src/Presentation/Nop.Web/App_Data/TempUploads/*
 !src/Presentation/Nop.Web/App_Data/TempUploads/Index.htm

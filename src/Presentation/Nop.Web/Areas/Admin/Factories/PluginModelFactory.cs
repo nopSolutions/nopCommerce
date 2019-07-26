@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
-using Nop.Core.Domain.Tax;
-using Nop.Core.Plugins;
+using Nop.Core.Caching;
 using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
 using Nop.Services.Localization;
-using Nop.Services.Logging;
 using Nop.Services.Payments;
 using Nop.Services.Plugins;
+using Nop.Services.Plugins.Marketplace;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Plugins;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Areas.Admin.Models.Plugins.Marketplace;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -29,50 +29,57 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
+        private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
-        private readonly IOfficialFeedManager _officialFeedManager;
-        private readonly IPaymentService _paymentService;
-        private readonly IPluginFinder _pluginFinder;
-        private readonly IShippingService _shippingService;
+        private readonly IPaymentPluginManager _paymentPluginManager;
+        private readonly IPickupPluginManager _pickupPluginManager;
+        private readonly IPluginService _pluginService;
+        private readonly IShippingPluginManager _shippingPluginManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
-        private readonly IWidgetService _widgetService;
-        private readonly TaxSettings _taxSettings;
-        private readonly ILogger _logger;
+        private readonly ITaxPluginManager _taxPluginManager;
+        private readonly IWidgetPluginManager _widgetPluginManager;
+        private readonly IWorkContext _workContext;
+        private readonly OfficialFeedManager _officialFeedManager;
 
         #endregion
 
         #region Ctor
 
         public PluginModelFactory(IAclSupportedModelFactory aclSupportedModelFactory,
+            IAuthenticationPluginManager authenticationPluginManager,
             IBaseAdminModelFactory baseAdminModelFactory,
-            IExternalAuthenticationService externalAuthenticationService,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
-            IOfficialFeedManager officialFeedManager,
-            IPaymentService paymentService,
-            IPluginFinder pluginFinder,
+            IPaymentPluginManager paymentPluginManager,
+            IPickupPluginManager pickupPluginManager,
+            IPluginService pluginService,
+            IShippingPluginManager shippingPluginManager,
             IShippingService shippingService,
+            IStaticCacheManager cacheManager,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
-            IWidgetService widgetService,
-            TaxSettings taxSettings,
-            ILogger logger)
+            ITaxPluginManager taxPluginManager,
+            IWidgetPluginManager widgetPluginManager,
+            IWorkContext workContext,
+            OfficialFeedManager officialFeedManager)
         {
-            this._aclSupportedModelFactory = aclSupportedModelFactory;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._officialFeedManager = officialFeedManager;
-            this._paymentService = paymentService;
-            this._pluginFinder = pluginFinder;
-            this._shippingService = shippingService;
-            this._storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
-            this._widgetService = widgetService;
-            this._taxSettings = taxSettings;
-            this._logger = logger;
+            _aclSupportedModelFactory = aclSupportedModelFactory;
+            _authenticationPluginManager = authenticationPluginManager;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _paymentPluginManager = paymentPluginManager;
+            _pickupPluginManager = pickupPluginManager;
+            _pluginService = pluginService;
+            _shippingPluginManager = shippingPluginManager;
+            _cacheManager = cacheManager;
+            _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
+            _taxPluginManager = taxPluginManager;
+            _widgetPluginManager = widgetPluginManager;
+            _workContext = workContext;
+            _officialFeedManager = officialFeedManager;
         }
 
         #endregion
@@ -100,28 +107,27 @@ namespace Nop.Web.Areas.Admin.Factories
             switch (plugin)
             {
                 case IPaymentMethod paymentMethod:
-                    model.IsEnabled = _paymentService.IsPaymentMethodActive(paymentMethod);
+                    model.IsEnabled = _paymentPluginManager.IsPluginActive(paymentMethod);
                     break;
 
                 case IShippingRateComputationMethod shippingRateComputationMethod:
-                    model.IsEnabled = _shippingService.IsShippingRateComputationMethodActive(shippingRateComputationMethod);
+                    model.IsEnabled = _shippingPluginManager.IsPluginActive(shippingRateComputationMethod);
                     break;
 
                 case IPickupPointProvider pickupPointProvider:
-                    model.IsEnabled = _shippingService.IsPickupPointProviderActive(pickupPointProvider);
+                    model.IsEnabled = _pickupPluginManager.IsPluginActive(pickupPointProvider);
                     break;
 
-                case ITaxProvider _:
-                    model.IsEnabled = plugin.PluginDescriptor.SystemName
-                        .Equals(_taxSettings.ActiveTaxProviderSystemName, StringComparison.InvariantCultureIgnoreCase);
+                case ITaxProvider taxProvider:
+                    model.IsEnabled = _taxPluginManager.IsPluginActive(taxProvider);
                     break;
 
                 case IExternalAuthenticationMethod externalAuthenticationMethod:
-                    model.IsEnabled = _externalAuthenticationService.IsExternalAuthenticationMethodActive(externalAuthenticationMethod);
+                    model.IsEnabled = _authenticationPluginManager.IsPluginActive(externalAuthenticationMethod);
                     break;
 
                 case IWidgetPlugin widgetPlugin:
-                    model.IsEnabled = _widgetService.IsWidgetActive(widgetPlugin);
+                    model.IsEnabled = _widgetPluginManager.IsPluginActive(widgetPlugin);
                     break;
 
                 default:
@@ -153,6 +159,8 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare page parameters
             searchModel.SetGridPageSize();
 
+            searchModel.NeedToRestart = _pluginService.IsRestartRequired();
+
             return searchModel;
         }
 
@@ -170,27 +178,28 @@ namespace Nop.Web.Areas.Admin.Factories
             var group = string.IsNullOrEmpty(searchModel.SearchGroup) || searchModel.SearchGroup.Equals("0") ? null : searchModel.SearchGroup;
             var loadMode = (LoadPluginsMode)searchModel.SearchLoadModeId;
 
-            //get plugins
-            var plugins = _pluginFinder.GetPluginDescriptors(group: group, loadMode: loadMode)
-                .OrderBy(plugin => plugin.Group).ToList();
+            //filter visible plugins
+            var plugins = _pluginService.GetPluginDescriptors<IPlugin>(group: group, loadMode: loadMode)
+                .Where(p => p.ShowInPluginsList)
+                .OrderBy(plugin => plugin.Group).ToList()
+                .ToPagedList(searchModel);
 
             //prepare list model
-            var model = new PluginListModel
+            var model = new PluginListModel().PrepareToGrid(searchModel, plugins, () =>
             {
-                Data = plugins.PaginationByRequestModel(searchModel).Select(pluginDescriptor =>
+                return plugins.Select(pluginDescriptor =>
                 {
                     //fill in model values from the entity
                     var pluginModel = pluginDescriptor.ToPluginModel<PluginModel>();
 
                     //fill in additional values (not existing in the entity)
-                    pluginModel.LogoUrl = PluginManager.GetLogoUrl(pluginDescriptor);
+                    pluginModel.LogoUrl = _pluginService.GetPluginLogoUrl(pluginDescriptor);
                     if (pluginDescriptor.Installed)
-                        PrepareInstalledPluginModel(pluginModel, pluginDescriptor.Instance());
+                        PrepareInstalledPluginModel(pluginModel, pluginDescriptor.Instance<IPlugin>());
 
                     return pluginModel;
-                }),
-                Total = plugins.Count
-            };
+                });
+            });
 
             return model;
         }
@@ -211,16 +220,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 //fill in model values from the entity
                 model = model ?? pluginDescriptor.ToPluginModel(model);
 
-                model.LogoUrl = PluginManager.GetLogoUrl(pluginDescriptor);
+                model.LogoUrl = _pluginService.GetPluginLogoUrl(pluginDescriptor);
                 model.SelectedStoreIds = pluginDescriptor.LimitedToStores;
                 model.SelectedCustomerRoleIds = pluginDescriptor.LimitedToCustomerRoles;
+                var plugin = pluginDescriptor.Instance<IPlugin>();
                 if (pluginDescriptor.Installed)
-                    PrepareInstalledPluginModel(model, pluginDescriptor.Instance());
+                    PrepareInstalledPluginModel(model, plugin);
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
                 {
-                    var plugin = pluginDescriptor.Instance();
                     locale.FriendlyName = _localizationService.GetLocalizedFriendlyName(plugin, languageId, false);
                 };
             }
@@ -248,21 +257,8 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
-            IList<OfficialFeedVersion> pluginVersions = new List<OfficialFeedVersion>();
-            IList<OfficialFeedCategory> pluginCategories = new List<OfficialFeedCategory>();
-
-            //ensure that no exception is thrown when www.nopcommerce.com website is not available
-            try
-            {
-                pluginVersions = _officialFeedManager.GetVersions();
-                pluginCategories = _officialFeedManager.GetCategories();
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("No access to the list of plugins. Website www.nopcommerce.com is not available.", ex);
-            }
-
             //prepare available versions
+            var pluginVersions = _officialFeedManager.GetVersions();
             searchModel.AvailableVersions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var version in pluginVersions)
                 searchModel.AvailableVersions.Add(new SelectListItem { Text = version.Name, Value = version.Id.ToString() });
@@ -276,7 +272,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 currentVersionItem.Selected = true;
             }
 
-            //prepare available plugin categories            
+            //prepare available plugin categories
+            var pluginCategories = _officialFeedManager.GetCategories();
             searchModel.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var pluginCategory in pluginCategories)
             {
@@ -315,8 +312,7 @@ namespace Nop.Web.Areas.Admin.Factories
             });
 
             //prepare page parameters
-            searchModel.PageSize = 15;
-            searchModel.AvailablePageSizes = "15";
+            searchModel.SetGridPageSize(15, "15");
 
             return searchModel;
         }
@@ -333,17 +329,16 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get plugins
             var plugins = _officialFeedManager.GetAllPlugins(categoryId: searchModel.SearchCategoryId,
-            versionId: searchModel.SearchVersionId,
-            price: searchModel.SearchPriceId,
-            searchTerm: searchModel.SearchName,
-            pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);                
-            
+                versionId: searchModel.SearchVersionId,
+                price: searchModel.SearchPriceId,
+                searchTerm: searchModel.SearchName,
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new OfficialFeedPluginListModel
+            var model = new OfficialFeedPluginListModel().PrepareToGrid(searchModel, plugins, () =>
             {
                 //fill in model values from the entity
-                Data = plugins.Select(plugin => new OfficialFeedPluginModel
+                return plugins?.Select(plugin => new OfficialFeedPluginModel
                 {
                     Url = plugin.Url,
                     Name = plugin.Name,
@@ -351,9 +346,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     SupportedVersions = plugin.SupportedVersions,
                     PictureUrl = plugin.PictureUrl,
                     Price = plugin.Price
-                }),
-                Total = plugins.TotalCount
-            };
+                }) ?? new List<OfficialFeedPluginModel>();
+            });
 
             return model;
         }
@@ -373,6 +367,26 @@ namespace Nop.Web.Areas.Admin.Factories
             PrepareOfficialFeedPluginSearchModel(pluginsConfigurationModel.AllPluginsAndThemes);
 
             return pluginsConfigurationModel;
+        }
+
+        /// <summary>
+        /// Prepare plugin models for admin navigation
+        /// </summary>
+        /// <returns>List of models</returns>
+        public virtual IList<AdminNavigationPluginModel> PrepareAdminNavigationPluginModels()
+        {
+            var cacheKey = string.Format(NopPluginDefaults.AdminNavigationPluginsCacheKey, _workContext.CurrentCustomer.Id);
+            return _cacheManager.Get(cacheKey, () =>
+            {
+                //get installed plugins
+                return _pluginService.GetPluginDescriptors<IPlugin>(LoadPluginsMode.InstalledOnly, _workContext.CurrentCustomer)
+                    .Where(plugin => plugin.ShowInPluginsList)
+                    .Select(plugin => new AdminNavigationPluginModel
+                    {
+                        FriendlyName = plugin.FriendlyName,
+                        ConfigurationUrl = plugin.Instance<IPlugin>().GetConfigurationPageUrl()
+                    }).Where(model => !string.IsNullOrEmpty(model.ConfigurationUrl)).ToList();
+            });
         }
 
         #endregion

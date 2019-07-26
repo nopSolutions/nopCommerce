@@ -38,14 +38,14 @@ namespace Nop.Web.Controllers
             IUrlRecordService urlRecordService,
             IWorkContext workContext)
         {
-            this._catalogSettings = catalogSettings;
-            this._customerSettings = customerSettings;
-            this._backInStockSubscriptionService = backInStockSubscriptionService;
-            this._localizationService = localizationService;
-            this._productService = productService;
-            this._storeContext = storeContext;
-            this._urlRecordService = urlRecordService;
-            this._workContext = workContext;
+            _catalogSettings = catalogSettings;
+            _customerSettings = customerSettings;
+            _backInStockSubscriptionService = backInStockSubscriptionService;
+            _localizationService = localizationService;
+            _productService = productService;
+            _storeContext = storeContext;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -187,7 +187,7 @@ namespace Nop.Web.Controllers
                 TotalRecords = list.TotalCount,
                 PageIndex = list.PageIndex,
                 ShowTotalSummary = false,
-                RouteActionName = "CustomerBackInStockSubscriptionsPaged",
+                RouteActionName = "CustomerBackInStockSubscriptions",
                 UseRouteLinks = true,
                 RouteValues = new BackInStockSubscriptionsRouteValues { pageNumber = pageIndex }
             };

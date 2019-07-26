@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
+using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Security;
+using Nop.Services.Logging;
 using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Web.Framework.Mvc.Filters
@@ -21,7 +23,7 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <param name="actionParameterName">The name of the action parameter to which the result will be passed</param>
         public ValidateCaptchaAttribute(string actionParameterName = "captchaValid") : base(typeof(ValidateCaptchaFilter))
         {
-            this.Arguments = new object[] { actionParameterName };
+            Arguments = new object[] { actionParameterName };
         }
 
         #endregion
@@ -44,16 +46,26 @@ namespace Nop.Web.Framework.Mvc.Filters
             #region Fields
 
             private readonly string _actionParameterName;
+            private readonly CaptchaHttpClient _captchaHttpClient;
             private readonly CaptchaSettings _captchaSettings;
+            private readonly ILogger _logger;
+            private readonly IWorkContext _workContext;
 
             #endregion
 
             #region Ctor
 
-            public ValidateCaptchaFilter(string actionParameterName, CaptchaSettings captchaSettings)
+            public ValidateCaptchaFilter(string actionParameterName,
+                CaptchaHttpClient captchaHttpClient,
+                CaptchaSettings captchaSettings,
+                ILogger logger,
+                IWorkContext workContext)
             {
-                this._actionParameterName = actionParameterName;
-                this._captchaSettings = captchaSettings;
+                _actionParameterName = actionParameterName;
+                _captchaHttpClient = captchaHttpClient;
+                _captchaSettings = captchaSettings;
+                _logger = logger;
+                _workContext = workContext;
             }
 
             #endregion
@@ -70,24 +82,22 @@ namespace Nop.Web.Framework.Mvc.Filters
                 var isValid = false;
 
                 //get form values
-                var captchaChallengeValue = context.HttpContext.Request.Form[CHALLENGE_FIELD_KEY];
                 var captchaResponseValue = context.HttpContext.Request.Form[RESPONSE_FIELD_KEY];
                 var gCaptchaResponseValue = context.HttpContext.Request.Form[G_RESPONSE_FIELD_KEY];
 
-                if ((!StringValues.IsNullOrEmpty(captchaChallengeValue) && !StringValues.IsNullOrEmpty(captchaResponseValue)) || !StringValues.IsNullOrEmpty(gCaptchaResponseValue))
+                if (!StringValues.IsNullOrEmpty(captchaResponseValue) || !StringValues.IsNullOrEmpty(gCaptchaResponseValue))
                 {
-                    //create CAPTCHA validator
-                    var captchaValidtor = new GReCaptchaValidator()
-                    {
-                        SecretKey = _captchaSettings.ReCaptchaPrivateKey,
-                        RemoteIp = context.HttpContext.Connection.RemoteIpAddress?.ToString(),
-                        Response = !StringValues.IsNullOrEmpty(captchaResponseValue) ? captchaResponseValue : gCaptchaResponseValue,
-                        Challenge = captchaChallengeValue
-                    };
-
                     //validate request
-                    var recaptchaResponse = captchaValidtor.Validate();
-                    isValid = recaptchaResponse.IsValid;
+                    try
+                    {
+                        var value = !StringValues.IsNullOrEmpty(captchaResponseValue) ? captchaResponseValue : gCaptchaResponseValue;
+                        var response = _captchaHttpClient.ValidateCaptchaAsync(value).Result;
+                        isValid = response.IsValid;
+                    }
+                    catch (Exception exception)
+                    {
+                        _logger.Error("Error occurred on CAPTCHA validation", exception, _workContext.CurrentCustomer);
+                    }
                 }
 
                 return isValid;

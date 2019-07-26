@@ -14,8 +14,8 @@ namespace Nop.Web.Components
         public VendorNavigationViewComponent(ICatalogModelFactory catalogModelFactory,
             VendorSettings vendorSettings)
         {
-            this._catalogModelFactory = catalogModelFactory;
-            this._vendorSettings = vendorSettings;
+            _catalogModelFactory = catalogModelFactory;
+            _vendorSettings = vendorSettings;
         }
 
         public IViewComponentResult Invoke()

@@ -1,3 +1,5 @@
+﻿using Newtonsoft.Json;
+
 namespace Nop.Core.Configuration
 {
     /// <summary>
@@ -10,7 +12,7 @@ namespace Nop.Core.Configuration
         /// It's ignored (always enabled) in development environment
         /// </summary>
         public bool DisplayFullErrorStack { get; set; }
-
+        
         /// <summary>
         /// Gets or sets connection string for Azure BLOB storage
         /// </summary>
@@ -23,19 +25,36 @@ namespace Nop.Core.Configuration
         /// Gets or sets end point for Azure BLOB storage
         /// </summary>
         public string AzureBlobStorageEndPoint { get; set; }
+        /// <summary>
+        /// Gets or sets whether or the Container Name is appended to the AzureBlobStorageEndPoint
+        /// when constructing the url
+        /// </summary>
+        public bool AzureBlobStorageAppendContainerName { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether we should use Redis server for caching (instead of default in-memory caching)
+        /// Gets or sets a value indicating whether we should use Redis server
         /// </summary>
-        public bool RedisCachingEnabled { get; set; }
+        public bool RedisEnabled { get; set; }
         /// <summary>
-        /// Gets or sets Redis connection string. Used when Redis caching is enabled
+        /// Gets or sets Redis connection string. Used when Redis is enabled
         /// </summary>
-        public string RedisCachingConnectionString { get; set; }
+        public string RedisConnectionString { get; set; }
+        /// <summary>
+        /// Gets or sets a specific redis database; If you need to use a specific redis database, just set its number here. set NULL if should use the different database for each data type (used by default)
+        /// </summary>
+        public int? RedisDatabaseId { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether the data protection system should be configured to persist keys in the Redis database
         /// </summary>
-        public bool PersistDataProtectionKeysToRedis { get; set; }
+        public bool UseRedisToStoreDataProtectionKeys { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether we should use Redis server for caching (instead of default in-memory caching)
+        /// </summary>
+        public bool UseRedisForCaching { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether we should use Redis server for store the plugins info (instead of default plugin.json file)
+        /// </summary>
+        public bool UseRedisToStorePluginsInfo { get; set; }
 
         /// <summary>
         /// Gets or sets path to database with user agent strings
@@ -59,11 +78,6 @@ namespace Nop.Core.Configuration
         /// Gets or sets a list of plugins ignored during nopCommerce installation
         /// </summary>
         public string PluginsIgnoredDuringInstallation { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether we should ignore startup tasks
-        /// </summary>
-        public bool IgnoreStartupTasks { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to clear /Plugins/bin directory on application startup
@@ -95,5 +109,11 @@ namespace Nop.Core.Configuration
         /// By default the cookie-based TempData provider is used to store TempData in cookies.
         /// </summary>
         public bool UseSessionStateTempDataProvider { get; set; }
+        
+        /// <summary>
+        /// Gets a value indicating whether we should use Azure blob storage
+        /// </summary>
+        [JsonIgnore]
+        public bool AzureBlobStorageEnabled => !string.IsNullOrEmpty(AzureBlobStorageConnectionString);
     }
 }

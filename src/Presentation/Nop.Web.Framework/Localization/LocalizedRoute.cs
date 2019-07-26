@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
+using Nop.Services.Localization;
 
 namespace Nop.Web.Framework.Localization
 {

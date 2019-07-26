@@ -21,7 +21,7 @@ namespace Nop.Services.Tasks
 
         public ScheduleTaskService(IRepository<ScheduleTask> taskRepository)
         {
-            this._taskRepository = taskRepository;
+            _taskRepository = taskRepository;
         }
 
         #endregion

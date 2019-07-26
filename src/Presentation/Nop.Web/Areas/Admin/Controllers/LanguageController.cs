@@ -15,9 +15,10 @@ using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Localization;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -55,15 +56,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreMappingService storeMappingService,
             IStoreService storeService)
         {
-            this._customerActivityService = customerActivityService;
-            this._languageModelFactory = languageModelFactory;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._fileProvider = fileProvider;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
+            _customerActivityService = customerActivityService;
+            _languageModelFactory = languageModelFactory;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _fileProvider = fileProvider;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
         }
 
         #endregion
@@ -118,7 +119,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(LanguageSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _languageModelFactory.PrepareLanguageListModel(searchModel);
@@ -159,9 +160,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
 
                 return RedirectToAction("Edit", new { id = language.Id });
             }
@@ -226,9 +224,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
 
                 return RedirectToAction("Edit", new { id = language.Id });
             }
@@ -300,7 +295,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult Resources(LocaleResourceSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a language with the specified id
             var language = _languageService.GetLanguageById(searchModel.LanguageId, false);
@@ -313,8 +308,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
+        //ValidateAttribute is used to force model validation
         [HttpPost]
-        public virtual IActionResult ResourceUpdate(LocaleResourceModel model)
+        public virtual IActionResult ResourceUpdate([Validate] LocaleResourceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -326,7 +322,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
             }
 
             var resource = _localizationService.GetLocaleStringResourceById(model.Id);
@@ -336,7 +332,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var res = _localizationService.GetLocaleStringResourceByName(model.ResourceName, model.LanguageId, false);
                 if (res != null && res.Id != resource.Id)
                 {
-                    return Json(new DataSourceResult { Errors = string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), res.ResourceName) });
+                    return ErrorJson(string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), res.ResourceName));
                 }
             }
 
@@ -348,8 +344,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        //ValidateAttribute is used to force model validation
         [HttpPost]
-        public virtual IActionResult ResourceAdd(int languageId, LocaleResourceModel model)
+        public virtual IActionResult ResourceAdd(int languageId, [Validate] LocaleResourceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -361,7 +358,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
             }
 
             var res = _localizationService.GetLocaleStringResourceByName(model.ResourceName, model.LanguageId, false);
@@ -376,10 +373,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             else
             {
-                return Json(new DataSourceResult { Errors = string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), model.ResourceName) });
+                return ErrorJson(string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), model.ResourceName));
             }
 
-            return new NullJsonResult();
+            return Json(new { Result = true });
         }
 
         [HttpPost]
@@ -440,13 +437,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     using (var sr = new StreamReader(importxmlfile.OpenReadStream(), Encoding.UTF8))
                     {
-                        _localizationService.ImportResourcesFromXml(language, sr.ReadToEnd());
+                        _localizationService.ImportResourcesFromXml(language, sr);
                     }
                 }
                 else
                 {
                     _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
-                    return RedirectToAction("Edit", new {id = language.Id});
+                    return RedirectToAction("Edit", new { id = language.Id });
                 }
 
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Imported"));

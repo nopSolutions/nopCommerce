@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Infrastructure.Mapper;
-using Nop.Core.Plugins;
 
 namespace Nop.Core.Infrastructure
 {
@@ -67,12 +64,12 @@ namespace Nop.Core.Infrastructure
         }
 
         /// <summary>
-        /// Register dependencies using Autofac
+        /// Register dependencies
         /// </summary>
-        /// <param name="nopConfig">Startup Nop configuration parameters</param>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="typeFinder">Type finder</param>
-        protected virtual IServiceProvider RegisterDependencies(NopConfig nopConfig, IServiceCollection services, ITypeFinder typeFinder)
+        /// <param name="nopConfig">Nop configuration parameters</param>
+        protected virtual IServiceProvider RegisterDependencies(IServiceCollection services, ITypeFinder typeFinder, NopConfig nopConfig)
         {
             var containerBuilder = new ContainerBuilder();
 
@@ -82,12 +79,14 @@ namespace Nop.Core.Infrastructure
             //register type finder
             containerBuilder.RegisterInstance(typeFinder).As<ITypeFinder>().SingleInstance();
 
+            //populate Autofac container builder with the set of registered service descriptors
+            containerBuilder.Populate(services);
+
             //find dependency registrars provided by other assemblies
             var dependencyRegistrars = typeFinder.FindClassesOfType<IDependencyRegistrar>();
 
             //create and sort instances of dependency registrars
             var instances = dependencyRegistrars
-                //.Where(dependencyRegistrar => PluginManager.FindPlugin(dependencyRegistrar)?.Installed ?? true) //ignore not installed plugins
                 .Select(dependencyRegistrar => (IDependencyRegistrar)Activator.CreateInstance(dependencyRegistrar))
                 .OrderBy(dependencyRegistrar => dependencyRegistrar.Order);
 
@@ -95,11 +94,9 @@ namespace Nop.Core.Infrastructure
             foreach (var dependencyRegistrar in instances)
                 dependencyRegistrar.Register(containerBuilder, typeFinder, nopConfig);
 
-            //populate Autofac container builder with the set of registered service descriptors
-            containerBuilder.Populate(services);
-
             //create service provider
             _serviceProvider = new AutofacServiceProvider(containerBuilder.Build());
+
             return _serviceProvider;
         }
 
@@ -115,12 +112,11 @@ namespace Nop.Core.Infrastructure
 
             //create and sort instances of mapper configurations
             var instances = mapperConfigurations
-                .Where(mapperConfiguration => PluginManager.FindPlugin(mapperConfiguration)?.Installed ?? true) //ignore not installed plugins
                 .Select(mapperConfiguration => (IOrderedMapperProfile)Activator.CreateInstance(mapperConfiguration))
                 .OrderBy(mapperConfiguration => mapperConfiguration.Order);
 
             //create AutoMapper configuration
-            var config = new MapperConfiguration(cfg => 
+            var config = new MapperConfiguration(cfg =>
             {
                 foreach (var instance in instances)
                 {
@@ -130,29 +126,6 @@ namespace Nop.Core.Infrastructure
 
             //register
             AutoMapperConfiguration.Init(config);
-        }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Initialize engine
-        /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        public void Initialize(IServiceCollection services)
-        {
-            //most of API providers require TLS 1.2 nowadays
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-            var provider = services.BuildServiceProvider();
-            var hostingEnvironment = provider.GetRequiredService<IHostingEnvironment>();
-            CommonHelper.DefaultFileProvider = new NopFileProvider(hostingEnvironment);
-
-            //initialize plugins
-            var nopConfig = provider.GetRequiredService<NopConfig>();
-            var mvcCoreBuilder = services.AddMvcCore();
-            PluginManager.Initialize(mvcCoreBuilder.PartManager, nopConfig);
         }
 
         private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
@@ -168,13 +141,18 @@ namespace Nop.Core.Infrastructure
             return assembly;
         }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Add and configure services
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration of the application</param>
+        /// <param name="nopConfig">Nop configuration parameters</param>
         /// <returns>Service provider</returns>
-        public IServiceProvider ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        public IServiceProvider ConfigureServices(IServiceCollection services, IConfiguration configuration, NopConfig nopConfig)
         {
             //find startup configurations provided by other assemblies
             var typeFinder = new WebAppTypeFinder();
@@ -182,7 +160,6 @@ namespace Nop.Core.Infrastructure
 
             //create and sort instances of startup configurations
             var instances = startupConfigurations
-                //.Where(startup => PluginManager.FindPlugin(startup)?.Installed ?? true) //ignore not installed plugins
                 .Select(startup => (INopStartup)Activator.CreateInstance(startup))
                 .OrderBy(startup => startup.Order);
 
@@ -194,16 +171,14 @@ namespace Nop.Core.Infrastructure
             AddAutoMapper(services, typeFinder);
 
             //register dependencies
-            var nopConfig = services.BuildServiceProvider().GetService<NopConfig>();
-            RegisterDependencies(nopConfig, services, typeFinder);
+            RegisterDependencies(services, typeFinder, nopConfig);
 
             //run startup tasks
-            if (!nopConfig.IgnoreStartupTasks)
-                RunStartupTasks(typeFinder);
+            RunStartupTasks(typeFinder);
 
             //resolve assemblies here. otherwise, plugins can throw an exception when rendering views
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-            
+
             return _serviceProvider;
         }
 
@@ -219,7 +194,6 @@ namespace Nop.Core.Infrastructure
 
             //create and sort instances of startup configurations
             var instances = startupConfigurations
-                //.Where(startup => PluginManager.FindPlugin(startup)?.Installed ?? true) //ignore not installed plugins
                 .Select(startup => (INopStartup)Activator.CreateInstance(startup))
                 .OrderBy(startup => startup.Order);
 
@@ -235,7 +209,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Resolved service</returns>
         public T Resolve<T>() where T : class
         {
-            return (T)GetServiceProvider().GetRequiredService(typeof(T));
+            return (T)Resolve(typeof(T));
         }
 
         /// <summary>
@@ -245,7 +219,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Resolved service</returns>
         public object Resolve(Type type)
         {
-            return GetServiceProvider().GetRequiredService(type);
+            return GetServiceProvider().GetService(type);
         }
 
         /// <summary>
@@ -253,7 +227,7 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <typeparam name="T">Type of resolved services</typeparam>
         /// <returns>Collection of resolved services</returns>
-        public IEnumerable<T> ResolveAll<T>()
+        public virtual IEnumerable<T> ResolveAll<T>()
         {
             return (IEnumerable<T>)GetServiceProvider().GetServices(typeof(T));
         }

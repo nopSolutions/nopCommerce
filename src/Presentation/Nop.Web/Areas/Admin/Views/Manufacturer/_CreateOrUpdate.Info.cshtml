@@ -1,27 +1,7 @@
-@model ManufacturerModel
+﻿@model ManufacturerModel
 
-<script>
-    $(document).ready(function () {
-        $("#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
-        togglePageSize();
-    });
-
-    function togglePageSize() {
-        if ($('#@Html.IdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
-            $('#pnlPageSize').hide();
-            $('#pnlPageSizeOptions').show();
-        } else {
-            $('#pnlPageSize').show();
-            $('#pnlPageSizeOptions').hide();
-        }
-    }
-</script>
-
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerDetailsInfoTop, additionalData = Model })
-    <div class="panel panel-default">
-        <div class="panel-body">
-            @(Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-info-localized",
+<div class="panel-body">
+    @(Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-name-localized",
     @<div>
         <div class="form-group">
             <div class="col-md-3">
@@ -43,7 +23,7 @@
         </div>
         <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
     </div>
-    ,
+,
     @<div>
         <div class="form-group">
             <div class="col-md-3">
@@ -63,184 +43,15 @@
                 <span asp-validation-for="Description"></span>
             </div>
         </div>
-    </div>
-      ))
-            <div class="form-group" @(Model.AvailableManufacturerTemplates.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
-                <div class="col-md-3">
-                    <nop-label asp-for="ManufacturerTemplateId" />
-                </div>
-                <div class="col-md-9">
-                    <nop-select asp-for="ManufacturerTemplateId" asp-items="Model.AvailableManufacturerTemplates"/>
-                    <span asp-validation-for="ManufacturerTemplateId"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="PictureId" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="PictureId" />
-                    <span asp-validation-for="PictureId"></span>
-                </div>
-            </div>
-            <div class="form-group advanced-setting">
-                <div class="col-md-3">
-                    <nop-label asp-for="PriceRanges" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="PriceRanges" />
-                    <span asp-validation-for="PriceRanges"></span>
-                </div>
-            </div>
-            <div class="form-group advanced-setting">
-                <div class="col-md-3">
-                    <nop-label asp-for="AllowCustomersToSelectPageSize" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="AllowCustomersToSelectPageSize" />
-                    <span asp-validation-for="AllowCustomersToSelectPageSize"></span>
-                </div>
-            </div>
-            <nop-nested-setting asp-for="AllowCustomersToSelectPageSize">
-                <div id="pnlPageSize" class="form-group advanced-setting">
-                    <div class="col-md-3">
-                        <nop-label asp-for="PageSize" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="PageSize" />
-                        <span asp-validation-for="PageSize"></span>
-                    </div>
-                </div>
-                <div id="pnlPageSizeOptions" class="form-group advanced-setting">
-                    <div class="col-md-3">
-                        <nop-label asp-for="PageSizeOptions" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-editor asp-for="PageSizeOptions" />
-                        <span asp-validation-for="PageSizeOptions"></span>
-                    </div>
-                </div>
-            </nop-nested-setting>
-            <div class="form-group advanced-setting">
-                <div class="col-md-3">
-                    <nop-label asp-for="SelectedDiscountIds" />
-                </div>
-                <div class="col-md-9">
-                    <nop-select asp-for="SelectedDiscountIds" asp-items="Model.AvailableDiscounts" asp-multiple="true" />
-                    <script>
-            $(document).ready(function() {
-                var discountsIdsInput = $('#@Html.IdFor(model => model.SelectedDiscountIds)').data("kendoMultiSelect");
-                discountsIdsInput.setOptions({
-                    autoClose: false,
-                    filter: "contains"
-                });
-
-                @if (Model.AvailableDiscounts.Count == 0)
-                {
-                    <text>
-                        discountsIdsInput.setOptions({
-                            enable: false,
-                            placeholder: '@T("Admin.Catalog.Manufacturers.Fields.Discounts.NoDiscounts")'
-                        });
-                        discountsIdsInput._placeholder();
-                        discountsIdsInput._enable();
-                    </text>
-                }
-            });
-                    </script>
-                </div>
-            </div>
-            <div class="form-group advanced-setting">
-                <div class="col-md-3">
-                    <nop-label asp-for="SelectedCustomerRoleIds" />
-                </div>
-                <div class="col-md-9">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <nop-select asp-for="SelectedCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
-                            <script>
-                    $(document).ready(function() {
-                        var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
-                        rolesIdsInput.setOptions({
-                            autoClose: false,
-                            filter: "contains"
-                        });
-
-                        @if (Model.AvailableCustomerRoles.Count == 0)
-                        {
-                            <text>
-                                rolesIdsInput.setOptions({
-                                    enable: false,
-                                    placeholder: 'No customer roles available'
-                                });
-                                rolesIdsInput._placeholder();
-                                rolesIdsInput._enable();
-                            </text>
-                        }
-                    });
-                            </script>
-                        </div>
-                        <div class="col-md-8">
-                            @await Component.InvokeAsync("AclDisabledWarning")
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group advanced-setting">
-                <div class="col-md-3">
-                    <nop-label asp-for="SelectedStoreIds" />
-                </div>
-                <div class="col-md-9">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
-                            <script>
-                    $(document).ready(function() {
-                        var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
-                        storesIdsInput.setOptions({
-                            autoClose: false,
-                            filter: "contains"
-                        });
-
-                        @if (Model.AvailableStores.Count == 0)
-                        {
-                            <text>
-                                storesIdsInput.setOptions({
-                                    enable: false,
-                                    placeholder: 'No stores available'
-                                });
-                                storesIdsInput._placeholder();
-                                storesIdsInput._enable();
-                            </text>
-                        }
-                    });
-                            </script>
-                        </div>
-                        <div class="col-md-8">
-                            @await Component.InvokeAsync("MultistoreDisabledWarning")
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group advanced-setting">
-                <div class="col-md-3">
-                    <nop-label asp-for="Published" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="Published" />
-                    <span asp-validation-for="Published"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-3">
-                    <nop-label asp-for="DisplayOrder" />
-                </div>
-                <div class="col-md-9">
-                    <nop-editor asp-for="DisplayOrder" />
-                    <span asp-validation-for="DisplayOrder"></span>
-                </div>
-            </div>
+    </div>))
+    
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-label asp-for="PictureId" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="PictureId" />
+            <span asp-validation-for="PictureId"></span>
         </div>
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerDetailsInfoBottom, additionalData = Model })
 </div>

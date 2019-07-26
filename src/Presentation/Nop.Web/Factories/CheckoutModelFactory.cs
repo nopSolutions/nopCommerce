@@ -7,15 +7,14 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Directory;
-using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Pickup;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Models.Checkout;
@@ -30,15 +29,19 @@ namespace Nop.Web.Factories
         private readonly AddressSettings _addressSettings;
         private readonly CommonSettings _commonSettings;
         private readonly IAddressModelFactory _addressModelFactory;
+        private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IPaymentService _paymentService;
+        private readonly IPickupPluginManager _pickupPluginManager;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IRewardPointService _rewardPointService;
+        private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -58,15 +61,19 @@ namespace Nop.Web.Factories
         public CheckoutModelFactory(AddressSettings addressSettings,
             CommonSettings commonSettings,
             IAddressModelFactory addressModelFactory,
+            IAddressService addressService,
             ICountryService countryService,
             ICurrencyService currencyService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IOrderProcessingService orderProcessingService,
             IOrderTotalCalculationService orderTotalCalculationService,
+            IPaymentPluginManager paymentPluginManager,
             IPaymentService paymentService,
+            IPickupPluginManager pickupPluginManager,
             IPriceFormatter priceFormatter,
             IRewardPointService rewardPointService,
+            IShippingPluginManager shippingPluginManager,
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
@@ -79,29 +86,33 @@ namespace Nop.Web.Factories
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings)
         {
-            this._addressSettings = addressSettings;
-            this._commonSettings = commonSettings;
-            this._addressModelFactory = addressModelFactory;
-            this._countryService = countryService;
-            this._currencyService = currencyService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._orderProcessingService = orderProcessingService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._paymentService = paymentService;
-            this._priceFormatter = priceFormatter;
-            this._rewardPointService = rewardPointService;
-            this._shippingService = shippingService;
-            this._shoppingCartService = shoppingCartService;
-            this._stateProvinceService = stateProvinceService;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._taxService = taxService;
-            this._workContext = workContext;
-            this._orderSettings = orderSettings;
-            this._paymentSettings = paymentSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._shippingSettings = shippingSettings;
+            _addressSettings = addressSettings;
+            _commonSettings = commonSettings;
+            _addressModelFactory = addressModelFactory;
+            _addressService = addressService;
+            _countryService = countryService;
+            _currencyService = currencyService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _orderProcessingService = orderProcessingService;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _paymentPluginManager = paymentPluginManager;
+            _paymentService = paymentService;
+            _pickupPluginManager = pickupPluginManager;
+            _priceFormatter = priceFormatter;
+            _rewardPointService = rewardPointService;
+            _shippingPluginManager = shippingPluginManager;
+            _shippingService = shippingService;
+            _shoppingCartService = shoppingCartService;
+            _stateProvinceService = stateProvinceService;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _taxService = taxService;
+            _workContext = workContext;
+            _orderSettings = orderSettings;
+            _paymentSettings = paymentSettings;
+            _rewardPointsSettings = rewardPointsSettings;
+            _shippingSettings = shippingSettings;
         }
 
         #endregion
@@ -145,7 +156,15 @@ namespace Nop.Web.Factories
                     address: address,
                     excludeProperties: false,
                     addressSettings: _addressSettings);
-                model.ExistingAddresses.Add(addressModel);
+
+                if (_addressService.IsAddressValid(address))
+                {
+                    model.ExistingAddresses.Add(addressModel);
+                }
+                else
+                {
+                    model.InvalidExistingAddresses.Add(addressModel);
+                }
             }
 
             //new address
@@ -175,13 +194,13 @@ namespace Nop.Web.Factories
             {
 
                 //allow pickup in store?
-                AllowPickUpInStore = _shippingSettings.AllowPickUpInStore
+                AllowPickupInStore = _shippingSettings.AllowPickupInStore
             };
-            if (model.AllowPickUpInStore)
+            if (model.AllowPickupInStore)
             {
                 model.DisplayPickupPointsOnMap = _shippingSettings.DisplayPickupPointsOnMap;
                 model.GoogleMapsApiKey = _shippingSettings.GoogleMapsApiKey;
-                var pickupPointProviders = _shippingService.LoadActivePickupPointProviders(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+                var pickupPointProviders = _pickupPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
                 if (pickupPointProviders.Any())
                 {
                     var languageId = _workContext.WorkingLanguage.Id;
@@ -210,7 +229,7 @@ namespace Nop.Web.Factories
                                 OpeningHours = point.OpeningHours
                             };
                             if (point.PickupFee > 0)
-                            {                                
+                            {
                                 var amount = _taxService.GetShippingPrice(point.PickupFee, _workContext.CurrentCustomer);
                                 amount = _currencyService.ConvertFromPrimaryStoreCurrency(amount, _workContext.WorkingCurrency);
                                 pickupPointModel.PickupFee = _priceFormatter.FormatShippingPrice(amount, true);
@@ -224,15 +243,16 @@ namespace Nop.Web.Factories
                 }
 
                 //only available pickup points
-                if (!_shippingService.LoadActiveShippingRateComputationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id).Any())
+                var shippingProviders = _shippingPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+                if (!shippingProviders.Any())
                 {
                     if (!pickupPointProviders.Any())
                     {
                         model.Warnings.Add(_localizationService.GetResource("Checkout.ShippingIsNotAllowed"));
                         model.Warnings.Add(_localizationService.GetResource("Checkout.PickupPoints.NotAvailable"));
                     }
-                    model.PickUpInStoreOnly = true;
-                    model.PickUpInStore = true;
+                    model.PickupInStoreOnly = true;
+                    model.PickupInStore = true;
                     return model;
                 }
             }
@@ -254,7 +274,15 @@ namespace Nop.Web.Factories
                     address: address,
                     excludeProperties: false,
                     addressSettings: _addressSettings);
-                model.ExistingAddresses.Add(addressModel);
+
+                if (_addressService.IsAddressValid(address))
+                {
+                    model.ExistingAddresses.Add(addressModel);
+                }
+                else
+                {
+                    model.InvalidExistingAddresses.Add(addressModel);
+                }
             }
 
             //new address
@@ -302,7 +330,7 @@ namespace Nop.Web.Factories
                     };
 
                     //adjust rate
-                    var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(shippingOption.Rate, cart, out List<DiscountForCaching> _);
+                    var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(shippingOption.Rate, cart, out var _);
 
                     var rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
                     var rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
@@ -383,8 +411,8 @@ namespace Nop.Web.Factories
             }
 
             //filter by country
-            var paymentMethods = _paymentService
-                .LoadActivePaymentMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id, filterByCountryId)
+            var paymentMethods = _paymentPluginManager
+                .LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id, filterByCountryId)
                 .Where(pm => pm.PaymentMethodType == PaymentMethodType.Standard || pm.PaymentMethodType == PaymentMethodType.Redirection)
                 .Where(pm => !pm.HidePaymentMethod(cart))
                 .ToList();
@@ -398,7 +426,7 @@ namespace Nop.Web.Factories
                     Name = _localizationService.GetLocalizedFriendlyName(pm, _workContext.WorkingLanguage.Id),
                     Description = _paymentSettings.ShowPaymentMethodDescriptions ? pm.PaymentMethodDescription : string.Empty,
                     PaymentMethodSystemName = pm.PluginDescriptor.SystemName,
-                    LogoUrl = PluginManager.GetLogoUrl(pm.PluginDescriptor)
+                    LogoUrl = _paymentPluginManager.GetPluginLogoUrl(pm)
                 };
                 //payment method additional fee
                 var paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, pm.PluginDescriptor.SystemName);

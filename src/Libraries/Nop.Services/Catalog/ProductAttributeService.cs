@@ -23,6 +23,7 @@ namespace Nop.Services.Catalog
         private readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
         private readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
         private readonly IRepository<ProductAttributeValue> _productAttributeValueRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -34,15 +35,17 @@ namespace Nop.Services.Catalog
             IRepository<ProductAttribute> productAttributeRepository,
             IRepository<ProductAttributeCombination> productAttributeCombinationRepository,
             IRepository<ProductAttributeMapping> productAttributeMappingRepository,
-            IRepository<ProductAttributeValue> productAttributeValueRepository)
+            IRepository<ProductAttributeValue> productAttributeValueRepository,
+            IStaticCacheManager staticCacheManager)
         {
-            this._cacheManager = cacheManager;
-            this._eventPublisher = eventPublisher;
-            this._predefinedProductAttributeValueRepository = predefinedProductAttributeValueRepository;
-            this._productAttributeRepository = productAttributeRepository;
-            this._productAttributeCombinationRepository = productAttributeCombinationRepository;
-            this._productAttributeMappingRepository = productAttributeMappingRepository;
-            this._productAttributeValueRepository = productAttributeValueRepository;
+            _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _predefinedProductAttributeValueRepository = predefinedProductAttributeValueRepository;
+            _productAttributeRepository = productAttributeRepository;
+            _productAttributeCombinationRepository = productAttributeCombinationRepository;
+            _productAttributeMappingRepository = productAttributeMappingRepository;
+            _productAttributeValueRepository = productAttributeValueRepository;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -63,10 +66,11 @@ namespace Nop.Services.Catalog
             _productAttributeRepository.Delete(productAttribute);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeMappingsPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeValuesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeCombinationsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeMappingsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeValuesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeCombinationsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(productAttribute);
@@ -117,10 +121,11 @@ namespace Nop.Services.Catalog
             _productAttributeRepository.Insert(productAttribute);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeMappingsPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeValuesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeCombinationsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeMappingsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeValuesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeCombinationsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(productAttribute);
@@ -138,10 +143,11 @@ namespace Nop.Services.Catalog
             _productAttributeRepository.Update(productAttribute);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeMappingsPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeValuesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeCombinationsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeMappingsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeValuesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeCombinationsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(productAttribute);
@@ -179,10 +185,11 @@ namespace Nop.Services.Catalog
             _productAttributeMappingRepository.Delete(productAttributeMapping);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeMappingsPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeValuesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeCombinationsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeMappingsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeValuesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeCombinationsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(productAttributeMapping);
@@ -195,17 +202,44 @@ namespace Nop.Services.Catalog
         /// <returns>Product attribute mapping collection</returns>
         public virtual IList<ProductAttributeMapping> GetProductAttributeMappingsByProductId(int productId)
         {
-            var key = string.Format(NopCatalogDefaults.ProductAttributeMappingsAllCacheKey, productId);
+            IList<ProductAttributeMapping> attributes = null;
 
-            return _cacheManager.Get(key, () =>
+            //function to load attributes
+            IList<ProductAttributeMapping> LoadAttributesFunc()
             {
-                var query = from pam in _productAttributeMappingRepository.Table
-                            orderby pam.DisplayOrder, pam.Id
-                            where pam.ProductId == productId
-                            select pam;
-                var productAttributeMappings = query.ToList();
-                return productAttributeMappings;
+                var allCacheKey = string.Format(NopCatalogDefaults.ProductAttributeMappingsAllCacheKey, productId);
+                return _cacheManager.Get(allCacheKey, () =>
+                {
+                    var query = from pam in _productAttributeMappingRepository.Table
+                        orderby pam.DisplayOrder, pam.Id
+                        where pam.ProductId == productId
+                        select pam;
+                    var productAttributeMappings = query.ToList();
+                    return productAttributeMappings;
+                });
+            };
+
+            //perfomance optimization
+            //We cache a value indicating whether a product has attributes.
+            //This way we don't load attributes with each HTTP request
+            var hasAttributesCacheKey = string.Format(NopCatalogDefaults.ProductHasProductAttributesCacheKey, productId);
+            var hasAttributes = _staticCacheManager.Get(hasAttributesCacheKey, () =>
+            {
+                //no value in the cache yet
+                //let's load attributes and cache the result (true/false)
+                attributes = LoadAttributesFunc();
+                return attributes.Any();
             });
+            if (hasAttributes && attributes == null)
+            {
+                //cache indicates that a product has attributes
+                //let's load them
+                attributes = LoadAttributesFunc();
+            }
+            if (attributes == null)
+                attributes = new List<ProductAttributeMapping>();
+
+            return attributes;
         }
 
         /// <summary>
@@ -234,10 +268,11 @@ namespace Nop.Services.Catalog
             _productAttributeMappingRepository.Insert(productAttributeMapping);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeMappingsPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeValuesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeCombinationsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeMappingsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeValuesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeCombinationsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(productAttributeMapping);
@@ -255,10 +290,11 @@ namespace Nop.Services.Catalog
             _productAttributeMappingRepository.Update(productAttributeMapping);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeMappingsPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeValuesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeCombinationsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeMappingsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeValuesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeCombinationsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(productAttributeMapping);
@@ -280,10 +316,11 @@ namespace Nop.Services.Catalog
             _productAttributeValueRepository.Delete(productAttributeValue);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeMappingsPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeValuesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeCombinationsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeMappingsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeValuesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeCombinationsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(productAttributeValue);
@@ -334,10 +371,11 @@ namespace Nop.Services.Catalog
             _productAttributeValueRepository.Insert(productAttributeValue);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeMappingsPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeValuesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeCombinationsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeMappingsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeValuesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeCombinationsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(productAttributeValue);
@@ -355,10 +393,11 @@ namespace Nop.Services.Catalog
             _productAttributeValueRepository.Update(productAttributeValue);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeMappingsPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeValuesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeCombinationsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeMappingsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeValuesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeCombinationsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(productAttributeValue);
@@ -380,10 +419,11 @@ namespace Nop.Services.Catalog
             _predefinedProductAttributeValueRepository.Delete(ppav);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeMappingsPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeValuesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeCombinationsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeMappingsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeValuesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeCombinationsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(ppav);
@@ -429,10 +469,11 @@ namespace Nop.Services.Catalog
             _predefinedProductAttributeValueRepository.Insert(ppav);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeMappingsPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeValuesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeCombinationsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeMappingsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeValuesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeCombinationsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(ppav);
@@ -450,10 +491,11 @@ namespace Nop.Services.Catalog
             _predefinedProductAttributeValueRepository.Update(ppav);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeMappingsPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeValuesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeCombinationsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeMappingsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeValuesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeCombinationsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(ppav);
@@ -475,10 +517,11 @@ namespace Nop.Services.Catalog
             _productAttributeCombinationRepository.Delete(combination);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeMappingsPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeValuesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeCombinationsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeMappingsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeValuesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeCombinationsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(combination);
@@ -552,10 +595,11 @@ namespace Nop.Services.Catalog
             _productAttributeCombinationRepository.Insert(combination);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeMappingsPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeValuesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeCombinationsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeMappingsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeValuesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeCombinationsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(combination);
@@ -573,10 +617,11 @@ namespace Nop.Services.Catalog
             _productAttributeCombinationRepository.Update(combination);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeMappingsPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeValuesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductAttributeCombinationsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeMappingsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeValuesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductAttributeCombinationsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(combination);

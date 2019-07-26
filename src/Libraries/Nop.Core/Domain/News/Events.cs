@@ -11,7 +11,7 @@ namespace Nop.Core.Domain.News
         /// <param name="newsComment">News comment</param>
         public NewsCommentApprovedEvent(NewsComment newsComment)
         {
-            this.NewsComment = newsComment;
+            NewsComment = newsComment;
         }
 
         /// <summary>

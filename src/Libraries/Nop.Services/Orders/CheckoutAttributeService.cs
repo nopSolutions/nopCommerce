@@ -32,11 +32,11 @@ namespace Nop.Services.Orders
             IRepository<CheckoutAttributeValue> checkoutAttributeValueRepository,
             IStoreMappingService storeMappingService)
         {
-            this._cacheManager = cacheManager;
-            this._eventPublisher = eventPublisher;
-            this._checkoutAttributeRepository = checkoutAttributeRepository;
-            this._checkoutAttributeValueRepository = checkoutAttributeValueRepository;
-            this._storeMappingService = storeMappingService;
+            _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _checkoutAttributeRepository = checkoutAttributeRepository;
+            _checkoutAttributeValueRepository = checkoutAttributeValueRepository;
+            _storeMappingService = storeMappingService;
         }
 
         #endregion
@@ -56,8 +56,8 @@ namespace Nop.Services.Orders
 
             _checkoutAttributeRepository.Delete(checkoutAttribute);
 
-            _cacheManager.RemoveByPattern(NopOrderDefaults.CheckoutAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopOrderDefaults.CheckoutAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopOrderDefaults.CheckoutAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopOrderDefaults.CheckoutAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(checkoutAttribute);
@@ -119,8 +119,8 @@ namespace Nop.Services.Orders
 
             _checkoutAttributeRepository.Insert(checkoutAttribute);
 
-            _cacheManager.RemoveByPattern(NopOrderDefaults.CheckoutAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopOrderDefaults.CheckoutAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopOrderDefaults.CheckoutAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopOrderDefaults.CheckoutAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(checkoutAttribute);
@@ -137,8 +137,8 @@ namespace Nop.Services.Orders
 
             _checkoutAttributeRepository.Update(checkoutAttribute);
 
-            _cacheManager.RemoveByPattern(NopOrderDefaults.CheckoutAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopOrderDefaults.CheckoutAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopOrderDefaults.CheckoutAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopOrderDefaults.CheckoutAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(checkoutAttribute);
@@ -159,8 +159,8 @@ namespace Nop.Services.Orders
 
             _checkoutAttributeValueRepository.Delete(checkoutAttributeValue);
 
-            _cacheManager.RemoveByPattern(NopOrderDefaults.CheckoutAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopOrderDefaults.CheckoutAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopOrderDefaults.CheckoutAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopOrderDefaults.CheckoutAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(checkoutAttributeValue);
@@ -210,8 +210,8 @@ namespace Nop.Services.Orders
 
             _checkoutAttributeValueRepository.Insert(checkoutAttributeValue);
 
-            _cacheManager.RemoveByPattern(NopOrderDefaults.CheckoutAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopOrderDefaults.CheckoutAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopOrderDefaults.CheckoutAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopOrderDefaults.CheckoutAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(checkoutAttributeValue);
@@ -228,8 +228,8 @@ namespace Nop.Services.Orders
 
             _checkoutAttributeValueRepository.Update(checkoutAttributeValue);
 
-            _cacheManager.RemoveByPattern(NopOrderDefaults.CheckoutAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopOrderDefaults.CheckoutAttributeValuesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopOrderDefaults.CheckoutAttributesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopOrderDefaults.CheckoutAttributeValuesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(checkoutAttributeValue);

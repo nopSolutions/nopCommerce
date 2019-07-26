@@ -112,8 +112,8 @@ namespace Nop.Core.Domain.Messages
         /// </summary>
         public QueuedEmailPriority Priority
         {
-            get => (QueuedEmailPriority)this.PriorityId;
-            set => this.PriorityId = (int)value;
+            get => (QueuedEmailPriority)PriorityId;
+            set => PriorityId = (int)value;
         }
     }
 }

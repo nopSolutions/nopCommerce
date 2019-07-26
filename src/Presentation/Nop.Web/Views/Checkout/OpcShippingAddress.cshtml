@@ -1,31 +1,31 @@
 ﻿@model CheckoutShippingAddressModel
 @using System.Text
 <div class="checkout-data">
-    @if (Model.AllowPickUpInStore && !Model.PickUpInStoreOnly && Model.PickupPoints.Any())
+    @if (Model.AllowPickupInStore && !Model.PickupInStoreOnly && Model.PickupPoints.Any())
     {
         <div class="section pickup-in-store">
             <p class="selector">
-                <input asp-for="PickUpInStore" onclick="Shipping.togglePickUpInStore(this)" />
-                <label asp-for="PickUpInStore">@T("Checkout.PickupPoints")</label>
+                <input asp-for="PickupInStore" onclick="Shipping.togglePickupInStore(this)" />
+                <label asp-for="PickupInStore">@T("Checkout.PickupPoints")</label>
             </p>
             <p class="description">
                 <i>@T("Checkout.PickupPoints.Description")</i>
             </p>
             <script>
                 $(document).ready(function () {
-                    Shipping.togglePickUpInStore($('#@Html.IdFor(model => model.PickUpInStore)'));
+                    Shipping.togglePickupInStore($('#@Html.IdFor(model => model.PickupInStore)'));
                 });
             </script>
         </div>
     }
-    @if (Model.AllowPickUpInStore)
+    @if (Model.AllowPickupInStore)
     {
         <div class="section pickup-points" id="pickup-points-form">
             @if (Model.PickupPoints.Any())
             {
-                if (Model.PickUpInStoreOnly)
+                if (Model.PickupInStoreOnly)
                 { 
-                    <input type="hidden" asp-for="PickUpInStore"/>
+                    <input type="hidden" asp-for="PickupInStore"/>
                 }
                 <div class="select-pickup-points">
                     @if (Model.PickupPoints.Count == 1)
@@ -159,8 +159,8 @@
                                         new google.maps.event.trigger(markers.get(this.value), 'click' );
                                     });
 
-                                    $("#@Html.IdFor(model => model.PickUpInStore)").on('change', function() {
-                                        if ($('#@Html.IdFor(model => model.PickUpInStore)').is(':checked')) {
+                                    $("#@Html.IdFor(model => model.PickupInStore)").on('change', function() {
+                                        if ($('#@Html.IdFor(model => model.PickupInStore)').is(':checked')) {
                                             var center = googleMap.getCenter();
                                             google.maps.event.trigger(googleMap, 'resize');
                                             googleMap.setCenter(center);
@@ -182,7 +182,7 @@
             </div>
         </div>
     }
-    @if (!Model.PickUpInStoreOnly)
+    @if (!Model.PickupInStoreOnly)
     {
         <div class="shipping-addresses" id="shipping-addresses-form">
             @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressTop })
@@ -190,6 +190,12 @@
             {
                 <div class="section select-shipping-address">
                     <label for="shipping-address-select">@T("Checkout.SelectShippingAddressOrEnterNewOne")</label>
+                    @if (Model.InvalidExistingAddresses.Count > 0)
+                    {
+                        <label class="min-amount-warning">
+                            @string.Format(T("Checkout.Addresses.Invalid").Text, Model.InvalidExistingAddresses.Count)
+                        </label>
+                    }
                     <div>
                         <select name="shipping_address_id" id="shipping-address-select" class="address-select"
                                 title="" onchange="Shipping.newAddress(!this.value)">

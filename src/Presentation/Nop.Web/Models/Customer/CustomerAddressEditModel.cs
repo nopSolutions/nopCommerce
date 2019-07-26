@@ -7,7 +7,7 @@ namespace Nop.Web.Models.Customer
     {
         public CustomerAddressEditModel()
         {
-            this.Address = new AddressModel();
+            Address = new AddressModel();
         }
         
         public AddressModel Address { get; set; }

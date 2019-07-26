@@ -1,6 +1,54 @@
 ﻿@model ProductModel
 
-@inject IEventPublisher eventPublisher
+@{
+    const string hideInfoBlockAttributeName = "ProductPage.HideInfoBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+
+    const string hidePricesBlockAttributeName = "ProductPage.HidePricesBlock";
+    var hidePricesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePricesBlockAttributeName, defaultValue: true);
+
+    const string hideShippingBlockAttributeName = "ProductPage.HideShippingBlock";
+    var hideShippingBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideShippingBlockAttributeName, defaultValue: true);
+
+    const string hideInventoryBlockAttributeName = "ProductPage.HideInventoryBlock";
+    var hideInventoryBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInventoryBlockAttributeName, defaultValue: true);
+
+    const string hidePicturesBlockAttributeName = "ProductPage.HidePicturesBlock";
+    var hidePicturesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePicturesBlockAttributeName, defaultValue: true);
+
+    const string hideProductAttributesBlockAttributeName = "ProductPage.HideProductAttributesBlock";
+    var hideProductAttributesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductAttributesBlockAttributeName, defaultValue: true);
+
+    const string hideSpecificationAttributeBlockAttributeName = "ProductPage.HideSpecificationAttributeBlock";
+    var hideSpecificationAttributeBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSpecificationAttributeBlockAttributeName, defaultValue: true);
+
+    const string hideGiftCardBlockAttributeName = "ProductPage.HideGiftCardBlock";
+    var hideGiftCardBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideGiftCardBlockAttributeName, defaultValue: true);
+
+    const string hideDownloadableBlockAttributeName = "ProductPage.HideDownloadableBlock";
+    var hideDownloadableBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDownloadableBlockAttributeName, defaultValue: true);
+
+    const string hideRentalBlockAttributeName = "ProductPage.HideRentalBlock";
+    var hideRentalBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRentalBlockAttributeName, defaultValue: true);
+
+    const string hideRecurringBlockAttributeName = "ProductPage.HideRecurringBlock";
+    var hideRecurringBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRecurringBlockAttributeName, defaultValue: true);
+
+    const string hideSeoBlockAttributeName = "ProductPage.HideSEOBlock";
+    var hideSeoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSeoBlockAttributeName, defaultValue: true);
+
+    const string hideRelatedProductsBlockAttributeName = "ProductPage.HideRelatedProductsBlock";
+    var hideRelatedProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideRelatedProductsBlockAttributeName, defaultValue: true);
+
+    const string hideCrossSellsProductsBlockAttributeName = "ProductPage.HideCrossSellsProductsBlock";
+    var hideCrossSellsProductsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCrossSellsProductsBlockAttributeName, defaultValue: true);
+
+    const string hidePurchasedWithOrdersBlockAttributeName = "ProductPage.HidePurchasedWithOrdersBlock";
+    var hidePurchasedWithOrdersBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePurchasedWithOrdersBlockAttributeName, defaultValue: true);
+
+    const string hideStockQuantityHistoryBlockAttributeName = "ProductPage.HideStockQuantityHistoryBlock";
+    var hideStockQuantityHistoryBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideStockQuantityHistoryBlockAttributeName, defaultValue: true);
+}
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
@@ -21,28 +69,30 @@
                 }
             </div>
         </div>
-
-        <nop-tabs id="product-edit">
-            <nop-tab asp-name="tab-info" asp-title="@T("Admin.Catalog.Products.Info")" asp-default="true">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
-            <nop-tab asp-name="tab-seo" asp-title="@T("Admin.Common.SEO")" class="@(Model.ProductEditorSettingsModel.Seo ? "" : "advanced-setting")">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-tab>
-            <nop-tab asp-name="tab-pictures" asp-title="@T("Admin.Catalog.Products.Pictures")">@await Html.PartialAsync("_CreateOrUpdate.Pictures", Model)</nop-tab>
-            <nop-tab asp-name="tab-product-attributes" asp-title="@T("Admin.Catalog.Products.ProductAttributes")" class="@(Model.ProductEditorSettingsModel.ProductAttributes ? "" : "advanced-setting")">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes", Model)</nop-tab>
-            <nop-tab asp-name="tab-specification-attributes" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes")" class="@(Model.ProductEditorSettingsModel.SpecificationAttributes ? "" : "advanced-setting")">@await Html.PartialAsync("_CreateOrUpdate.SpecificationAttributes", Model)</nop-tab>
+        
+        <nop-panels id="product-panels">
+            <nop-panel asp-name="product-info" asp-icon="fa fa-info" asp-title="@T("Admin.Catalog.Products.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            <nop-panel asp-name="product-price" asp-icon="fa fa-usd" asp-title="@T("Admin.Catalog.Products.Price")" asp-hide-block-attribute-name="@hidePricesBlockAttributeName" asp-hide="@hidePricesBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Prices", Model)</nop-panel>
+            <nop-panel asp-name="product-shipping" asp-icon="fa fa-truck" asp-title="@T("Admin.Catalog.Products.Shipping")" asp-hide-block-attribute-name="@hideShippingBlockAttributeName" asp-hide="@hideShippingBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Shipping", Model)</nop-panel>
+            <nop-panel asp-name="product-inventory" asp-icon="fa fa-sitemap" asp-title="@T("Admin.Catalog.Products.Inventory")" asp-hide-block-attribute-name="@hideInventoryBlockAttributeName" asp-hide="@hideInventoryBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Inventory", Model)</nop-panel>
+            <nop-panel asp-name="product-pictures" asp-icon="fa fa-picture-o" asp-title="@T("Admin.Catalog.Products.Pictures")" asp-hide-block-attribute-name="@hidePicturesBlockAttributeName" asp-hide="@hidePicturesBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Pictures", Model)</nop-panel>
+            <nop-panel asp-name="product-product-attributes" asp-icon="fa fa-paperclip" asp-title="@T("Admin.Catalog.Products.ProductAttributes")" asp-hide-block-attribute-name="@hideProductAttributesBlockAttributeName" asp-hide="@hideProductAttributesBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.ProductAttributes)">@await Html.PartialAsync("_CreateOrUpdate.ProductAttributes", Model)</nop-panel>
+            <nop-panel asp-name="product-specification-attributes" asp-icon="fa fa-cog" asp-title="@T("Admin.Catalog.Attributes.SpecificationAttributes")" asp-hide-block-attribute-name="@hideSpecificationAttributeBlockAttributeName" asp-hide="@hideSpecificationAttributeBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.SpecificationAttributes)">@await Html.PartialAsync("_CreateOrUpdate.SpecificationAttributes", Model)</nop-panel>
+            <nop-panel asp-name="product-giftcard" asp-icon="fa fa-gift" asp-title="@T("Admin.Catalog.Products.GiftCard")" asp-hide-block-attribute-name="@hideGiftCardBlockAttributeName" asp-hide="@hideGiftCardBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.IsGiftCard)">@await Html.PartialAsync("_CreateOrUpdate.GiftCard", Model)</nop-panel>
+            <nop-panel asp-name="product-downloadable" asp-icon="fa fa-download" asp-title="@T("Admin.Catalog.Products.DownloadableProduct")" asp-hide-block-attribute-name="@hideDownloadableBlockAttributeName" asp-hide="@hideDownloadableBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.DownloadableProduct)">@await Html.PartialAsync("_CreateOrUpdate.DownloadableProduct", Model)</nop-panel>
+            <nop-panel asp-name="product-rental" asp-icon="fa fa-calendar" asp-title="@T("Admin.Catalog.Products.Rental")" asp-hide-block-attribute-name="@hideRentalBlockAttributeName" asp-hide="@hideRentalBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.IsRental)">@await Html.PartialAsync("_CreateOrUpdate.Rental", Model)</nop-panel>
+            <nop-panel asp-name="product-recurring" asp-icon="fa fa-repeat" asp-title="@T("Admin.Catalog.Products.RecurringProduct")" asp-hide-block-attribute-name="@hideRecurringBlockAttributeName" asp-hide="@hideRecurringBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.RecurringProduct)">@await Html.PartialAsync("_CreateOrUpdate.Recurring", Model)</nop-panel>
+            <nop-panel asp-name="product-seo" asp-icon="fa fa-search-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.Seo)">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-panel>
+            <nop-panel asp-name="product-related-products" asp-icon="fa fa-object-group" asp-title="@T("Admin.Catalog.Products.RelatedProducts")" asp-hide-block-attribute-name="@hideRelatedProductsBlockAttributeName" asp-hide="@hideRelatedProductsBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.RelatedProducts)">@await Html.PartialAsync("_CreateOrUpdate.RelatedProducts", Model)</nop-panel>
+            <nop-panel asp-name="product-crosssells-products" asp-icon="fa fa-random" asp-title="@T("Admin.Catalog.Products.CrossSells")" asp-hide-block-attribute-name="@hideCrossSellsProductsBlockAttributeName" asp-hide="@hideCrossSellsProductsBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.CrossSellsProducts)">@await Html.PartialAsync("_CreateOrUpdate.CrossSellsProducts", Model)</nop-panel>
+            
             @if (Model.Id > 0)
             {
-                <nop-tab asp-name="tab-purchased-with-orders" asp-title="@T("Admin.Catalog.Products.PurchasedWithOrders")" class="@(Model.ProductEditorSettingsModel.PurchasedWithOrders ? "" : "advanced-setting")">@await Html.PartialAsync("_CreateOrUpdate.PurchasedWithOrders", Model)</nop-tab>
-                <nop-tab asp-name="tab-stock-quantity-history" asp-title="@T("Admin.Catalog.Products.StockQuantityHistory")" class="@(Model.ProductEditorSettingsModel.StockQuantityHistory ? "" : "advanced-setting")">@await Html.PartialAsync("_CreateOrUpdate._StockQuantityHistory", Model)</nop-tab>
+                <nop-panel asp-name="product-purchased-with-orders" asp-icon="fa fa-cart-arrow-down" asp-title="@T("Admin.Catalog.Products.PurchasedWithOrders")" asp-hide-block-attribute-name="@hidePurchasedWithOrdersBlockAttributeName" asp-hide="@hidePurchasedWithOrdersBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.PurchasedWithOrders)">@await Html.PartialAsync("_CreateOrUpdate.PurchasedWithOrders", Model)</nop-panel>
+                <nop-panel asp-name="product-stock-quantity-history" asp-icon="fa fa-history" asp-title="@T("Admin.Catalog.Products.StockQuantityHistory")" asp-hide-block-attribute-name="@hideStockQuantityHistoryBlockAttributeName" asp-hide="@hideStockQuantityHistoryBlock" asp-advanced="@(!Model.ProductEditorSettingsModel.StockQuantityHistory)">@await Html.PartialAsync("_CreateOrUpdate.StockQuantityHistory", Model)</nop-panel>
             }
-        </nop-tabs>
+            
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsBlock, additionalData = Model })
+        </nop-panels>
     </div>
 </div>
-
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "product-edit");
-    eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}

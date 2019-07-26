@@ -23,7 +23,7 @@ namespace Nop.Services.Shipping.Tracking
 
         public GeneralShipmentTracker(ITypeFinder typeFinder)
         {
-            this._typeFinder = typeFinder;
+            _typeFinder = typeFinder;
         }
 
         #endregion

@@ -1,82 +1,39 @@
-@model ProductAttributeModel
+﻿@model ProductAttributeModel
 
-<div class="panel-group">
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeDetailsUsedByProductsTop, additionalData = Model })
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <p>
-                @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Hint")
-            </p>
-            <div id="used-by-products-grid"></div>
-
-            <script>
-                $(document).ready(function () {
-                    $("#used-by-products-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("UsedByProducts", "ProductAttribute"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: function() {
-                                        var data = {
-                                            ProductAttributeId: '@(Model.Id)'
-                                        };
-                                        addAntiForgeryToken(data);
-                                        return data;
-                                    }
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(Model.ProductAttributeProductSearchModel.PageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(Model.ProductAttributeProductSearchModel.AvailablePageSizes)],
-                            @await Html.PartialAsync("_GridPagerMessages")
-                        },
-                        editable: {
-                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                                field: "ProductName",
-                                title: "@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Product")",
-                                width: 400
-                            }, {
-                                field: "Published",
-                                title: "@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Published")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                            },
-                            {
-                                field: "Id",
-                                title: "@T("Admin.Common.View")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=Id#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
-                            }]
-                    });
-                });
-            </script>
-        </div>
+@if (Model.Id > 0)
+{
+    <div class="panel-body">
+        <p>
+            @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Hint")
+        </p>
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "used-by-products-grid",
+            UrlRead = new DataUrl("UsedByProducts", "ProductAttribute", new RouteValueDictionary { [nameof(Model.ProductAttributeProductSearchModel.ProductAttributeId)] = Model.ProductAttributeProductSearchModel.ProductAttributeId }),
+            Length = Model.ProductAttributeProductSearchModel.PageSize,
+            LengthMenu = Model.ProductAttributeProductSearchModel.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ProductAttributeProductModel.ProductName))
+                {
+                    Title = T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Product").Text,
+                    Width = "400"
+                },
+                new ColumnProperty(nameof(ProductAttributeProductModel.Published))
+                {
+                    Title = T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Published").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.CenterAll,
+                    Render = new RenderBoolean()
+                },
+                new ColumnProperty(nameof(ProductAttributeProductModel.Id))
+                {
+                    Title = T("Admin.Common.View").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                }
+            }
+        })
     </div>
-    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeDetailsUsedByProductsBottom, additionalData = Model })
-</div>
+}

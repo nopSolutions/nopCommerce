@@ -1,11 +1,30 @@
 @model CustomerUserSettingsModel
-@inject IEventPublisher eventPublisher
 
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.CustomerUser").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Customer and user settings");
+}
+
+@{
+    const string hideCommonBlockAttributeName = "CustomerUserSettingsPage.HideCommonBlock";
+    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+
+    const string hideSecurityBlockAttributeName = "CustomerUserSettingsPage.HideSecurityBlock";
+    var hideSecurityBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSecurityBlockAttributeName);
+
+    const string hideAccountBlockAttributeName = "CustomerUserSettingsPage.HideAccountBlock";
+    var hideAccountBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAccountBlockAttributeName);
+
+    const string hideProfileBlockAttributeName = "CustomerUserSettingsPage.HideProfileBlock";
+    var hideProfileBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProfileBlockAttributeName);
+
+    const string hideCustomerFormFieldsBlockAttributeName = "CustomerUserSettingsPage.HideCustomerFormFieldsBlock";
+    var hideCustomerFormFieldsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCustomerFormFieldsBlockAttributeName);
+
+    const string hideAddressFormFieldsBlockAttributeName = "CustomerUserSettingsPage.HideAddressFormFieldsBlock";
+    var hideAddressFormFieldsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideAddressFormFieldsBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="CustomerUser" method="post">
@@ -22,26 +41,21 @@
         </div>
     </div>
     <div asp-validation-summary="All"></div>
-    
+
     <div class="content">
         <div class="form-horizontal">
             @await Component.InvokeAsync("SettingMode")
+            
+            <nop-panels id="customersettings-panels">
+                <nop-panel asp-name="customersettings-common" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_CustomerUser.Common", Model)</nop-panel>
+                <nop-panel asp-name="customersettings-security" asp-icon="fa fa-shield" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Password")" asp-hide-block-attribute-name="@hideSecurityBlockAttributeName" asp-hide="@hideSecurityBlock" asp-advanced="true">@await Html.PartialAsync("_CustomerUser.Security", Model)</nop-panel>
+                <nop-panel asp-name="customersettings-account" asp-icon="fa fa-user" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Account")" asp-hide-block-attribute-name="@hideAccountBlockAttributeName" asp-hide="@hideAccountBlock" asp-advanced="true">@await Html.PartialAsync("_CustomerUser.Account", Model)</nop-panel>
+                <nop-panel asp-name="customersettings-profile" asp-icon="fa fa-user-circle-o" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Profile")" asp-hide-block-attribute-name="@hideProfileBlockAttributeName" asp-hide="@hideProfileBlock" asp-advanced="true">@await Html.PartialAsync("_CustomerUser.Profile", Model)</nop-panel>
+                <nop-panel asp-name="customersettings-customerformfields" asp-icon="fa fa-align-justify" asp-title="@T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields")" asp-hide-block-attribute-name="@hideCustomerFormFieldsBlockAttributeName" asp-hide="@hideCustomerFormFieldsBlock" asp-advanced="false">@await Html.PartialAsync("_CustomerUser.CustomerFormFields", Model)</nop-panel>
+                <nop-panel asp-name="customersettings-addressformfields" asp-icon="fa fa-address-book-o" asp-title="@T("Admin.Configuration.Settings.CustomerUser.AddressFormFields")" asp-hide-block-attribute-name="@hideAddressFormFieldsBlockAttributeName" asp-hide="@hideAddressFormFieldsBlock" asp-advanced="false">@await Html.PartialAsync("_CustomerUser.AddressFormFields", Model)</nop-panel>
 
-            <nop-tabs id="customersettings-edit">
-                <nop-tab asp-name="tab-customer" asp-default="true" asp-title="@T("Admin.Configuration.Settings.CustomerUser.CustomerSettings")">@await Html.PartialAsync("_CustomerUser.Settings", Model)</nop-tab>
-                <nop-tab asp-name="tab-customerformfields" asp-title="@T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields")">@await Html.PartialAsync("_CustomerUser.CustomerFormFields", Model)</nop-tab>
-                <nop-tab asp-name="tab-addressformfields" asp-title="@T("Admin.Configuration.Settings.CustomerUser.AddressFormFields")">@await Html.PartialAsync("_CustomerUser.AddressFormFields", Model)</nop-tab>
-            </nop-tabs>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerUserDetailsBlock, additionalData = Model })
+            </nop-panels>
         </div>
     </div>
-
-    @{
-        //custom tabs
-        var eventMessage = new AdminTabStripCreated(this.Html, "customersettings-edit");
-        eventPublisher.Publish(eventMessage);
-        foreach (var eventBlock in eventMessage.BlocksToRender)
-        {
-            @eventBlock
-        }
-    }
 </form>

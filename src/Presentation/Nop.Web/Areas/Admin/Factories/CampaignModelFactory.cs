@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Linq;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Helpers;
+using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -16,27 +19,33 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICampaignService _campaignService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ILocalizationService _localizationService;
         private readonly IMessageTokenProvider _messageTokenProvider;
 
         #endregion
 
         #region Ctor
 
-        public CampaignModelFactory(EmailAccountSettings emailAccountSettings,
+        public CampaignModelFactory(CatalogSettings catalogSettings,
+            EmailAccountSettings emailAccountSettings,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICampaignService campaignService,
             IDateTimeHelper dateTimeHelper,
+            ILocalizationService localizationService,
             IMessageTokenProvider messageTokenProvider)
         {
-            this._emailAccountSettings = emailAccountSettings;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._campaignService = campaignService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._messageTokenProvider = messageTokenProvider;
+            _catalogSettings = catalogSettings;
+            _emailAccountSettings = emailAccountSettings;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _campaignService = campaignService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _messageTokenProvider = messageTokenProvider;
         }
 
         #endregion
@@ -56,6 +65,8 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available stores
             _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+
             //prepare page parameters
             searchModel.SetGridPageSize();
 
@@ -71,14 +82,14 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
-            
+
             //get campaigns
-            var campaigns = _campaignService.GetAllCampaigns(searchModel.StoreId);
+            var campaigns = _campaignService.GetAllCampaigns(searchModel.StoreId).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new CampaignListModel
+            var model = new CampaignListModel().PrepareToGrid(searchModel, campaigns, () =>
             {
-                Data = campaigns.PaginationByRequestModel(searchModel).Select(campaign =>
+                return campaigns.Select(campaign =>
                 {
                     //fill in model values from the entity
                     var campaignModel = campaign.ToModel<CampaignModel>();
@@ -92,9 +103,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     }
 
                     return campaignModel;
-                }),
-                Total = campaigns.Count
-            };
+                });
+            });
 
             return model;
         }

@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using Nop.Services.Helpers;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Logging;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -16,6 +20,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IDateTimeHelper _dateTimeHelper;
 
@@ -24,46 +29,53 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public ActivityLogModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+            ILocalizationService localizationService,
             ICustomerActivityService customerActivityService,
             IDateTimeHelper dateTimeHelper)
         {
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._customerActivityService = customerActivityService;
-            this._dateTimeHelper = dateTimeHelper;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _localizationService = localizationService;
+            _customerActivityService = customerActivityService;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #endregion
 
-        #region Methods
-
-        /// <summary>
-        /// Prepare activity log container model
-        /// </summary>
-        /// <param name="activityLogContainerModel">Activity log container model</param>
-        /// <returns>Activity log container model</returns>
-        public virtual ActivityLogContainerModel PrepareActivityLogContainerModel(ActivityLogContainerModel activityLogContainerModel)
-        {
-            if (activityLogContainerModel == null)
-                throw new ArgumentNullException(nameof(activityLogContainerModel));
-
-            //prepare nested models
-            PrepareActivityLogSearchModel(activityLogContainerModel.ListLogs);
-            activityLogContainerModel.ListTypes = PrepareActivityLogTypeModels();
-
-            return activityLogContainerModel;
-        }
+        #region Utilities
 
         /// <summary>
         /// Prepare activity log type models
         /// </summary>
         /// <returns>List of activity log type models</returns>
-        public virtual IList<ActivityLogTypeModel> PrepareActivityLogTypeModels()
+        protected virtual IList<ActivityLogTypeModel> PrepareActivityLogTypeModels()
         {
             //prepare available activity log types
             var availableActivityTypes = _customerActivityService.GetAllActivityTypes();
             var models = availableActivityTypes.Select(activityType => activityType.ToModel<ActivityLogTypeModel>()).ToList();
 
             return models;
+        }
+        
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Prepare activity log types search model
+        /// </summary>
+        /// <param name="searchModel">Activity log types search model</param>
+        /// <returns>Activity log types search model</returns>
+        public virtual ActivityLogTypeSearchModel PrepareActivityLogTypeSearchModel(ActivityLogTypeSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            searchModel.ActivityLogTypeListModel = PrepareActivityLogTypeModels();
+
+            //prepare grid
+            searchModel.SetGridPageSize();
+
+            return searchModel;
         }
 
         /// <summary>
@@ -79,7 +91,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare available activity log types
             _baseAdminModelFactory.PrepareActivityLogTypes(searchModel.ActivityLogType);
 
-            //prepare page parameters
+            //prepare grid
             searchModel.SetGridPageSize();
 
             return searchModel;
@@ -94,7 +106,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
-            
+
             //get parameters to filter log
             var startDateValue = searchModel.CreatedOnFrom == null ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(searchModel.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
@@ -109,9 +121,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new ActivityLogListModel
+            var model = new ActivityLogListModel().PrepareToGrid(searchModel, activityLog, () =>
             {
-                Data = activityLog.Select(logItem =>
+                return activityLog.Select(logItem =>
                 {
                     //fill in model values from the entity
                     var logItemModel = logItem.ToModel<ActivityLogModel>();
@@ -123,9 +135,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     return logItemModel;
 
-                }),
-                Total = activityLog.TotalCount
-            };
+                });
+            });
 
             return model;
         }

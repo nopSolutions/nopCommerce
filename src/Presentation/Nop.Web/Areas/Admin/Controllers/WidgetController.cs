@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Cms;
-using Nop.Core.Plugins;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
+using Nop.Services.Events;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Factories;
@@ -15,30 +15,30 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
+        private readonly IEventPublisher _eventPublisher;
         private readonly IPermissionService _permissionService;
-        private readonly IPluginFinder _pluginFinder;
         private readonly ISettingService _settingService;
         private readonly IWidgetModelFactory _widgetModelFactory;
-        private readonly IWidgetService _widgetService;
+        private readonly IWidgetPluginManager _widgetPluginManager;
         private readonly WidgetSettings _widgetSettings;
 
         #endregion
 
         #region Ctor
 
-        public WidgetController(IPermissionService permissionService,
-            IPluginFinder pluginFinder,
+        public WidgetController(IEventPublisher eventPublisher,
+            IPermissionService permissionService,
             ISettingService settingService,
             IWidgetModelFactory widgetModelFactory,
-            IWidgetService widgetService,
+            IWidgetPluginManager widgetPluginManager,
             WidgetSettings widgetSettings)
         {
-            this._permissionService = permissionService;
-            this._pluginFinder = pluginFinder;
-            this._settingService = settingService;
-            this._widgetModelFactory = widgetModelFactory;
-            this._widgetService = widgetService;
-            this._widgetSettings = widgetSettings;
+            _eventPublisher = eventPublisher;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _widgetModelFactory = widgetModelFactory;
+            _widgetPluginManager = widgetPluginManager;
+            _widgetSettings = widgetSettings;
         }
 
         #endregion
@@ -65,7 +65,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(WidgetSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _widgetModelFactory.PrepareWidgetListModel(searchModel);
@@ -79,8 +79,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
-            var widget = _widgetService.LoadWidgetBySystemName(model.SystemName);
-            if (_widgetService.IsWidgetActive(widget))
+            var widget = _widgetPluginManager.LoadPluginBySystemName(model.SystemName);
+            if (_widgetPluginManager.IsPluginActive(widget, _widgetSettings.ActiveWidgetSystemNames))
             {
                 if (!model.IsActive)
                 {
@@ -105,10 +105,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
 
             //update the description file
-            PluginManager.SavePluginDescriptor(pluginDescriptor);
+            pluginDescriptor.Save();
 
-            //reset plugin cache
-            _pluginFinder.ReloadPlugins(pluginDescriptor);
+            //raise event
+            _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }

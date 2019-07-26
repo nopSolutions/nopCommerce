@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Moq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
@@ -10,12 +9,14 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Plugins;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Pickup;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -40,6 +41,9 @@ namespace Nop.Services.Tests.Shipping
         private ShoppingCartSettings _shoppingCartSettings;
         private ShippingService _shippingService;
         private Mock<IPriceCalculationService> _priceCalcService;
+        private IPickupPluginManager _pickupPluginManager;
+        private IShippingPluginManager _shippingPluginManager;
+        private CatalogSettings _catalogSettings;
 
         [SetUp]
         public new void SetUp()
@@ -57,14 +61,21 @@ namespace Nop.Services.Tests.Shipping
             _productAttributeParser = new Mock<IProductAttributeParser>();
             _checkoutAttributeParser = new Mock<ICheckoutAttributeParser>();
 
-            var cacheManager = new NopNullCache();
+            var cacheManager = new TestCacheManager();
 
             _productService = new Mock<IProductService>();
 
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var pluginFinder = new PluginFinder(_eventPublisher.Object);
+            var customerService = new Mock<ICustomerService>();
+            var loger = new Mock<ILogger>();
+            var webHelper = new Mock<IWebHelper>();
+
+            _catalogSettings = new CatalogSettings();
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+            _pickupPluginManager = new PickupPluginManager(pluginService, _shippingSettings);
+            _shippingPluginManager = new ShippingPluginManager(pluginService, _shippingSettings);
 
             _localizationService = new Mock<ILocalizationService>();
             _addressService = new Mock<IAddressService>();
@@ -84,12 +95,13 @@ namespace Nop.Services.Tests.Shipping
                 _genericAttributeService.Object,
                 _localizationService.Object,
                 _logger,
-                pluginFinder,
+                _pickupPluginManager,
                 _priceCalcService.Object,
                 _productAttributeParser.Object,
                 _productService.Object,
                 _shippingMethodRepository.Object,
                 _warehouseRepository.Object,
+                _shippingPluginManager,
                 _storeContext.Object,
                 _shippingSettings,
                 _shoppingCartSettings);
@@ -136,7 +148,7 @@ namespace Nop.Services.Tests.Shipping
             width.ShouldEqual(0);
             height.ShouldEqual(0);
         }
-        
+
         [Test]
         public void can_calculate_with_single_item_and_qty_1_should_ignore_cubic_method()
         {
@@ -199,7 +211,7 @@ namespace Nop.Services.Tests.Shipping
                     }
                 })
             };
-            
+
             _shippingService.GetDimensions(items, out var width, out var length, out var height);
             Math.Round(length, 2).ShouldEqual(2.88);
             Math.Round(width, 2).ShouldEqual(2.88);
@@ -246,15 +258,15 @@ namespace Nop.Services.Tests.Shipping
             var items = new List<GetShippingOptionRequest.PackageItem>();
             for (var i = 0; i < 8; i++)
                 items.Add(new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
-                        {
-                            Quantity = 1,
-                            Product = new Product
-                                {
-                                    Length = 1,
-                                    Width = 1,
-                                    Height = 1
-                                }
-                        }));
+                {
+                    Quantity = 1,
+                    Product = new Product
+                    {
+                        Length = 1,
+                        Width = 1,
+                        Height = 1
+                    }
+                }));
 
             _shippingService.GetDimensions(items, out var width, out var length, out var height);
             Math.Round(length, 2).ShouldEqual(2);

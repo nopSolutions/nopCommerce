@@ -44,8 +44,8 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         public StorePickupPointService(ICacheManager cacheManager,
             IRepository<StorePickupPoint> storePickupPointRepository)
         {
-            this._cacheManager = cacheManager;
-            this._storePickupPointRepository = storePickupPointRepository;
+            _cacheManager = cacheManager;
+            _storePickupPointRepository = storePickupPointRepository;
         }
 
         #endregion
@@ -96,7 +96,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
                 throw new ArgumentNullException(nameof(pickupPoint));
 
             _storePickupPointRepository.Insert(pickupPoint);
-            _cacheManager.RemoveByPattern(PICKUP_POINT_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
                 throw new ArgumentNullException(nameof(pickupPoint));
 
             _storePickupPointRepository.Update(pickupPoint);
-            _cacheManager.RemoveByPattern(PICKUP_POINT_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
                 throw new ArgumentNullException(nameof(pickupPoint));
 
             _storePickupPointRepository.Delete(pickupPoint);
-            _cacheManager.RemoveByPattern(PICKUP_POINT_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
         }
 
         #endregion

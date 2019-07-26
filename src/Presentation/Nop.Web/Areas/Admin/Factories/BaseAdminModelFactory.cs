@@ -11,7 +11,6 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Plugins;
 using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -51,7 +50,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
-        private readonly IPluginFinder _pluginFinder;
+        private readonly IPluginService _pluginService;
         private readonly IProductTemplateService _productTemplateService;
         private readonly IShippingService _shippingService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -78,7 +77,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
             IManufacturerTemplateService manufacturerTemplateService,
-            IPluginFinder pluginFinder,
+            IPluginService pluginService,
             IProductTemplateService productTemplateService,
             IShippingService shippingService,
             IStateProvinceService stateProvinceService,
@@ -88,28 +87,28 @@ namespace Nop.Web.Areas.Admin.Factories
             ITopicTemplateService topicTemplateService,
             IVendorService vendorService)
         {
-            this._categoryService = categoryService;
-            this._categoryTemplateService = categoryTemplateService;
-            this._countryService = countryService;
-            this._currencyService = currencyService;
-            this._customerActivityService = customerActivityService;
-            this._customerService = customerService;
-            this._dateRangeService = dateRangeService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._emailAccountService = emailAccountService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._manufacturerService = manufacturerService;
-            this._manufacturerTemplateService = manufacturerTemplateService;
-            this._pluginFinder = pluginFinder;
-            this._productTemplateService = productTemplateService;
-            this._shippingService = shippingService;
-            this._stateProvinceService = stateProvinceService;
-            this._cacheManager = cacheManager;
-            this._storeService = storeService;
-            this._taxCategoryService = taxCategoryService;
-            this._topicTemplateService = topicTemplateService;
-            this._vendorService = vendorService;
+            _categoryService = categoryService;
+            _categoryTemplateService = categoryTemplateService;
+            _countryService = countryService;
+            _currencyService = currencyService;
+            _customerActivityService = customerActivityService;
+            _customerService = customerService;
+            _dateRangeService = dateRangeService;
+            _dateTimeHelper = dateTimeHelper;
+            _emailAccountService = emailAccountService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _manufacturerService = manufacturerService;
+            _manufacturerTemplateService = manufacturerTemplateService;
+            _pluginService = pluginService;
+            _productTemplateService = productTemplateService;
+            _shippingService = shippingService;
+            _stateProvinceService = stateProvinceService;
+            _cacheManager = cacheManager;
+            _storeService = storeService;
+            _taxCategoryService = taxCategoryService;
+            _topicTemplateService = topicTemplateService;
+            _vendorService = vendorService;
         }
 
         #endregion
@@ -394,7 +393,7 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, 
+            PrepareDefaultItem(items, withSpecialDefaultItem,
                 defaultItemText ?? _localizationService.GetResource("Admin.Configuration.Settings.Tax.TaxCategories.None"));
         }
 
@@ -646,7 +645,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Manufacturer template items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareManufacturerTemplates(IList<SelectListItem> items, 
+        public virtual void PrepareManufacturerTemplates(IList<SelectListItem> items,
             bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
@@ -697,7 +696,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(items));
 
             //prepare available plugin groups
-            var availablePluginGroups = _pluginFinder.GetPluginGroups();
+            var availablePluginGroups = _pluginService.GetPluginDescriptors<IPlugin>(LoadPluginsMode.All)
+                .Select(plugin => plugin.Group).Distinct().OrderBy(groupName => groupName).ToList();
             foreach (var group in availablePluginGroups)
             {
                 items.Add(new SelectListItem { Value = group, Text = group });
@@ -713,7 +713,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Return request status items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareReturnRequestStatuses(IList<SelectListItem> items, 
+        public virtual void PrepareReturnRequestStatuses(IList<SelectListItem> items,
             bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)
@@ -824,7 +824,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="items">Product availability range items</param>
         /// <param name="withSpecialDefaultItem">Whether to insert the first special item for the default value</param>
         /// <param name="defaultItemText">Default item text; pass null to use default value of the default item text</param>
-        public virtual void PrepareProductAvailabilityRanges(IList<SelectListItem> items, 
+        public virtual void PrepareProductAvailabilityRanges(IList<SelectListItem> items,
             bool withSpecialDefaultItem = true, string defaultItemText = null)
         {
             if (items == null)

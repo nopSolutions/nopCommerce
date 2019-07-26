@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -13,31 +13,6 @@ namespace Nop.Services.Tax
     /// </summary>
     public partial interface ITaxService
     {
-        #region Tax providers
-
-        /// <summary>
-        /// Load active tax provider
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <returns>Active tax provider</returns>
-        ITaxProvider LoadActiveTaxProvider(Customer customer = null);
-
-        /// <summary>
-        /// Load tax provider by system name
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        /// <returns>Found tax provider</returns>
-        ITaxProvider LoadTaxProviderBySystemName(string systemName);
-
-        /// <summary>
-        /// Load all tax providers
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <returns>Tax providers</returns>
-        IList<ITaxProvider> LoadAllTaxProviders(Customer customer = null);
-
-        #endregion
-
         #region Product price
         
         /// <summary>
@@ -260,7 +235,7 @@ namespace Nop.Services.Tax
         /// <param name="address">Address</param>
         /// <param name="customer">Customer</param>
         /// <returns>Result</returns>
-        bool IsVatExempt(Address address, Customer customer);
+        bool IsVatExempt(CalculateTaxRequest.TaxAddress address, Customer customer);
 
         #endregion
     }

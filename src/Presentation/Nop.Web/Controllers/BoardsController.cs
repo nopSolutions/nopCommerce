@@ -6,12 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Security;
+using Nop.Core.Rss;
 using Nop.Services.Forums;
 using Nop.Services.Localization;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Mvc.Rss;
 using Nop.Web.Framework.Security;
 using Nop.Web.Models.Boards;
 
@@ -22,6 +23,7 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
+        private readonly CaptchaSettings _captchaSettings;
         private readonly ForumSettings _forumSettings;
         private readonly IForumModelFactory _forumModelFactory;
         private readonly IForumService _forumService;
@@ -34,7 +36,8 @@ namespace Nop.Web.Controllers
 
         #region Ctor
 
-        public BoardsController(ForumSettings forumSettings,
+        public BoardsController(CaptchaSettings captchaSettings,
+            ForumSettings forumSettings,
             IForumModelFactory forumModelFactory,
             IForumService forumService,
             ILocalizationService localizationService,
@@ -42,13 +45,14 @@ namespace Nop.Web.Controllers
             IWebHelper webHelper,
             IWorkContext workContext)
         {
-            this._forumSettings = forumSettings;
-            this._forumModelFactory = forumModelFactory;
-            this._forumService = forumService;
-            this._localizationService = localizationService;
-            this._storeContext = storeContext;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
+            _captchaSettings = captchaSettings;
+            _forumSettings = forumSettings;
+            _forumModelFactory = forumModelFactory;
+            _forumService = forumService;
+            _localizationService = localizationService;
+            _storeContext = storeContext;
+            _webHelper = webHelper;
+            _workContext = workContext;
         }
 
         #endregion
@@ -58,9 +62,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Index()
         {
             if (!_forumSettings.ForumsEnabled)
-            {
-                return RedirectToRoute("HomePage");
-            }
+                return RedirectToRoute("Homepage");
 
             var model = _forumModelFactory.PrepareBoardsIndexModel();
             return View(model);
@@ -69,9 +71,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ActiveDiscussions(int forumId = 0, int pageNumber = 1)
         {
             if (!_forumSettings.ForumsEnabled)
-            {
-                return RedirectToRoute("HomePage");
-            }
+                return RedirectToRoute("Homepage");
 
             var model = _forumModelFactory.PrepareActiveDiscussionsModel(forumId, pageNumber);
             return View(model);
@@ -80,14 +80,10 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ActiveDiscussionsRss(int forumId = 0)
         {
             if (!_forumSettings.ForumsEnabled)
-            {
-                return RedirectToRoute("HomePage");
-            }
+                return RedirectToRoute("Homepage");
 
             if (!_forumSettings.ActiveDiscussionsFeedEnabled)
-            {
                 return RedirectToRoute("Boards");
-            }
 
             var topics = _forumService.GetActiveTopics(forumId, 0, _forumSettings.ActiveDiscussionsFeedCount);
             var url = Url.RouteUrl("ActiveDiscussionsRSS", null, _webHelper.CurrentRequestProtocol);
@@ -122,15 +118,11 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ForumGroup(int id)
         {
             if (!_forumSettings.ForumsEnabled)
-            {
-                return RedirectToRoute("HomePage");
-            }
+                return RedirectToRoute("Homepage");
 
             var forumGroup = _forumService.GetForumGroupById(id);
             if (forumGroup == null)
-            {
                 return RedirectToRoute("Boards");
-            }
 
             var model = _forumModelFactory.PrepareForumGroupModel(forumGroup);
             return View(model);
@@ -139,9 +131,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Forum(int id, int pageNumber = 1)
         {
             if (!_forumSettings.ForumsEnabled)
-            {
-                return RedirectToRoute("HomePage");
-            }
+                return RedirectToRoute("Homepage");
 
             var forum = _forumService.GetForumById(id);
             if (forum == null)
@@ -154,14 +144,10 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ForumRss(int id)
         {
             if (!_forumSettings.ForumsEnabled)
-            {
-                return RedirectToRoute("HomePage");
-            }
+                return RedirectToRoute("Homepage");
 
             if (!_forumSettings.ForumFeedsEnabled)
-            {
                 return RedirectToRoute("Boards");
-            }
 
             var topicLimit = _forumSettings.ForumFeedCount;
             var forum = _forumService.GetForumById(id);
@@ -213,14 +199,10 @@ namespace Nop.Web.Controllers
 
             var forum = _forumService.GetForumById(id);
             if (forum == null)
-            {
                 return Json(new { Subscribed = false, Text = returnText, Error = true });
-            }
 
             if (!_forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer))
-            {
                 return Json(new { Subscribed = false, Text = returnText, Error = true });
-            }
 
             var forumSubscription = _forumService.GetAllSubscriptions(_workContext.CurrentCustomer.Id,
                 forum.Id, 0, 0, 1).FirstOrDefault();
@@ -251,15 +233,11 @@ namespace Nop.Web.Controllers
         public virtual IActionResult Topic(int id, int pageNumber = 1)
         {
             if (!_forumSettings.ForumsEnabled)
-            {
-                return RedirectToRoute("HomePage");
-            }
+                return RedirectToRoute("Homepage");
 
             var forumTopic = _forumService.GetTopicById(id);
             if (forumTopic == null)
-            {
                 return RedirectToRoute("Boards");
-            }
 
             var model = _forumModelFactory.PrepareForumTopicPageModel(forumTopic, pageNumber);
             //if no posts loaded, redirect to the first page
@@ -282,14 +260,10 @@ namespace Nop.Web.Controllers
 
             var forumTopic = _forumService.GetTopicById(id);
             if (forumTopic == null)
-            {
                 return Json(new { Subscribed = false, Text = returnText, Error = true });
-            }
 
             if (!_forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer))
-            {
                 return Json(new { Subscribed = false, Text = returnText, Error = true });
-            }
 
             var forumSubscription = _forumService.GetAllSubscriptions(_workContext.CurrentCustomer.Id,
                 0, forumTopic.Id, 0, 1).FirstOrDefault();
@@ -320,15 +294,11 @@ namespace Nop.Web.Controllers
         public virtual IActionResult TopicMove(int id)
         {
             if (!_forumSettings.ForumsEnabled)
-            {
-                return RedirectToRoute("HomePage");
-            }
+                return RedirectToRoute("Homepage");
 
             var forumTopic = _forumService.GetTopicById(id);
             if (forumTopic == null)
-            {
                 return RedirectToRoute("Boards");
-            }
 
             var model = _forumModelFactory.PrepareTopicMove(forumTopic);
             return View(model);
@@ -339,24 +309,18 @@ namespace Nop.Web.Controllers
         public virtual IActionResult TopicMove(TopicMoveModel model)
         {
             if (!_forumSettings.ForumsEnabled)
-            {
-                return RedirectToRoute("HomePage");
-            }
+                return RedirectToRoute("Homepage");
 
             var forumTopic = _forumService.GetTopicById(model.Id);
 
             if (forumTopic == null)
-            {
                 return RedirectToRoute("Boards");
-            }
 
             var newForumId = model.ForumSelected;
             var forum = _forumService.GetForumById(newForumId);
 
             if (forum != null && forumTopic.ForumId != newForumId)
-            {
                 _forumService.MoveTopic(forumTopic.Id, newForumId);
-            }
 
             return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = _forumService.GetTopicSeName(forumTopic) });
         }
@@ -366,31 +330,26 @@ namespace Nop.Web.Controllers
         public virtual IActionResult TopicDelete(int id)
         {
             if (!_forumSettings.ForumsEnabled)
-            {
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("HomePage"),
+                    redirect = Url.RouteUrl("Homepage"),
                 });
-            }
 
             var forumTopic = _forumService.GetTopicById(id);
             if (forumTopic != null)
             {
                 if (!_forumService.IsCustomerAllowedToDeleteTopic(_workContext.CurrentCustomer, forumTopic))
-                {
                     return Challenge();
-                }
+
                 var forum = _forumService.GetForumById(forumTopic.ForumId);
 
                 _forumService.DeleteTopic(forumTopic);
 
                 if (forum != null)
-                {
                     return Json(new
                     {
                         redirect = Url.RouteUrl("ForumSlug", new { id = forum.Id, slug = _forumService.GetForumSeName(forum) }),
                     });
-                }
             }
 
             return Json(new
@@ -402,20 +361,14 @@ namespace Nop.Web.Controllers
         public virtual IActionResult TopicCreate(int id)
         {
             if (!_forumSettings.ForumsEnabled)
-            {
-                return RedirectToRoute("HomePage");
-            }
+                return RedirectToRoute("Homepage");
 
             var forum = _forumService.GetForumById(id);
             if (forum == null)
-            {
                 return RedirectToRoute("Boards");
-            }
 
             if (_forumService.IsCustomerAllowedToCreateTopic(_workContext.CurrentCustomer, forum) == false)
-            {
                 return Challenge();
-            }
 
             var model = new EditForumTopicModel();
             _forumModelFactory.PrepareTopicCreateModel(forum, model);
@@ -424,18 +377,20 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        public virtual IActionResult TopicCreate(EditForumTopicModel model)
+        [ValidateCaptcha]
+        public virtual IActionResult TopicCreate(EditForumTopicModel model, bool captchaValid)
         {
             if (!_forumSettings.ForumsEnabled)
-            {
-                return RedirectToRoute("HomePage");
-            }
+                return RedirectToRoute("Homepage");
 
             var forum = _forumService.GetForumById(model.ForumId);
-
             if (forum == null)
-            {
                 return RedirectToRoute("Boards");
+
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
             if (ModelState.IsValid)
@@ -457,20 +412,14 @@ namespace Nop.Web.Controllers
                     var text = model.Text;
                     var maxPostLength = _forumSettings.PostMaxLength;
                     if (maxPostLength > 0 && text.Length > maxPostLength)
-                    {
                         text = text.Substring(0, maxPostLength);
-                    }
 
                     var topicType = ForumTopicType.Normal;
-
                     var ipAddress = _webHelper.GetCurrentIpAddress();
-
                     var nowUtc = DateTime.UtcNow;
 
                     if (_forumService.IsCustomerAllowedToSetTopicPriority(_workContext.CurrentCustomer))
-                    {
                         topicType = (ForumTopicType)Enum.ToObject(typeof(ForumTopicType), model.TopicTypeId);
-                    }
 
                     //forum topic
                     var forumTopic = new ForumTopic
@@ -537,20 +486,14 @@ namespace Nop.Web.Controllers
         public virtual IActionResult TopicEdit(int id)
         {
             if (!_forumSettings.ForumsEnabled)
-            {
-                return RedirectToRoute("HomePage");
-            }
+                return RedirectToRoute("Homepage");
 
             var forumTopic = _forumService.GetTopicById(id);
             if (forumTopic == null)
-            {
                 return RedirectToRoute("Boards");
-            }
 
             if (!_forumService.IsCustomerAllowedToEditTopic(_workContext.CurrentCustomer, forumTopic))
-            {
                 return Challenge();
-            }
 
             var model = new EditForumTopicModel();
             _forumModelFactory.PrepareTopicEditModel(forumTopic, model, false);
@@ -559,23 +502,24 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        public virtual IActionResult TopicEdit(EditForumTopicModel model)
+        [ValidateCaptcha]
+        public virtual IActionResult TopicEdit(EditForumTopicModel model, bool captchaValid)
         {
             if (!_forumSettings.ForumsEnabled)
-            {
-                return RedirectToRoute("HomePage");
-            }
+                return RedirectToRoute("Homepage");
 
             var forumTopic = _forumService.GetTopicById(model.Id);
 
             if (forumTopic == null)
-            {
                 return RedirectToRoute("Boards");
-            }
             var forum = forumTopic.Forum;
             if (forum == null)
-            {
                 return RedirectToRoute("Boards");
+
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
             if (ModelState.IsValid)
@@ -583,9 +527,7 @@ namespace Nop.Web.Controllers
                 try
                 {
                     if (!_forumService.IsCustomerAllowedToEditTopic(_workContext.CurrentCustomer, forumTopic))
-                    {
                         return Challenge();
-                    }
 
                     var subject = model.Subject;
                     var maxSubjectLength = _forumSettings.TopicSubjectMaxLength;
@@ -597,20 +539,14 @@ namespace Nop.Web.Controllers
                     var text = model.Text;
                     var maxPostLength = _forumSettings.PostMaxLength;
                     if (maxPostLength > 0 && text.Length > maxPostLength)
-                    {
                         text = text.Substring(0, maxPostLength);
-                    }
 
                     var topicType = ForumTopicType.Normal;
-
                     var ipAddress = _webHelper.GetCurrentIpAddress();
-
                     var nowUtc = DateTime.UtcNow;
 
                     if (_forumService.IsCustomerAllowedToSetTopicPriority(_workContext.CurrentCustomer))
-                    {
                         topicType = (ForumTopicType)Enum.ToObject(typeof(ForumTopicType), model.TopicTypeId);
-                    }
 
                     //forum topic
                     forumTopic.TopicTypeId = (int)topicType;
@@ -681,6 +617,7 @@ namespace Nop.Web.Controllers
 
             //redisplay form
             _forumModelFactory.PrepareTopicEditModel(forumTopic, model, true);
+
             return View(model);
         }
 
@@ -689,21 +626,16 @@ namespace Nop.Web.Controllers
         public virtual IActionResult PostDelete(int id)
         {
             if (!_forumSettings.ForumsEnabled)
-            {
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("HomePage"),
+                    redirect = Url.RouteUrl("Homepage"),
                 });
-            }
 
             var forumPost = _forumService.GetPostById(id);
-
             if (forumPost != null)
             {
                 if (!_forumService.IsCustomerAllowedToDeletePost(_workContext.CurrentCustomer, forumPost))
-                {
                     return Challenge();
-                }
 
                 var forumTopic = forumPost.ForumTopic;
                 var forumId = forumTopic.Forum.Id;
@@ -735,20 +667,14 @@ namespace Nop.Web.Controllers
         public virtual IActionResult PostCreate(int id, int? quote)
         {
             if (!_forumSettings.ForumsEnabled)
-            {
-                return RedirectToRoute("HomePage");
-            }
+                return RedirectToRoute("Homepage");
 
             var forumTopic = _forumService.GetTopicById(id);
             if (forumTopic == null)
-            {
                 return RedirectToRoute("Boards");
-            }
 
             if (!_forumService.IsCustomerAllowedToCreatePost(_workContext.CurrentCustomer, forumTopic))
-            {
                 return Challenge();
-            }
 
             var model = _forumModelFactory.PreparePostCreateModel(forumTopic, quote, false);
             return View(model);
@@ -756,17 +682,20 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        public virtual IActionResult PostCreate(EditForumPostModel model)
+        [ValidateCaptcha]
+        public virtual IActionResult PostCreate(EditForumPostModel model, bool captchaValid)
         {
             if (!_forumSettings.ForumsEnabled)
-            {
-                return RedirectToRoute("HomePage");
-            }
+                return RedirectToRoute("Homepage");
 
             var forumTopic = _forumService.GetTopicById(model.ForumTopicId);
             if (forumTopic == null)
-            {
                 return RedirectToRoute("Boards");
+
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
             if (ModelState.IsValid)
@@ -830,13 +759,9 @@ namespace Nop.Web.Controllers
                     var pageIndex = (_forumService.CalculateTopicPageIndex(forumPost.TopicId, pageSize, forumPost.Id) + 1);
                     var url = string.Empty;
                     if (pageIndex > 1)
-                    {
                         url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = _forumService.GetTopicSeName(forumPost.ForumTopic), pageNumber = pageIndex });
-                    }
                     else
-                    {
                         url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = _forumService.GetTopicSeName(forumPost.ForumTopic) });
-                    }
                     return Redirect($"{url}#{forumPost.Id}");
                 }
                 catch (Exception ex)
@@ -846,27 +771,22 @@ namespace Nop.Web.Controllers
             }
 
             //redisplay form
-            _forumModelFactory.PreparePostCreateModel(forumTopic, 0, true);
+            model = _forumModelFactory.PreparePostCreateModel(forumTopic, 0, true);
+
             return View(model);
         }
 
         public virtual IActionResult PostEdit(int id)
         {
             if (!_forumSettings.ForumsEnabled)
-            {
-                return RedirectToRoute("HomePage");
-            }
+                return RedirectToRoute("Homepage");
 
             var forumPost = _forumService.GetPostById(id);
             if (forumPost == null)
-            {
                 return RedirectToRoute("Boards");
-            }
 
             if (!_forumService.IsCustomerAllowedToEditPost(_workContext.CurrentCustomer, forumPost))
-            {
                 return Challenge();
-            }
 
             var model = _forumModelFactory.PreparePostEditModel(forumPost, false);
             return View(model);
@@ -874,34 +794,31 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        public virtual IActionResult PostEdit(EditForumPostModel model)
+        [ValidateCaptcha]
+        public virtual IActionResult PostEdit(EditForumPostModel model, bool captchaValid)
         {
             if (!_forumSettings.ForumsEnabled)
-            {
-                return RedirectToRoute("HomePage");
-            }
+                return RedirectToRoute("Homepage");
 
             var forumPost = _forumService.GetPostById(model.Id);
             if (forumPost == null)
-            {
                 return RedirectToRoute("Boards");
-            }
 
             if (!_forumService.IsCustomerAllowedToEditPost(_workContext.CurrentCustomer, forumPost))
-            {
                 return Challenge();
-            }
 
             var forumTopic = forumPost.ForumTopic;
             if (forumTopic == null)
-            {
                 return RedirectToRoute("Boards");
-            }
 
             var forum = forumTopic.Forum;
             if (forum == null)
-            {
                 return RedirectToRoute("Boards");
+
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnForum && !captchaValid)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
             if (ModelState.IsValid)
@@ -969,7 +886,8 @@ namespace Nop.Web.Controllers
             }
 
             //redisplay form
-            _forumModelFactory.PreparePostEditModel(forumPost, true);
+            model = _forumModelFactory.PreparePostEditModel(forumPost, true);
+
             return View(model);
         }
 
@@ -977,9 +895,7 @@ namespace Nop.Web.Controllers
             string within, string limitDays, int page = 1)
         {
             if (!_forumSettings.ForumsEnabled)
-            {
-                return RedirectToRoute("HomePage");
-            }
+                return RedirectToRoute("Homepage");
 
             var model = _forumModelFactory.PrepareSearchModel(searchterms, adv, forumId, within, limitDays, page);
             return View(model);
@@ -988,9 +904,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult CustomerForumSubscriptions(int? pageNumber)
         {
             if (!_forumSettings.AllowCustomersToManageSubscriptions)
-            {
                 return RedirectToRoute("CustomerInfo");
-            }
 
             var model = _forumModelFactory.PrepareCustomerForumSubscriptionsModel(pageNumber);
             return View(model);
@@ -1006,7 +920,7 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("fs", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("fs", "").Trim();
-                    if (int.TryParse(id, out int forumSubscriptionId))
+                    if (int.TryParse(id, out var forumSubscriptionId))
                     {
                         var forumSubscription = _forumService.GetSubscriptionById(forumSubscriptionId);
                         if (forumSubscription != null && forumSubscription.CustomerId == _workContext.CurrentCustomer.Id)

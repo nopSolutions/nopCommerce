@@ -1,8 +1,14 @@
-﻿@model Nop.Plugin.Payments.Square.Models.ConfigurationModel
+﻿@model ConfigurationModel
+
+@using Nop.Services
+@using Nop.Plugin.Payments.Square
+@using Nop.Plugin.Payments.Square.Domain
+@using Nop.Plugin.Payments.Square.Models
+@inject Nop.Core.IWebHelper webHelper
+
 @{
     Layout = "_ConfigurePlugin";
 }
-@inject Nop.Core.IWebHelper webHelper
 
 <script>
     $(document).ready(function () {
@@ -41,11 +47,17 @@
                         <span asp-validation-for="UseSandbox"></span>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-md-3" id="sandboxApplicationId">
+                <div class="form-group" id="sandboxApplicationId">
+                    <div class="col-md-3">
                         <nop-label asp-for="SandboxApplicationId" />
                     </div>
-                    <div class="col-md-3" id="liveApplicationId">
+                    <div class="col-md-9">
+                        <nop-editor asp-for="SandboxApplicationId" asp-required="true" />
+                        <span asp-validation-for="SandboxApplicationId"></span>
+                    </div>
+                </div>
+                <div class="form-group" id="liveApplicationId">
+                    <div class="col-md-3">
                         <nop-label asp-for="ApplicationId" />
                     </div>
                     <div class="col-md-9">
@@ -58,17 +70,8 @@
                         <nop-label asp-for="ApplicationSecret" />
                     </div>
                     <div class="col-md-9">
-                        <nop-editor asp-for="ApplicationSecret" asp-required="true" />
+                        <nop-editor asp-for="ApplicationSecret" asp-required="true" asp-value="@Model.ApplicationSecret" />
                         <span asp-validation-for="ApplicationSecret"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        <nop-label asp-for="LocationId" />
-                    </div>
-                    <div class="col-md-9">
-                        <nop-select asp-for="LocationId" asp-items="Model.Locations" asp-required="true" />                         
-                        <span asp-validation-for="LocationId"></span>
                     </div>
                 </div>
                 <div class="form-group" id="sandboxAccessToken">
@@ -76,8 +79,17 @@
                         <nop-label asp-for="SandboxAccessToken" />
                     </div>
                     <div class="col-md-9">
-                        <nop-editor asp-for="AccessToken" asp-required="true" />
-                        <span asp-validation-for="AccessToken"></span>
+                        <nop-editor asp-for="SandboxAccessToken" asp-required="true" asp-value="@Model.SandboxAccessToken" />
+                        <span asp-validation-for="SandboxAccessToken"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="LocationId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="LocationId" asp-items="Model.Locations" asp-required="true" />
+                        <span asp-validation-for="LocationId"></span>
                     </div>
                 </div>
                 <div class="form-group" id="liveAccessToken">
@@ -86,7 +98,7 @@
                     </div>
                     <div class="col-md-9">
                         <div class="input-group input-group-required">
-                            <div class="form-text-row">@(new string('*', Model.AccessToken?.Length ?? 0))</div>
+                            <nop-editor asp-for="AccessToken" asp-value="@Model.AccessToken" asp-disabled="true" />
                             <div class="input-group-btn">
                                 <button type="submit" name="obtainAccessToken" class="btn btn-info">
                                     @T("Plugins.Payments.Square.ObtainAccessToken")
@@ -101,7 +113,7 @@
                         <nop-label asp-for="TransactionModeId" />
                     </div>
                     <div class="col-md-9">
-                        <nop-select asp-for="TransactionModeId" asp-items="Model.TransactionModes" />
+                        <nop-select asp-for="TransactionModeId" asp-items="@(TransactionMode.Authorize.ToSelectList(false))" />
                         <span asp-validation-for="TransactionModeId"></span>
                     </div>
                 </div>
@@ -130,8 +142,8 @@
                                 <input type="submit" name="save" class="btn btn-primary" value="@T("Admin.Common.Save")" />
                             </div>
                             @if (!Model.UseSandbox &&
-                                !string.IsNullOrEmpty(Model.ApplicationId) && 
-                                !string.IsNullOrEmpty(Model.ApplicationSecret) && 
+                                !string.IsNullOrEmpty(Model.ApplicationId) &&
+                                !string.IsNullOrEmpty(Model.ApplicationSecret) &&
                                 !string.IsNullOrEmpty(Model.AccessToken))
                             {
                                 <div class="input-group-btn">

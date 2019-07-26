@@ -35,13 +35,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             IPermissionService permissionService,
             ISettingService settingService)
         {
-            this._adminAreaSettings = adminAreaSettings;
-            this._commonModelFactory = commonModelFactory;
-            this._homeModelFactory = homeModelFactory;
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
+            _adminAreaSettings = adminAreaSettings;
+            _commonModelFactory = commonModelFactory;
+            _homeModelFactory = homeModelFactory;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
         }
 
         #endregion
@@ -57,7 +57,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (warnings.Any(warning => warning.Level == SystemWarningLevel.Fail ||
                                             warning.Level == SystemWarningLevel.CopyrightRemovalKey ||
                                             warning.Level == SystemWarningLevel.Warning))
-                    _notificationService.WarningNotification(_localizationService.GetResource("Admin.System.Warnings.Errors"));
+                    _notificationService.WarningNotification(
+                        string.Format(_localizationService.GetResource("Admin.System.Warnings.Errors"),
+                        Url.Action("Warnings", "Common")),
+                        //do not encode URLs
+                        false);
             }
 
             //prepare model

@@ -49,7 +49,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
-        IList<Category> GetAllCategoriesDisplayedOnHomePage(bool showHidden = false);
+        IList<Category> GetAllCategoriesDisplayedOnHomepage(bool showHidden = false);
 
         /// <summary>
         /// Gets child category identifiers

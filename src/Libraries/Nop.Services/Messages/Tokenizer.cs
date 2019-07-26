@@ -23,7 +23,7 @@ namespace Nop.Services.Messages
 
         public Tokenizer(MessageTemplatesSettings messageTemplatesSettings)
         {
-            this._messageTemplatesSettings = messageTemplatesSettings;
+            _messageTemplatesSettings = messageTemplatesSettings;
         }
 
         #endregion

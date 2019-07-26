@@ -8,65 +8,34 @@
         <p>
             <em>@T("Admin.Configuration.Settings.Order.ReturnRequestActions.Hint")</em>
         </p>
-        <div id="returnrequestactions-grid"></div>
-
-        <script>
-                $(document).ready(function () {
-                    $("#returnrequestactions-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("ReturnRequestActionList", "ReturnRequest"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(Model.PageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(Model.AvailablePageSizes)],
-                            @await Html.PartialAsync("_GridPagerMessages")
-                        },
-                        editable: {
-                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "Name",
-                            title: "@T("Admin.Configuration.Settings.Order.ReturnRequestActions.Name")",
-                            width: 300
-                        }, {
-                            field: "DisplayOrder",
-                            title: "@T("Admin.Configuration.Settings.Order.ReturnRequestActions.DisplayOrder")",
-                            width: 100
-                        }, {
-                            field: "Id",
-                            title: "@T("Admin.Common.Edit")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/ReturnRequest/ReturnRequestActionEdit/")#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
-                        }]
-                    });
-                });
-        </script>
+        @await Html.PartialAsync("Table",  new DataTablesModel
+        {
+            Name = "returnrequestactions-grid",
+            UrlRead = new DataUrl("ReturnRequestActionList", "ReturnRequest", null),
+            Length = Model.PageSize,
+            LengthMenu = Model.AvailablePageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ReturnRequestActionModel.Name))
+                {
+                    Title = T("Admin.Configuration.Settings.Order.ReturnRequestActions.Name").Text,
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(ReturnRequestActionModel.DisplayOrder))
+                {
+                    Title = T("Admin.Configuration.Settings.Order.ReturnRequestActions.DisplayOrder").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.CenterAll
+                },
+                new ColumnProperty(nameof(ReturnRequestActionModel.Id))
+                {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonEdit(new DataUrl("~/Admin/ReturnRequest/ReturnRequestActionEdit/"))
+                }
+            }
+        })
     </div>
     <div class="panel-footer">
         <a asp-action="ReturnRequestActionCreate" asp-controller="ReturnRequest" class="btn btn-primary">

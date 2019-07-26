@@ -56,33 +56,11 @@
             <div class="panel panel-default">
                 <div class="panel panel-body">
                     <div class="form-group">
-                        <script>
-                            function toggleLoadedAllowedTokens() {
-                                $('#pnlAllowedTokens').toggle();
-                                if ($('#pnlAllowedTokens').css('display') == 'none') {
-                                    $('#allowedTokensShowHide').html('@T("Admin.Common.Show")');
-                                } else {
-                                    $('#allowedTokensShowHide').html('@T("Admin.Common.Hide")');
-                                }
-                            }
-                        </script>
-
-                        <div class="col-md-3">
-                            <nop-label asp-for="AllowedTokens" />
-                        </div>
-                        <div class="col-md-9">
-                            <a id="allowedTokensShowHide" href="javascript:toggleLoadedAllowedTokens();">@T("Admin.Common.Show")</a>
-                            <div id="pnlAllowedTokens" style="display: none">
-                                <div class="form-text-row">@Model.AllowedTokens</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <div class="col-md-3">
                             <nop-label asp-for="Name" />
                         </div>
                         <div class="col-md-9">
-                            <nop-editor asp-for="Name" asp-required="true"/>
+                            <nop-editor asp-for="Name" asp-required="true" />
                             <span asp-validation-for="Name"></span>
                         </div>
                     </div>
@@ -91,7 +69,7 @@
                             <nop-label asp-for="Subject" />
                         </div>
                         <div class="col-md-9">
-                            <nop-editor asp-for="Subject" asp-required="true"/>
+                            <nop-editor asp-for="Subject" asp-required="true" />
                             <span asp-validation-for="Subject"></span>
                         </div>
                     </div>
@@ -111,7 +89,7 @@
                                 <div class="input-group input-group-required">
                                     <nop-editor asp-for="Body" asp-template="RichEditor" />
                                     <div class="input-group-btn">
-                                        <nop-required/>
+                                        <nop-required />
                                     </div>
                                 </div>
                             }
@@ -130,6 +108,28 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <script>
+                            function toggleLoadedAllowedTokens() {
+                                $('#pnlAllowedTokens').toggle();
+                                if ($('#pnlAllowedTokens').css('display') == 'none') {
+                                    $('#allowedTokensShowHide').text('@T("Admin.Common.Show")');
+                                } else {
+                                    $('#allowedTokensShowHide').text('@T("Admin.Common.Hide")');
+                                }
+                            }
+                        </script>
+
+                        <div class="col-md-3">
+                            <nop-label asp-for="AllowedTokens" />
+                        </div>
+                        <div class="col-md-9">
+                            <a id="allowedTokensShowHide" href="javascript:toggleLoadedAllowedTokens();">@T("Admin.Common.Show")</a>
+                            <div id="pnlAllowedTokens" style="display: none">
+                                <div class="form-text-row">@Model.AllowedTokens</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <div class="col-md-3">
                             <nop-label asp-for="DontSendBeforeDate" />
                         </div>
@@ -143,7 +143,7 @@
                             <nop-label asp-for="StoreId" />
                         </div>
                         <div class="col-md-9">
-                            <nop-select asp-for="StoreId" asp-items="Model.AvailableStores"/>
+                            <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
                             <span asp-validation-for="StoreId"></span>
                         </div>
                     </div>
@@ -152,7 +152,7 @@
                             <nop-label asp-for="CustomerRoleId" />
                         </div>
                         <div class="col-md-9">
-                            <nop-select asp-for="CustomerRoleId" asp-items="Model.AvailableCustomerRoles"/>
+                            <nop-select asp-for="CustomerRoleId" asp-items="Model.AvailableCustomerRoles" />
                             <span asp-validation-for="CustomerRoleId"></span>
                         </div>
                     </div>

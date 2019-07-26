@@ -26,9 +26,9 @@ namespace Nop.Services.Shipping.Date
             IRepository<DeliveryDate> deliveryDateRepository,
             IRepository<ProductAvailabilityRange> productAvailabilityRangeRepository)
         {
-            this._eventPublisher = eventPublisher;
-            this._deliveryDateRepository = deliveryDateRepository;
-            this._productAvailabilityRangeRepository = productAvailabilityRangeRepository;
+            _eventPublisher = eventPublisher;
+            _deliveryDateRepository = deliveryDateRepository;
+            _productAvailabilityRangeRepository = productAvailabilityRangeRepository;
         }
 
         #endregion

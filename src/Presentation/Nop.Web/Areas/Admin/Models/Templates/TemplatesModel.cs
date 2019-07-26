@@ -15,6 +15,11 @@ namespace Nop.Web.Areas.Admin.Models.Templates
             TemplatesManufacturer = new ManufacturerTemplateSearchModel();
             TemplatesProduct = new ProductTemplateSearchModel();
             TemplatesTopic = new TopicTemplateSearchModel();
+
+            AddCategoryTemplate = new CategoryTemplateModel();
+            AddManufacturerTemplate = new ManufacturerTemplateModel();
+            AddProductTemplate = new ProductTemplateModel();
+            AddTopicTemplate = new TopicTemplateModel();
         }
 
         #endregion
@@ -28,6 +33,14 @@ namespace Nop.Web.Areas.Admin.Models.Templates
         public ProductTemplateSearchModel TemplatesProduct { get; set; }
 
         public TopicTemplateSearchModel TemplatesTopic { get; set; }
+
+        public CategoryTemplateModel AddCategoryTemplate { get; set; }
+
+        public ManufacturerTemplateModel AddManufacturerTemplate { get; set; }
+
+        public ProductTemplateModel AddProductTemplate { get; set; }
+
+        public TopicTemplateModel AddTopicTemplate { get; set; }
 
         #endregion
     }

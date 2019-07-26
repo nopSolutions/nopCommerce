@@ -1,11 +1,10 @@
 ﻿@model BestsellerBriefSearchModel  
 
-@using Nop.Core
 @inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject IWorkContext workContext
 @{
     const string panelId = "bestsellers-report-quantity-box";
-    const string hidePanelAttributeName = "HideBestsellersBriefReportByQuantityPanel";
+    const string hidePanelAttributeName = "Reports.HideBestsellersBriefReportByQuantityPanel";
     var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
 }
 
@@ -28,76 +27,47 @@
             </button>
         </div>
     </div>
-    <div class="box-body">
-        <div id="bestsellers-byquantity-grid"></div>
-
-        <script>
-            $(document).ready(function () {
-                $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
-                    var collapsed = !$('#@panelId').hasClass('collapsed-box');
-                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
-                });
-
-                $("#bestsellers-byquantity-grid").kendoGrid({
-                    dataSource: {
-                        type: "json",
-                        transport: {
-                            read: {
-                                url: "@Html.Raw(Url.Action("BestsellersBriefReportByQuantityList", "Order"))",
-                                type: "POST",
-                                dataType: "json",
-                                data: function() {
-                                    var data = {
-                                        OrderBy : 1
-                                    };
-                                    addAntiForgeryToken(data);
-                                    return data;
-                                }
-                            }
-                        },
-                        schema: {
-                            data: "Data",
-                            total: "Total",
-                            errors: "Errors"
-                        },
-                        error: function(e) {
-                            display_kendoui_grid_error(e);
-                            // Cancel the changes
-                            this.cancelChanges();
-                        },
-                        pageSize: @(Model.PageSize),
-                        serverPaging: true,
-                        serverFiltering: true,
-                        serverSorting: true
-                    },
-                    pageable: {
-                        refresh: true,
-                        @await Html.PartialAsync("_GridPagerMessages")
-                    },
-                    editable: {
-                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                        mode: "inline"
-                    },
-                    scrollable: false,
-                    columns: [{
-                        field: "ProductName",
-                        title: "@T("Admin.Reports.Sales.Bestsellers.Fields.Name")"
-                    }, {
-                        field: "TotalQuantity",
-                        title: "@T("Admin.Reports.Sales.Bestsellers.Fields.TotalQuantity")"
-                    }, {
-                        field: "TotalAmount",
-                        title: "@T("Admin.Reports.Sales.Bestsellers.Fields.TotalAmount")"
-                    }, {
-                        field: "ProductId",
-                        title: "@T("Admin.Common.View")",
-                        width: 100,
-                        headerAttributes: { style: "text-align:center" },
-                        attributes: { style: "text-align:center" },
-                        template: '<a class="btn btn-xs btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#"><i class="fa fa-eye"></i>@T("Admin.Common.View")</a>'
-                    }]
-                });
+    <script>
+        $(document).ready(function () {
+            $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
+                var collapsed = !$('#@panelId').hasClass('collapsed-box');
+                saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
             });
-        </script>
+        });
+    </script>
+    <div class="box-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "bestsellers-byquantity-grid",
+            UrlRead = new DataUrl("BestsellersBriefReportByQuantityList", "Order", new RouteValueDictionary { [nameof(Model.OrderBy)] = 1 }),
+            Length = Model.PageSize,
+            Dom = "<'row'<'col-md-12't>>" +
+                  "<'row margin-t-5'" +
+                    "<'col-lg-10 col-xs-12'<'float-lg-left'p>>" +
+                    "<'col-lg-2 col-xs-12'<'float-lg-right text-center'i>>" +
+                  ">",
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(BestsellerModel.ProductName))
+                {
+                    Title = T("Admin.Reports.Sales.Bestsellers.Fields.Name").Text
+                },
+                new ColumnProperty(nameof(BestsellerModel.TotalQuantity))
+                {
+                    Title = T("Admin.Reports.Sales.Bestsellers.Fields.TotalQuantity").Text
+                },
+                new ColumnProperty(nameof(BestsellerModel.TotalAmount))
+                {
+                    Title = T("Admin.Reports.Sales.Bestsellers.Fields.TotalAmount").Text
+                },
+                new ColumnProperty(nameof(BestsellerModel.ProductId))
+                {
+                    Title = T("Admin.Common.View").Text,
+                    Width = "50",
+                    ClassName = NopColumnClassDefaults.Button,
+                    Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/"))
+                }
+            }
+        })
     </div>
 </div>

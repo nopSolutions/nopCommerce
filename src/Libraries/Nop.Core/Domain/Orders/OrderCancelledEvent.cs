@@ -11,7 +11,7 @@ namespace Nop.Core.Domain.Orders
         /// <param name="order">Order</param>
         public OrderCancelledEvent(Order order)
         {
-            this.Order = order;
+            Order = order;
         }
 
         /// <summary>

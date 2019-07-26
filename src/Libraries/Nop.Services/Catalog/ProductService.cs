@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -54,9 +54,9 @@ namespace Nop.Services.Catalog
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IRepository<TierPrice> _tierPriceRepository;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
         private readonly LocalizationSettings _localizationSettings;
-        private readonly string _entityName;
 
         #endregion
 
@@ -84,36 +84,37 @@ namespace Nop.Services.Catalog
             IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
             IRepository<StoreMapping> storeMappingRepository,
             IRepository<TierPrice> tierPriceRepository,
+            IStoreService storeService,
             IStoreMappingService storeMappingService,
             IWorkContext workContext,
             LocalizationSettings localizationSettings)
         {
-            this._catalogSettings = catalogSettings;
-            this._commonSettings = commonSettings;
-            this._aclService = aclService;
-            this._cacheManager = cacheManager;
-            this._dataProvider = dataProvider;
-            this._dateRangeService = dateRangeService;
-            this._dbContext = dbContext;
-            this._eventPublisher = eventPublisher;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._productAttributeParser = productAttributeParser;
-            this._productAttributeService = productAttributeService;
-            this._aclRepository = aclRepository;
-            this._crossSellProductRepository = crossSellProductRepository;
-            this._productRepository = productRepository;
-            this._productPictureRepository = productPictureRepository;
-            this._productReviewRepository = productReviewRepository;
-            this._productWarehouseInventoryRepository = productWarehouseInventoryRepository;
-            this._relatedProductRepository = relatedProductRepository;
-            this._stockQuantityHistoryRepository = stockQuantityHistoryRepository;
-            this._storeMappingRepository = storeMappingRepository;
-            this._tierPriceRepository = tierPriceRepository;
-            this._storeMappingService = storeMappingService;
-            this._workContext = workContext;
-            this._localizationSettings = localizationSettings;
-            this._entityName = typeof(Product).Name;
+            _catalogSettings = catalogSettings;
+            _commonSettings = commonSettings;
+            _aclService = aclService;
+            _cacheManager = cacheManager;
+            _dataProvider = dataProvider;
+            _dateRangeService = dateRangeService;
+            _dbContext = dbContext;
+            _eventPublisher = eventPublisher;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _productAttributeParser = productAttributeParser;
+            _productAttributeService = productAttributeService;
+            _aclRepository = aclRepository;
+            _crossSellProductRepository = crossSellProductRepository;
+            _productRepository = productRepository;
+            _productPictureRepository = productPictureRepository;
+            _productReviewRepository = productReviewRepository;
+            _productWarehouseInventoryRepository = productWarehouseInventoryRepository;
+            _relatedProductRepository = relatedProductRepository;
+            _stockQuantityHistoryRepository = stockQuantityHistoryRepository;
+            _storeMappingRepository = storeMappingRepository;
+            _tierPriceRepository = tierPriceRepository;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
+            _workContext = workContext;
+            _localizationSettings = localizationSettings;
         }
 
         #endregion
@@ -234,7 +235,7 @@ namespace Nop.Services.Catalog
             if (!product.DisplayStockAvailability)
                 return string.Empty;
 
-            var stockQuantity = this.GetTotalStockQuantity(product);
+            var stockQuantity = GetTotalStockQuantity(product);
             if (stockQuantity > 0)
             {
                 stockMessage = product.DisplayStockQuantity
@@ -322,13 +323,13 @@ namespace Nop.Services.Catalog
         /// Gets all products displayed on the home page
         /// </summary>
         /// <returns>Products</returns>
-        public virtual IList<Product> GetAllProductsDisplayedOnHomePage()
+        public virtual IList<Product> GetAllProductsDisplayedOnHomepage()
         {
             var query = from p in _productRepository.Table
                         orderby p.DisplayOrder, p.Id
                         where p.Published &&
                         !p.Deleted &&
-                        p.ShowOnHomePage
+                        p.ShowOnHomepage
                         select p;
             var products = query.ToList();
             return products;
@@ -387,7 +388,7 @@ namespace Nop.Services.Catalog
             _productRepository.Insert(product);
 
             //clear cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(product);
@@ -406,7 +407,7 @@ namespace Nop.Services.Catalog
             _productRepository.Update(product);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(product);
@@ -425,7 +426,7 @@ namespace Nop.Services.Catalog
             _productRepository.Update(products);
 
             //cache
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
 
             //event notification
             foreach (var product in products)
@@ -464,7 +465,7 @@ namespace Nop.Services.Catalog
 
                 query = from p in query
                         join acl in _aclRepository.Table
-                        on new { c1 = p.Id, c2 = _entityName } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into p_acl
+                        on new { c1 = p.Id, c2 = nameof(Product) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into p_acl
                         from acl in p_acl.DefaultIfEmpty()
                         where !p.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                         select p;
@@ -474,7 +475,7 @@ namespace Nop.Services.Catalog
             {
                 query = from p in query
                         join sm in _storeMappingRepository.Table
-                        on new { c1 = p.Id, c2 = _entityName } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
+                        on new { c1 = p.Id, c2 = nameof(Product) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
                         from sm in p_sm.DefaultIfEmpty()
                         where !p.LimitedToStores || storeId == sm.StoreId
                         select p;
@@ -1237,7 +1238,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            this.GetSkuMpnGtin(product, attributesXml, out var sku, out var _, out var _);
+            GetSkuMpnGtin(product, attributesXml, out var sku, out var _, out var _);
 
             return sku;
         }
@@ -1253,7 +1254,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            this.GetSkuMpnGtin(product, attributesXml, out var _, out var manufacturerPartNumber, out var _);
+            GetSkuMpnGtin(product, attributesXml, out var _, out var manufacturerPartNumber, out var _);
 
             return manufacturerPartNumber;
         }
@@ -1269,7 +1270,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            this.GetSkuMpnGtin(product, attributesXml, out var _, out var _, out var gtin);
+            GetSkuMpnGtin(product, attributesXml, out var _, out var _, out var gtin);
 
             return gtin;
         }
@@ -1289,6 +1290,35 @@ namespace Nop.Services.Catalog
                 return null;
 
             return date.ToShortDateString();
+        }
+
+        /// <summary>
+        /// Update product store mappings
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="limitedToStoresIds">A list of store ids for mapping</param>
+        public virtual void UpdateProductStoreMappings(Product product, IList<int> limitedToStoresIds)
+        {
+            product.LimitedToStores = limitedToStoresIds.Any();
+
+            var existingStoreMappings = _storeMappingService.GetStoreMappings(product);
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
+            {
+                if (limitedToStoresIds.Contains(store.Id))
+                {
+                    //new store
+                    if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
+                        _storeMappingService.InsertStoreMapping(product, store.Id);
+                }
+                else
+                {
+                    //remove store
+                    var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
+                    if (storeMappingToDelete != null)
+                        _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                }
+            }
         }
 
         #endregion
@@ -1313,7 +1343,7 @@ namespace Nop.Services.Catalog
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
             {
                 //previous stock
-                var prevStockQuantity = this.GetTotalStockQuantity(product);
+                var prevStockQuantity = GetTotalStockQuantity(product);
 
                 //update stock quantity
                 if (product.UseMultipleWarehouses)
@@ -1336,7 +1366,7 @@ namespace Nop.Services.Catalog
                 }
 
                 //qty is reduced. check if minimum stock quantity is reached
-                if (quantityToChange < 0 && product.MinStockQuantity >= this.GetTotalStockQuantity(product))
+                if (quantityToChange < 0 && product.MinStockQuantity >= GetTotalStockQuantity(product))
                 {
                     //what should we do now? disable buy button, unpublish the product, or do nothing? check "Low stock activity" property
                     switch (product.LowStockActivity)
@@ -1357,7 +1387,7 @@ namespace Nop.Services.Catalog
                 //qty is increased. product is back in stock (minimum stock quantity is reached again)?
                 if (_catalogSettings.PublishBackProductWhenCancellingOrders)
                 {
-                    if (quantityToChange > 0 && prevStockQuantity <= product.MinStockQuantity && product.MinStockQuantity < this.GetTotalStockQuantity(product))
+                    if (quantityToChange > 0 && prevStockQuantity <= product.MinStockQuantity && product.MinStockQuantity < GetTotalStockQuantity(product))
                     {
                         switch (product.LowStockActivity)
                         {
@@ -1377,7 +1407,7 @@ namespace Nop.Services.Catalog
                 }
 
                 //send email notification
-                if (quantityToChange < 0 && this.GetTotalStockQuantity(product) < product.NotifyAdminForQuantityBelow)
+                if (quantityToChange < 0 && GetTotalStockQuantity(product) < product.NotifyAdminForQuantityBelow)
                 {
                     var workflowMessageService = EngineContext.Current.Resolve<IWorkflowMessageService>();
                     workflowMessageService.SendQuantityBelowStoreOwnerNotification(product, _localizationSettings.DefaultAdminLanguageId);
@@ -1472,6 +1502,57 @@ namespace Nop.Services.Catalog
                 pwi.ReservedQuantity += qty;
             }
 
+            UpdateProduct(product);
+        }
+
+        /// <summary>
+        /// Balance the given quantity in the warehouses.
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="warehouseId">Warehouse identifier</param>
+        /// <param name="quantity">Quantity</param>
+        public virtual void BalanceInventory(Product product, int warehouseId, int quantity)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            //Warehouse to which reserve is being transferred
+            var productInventory = product.ProductWarehouseInventory
+                .Where(pwi => pwi.WarehouseId == warehouseId)
+                .ToList()
+                .FirstOrDefault();
+
+            if (productInventory == null)
+                return;
+
+            var selectQty = Math.Min(productInventory.StockQuantity - productInventory.ReservedQuantity, quantity);
+            productInventory.ReservedQuantity += selectQty;
+
+            //remove from reserve in other warehouses what has just been reserved in the current warehouse to equalize the total
+            var productAnotherInventories = product.ProductWarehouseInventory
+                .Where(pwi => pwi.WarehouseId != warehouseId)
+                .OrderByDescending(ob => ob.ReservedQuantity)
+                .ToList();
+
+            var qty = selectQty;
+            //We need to make a balance in all warehouses, as resources of one warehouse may not be enough
+            foreach (var productAnotherInventory in productAnotherInventories)
+            {
+                if (qty > 0)
+                {
+                    if (productAnotherInventory.ReservedQuantity >= qty)
+                    {
+                        productAnotherInventory.ReservedQuantity -= qty;
+                    }
+                    else
+                    {
+                        //Here we can transfer only a part of the reserve, the rest will be sought in other warehouses.
+                        qty = selectQty - productAnotherInventory.ReservedQuantity;
+                        productAnotherInventory.ReservedQuantity = 0;
+                    }
+                }
+            }
+                                                  
             UpdateProduct(product);
         }
 
@@ -1866,7 +1947,7 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Delete(tierPrice);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(tierPrice);
@@ -1896,7 +1977,7 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Insert(tierPrice);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(tierPrice);
@@ -1913,7 +1994,7 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Update(tierPrice);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(tierPrice);
@@ -2149,7 +2230,7 @@ namespace Nop.Services.Catalog
 
             _productReviewRepository.Delete(productReview);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
             //event notification
             _eventPublisher.EntityDeleted(productReview);
         }
@@ -2165,7 +2246,7 @@ namespace Nop.Services.Catalog
 
             _productReviewRepository.Delete(productReviews);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
             //event notification
             foreach (var productReview in productReviews)
             {
@@ -2188,7 +2269,7 @@ namespace Nop.Services.Catalog
 
             _productWarehouseInventoryRepository.Delete(pwi);
 
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ProductsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
         }
 
         #endregion

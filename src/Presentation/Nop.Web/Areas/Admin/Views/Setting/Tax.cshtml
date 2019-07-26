@@ -7,384 +7,56 @@
     Html.SetActiveMenuItemSystemName("Tax settings");
 }
 
-<form asp-controller="Setting" asp-action="Tax" method="post">
-    <div class="content-header clearfix">
-        <h1 class="pull-left">
-            @T("Admin.Configuration.Settings.Tax")
-        </h1>
-        <div class="pull-right">
-            <button type="submit" name="save" class="btn bg-blue">
-                <i class="fa fa-floppy-o"></i>
-                @T("Admin.Common.Save")
-            </button>
-            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxSettingsButtons })
-        </div>
-    </div>
-    
-    <div class="content">
-        <div class="form-horizontal">
-            @await Component.InvokeAsync("StoreScopeConfiguration")
-            @await Component.InvokeAsync("SettingMode")
-            <div asp-validation-summary="All"></div>
+@{
+    const string hideCommonBlockAttributeName = "TaxSettingsPage.HideCommonBlock";
+    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
 
-            <div class="panel-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxSettingsTop })
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.Tax.BlockTitle.Common")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DefaultTaxCategoryId_OverrideForStore" asp-input="DefaultTaxCategoryId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DefaultTaxCategoryId" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-select asp-for="DefaultTaxCategoryId" asp-items="Model.TaxCategories" />
-                                <span asp-validation-for="DefaultTaxCategoryId"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="TaxBasedOn_OverrideForStore" asp-input="TaxBasedOn" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="TaxBasedOn" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-select asp-for="TaxBasedOn" asp-items="Model.TaxBasedOnValues" />
-                                <span asp-validation-for="TaxBasedOn"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="TaxBasedOnPickupPointAddress_OverrideForStore" asp-input="TaxBasedOnPickupPointAddress" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="TaxBasedOnPickupPointAddress" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="TaxBasedOnPickupPointAddress" />
-                                <span asp-validation-for="TaxBasedOnPickupPointAddress"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <nop-override-store-checkbox asp-for="DefaultTaxAddress_OverrideForStore" asp-parent-container="pnlDefaultTaxAddress" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                        @T("Admin.Configuration.Settings.Tax.DefaultTaxAddress")
-                    </div>
-                    <div class="panel-body">
-                        <div id="pnlDefaultTaxAddress">
-                            <nop-editor asp-for="DefaultTaxAddress" asp-template="Address" />
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.Tax.BlockTitle.TaxDisplaying")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="AllowCustomersToSelectTaxDisplayType_OverrideForStore" asp-input="AllowCustomersToSelectTaxDisplayType" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="AllowCustomersToSelectTaxDisplayType" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="AllowCustomersToSelectTaxDisplayType" />
-                                <span asp-validation-for="AllowCustomersToSelectTaxDisplayType"></span>
-                            </div>
-                        </div>
-                        <div class="form-group" id="pnlTaxDisplayType">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="TaxDisplayType_OverrideForStore" asp-input="TaxDisplayType" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="TaxDisplayType" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-select asp-for="TaxDisplayType" asp-items="Model.TaxDisplayTypeValues" />
-                                <span asp-validation-for="TaxDisplayType"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="PricesIncludeTax_OverrideForStore" asp-input="PricesIncludeTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="PricesIncludeTax" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="PricesIncludeTax" />
-                                <span asp-validation-for="PricesIncludeTax"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayTaxSuffix_OverrideForStore" asp-input="DisplayTaxSuffix" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayTaxSuffix" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayTaxSuffix" />
-                                <span asp-validation-for="DisplayTaxSuffix"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DisplayTaxRates_OverrideForStore" asp-input="DisplayTaxRates" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DisplayTaxRates" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DisplayTaxRates" />
-                                <span asp-validation-for="DisplayTaxRates"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="HideZeroTax_OverrideForStore" asp-input="HideZeroTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="HideZeroTax" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="HideZeroTax" />
-                                <span asp-validation-for="HideZeroTax"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="HideTaxInOrderSummary_OverrideForStore" asp-input="HideTaxInOrderSummary" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="HideTaxInOrderSummary" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="HideTaxInOrderSummary" />
-                                <span asp-validation-for="HideTaxInOrderSummary"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="ForceTaxExclusionFromOrderSubtotal_OverrideForStore" asp-input="ForceTaxExclusionFromOrderSubtotal" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="ForceTaxExclusionFromOrderSubtotal" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="ForceTaxExclusionFromOrderSubtotal" />
-                                <span asp-validation-for="ForceTaxExclusionFromOrderSubtotal"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <script>
-                        $(document).ready(function () {
-                            $("#@Html.IdFor(model => model.AllowCustomersToSelectTaxDisplayType)").click(toggleTaxDisplayType);
-                            toggleTaxDisplayType();
-                        });
+    const string hideDefaultTaxAddressBlockAttributeName = "TaxSettingsPage.HideDefaultTaxAddressBlock";
+    var hideDefaultTaxAddressBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDefaultTaxAddressBlockAttributeName);
 
-                        function toggleTaxDisplayType() {
-                            if ($('#@Html.IdFor(model => model.AllowCustomersToSelectTaxDisplayType)').is(':checked')) {
-                                $('#pnlTaxDisplayType').hide();
-                            } else {
-                                $('#pnlTaxDisplayType').show();
-                            }
-                        }
+    const string hideTaxDisplayingBlockAttributeName = "TaxSettingsPage.HideTaxDisplayingBlock";
+    var hideTaxDisplayingBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideTaxDisplayingBlockAttributeName);
 
-                    </script>
-                </div>
-                <div class="panel panel-default advanced-setting">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.Tax.BlockTitle.Shipping")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="ShippingIsTaxable_OverrideForStore" asp-input="ShippingIsTaxable" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="ShippingIsTaxable" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="ShippingIsTaxable" />
-                                <span asp-validation-for="ShippingIsTaxable"></span>
-                            </div>
-                        </div>
-                        <nop-nested-setting asp-for="ShippingIsTaxable">
-                            <div class="form-group" id="pnlShippingPriceIncludesTax">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="ShippingPriceIncludesTax_OverrideForStore" asp-input="ShippingPriceIncludesTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="ShippingPriceIncludesTax" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="ShippingPriceIncludesTax" />
-                                    <span asp-validation-for="ShippingPriceIncludesTax"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="pnlShippingTaxClass">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="ShippingTaxClassId_OverrideForStore" asp-input="ShippingTaxClassId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="ShippingTaxClassId" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-select asp-for="ShippingTaxClassId" asp-items="Model.TaxCategories" />
-                                    <span asp-validation-for="ShippingTaxClassId"></span>
-                                </div>
-                            </div>
-                        </nop-nested-setting>
-                    </div>
-                    <script>
-                        $(document).ready(function () {
-                            $("#@Html.IdFor(model => model.ShippingIsTaxable)").click(toggleShipping);
+    const string hideShippingBlockAttributeName = "TaxSettingsPage.HideShippingBlock";
+    var hideShippingBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideShippingBlockAttributeName);
 
-                            toggleShipping();
-                        });
+    const string hidePaymentBlockAttributeName = "TaxSettingsPage.HidePaymentBlock";
+    var hidePaymentBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePaymentBlockAttributeName);
 
-                        function toggleShipping() {
-                            if ($('#@Html.IdFor(model => model.ShippingIsTaxable)').is(':checked')) {
-                                $('#pnlShippingPriceIncludesTax').show();
-                                $('#pnlShippingTaxClass').show();
-                            } else {
-                                $('#pnlShippingPriceIncludesTax').hide();
-                                $('#pnlShippingTaxClass').hide();
-                            }
-                        }
-                    </script>
-                </div>
-                <div class="panel panel-default advanced-setting">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.Tax.BlockTitle.Payment")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="PaymentMethodAdditionalFeeIsTaxable_OverrideForStore" asp-input="PaymentMethodAdditionalFeeIsTaxable" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="PaymentMethodAdditionalFeeIsTaxable" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="PaymentMethodAdditionalFeeIsTaxable" />
-                                <span asp-validation-for="PaymentMethodAdditionalFeeIsTaxable"></span>
-                            </div>
-                        </div>
-                        <nop-nested-setting asp-for="PaymentMethodAdditionalFeeIsTaxable">
-                            <div class="form-group" id="pnlPaymentMethodAdditionalFeeIncludesTax">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="PaymentMethodAdditionalFeeIncludesTax_OverrideForStore" asp-input="PaymentMethodAdditionalFeeIncludesTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="PaymentMethodAdditionalFeeIncludesTax" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="PaymentMethodAdditionalFeeIncludesTax" />
-                                    <span asp-validation-for="PaymentMethodAdditionalFeeIncludesTax"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="pnlPaymentMethodAdditionalFeeTaxClass">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="PaymentMethodAdditionalFeeTaxClassId_OverrideForStore" asp-input="PaymentMethodAdditionalFeeTaxClassId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="PaymentMethodAdditionalFeeTaxClassId" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-select asp-for="PaymentMethodAdditionalFeeTaxClassId" asp-items="Model.TaxCategories" />
-                                    <span asp-validation-for="PaymentMethodAdditionalFeeTaxClassId"></span>
-                                </div>
-                            </div>
-                        </nop-nested-setting>
-                    </div>
-                    <script>
-                        $(document).ready(function () {
-                            $("#@Html.IdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)").click(togglePayment);
+    const string hideVATBlockAttributeName = "TaxSettingsPage.HideVATBlock";
+    var hideVATBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideVATBlockAttributeName);
+}
 
-                            togglePayment();
-                        });
-
-
-                        function togglePayment() {
-                            if ($('#@Html.IdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)').is(':checked')) {
-                                $('#pnlPaymentMethodAdditionalFeeIncludesTax').show();
-                                $('#pnlPaymentMethodAdditionalFeeTaxClass').show();
-                            } else {
-                                $('#pnlPaymentMethodAdditionalFeeIncludesTax').hide();
-                                $('#pnlPaymentMethodAdditionalFeeTaxClass').hide();
-                            }
-                        }
-                    </script>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.Tax.BlockTitle.VAT")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="EuVatEnabled_OverrideForStore" asp-input="EuVatEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="EuVatEnabled" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="EuVatEnabled" />
-                                <span asp-validation-for="EuVatEnabled"></span>
-                            </div>
-                        </div>
-                        <nop-nested-setting asp-for="EuVatEnabled">
-                            <div class="form-group" id="pnlEuVatShopCountry">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="EuVatShopCountryId_OverrideForStore" asp-input="EuVatShopCountryId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="EuVatShopCountryId" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-select asp-for="EuVatShopCountryId" asp-items="Model.EuVatShopCountries" />
-                                    <span asp-validation-for="EuVatShopCountryId"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="pnlEuVatAllowVATExemption">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="EuVatAllowVatExemption_OverrideForStore" asp-input="EuVatAllowVatExemption" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="EuVatAllowVatExemption" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="EuVatAllowVatExemption" />
-                                    <span asp-validation-for="EuVatAllowVatExemption"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="pnlEuVatAssumeValid">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="EuVatAssumeValid_OverrideForStore" asp-input="EuVatAssumeValid" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="EuVatAssumeValid" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="EuVatAssumeValid" />
-                                    <span asp-validation-for="EuVatAssumeValid"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="pnlEuVatUseWebService">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="EuVatUseWebService_OverrideForStore" asp-input="EuVatUseWebService" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="EuVatUseWebService" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="EuVatUseWebService" />
-                                    <span asp-validation-for="EuVatUseWebService"></span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="pnlEuVatEmailAdminWhenNewVATSubmitted">
-                                <div class="col-md-3">
-                                    <nop-override-store-checkbox asp-for="EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore" asp-input="EuVatEmailAdminWhenNewVatSubmitted" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                    <nop-label asp-for="EuVatEmailAdminWhenNewVatSubmitted" />
-                                </div>
-                                <div class="col-md-9">
-                                    <nop-editor asp-for="EuVatEmailAdminWhenNewVatSubmitted" />
-                                    <span asp-validation-for="EuVatEmailAdminWhenNewVatSubmitted"></span>
-                                </div>
-                            </div>
-                        </nop-nested-setting>
-                        <script>
-                            $(document).ready(function () {
-                                $("#@Html.IdFor(model => model.EuVatEnabled)").click(toggleEUVAT);
-
-                                toggleEUVAT();
-                            });
-                            function toggleEUVAT() {
-                                if ($('#@Html.IdFor(model => model.EuVatEnabled)').is(':checked')) {
-                                    $('#pnlEuVatShopCountry').show();
-                                    $('#pnlEuVatAllowVATExemption').show();
-                                    $('#pnlEuVatAssumeValid').show();
-                                    $('#pnlEuVatUseWebService').show();
-                                    $('#pnlEuVatEmailAdminWhenNewVATSubmitted').show();
-                                } else {
-                                    $('#pnlEuVatShopCountry').hide();
-                                    $('#pnlEuVatAllowVATExemption').hide();
-                                    $('#pnlEuVatAssumeValid').hide();
-                                    $('#pnlEuVatUseWebService').hide();
-                                    $('#pnlEuVatEmailAdminWhenNewVATSubmitted').hide();
-                                }
-                            }
-                        </script>
-                    </div>
-                </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxSettingsBottom })
+    <form asp-controller="Setting" asp-action="Tax" method="post">
+        <div class="content-header clearfix">
+            <h1 class="pull-left">
+                @T("Admin.Configuration.Settings.Tax")
+            </h1>
+            <div class="pull-right">
+                <button type="submit" name="save" class="btn bg-blue">
+                    <i class="fa fa-floppy-o"></i>
+                    @T("Admin.Common.Save")
+                </button>
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxSettingsButtons })
             </div>
         </div>
-    </div>
-</form>
+
+        <div class="content">
+            <div class="form-horizontal">
+                @await Component.InvokeAsync("StoreScopeConfiguration")
+                @await Component.InvokeAsync("SettingMode")
+                <div asp-validation-summary="All"></div>
+
+                <nop-panels id="taxsettings-panels">
+                    <nop-panel asp-name="taxsettings-common" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.Tax.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Tax.Common", Model)</nop-panel>
+                    <nop-panel asp-name="taxsettings-default-tax-address" asp-icon="fa fa-address-book-o" asp-title="@T("Admin.Configuration.Settings.Tax.DefaultTaxAddress")" asp-hide-block-attribute-name="@hideDefaultTaxAddressBlockAttributeName" asp-hide="@hideDefaultTaxAddressBlock" asp-advanced="false">@await Html.PartialAsync("_Tax.DefaultTaxAddress", Model)</nop-panel>
+                    <nop-panel asp-name="taxsettings-tax-displaying" asp-icon="fa fa-television" asp-title="@T("Admin.Configuration.Settings.Tax.BlockTitle.TaxDisplaying")" asp-hide-block-attribute-name="@hideTaxDisplayingBlockAttributeName" asp-hide="@hideTaxDisplayingBlock" asp-advanced="false">@await Html.PartialAsync("_Tax.TaxDisplaying", Model)</nop-panel>
+                    <nop-panel asp-name="taxsettings-shipping" asp-icon="fa fa-truck" asp-title="@T("Admin.Configuration.Settings.Tax.BlockTitle.Shipping")" asp-hide-block-attribute-name="@hideShippingBlockAttributeName" asp-hide="@hideShippingBlock" asp-advanced="true">@await Html.PartialAsync("_Tax.Shipping", Model)</nop-panel>
+                    <nop-panel asp-name="taxsettings-payment" asp-icon="fa fa-credit-card" asp-title="@T("Admin.Configuration.Settings.Tax.BlockTitle.Payment")" asp-hide-block-attribute-name="@hidePaymentBlockAttributeName" asp-hide="@hidePaymentBlock" asp-advanced="true">@await Html.PartialAsync("_Tax.Payment", Model)</nop-panel>
+                    <nop-panel asp-name="taxsettings-vat" asp-icon="fa fa-percent" asp-title="@T("Admin.Configuration.Settings.Tax.BlockTitle.VAT")" asp-hide-block-attribute-name="@hideVATBlockAttributeName" asp-hide="@hideVATBlock" asp-advanced="false">@await Html.PartialAsync("_Tax.VAT", Model)</nop-panel>
+                   
+                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TaxSettingsDetailsBlock, additionalData = Model })
+                </nop-panels>
+            </div>
+        </div>
+    </form>

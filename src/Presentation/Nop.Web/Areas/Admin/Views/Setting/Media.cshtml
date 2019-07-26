@@ -7,6 +7,16 @@
     Html.SetActiveMenuItemSystemName("Media settings");
 }
 
+@{
+    const string hideCommonBlockAttributeName = "MediaSettingsPage.HideCommonBlock";
+    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+
+    const string hideProductBlockAttributeName = "MediaSettingsPage.HideProductBlock";
+    var hideProductBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideProductBlockAttributeName);
+
+    const string hideOtherPagesBlockAttributeName = "MediaSettingsPage.HideOtherPagesBlock";
+    var hideOtherPagesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideOtherPagesBlockAttributeName);
+}
 
 <form asp-controller="Setting" asp-action="Media" method="post">
     <div class="content-header clearfix">
@@ -28,209 +38,13 @@
             @await Component.InvokeAsync("SettingMode")
             <div asp-validation-summary="All"></div>
 
-            <div class="panel-group">
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MediaSettingsTop })
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.Media.BlockTitle.Common")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-label asp-for="PicturesStoredIntoDatabase" />
-                            </div>
-                            <div class="col-md-1">
-                                <div class="form-text-row">
-                                    @if (Model.PicturesStoredIntoDatabase)
-                                    {
-                                        @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Database")
-                                    }
-                                    else
-                                    {
-                                        @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.FileSystem")
-                                    }
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <button type="submit" id="change-picture-storage" name="change-picture-storage" class="btn btn-primary">
-                                    @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Change")
-                                </button>
-                                <nop-action-confirmation asp-button-id="change-picture-storage" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-9 col-md-offset-3">
-                                <span>@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note")</span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="MaximumImageSize_OverrideForStore" asp-input="MaximumImageSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="MaximumImageSize" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="MaximumImageSize" />
-                                <span asp-validation-for="MaximumImageSize"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="MultipleThumbDirectories_OverrideForStore" asp-input="MultipleThumbDirectories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="MultipleThumbDirectories" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="MultipleThumbDirectories" />
-                                <span asp-validation-for="MultipleThumbDirectories"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DefaultImageQuality_OverrideForStore" asp-input="DefaultImageQuality" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DefaultImageQuality" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DefaultImageQuality" />
-                                <span asp-validation-for="DefaultImageQuality"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="ImportProductImagesUsingHash_OverrideForStore" asp-input="ImportProductImagesUsingHash" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="ImportProductImagesUsingHash" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="ImportProductImagesUsingHash" />
-                                <span asp-validation-for="ImportProductImagesUsingHash"></span>
-                            </div>
-                        </div>
-                        <div class="form-group advanced-setting">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="DefaultPictureZoomEnabled_OverrideForStore" asp-input="DefaultPictureZoomEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="DefaultPictureZoomEnabled" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="DefaultPictureZoomEnabled" />
-                                <span asp-validation-for="DefaultPictureZoomEnabled"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default advanced-setting">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.Media.BlockTitle.Product")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="ProductDetailsPictureSize_OverrideForStore" asp-input="ProductDetailsPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="ProductDetailsPictureSize" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="ProductDetailsPictureSize" />
-                                <span asp-validation-for="ProductDetailsPictureSize"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="ProductThumbPictureSize_OverrideForStore" asp-input="ProductThumbPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="ProductThumbPictureSize" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="ProductThumbPictureSize" />
-                                <span asp-validation-for="ProductThumbPictureSize"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore" asp-input="ProductThumbPictureSizeOnProductDetailsPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="ProductThumbPictureSizeOnProductDetailsPage" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="ProductThumbPictureSizeOnProductDetailsPage" />
-                                <span asp-validation-for="ProductThumbPictureSizeOnProductDetailsPage"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="AssociatedProductPictureSize_OverrideForStore" asp-input="AssociatedProductPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="AssociatedProductPictureSize" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="AssociatedProductPictureSize" />
-                                <span asp-validation-for="AssociatedProductPictureSize"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default advanced-setting">
-                    <div class="panel-heading">
-                        @T("Admin.Configuration.Settings.Media.BlockTitle.OtherPages")
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="CategoryThumbPictureSize_OverrideForStore" asp-input="CategoryThumbPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="CategoryThumbPictureSize" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="CategoryThumbPictureSize" />
-                                <span asp-validation-for="CategoryThumbPictureSize"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="ManufacturerThumbPictureSize_OverrideForStore" asp-input="ManufacturerThumbPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="ManufacturerThumbPictureSize" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="ManufacturerThumbPictureSize" />
-                                <span asp-validation-for="ManufacturerThumbPictureSize"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="VendorThumbPictureSize_OverrideForStore" asp-input="VendorThumbPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="VendorThumbPictureSize" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="VendorThumbPictureSize" />
-                                <span asp-validation-for="VendorThumbPictureSize"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="CartThumbPictureSize_OverrideForStore" asp-input="CartThumbPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="CartThumbPictureSize" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="CartThumbPictureSize" />
-                                <span asp-validation-for="CartThumbPictureSize"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="MiniCartThumbPictureSize_OverrideForStore" asp-input="MiniCartThumbPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="MiniCartThumbPictureSize" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="MiniCartThumbPictureSize" />
-                                <span asp-validation-for="MiniCartThumbPictureSize"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                <nop-override-store-checkbox asp-for="AvatarPictureSize_OverrideForStore" asp-input="AvatarPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-                                <nop-label asp-for="AvatarPictureSize" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="AvatarPictureSize" />
-                                <span asp-validation-for="AvatarPictureSize"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MediaSettingsBottom })
-            </div>
+            <nop-panels id="mediasettings-panels">
+                <nop-panel asp-name="mediasettings-common" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.Media.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Media.Common", Model)</nop-panel>
+                <nop-panel asp-name="mediasettings-product" asp-icon="fa fa-cube" asp-title="@T("Admin.Configuration.Settings.Media.BlockTitle.Product")" asp-hide-block-attribute-name="@hideProductBlockAttributeName" asp-hide="@hideProductBlock" asp-advanced="true">@await Html.PartialAsync("_Media.Product", Model)</nop-panel>
+                <nop-panel asp-name="mediasettings-other-pages" asp-icon="fa fa-file-o" asp-title="@T("Admin.Configuration.Settings.Media.BlockTitle.OtherPages")" asp-hide-block-attribute-name="@hideOtherPagesBlockAttributeName" asp-hide="@hideOtherPagesBlock" asp-advanced="true">@await Html.PartialAsync("_Media.OtherPages", Model)</nop-panel>
+
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MediaSettingsDetailsBlock, additionalData = Model })
+            </nop-panels>
         </div>
     </div>
 </form>

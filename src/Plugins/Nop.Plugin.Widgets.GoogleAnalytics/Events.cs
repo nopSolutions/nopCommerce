@@ -1,10 +1,12 @@
-using System;
+﻿using System;
 using System.Linq;
+using System.Net.Http;
 using Nop.Core;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Events;
+using Nop.Core.Http;
 using Nop.Plugin.Widgets.GoogleAnalytics.Api;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
@@ -18,31 +20,34 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
     public class EventConsumer : IConsumer<OrderCancelledEvent>, IConsumer<OrderPaidEvent>, IConsumer<EntityDeletedEvent<Order>>
     {
         private readonly ICategoryService _categoryService;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger _logger;
         private readonly IProductService _productService;
         private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IWebHelper _webHelper;
-        private readonly IWidgetService _widgetService;
+        private readonly IWidgetPluginManager _widgetPluginManager;
 
         public EventConsumer(ICategoryService categoryService,
+            IHttpClientFactory httpClientFactory,
             ILogger logger,
             IProductService productService,
             ISettingService settingService,
             IStoreContext storeContext,
             IStoreService storeService,
             IWebHelper webHelper,
-            IWidgetService widgetService)
+            IWidgetPluginManager widgetPluginManager)
         {
-            this._logger = logger;
-            this._categoryService = categoryService;
-            this._productService = productService;
-            this._settingService = settingService;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._webHelper = webHelper;
-            this._widgetService = widgetService;
+            _categoryService = categoryService;
+            _httpClientFactory = httpClientFactory;
+            _logger = logger;
+            _productService = productService;
+            _settingService = settingService;
+            _storeContext = storeContext;
+            _storeService = storeService;
+            _webHelper = webHelper;
+            _widgetPluginManager = widgetPluginManager;
         }
 
         private string FixIllegalJavaScriptChars(string text)
@@ -57,8 +62,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
 
         private bool IsPluginEnabled()
         {
-            var plugin = _widgetService.LoadWidgetBySystemName("Widgets.GoogleAnalytics") as GoogleAnalyticsPlugin;
-            return plugin != null && _widgetService.IsWidgetActive(plugin) && plugin.PluginDescriptor.Installed;
+            return _widgetPluginManager.IsPluginActive("Widgets.GoogleAnalytics");
         }
 
         private void ProcessOrderEvent(Order order, bool add)
@@ -109,7 +113,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                     var sku = _productService.FormatSku(item.Product, item.AttributesXml);
                     if (String.IsNullOrEmpty(sku))
                         sku = item.Product.Id.ToString();
-                    var product = new TransactionItem(FixIllegalJavaScriptChars(orderId), 
+                    var product = new TransactionItem(FixIllegalJavaScriptChars(orderId),
                       FixIllegalJavaScriptChars(sku),
                       FixIllegalJavaScriptChars(item.Product.Name),
                       unitPrice,
@@ -119,7 +123,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                     trans.Items.Add(product);
                 }
 
-                request.SendRequest(trans);
+                request.SendRequest(trans, _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient));
             }
             catch (Exception ex)
             {
@@ -191,7 +195,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             if (sendRequest)
                 ProcessOrderEvent(order, false);
         }
-        
+
         /// <summary>
         /// Handles the event
         /// </summary>

@@ -10,7 +10,7 @@ using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -39,12 +39,12 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IPriceFormatter priceFormatter)
         {
-            this._currencySettings = currencySettings;
-            this._currencyService = currencyService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._giftCardService = giftCardService;
-            this._localizationService = localizationService;
-            this._priceFormatter = priceFormatter;
+            _currencySettings = currencySettings;
+            _currencyService = currencyService;
+            _dateTimeHelper = dateTimeHelper;
+            _giftCardService = giftCardService;
+            _localizationService = localizationService;
+            _priceFormatter = priceFormatter;
         }
 
         #endregion
@@ -73,7 +73,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
+        
         #endregion
 
         #region Methods
@@ -131,9 +131,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new GiftCardListModel
+            var model = new GiftCardListModel().PrepareToGrid(searchModel, giftCards, () =>
             {
-                Data = giftCards.Select(giftCard =>
+                return giftCards.Select(giftCard =>
                 {
                     //fill in model values from the entity
                     var giftCardModel = giftCard.ToModel<GiftCardModel>();
@@ -146,9 +146,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     giftCardModel.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
 
                     return giftCardModel;
-                }),
-                Total = giftCards.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -198,12 +197,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(giftCard));
 
             //get gift card usage history
-            var usageHistory = giftCard.GiftCardUsageHistory.OrderByDescending(historyEntry => historyEntry.CreatedOnUtc).ToList();
+            var usageHistory = giftCard.GiftCardUsageHistory
+                .OrderByDescending(historyEntry => historyEntry.CreatedOnUtc).ToList()
+                .ToPagedList(searchModel);
 
             //prepare list model
-            var model = new GiftCardUsageHistoryListModel
+            var model = new GiftCardUsageHistoryListModel().PrepareToGrid(searchModel, usageHistory, () =>
             {
-                Data = usageHistory.PaginationByRequestModel(searchModel).Select(historyEntry =>
+                return usageHistory.Select(historyEntry =>
                 {
                     //fill in model values from the entity
                     var giftCardUsageHistoryModel = historyEntry.ToModel<GiftCardUsageHistoryModel>();
@@ -217,9 +218,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     giftCardUsageHistoryModel.UsedValue = _priceFormatter.FormatPrice(historyEntry.UsedValue, true, false);
 
                     return giftCardUsageHistoryModel;
-                }),
-                Total = usageHistory.Count
-            };
+                });
+            });
 
             return model;
         }

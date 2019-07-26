@@ -1,6 +1,18 @@
 ﻿@model VendorModel
 
-@inject IEventPublisher eventPublisher
+@{
+    const string hideInfoBlockAttributeName = "VendorPage.HideInfoBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+
+    const string hideDisplayBlockAttributeName = "VendorPage.HideDisplayBlock";
+    var hideDisplayBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideDisplayBlockAttributeName, defaultValue: true);
+
+    const string hideSeoBlockAttributeName = "VendorPage.HideSEOBlock";
+    var hideSeoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSeoBlockAttributeName, defaultValue: true);
+
+    const string hideVendorNotesBlockAttributeName = "VendorPage.HideNotesBlock";
+    var hideVendorNotesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideVendorNotesBlockAttributeName, defaultValue: true);
+}
 
 <div asp-validation-summary="All"></div>
 <input asp-for="Id" type="hidden" />
@@ -14,23 +26,18 @@
                 </div>
             </div>
         </div>
-        <nop-tabs id="vendor-edit">
-            <nop-tab asp-name="tab-info" asp-default="true" asp-title="@T("Admin.Vendors.Info")">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-tab>
-            <nop-tab asp-name="tab-seo" class="advanced-setting" asp-title="@T("Admin.Common.SEO")">@await Html.PartialAsync("_CreateOrUpdate.SEO", Model)</nop-tab>
+
+        <nop-panels id="vendor-panels">
+            <nop-panel asp-name="vendor-info" asp-icon="fa fa-info" asp-title="@T("Admin.Vendors.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            <nop-panel asp-name="vendor-display" asp-icon="fa fa-television" asp-title="@T("Admin.Vendors.Display")" asp-hide-block-attribute-name="@hideDisplayBlockAttributeName" asp-hide="@hideDisplayBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Display", Model)</nop-panel>
+            <nop-panel asp-name="vendor-seo" asp-icon="fa fa-search-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-panel>
+            
             @if (Model.Id > 0)
             {
-                <nop-tab asp-name="tab-vendor-notes" class="advanced-setting" asp-title="@T("Admin.Vendors.VendorNotes")">@await Html.PartialAsync("_CreateOrUpdate.Notes", Model)</nop-tab>
+                <nop-panel asp-name="vendor-products" asp-icon="fa fa-th-list" asp-title="@T("Admin.Vendors.VendorNotes")" asp-hide-block-attribute-name="@hideVendorNotesBlockAttributeName" asp-hide="@hideVendorNotesBlock" asp-advanced="true">@await Html.PartialAsync("_CreateOrUpdate.Notes", Model)</nop-panel>
             }
-        </nop-tabs>
+                    
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorDetailsBlock, additionalData = Model })
+        </nop-panels>
     </div>
 </div>
-
-@{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "vendor-edit");
-    eventPublisher.Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
-        @eventBlock
-    }
-}

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -55,7 +55,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets a value indicating whether a customer chose "pick up in store" shipping option
         /// </summary>
-        public bool PickUpInStore { get; set; }
+        public bool PickupInStore { get; set; }
 
         /// <summary>
         /// Gets or sets an order status identifier
@@ -273,7 +273,7 @@ namespace Nop.Core.Domain.Orders
         public string ShippingMethod { get; set; }
 
         /// <summary>
-        /// Gets or sets the shipping rate computation method identifier or the pickup point provider identifier (if PickUpInStore is true)
+        /// Gets or sets the shipping rate computation method identifier or the pickup point provider identifier (if PickupInStore is true)
         /// </summary>
         public string ShippingRateComputationMethodSystemName { get; set; }
 

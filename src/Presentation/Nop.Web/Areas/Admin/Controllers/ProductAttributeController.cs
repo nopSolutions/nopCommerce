@@ -38,13 +38,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             IProductAttributeModelFactory productAttributeModelFactory,
             IProductAttributeService productAttributeService)
         {
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._productAttributeModelFactory = productAttributeModelFactory;
-            this._productAttributeService = productAttributeService;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _productAttributeModelFactory = productAttributeModelFactory;
+            _productAttributeService = productAttributeService;
         }
 
         #endregion
@@ -104,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(ProductAttributeSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _productAttributeModelFactory.PrepareProductAttributeListModel(searchModel);
@@ -143,10 +143,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = productAttribute.Id });
             }
 
@@ -199,10 +196,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = productAttribute.Id });
             }
 
@@ -243,7 +237,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult UsedByProducts(ProductAttributeProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a product attribute with the specified id
             var productAttribute = _productAttributeService.GetProductAttributeById(searchModel.ProductAttributeId)
@@ -263,7 +257,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult PredefinedProductAttributeValueList(PredefinedProductAttributeValueSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a product attribute with the specified id
             var productAttribute = _productAttributeService.GetProductAttributeById(searchModel.ProductAttributeId)

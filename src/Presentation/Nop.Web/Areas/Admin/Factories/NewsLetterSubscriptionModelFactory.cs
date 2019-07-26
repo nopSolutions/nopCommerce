@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
+using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -17,6 +20,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
@@ -27,17 +31,19 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public NewsletterSubscriptionModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+        public NewsletterSubscriptionModelFactory(CatalogSettings catalogSettings,
+            IBaseAdminModelFactory baseAdminModelFactory,
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IStoreService storeService)
         {
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._storeService = storeService;
+            _catalogSettings = catalogSettings;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _storeService = storeService;
         }
 
         #endregion
@@ -77,6 +83,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 Text = _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.NotActiveOnly")
             });
 
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+
             //prepare page parameters
             searchModel.SetGridPageSize();
 
@@ -110,23 +118,22 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new NewsletterSubscriptionListModel
+            var model = new NewsletterSubscriptionListModel().PrepareToGrid(searchModel, newsletterSubscriptions, () =>
             {
-                Data = newsletterSubscriptions.Select(subscription =>
+                return newsletterSubscriptions.Select(subscription =>
                 {
                     //fill in model values from the entity
                     var subscriptionModel = subscription.ToModel<NewsletterSubscriptionModel>();
 
                     //convert dates to the user time
-                    subscriptionModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(subscription.CreatedOnUtc, DateTimeKind.Utc);
+                    subscriptionModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(subscription.CreatedOnUtc, DateTimeKind.Utc).ToString();
 
                     //fill in additional values (not existing in the entity)
                     subscriptionModel.StoreName = _storeService.GetStoreById(subscription.StoreId)?.Name ?? "Deleted";
 
                     return subscriptionModel;
-                }),
-                Total = newsletterSubscriptions.TotalCount
-            };
+                });
+            });
 
             return model;
         }

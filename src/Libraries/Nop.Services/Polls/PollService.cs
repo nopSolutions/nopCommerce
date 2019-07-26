@@ -34,12 +34,12 @@ namespace Nop.Services.Polls
             IRepository<PollVotingRecord> pollVotingRecordRepository,
              IRepository<StoreMapping> storeMappingRepository)
         {
-            this._catalogSettings = catalogSettings;
-            this._eventPublisher = eventPublisher;
-            this._pollRepository = pollRepository;
-            this._pollAnswerRepository = pollAnswerRepository;
-            this._pollVotingRecordRepository = pollVotingRecordRepository;
-            this._storeMappingRepository = storeMappingRepository;
+            _catalogSettings = catalogSettings;
+            _eventPublisher = eventPublisher;
+            _pollRepository = pollRepository;
+            _pollAnswerRepository = pollAnswerRepository;
+            _pollVotingRecordRepository = pollVotingRecordRepository;
+            _storeMappingRepository = storeMappingRepository;
         }
 
         #endregion
@@ -65,13 +65,13 @@ namespace Nop.Services.Polls
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
         /// <param name="languageId">Language identifier; pass 0 to load all records</param>
         /// <param name="showHidden">Whether to show hidden records (not published, not started and expired)</param>
-        /// <param name="loadShownOnHomePageOnly">Retrieve only shown on home page polls</param>
+        /// <param name="loadShownOnHomepageOnly">Retrieve only shown on home page polls</param>
         /// <param name="systemKeyword">The poll system keyword; pass null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Polls</returns>
         public virtual IPagedList<Poll> GetPolls(int storeId, int languageId = 0, bool
-            showHidden = false, bool loadShownOnHomePageOnly = false, string systemKeyword = null,
+            showHidden = false, bool loadShownOnHomepageOnly = false, string systemKeyword = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _pollRepository.Table;
@@ -86,8 +86,8 @@ namespace Nop.Services.Polls
             }
 
             //load homepage polls only
-            if (loadShownOnHomePageOnly)
-                query = query.Where(poll => poll.ShowOnHomePage);
+            if (loadShownOnHomepageOnly)
+                query = query.Where(poll => poll.ShowOnHomepage);
 
             //filter by language
             if (languageId > 0)

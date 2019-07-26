@@ -11,7 +11,7 @@ using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Models.Extensions;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -45,14 +45,14 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
             IStoreService storeService,
             ITaxCategoryService taxCategoryService)
         {
-            this._countryStateZipSettings = countryStateZipSettings;
-            this._countryService = countryService;
-            this._taxRateService = taxRateService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._stateProvinceService = stateProvinceService;
-            this._storeService = storeService;
-            this._taxCategoryService = taxCategoryService;
+            _countryStateZipSettings = countryStateZipSettings;
+            _countryService = countryService;
+            _taxRateService = taxRateService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _stateProvinceService = stateProvinceService;
+            _storeService = storeService;
+            _taxCategoryService = taxCategoryService;
         }
 
         #endregion
@@ -110,23 +110,23 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
         #region Fixed tax
 
         [HttpPost]
-        public IActionResult FixedRatesList(DataSourceRequest command)
+        public IActionResult FixedRatesList(ConfigurationModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
-            var taxRateModels = _taxCategoryService.GetAllTaxCategories().Select(taxCategory => new FixedTaxRateModel
-            {
-                TaxCategoryId = taxCategory.Id,
-                TaxCategoryName = taxCategory.Name,
-                Rate = _settingService.GetSettingByKey<decimal>(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id))
-            }).ToList();
+            var categories = _taxCategoryService.GetAllTaxCategories().ToPagedList(searchModel);
 
-            var gridModel = new DataSourceResult
+            var gridModel = new FixedTaxRateListModel().PrepareToGrid(searchModel, categories, () =>
             {
-                Data = taxRateModels,
-                Total = taxRateModels.Count
-            };
+                return categories.Select(taxCategory => new FixedTaxRateModel
+                {
+                    TaxCategoryId = taxCategory.Id,
+                    TaxCategoryName = taxCategory.Name,
+                    Rate = _settingService.GetSettingByKey<decimal>(
+                        string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id))
+                });
+            });
 
             return Json(gridModel);
         }
@@ -148,32 +148,30 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        public IActionResult RatesByCountryStateZipList(DataSourceRequest command)
+        public IActionResult RatesByCountryStateZipList(ConfigurationModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
-            var records = _taxRateService.GetAllTaxRates(command.Page - 1, command.PageSize);
-            var taxRatesModel = records.Select(record => new CountryStateZipModel
+            var records = _taxRateService.GetAllTaxRates(searchModel.Page - 1, searchModel.PageSize);
+            
+            var gridModel = new CountryStateZipListModel().PrepareToGrid(searchModel, records, () =>
             {
-                Id = record.Id,
-                StoreId = record.StoreId,
-                StoreName = _storeService.GetStoreById(record.StoreId)?.Name ?? "*",
-                TaxCategoryId = record.TaxCategoryId,
-                TaxCategoryName = _taxCategoryService.GetTaxCategoryById(record.TaxCategoryId)?.Name ?? string.Empty,
-                CountryId = record.CountryId,
-                CountryName = _countryService.GetCountryById(record.CountryId)?.Name ?? "Unavailable",
-                StateProvinceId = record.StateProvinceId,
-                StateProvinceName = _stateProvinceService.GetStateProvinceById(record.StateProvinceId)?.Name ?? "*",
-                Zip = !string.IsNullOrEmpty(record.Zip) ? record.Zip : "*",
-                Percentage = record.Percentage,
-            }).ToList();
-
-            var gridModel = new DataSourceResult
-            {
-                Data = taxRatesModel,
-                Total = records.TotalCount
-            };
+                return records.Select(record => new CountryStateZipModel
+                {
+                    Id = record.Id,
+                    StoreId = record.StoreId,
+                    StoreName = _storeService.GetStoreById(record.StoreId)?.Name ?? "*",
+                    TaxCategoryId = record.TaxCategoryId,
+                    TaxCategoryName = _taxCategoryService.GetTaxCategoryById(record.TaxCategoryId)?.Name ?? string.Empty,
+                    CountryId = record.CountryId,
+                    CountryName = _countryService.GetCountryById(record.CountryId)?.Name ?? "Unavailable",
+                    StateProvinceId = record.StateProvinceId,
+                    StateProvinceName = _stateProvinceService.GetStateProvinceById(record.StateProvinceId)?.Name ?? "*",
+                    Zip = !string.IsNullOrEmpty(record.Zip) ? record.Zip : "*",
+                    Percentage = record.Percentage
+                });
+            });
 
             return Json(gridModel);
         }

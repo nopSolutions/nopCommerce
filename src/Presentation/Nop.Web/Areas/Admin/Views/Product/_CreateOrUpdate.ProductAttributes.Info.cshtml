@@ -1,116 +1,76 @@
 @model ProductModel
 
 @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesInfoTop, additionalData = Model })
-<div class="panel panel-default">
-    <div class="panel-body">
-        <div id="productattributemappings-grid"></div>
-        <script>
-            $(document).ready(function() {
-                $("#productattributemappings-grid").kendoGrid({
-                    dataSource: {
-                        type: "json",
-                        transport: {
-                            read: {
-                                url: "@Html.Raw(Url.Action("ProductAttributeMappingList", "Product"))",
-                                type: "POST",
-                                dataType: "json",
-                                data: function additionalData() {
-                                    var data = {
-                                        ProductId: '@(Model.Id)'
-                                    };
-                                    addAntiForgeryToken(data);
-                                    return data;
-                                }
-                            }
-                        },
-                        schema: {
-                            data: "Data",
-                            total: "Total",
-                            errors: "Errors"
-                        },
-                        error: function(e) {
-                            display_kendoui_grid_error(e);
-                            // Cancel the changes
-                            this.cancelChanges();
-                        },
-                        pageSize: @(Model.ProductAttributeMappingSearchModel.PageSize),
-                        serverPaging: true,
-                        serverFiltering: true,
-                        serverSorting: true
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @await Html.PartialAsync("Table", new DataTablesModel
+            {
+                Name = "productattributemappings-grid",
+                UrlRead = new DataUrl("ProductAttributeMappingList", "Product", new RouteValueDictionary { [nameof(Model.ProductAttributeMappingSearchModel.ProductId)] = Model.ProductAttributeMappingSearchModel.ProductId }),
+                Length = Model.ProductPictureSearchModel.PageSize,
+                LengthMenu = Model.ProductPictureSearchModel.AvailablePageSizes,
+                ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(ProductAttributeMappingModel.ProductAttribute))
+                    {
+                        Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute").Text,
+                        Width = "200"
                     },
-                    pageable: {
-                        refresh: true,
-                        pageSizes: [@(Model.ProductAttributeMappingSearchModel.AvailablePageSizes)],
-                        @await Html.PartialAsync("_GridPagerMessages")
+                    new ColumnProperty(nameof(ProductAttributeMappingModel.TextPrompt))
+                    {
+                        Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt").Text,
+                        Width = "150"
                     },
-                    editable: {
-                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                        mode: "inline"
+                    new ColumnProperty(nameof(ProductAttributeMappingModel.IsRequired))
+                    {
+                        Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.IsRequired").Text,
+                        Width = "100",
+                        ClassName = NopColumnClassDefaults.CenterAll,
+                        Render = new RenderBoolean()
                     },
-                    scrollable: false,
-                    columns: [
-                        {
-                            field: "ProductAttribute",
-                            title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute")",
-                            width: 200
-                        }, {
-                            field: "TextPrompt",
-                            title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt")",
-                            width: 150
-                        }, {
-                            field: "IsRequired",
-                            title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.IsRequired")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '# if(IsRequired) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                        },
-                        {
-                            field: "AttributeControlType",
-                            title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.AttributeControlType")",
-                            width: 250
-                        },
-                        {
-                            field: "DisplayOrder",
-                            title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.DisplayOrder")",
-                            width: 150
-                        },
-                        {
-                            field: "ValidationRulesString",
-                            title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules")",
-                            width: 150,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            encoded: false
-                        },
-                        {
-                            field: "ConditionString",
-                            title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition")",
-                            width: 150,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            encoded: false
-                        },
-                        {
-                            field: "Id",
-                            title: "@T("Admin.Common.Edit")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<a class="btn btn-default" href="@Url.Content("~/Admin/Product/ProductAttributeMappingEdit/")#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
-                        }
-                    ]
-                });
-            });
+                    new ColumnProperty(nameof(ProductAttributeMappingModel.AttributeControlType))
+                    {
+                        Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.AttributeControlType").Text,
+                        Width = "250"
+                    },
+                    new ColumnProperty(nameof(ProductAttributeMappingModel.DisplayOrder))
+                    {
+                        Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.DisplayOrder").Text,
+                        Width = "150",
+                        ClassName =  NopColumnClassDefaults.CenterAll
+                    },
+                    new ColumnProperty(nameof(ProductAttributeMappingModel.ValidationRulesString))
+                    {
+                        Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules").Text,
+                        Width = "150",
+                        ClassName = NopColumnClassDefaults.CenterAll,
+                        Encode = false
+                    },
+                    new ColumnProperty(nameof(ProductAttributeMappingModel.ConditionString))
+                    {
+                        Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition").Text,
+                        Width = "150",
+                        ClassName = NopColumnClassDefaults.CenterAll,
+                        Encode = false
+                    },
+                    new ColumnProperty(nameof(ProductAttributeMappingModel.Id))
+                    {
+                        Title = T("Admin.Common.Edit").Text,
+                        Width = "100",
+                        ClassName =  NopColumnClassDefaults.Button,
+                        Render = new RenderButtonEdit(new DataUrl("~/Admin/Product/ProductAttributeMappingEdit/"))
+                    }
+                }
+            })
+        </div>
 
-        </script>
-    </div>
-
-    <div class="panel-footer">
-        <a asp-action="ProductAttributeMappingCreate" asp-route-productId="@Model.Id" class="btn bg-blue">
-            <i class="fa fa-plus-square"></i>
-            @T("Admin.Catalog.Products.ProductAttributes.Attributes.AddNew")
-        </a>
+        <div class="panel-footer">
+            <a asp-action="ProductAttributeMappingCreate" asp-route-productId="@Model.Id" class="btn bg-blue">
+                <i class="fa fa-plus-square"></i>
+                @T("Admin.Catalog.Products.ProductAttributes.Attributes.AddNew")
+            </a>
+        </div>
     </div>
 </div>
 @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesInfoBottom, additionalData = Model })

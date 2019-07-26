@@ -13,8 +13,8 @@ namespace Nop.Web.Components
 
         public ProfilePostsViewComponent(ICustomerService customerService, IProfileModelFactory profileModelFactory)
         {
-            this._customerService = customerService;
-            this._profileModelFactory = profileModelFactory;
+            _customerService = customerService;
+            _profileModelFactory = profileModelFactory;
         }
 
         public IViewComponentResult Invoke(int customerProfileId, int pageNumber)

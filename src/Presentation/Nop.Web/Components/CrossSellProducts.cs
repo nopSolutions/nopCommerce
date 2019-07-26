@@ -31,14 +31,14 @@ namespace Nop.Web.Components
             IWorkContext workContext,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._aclService = aclService;
-            this._productModelFactory = productModelFactory;
-            this._productService = productService;
-            this._shoppingCartService = shoppingCartService;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._workContext = workContext;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _aclService = aclService;
+            _productModelFactory = productModelFactory;
+            _productService = productService;
+            _shoppingCartService = shoppingCartService;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _workContext = workContext;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         public IViewComponentResult Invoke(int? productThumbPictureSize)

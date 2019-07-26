@@ -27,9 +27,9 @@ namespace Nop.Services.Stores
             IRepository<Store> storeRepository,
             IStaticCacheManager cacheManager)
         {
-            this._eventPublisher = eventPublisher;
-            this._storeRepository = storeRepository;
-            this._cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _storeRepository = storeRepository;
+            _cacheManager = cacheManager;
         }
 
         #endregion
@@ -54,7 +54,7 @@ namespace Nop.Services.Stores
 
             _storeRepository.Delete(store);
 
-            _cacheManager.RemoveByPattern(NopStoreDefaults.StoresPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopStoreDefaults.StoresPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(store);
@@ -132,7 +132,7 @@ namespace Nop.Services.Stores
 
             _storeRepository.Insert(store);
 
-            _cacheManager.RemoveByPattern(NopStoreDefaults.StoresPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopStoreDefaults.StoresPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(store);
@@ -152,7 +152,7 @@ namespace Nop.Services.Stores
 
             _storeRepository.Update(store);
 
-            _cacheManager.RemoveByPattern(NopStoreDefaults.StoresPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopStoreDefaults.StoresPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(store);
@@ -197,9 +197,36 @@ namespace Nop.Services.Stores
             if (string.IsNullOrEmpty(host))
                 return false;
 
-            var contains = this.ParseHostValues(store).Any(x => x.Equals(host, StringComparison.InvariantCultureIgnoreCase));
+            var contains = ParseHostValues(store).Any(x => x.Equals(host, StringComparison.InvariantCultureIgnoreCase));
 
             return contains;
+        }
+
+        /// <summary>
+        /// Returns a list of names of not existing stores
+        /// </summary>
+        /// <param name="storeIdsNames">The names and/or IDs of the store to check</param>
+        /// <returns>List of names and/or IDs not existing stores</returns>
+        public string[] GetNotExistingStores(string[] storeIdsNames)
+        {
+            if (storeIdsNames == null)
+                throw new ArgumentNullException(nameof(storeIdsNames));
+
+            var query = _storeRepository.Table;
+            var queryFilter = storeIdsNames.Distinct().ToArray();
+            //filtering by name
+            var filter = query.Select(store => store.Name).Where(store => queryFilter.Contains(store)).ToList();
+            queryFilter = queryFilter.Except(filter).ToArray();
+
+            //if some names not found
+            if (!queryFilter.Any())
+                return queryFilter.ToArray();
+
+            //filtering by IDs
+            filter = query.Select(store => store.Id.ToString()).Where(store => queryFilter.Contains(store)).ToList();
+            queryFilter = queryFilter.Except(filter).ToArray();
+
+            return queryFilter.ToArray();
         }
 
         #endregion

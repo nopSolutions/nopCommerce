@@ -13,8 +13,9 @@ using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Vendors;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -57,19 +58,19 @@ namespace Nop.Web.Areas.Admin.Factories
             IVendorService vendorService,
             VendorSettings vendorSettings)
         {
-            this._addressAttributeModelFactory = addressAttributeModelFactory;
-            this._addressService = addressService;
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._localizedModelFactory = localizedModelFactory;
-            this._urlRecordService = urlRecordService;
-            this._vendorAttributeParser = vendorAttributeParser;
-            this._vendorAttributeService = vendorAttributeService;
-            this._vendorService = vendorService;
-            this._vendorSettings = vendorSettings;
+            _addressAttributeModelFactory = addressAttributeModelFactory;
+            _addressService = addressService;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _urlRecordService = urlRecordService;
+            _vendorAttributeParser = vendorAttributeParser;
+            _vendorAttributeService = vendorAttributeService;
+            _vendorService = vendorService;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -147,39 +148,39 @@ namespace Nop.Web.Areas.Admin.Factories
                         case AttributeControlType.DropdownList:
                         case AttributeControlType.RadioList:
                         case AttributeControlType.Checkboxes:
+                        {
+                            if (!string.IsNullOrEmpty(selectedVendorAttributes))
                             {
-                                if (!string.IsNullOrEmpty(selectedVendorAttributes))
-                                {
-                                    //clear default selection
-                                    foreach (var item in attributeModel.Values)
-                                        item.IsPreSelected = false;
+                                //clear default selection
+                                foreach (var item in attributeModel.Values)
+                                    item.IsPreSelected = false;
 
-                                    //select new values
-                                    var selectedValues = _vendorAttributeParser.ParseVendorAttributeValues(selectedVendorAttributes);
-                                    foreach (var attributeValue in selectedValues)
-                                        foreach (var item in attributeModel.Values)
-                                            if (attributeValue.Id == item.Id)
-                                                item.IsPreSelected = true;
-                                }
+                                //select new values
+                                var selectedValues = _vendorAttributeParser.ParseVendorAttributeValues(selectedVendorAttributes);
+                                foreach (var attributeValue in selectedValues)
+                                    foreach (var item in attributeModel.Values)
+                                        if (attributeValue.Id == item.Id)
+                                            item.IsPreSelected = true;
                             }
-                            break;
+                        }
+                        break;
                         case AttributeControlType.ReadonlyCheckboxes:
-                            {
-                                //do nothing
-                                //values are already pre-set
-                            }
-                            break;
+                        {
+                            //do nothing
+                            //values are already pre-set
+                        }
+                        break;
                         case AttributeControlType.TextBox:
                         case AttributeControlType.MultilineTextbox:
+                        {
+                            if (!string.IsNullOrEmpty(selectedVendorAttributes))
                             {
-                                if (!string.IsNullOrEmpty(selectedVendorAttributes))
-                                {
-                                    var enteredText = _vendorAttributeParser.ParseValues(selectedVendorAttributes, attribute.Id);
-                                    if (enteredText.Any())
-                                        attributeModel.DefaultValue = enteredText[0];
-                                }
+                                var enteredText = _vendorAttributeParser.ParseValues(selectedVendorAttributes, attribute.Id);
+                                if (enteredText.Any())
+                                    attributeModel.DefaultValue = enteredText[0];
                             }
-                            break;
+                        }
+                        break;
                         case AttributeControlType.Datepicker:
                         case AttributeControlType.ColorSquares:
                         case AttributeControlType.ImageSquares:
@@ -246,7 +247,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
+        
         #endregion
 
         #region Methods
@@ -283,18 +284,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new VendorListModel
+            var model = new VendorListModel().PrepareToGrid(searchModel, vendors, () =>
             {
                 //fill in model values from the entity
-                Data = vendors.Select(vendor =>
+                return vendors.Select(vendor =>
                 {
                     var vendorModel = vendor.ToModel<VendorModel>();
                     vendorModel.SeName = _urlRecordService.GetSeName(vendor, 0, true, false);
 
                     return vendorModel;
-                }),
-                Total = vendors.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -377,16 +377,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(vendor));
 
             //get vendor notes
-            var vendorNotes = vendor.VendorNotes.OrderByDescending(note => note.CreatedOnUtc).ToList();
+            var vendorNotes = vendor.VendorNotes.OrderByDescending(note => note.CreatedOnUtc).ToList().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new VendorNoteListModel
+            var model = new VendorNoteListModel().PrepareToGrid(searchModel, vendorNotes, () =>
             {
-                Data = vendorNotes.PaginationByRequestModel(searchModel).Select(note =>
+                //fill in model values from the entity
+                return vendorNotes.Select(note =>
                 {
                     //fill in model values from the entity        
                     var vendorNoteModel = note.ToModel<VendorNoteModel>();
-                    
+
                     //convert dates to the user time
                     vendorNoteModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(note.CreatedOnUtc, DateTimeKind.Utc);
 
@@ -394,9 +395,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     vendorNoteModel.Note = _vendorService.FormatVendorNoteText(note);
 
                     return vendorNoteModel;
-                }),
-                Total = vendorNotes.Count
-            };
+                });
+            });
 
             return model;
         }

@@ -11,7 +11,7 @@ namespace Nop.Web.Areas.Admin.Models.Forums
 
         public ForumGroupSearchModel()
         {
-            this.ForumSearch = new ForumSearchModel();
+            ForumSearch = new ForumSearchModel();
         }
 
         #endregion

@@ -19,8 +19,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         public OnlineCustomerController(ICustomerModelFactory customerModelFactory,
             IPermissionService permissionService)
         {
-            this._customerModelFactory = customerModelFactory;
-            this._permissionService = permissionService;
+            _customerModelFactory = customerModelFactory;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -42,7 +42,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(OnlineCustomerSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _customerModelFactory.PrepareOnlineCustomerListModel(searchModel);

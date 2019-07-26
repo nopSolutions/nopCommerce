@@ -29,10 +29,10 @@ namespace Nop.Services.Catalog
             IRepository<ReviewType> reviewTypeRepository,
             IStaticCacheManager cacheManager)
         {
-            this._eventPublisher = eventPublisher;
-            this._productReviewReviewTypeMappingRepository = productReviewReviewTypeMappingRepository;
-            this._reviewTypeRepository = reviewTypeRepository;
-            this._cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
+            _productReviewReviewTypeMappingRepository = productReviewReviewTypeMappingRepository;
+            _reviewTypeRepository = reviewTypeRepository;
+            _cacheManager = cacheManager;
         }
 
         #endregion
@@ -79,7 +79,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(reviewType));
 
             _reviewTypeRepository.Insert(reviewType);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ReviewTypeByPatternKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ReviewTypeByPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(reviewType);
@@ -95,7 +95,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(reviewType));
 
             _reviewTypeRepository.Update(reviewType);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ReviewTypeByPatternKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ReviewTypeByPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(reviewType);
@@ -111,7 +111,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(reviewType));
 
             _reviewTypeRepository.Delete(reviewType);
-            _cacheManager.RemoveByPattern(NopCatalogDefaults.ReviewTypeByPatternKey);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ReviewTypeByPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(reviewType);

@@ -61,6 +61,8 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         public bool AllowVendorsToImportProducts { get; set; }
 
+        public bool HideStoresList { get; set; }
+
         public IList<SelectListItem> AvailableCategories { get; set; }
 
         public IList<SelectListItem> AvailableManufacturers { get; set; }

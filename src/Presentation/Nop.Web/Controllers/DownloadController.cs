@@ -25,12 +25,12 @@ namespace Nop.Web.Controllers
             IProductService productService,
             IWorkContext workContext)
         {
-            this._customerSettings = customerSettings;
-            this._downloadService = downloadService;
-            this._localizationService = localizationService;
-            this._orderService = orderService;
-            this._productService = productService;
-            this._workContext = workContext;
+            _customerSettings = customerSettings;
+            _downloadService = downloadService;
+            _localizationService = localizationService;
+            _orderService = orderService;
+            _productService = productService;
+            _workContext = workContext;
         }
         
         public virtual IActionResult Sample(int productId)

@@ -31,8 +31,8 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
         public CheckAccessClosedStoreAttribute(bool ignore = false) : base(typeof(CheckAccessClosedStoreFilter))
         {
-            this._ignoreFilter = ignore;
-            this.Arguments = new object[] { ignore };
+            _ignoreFilter = ignore;
+            Arguments = new object[] { ignore };
         }
 
         #endregion
@@ -73,12 +73,12 @@ namespace Nop.Web.Framework.Mvc.Filters
                 IUrlHelperFactory urlHelperFactory,
                 StoreInformationSettings storeInformationSettings)
             {
-                this._ignoreFilter = ignoreFilter;
-                this._permissionService = permissionService;
-                this._storeContext = storeContext;
-                this._topicService = topicService;
-                this._urlHelperFactory = urlHelperFactory;
-                this._storeInformationSettings = storeInformationSettings;
+                _ignoreFilter = ignoreFilter;
+                _permissionService = permissionService;
+                _storeContext = storeContext;
+                _topicService = topicService;
+                _urlHelperFactory = urlHelperFactory;
+                _storeInformationSettings = storeInformationSettings;
             }
 
             #endregion

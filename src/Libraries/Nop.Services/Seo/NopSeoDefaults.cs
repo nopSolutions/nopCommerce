@@ -63,7 +63,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string UrlRecordPatternCacheKey => "Nop.urlrecord.";
+        public static string UrlRecordPrefixCacheKey => "Nop.urlrecord.";
 
         #endregion
     }

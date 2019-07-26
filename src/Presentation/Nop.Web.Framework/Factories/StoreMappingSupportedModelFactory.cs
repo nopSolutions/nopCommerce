@@ -25,8 +25,8 @@ namespace Nop.Web.Framework.Factories
         public StoreMappingSupportedModelFactory(IStoreMappingService storeMappingService,
             IStoreService storeService)
         {
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
         }
 
         #endregion

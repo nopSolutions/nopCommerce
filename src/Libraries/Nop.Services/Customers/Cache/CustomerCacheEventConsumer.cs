@@ -19,7 +19,7 @@ namespace Nop.Services.Customers.Cache
 
         public CustomerCacheEventConsumer(IStaticCacheManager cacheManager)
         {
-            this._cacheManager = cacheManager;
+            _cacheManager = cacheManager;
         }
 
         #endregion

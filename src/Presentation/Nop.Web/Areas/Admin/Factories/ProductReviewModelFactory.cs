@@ -11,6 +11,7 @@ using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -21,30 +22,33 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IProductService _productService;
         private readonly IReviewTypeService _reviewTypeService;
-        private readonly IWorkContext _workContext;        
+        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
-        public ProductReviewModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
+        public ProductReviewModelFactory(CatalogSettings catalogSettings,
+            IBaseAdminModelFactory baseAdminModelFactory,
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             IProductService productService,
             IReviewTypeService reviewTypeService,
             IWorkContext workContext)
         {
-            this._baseAdminModelFactory = baseAdminModelFactory;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._productService = productService;
-            this._reviewTypeService = reviewTypeService;
-            this._workContext = workContext;
+            _catalogSettings = catalogSettings;
+            _baseAdminModelFactory = baseAdminModelFactory;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _productService = productService;
+            _reviewTypeService = reviewTypeService;
+            _workContext = workContext;
         }
 
         #endregion
@@ -83,6 +87,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 Value = "2"
             });
 
+            searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+
             //prepare page parameters
             searchModel.SetGridPageSize();
 
@@ -120,9 +126,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new ProductReviewListModel
+            var model = new ProductReviewListModel().PrepareToGrid(searchModel, productReviews, () =>
             {
-                Data = productReviews.Select(productReview =>
+                return productReviews.Select(productReview =>
                 {
                     //fill in model values from the entity
                     var productReviewModel = productReview.ToModel<ProductReviewModel>();
@@ -139,9 +145,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     productReviewModel.ReplyText = HtmlHelper.FormatText(productReview.ReplyText, false, true, false, false, false, false);
 
                     return productReviewModel;
-                }),
-                Total = productReviews.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -207,8 +212,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             searchModel.ProductReviewId = productReview.Id;
 
+            searchModel.IsAnyReviewTypes = productReview.ProductReviewReviewTypeMappingEntries.Any();
+
             //prepare page parameters
-            searchModel.SetGridPageSize();
+            searchModel.SetGridPageSize();            
 
             return searchModel;
         }
@@ -228,30 +235,35 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(productReview));
 
             //get product review and review type mappings
-            var productReviewReviewTypeMappings = _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewId(productReview.Id);
+            var productReviewReviewTypeMappings = _reviewTypeService
+                .GetProductReviewReviewTypeMappingsByProductReviewId(productReview.Id).ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductReviewReviewTypeMappingListModel
+            var model = new ProductReviewReviewTypeMappingListModel().PrepareToGrid(searchModel, productReviewReviewTypeMappings, () =>
             {
-                Data = productReviewReviewTypeMappings.PaginationByRequestModel(searchModel).Select(productReviewReviewTypeMapping =>
+                return productReviewReviewTypeMappings.Select(productReviewReviewTypeMapping =>
                 {
                     //fill in model values from the entity
-                    var productReviewReviewTypeMappingModel = productReviewReviewTypeMapping.ToModel<ProductReviewReviewTypeMappingModel>();
+                    var productReviewReviewTypeMappingModel = productReviewReviewTypeMapping
+                        .ToModel<ProductReviewReviewTypeMappingModel>();
 
                     //fill in additional values (not existing in the entity)
-                    var reviewType = _reviewTypeService.GetReviewTypeById(productReviewReviewTypeMapping.ReviewTypeId);
+                    var reviewType =
+                        _reviewTypeService.GetReviewTypeById(productReviewReviewTypeMapping.ReviewTypeId);
 
-                    productReviewReviewTypeMappingModel.Name = _localizationService.GetLocalized(reviewType, entity => entity.Name);
-                    productReviewReviewTypeMappingModel.Description = _localizationService.GetLocalized(reviewType, entity => entity.Description);
-                    productReviewReviewTypeMappingModel.VisibleToAllCustomers = reviewType.VisibleToAllCustomers;
+                    productReviewReviewTypeMappingModel.Name =
+                        _localizationService.GetLocalized(reviewType, entity => entity.Name);
+                    productReviewReviewTypeMappingModel.Description =
+                        _localizationService.GetLocalized(reviewType, entity => entity.Description);
+                    productReviewReviewTypeMappingModel.VisibleToAllCustomers =
+                        reviewType.VisibleToAllCustomers;
 
                     return productReviewReviewTypeMappingModel;
-                }),
-                Total = productReviewReviewTypeMappings.Count
-            };
+                });
+            });
 
             return model;
-        }        
+        }
 
         #endregion
     }

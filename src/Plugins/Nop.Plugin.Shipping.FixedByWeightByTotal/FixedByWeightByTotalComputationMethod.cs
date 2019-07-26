@@ -2,12 +2,12 @@
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Plugins;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Data;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
 
@@ -44,15 +44,15 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
             IWebHelper webHelper,
             ShippingByWeightByTotalObjectContext objectContext)
         {
-            this._fixedByWeightByTotalSettings = fixedByWeightByTotalSettings;
-            this._localizationService = localizationService;
-            this._priceCalculationService = priceCalculationService;
-            this._settingService = settingService;
-            this._shippingByWeightByTotalService = shippingByWeightByTotalService;
-            this._shippingService = shippingService;
-            this._storeContext = storeContext;
-            this._webHelper = webHelper;
-            this._objectContext = objectContext;
+            _fixedByWeightByTotalSettings = fixedByWeightByTotalSettings;
+            _localizationService = localizationService;
+            _priceCalculationService = priceCalculationService;
+            _settingService = settingService;
+            _shippingByWeightByTotalService = shippingByWeightByTotalService;
+            _shippingService = shippingService;
+            _storeContext = storeContext;
+            _webHelper = webHelper;
+            _objectContext = objectContext;
         }
 
         #endregion

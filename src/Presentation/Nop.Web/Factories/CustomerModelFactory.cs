@@ -47,12 +47,12 @@ namespace Nop.Web.Factories
         private readonly ForumSettings _forumSettings;
         private readonly GdprSettings _gdprSettings;
         private readonly IAddressModelFactory _addressModelFactory;
+        private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly ICountryService _countryService;
         private readonly ICustomerAttributeParser _customerAttributeParser;
         private readonly ICustomerAttributeService _customerAttributeService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDownloadService _downloadService;
-        private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly IGdprService _gdprService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
@@ -86,12 +86,12 @@ namespace Nop.Web.Factories
             ForumSettings forumSettings,
             GdprSettings gdprSettings,
             IAddressModelFactory addressModelFactory,
+            IAuthenticationPluginManager authenticationPluginManager,
             ICountryService countryService,
             ICustomerAttributeParser customerAttributeParser,
             ICustomerAttributeService customerAttributeService,
             IDateTimeHelper dateTimeHelper,
             IDownloadService downloadService,
-            IExternalAuthenticationService externalAuthenticationService,
             IGdprService gdprService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
@@ -111,40 +111,40 @@ namespace Nop.Web.Factories
             TaxSettings taxSettings,
             VendorSettings vendorSettings)
         {
-            this._addressSettings = addressSettings;
-            this._captchaSettings = captchaSettings;
-            this._catalogSettings = catalogSettings;
-            this._commonSettings = commonSettings;
-            this._customerSettings = customerSettings;
-            this._dateTimeSettings = dateTimeSettings;
-            this._externalAuthenticationSettings = externalAuthenticationSettings;
-            this._forumSettings = forumSettings;
-            this._gdprSettings = gdprSettings;
-            this._addressModelFactory = addressModelFactory;
-            this._countryService = countryService;
-            this._customerAttributeParser = customerAttributeParser;
-            this._customerAttributeService = customerAttributeService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._downloadService = downloadService;
-            this._externalAuthenticationService = externalAuthenticationService;
-            this._gdprService = gdprService;
-            this._genericAttributeService = genericAttributeService;
-            this._localizationService = localizationService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._orderService = orderService;
-            this._pictureService = pictureService;
-            this._returnRequestService = returnRequestService;
-            this._stateProvinceService = stateProvinceService;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._urlRecordService = urlRecordService;
-            this._workContext = workContext;
-            this._mediaSettings = mediaSettings;
-            this._orderSettings = orderSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._securitySettings = securitySettings;
-            this._taxSettings = taxSettings;
-            this._vendorSettings = vendorSettings;
+            _addressSettings = addressSettings;
+            _captchaSettings = captchaSettings;
+            _catalogSettings = catalogSettings;
+            _commonSettings = commonSettings;
+            _customerSettings = customerSettings;
+            _dateTimeSettings = dateTimeSettings;
+            _externalAuthenticationSettings = externalAuthenticationSettings;
+            _forumSettings = forumSettings;
+            _gdprSettings = gdprSettings;
+            _addressModelFactory = addressModelFactory;
+            _authenticationPluginManager = authenticationPluginManager;
+            _countryService = countryService;
+            _customerAttributeParser = customerAttributeParser;
+            _customerAttributeService = customerAttributeService;
+            _dateTimeHelper = dateTimeHelper;
+            _downloadService = downloadService;
+            _gdprService = gdprService;
+            _genericAttributeService = genericAttributeService;
+            _localizationService = localizationService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _orderService = orderService;
+            _pictureService = pictureService;
+            _returnRequestService = returnRequestService;
+            _stateProvinceService = stateProvinceService;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
+            _mediaSettings = mediaSettings;
+            _orderSettings = orderSettings;
+            _rewardPointsSettings = rewardPointsSettings;
+            _securitySettings = securitySettings;
+            _taxSettings = taxSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -405,12 +405,13 @@ namespace Nop.Web.Factories
 
             //external authentication
             model.AllowCustomersToRemoveAssociations = _externalAuthenticationSettings.AllowCustomersToRemoveAssociations;
-            model.NumberOfExternalAuthenticationProviders = _externalAuthenticationService
-                .LoadActiveExternalAuthenticationMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id).Count;
+            model.NumberOfExternalAuthenticationProviders = _authenticationPluginManager
+                .LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
+                .Count;
             foreach (var record in customer.ExternalAuthenticationRecords)
             {
-                var authMethod = _externalAuthenticationService.LoadExternalAuthenticationMethodBySystemName(record.ProviderSystemName);
-                if (authMethod == null || !_externalAuthenticationService.IsExternalAuthenticationMethodActive(authMethod))
+                var authMethod = _authenticationPluginManager.LoadPluginBySystemName(record.ProviderSystemName);
+                if (!_authenticationPluginManager.IsPluginActive(authMethod))
                     continue;
 
                 model.AssociatedExternalAuthRecords.Add(new CustomerInfoModel.AssociatedExternalAuthModel
@@ -542,7 +543,8 @@ namespace Nop.Web.Factories
             }
 
             //custom customer attributes
-            var customAttributes = PrepareCustomCustomerAttributes(_workContext.CurrentCustomer, overrideCustomCustomerAttributesXml); foreach (var attribute in customAttributes)
+            var customAttributes = PrepareCustomCustomerAttributes(_workContext.CurrentCustomer, overrideCustomCustomerAttributesXml);
+            foreach (var attribute in customAttributes)
                 model.CustomerAttributes.Add(attribute);
 
             //GDPR
@@ -568,6 +570,7 @@ namespace Nop.Web.Factories
             var model = new LoginModel
             {
                 UsernamesEnabled = _customerSettings.UsernamesEnabled,
+                RegistrationType = _customerSettings.UserRegistrationType,
                 CheckoutAsGuest = checkoutAsGuest.GetValueOrDefault(),
                 DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage
             };
@@ -580,7 +583,10 @@ namespace Nop.Web.Factories
         /// <returns>Password recovery model</returns>
         public virtual PasswordRecoveryModel PreparePasswordRecoveryModel()
         {
-            var model = new PasswordRecoveryModel();
+            var model = new PasswordRecoveryModel
+            {
+                DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnForgotPasswordPage
+            };
             return model;
         }
 

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Validators.Messages;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
@@ -12,16 +10,15 @@ namespace Nop.Web.Areas.Admin.Models.Messages
     /// <summary>
     /// Represents a campaign model
     /// </summary>
-    [Validator(typeof(CampaignValidator))]
     public partial class CampaignModel : BaseNopEntityModel
     {
         #region Ctor
 
         public CampaignModel()
         {
-            this.AvailableStores = new List<SelectListItem>();
-            this.AvailableCustomerRoles = new List<SelectListItem>();
-            this.AvailableEmailAccounts = new List<SelectListItem>();
+            AvailableStores = new List<SelectListItem>();
+            AvailableCustomerRoles = new List<SelectListItem>();
+            AvailableEmailAccounts = new List<SelectListItem>();
         }
 
         #endregion

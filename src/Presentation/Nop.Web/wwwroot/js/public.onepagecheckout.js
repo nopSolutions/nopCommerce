@@ -143,7 +143,7 @@ var Billing = {
             cache: false,
             url: this.saveUrl,
             data: $(this.form).serialize(),
-            type: 'post',
+            type: "POST",
             success: this.nextStep,
             complete: this.resetLoadWaiting,
             error: Checkout.ajaxFailure
@@ -180,6 +180,13 @@ var Billing = {
         }
 
         Checkout.setStepResponse(response);
+        Billing.initializeCountrySelect();
+    },
+    
+    initializeCountrySelect: function () {
+        if ($('#opc-billing').has('select[data-trigger="country-select"]')) {
+            $('#opc-billing select[data-trigger="country-select"]').countrySelect();
+        }
     }
 };
 
@@ -202,9 +209,10 @@ var Shipping = {
             $('#shipping-new-address-form').hide();
         }
         $(document).trigger({ type: "onepagecheckout_shipping_address_new" });
+        Shipping.initializeCountrySelect();
     },
 
-    togglePickUpInStore: function (pickupInStoreInput) {
+    togglePickupInStore: function (pickupInStoreInput) {
         if (pickupInStoreInput.checked) {
             $('#pickup-points-form').show();
             $('#shipping-addresses-form').hide();
@@ -232,7 +240,7 @@ var Shipping = {
             cache: false,
             url: this.saveUrl,
             data: $(this.form).serialize(),
-            type: 'post',
+            type: "POST",
             success: this.nextStep,
             complete: this.resetLoadWaiting,
             error: Checkout.ajaxFailure
@@ -255,6 +263,12 @@ var Shipping = {
         }
 
         Checkout.setStepResponse(response);
+    },
+
+    initializeCountrySelect: function () {
+        if ($('#opc-shipping').has('select[data-trigger="country-select"]')) {
+            $('#opc-shipping select[data-trigger="country-select"]').countrySelect();
+        }
     }
 };
 
@@ -295,7 +309,7 @@ var ShippingMethod = {
                 cache: false,
                 url: this.saveUrl,
                 data: $(this.form).serialize(),
-                type: 'post',
+                type: "POST",
                 success: this.nextStep,
                 complete: this.resetLoadWaiting,
                 error: Checkout.ajaxFailure
@@ -367,7 +381,7 @@ var PaymentMethod = {
                 cache: false,
                 url: this.saveUrl,
                 data: $(this.form).serialize(),
-                type: 'post',
+                type: "POST",
                 success: this.nextStep,
                 complete: this.resetLoadWaiting,
                 error: Checkout.ajaxFailure
@@ -413,7 +427,7 @@ var PaymentInfo = {
             cache: false,
             url: this.saveUrl,
             data: $(this.form).serialize(),
-            type: 'post',
+            type: "POST",
             success: this.nextStep,
             complete: this.resetLoadWaiting,
             error: Checkout.ajaxFailure
@@ -470,7 +484,7 @@ var ConfirmOrder = {
             $.ajax({
                 cache: false,
                 url: this.saveUrl,
-                type: 'post',
+                type: "POST",
                 success: this.nextStep,
                 complete: this.resetLoadWaiting,
                 error: Checkout.ajaxFailure

@@ -26,8 +26,8 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
         public AuthorizeAdminAttribute(bool ignore = false) : base(typeof(AuthorizeAdminFilter))
         {
-            this._ignoreFilter = ignore;
-            this.Arguments = new object[] { ignore };
+            _ignoreFilter = ignore;
+            Arguments = new object[] { ignore };
         }
 
         #endregion
@@ -60,8 +60,8 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             public AuthorizeAdminFilter(bool ignoreFilter, IPermissionService permissionService)
             {
-                this._ignoreFilter = ignoreFilter;
-                this._permissionService = permissionService;
+                _ignoreFilter = ignoreFilter;
+                _permissionService = permissionService;
             }
 
             #endregion

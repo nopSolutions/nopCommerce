@@ -44,17 +44,17 @@ namespace Nop.Web.Controllers
             IUrlRecordService urlRecordService,
             IWebHelper webHelper)
         {
-            this._blogService = blogService;
-            this._categoryService = categoryService;
-            this._customerService = customerService;
-            this._forumService = forumService;
-            this._manufacturerService = manufacturerService;
-            this._newsService = newsService;
-            this._productService = productService;
-            this._productTagService = productTagService;
-            this._topicService = topicService;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
+            _blogService = blogService;
+            _categoryService = categoryService;
+            _customerService = customerService;
+            _forumService = forumService;
+            _manufacturerService = manufacturerService;
+            _newsService = newsService;
+            _productService = productService;
+            _productTagService = productTagService;
+            _topicService = topicService;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
         }
 
         #endregion
@@ -66,7 +66,7 @@ namespace Nop.Web.Controllers
             // use Request.RawUrl, for instance to parse out what was invoked
             // this regex will extract anything between a "/" and a ".aspx"
             var regex = new Regex(@"(?<=/).+(?=\.aspx)", RegexOptions.Compiled);
-            var rawUrl = _webHelper.GetRawUrl(this.HttpContext.Request);
+            var rawUrl = _webHelper.GetRawUrl(HttpContext.Request);
             var aspxfileName = regex.Match(rawUrl).Value.ToLowerInvariant();
 
             switch (aspxfileName)
@@ -157,7 +157,7 @@ namespace Nop.Web.Controllers
             }
 
             //no permanent redirect in this case
-            return RedirectToRoute("HomePage");
+            return RedirectToRoute("Homepage");
         }
 
         public virtual IActionResult RedirectProduct(string id, bool idIncludesSename = true)
@@ -166,7 +166,7 @@ namespace Nop.Web.Controllers
             var productId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
             var product = _productService.GetProductById(productId);
             if (product == null)
-                return RedirectToRoutePermanent("HomePage");
+                return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("Product", new { SeName = _urlRecordService.GetSeName(product) });
         }
@@ -177,7 +177,7 @@ namespace Nop.Web.Controllers
             var categoryid = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
             var category = _categoryService.GetCategoryById(categoryid);
             if (category == null)
-                return RedirectToRoutePermanent("HomePage");
+                return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("Category", new { SeName = _urlRecordService.GetSeName(category) });
         }
@@ -188,7 +188,7 @@ namespace Nop.Web.Controllers
             var manufacturerId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
             var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
             if (manufacturer == null)
-                return RedirectToRoutePermanent("HomePage");
+                return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("Manufacturer", new { SeName = _urlRecordService.GetSeName(manufacturer) });
         }
@@ -199,7 +199,7 @@ namespace Nop.Web.Controllers
             var tagId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
             var tag = _productTagService.GetProductTagById(tagId);
             if (tag == null)
-                return RedirectToRoutePermanent("HomePage");
+                return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("ProductsByTag", new { productTagId = tag.Id });
         }
@@ -210,7 +210,7 @@ namespace Nop.Web.Controllers
             var newsId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
             var newsItem = _newsService.GetNewsById(newsId);
             if (newsItem == null)
-                return RedirectToRoutePermanent("HomePage");
+                return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("NewsItem", new { newsItemId = newsItem.Id, SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
         }
@@ -221,7 +221,7 @@ namespace Nop.Web.Controllers
             var blogPostId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
             var blogPost = _blogService.GetBlogPostById(blogPostId);
             if (blogPost == null)
-                return RedirectToRoutePermanent("HomePage");
+                return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("BlogPost", new { blogPostId = blogPost.Id, SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
         }
@@ -232,7 +232,7 @@ namespace Nop.Web.Controllers
             var topicid = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
             var topic = _topicService.GetTopicById(topicid);
             if (topic == null)
-                return RedirectToRoutePermanent("HomePage");
+                return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("Topic", new { SeName = _urlRecordService.GetSeName(topic) });
         }
@@ -243,7 +243,7 @@ namespace Nop.Web.Controllers
             var forumGroupId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
             var forumGroup = _forumService.GetForumGroupById(forumGroupId);
             if (forumGroup == null)
-                return RedirectToRoutePermanent("HomePage");
+                return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("ForumGroupSlug", new { id = forumGroup.Id, slug = _forumService.GetForumGroupSeName(forumGroup) });
         }
@@ -254,7 +254,7 @@ namespace Nop.Web.Controllers
             var forumId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
             var forum = _forumService.GetForumById(forumId);
             if (forum == null)
-                return RedirectToRoutePermanent("HomePage");
+                return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("ForumSlug", new { id = forum.Id, slug = _forumService.GetForumSeName(forum) });
         }
@@ -265,7 +265,7 @@ namespace Nop.Web.Controllers
             var forumTopicId = idIncludesSename ? Convert.ToInt32(id.Split(new[] { '-' })[0]) : Convert.ToInt32(id);
             var topic = _forumService.GetTopicById(forumTopicId);
             if (topic == null)
-                return RedirectToRoutePermanent("HomePage");
+                return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("TopicSlug", new { id = topic.Id, slug = _forumService.GetTopicSeName(topic) });
         }
@@ -276,7 +276,7 @@ namespace Nop.Web.Controllers
             var userId = Convert.ToInt32(id);
             var user = _customerService.GetCustomerById(userId);
             if (user == null)
-                return RedirectToRoutePermanent("HomePage");
+                return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("CustomerProfile", new { id = user.Id });
         }

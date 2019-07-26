@@ -1,16 +1,13 @@
 ﻿using System.Collections.Generic;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Validators.Localization;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Localization
 {
     /// <summary>
     /// Represents a language model
     /// </summary>
-    [Validator(typeof(LanguageValidator))]
     public partial class LanguageModel : BaseNopEntityModel, IStoreMappingSupportedModel
     {
         #region Ctor
@@ -35,7 +32,7 @@ namespace Nop.Web.Areas.Admin.Models.Localization
 
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.UniqueSeoCode")]
         public string UniqueSeoCode { get; set; }
-        
+
         //flags
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.FlagImageFileName")]
         public string FlagImageFileName { get; set; }
@@ -54,7 +51,7 @@ namespace Nop.Web.Areas.Admin.Models.Localization
 
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
-        
+
         //store mapping
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.LimitedToStores")]
         public IList<int> SelectedStoreIds { get; set; }

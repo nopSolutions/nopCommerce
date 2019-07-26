@@ -1,7 +1,5 @@
 ﻿@model ScheduleTaskSearchModel
 
-@using System.Text.Encodings.Web
-
 @{
     //page title
     ViewBag.Title = T("Admin.System.ScheduleTasks").Text;
@@ -39,124 +37,84 @@
                     <p>
                         <strong>@T("Admin.System.ScheduleTasks.RestartApplication")</strong>
                     </p>
-                    <div id="schedule-tasks-grid"></div>
 
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "schedule-tasks-grid",
+                        UrlRead = new DataUrl("List", "ScheduleTask", null),
+                        UrlUpdate = new DataUrl("TaskUpdate", "ScheduleTask", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(ScheduleTaskModel.Name))
+                                {
+                                    Title = T("Admin.System.ScheduleTasks.Name").Text,
+                                    Width = "300",
+                                    Editable = true,
+                                    EditType = EditType.String
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.Seconds))
+                                {
+                                    Title = T("Admin.System.ScheduleTasks.Seconds").Text,
+                                    Width = "150",
+                                    Editable = true,
+                                    EditType = EditType.Number
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.Enabled))
+                                {
+                                    Title = T("Admin.System.ScheduleTasks.Enabled").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean(),
+                                    Editable = true,
+                                    EditType = EditType.Checkbox
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.StopOnError))
+                                {
+                                    Title = T("Admin.System.ScheduleTasks.StopOnError").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean(),
+                                    Editable = true,
+                                    EditType = EditType.Checkbox
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.LastStartUtc))
+                                {
+                                    Title = T("Admin.System.ScheduleTasks.LastStart").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.LastEndUtc))
+                                {
+                                    Title = T("Admin.System.ScheduleTasks.LastEnd").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.LastSuccessUtc))
+                                {
+                                    Title = T("Admin.System.ScheduleTasks.LastSuccess").Text,
+                                    Width = "200"
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.Id))
+                                {
+                                    Title = T("Admin.System.ScheduleTasks.RunNow").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderCustom("renderColumnRunNow")
+                                },
+                                new ColumnProperty(nameof(ScheduleTaskModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "200",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonsInlineEdit()
+                                }
+                            }
+                    })
+                    
                     <script>
-                        $(document).ready(function () {
-                            $("#schedule-tasks-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("List", "ScheduleTask"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        },
-                                        update: {
-                                            url: "@Html.Raw(Url.Action("TaskUpdate", "ScheduleTask"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors",
-                                        model: {
-                                            id: "Id",
-                                            fields: {
-                                                Name: { editable: true, type: "string" },
-                                                Seconds: { editable: true, type: "number" },
-                                                Enabled: { editable: true, type: "boolean" },
-                                                StopOnError: { editable: true, type: "boolean" },
-                                                LastStartUtc: { editable: false, type: "date" },
-                                                LastEndUtc: { editable: false, type: "date" },
-                                                LastSuccessUtc: { editable: false, type: "date" },
-                                                Id: { editable: false, type: "number" }
-                                            }
-                                        }
-                                    },
-                                    error: function (e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [{
-                                    field: "Name",
-                                    title: "@T("Admin.System.ScheduleTasks.Name")",
-                                    width: 300
-                                }, {
-                                    field: "Seconds",
-                                    title: "@T("Admin.System.ScheduleTasks.Seconds")",
-                                    width: 150
-                                }, {
-                                    field: "Enabled",
-                                    title: "@T("Admin.System.ScheduleTasks.Enabled")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(Enabled) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                }, {
-                                    field: "StopOnError",
-                                    title: "@T("Admin.System.ScheduleTasks.StopOnError")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(StopOnError) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                }, {
-                                    field: "LastStartUtc",
-                                    title: "@T("Admin.System.ScheduleTasks.LastStart")",
-                                    width: 200,
-                                    type: "date",
-                                    format: "{0:G}"
-                                }, {
-                                    field: "LastEndUtc",
-                                    title: "@T("Admin.System.ScheduleTasks.LastEnd")",
-                                    width: 200,
-                                    type: "date",
-                                    format: "{0:G}"
-                                }, {
-                                    field: "LastSuccessUtc",
-                                    title: "@T("Admin.System.ScheduleTasks.LastSuccess")",
-                                    width: 200,
-                                    type: "date",
-                                    format: "{0:G}"
-                                }, {
-                                    field: "Id",
-                                    title: "@T("Admin.System.ScheduleTasks.RunNow")",
-                                    width: 100,
-                                    template: '<a href="@Url.Content("~/Admin/ScheduleTask/RunNow/")#=Id#" class="btn bg-green">@T("Admin.System.ScheduleTasks.RunNow")</a>'
-                                }, {
-                                    command: {
-                                        name: "edit",
-                                        text: {
-                                            edit: "@T("Admin.Common.Edit")",
-                                            update: "@T("Admin.Common.Update")",
-                                            cancel: "@T("Admin.Common.Cancel")"
-                                        }
-                                    },
-                                    title: "@T("Admin.Common.Edit")",
-                                    width: 100
-                                }]
-                            });
-                        });
+                        function renderColumnRunNow(data, type, row, meta) {
+                            return '<a href="@Url.Content("~/Admin/ScheduleTask/RunNow/")' + row.Id +'" class="btn bg-green">@T("Admin.System.ScheduleTasks.RunNow")</a>';
+                        }
                     </script>
                 </div>
             </div>

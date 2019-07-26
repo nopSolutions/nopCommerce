@@ -40,12 +40,12 @@ namespace Nop.Services.Seo
             LocalizationSettings localizationSettings,
             SeoSettings seoSettings)
         {
-            this._languageService = languageService;
-            this._urlRecordRepository = urlRecordRepository;
-            this._cacheManager = cacheManager;
-            this._workContext = workContext;
-            this._localizationSettings = localizationSettings;
-            this._seoSettings = seoSettings;
+            _languageService = languageService;
+            _urlRecordRepository = urlRecordRepository;
+            _cacheManager = cacheManager;
+            _workContext = workContext;
+            _localizationSettings = localizationSettings;
+            _seoSettings = seoSettings;
         }
 
         #endregion
@@ -1203,7 +1203,7 @@ namespace Nop.Services.Seo
             _urlRecordRepository.Delete(urlRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(NopSeoDefaults.UrlRecordPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopSeoDefaults.UrlRecordPrefixCacheKey);
         }
 
         /// <summary>
@@ -1218,7 +1218,7 @@ namespace Nop.Services.Seo
             _urlRecordRepository.Delete(urlRecords);
 
             //cache
-            _cacheManager.RemoveByPattern(NopSeoDefaults.UrlRecordPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopSeoDefaults.UrlRecordPrefixCacheKey);
         }
 
         /// <summary>
@@ -1258,7 +1258,7 @@ namespace Nop.Services.Seo
             _urlRecordRepository.Insert(urlRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(NopSeoDefaults.UrlRecordPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopSeoDefaults.UrlRecordPrefixCacheKey);
         }
 
         /// <summary>
@@ -1273,7 +1273,7 @@ namespace Nop.Services.Seo
             _urlRecordRepository.Update(urlRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(NopSeoDefaults.UrlRecordPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopSeoDefaults.UrlRecordPrefixCacheKey);
         }
 
         /// <summary>

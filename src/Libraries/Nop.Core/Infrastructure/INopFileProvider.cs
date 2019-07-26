@@ -17,7 +17,7 @@ namespace Nop.Core.Infrastructure
         /// <param name="paths">An array of parts of the path</param>
         /// <returns>The combined paths</returns>
         string Combine(params string[] paths);
-        
+
         /// <summary>
         /// Creates all directories and subdirectories in the specified path unless they already exist
         /// </summary>
@@ -252,6 +252,13 @@ namespace Nop.Core.Infrastructure
         string GetParentDirectory(string directoryPath);
 
         /// <summary>
+        /// Gets a virtual path from a physical disk path.
+        /// </summary>
+        /// <param name="path">The physical disk path</param>
+        /// <returns>The virtual path. E.g. "~/bin"</returns>
+        string GetVirtualPath(string path);
+
+        /// <summary>
         /// Checks if the path is directory
         /// </summary>
         /// <param name="path">Path for check</param>
@@ -264,7 +271,7 @@ namespace Nop.Core.Infrastructure
         /// <param name="path">The path to map. E.g. "~/bin"</param>
         /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
         string MapPath(string path);
-        
+
         /// <summary>
         /// Reads the contents of the file into a byte array
         /// </summary>
@@ -279,7 +286,7 @@ namespace Nop.Core.Infrastructure
         /// <param name="encoding">The encoding applied to the contents of the file</param>
         /// <returns>A string containing all lines of the file</returns>
         string ReadAllText(string path, Encoding encoding);
-        
+
         /// <summary>
         /// Sets the date and time, in coordinated universal time (UTC), that the specified file was last written to
         /// </summary>
@@ -289,7 +296,7 @@ namespace Nop.Core.Infrastructure
         /// This value is expressed in UTC time
         /// </param>
         void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc);
-        
+
         /// <summary>
         /// Writes the specified byte array to the file
         /// </summary>

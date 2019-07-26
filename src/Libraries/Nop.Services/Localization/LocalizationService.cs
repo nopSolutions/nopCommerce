@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -13,12 +14,12 @@ using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
-using Nop.Core.Plugins;
 using Nop.Data;
 using Nop.Data.Extensions;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
 using Nop.Services.Logging;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Localization
 {
@@ -57,17 +58,17 @@ namespace Nop.Services.Localization
             IWorkContext workContext,
             LocalizationSettings localizationSettings)
         {
-            this._dataProvider = dataProvider;
-            this._dbContext = dbContext;
-            this._eventPublisher = eventPublisher;
-            this._languageService = languageService;
-            this._localizedEntityService = localizedEntityService;
-            this._logger = logger;
-            this._lsrRepository = lsrRepository;
-            this._settingService = settingService;
-            this._cacheManager = cacheManager;
-            this._workContext = workContext;
-            this._localizationSettings = localizationSettings;
+            _dataProvider = dataProvider;
+            _dbContext = dbContext;
+            _eventPublisher = eventPublisher;
+            _languageService = languageService;
+            _localizedEntityService = localizedEntityService;
+            _logger = logger;
+            _lsrRepository = lsrRepository;
+            _settingService = settingService;
+            _cacheManager = cacheManager;
+            _workContext = workContext;
+            _localizationSettings = localizationSettings;
         }
 
         #endregion
@@ -87,7 +88,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Insert(resources);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
 
             //event notification
             foreach (var resource in resources)
@@ -109,7 +110,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Update(resources);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
 
             //event notification
             foreach (var resource in resources)
@@ -148,7 +149,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Delete(localeStringResource);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(localeStringResource);
@@ -228,7 +229,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Insert(localeStringResource);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(localeStringResource);
@@ -246,7 +247,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Update(localeStringResource);
 
             //cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(localeStringResource);
@@ -383,58 +384,45 @@ namespace Nop.Services.Localization
         {
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
-            var sb = new StringBuilder();
-            var stringWriter = new StringWriter(sb);
-            var xmlWriter = new XmlTextWriter(stringWriter);
-            xmlWriter.WriteStartDocument();
-            xmlWriter.WriteStartElement("Language");
-            xmlWriter.WriteAttributeString("Name", language.Name);
-            xmlWriter.WriteAttributeString("SupportedVersion", NopVersion.CurrentVersion);
-
-            var resources = GetAllResources(language.Id);
-            foreach (var resource in resources)
+            using (var stream = new MemoryStream())
             {
-                xmlWriter.WriteStartElement("LocaleResource");
-                xmlWriter.WriteAttributeString("Name", resource.ResourceName);
-                xmlWriter.WriteElementString("Value", null, resource.ResourceValue);
-                xmlWriter.WriteEndElement();
-            }
+                using (var xmlWriter = new XmlTextWriter(stream, Encoding.UTF8))
+                {
+                    xmlWriter.WriteStartDocument();
+                    xmlWriter.WriteStartElement("Language");
+                    xmlWriter.WriteAttributeString("Name", language.Name);
+                    xmlWriter.WriteAttributeString("SupportedVersion", NopVersion.CurrentVersion);
 
-            xmlWriter.WriteEndElement();
-            xmlWriter.WriteEndDocument();
-            xmlWriter.Close();
-            return stringWriter.ToString();
+                    var resources = GetAllResources(language.Id);
+                    foreach (var resource in resources)
+                    {
+                        xmlWriter.WriteStartElement("LocaleResource");
+                        xmlWriter.WriteAttributeString("Name", resource.ResourceName);
+                        xmlWriter.WriteElementString("Value", null, resource.ResourceValue);
+                        xmlWriter.WriteEndElement();
+                    }
+
+                    xmlWriter.WriteEndElement();
+                    xmlWriter.WriteEndDocument();
+                }
+
+                return Encoding.UTF8.GetString(stream.ToArray());
+            }
         }
 
         /// <summary>
         /// Import language resources from XML file
         /// </summary>
         /// <param name="language">Language</param>
-        /// <param name="xml">XML</param>
+        /// <param name="xmlStreamReader">Stream reader of XML file</param>
         /// <param name="updateExistingResources">A value indicating whether to update existing resources</param>
-        public virtual void ImportResourcesFromXml(Language language, string xml, bool updateExistingResources = true)
+        public virtual void ImportResourcesFromXml(Language language, StreamReader xmlStreamReader, bool updateExistingResources = true)
         {
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
 
-            if (string.IsNullOrEmpty(xml))
+            if (xmlStreamReader.EndOfStream)
                 return;
-
-            //SQL 2005 insists that your XML schema encoding be in UTF-16.
-            //Otherwise, you'll get "XML parsing: line 1, character XXX, unable to switch the encoding"
-            //so let's remove XML declaration
-            var inDoc = new XmlDocument();
-            inDoc.LoadXml(xml);
-            var sb = new StringBuilder();
-            using (var xWriter = XmlWriter.Create(sb, new XmlWriterSettings { OmitXmlDeclaration = true }))
-            {
-                inDoc.Save(xWriter);
-                xWriter.Close();
-            }
-
-            var outDoc = new XmlDocument();
-            outDoc.LoadXml(sb.ToString());
-            xml = outDoc.OuterXml;
 
             //stored procedures are enabled and supported by the database.
             var pLanguageId = _dataProvider.GetParameter();
@@ -444,7 +432,7 @@ namespace Nop.Services.Localization
 
             var pXmlPackage = _dataProvider.GetParameter();
             pXmlPackage.ParameterName = "XmlPackage";
-            pXmlPackage.Value = xml;
+            pXmlPackage.Value = new SqlXml(XmlReader.Create(xmlStreamReader));
             pXmlPackage.DbType = DbType.Xml;
 
             var pUpdateExistingResources = _dataProvider.GetParameter();
@@ -457,7 +445,7 @@ namespace Nop.Services.Localization
                 false, 600, pLanguageId, pXmlPackage, pUpdateExistingResources);
 
             //clear cache
-            _cacheManager.RemoveByPattern(NopLocalizationDefaults.LocaleStringResourcesPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
         }
 
         /// <summary>

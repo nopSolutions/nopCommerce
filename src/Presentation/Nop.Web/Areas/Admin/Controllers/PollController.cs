@@ -10,9 +10,10 @@ using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Polls;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -40,13 +41,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             IStoreMappingService storeMappingService,
             IStoreService storeService)
         {
-            this._localizationService = localizationService;
-            this._notificationService = notificationService;
-            this._permissionService = permissionService;
-            this._pollModelFactory = pollModelFactory;
-            this._pollService = pollService;
-            this._storeMappingService = storeMappingService;
-            this._storeService = storeService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _pollModelFactory = pollModelFactory;
+            _pollService = pollService;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
         }
 
         #endregion
@@ -99,7 +100,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(PollSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _pollModelFactory.PreparePollListModel(searchModel);
@@ -136,9 +137,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
 
                 return RedirectToAction("Edit", new { id = poll.Id });
             }
@@ -190,9 +188,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (!continueEditing)
                     return RedirectToAction("List");
 
-                //selected tab
-                SaveSelectedTabName();
-
                 return RedirectToAction("Edit", new { id = poll.Id });
             }
 
@@ -229,7 +224,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult PollAnswers(PollAnswerSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a poll with the specified id
             var poll = _pollService.GetPollById(searchModel.PollId)
@@ -241,14 +236,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
+        //ValidateAttribute is used to force model validation
         [HttpPost]
-        public virtual IActionResult PollAnswerUpdate(PollAnswerModel model)
+        public virtual IActionResult PollAnswerUpdate([Validate] PollAnswerModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a poll answer with the specified id
             var pollAnswer = _pollService.GetPollAnswerById(model.Id)
@@ -260,14 +256,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        //ValidateAttribute is used to force model validation
         [HttpPost]
-        public virtual IActionResult PollAnswerAdd(int pollId, PollAnswerModel model)
+        public virtual IActionResult PollAnswerAdd(int pollId, [Validate] PollAnswerModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a poll with the specified id
             var poll = _pollService.GetPollById(pollId)
@@ -277,7 +274,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             poll.PollAnswers.Add(model.ToEntity<PollAnswer>());
             _pollService.UpdatePoll(poll);
 
-            return new NullJsonResult();
+            return Json(new { Result = true });
         }
 
         [HttpPost]

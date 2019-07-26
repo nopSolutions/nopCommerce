@@ -55,9 +55,9 @@ namespace Nop.Web.Framework.Mvc.Filters
                 ICustomerService customerService,
                 IWorkContext workContext)
             {
-                this._affiliateService = affiliateService;
-                this._customerService = customerService;
-                this._workContext = workContext;
+                _affiliateService = affiliateService;
+                _customerService = customerService;
+                _workContext = workContext;
             }
 
             #endregion
@@ -108,7 +108,8 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //try to find by ID
                 var affiliateIds = request.Query[AFFILIATE_ID_QUERY_PARAMETER_NAME];
-                if (affiliateIds.Any() && int.TryParse(affiliateIds.FirstOrDefault(), out int affiliateId) && affiliateId > 0)
+                if (affiliateIds.Any() && int.TryParse(affiliateIds.FirstOrDefault(), out int affiliateId)
+                    && affiliateId > 0 && affiliateId != _workContext.CurrentCustomer.AffiliateId)
                 {
                     SetCustomerAffiliateId(_affiliateService.GetAffiliateById(affiliateId));
                     return;

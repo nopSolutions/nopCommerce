@@ -28,10 +28,10 @@ namespace Nop.Services.Vendors
             IVendorAttributeService vendorAttributeService,
             IWorkContext workContext)
         {
-            this._localizationService = localizationService;
-            this._vendorAttributeParser = vendorAttributeParser;
-            this._vendorAttributeService = vendorAttributeService;
-            this._workContext = workContext;
+            _localizationService = localizationService;
+            _vendorAttributeParser = vendorAttributeParser;
+            _vendorAttributeService = vendorAttributeService;
+            _workContext = workContext;
         }
 
         #endregion

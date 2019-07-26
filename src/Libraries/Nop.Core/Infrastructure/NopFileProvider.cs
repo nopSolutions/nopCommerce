@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,7 +19,7 @@ namespace Nop.Core.Infrastructure
         /// Initializes a new instance of a NopFileProvider
         /// </summary>
         /// <param name="hostingEnvironment">Hosting environment</param>
-        public NopFileProvider(IHostingEnvironment hostingEnvironment) 
+        public NopFileProvider(IHostingEnvironment hostingEnvironment)
             : base(File.Exists(hostingEnvironment.WebRootPath) ? Path.GetDirectoryName(hostingEnvironment.WebRootPath) : hostingEnvironment.WebRootPath)
         {
             var path = hostingEnvironment.ContentRootPath ?? string.Empty;
@@ -50,8 +50,22 @@ namespace Nop.Core.Infrastructure
             }
         }
 
+        /// <summary>
+        /// Determines if the string is a valid Universal Naming Convention (UNC)
+        /// for a server and share path.
+        /// </summary>
+        /// <param name="path">The path to be tested.</param>
+        /// <returns><see langword="true"/> if the path is a valid UNC path; 
+        /// otherwise, <see langword="false"/>.</returns>
+        protected static bool IsUncPath(string path)
+        {
+            return Uri.TryCreate(path, UriKind.Absolute, out var uri) && uri.IsUnc;
+        }
+
         #endregion
 
+        #region Methods
+        
         /// <summary>
         /// Combines an array of strings into a path
         /// </summary>
@@ -59,7 +73,13 @@ namespace Nop.Core.Infrastructure
         /// <returns>The combined paths</returns>
         public virtual string Combine(params string[] paths)
         {
-            return Path.Combine(paths);
+            var path = Path.Combine(paths.SelectMany(p => IsUncPath(p) ? new[] { p } : p.Split('\\', '/')).ToArray());
+
+            if (Environment.OSVersion.Platform == PlatformID.Unix && !IsUncPath(path))
+                //add leading slash to correctly form path in the UNIX system
+                path = "/" + path;
+
+            return path;
         }
 
         /// <summary>
@@ -81,12 +101,15 @@ namespace Nop.Core.Infrastructure
             if (FileExists(path))
                 return;
 
+            var fileInfo = new FileInfo(path);
+            CreateDirectory(fileInfo.DirectoryName);
+
             //we use 'using' to close the file after it's created
             using (File.Create(path))
             {
             }
         }
-        
+
         /// <summary>
         ///  Depth-first recursive delete, with handling for descendant directories open in Windows Explorer.
         /// </summary>
@@ -235,10 +258,10 @@ namespace Nop.Core.Infrastructure
         /// <returns>The absolute path to the directory</returns>
         public virtual string GetAbsolutePath(params string[] paths)
         {
-            var allPaths = paths.ToList();
-            allPaths.Insert(0, Root);
+            var allPaths = new List<string> { Root };
+            allPaths.AddRange(paths);
 
-            return Path.Combine(allPaths.ToArray());
+            return Combine(allPaths.ToArray());
         }
 
         /// <summary>
@@ -419,6 +442,24 @@ namespace Nop.Core.Infrastructure
         }
 
         /// <summary>
+        /// Gets a virtual path from a physical disk path.
+        /// </summary>
+        /// <param name="path">The physical disk path</param>
+        /// <returns>The virtual path. E.g. "~/bin"</returns>
+        public virtual string GetVirtualPath(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return path;
+
+            if (!IsDirectory(path) && FileExists(path))
+                path = new FileInfo(path).DirectoryName;
+
+            path = path?.Replace(Root, "").Replace('\\', '/').Trim('/').TrimStart('~', '/');
+
+            return $"~/{path ?? ""}";
+        }
+
+        /// <summary>
         /// Checks if the path is directory
         /// </summary>
         /// <param name="path">Path for check</param>
@@ -435,10 +476,14 @@ namespace Nop.Core.Infrastructure
         /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
         public virtual string MapPath(string path)
         {
-            path = path.Replace("~/", string.Empty).TrimStart('/').Replace('/', '\\');
-            return Path.Combine(BaseDirectory ?? string.Empty, path);
+            path = path.Replace("~/", string.Empty).TrimStart('/');
+
+            //if virtual path has slash on the end, it should be after transform the virtual path to physical path too
+            var pathEnd = path.EndsWith('/') ? Path.DirectorySeparatorChar.ToString() : string.Empty;
+
+            return Combine(BaseDirectory ?? string.Empty, path) + pathEnd;
         }
-        
+
         /// <summary>
         /// Reads the contents of the file into a byte array
         /// </summary>
@@ -457,7 +502,13 @@ namespace Nop.Core.Infrastructure
         /// <returns>A string containing all lines of the file</returns>
         public virtual string ReadAllText(string path, Encoding encoding)
         {
-            return File.ReadAllText(path, encoding);
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                using (var streamReader = new StreamReader(fileStream, encoding))
+                {
+                    return streamReader.ReadToEnd();
+                }
+            }
         }
 
         /// <summary>
@@ -494,6 +545,8 @@ namespace Nop.Core.Infrastructure
         {
             File.WriteAllText(path, contents, encoding);
         }
+
+        #endregion
 
         protected string BaseDirectory { get; }
     }

@@ -46,16 +46,16 @@ namespace Nop.Services.Catalog
             IWorkContext workContext,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._currencyService = currencyService;
-            this._downloadService = downloadService;
-            this._localizationService = localizationService;
-            this._priceCalculationService = priceCalculationService;
-            this._priceFormatter = priceFormatter;
-            this._productAttributeParser = productAttributeParser;
-            this._taxService = taxService;
-            this._webHelper = webHelper;
-            this._workContext = workContext;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _currencyService = currencyService;
+            _downloadService = downloadService;
+            _localizationService = localizationService;
+            _priceCalculationService = priceCalculationService;
+            _priceFormatter = priceFormatter;
+            _productAttributeParser = productAttributeParser;
+            _taxService = taxService;
+            _webHelper = webHelper;
+            _workContext = workContext;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
@@ -153,7 +153,7 @@ namespace Nop.Services.Catalog
                                     formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
                             }
 
-                            if (string.IsNullOrEmpty(formattedAttribute)) 
+                            if (string.IsNullOrEmpty(formattedAttribute))
                                 continue;
 
                             if (result.Length > 0)
@@ -172,21 +172,37 @@ namespace Nop.Services.Catalog
                             {
                                 if (attributeValue.PriceAdjustmentUsePercentage)
                                 {
-                                    var priceAdjustmentStr = attributeValue.PriceAdjustment.ToString("G29");
                                     if (attributeValue.PriceAdjustment > decimal.Zero)
-                                        formattedAttribute += $" [+{priceAdjustmentStr}%]";
+                                    {
+                                        formattedAttribute += string.Format(
+                                                _localizationService.GetResource("FormattedAttributes.PriceAdjustment"),
+                                                "+", attributeValue.PriceAdjustment.ToString("G29"), "%");
+                                    }
                                     else if (attributeValue.PriceAdjustment < decimal.Zero)
-                                        formattedAttribute += $" [{priceAdjustmentStr}%]";
+                                    {
+                                        formattedAttribute += string.Format(
+                                                _localizationService.GetResource("FormattedAttributes.PriceAdjustment"),
+                                                string.Empty, attributeValue.PriceAdjustment.ToString("G29"), "%");
+                                    }
                                 }
                                 else
                                 {
                                     var attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue, customer);
                                     var priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer, out var _);
                                     var priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
+
                                     if (priceAdjustmentBase > decimal.Zero)
-                                        formattedAttribute += $" [+{_priceFormatter.FormatPrice(priceAdjustment, false, false)}]";
+                                    {
+                                        formattedAttribute += string.Format(
+                                                _localizationService.GetResource("FormattedAttributes.PriceAdjustment"),
+                                                "+", _priceFormatter.FormatPrice(priceAdjustment, false, false), string.Empty);
+                                    }
                                     else if (priceAdjustmentBase < decimal.Zero)
-                                        formattedAttribute += $" [-{_priceFormatter.FormatPrice(-priceAdjustment, false, false)}]";
+                                    {
+                                        formattedAttribute += string.Format(
+                                                _localizationService.GetResource("FormattedAttributes.PriceAdjustment"),
+                                                "-", _priceFormatter.FormatPrice(-priceAdjustment, false, false), string.Empty);
+                                    }
                                 }
                             }
 
@@ -202,7 +218,7 @@ namespace Nop.Services.Catalog
                             if (htmlEncode)
                                 formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
 
-                            if (string.IsNullOrEmpty(formattedAttribute)) 
+                            if (string.IsNullOrEmpty(formattedAttribute))
                                 continue;
 
                             if (result.Length > 0)
@@ -214,10 +230,10 @@ namespace Nop.Services.Catalog
             }
 
             //gift cards
-            if (!renderGiftCardAttributes) 
+            if (!renderGiftCardAttributes)
                 return result.ToString();
 
-            if (!product.IsGiftCard) 
+            if (!product.IsGiftCard)
                 return result.ToString();
 
             _productAttributeParser.GetGiftCardAttribute(attributesXml, out var giftCardRecipientName, out var giftCardRecipientEmail, out var giftCardSenderName, out var giftCardSenderEmail, out var _);

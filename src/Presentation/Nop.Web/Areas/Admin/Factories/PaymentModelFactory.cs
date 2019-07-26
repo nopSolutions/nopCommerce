@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Plugins;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Areas.Admin.Models.Payments;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -21,7 +20,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         private readonly ICountryService _countryService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPaymentService _paymentService;
+        private readonly IPaymentPluginManager _paymentPluginManager;
 
         #endregion
 
@@ -29,11 +28,11 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public PaymentModelFactory(ICountryService countryService,
             ILocalizationService localizationService,
-            IPaymentService paymentService)
+            IPaymentPluginManager paymentPluginManager)
         {
-            this._countryService = countryService;
-            this._localizationService = localizationService;
-            this._paymentService = paymentService;
+            _countryService = countryService;
+            _localizationService = localizationService;
+            _paymentPluginManager = paymentPluginManager;
         }
 
         #endregion
@@ -84,26 +83,25 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get payment methods
-            var paymentMethods = _paymentService.LoadAllPaymentMethods();
+            var paymentMethods = _paymentPluginManager.LoadAllPlugins().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new PaymentMethodListModel
+            var model = new PaymentMethodListModel().PrepareToGrid(searchModel, paymentMethods, () =>
             {
-                Data = paymentMethods.PaginationByRequestModel(searchModel).Select(method =>
+                return paymentMethods.Select(method =>
                 {
                     //fill in model values from the entity
                     var paymentMethodModel = method.ToPluginModel<PaymentMethodModel>();
 
                     //fill in additional values (not existing in the entity)
-                    paymentMethodModel.IsActive = _paymentService.IsPaymentMethodActive(method);
+                    paymentMethodModel.IsActive = _paymentPluginManager.IsPluginActive(method);
                     paymentMethodModel.ConfigurationUrl = method.GetConfigurationPageUrl();
-                    paymentMethodModel.LogoUrl = PluginManager.GetLogoUrl(method.PluginDescriptor);
+                    paymentMethodModel.LogoUrl = _paymentPluginManager.GetPluginLogoUrl(method);
                     paymentMethodModel.RecurringPaymentType = _localizationService.GetLocalizedEnum(method.RecurringPaymentType);
 
                     return paymentMethodModel;
-                }),
-                Total = paymentMethods.Count
-            };
+                });
+            });
 
             return model;
         }
@@ -127,20 +125,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 return countryModel;
             }).ToList();
 
-            foreach (var method in _paymentService.LoadAllPaymentMethods())
+            foreach (var method in _paymentPluginManager.LoadAllPlugins())
             {
                 var paymentMethodModel = method.ToPluginModel<PaymentMethodModel>();
                 paymentMethodModel.RecurringPaymentType = _localizationService.GetLocalizedEnum(method.RecurringPaymentType);
 
                 model.AvailablePaymentMethods.Add(paymentMethodModel);
 
-                var restrictedCountries = _paymentService.GetRestictedCountryIds(method);
+                var restrictedCountries = _paymentPluginManager.GetRestrictedCountryIds(method);
                 foreach (var country in countries)
                 {
-                    if (!model.Resticted.ContainsKey(method.PluginDescriptor.SystemName))
-                        model.Resticted[method.PluginDescriptor.SystemName] = new Dictionary<int, bool>();
+                    if (!model.Restricted.ContainsKey(method.PluginDescriptor.SystemName))
+                        model.Restricted[method.PluginDescriptor.SystemName] = new Dictionary<int, bool>();
 
-                    model.Resticted[method.PluginDescriptor.SystemName][country.Id] = restrictedCountries.Contains(country.Id);
+                    model.Restricted[method.PluginDescriptor.SystemName][country.Id] = restrictedCountries.Contains(country.Id);
                 }
             }
 

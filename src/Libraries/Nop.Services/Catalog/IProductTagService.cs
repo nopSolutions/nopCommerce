@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Services.Catalog
@@ -58,8 +58,9 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productTagId">Product tag identifier</param>
         /// <param name="storeId">Store identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Number of products</returns>
-        int GetProductCount(int productTagId, int storeId);
+        int GetProductCount(int productTagId, int storeId, bool showHidden = false);
 
         /// <summary>
         /// Update product tags
