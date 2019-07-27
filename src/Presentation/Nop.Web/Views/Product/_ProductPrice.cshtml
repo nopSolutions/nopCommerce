@@ -17,7 +17,7 @@
             if (Model.IsRental)
             {
                 <div class="rental-price">
-                    <label>@T("Products.Price.RentalPrice"):</label>
+                    <span>@T("Products.Price.RentalPrice"):</span>
                     <span>@Model.RentalPrice</span>
                 </div>
             }
@@ -25,7 +25,7 @@
             {
             @*old price*@
                 <div class="old-product-price">
-                    <label>@T("Products.Price.OldPrice"):</label>
+                    <span>@T("Products.Price.OldPrice"):</span>
                     <span>@Model.OldPrice</span>
                 </div>
             }
@@ -53,7 +53,7 @@
             {
             @*discounted price*@
                 <div class="product-price discounted-price">
-                    <label>@T("Products.Price.WithDiscount"):</label>
+                    <span>@T("Products.Price.WithDiscount"):</span>
                     <span itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="price-value-@(Model.ProductId)">
                         @Html.Raw(Model.PriceWithDiscount)
                     </span>

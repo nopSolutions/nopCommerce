@@ -26,90 +26,58 @@
     </div>
 
     <div class="sub-panel">
-        <div id="stock-quantity-history-grid"></div>
-
+        
+        @await Html.PartialAsync("Table", new DataTablesModel
+   {
+       Name = "stock-quantity-history-grid",
+       UrlRead = new DataUrl("StockQuantityHistory", "Product", new RouteValueDictionary { [nameof(Model.StockQuantityHistorySearchModel.ProductId)] = Model.StockQuantityHistorySearchModel.ProductId }),
+       SearchButtonId = "search-stock-quantity-history",
+       Length = Model.StockQuantityHistorySearchModel.PageSize,
+       LengthMenu = Model.StockQuantityHistorySearchModel.AvailablePageSizes,
+       Filters = new List<FilterParameter>
+            {
+                new FilterParameter(nameof(StockQuantityHistorySearchModel.WarehouseId), nameof(StockQuantityHistorySearchModel))
+            },
+       ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(StockQuantityHistoryModel.WarehouseName))
+                {
+                    Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.Warehouse").Text,
+                    Width = "200"
+                },
+                new ColumnProperty(nameof(StockQuantityHistoryModel.AttributeCombination))
+                {
+                    Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.Combination").Text,
+                    Width = "220",
+                    Encode = false
+                },
+                new ColumnProperty(nameof(StockQuantityHistoryModel.QuantityAdjustment))
+                {
+                    Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.QuantityAdjustment").Text,
+                    Width = "150",
+                    Render = new RenderCustom("renderStockQuantityHistoryQuantityAdjustment")
+                },
+                new ColumnProperty(nameof(StockQuantityHistoryModel.StockQuantity))
+                {
+                    Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.StockQuantity").Text,
+                    Width = "130"
+                },
+                new ColumnProperty(nameof(StockQuantityHistoryModel.Message))
+                {
+                    Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.Message").Text
+                },
+                new ColumnProperty(nameof(StockQuantityHistoryModel.CreatedOn))
+                {
+                    Title = T("Admin.Catalog.Products.StockQuantityHistory.Fields.CreatedOn").Text,
+                    Width = "170",
+                    Render = new RenderDate()
+                }
+            }
+   })
         <script>
-            $(document).ready(function() {
-                $("#stock-quantity-history-grid").kendoGrid({
-                    dataSource: {
-                        type: "json",
-                        transport: {
-                            read: {
-                                url: "@Html.Raw(Url.Action("StockQuantityHistory", "Product"))",
-                                type: "POST",
-                                dataType: "json",
-                                data: function additionalData() {
-                                    var data = {
-                                        ProductId: '@(Model.Id)',
-                                        WarehouseId: $('#@Html.IdFor(model => model.StockQuantityHistorySearchModel.WarehouseId)').val()
-                                    };
-                                    addAntiForgeryToken(data);
-                                    return data;
-                                }
-                            }
-                        },
-                        schema: {
-                            data: "Data",
-                            total: "Total",
-                            errors: "Errors"
-                        },
-                        error: function(e) {
-                            display_kendoui_grid_error(e);
-                            // Cancel the changes
-                            this.cancelChanges();
-                        },
-                        pageSize: @(Model.StockQuantityHistorySearchModel.PageSize),
-                        serverPaging: true,
-                        serverFiltering: true,
-                        serverSorting: true
-                    },
-                    pageable: {
-                        refresh: true,
-                        pageSizes: [@(Model.StockQuantityHistorySearchModel.AvailablePageSizes)],
-                        @await Html.PartialAsync("_GridPagerMessages")
-                    },
-                    scrollable: false,
-                    columns: [
-                        {
-                            field: "WarehouseName",
-                            title: "@T("Admin.Catalog.Products.StockQuantityHistory.Fields.Warehouse")",
-                            width: 200
-                        }, {
-                            field: "AttributeCombination",
-                            title: "@T("Admin.Catalog.Products.StockQuantityHistory.Fields.Combination")",
-                            width: 220,
-                            encoded: false
-                        }, {
-                            field: "QuantityAdjustment",
-                            title: "@T("Admin.Catalog.Products.StockQuantityHistory.Fields.QuantityAdjustment")",
-                            width: 150,
-                            template: '# if(QuantityAdjustment > 0) { # +#=QuantityAdjustment# # } else { # #=QuantityAdjustment# # } #'
-                        }, {
-                            field: "StockQuantity",
-                            title: "@T("Admin.Catalog.Products.StockQuantityHistory.Fields.StockQuantity")",
-                            width: 130
-                        }, {
-                            field: "Message",
-                            title: "@T("Admin.Catalog.Products.StockQuantityHistory.Fields.Message")"
-                        }, {
-                            field: "CreatedOn",
-                            title: "@T("Admin.Catalog.Products.StockQuantityHistory.Fields.CreatedOn")",
-                            type: "date",
-                            format: "{0:G}",
-                            width: 170
-                        }
-                    ]
-                });
-            });
-        </script>
-
-        <script>
-            $(document).ready(function() {
-                $('#search-stock-quantity-history').click(function() {
-                    $('#stock-quantity-history-grid').data('kendoGrid').dataSource.page(1);
-                    return false;
-                });
-            });
+            function renderStockQuantityHistoryQuantityAdjustment(data, type, row, meta) {
+                return (data > 0 ? '+' : '') + data;
+            }
         </script>
     </div>
     @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsStockQuantityHistoryBottom, additionalData = Model })

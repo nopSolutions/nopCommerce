@@ -73,10 +73,6 @@
                         @T("Admin.Common.Import")
                     </button>
                 }
-                <a asp-action="BulkEdit" class="btn bg-yellow">
-                    <i class="fa fa-edit"></i>
-                    @T("Admin.Common.BulkEdit")
-                </a>
                 <button type="button" id="delete-selected" class="btn bg-red">
                     <i class="fa fa-trash-o"></i>
                     @T("Admin.Common.Delete.Selected")
@@ -205,7 +201,82 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        @await Html.PartialAsync("Table", Model.Grid)
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "products-grid",
+                            UrlRead = new DataUrl("ProductList", "Product", null),
+                            SearchButtonId = "search-products",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.SearchProductName)),
+                                new FilterParameter(nameof(Model.SearchCategoryId)),
+                                new FilterParameter(nameof(Model.SearchIncludeSubCategories), typeof(bool)),
+                                new FilterParameter(nameof(Model.SearchManufacturerId)),
+                                new FilterParameter(nameof(Model.SearchStoreId)),
+                                new FilterParameter(nameof(Model.SearchWarehouseId)),
+                                new FilterParameter(nameof(Model.SearchVendorId)),
+                                new FilterParameter(nameof(Model.SearchProductTypeId)),
+                                new FilterParameter(nameof(Model.SearchPublishedId))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(ProductModel.Id))
+                                {
+                                    IsMasterCheckBox = true,
+                                    Render = new RenderCheckBox("checkbox_products"),
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Width = "50",
+                                },
+                                new ColumnProperty(nameof(ProductModel.PictureThumbnailUrl))
+                                {
+                                    Title = T("Admin.Catalog.Products.Fields.PictureThumbnailUrl").Text,
+                                    Width = "100",
+                                    Render = new RenderPicture()
+                                },
+                                new ColumnProperty(nameof(ProductModel.Name))
+                                {
+                                    Title = T("Admin.Catalog.Products.Fields.Name").Text,
+                                    Width = "300"
+                                },
+                                new ColumnProperty(nameof(ProductModel.Sku))
+                                {
+                                    Title = T("Admin.Catalog.Products.Fields.Sku").Text,
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(ProductModel.Price))
+                                {
+                                    Title = T("Admin.Catalog.Products.Fields.Price").Text,
+                                    Width = "150",
+                                    Render = new RenderCustom("renderColumnPrice")
+                                },
+                                new ColumnProperty(nameof(ProductModel.StockQuantityStr))
+                                {
+                                    Title = T("Admin.Catalog.Products.Fields.StockQuantity").Text,
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(ProductModel.ProductTypeName))
+                                {
+                                    Title = T("Admin.Catalog.Products.Fields.ProductType").Text,
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(ProductModel.Published))
+                                {
+                                    Title = T("Admin.Catalog.Products.Fields.Published").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(ProductModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                }
+                            }
+                        })
 
                         <script>
                             function renderColumnPrice(data, type, row, meta) {
@@ -220,15 +291,15 @@
                                     addAntiForgeryToken(postData);
                                     $.ajax({
                                         cache: false,
-                                        type: 'POST',
+                                        type: "POST",
                                         url: "@(Url.Action("DeleteSelected", "Product"))",
                                         data: postData,
-                                        complete: function (data) {
-                                            $('#@Model.Grid.Name').DataTable().ajax.reload();
-                                        },
-                                        error: function (xhr, ajaxOptions, thrownError) {
-                                            $('#deleteSelectedFailed-info').html(thrownError);
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            $('#deleteSelectedFailed-info').text(errorThrown);
                                             $('#deleteSelectedFailed').click();
+                                        },
+                                        complete: function (jqXHR, textStatus) {
+                                            updateTable('#products-grid');
                                         }
                                     });
                                     $('#delete-selected-action-confirmation').modal('toggle');
@@ -310,6 +381,7 @@
             var ids = selectedIds.join(",");
             $('#export-xml-selected-form #selectedIds').val(ids);
             $('#export-xml-selected-form').submit();
+            updateTable('#products-grid');
             return false;
         });
     });
@@ -327,6 +399,7 @@
                 var ids = selectedIds.join(",");
                 $('#export-excel-selected-form #selectedIds').val(ids);
                 $('#export-excel-selected-form').submit();
+                updateTable('#products-grid');
                 return false;
             });
         });

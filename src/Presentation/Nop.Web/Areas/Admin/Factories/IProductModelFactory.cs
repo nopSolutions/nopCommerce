@@ -168,20 +168,6 @@ namespace Nop.Web.Areas.Admin.Factories
         ProductOrderListModel PrepareProductOrderListModel(ProductOrderSearchModel searchModel, Product product);
 
         /// <summary>
-        /// Prepare bulk edit product search model
-        /// </summary>
-        /// <param name="searchModel">Bulk edit product search model</param>
-        /// <returns>Bulk edit product search model</returns>
-        BulkEditProductSearchModel PrepareBulkEditProductSearchModel(BulkEditProductSearchModel searchModel);
-
-        /// <summary>
-        /// Prepare paged bulk edit product list model
-        /// </summary>
-        /// <param name="searchModel">Bulk edit product search model</param>
-        /// <returns>Bulk edit product list model</returns>
-        BulkEditProductListModel PrepareBulkEditProductListModel(BulkEditProductSearchModel searchModel);
-
-        /// <summary>
         /// Prepare paged tier price list model
         /// </summary>
         /// <param name="searchModel">Tier price search model</param>

@@ -60,7 +60,7 @@ namespace Nop.Services.Plugins
         /// <returns>Plugin</returns>
         public virtual TPlugin LoadPluginBySystemName(string systemName, Customer customer = null, int storeId = 0)
         {
-            if (systemName == null)
+            if (string.IsNullOrEmpty(systemName))
                 return null;
 
             //try to get already loaded plugin

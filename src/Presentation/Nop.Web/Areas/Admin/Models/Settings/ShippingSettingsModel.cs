@@ -26,17 +26,17 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool ShipToSameAddress { get; set; }
         public bool ShipToSameAddress_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.AllowPickUpInStore")]
-        public bool AllowPickUpInStore { get; set; }
-        public bool AllowPickUpInStore_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.AllowPickupInStore")]
+        public bool AllowPickupInStore { get; set; }
+        public bool AllowPickupInStore_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.DisplayPickupPointsOnMap")]
         public bool DisplayPickupPointsOnMap { get; set; }
         public bool DisplayPickupPointsOnMap_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickUpInStore")]
-        public bool IgnoreAdditionalShippingChargeForPickUpInStore { get; set; }
-        public bool IgnoreAdditionalShippingChargeForPickUpInStore_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.IgnoreAdditionalShippingChargeForPickupInStore")]
+        public bool IgnoreAdditionalShippingChargeForPickupInStore { get; set; }
+        public bool IgnoreAdditionalShippingChargeForPickupInStore_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.GoogleMapsApiKey")]
         public string GoogleMapsApiKey { get; set; }

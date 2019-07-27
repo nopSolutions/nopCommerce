@@ -327,10 +327,8 @@ namespace Nop.Web.Controllers
 
             //ship to the same address?
             //by default Shipping is available if the country is not specified
-            var isAllowsShipping = (address.Country != null) && address.Country.AllowsShipping;
-            isAllowsShipping = _addressSettings.CountryEnabled ? isAllowsShipping : true;
-
-            if (_shippingSettings.ShipToSameAddress && shipToSameAddress && _shoppingCartService.ShoppingCartRequiresShipping(cart) && isAllowsShipping)
+            var shippingAllowed = _addressSettings.CountryEnabled ? address.Country?.AllowsShipping ?? false : true;
+            if (_shippingSettings.ShipToSameAddress && shipToSameAddress && _shoppingCartService.ShoppingCartRequiresShipping(cart) && shippingAllowed)
             {
                 _workContext.CurrentCustomer.ShippingAddress = _workContext.CurrentCustomer.BillingAddress;
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -463,7 +461,7 @@ namespace Nop.Web.Controllers
             _workContext.CurrentCustomer.ShippingAddress = address;
             _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
-            if (_shippingSettings.AllowPickUpInStore)
+            if (_shippingSettings.AllowPickupInStore)
             {
                 //set value indicating that "pick up in store" option has not been chosen
                 _genericAttributeService.SaveAttribute<PickupPoint>(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedPickupPointAttribute, null, _storeContext.CurrentStore.Id);
@@ -499,9 +497,9 @@ namespace Nop.Web.Controllers
             }
 
             //pickup point
-            if (_shippingSettings.AllowPickUpInStore)
+            if (_shippingSettings.AllowPickupInStore)
             {
-                if (model.PickUpInStore)
+                if (model.PickupInStore)
                 {
                     //no shipping address selected
                     _workContext.CurrentCustomer.ShippingAddress = null;
@@ -1235,10 +1233,8 @@ namespace Nop.Web.Controllers
                     var address = _workContext.CurrentCustomer.BillingAddress;
 
                     //by default Shipping is available if the country is not specified
-                    var isAllowsShipping = (address.Country != null) && address.Country.AllowsShipping;
-                    isAllowsShipping = _addressSettings.CountryEnabled ? isAllowsShipping : true;
-
-                    if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress && isAllowsShipping)
+                    var shippingAllowed = _addressSettings.CountryEnabled ? address.Country?.AllowsShipping ?? false : true;
+                    if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress && shippingAllowed)
                     {
                         //ship to the same address
                         _workContext.CurrentCustomer.ShippingAddress = address;
@@ -1303,9 +1299,9 @@ namespace Nop.Web.Controllers
                     throw new Exception("Shipping is not required");
 
                 //pickup point
-                if (_shippingSettings.AllowPickUpInStore)
+                if (_shippingSettings.AllowPickupInStore)
                 {
-                    if (model.PickUpInStore)
+                    if (model.PickupInStore)
                     {
                         //no shipping address selected
                         _workContext.CurrentCustomer.ShippingAddress = null;

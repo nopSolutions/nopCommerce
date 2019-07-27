@@ -13,7 +13,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.UI;
@@ -167,20 +166,30 @@ namespace Nop.Web.Framework.Controllers
         #region Notifications
 
         /// <summary>
-        /// Error's JSON data for kendo grid
+        /// Error's JSON data
         /// </summary>
-        /// <param name="errorMessage">Error message</param>
+        /// <param name="error">Error text</param>
         /// <returns>Error's JSON data</returns>
-        protected JsonResult ErrorForKendoGridJson(string errorMessage)
+        protected JsonResult ErrorJson(string error)
         {
-            var gridModel = new DataSourceResult
+            return Json(new
             {
-                Errors = errorMessage
-            };
-
-            return Json(gridModel);
+                error = error
+            });
         }
 
+        /// <summary>
+        /// Error's JSON data
+        /// </summary>
+        /// <param name="errors">Error messages</param>
+        /// <returns>Error's JSON data</returns>
+        protected JsonResult ErrorJson(object errors)
+        {
+            return Json(new
+            {
+                error = errors
+            });
+        }
         /// <summary>
         /// Display "Edit" (manage) link (in public store)
         /// </summary>
@@ -248,13 +257,13 @@ namespace Nop.Web.Framework.Controllers
         }
 
         /// <summary>
-        /// Access denied JSON data for kendo grid
+        /// Access denied JSON data for DataTables
         /// </summary>
         /// <returns>Access denied JSON data</returns>
-        protected JsonResult AccessDeniedKendoGridJson()
+        protected JsonResult AccessDeniedDataTablesJson()
         {
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-            return ErrorForKendoGridJson(localizationService.GetResource("Admin.AccessDenied.Description"));
+            return ErrorJson(localizationService.GetResource("Admin.AccessDenied.Description"));
         }
 
         #endregion
@@ -334,6 +343,32 @@ namespace Nop.Web.Framework.Controllers
             {
                 ViewData[dataKey] = tabName;
             }
+        }
+
+        #endregion
+
+        #region DataTables
+
+        /// <summary>
+        /// Creates an object that serializes the specified object to JSON
+        /// Used to serialize data for DataTables
+        /// </summary>
+        /// <typeparam name="T">Model type</typeparam>
+        /// <param name="model">The model to serialize.</param>
+        /// <returns>The created object that serializes the specified data to JSON format for the response.</returns>
+        public JsonResult Json<T>(BasePagedListModel<T> model) where T : BaseNopModel
+        {
+            return Json(new
+            {
+                draw = model.Draw,
+                recordsTotal = model.RecordsTotal,
+                recordsFiltered = model.RecordsFiltered,
+                data = model.Data,
+
+                //TODO: remove after moving to DataTables grids
+                Total = model.Total,
+                Data = model.Data
+            });
         }
 
         #endregion

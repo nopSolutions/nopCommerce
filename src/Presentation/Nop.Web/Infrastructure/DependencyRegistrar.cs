@@ -1,4 +1,4 @@
-using Autofac;
+﻿using Autofac;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
@@ -111,9 +111,6 @@ namespace Nop.Web.Infrastructure
         /// <summary>
         /// Gets order of this dependency registrar implementation
         /// </summary>
-        public int Order
-        {
-            get { return 2; }
-        }
+        public int Order => 2;
     }
 }

@@ -212,7 +212,7 @@
                                                     }
                                                     
                                                     if (responseJSON.message) {
-                                                        $('#uploadFileProductAttributeFailed-info').html((responseJSON.message).Text.replace(/<[^>]+>/g, ''));
+                                                        $('#uploadFileProductAttributeFailed-info').text((responseJSON.message).Text.replace(/<[^>]+>/g, ''));
                                                         $("#uploadFileProductAttributeFailed").click();
                                                     }
                                                 });
@@ -289,10 +289,10 @@
                 function @(attributeChangeHandlerFuncName)() {
                     $.ajax({
                         cache: false,
-                        url: '@Html.Raw(Url.Action("productdetails_attributechange", "Order", new {productId = productId, validateAttributeConditions = attributesHaveConditions}))',
+                        url: "@Html.Raw(Url.Action("productdetails_attributechange", "Order", new {productId = productId, validateAttributeConditions = attributesHaveConditions}))",
                         data: $('#product-details-form').serialize(),
-                        type: 'post',
-                        success: function(data) {
+                        type: "POST",
+                        success: function (data, textStatus, jqXHR) {
                             if (data.enabledattributemappingids) {
                                 for (var i = 0; i < data.enabledattributemappingids.length; i++) {
                                     $('#product_attribute_row_' + data.enabledattributemappingids[i]).show();
@@ -304,7 +304,7 @@
                                 }
                             }
                             if (data.message) {
-                                $('#productdetails_attributechangeMessage-info').html(data.message);
+                                $('#productdetails_attributechangeMessage-info').text(data.message);
                                 $("#productdetails_attributechangeMessage").click();
                             }
                         }

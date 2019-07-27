@@ -52,11 +52,11 @@
                                 <div class="rating-wrapper">
                                     <div class="label first">@T("Reviews.Fields.Rating.Bad")</div>
                                     <div class="rating-options">
-                                        <input asp-for="AddProductReview.Rating" value="1" type="radio" id="addproductrating_1" />
-                                        <input asp-for="AddProductReview.Rating" value="2" type="radio" id="addproductrating_2" />
-                                        <input asp-for="AddProductReview.Rating" value="3" type="radio" id="addproductrating_3" />
-                                        <input asp-for="AddProductReview.Rating" value="4" type="radio" id="addproductrating_4" />
-                                        <input asp-for="AddProductReview.Rating" value="5" type="radio" id="addproductrating_5" />
+                                        <input asp-for="AddProductReview.Rating" value="1" type="radio" id="addproductrating_1" aria-label="@T("Reviews.Fields.Rating.Bad")" />
+                                        <input asp-for="AddProductReview.Rating" value="2" type="radio" id="addproductrating_2" aria-label="@T("Reviews.Fields.Rating.NotGood")" />
+                                        <input asp-for="AddProductReview.Rating" value="3" type="radio" id="addproductrating_3" aria-label="@T("Reviews.Fields.Rating.NotBadNotExcellent")" /> 
+                                        <input asp-for="AddProductReview.Rating" value="4" type="radio" id="addproductrating_4" aria-label="@T("Reviews.Fields.Rating.Good")" />
+                                        <input asp-for="AddProductReview.Rating" value="5" type="radio" id="addproductrating_5" aria-label="@T("Reviews.Fields.Rating.Excellent")" />
                                     </div>
                                     <div class="label last">@T("Reviews.Fields.Rating.Excellent")</div>
                                 </div>

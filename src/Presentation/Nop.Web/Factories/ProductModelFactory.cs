@@ -1399,7 +1399,7 @@ namespace Nop.Web.Factories
                 {
                     Id = pr.Id,
                     CustomerId = pr.CustomerId,
-                    CustomerName = _customerService.FormatUserName(customer),
+                    CustomerName = _customerService.FormatUsername(customer),
                     AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !customer.IsGuest(),
                     Title = pr.Title,
                     ReviewText = pr.ReviewText,

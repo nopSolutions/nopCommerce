@@ -1,0 +1,126 @@
+﻿@model ConfigurationModel
+
+@using Nop.Plugin.Tax.Avalara.Models.Configuration
+@using Nop.Plugin.Tax.Avalara.Models.Log
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <nop-label asp-for="@Model.TaxTransactionLogSearchModel.CreatedFrom" />
+                        </div>
+                        <div class="col-md-8">
+                            <nop-editor asp-for="@Model.TaxTransactionLogSearchModel.CreatedFrom" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <nop-label asp-for="@Model.TaxTransactionLogSearchModel.CreatedTo" />
+                        </div>
+                        <div class="col-md-8">
+                            <nop-editor asp-for="@Model.TaxTransactionLogSearchModel.CreatedTo" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-8 col-md-offset-4">
+                            <button type="button" id="search-log" class="btn btn-primary btn-search">
+                                <i class="fa fa-search"></i>
+                                @T("Admin.Common.Search")
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @await Html.PartialAsync("Table", new DataTablesModel
+            {
+                Name = "log-grid",
+                UrlRead = new DataUrl("LogList", "TaxTransactionLog", null),
+                SearchButtonId = "search-log",
+                Length = Model.TaxTransactionLogSearchModel.PageSize,
+                LengthMenu = Model.TaxTransactionLogSearchModel.AvailablePageSizes,
+                Filters = new List<FilterParameter>
+                {
+                    new FilterParameter(nameof(Model.TaxTransactionLogSearchModel.CreatedFrom), nameof(Model.TaxTransactionLogSearchModel)),
+                    new FilterParameter(nameof(Model.TaxTransactionLogSearchModel.CreatedTo), nameof(Model.TaxTransactionLogSearchModel))
+                },
+                ColumnCollection = new List<ColumnProperty>
+                {
+                    new ColumnProperty(nameof(TaxTransactionLogModel.Id))
+                    {
+                        IsMasterCheckBox = true,
+                        Render = new RenderCheckBox("checkbox_log"),
+                        ClassName =  NopColumnClassDefaults.CenterAll,
+                        Width = "50",
+                    },
+                    new ColumnProperty(nameof(TaxTransactionLogModel.StatusCode))
+                    {
+                        Title = T("Plugins.Tax.Avalara.Log.StatusCode").Text,
+                        Width = "100"
+                    },
+                    new ColumnProperty(nameof(TaxTransactionLogModel.Url))
+                    {
+                        Title = T("Plugins.Tax.Avalara.Log.Url").Text,
+                        Width = "200"
+                    },
+                    new ColumnProperty(nameof(TaxTransactionLogModel.CreatedDate))
+                    {
+                        Title = T("Plugins.Tax.Avalara.Log.CreatedDate").Text,
+                        Width = "200",
+                        Render = new RenderDate()
+                    },
+                    new ColumnProperty(nameof(TaxTransactionLogModel.Id))
+                    {
+                        Title = T("Admin.Common.View").Text,
+                        Width = "100",
+                        ClassName = NopColumnClassDefaults.Button,
+                        Render = new RenderButtonView(new DataUrl("~/Admin/TaxTransactionLog/View/"))
+                    }
+                }
+            })
+
+            <script>
+                $(document).ready(function() {
+                    //"delete selected" button
+                    $("#delete-selected-action-confirmation-submit-button").bind("click", function () {
+                        var postData = {
+                            selectedIds: selectedIds
+                        };
+                        addAntiForgeryToken(postData);
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "@(Url.Action("DeleteSelected", "TaxTransactionLog"))",
+                            data: postData,
+                            traditional: true,                            
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                $('#deleteSelectedFailed-info').text(errorThrown);
+                                $("#deleteSelectedFailed").click();
+                            },
+                            complete: function (jqXHR, textStatus) {
+                                updateTable('#log-grid');
+                            }
+                        });
+                        $('#delete-selected-action-confirmation').modal('toggle');
+                        return false;
+                    });
+                });
+            </script>
+        </div>
+        <div class="panel-footer">
+            <button type="button" id="delete-selected" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.System.Log.DeleteSelected")
+            </button>
+            <nop-action-confirmation asp-button-id="delete-selected" />
+        </div>
+    </div>
+</div>
+<nop-alert asp-alert-id="deleteSelectedFailed" />

@@ -194,9 +194,9 @@ namespace Nop.Web.Factories
             {
 
                 //allow pickup in store?
-                AllowPickUpInStore = _shippingSettings.AllowPickUpInStore
+                AllowPickupInStore = _shippingSettings.AllowPickupInStore
             };
-            if (model.AllowPickUpInStore)
+            if (model.AllowPickupInStore)
             {
                 model.DisplayPickupPointsOnMap = _shippingSettings.DisplayPickupPointsOnMap;
                 model.GoogleMapsApiKey = _shippingSettings.GoogleMapsApiKey;
@@ -251,8 +251,8 @@ namespace Nop.Web.Factories
                         model.Warnings.Add(_localizationService.GetResource("Checkout.ShippingIsNotAllowed"));
                         model.Warnings.Add(_localizationService.GetResource("Checkout.PickupPoints.NotAvailable"));
                     }
-                    model.PickUpInStoreOnly = true;
-                    model.PickUpInStore = true;
+                    model.PickupInStoreOnly = true;
+                    model.PickupInStore = true;
                     return model;
                 }
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using Nop.Core.Data;
@@ -173,6 +174,11 @@ namespace Nop.Web.Framework.Security
         /// <returns>Result</returns>
         private static bool CheckPermissionsInUnix(string path, bool checkRead, bool checkWrite, bool checkModify, bool checkDelete)
         {
+            //MacOSX file permission check differs slightly from linux
+            var arguments = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                ? $"-c \"stat -f '%A %u %g' {path}\""
+                : $"-c \"stat -c '%a %u %g' {path}\"";
+
             try
             {
                 //create bash command like
@@ -185,7 +191,7 @@ namespace Nop.Web.Framework.Security
                         RedirectStandardOutput = true,
                         UseShellExecute = false,
                         FileName = "sh",
-                        Arguments = $"-c \"stat -c '%a %u %g' {path}\""
+                        Arguments = arguments
                     }
                 };
                 process.Start();

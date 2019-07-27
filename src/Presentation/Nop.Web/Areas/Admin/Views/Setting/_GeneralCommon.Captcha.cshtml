@@ -113,6 +113,16 @@
                 <span asp-validation-for="CaptchaSettings.ShowOnApplyVendorPage"></span>
             </div>
         </div>
+        <div class="form-group" id="ssCaptchaShowOnForumpnl">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="CaptchaSettings.ShowOnForum_OverrideForStore" asp-input="CaptchaSettings.ShowOnForum" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="CaptchaSettings.ShowOnForum" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CaptchaSettings.ShowOnForum" />
+                <span asp-validation-for="CaptchaSettings.ShowOnForum"></span>
+            </div>
+        </div>
         <div class="form-group" id="ssReCaptchaPublicKeypnl">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="CaptchaSettings.ReCaptchaPublicKey_OverrideForStore" asp-input="CaptchaSettings.ReCaptchaPublicKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -153,6 +163,7 @@
             $('#ssCaptchaShowOnNewsCommentPagepnl').show();
             $('#ssCaptchaShowOnProductReviewPagepnl').show();
             $('#ssCaptchaShowOnApplyVendorPagepnl').show();
+            $('#ssCaptchaShowOnForumpnl').show();
             $('#ssReCaptchaPublicKeypnl').show();
             $('#ssReCaptchaPrivateKeypnl').show();
         } else {
@@ -166,6 +177,7 @@
             $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
             $('#ssCaptchaShowOnProductReviewPagepnl').hide();
             $('#ssCaptchaShowOnApplyVendorPagepnl').hide();
+            $('#ssCaptchaShowOnForumpnl').hide();
             $('#ssReCaptchaPublicKeypnl').hide();
             $('#ssReCaptchaPrivateKeypnl').hide();
         }

@@ -1,5 +1,4 @@
 ﻿@model PollModel
-@using System.Text.Encodings.Web
 <div class="poll" id="poll-block-@(Model.Id)">
     <strong class="poll-display-text">@Model.Name</strong>
     @if (Model.AlreadyVoted)
@@ -46,21 +45,22 @@
                             cache: false,
                             type: "POST",
                             url: "@(Url.RouteUrl("PollVote"))",
-                            data: { "pollAnswerId": pollAnswerId },
-                            success: function (data) {
-                                voteProgress.hide();
-
+                            data: {
+                                "pollAnswerId": pollAnswerId
+                            },
+                            success: function (data, textStatus, jqXHR) {
                                 if (data.error) {
                                     $("#block-poll-vote-error-@(Model.Id)").html(data.error);
                                     $('#block-poll-vote-error-@(Model.Id)').fadeIn("slow").delay(2000).fadeOut("slow");
                                 }
-
                                 if (data.html) {
                                     $("#poll-block-@(Model.Id)").replaceWith(data.html);
                                 }
                             },
-                            error: function (xhr, ajaxOptions, thrownError) {
+                            error: function (jqXHR, textStatus, errorThrown) {
                                 alert('Failed to vote.');
+                            },
+                            complete: function (jqXHR, textStatus) {
                                 voteProgress.hide();
                             }
                         });

@@ -33,7 +33,7 @@ var AjaxCart = {
         $.ajax({
             cache: false,
             url: urladd,
-            type: 'post',
+            type: "POST",
             success: this.success_process,
             complete: this.resetLoadWaiting,
             error: this.ajaxFailure
@@ -51,7 +51,7 @@ var AjaxCart = {
             cache: false,
             url: urladd,
             data: $(formselector).serialize(),
-            type: 'post',
+            type: "POST",
             success: this.success_process,
             complete: this.resetLoadWaiting,
             error: this.ajaxFailure
@@ -68,7 +68,7 @@ var AjaxCart = {
         $.ajax({
             cache: false,
             url: urladd,
-            type: 'post',
+            type: "POST",
             success: this.success_process,
             complete: this.resetLoadWaiting,
             error: this.ajaxFailure

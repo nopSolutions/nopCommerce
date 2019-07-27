@@ -154,12 +154,126 @@
                     </div>
                 </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-body">                        
-                        @await Html.PartialAsync("Table", Model.Grid)                  
-                    </div>
+            <div class="panel panel-default">
+                <div class="panel-body">                        
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "shipments-grid",
+                        UrlRead = new DataUrl("ShipmentListSelect", "Order", null),
+                        SearchButtonId = "search-shipments",
+                        PrimaryKeyColumn = nameof(ShipmentModel.Id),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.StartDate)),
+                            new FilterParameter(nameof(Model.EndDate)),
+                            new FilterParameter(nameof(Model.TrackingNumber)),
+                            new FilterParameter(nameof(Model.CountryId)),
+                            new FilterParameter(nameof(Model.StateProvinceId)),
+                            new FilterParameter(nameof(Model.County)),
+                            new FilterParameter(nameof(Model.City)),
+                            new FilterParameter(nameof(Model.WarehouseId)),
+                            new FilterParameter(nameof(Model.LoadNotShipped), typeof(bool))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(null)
+                            {
+                                Render = new RenderChildCaret(),
+                                Width = "5",
+                                Searchable = false,
+                                ClassName =  NopColumnClassDefaults.ChildControl,
+                            },
+                            new ColumnProperty(nameof(ShipmentModel.Id))
+                            {
+                                IsMasterCheckBox = true,
+                                Render = new RenderCheckBox("checkbox_shipments"),
+                                Searchable = false,
+                                Width = "10",
+                            },
+                            new ColumnProperty(nameof(ShipmentModel.Id))
+                            {
+                                Title = T("Admin.Orders.Shipments.ID").Text,
+                                Width = "50"
+                            },
+                            new ColumnProperty(nameof(ShipmentModel.CustomOrderNumber))
+                            {
+                                Title = T("Admin.Orders.Shipments.CustomOrderNumber").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(ShipmentModel.TrackingNumber))
+                            {
+                                Title = T("Admin.Orders.Shipments.TrackingNumber").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(ShipmentModel.TotalWeight))
+                            {
+                                Title = T("Admin.Orders.Shipments.TotalWeight").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(ShipmentModel.ShippedDate))
+                            {
+                                Title = T("Admin.Orders.Shipments.ShippedDate").Text,
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(ShipmentModel.DeliveryDate))
+                            {
+                                Title = T("Admin.Orders.Shipments.DeliveryDate").Text,
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(OrderModel.Id))
+                            {
+                                Title = T("Admin.Common.View").Text,
+                                Width = "50",
+                                ClassName = NopColumnClassDefaults.Button,
+                                Render = new RenderButtonView(new DataUrl("~/Admin/Order/ShipmentDetails/"))
+                            }
+                        },
+                        ChildTable = new DataTablesModel
+                        {
+                            Name = "shipments-grid",
+                            UrlRead = new DataUrl("ShipmentsItemsByShipmentId", "Order", null),
+                            IsChildTable = true,
+                            Paging = false,
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(ShipmentItemSearchModel.ShipmentId), nameof(OrderModel.Id), true)
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(ShipmentItemModel.ProductName))
+                                {
+                                    Title = T("Admin.Orders.Shipments.Products.ProductName").Text,
+                                    Width = "400"
+                                },
+                                new ColumnProperty(nameof(ShipmentItemModel.ShippedFromWarehouse))
+                                {
+                                    Title = T("Admin.Orders.Shipments.Products.Warehouse").Text,
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(ShipmentItemModel.QuantityInThisShipment))
+                                {
+                                    Title = T("Admin.Orders.Shipments.Products.QtyShipped").Text,
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(ShipmentItemModel.ItemWeight))
+                                {
+                                    Title = T("Admin.Orders.Shipments.Products.ItemWeight").Text,
+                                    Width = "150"
+                                },
+                                new ColumnProperty(nameof(ShipmentItemModel.ItemDimensions))
+                                {
+                                    Title = T("Admin.Orders.Shipments.Products.ItemDimensions").Text,
+                                    Width = "150"
+                                }
+                            }
+                        }
+                    })                  
                 </div>
-
+            </div>
                 <script>
                     $(document).ready(function() {
                         //load states when changing a country dropdownlist
@@ -170,14 +284,17 @@
                                 cache: false,
                                 type: "GET",
                                 url: "@(Url.Action("GetStatesByCountryId", "Country"))",
-                                data: { "countryId": selectedItem, "addAsterisk": "true" },
-                                success: function(data) {
+                                data: {
+                                    "countryId": selectedItem,
+                                    "addAsterisk": "true"
+                                },
+                                success: function (data, textStatus, jqXHR) {
                                     ddlStates.html('');
                                     $.each(data, function(id, option) {
                                         ddlStates.append($('<option></option>').val(option.id).html(option.name));
                                     });
                                 },
-                                error: function(xhr, ajaxOptions, thrownError) {
+                                error: function (jqXHR, textStatus, errorThrown) {
                                     $("#statesAlert").click();
                                 }
                             });
@@ -197,15 +314,14 @@
                                 type: "POST",
                                 url: "@(Url.Action("SetAsShippedSelected", "Order"))",
                                 data: postData,
-                                complete: function(data) {
-                                    //reload grid
-                                    $('#shipments-grid').DataTable().draw(false);                                    
-                                },
-                                error: function(xhr, ajaxOptions, thrownError) {
-                                    $('#setAsShippedSelectedFailed-info').html(thrownError);
+                                traditional: true,
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    $('#setAsShippedSelectedFailed-info').text(errorThrown);
                                     $("#setAsShippedSelectedFailed").click();
                                 },
-                                traditional: true
+                                complete: function (jqXHR, textStatus) {
+                                    updateTable('#shipments-grid');
+                                }
                             });
                             return false;
                         });
@@ -224,22 +340,21 @@
                                 type: "POST",
                                 url: "@(Url.Action("SetAsDeliveredSelected", "Order"))",
                                 data: postData,
-                                complete: function(data) {
-                                    //reload grid
-                                    $('#shipments-grid').DataTable().draw(false);
-                                },
-                                error: function(xhr, ajaxOptions, thrownError) {
-                                    $('#setAsDeliveredSelectedFailed-info').html(thrownError);
+                                traditional: true,
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    $('#setAsDeliveredSelectedFailed-info').text(errorThrown);
                                     $("#setAsDeliveredSelectedFailed").click();
                                 },
-                                traditional: true
+                                complete: function (jqXHR, textStatus) {
+                                    updateTable('#shipments-grid');
+                                }
                             });
                             return false;
                         });
-                        
                     });
                                        
                 </script>
+                
             </div>
         </div>
     </div>
@@ -260,6 +375,7 @@
             var ids = selectedIds.join(",");
             $('#pdf-packaging-slip-selected-form #selectedIds').val(ids);
             $('#pdf-packaging-slip-selected-form').submit();
+            updateTable('#shipments-grid');
             return false;
         });
     });

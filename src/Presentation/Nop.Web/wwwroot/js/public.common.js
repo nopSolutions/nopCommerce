@@ -118,6 +118,13 @@ function displayBarNotification(message, messagetype, timeout) {
     //types: success, error, warning
     var cssclass = ['success', 'error', 'warning'].indexOf(messagetype) !== -1 ? messagetype : 'success';
 
+    //remove previous CSS classes and notifications
+    $('#bar-notification')
+      .removeClass('success')
+      .removeClass('error')
+      .removeClass('warning');
+    $('.bar-notification').remove();
+
     //add new notifications
     var htmlcode = document.createElement('div');
     htmlcode.classList.add('bar-notification', cssclass);

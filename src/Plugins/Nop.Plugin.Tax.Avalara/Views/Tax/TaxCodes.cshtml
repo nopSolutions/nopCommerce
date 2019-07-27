@@ -1,0 +1,31 @@
+﻿<div class="btn-group">
+    <button type="button" class="btn btn-warning">
+        <i class="fa fa-exchange"></i>
+        @T("Plugins.Tax.Avalara.TaxCodes")
+    </button>
+    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <span class="caret"></span>
+        <span class="sr-only">&nbsp;</span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+        <li>
+            <button type="submit" name="exportTaxCodes">
+                <i class="fa fa-exchange"></i>
+                @T("Plugins.Tax.Avalara.TaxCodes.Export")
+            </button>
+        </li>
+        <li>
+            <button type="submit" name="importTaxCodes">
+                <i class="fa fa-exchange"></i>
+                @T("Plugins.Tax.Avalara.TaxCodes.Import")
+            </button>
+        </li>
+        <li class="divider"></li>
+        <li>
+            <button type="submit" name="deleteTaxCodes">
+                <i class="fa fa-trash-o"></i>
+                @T("Plugins.Tax.Avalara.TaxCodes.Delete")
+            </button>
+        </li>
+    </ul>
+</div>

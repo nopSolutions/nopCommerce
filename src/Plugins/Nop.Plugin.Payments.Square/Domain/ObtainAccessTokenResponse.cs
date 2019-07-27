@@ -33,15 +33,21 @@ namespace Nop.Plugin.Payments.Square.Domain
         public string MerchantId { get; set; }
 
         /// <summary>
-        /// Gets or sets the ID of the merchant subscription associated with the authorization
-        /// </summary>
-        [JsonProperty(PropertyName = "subscription_id")]
-        public string SubscriptionId { get; set; }
-
-        /// <summary>
         /// Gets or sets the ID of the subscription plan the merchant signed up for
         /// </summary>
         [JsonProperty(PropertyName = "plan_id")]
         public string PlanId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the OpenID token belonging to this person, only present if the OPENID scope is included in the authorize request
+        /// </summary>
+        [JsonProperty(PropertyName = "id_token")]
+        public string OpenIdToken { get; set; }
+
+        /// <summary>
+        /// Gets or sets a refresh token
+        /// </summary>
+        [JsonProperty(PropertyName = "refresh_token")]
+        public string RefreshToken { get; set; }
     }
 }

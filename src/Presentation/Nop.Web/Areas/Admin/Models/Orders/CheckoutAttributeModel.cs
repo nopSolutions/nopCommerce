@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
-using Nop.Web.Areas.Admin.Validators.Orders;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -12,7 +10,6 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a checkout attribute model
     /// </summary>
-    [Validator(typeof(CheckoutAttributeValidator))]
     public partial class CheckoutAttributeModel : BaseNopEntityModel, 
         ILocalizedModel<CheckoutAttributeLocalizedModel>, IStoreMappingSupportedModel
     {

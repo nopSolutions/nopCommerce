@@ -137,7 +137,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(MessageTemplateSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _messageTemplateModelFactory.PrepareMessageTemplateListModel(searchModel);

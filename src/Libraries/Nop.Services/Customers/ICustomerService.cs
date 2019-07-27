@@ -190,7 +190,7 @@ namespace Nop.Services.Customers
         /// <param name="stripTooLong">Strip too long customer name</param>
         /// <param name="maxLength">Maximum customer name length</param>
         /// <returns>Formatted text</returns>
-        string FormatUserName(Customer customer, bool stripTooLong = false, int maxLength = 0);
+        string FormatUsername(Customer customer, bool stripTooLong = false, int maxLength = 0);
 
         /// <summary>
         /// Gets coupon codes

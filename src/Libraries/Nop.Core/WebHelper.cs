@@ -5,6 +5,8 @@ using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Hosting;
@@ -25,23 +27,29 @@ namespace Nop.Core
         #region Fields 
 
         private readonly HostingConfig _hostingConfig;
+        private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IApplicationLifetime _applicationLifetime;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly INopFileProvider _fileProvider;
+        private readonly IUrlHelperFactory _urlHelperFactory;
 
         #endregion
 
         #region Ctor
 
         public WebHelper(HostingConfig hostingConfig,
+            IActionContextAccessor actionContextAccessor,
             IApplicationLifetime applicationLifetime,
             IHttpContextAccessor httpContextAccessor,
-            INopFileProvider fileProvider)
+            INopFileProvider fileProvider,
+            IUrlHelperFactory urlHelperFactory)
         {
             _hostingConfig = hostingConfig;
+            _actionContextAccessor = actionContextAccessor;
+            _applicationLifetime = applicationLifetime;
             _httpContextAccessor = httpContextAccessor;
             _fileProvider = fileProvider;
-            _applicationLifetime = applicationLifetime;
+            _urlHelperFactory = urlHelperFactory;
         }
 
         #endregion
@@ -288,7 +296,7 @@ namespace Nop.Core
             //source: https://github.com/aspnet/StaticFiles/blob/dev/src/Microsoft.AspNetCore.StaticFiles/FileExtensionContentTypeProvider.cs
             //if it can return content type, then it's a static file
             var contentTypeProvider = new FileExtensionContentTypeProvider();
-            return contentTypeProvider.TryGetContentType(path, out string _);
+            return contentTypeProvider.TryGetContentType(path, out var _);
         }
 
         /// <summary>
@@ -306,13 +314,17 @@ namespace Nop.Core
             if (string.IsNullOrEmpty(key))
                 return url;
 
+            //prepare URI object
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+            var isLocalUrl = urlHelper.IsLocalUrl(url);
+            var uri = new Uri(isLocalUrl ? $"{GetStoreLocation().TrimEnd('/')}{url}" : url, UriKind.Absolute);
+
             //get current query parameters
-            var uri = new Uri(url);
             var queryParameters = QueryHelpers.ParseQuery(uri.Query);
 
             //and add passed one
             queryParameters[key] = string.Join(",", values);
-            
+
             //add only first value
             //two the same query parameters? theoretically it's not possible.
             //but MVC has some ugly implementation for checkboxes and we can have two values
@@ -322,7 +334,7 @@ namespace Nop.Core
                 .ToDictionary(parameter => parameter.Key, parameter => parameter.Value.FirstOrDefault()?.ToString() ?? string.Empty));
 
             //create new URL with passed query parameters
-            url = $"{uri.GetLeftPart(UriPartial.Path)}{queryBuilder.ToQueryString()}{uri.Fragment}";
+            url = $"{(isLocalUrl ? uri.LocalPath : uri.GetLeftPart(UriPartial.Path))}{queryBuilder.ToQueryString()}{uri.Fragment}";
 
             return url;
         }
@@ -342,8 +354,12 @@ namespace Nop.Core
             if (string.IsNullOrEmpty(key))
                 return url;
 
+            //prepare URI object
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+            var isLocalUrl = urlHelper.IsLocalUrl(url);
+            var uri = new Uri(isLocalUrl ? $"{GetStoreLocation().TrimEnd('/')}{url}" : url, UriKind.Absolute);
+
             //get current query parameters
-            var uri = new Uri(url);
             var queryParameters = QueryHelpers.ParseQuery(uri.Query)
                 .SelectMany(parameter => parameter.Value, (parameter, queryValue) => new KeyValuePair<string, string>(parameter.Key, queryValue))
                 .ToList();
@@ -360,8 +376,10 @@ namespace Nop.Core
                 queryParameters.RemoveAll(parameter => parameter.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase));
             }
 
+            var queryBuilder = new QueryBuilder(queryParameters);
+
             //create new URL without passed query parameters
-            url = $"{uri.GetLeftPart(UriPartial.Path)}{new QueryBuilder(queryParameters).ToQueryString()}{uri.Fragment}";
+            url = $"{(isLocalUrl ? uri.LocalPath : uri.GetLeftPart(UriPartial.Path))}{queryBuilder.ToQueryString()}{uri.Fragment}";
 
             return url;
         }
@@ -478,7 +496,7 @@ namespace Nop.Core
 
             return rawUrl;
         }
-        
+
         /// <summary>
         /// Gets whether the request is made with AJAX 
         /// </summary>

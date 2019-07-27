@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -29,7 +28,6 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Areas.Admin.Models.Reports;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -441,7 +439,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult OrderList(OrderSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _orderModelFactory.PrepareOrderListModel(searchModel);
@@ -453,7 +451,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ReportAggregates(OrderSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _orderModelFactory.PrepareOrderAggregatorModel(searchModel);
@@ -1806,7 +1804,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult AddProductToOrder(AddProductToOrderSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get an order with the specified id
             var order = _orderService.GetOrderById(searchModel.OrderId)
@@ -2096,7 +2094,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ShipmentListSelect(ShipmentSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _orderModelFactory.PrepareShipmentListModel(searchModel);
@@ -2108,7 +2106,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ShipmentsByOrder(OrderShipmentSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get an order with the specified id
             var order = _orderService.GetOrderById(searchModel.OrderId)
@@ -2128,7 +2126,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ShipmentsItemsByShipmentId(ShipmentItemSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a shipment with the specified id
             var shipment = _shipmentService.GetShipmentById(searchModel.ShipmentId)
@@ -2283,13 +2281,24 @@ namespace Nop.Web.Areas.Admin.Controllers
                     WarehouseId = warehouseId
                 };
                 shipment.ShipmentItems.Add(shipmentItem);
+
+                var quantityWithReserved = _productService.GetTotalStockQuantity(orderItem.Product, true, warehouseId);
+                var quantityTotal = _productService.GetTotalStockQuantity(orderItem.Product, false, warehouseId);
+
+                //currently reserved in current stock
+                var quantityReserved = quantityTotal - quantityWithReserved;
+
+                //If the quantity of the reserve product in the warehouse does not coincide with the total quantity of goods in the basket, 
+                //it is necessary to redistribute the reserve to the warehouse
+                if (!(quantityReserved == qtyToAdd && quantityReserved == maxQtyToAdd))
+                    _productService.BalanceInventory(orderItem.Product, warehouseId, qtyToAdd);                
             }
 
             //if we have at least one item in the shipment, then save it
             if (shipment != null && shipment.ShipmentItems.Any())
             {
                 shipment.TotalWeight = totalWeight;
-                _shipmentService.InsertShipment(shipment);
+                _shipmentService.InsertShipment(shipment);                
 
                 //add a note
                 order.OrderNotes.Add(new OrderNote
@@ -2735,7 +2744,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult OrderNotesSelect(OrderNoteSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get an order with the specified id
             var order = _orderService.GetOrderById(searchModel.OrderId)
@@ -2757,18 +2766,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (string.IsNullOrEmpty(message))
-            {
-                return Json(new { Result = false, Error = JavaScriptEncoder.Default.Encode(_localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Note.Validation")) });
-            }
-
+                return ErrorJson(_localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Note.Validation"));
+            
             //try to get an order with the specified id
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
-                return Json(new { Result = false });
+                return ErrorJson("Order cannot be loaded");
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return Json(new { Result = false });
+                return ErrorJson("No access for vendors");
 
             var orderNote = new OrderNote
             {
@@ -2785,8 +2792,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (displayToCustomer)
             {
                 //email
-                _workflowMessageService.SendNewOrderNoteAddedCustomerNotification(
-                    orderNote, _workContext.WorkingLanguage.Id);
+                _workflowMessageService.SendNewOrderNoteAddedCustomerNotification(orderNote, _workContext.WorkingLanguage.Id);
             }
 
             return Json(new { Result = true });
@@ -2823,7 +2829,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult BestsellersBriefReportByQuantityList(BestsellerBriefSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _orderModelFactory.PrepareBestsellerBriefListModel(searchModel);
@@ -2835,7 +2841,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult BestsellersBriefReportByAmountList(BestsellerBriefSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _orderModelFactory.PrepareBestsellerBriefListModel(searchModel);
@@ -2844,33 +2850,33 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult OrderAverageReportList(DataSourceRequest command)
+        public virtual IActionResult OrderAverageReportList(OrderAverageReportSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //a vendor doesn't have access to this report
             if (_workContext.CurrentVendor != null)
                 return Content(string.Empty);
 
             //prepare model
-            var model = _orderModelFactory.PrepareOrderAverageReportListModel();
+            var model = _orderModelFactory.PrepareOrderAverageReportListModel(searchModel);
 
             return Json(model);
         }
 
         [HttpPost]
-        public virtual IActionResult OrderIncompleteReportList()
+        public virtual IActionResult OrderIncompleteReportList(OrderIncompleteReportSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //a vendor doesn't have access to this report
             if (_workContext.CurrentVendor != null)
                 return Content(string.Empty);
 
             //prepare model
-            var model = _orderModelFactory.PrepareOrderIncompleteReportListModel();
+            var model = _orderModelFactory.PrepareOrderIncompleteReportListModel(searchModel);
 
             return Json(model);
         }

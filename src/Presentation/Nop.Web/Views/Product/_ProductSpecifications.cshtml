@@ -8,10 +8,12 @@
         </div>
         <div class="table-wrapper">
             <table class="data-table">
-                <colgroup>
-                    <col width="25%" />
-                    <col />
-                </colgroup>
+                <thead>
+                    <tr class="hidden-row">
+                        <th width="25%"><span>@T("Products.Specs.AttributeName")</span></th>
+                        <th><span>@T("Products.Specs.AttributeValue")</span></th>
+                    </tr>
+                </thead>
                 <tbody>
                     @for (var i = 0; i < Model.Count; i++)
                     {

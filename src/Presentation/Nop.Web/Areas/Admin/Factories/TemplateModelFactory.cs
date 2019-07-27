@@ -88,12 +88,8 @@ namespace Nop.Web.Areas.Admin.Factories
             var categoryTemplates = _categoryTemplateService.GetAllCategoryTemplates().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new CategoryTemplateListModel
-            {
-                //fill in model values from the entity
-                Data = categoryTemplates.Select(template => template.ToModel<CategoryTemplateModel>()),
-                Total = categoryTemplates.TotalCount
-            };
+            var model = new CategoryTemplateListModel().PrepareToGrid(searchModel, categoryTemplates,
+                () => categoryTemplates.Select(template => template.ToModel<CategoryTemplateModel>()));
 
             return model;
         }
@@ -128,13 +124,9 @@ namespace Nop.Web.Areas.Admin.Factories
             var manufacturerTemplates = _manufacturerTemplateService.GetAllManufacturerTemplates().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ManufacturerTemplateListModel
-            {
-                //fill in model values from the entity
-                Data = manufacturerTemplates.Select(template => template.ToModel<ManufacturerTemplateModel>()),
-                Total = manufacturerTemplates.TotalCount
-            };
-
+            var model = new ManufacturerTemplateListModel().PrepareToGrid(searchModel, manufacturerTemplates,
+                () => manufacturerTemplates.Select(template => template.ToModel<ManufacturerTemplateModel>()));
+            
             return model;
         }
 
@@ -168,12 +160,8 @@ namespace Nop.Web.Areas.Admin.Factories
             var productTemplates = _productTemplateService.GetAllProductTemplates().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new ProductTemplateListModel
-            {
-                //fill in model values from the entity
-                Data = productTemplates.Select(template => template.ToModel<ProductTemplateModel>()),
-                Total = productTemplates.TotalCount
-            };
+            var model = new ProductTemplateListModel().PrepareToGrid(searchModel, productTemplates,
+                () => productTemplates.Select(template => template.ToModel<ProductTemplateModel>()));
 
             return model;
         }
@@ -208,12 +196,8 @@ namespace Nop.Web.Areas.Admin.Factories
             var topicTemplates = _topicTemplateService.GetAllTopicTemplates().ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new TopicTemplateListModel
-            {
-                //fill in model values from the entity
-                Data = topicTemplates.Select(template => template.ToModel<TopicTemplateModel>()),
-                Total = topicTemplates.TotalCount
-            };
+            var model = new TopicTemplateListModel().PrepareToGrid(searchModel, topicTemplates,
+                () => topicTemplates.Select(template => template.ToModel<TopicTemplateModel>()));
 
             return model;
         }

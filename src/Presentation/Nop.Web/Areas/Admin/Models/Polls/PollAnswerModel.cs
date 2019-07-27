@@ -1,6 +1,4 @@
-﻿using FluentValidation.Attributes;
-using Nop.Web.Areas.Admin.Validators.Polls;
-using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Polls
@@ -8,7 +6,6 @@ namespace Nop.Web.Areas.Admin.Models.Polls
     /// <summary>
     /// Represents a poll answer model
     /// </summary>
-    [Validator(typeof(PollAnswerValidator))]
     public partial class PollAnswerModel : BaseNopEntityModel
     {
         #region Properties

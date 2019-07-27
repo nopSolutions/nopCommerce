@@ -57,7 +57,7 @@
         /// <summary>
         /// Class to assign to each cell in the column.
         /// </summary>
-        public StyleColumn? ClassName { get; set; }
+        public string ClassName { get; set; }
 
         /// <summary>
         /// Enable or disable the display of this column.
@@ -68,6 +68,16 @@
         /// Enable or disable filtering on the data in this column.
         /// </summary>
         public bool Searchable { get; set; }
+
+        /// <summary>
+        /// Enable or disable editing on the data in this column.
+        /// </summary>
+        public bool Editable { get; set; }
+
+        /// <summary>
+        /// Data column type
+        /// </summary>
+        public EditType EditType { get; set; }
 
         /// <summary>
         /// Enable or disable encode on the data in this column.

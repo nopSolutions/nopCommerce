@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
-using Nop.Web.Areas.Admin.Validators.Customers;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
@@ -13,7 +11,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
     /// <summary>
     /// Represents a customer model
     /// </summary>
-    [Validator(typeof(CustomerValidator))]
     public partial class CustomerModel : BaseNopEntityModel, IAclSupportedModel
     {
         #region Ctor
@@ -27,7 +24,6 @@ namespace Nop.Web.Areas.Admin.Models.Customers
             SelectedCustomerRoleIds = new List<int>();
             AvailableCustomerRoles = new List<SelectListItem>();
 
-            AssociatedExternalAuthRecords = new List<CustomerAssociatedExternalAuthModel>();
             AvailableCountries = new List<SelectListItem>();
             AvailableStates = new List<SelectListItem>();
             AvailableVendors = new List<SelectListItem>();
@@ -41,6 +37,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
             CustomerShoppingCartSearchModel = new CustomerShoppingCartSearchModel();
             CustomerActivityLogSearchModel = new CustomerActivityLogSearchModel();
             CustomerBackInStockSubscriptionSearchModel = new CustomerBackInStockSubscriptionSearchModel();
+            CustomerAssociatedExternalAuthRecordsSearchModel = new CustomerAssociatedExternalAuthRecordsSearchModel();
         }
 
         #endregion
@@ -230,10 +227,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         //GDPR enabled
         public bool GdprEnabled { get; set; }
-
-        [NopResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth")]
-        public IList<CustomerAssociatedExternalAuthModel> AssociatedExternalAuthRecords { get; set; }
-
+        
         public string AvatarUrl { get; internal set; }
 
         public CustomerAddressSearchModel CustomerAddressSearchModel { get; set; }
@@ -245,6 +239,8 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         public CustomerActivityLogSearchModel CustomerActivityLogSearchModel { get; set; }
 
         public CustomerBackInStockSubscriptionSearchModel CustomerBackInStockSubscriptionSearchModel { get; set; }
+
+        public CustomerAssociatedExternalAuthRecordsSearchModel CustomerAssociatedExternalAuthRecordsSearchModel { get; set; }
 
         #endregion
 

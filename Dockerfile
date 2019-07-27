@@ -15,7 +15,11 @@ RUN dotnet publish Nop.Web.csproj -c Release -o /app/published
 
 # create the runtime instance 
 FROM microsoft/dotnet:2.2-aspnetcore-runtime-alpine AS runtime 
-                                   
+
+# add globalization support
+RUN apk add --no-cache icu-libs
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+
 WORKDIR /app        
 RUN mkdir bin
 RUN mkdir logs  

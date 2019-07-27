@@ -1,10 +1,14 @@
-﻿@model Nop.Plugin.Payments.Square.Models.PaymentInfoModel
+﻿@model PaymentInfoModel
+
+@using Nop.Plugin.Payments.Square
+@using Nop.Plugin.Payments.Square.Models
+@inject SquarePaymentSettings squarePaymentSettings
+@inject Nop.Core.Domain.Orders.OrderSettings orderSettings
+
 @{
     Layout = "";
     Html.AddScriptParts(ResourceLocation.Footer, SquarePaymentDefaults.PaymentFormScriptPath, excludeFromBundle: true);
 }
-@inject SquarePaymentSettings squarePaymentSettings
-@inject Nop.Core.Domain.Orders.OrderSettings orderSettings
 
 <style type="text/css">
     .square-input {
@@ -29,13 +33,12 @@
     }
 </style>
 
-<script>
+<script asp-location="Footer">
     $(document).ready(function () {
         $('#@Html.IdFor(model => model.StoredCardId)').on('change', toggleStoredCard);
         toggleStoredCard();
 
         var submitForm = false;
-        var stepBack = false;
         var onePageCheckout = @orderSettings.OnePageCheckoutEnabled.ToString().ToLower();
         $('.payment-info-next-step-button').attr('onclick', null);
         $('.payment-info-next-step-button').prop('disabled', true);
@@ -87,13 +90,7 @@
 
                 paymentFormLoaded: function () {
                     if (paymentForm) {
-                        if (stepBack) {
-                            paymentForm.destroy();
-                            paymentForm = null;
-                        }
-                        else {
-                            paymentForm.setPostalCode('@Model.PostalCode');
-                        }
+                        paymentForm.setPostalCode('@Model.PostalCode');
                     }
                     $('.payment-info-next-step-button').prop('disabled', false);
                     $('.payment-info-next-step-button').css("opacity", 1);
@@ -106,11 +103,11 @@
 
         $('input.payment-info-next-step-button').on('click', function (data) {
             var selectedStoredCardId = $('#@Html.IdFor(model => model.StoredCardId)').val()
-            if (!submitForm && (!selectedStoredCardId || selectedStoredCardId == '0')) {
+            if (!submitForm && (!selectedStoredCardId || selectedStoredCardId == '@(Guid.Empty.ToString())')) {
                 if (paymentForm) {
                     paymentForm.requestCardNonce();
+                    return false;
                 }
-                return false;
             }
             else if (onePageCheckout) {
                 submitForm = false;
@@ -119,15 +116,22 @@
         });
 
         $(document).on('accordion_section_opened', function (data) {
-            if (data && (data.currentSectionId == 'opc-billing' || data.currentSectionId == 'opc-shipping' || data.currentSectionId == 'opc-shipping_method' || data.currentSectionId == 'opc-payment_method')) {
-                stepBack = true;
+            if (data.currentSectionId != 'opc-confirm_order' && data.currentSectionId != 'opc-payment_info') {
+                if (paymentForm) {
+                    paymentForm.destroy();
+                    paymentForm = null;
+                }
+                $('.payment-info-next-step-button').attr('onclick', 'PaymentInfo.save()');
+            }
+            if (data.currentSectionId == 'opc-payment_info' && data.previousSectionId == 'opc-confirm_order') {
+                $('.payment-info-next-step-button').attr('onclick', null);
             }
         });
     });
 
     function toggleStoredCard() {
         var selectedStoredCardId = $('#@Html.IdFor(model => model.StoredCardId)').val();
-        if (!selectedStoredCardId || selectedStoredCardId == '0') {
+        if (!selectedStoredCardId || selectedStoredCardId == '@(Guid.Empty.ToString())') {
             $('#square-card-details').show();
         } else {
             $('#square-card-details').hide();
@@ -198,3 +202,5 @@
         </tr>
     }
 </table>
+
+@Html.NopInlineScripts(ResourceLocation.Footer)

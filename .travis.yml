@@ -1,6 +1,6 @@
 language: csharp
 mono: none
-dotnet: 2.2.101
+dotnet: 2.2.301
 dist: xenial
 install:
 - dotnet restore ./src/NopCommerce.sln

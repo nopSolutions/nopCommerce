@@ -57,7 +57,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (warnings.Any(warning => warning.Level == SystemWarningLevel.Fail ||
                                             warning.Level == SystemWarningLevel.CopyrightRemovalKey ||
                                             warning.Level == SystemWarningLevel.Warning))
-                    _notificationService.WarningNotification(_localizationService.GetResource("Admin.System.Warnings.Errors"));
+                    _notificationService.WarningNotification(
+                        string.Format(_localizationService.GetResource("Admin.System.Warnings.Errors"),
+                        Url.Action("Warnings", "Common")),
+                        //do not encode URLs
+                        false);
             }
 
             //prepare model

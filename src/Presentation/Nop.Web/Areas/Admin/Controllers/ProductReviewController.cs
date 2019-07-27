@@ -87,7 +87,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(ProductReviewSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _productReviewModelFactory.PrepareProductReviewListModel(searchModel);
@@ -337,7 +337,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ProductReviewReviewTypeMappingList(ProductReviewReviewTypeMappingSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
             var productReview = _productService.GetProductReviewById(searchModel.ProductReviewId)
                 ?? throw new ArgumentException("No product review found with the specified id");
 

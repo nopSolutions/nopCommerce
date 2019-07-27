@@ -27,7 +27,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         /// <returns>The created object that serializes the specified data to JSON format for the response.</returns>
         public override JsonResult Json(object data)
         {
-            //use IsoDateFormat on writing JSON text to fix issue with dates in KendoUI grid
+            //use IsoDateFormat on writing JSON text to fix issue with dates in grid
             var useIsoDateFormat = EngineContext.Current.Resolve<AdminAreaSettings>()?.UseIsoDateFormatInJsonResult ?? false;
             var serializerSettings = EngineContext.Current.Resolve<IOptions<MvcJsonOptions>>()?.Value?.SerializerSettings
                 ?? new JsonSerializerSettings();
@@ -41,25 +41,5 @@ namespace Nop.Web.Areas.Admin.Controllers
             return base.Json(data, serializerSettings);
         }
 
-        /// <summary>
-        /// Creates an object that serializes the specified object to JSON.
-        /// </summary>
-        /// <typeparam name="T">Model type</typeparam>
-        /// <param name="model">The model to serialize.</param>
-        /// <returns>The created object that serializes the specified data to JSON format for the response.</returns>
-        public JsonResult Json<T>(BasePagedListModel<T> model) where T : BaseNopModel
-        {
-            return Json(new
-            {
-                draw = model.Draw,
-                recordsTotal = model.RecordsTotal,
-                recordsFiltered = model.RecordsFiltered,
-                data = model.Data,
-
-                //TODO: remove after moving to DataTables grids
-                Total = model.Total,
-                Data = model.Data
-            });
-        }
     }
 }

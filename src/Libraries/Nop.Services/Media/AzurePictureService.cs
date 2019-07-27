@@ -25,7 +25,7 @@ namespace Nop.Services.Media
     public partial class AzurePictureService : PictureService
     {
         #region Fields
-        
+
         private static bool _azureBlobStorageAppendContainerName;
         private static bool _isInitialized;
         private static CloudBlobContainer _container;
@@ -43,6 +43,7 @@ namespace Nop.Services.Media
 
         public AzurePictureService(IDataProvider dataProvider,
             IDbContext dbContext,
+            IDownloadService downloadService,
             IEventPublisher eventPublisher,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
@@ -58,6 +59,7 @@ namespace Nop.Services.Media
             NopConfig config)
             : base(dataProvider,
                   dbContext,
+                  downloadService,
                   eventPublisher,
                   httpContextAccessor,
                   fileProvider,
@@ -82,7 +84,7 @@ namespace Nop.Services.Media
 
         protected void OneTimeInit(NopConfig config)
         {
-            if (_isInitialized) 
+            if (_isInitialized)
                 return;
 
             if (string.IsNullOrEmpty(config.AzureBlobStorageConnectionString))
@@ -96,14 +98,14 @@ namespace Nop.Services.Media
 
             lock (_locker)
             {
-                if (_isInitialized) 
+                if (_isInitialized)
                     return;
 
                 _azureBlobStorageAppendContainerName = config.AzureBlobStorageAppendContainerName;
                 _azureBlobStorageConnectionString = config.AzureBlobStorageConnectionString;
                 _azureBlobStorageContainerName = config.AzureBlobStorageContainerName.Trim().ToLower();
                 _azureBlobStorageEndPoint = config.AzureBlobStorageEndPoint.Trim().ToLower().TrimEnd('/');
-                
+
                 CreateCloudBlobContainer();
 
                 _isInitialized = true;

@@ -149,9 +149,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new ShoppingCartListModel
+            var model = new ShoppingCartListModel().PrepareToGrid(searchModel, customers, () =>
             {
-                Data = customers.Select(customer =>
+                return customers.Select(customer =>
                 {
                     //fill in model values from the entity
                     var shoppingCartModel = new ShoppingCartModel
@@ -166,9 +166,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate).Sum(item => item.Quantity);
 
                     return shoppingCartModel;
-                }),
-                Total = customers.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -192,9 +191,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ShoppingCartItemListModel
+            var model = new ShoppingCartItemListModel().PrepareToGrid(searchModel, items, () =>
             {
-                Data = items.Select(item =>
+                return items.Select(item =>
                 {
                     //fill in model values from the entity
                     var itemModel = item.ToModel<ShoppingCartItemModel>();
@@ -214,9 +213,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     itemModel.ProductName = item?.Product?.Name;
 
                     return itemModel;
-                }),
-                Total = items.TotalCount
-            };
+                });
+            });
 
             return model;
         }

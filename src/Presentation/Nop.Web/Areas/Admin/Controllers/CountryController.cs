@@ -17,7 +17,6 @@ using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Directory;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -148,7 +147,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult CountryList(CountrySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _countryModelFactory.PrepareCountryListModel(searchModel);
@@ -339,7 +338,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult States(StateProvinceSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a country with the specified id
             var country = _countryService.GetCountryById(searchModel.CountryId)
@@ -474,7 +473,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (_addressService.GetAddressTotalByStateProvinceId(state.Id) > 0)
             {
-                return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Configuration.Countries.States.CantDeleteWithAddresses") });
+                return ErrorJson(_localizationService.GetResource("Admin.Configuration.Countries.States.CantDeleteWithAddresses"));
             }
 
             //int countryId = state.CountryId;
@@ -549,7 +548,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            var fileName = $"states_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(4)}.txt";
+            var fileName = $"states_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(4)}.csv";
 
             var states = _stateProvinceService.GetStateProvinces(true);
             var result = _exportManager.ExportStatesToTxt(states);

@@ -163,7 +163,7 @@ namespace Nop.Services.Tests.Orders
 
             var loger = new Mock<ILogger>();
 
-            var pluginService = new PluginService(_customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, _webHelper.Object);
+            var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, _webHelper.Object);
             _paymentPluginManager = new PaymentPluginManager(pluginService, null, _paymentSettings);
             _pickupPluginManager = new PickupPluginManager(pluginService, _shippingSettings);
             _shippingPluginManager = new ShippingPluginManager(pluginService, _shippingSettings);

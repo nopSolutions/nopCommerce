@@ -1,5 +1,4 @@
-﻿@using System.Text.Encodings.Web
-@using Nop.Core
+﻿@using Nop.Core
 @model CustomerInfoModel
 @inject Nop.Core.IWebHelper webHelper
 @{
@@ -459,14 +458,14 @@
             addAntiForgeryToken(postData);
             $.ajax({
                 cache: false,
-                type: 'POST',
-                url: '@Url.Action("RemoveExternalAssociation", "Customer")',
+                type: "POST",
+                url: "@Url.Action("RemoveExternalAssociation", "Customer")",
                 data: postData,
-                dataType: 'json',
-                success: function (data) {
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
                     location.href = data.redirect;
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function (jqXHR, textStatus, errorThrown) {
                     alert('Failed to delete');
                 }
             });

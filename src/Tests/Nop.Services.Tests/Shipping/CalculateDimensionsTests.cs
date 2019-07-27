@@ -43,6 +43,7 @@ namespace Nop.Services.Tests.Shipping
         private Mock<IPriceCalculationService> _priceCalcService;
         private IPickupPluginManager _pickupPluginManager;
         private IShippingPluginManager _shippingPluginManager;
+        private CatalogSettings _catalogSettings;
 
         [SetUp]
         public new void SetUp()
@@ -71,7 +72,8 @@ namespace Nop.Services.Tests.Shipping
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
 
-            var pluginService = new PluginService(customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+            _catalogSettings = new CatalogSettings();
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
             _pickupPluginManager = new PickupPluginManager(pluginService, _shippingSettings);
             _shippingPluginManager = new ShippingPluginManager(pluginService, _shippingSettings);
 

@@ -224,7 +224,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(VendorSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _vendorModelFactory.PrepareVendorListModel(searchModel);
@@ -451,7 +451,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult VendorNotesSelect(VendorNoteSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a vendor with the specified id
             var vendor = _vendorService.GetVendorById(searchModel.VendorId)
@@ -471,7 +471,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             //try to get a vendor with the specified id
             var vendor = _vendorService.GetVendorById(vendorId);
             if (vendor == null)
-                return Json(new { Result = false });
+                return ErrorJson("Vendor cannot be loaded");
+
+            if (string.IsNullOrEmpty(message))
+                return ErrorJson(_localizationService.GetResource("Admin.Vendors.VendorNotes.Fields.Note.Validation"));
 
             var vendorNote = new VendorNote
             {

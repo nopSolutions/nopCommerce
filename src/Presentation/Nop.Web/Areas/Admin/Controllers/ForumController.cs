@@ -65,7 +65,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ForumGroupList(ForumGroupSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _forumModelFactory.PrepareForumGroupListModel(searchModel);
@@ -77,7 +77,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ForumList(ForumSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a forum group with the specified id
             var forumGroup = _forumService.GetForumGroupById(searchModel.ForumGroupId)

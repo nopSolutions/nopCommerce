@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -106,7 +107,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
+        
         /// <summary>
         /// Prepare discount product search model
         /// </summary>
@@ -128,7 +129,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
+        
         /// <summary>
         /// Prepare discount category search model
         /// </summary>
@@ -150,7 +151,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
+        
         /// <summary>
         /// Prepare discount manufacturer search model
         /// </summary>
@@ -173,98 +174,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareDiscountGridModel(DiscountSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "discounts-grid",
-                UrlRead = new DataUrl("List", "Discount", null),
-                SearchButtonId = "search-discounts",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>()
-            {
-                new FilterParameter(nameof(searchModel.SearchDiscountTypeId)),
-                new FilterParameter(nameof(searchModel.SearchDiscountCouponCode)),
-                new FilterParameter(nameof(searchModel.SearchDiscountName)),
-                new FilterParameter(nameof(searchModel.SearchStartDate)),
-                new FilterParameter(nameof(searchModel.SearchEndDate))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(DiscountModel.UsePercentage))
-                {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(DiscountModel.DiscountPercentage))
-                {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(DiscountModel.DiscountAmount))
-                {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(DiscountModel.PrimaryStoreCurrencyCode))
-                {
-                    Visible = false
-                },
-                new ColumnProperty(nameof(DiscountModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.Name"),
-                     Width = "350"
-                },
-                new ColumnProperty(nameof(DiscountModel.DiscountTypeName))
-                {
-                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.DiscountType"),
-                     Width = "250"
-                },
-                new ColumnProperty(nameof(DiscountModel.DiscountAmount))
-                {
-                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.Discount"),
-                     Width = "200",
-                     Render = new RenderCustom("renderColumnDiscount")
-                },
-                new ColumnProperty(nameof(DiscountModel.StartDateUtc))
-                {
-                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.StartDate"),
-                     Width = "200",
-                     Render = new RenderDate()
-                },
-                new ColumnProperty(nameof(DiscountModel.EndDateUtc))
-                {
-                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.EndDate"),
-                     Width = "200",
-                     Render = new RenderDate()
-                },
-                new ColumnProperty(nameof(DiscountModel.TimesUsed))
-                {
-                    Title = _localizationService.GetResource("Admin.Promotions.Discounts.Fields.TimesUsed"),
-                     Width = "200"
-                },
-                new ColumnProperty(nameof(DiscountModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderButtonEdit(new DataUrl("Edit"))
-                }
-            };
-
-            return model;
-        }
-
+        
         #endregion
 
         #region Methods
@@ -284,7 +194,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareDiscountGridModel(searchModel);
 
             return searchModel;
         }
@@ -476,9 +385,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new DiscountUsageHistoryListModel
+            var model = new DiscountUsageHistoryListModel().PrepareToGrid(searchModel, history, () =>
             {
-                Data = history.Select(historyEntry =>
+                return history.Select(historyEntry =>
                 {
                     //fill in model values from the entity
                     var discountUsageHistoryModel = historyEntry.ToModel<DiscountUsageHistoryModel>();
@@ -495,9 +404,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     }
 
                     return discountUsageHistoryModel;
-                }),
-                Total = history.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -522,19 +430,18 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new DiscountProductListModel
+            var model = new DiscountProductListModel().PrepareToGrid(searchModel, discountProducts, () =>
             {
                 //fill in model values from the entity
-                Data = discountProducts.Select(product =>
+                return discountProducts.Select(product =>
                 {
                     var discountProductModel = product.ToModel<DiscountProductModel>();
                     discountProductModel.ProductId = product.Id;
                     discountProductModel.ProductName = product.Name;
 
                     return discountProductModel;
-                }),
-                Total = discountProducts.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -591,18 +498,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddProductToDiscountListModel
+            var model = new AddProductToDiscountListModel().PrepareToGrid(searchModel, products, () =>
             {
-                //fill in model values from the entity
-                Data = products.Select(product =>
+                return products.Select(product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
                     productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
 
                     return productModel;
-                }),
-                Total = products.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -627,10 +532,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new DiscountCategoryListModel
+            var model = new DiscountCategoryListModel().PrepareToGrid(searchModel, discountCategories, () =>
             {
                 //fill in model values from the entity
-                Data = discountCategories.Select(category =>
+                return discountCategories.Select(category =>
                 {
                     var discountCategoryModel = category.ToModel<DiscountCategoryModel>();
 
@@ -638,10 +543,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     discountCategoryModel.CategoryId = category.Id;
 
                     return discountCategoryModel;
-                }),
-
-                Total = discountCategories.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -678,9 +581,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddCategoryToDiscountListModel
+            var model = new AddCategoryToDiscountListModel().PrepareToGrid(searchModel, categories, () =>
             {
-                Data = categories.Select(category =>
+                return categories.Select(category =>
                 {
                     //fill in model values from the entity
                     var categoryModel = category.ToModel<CategoryModel>();
@@ -690,9 +593,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     categoryModel.SeName = _urlRecordService.GetSeName(category, 0, true, false);
 
                     return categoryModel;
-                }),
-                Total = categories.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -718,19 +620,18 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new DiscountManufacturerListModel
+            var model = new DiscountManufacturerListModel().PrepareToGrid(searchModel, discountManufacturers, () =>
             {
                 //fill in model values from the entity
-                Data = discountManufacturers.Select(manufacturer =>
+                return discountManufacturers.Select(manufacturer =>
                 {
                     var discountManufacturerModel = manufacturer.ToModel<DiscountManufacturerModel>();
                     discountManufacturerModel.ManufacturerId = manufacturer.Id;
                     discountManufacturerModel.ManufacturerName = manufacturer.Name;
 
                     return discountManufacturerModel;
-                }),
-                Total = discountManufacturers.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -767,18 +668,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddManufacturerToDiscountListModel
+            var model = new AddManufacturerToDiscountListModel().PrepareToGrid(searchModel, manufacturers, () =>
             {
-                //fill in model values from the entity
-                Data = manufacturers.Select(manufacturer =>
+                return manufacturers.Select(manufacturer =>
                 {
                     var manufacturerModel = manufacturer.ToModel<ManufacturerModel>();
                     manufacturerModel.SeName = _urlRecordService.GetSeName(manufacturer, 0, true, false);
 
                     return manufacturerModel;
-                }),
-                Total = manufacturers.TotalCount
-            };
+                });
+            });
 
             return model;
         }

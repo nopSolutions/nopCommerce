@@ -2,6 +2,7 @@
 using System.Linq;
 using Moq;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Services.Configuration;
@@ -24,6 +25,7 @@ namespace Nop.Services.Tests.Payments
         private Mock<ISettingService> _settingService;
         private IPaymentPluginManager _paymentPluginManager;
         private IPaymentService _paymentService;
+        private CatalogSettings _catalogSettings;
 
         [SetUp]
         public new void SetUp()
@@ -41,7 +43,8 @@ namespace Nop.Services.Tests.Payments
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
 
-            var pluginService = new PluginService(customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+            _catalogSettings = new CatalogSettings();
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _settingService = new Mock<ISettingService>();

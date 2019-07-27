@@ -361,7 +361,7 @@ namespace Nop.Web.Factories
             var model = new HeaderLinksModel
             {
                 IsAuthenticated = customer.IsRegistered(),
-                CustomerName = customer.IsRegistered() ? _customerService.FormatUserName(customer) : "",
+                CustomerName = customer.IsRegistered() ? _customerService.FormatUsername(customer) : "",
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
                 AllowPrivateMessages = customer.IsRegistered() && _forumSettings.AllowPrivateMessages,
@@ -391,7 +391,7 @@ namespace Nop.Web.Factories
 
             var model = new AdminHeaderLinksModel
             {
-                ImpersonatedCustomerName = customer.IsRegistered() ? _customerService.FormatUserName(customer) : "",
+                ImpersonatedCustomerName = customer.IsRegistered() ? _customerService.FormatUsername(customer) : "",
                 IsCustomerImpersonated = _workContext.OriginalCustomerIfImpersonated != null,
                 DisplayAdminLink = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
                 EditPageUrl = _pageHeadBuilder.GetEditPageUrl()
@@ -827,7 +827,7 @@ namespace Nop.Web.Factories
                     "/boards/topiccreate",
                     "/boards/topicmove",
                     "/boards/topicwatch",
-                    "/cart",
+                    "/cart$",
                     "/changecurrency",
                     "/changelanguage",
                     "/changetaxtype",

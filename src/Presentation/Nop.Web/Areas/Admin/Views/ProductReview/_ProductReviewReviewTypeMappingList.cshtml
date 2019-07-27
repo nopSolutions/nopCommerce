@@ -6,69 +6,32 @@
         @T("Admin.Settings.ReviewType")
     </div>
     <div class="panel-body">
-        <div id="reviewext-grid"></div>
-        <script>
-                $(document).ready(function () {
-                    $("#reviewext-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("ProductReviewReviewTypeMappingList", "ProductReview"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: function additionalData() {
-                                    var data = {
-                                        ProductReviewId: '@(Model.ProductReviewId)'
-                                    };
-                                    addAntiForgeryToken(data);
-                                    return data;
-                                }
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(Model.PageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(Model.AvailablePageSizes)],
-                            @await Html.PartialAsync("_GridPagerMessages")
-                        },
-                        editable: {
-                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "Name",
-                            title: "@T("Admin.Catalog.AdditionalProductReviews.Fields.Name")",
-                            width: 300
-                        }, {
-                            field: "Rating",
-                            title: "@T("Admin.Catalog.AdditionalProductReviews.Fields.Rating")",
-                            width: 100
-                        }, {
-                            field: "VisibleToAllCustomers",
-                            title: "@T("Admin.Catalog.AdditionalProductReviews.Fields.VisibleToAllCustomers")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '# if(VisibleToAllCustomers) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                        }]
-                    });
-                });
-        </script>
+        @await Html.PartialAsync("Table", new DataTablesModel
+   {
+       Name = "reviewext-grid",
+       UrlRead = new DataUrl("ProductReviewReviewTypeMappingList", "ProductReview", new RouteValueDictionary { [nameof(Model.ProductReviewId)] = Model.ProductReviewId }),
+       Length = Model.PageSize,
+       LengthMenu = Model.AvailablePageSizes,
+       ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ProductReviewReviewTypeMappingModel.Name))
+                {
+                    Title = T("Admin.Catalog.AdditionalProductReviews.Fields.Name").Text,
+                    Width = "300"
+                },
+                new ColumnProperty(nameof(ProductReviewReviewTypeMappingModel.Rating))
+                {
+                    Title = T("Admin.Catalog.AdditionalProductReviews.Fields.Rating").Text,
+                    Width = "100"
+                },
+                new ColumnProperty(nameof(ProductReviewReviewTypeMappingModel.VisibleToAllCustomers))
+                {
+                    Title = T("Admin.Catalog.AdditionalProductReviews.Fields.VisibleToAllCustomers").Text,
+                    Width = "100",
+                    ClassName = NopColumnClassDefaults.CenterAll,
+                    Render = new RenderBoolean()
+                }
+            }
+   })
     </div>
 </div>

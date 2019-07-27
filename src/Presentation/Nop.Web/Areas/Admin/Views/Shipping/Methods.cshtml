@@ -37,71 +37,39 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="shippingmethod-grid"></div>
-
-                    <script>
-                        $(document).ready(function() {
-                            $("#shippingmethod-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("Methods", "Shipping"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [
-                                {
-                                    field: "Name",
-                                    title: "@T("Admin.Configuration.Shipping.Methods.Fields.Name")",
-                                    width: 200
-                                }, {
-                                    field: "Description",
-                                    title: "@T("Admin.Configuration.Shipping.Methods.Fields.Description")",
-                                    width: 400
-                                }, {
-                                    field: "DisplayOrder",
-                                    title: "@T("Admin.Configuration.Shipping.Methods.Fields.DisplayOrder")",
-                                    width: 100
-                                }, {
-                                    field: "Id",
-                                    title: "@T("Admin.Common.Edit")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<a class="btn btn-default" href="EditMethod/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
-                                    }
-                                ]
-                            });
-                        });
-                    </script>
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "shippingmethod-grid",
+                        UrlRead = new DataUrl("Methods", "Shipping", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(ShippingMethodModel.Name))
+                            {
+                                Title = T("Admin.Configuration.Shipping.Methods.Fields.Name").Text,
+                                Width = "200"
+                            },
+                            new ColumnProperty(nameof(ShippingMethodModel.Description))
+                            {
+                                Title = T("Admin.Configuration.Shipping.Methods.Fields.Description").Text,
+                                Width = "400"
+                            },
+                            new ColumnProperty(nameof(ShippingMethodModel.DisplayOrder))
+                            {
+                                Title = T("Admin.Configuration.Shipping.Methods.Fields.DisplayOrder").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(ShippingMethodModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("EditMethod"))
+                            }
+                        }
+                    })
                 </div>
             </div>
         </div>

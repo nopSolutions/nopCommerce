@@ -17,9 +17,10 @@ namespace Nop.Services.Plugins
         /// <param name="customer">Filter by  customer; pass null to load all records</param>
         /// <param name="storeId">Filter by store; pass 0 to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
+        /// <param name="dependsOnSystemName">System name of the plugin to define dependencies</param>
         /// <returns>Plugin descriptors</returns>
         IEnumerable<PluginDescriptor> GetPluginDescriptors<TPlugin>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            Customer customer = null, int storeId = 0, string group = null) where TPlugin : class, IPlugin;
+            Customer customer = null, int storeId = 0, string group = null, string dependsOnSystemName = "") where TPlugin : class, IPlugin;
 
         /// <summary>
         /// Get a plugin descriptor by the system name
@@ -66,7 +67,8 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="systemName">Plugin system name</param>
         /// <param name="customer">Customer</param>
-        void PreparePluginToInstall(string systemName, Customer customer = null);
+        /// <param name="checkDependencies">Specifies whether to check plugin dependencies</param>
+        void PreparePluginToInstall(string systemName, Customer customer = null, bool checkDependencies = true);
 
         /// <summary>
         /// Prepare plugin to the uninstallation

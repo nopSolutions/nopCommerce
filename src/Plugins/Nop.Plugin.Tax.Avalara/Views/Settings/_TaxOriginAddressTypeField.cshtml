@@ -1,0 +1,11 @@
+﻿@model Nop.Plugin.Tax.Avalara.Models.Settings.TaxOriginAddressTypeModel
+
+<div class="form-group has-warning">
+    <div class="col-md-3">
+        <nop-label asp-for="AvalaraTaxOriginAddressType" id="AvalaraTaxOriginAddressType_label" />
+    </div>
+    <div class="col-md-9">
+        <nop-select asp-for="AvalaraTaxOriginAddressType" asp-items="Model.TaxOriginAddressTypes" />
+        <span asp-validation-for="AvalaraTaxOriginAddressType"></span>
+    </div>
+</div>

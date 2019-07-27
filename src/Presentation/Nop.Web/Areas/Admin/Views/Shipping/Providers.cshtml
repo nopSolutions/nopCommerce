@@ -26,118 +26,74 @@
                     <p>
                         @T("Admin.Configuration.Shipping.Providers.DownloadMorePlugins")
                     </p>
-                    <div id="shippingproviders-grid"></div>
 
-                    <script>
-                        $(document).ready(function() {
-                            $("#shippingproviders-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("Providers", "Shipping"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        },
-                                        update: {
-                                            url: "@Html.Raw(Url.Action("ProviderUpdate", "Shipping"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors",
-                                        model: {
-                                            id: "SystemName",
-                                            fields: {
-                                                FriendlyName: { editable: false, type: "string" },
-                                                SystemName: { editable: false, type: "string" },
-                                                LogoUrl: { editable: false, type: "string" },
-                                                DisplayOrder: { editable: true, type: "number" },
-                                                IsActive: { editable: true, type: "boolean" }
-                                            }
-                                        }
-                                    },
-                                    requestEnd: function(e) {
-                                        if (e.type == "update") {
-                                            this.read();
-                                        }
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "shippingproviders-grid",
+                        UrlRead = new DataUrl("Providers", "Shipping", null),
+                        UrlUpdate = new DataUrl("ProviderUpdate", "Shipping", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(ShippingProviderModel.FriendlyName))
                                 {
-                                    field: "FriendlyName",
-                                    title: "@T("Admin.Configuration.Payment.Methods.Fields.FriendlyName")",
-                                    width: 250
-                                }, {
-                                    field: "SystemName",
-                                    title: "@T("Admin.Configuration.Payment.Methods.Fields.SystemName")",
-                                    width: 250
-                                }, {
-                                    field: "LogoUrl",
-                                    title: "@T("Admin.Configuration.Payment.Methods.Fields.Logo")",
-                                    width: 100,
-                                    template: '<img src="#=LogoUrl#" />'
-                                }, {
-                                    field: "DisplayOrder",
-                                    title: "@T("Admin.Configuration.Shipping.Providers.Fields.DisplayOrder")",
-                                    //integer format
-                                    format: "{0:0}",
-                                    width: 100
-                                }, {
-                                    field: "IsActive",
-                                    title: "@T("Admin.Configuration.Shipping.Providers.Fields.IsActive")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(IsActive) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                }, {
-                                    field: "SystemName",
-                                    title: "@T("Admin.Configuration.Shipping.Providers.Configure")",
-                                    width: 150,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn btn-default" href="#=ConfigurationUrl#"><i class="fa fa-cog"></i>@T("Admin.Configuration.Shipping.Providers.Configure")</a>#} #'
-                                }, {
-                                    command: {
-                                        name: "edit",
-                                        text: {
-                                            edit: "@T("Admin.Common.Edit")",
-                                            update: "@T("Admin.Common.Update")",
-                                            cancel: "@T("Admin.Common.Cancel")"
-                                        }
-                                    },
-                                    title: "@T("Admin.Common.Edit")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" }
-                                    }
-                                ]
-                            });
-                        });
+                                    Title = T("Admin.Configuration.Shipping.Providers.Fields.FriendlyName").Text,
+                                    Width = "250"
+                                },
+                                new ColumnProperty(nameof(ShippingProviderModel.SystemName))
+                                {
+                                    Title = T("Admin.Configuration.Shipping.Providers.Fields.SystemName").Text,
+                                    Width = "250"
+                                },
+                                new ColumnProperty(nameof(ShippingProviderModel.LogoUrl))
+                                {
+                                    Title = T("Admin.Configuration.Shipping.Providers.Fields.Logo").Text,
+                                    Width = "100",
+                                    Render = new RenderPicture()
+                                },
+                                new ColumnProperty(nameof(ShippingProviderModel.DisplayOrder))
+                                {
+                                    Title = T("Admin.Configuration.Shipping.Providers.Fields.DisplayOrder").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Editable = true,
+                                    EditType = EditType.Number
+                                },
+                                new ColumnProperty(nameof(ShippingProviderModel.IsActive))
+                                {
+                                    Title = T("Admin.Configuration.Shipping.Providers.Fields.IsActive").Text,
+                                    Width = "100",
+                                    ClassName = NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean(),
+                                    Editable = true,
+                                    EditType = EditType.Checkbox
+                                },
+                                new ColumnProperty(nameof(ShippingProviderModel.SystemName))
+                                {
+                                    Title = T("Admin.Configuration.Shipping.Providers.Configure").Text,
+                                    Width = "150",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderCustom("renderColumnConfigure")
+                                },
+                                new ColumnProperty(nameof(ShippingProviderModel.SystemName))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "200",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonsInlineEdit()
+                                }
+                            }
+                    })
+                    
+                    <script>
+                        function renderColumnConfigure(data, type, row, meta) {
+                            if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
+                                return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.Configuration.Shipping.Providers.Configure")</a>';
+                            } else {
+                                return '';
+                            }
+                        }
                     </script>
                 </div>
             </div>

@@ -19,8 +19,8 @@ namespace Nop.Plugin.Payments.Square.Infrastructure
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            //client to request Square services
-            services.AddHttpClient<SquareHttpClient>().WithProxy();
+            //client to request Square authorization service
+            services.AddHttpClient<SquareAuthorizationHttpClient>().WithProxy();
         }
 
         /// <summary>

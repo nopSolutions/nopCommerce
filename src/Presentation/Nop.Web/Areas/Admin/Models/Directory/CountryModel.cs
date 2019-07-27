@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Validators.Directory;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -10,7 +8,6 @@ namespace Nop.Web.Areas.Admin.Models.Directory
     /// <summary>
     /// Represents a country model
     /// </summary>
-    [Validator(typeof(CountryValidator))]
     public partial class CountryModel : BaseNopEntityModel, ILocalizedModel<CountryLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor

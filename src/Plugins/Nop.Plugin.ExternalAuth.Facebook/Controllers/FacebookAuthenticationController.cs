@@ -108,7 +108,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         public IActionResult Login(string returnUrl)
         {
             var methodIsAvailable = _authenticationPluginManager
-                .IsPluginActive(FacebookAuthenticationDefaults.ProviderSystemName, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
+                .IsPluginActive(FacebookAuthenticationDefaults.SystemName, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
             if (!methodIsAvailable)
                 throw new NopException("Facebook authentication module cannot be loaded");
 
@@ -123,7 +123,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             {
                 RedirectUri = Url.Action("LoginCallback", "FacebookAuthentication", new { returnUrl = returnUrl })
             };
-            authenticationProperties.SetString("ErrorCallback", Url.RouteUrl("Login", new { returnUrl }));
+            authenticationProperties.SetString(FacebookAuthenticationDefaults.ErrorCallback, Url.RouteUrl("Login", new { returnUrl }));
 
             return Challenge(authenticationProperties, FacebookDefaults.AuthenticationScheme);
         }
@@ -138,7 +138,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             //create external authentication parameters
             var authenticationParameters = new ExternalAuthenticationParameters
             {
-                ProviderSystemName = FacebookAuthenticationDefaults.ProviderSystemName,
+                ProviderSystemName = FacebookAuthenticationDefaults.SystemName,
                 AccessToken = await HttpContext.GetTokenAsync(FacebookDefaults.AuthenticationScheme, "access_token"),
                 Email = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.Email)?.Value,
                 ExternalIdentifier = authenticateResult.Principal.FindFirst(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value,

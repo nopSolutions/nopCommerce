@@ -56,12 +56,14 @@
             $('#pnlLogPrivacyPolicyConsent').show();
             $('#pnlLogNewsletterConsent').show();
             $('#pnlLogUserProfileChanges').show();
-            $('#pnlConsent').show(); 
+
+            $('[data-panel-name=gdprsettings-consents]').show();
+            ensureDataTablesRendered();
         } else {
             $('#pnlLogPrivacyPolicyConsent').hide();
             $('#pnlLogNewsletterConsent').hide();
             $('#pnlLogUserProfileChanges').hide();
-            $('#pnlConsent').hide();
+            $('[data-panel-name=gdprsettings-consents]').hide();
         }
     }
 </script>

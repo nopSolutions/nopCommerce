@@ -25,80 +25,60 @@
                         <p>
                             @T("Admin.Configuration.Tax.Providers.DownloadMorePlugins")
                         </p>
-                        <div id="tax-providers-grid"></div>
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "tax-providers-grid",
+                            UrlRead = new DataUrl("Providers", "Tax", null),
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(TaxProviderModel.FriendlyName))
+                                {
+                                    Title = T("Admin.Configuration.Tax.Providers.Fields.FriendlyName").Text,
+                                    Width = "250"
+                                },
+                                new ColumnProperty(nameof(TaxProviderModel.SystemName))
+                                {
+                                    Title = T("Admin.Configuration.Tax.Providers.Fields.SystemName").Text,
+                                    Width = "250"
+                                },
+                                new ColumnProperty(nameof(TaxProviderModel.IsPrimaryTaxProvider))
+                                {
+                                    Title = T("Admin.Configuration.Tax.Providers.Fields.IsPrimaryTaxProvider").Text,
+                                    Width = "100",
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Render = new RenderBoolean()
+                                },
+                                new ColumnProperty(nameof(TaxProviderModel.SystemName))
+                                {
+                                    Title = T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider").Text,
+                                    Width = "200",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderCustom("renderColumnSystemName")
+                                },
+                                new ColumnProperty(nameof(TaxProviderModel.SystemName))
+                                {
+                                    Title = T("Admin.Configuration.Tax.Providers.Configure").Text,
+                                    Width = "150",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderCustom("renderColumnConfigure")
+                                }
+                            }
+                        })
 
                         <script>
-                            $(document).ready(function() {
-                                $("#tax-providers-grid").kendoGrid({
-                                    dataSource: {
-                                        type: "json",
-                                        transport: {
-                                            read: {
-                                                url: "@Html.Raw(Url.Action("Providers", "Tax"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: addAntiForgeryToken
-                                            }
-                                        },
-                                        schema: {
-                                            data: "Data",
-                                            total: "Total",
-                                            errors: "Errors"
-                                        },
-                                        error: function(e) {
-                                            display_kendoui_grid_error(e);
-                                            // Cancel the changes
-                                            this.cancelChanges();
-                                        },
-                                        pageSize: @(Model.PageSize),
-                                        serverPaging: true,
-                                        serverFiltering: true,
-                                        serverSorting: true
-                                    },
-                                    pageable: {
-                                        refresh: true,
-                                        pageSizes: [@(Model.AvailablePageSizes)],
-                                        @await Html.PartialAsync("_GridPagerMessages")
-                                    },
-                                    editable: {
-                                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                        mode: "inline"
-                                    },
-                                    scrollable: false,
-                                    columns: [
-                                        {
-                                            field: "FriendlyName",
-                                            title: "@T("Admin.Configuration.Tax.Providers.Fields.FriendlyName")",
-                                            width: 250
-                                        }, {
-                                            field: "SystemName",
-                                            title: "@T("Admin.Configuration.Tax.Providers.Fields.SystemName")",
-                                            width: 250
-                                        }, {
-                                            field: "IsPrimaryTaxProvider",
-                                            title: "@T("Admin.Configuration.Tax.Providers.Fields.IsPrimaryTaxProvider")",
-                                            width: 100,
-                                            headerAttributes: { style: "text-align:center" },
-                                            attributes: { style: "text-align:center" },
-                                            template: '# if(IsPrimaryTaxProvider) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                        }, {
-                                            field: "SystemName",
-                                            title: "@T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider")",
-                                            width: 200,
-                                            headerAttributes: { style: "text-align:center" },
-                                            attributes: { style: "text-align:center" },
-                                            template: '<a href="@Url.Content("~/Admin/Tax/MarkAsPrimaryProvider/")?systemName=#=SystemName#" class="btn bg-green">@T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider")</a>'
-                                        }, {
-                                            field: "SystemName",
-                                            title: "@T("Admin.Configuration.Tax.Providers.Configure")",
-                                            width: 150,
-                                            headerAttributes: { style: "text-align:center" },
-                                            attributes: { style: "text-align:center" },
-                                            template: '# if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn btn-default" href="#=ConfigurationUrl#"><i class="fa fa-cog"></i>@T("Admin.Configuration.Tax.Providers.Configure")</a>#} #'
-                                        }
-                                    ]
-                                });
-                            });
+                            function renderColumnSystemName(data, type, row, meta) {
+                                return '<a href="@Url.Content("~/Admin/Tax/MarkAsPrimaryProvider/")?systemName=' + row.SystemName +'" class="btn bg-green">@T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider")</a>';
+                            }
+
+                            function renderColumnConfigure(data, type, row, meta) {
+                                if (row.ConfigurationUrl && row.ConfigurationUrl.length > 0) {
+                                    return '<a class="btn btn-default" href="' + row.ConfigurationUrl + '"><i class="fa fa-cog"></i>@T("Admin.Configuration.Tax.Providers.Configure")</a>';
+                                } else {
+                                    return '';
+                                }
+                            }
                         </script>
                     </div>
                 </div>

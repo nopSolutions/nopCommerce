@@ -233,7 +233,7 @@ namespace Nop.Services.Messages
                     "%Order.Product(s)%",
                     "%Order.CreatedOn%",
                     "%Order.OrderURLForCustomer%",
-                    "%Order.PickUpInStore%",
+                    "%Order.PickupInStore%",
                     "%Order.OrderId%"
                 });
 
@@ -914,7 +914,7 @@ namespace Nop.Services.Messages
         public virtual void AddOrderTokens(IList<Token> tokens, Order order, int languageId, int vendorId = 0)
         {
             //lambda expression for choosing correct order address
-            Address orderAddress(Order o) => o.PickUpInStore ? o.PickupAddress : o.ShippingAddress;
+            Address orderAddress(Order o) => o.PickupInStore ? o.PickupAddress : o.ShippingAddress;
 
             tokens.Add(new Token("Order.OrderId", order.Id));
             tokens.Add(new Token("Order.OrderNumber", order.CustomOrderNumber));
@@ -939,7 +939,7 @@ namespace Nop.Services.Messages
 
             tokens.Add(new Token("Order.Shippable", !string.IsNullOrEmpty(order.ShippingMethod)));
             tokens.Add(new Token("Order.ShippingMethod", order.ShippingMethod));
-            tokens.Add(new Token("Order.PickUpInStore", order.PickUpInStore));
+            tokens.Add(new Token("Order.PickupInStore", order.PickupInStore));
             tokens.Add(new Token("Order.ShippingFirstName", orderAddress(order)?.FirstName ?? string.Empty));
             tokens.Add(new Token("Order.ShippingLastName", orderAddress(order)?.LastName ?? string.Empty));
             tokens.Add(new Token("Order.ShippingPhoneNumber", orderAddress(order)?.PhoneNumber ?? string.Empty));
@@ -1138,9 +1138,9 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Customer.CustomAttributes", _customerAttributeFormatter.FormatAttributes(customAttributesXml), true));
 
             //note: we do not use SEO friendly URLS for these links because we can get errors caused by having .(dot) in the URL (from the email address)
-            var passwordRecoveryUrl = RouteUrl(routeName: "PasswordRecoveryConfirm", routeValues: new { token = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute), email = customer.Email });
-            var accountActivationUrl = RouteUrl(routeName: "AccountActivation", routeValues: new { token = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute), email = customer.Email });
-            var emailRevalidationUrl = RouteUrl(routeName: "EmailRevalidation", routeValues: new { token = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute), email = customer.Email });
+            var passwordRecoveryUrl = RouteUrl(routeName: "PasswordRecoveryConfirm", routeValues: new { token = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute), guid = customer.CustomerGuid });
+            var accountActivationUrl = RouteUrl(routeName: "AccountActivation", routeValues: new { token = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute), guid = customer.CustomerGuid });
+            var emailRevalidationUrl = RouteUrl(routeName: "EmailRevalidation", routeValues: new { token = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute), guid = customer.CustomerGuid });
             var wishlistUrl = RouteUrl(routeName: "Wishlist", routeValues: new { customerGuid = customer.CustomerGuid });
             tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
             tokens.Add(new Token("Customer.AccountActivationURL", accountActivationUrl, true));
@@ -1311,7 +1311,7 @@ namespace Nop.Services.Messages
         public virtual void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost)
         {
             var forumService = EngineContext.Current.Resolve<IForumService>();
-            tokens.Add(new Token("Forums.PostAuthor", _customerService.FormatUserName(forumPost.Customer)));
+            tokens.Add(new Token("Forums.PostAuthor", _customerService.FormatUsername(forumPost.Customer)));
             tokens.Add(new Token("Forums.PostBody", forumService.FormatPostText(forumPost), true));
 
             //event notification

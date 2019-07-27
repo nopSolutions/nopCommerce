@@ -1,15 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Validators.Common;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Common
 {
-    [Validator(typeof(AddressValidator))]
     public partial class AddressModel : BaseNopEntityModel
     {
         public AddressModel()

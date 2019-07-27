@@ -71,7 +71,39 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        @await Html.PartialAsync("Table", Model.Grid)  
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "log-grid",
+                            UrlRead = new DataUrl("GdprLogList", "Customer", null),
+                            SearchButtonId = "search-log",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.SearchRequestTypeId)),
+                                new FilterParameter(nameof(Model.SearchEmail))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(GdprLogModel.CustomerInfo))
+                                {
+                                    Title = T("Admin.Customers.GdprLog.Fields.CustomerInfo").Text
+                                },
+                                new ColumnProperty(nameof(GdprLogModel.RequestType))
+                                {
+                                    Title = T("Admin.Customers.GdprLog.Fields.RequestType").Text
+                                },
+                                new ColumnProperty(nameof(GdprLogModel.RequestDetails))
+                                {
+                                    Title = T("Admin.Customers.GdprLog.Fields.RequestDetails").Text
+                                },
+                                new ColumnProperty(nameof(GdprLogModel.CreatedOn))
+                                {
+                                    Title = T("Admin.Customers.GdprLog.Fields.CreatedOn").Text,
+                                    Render = new RenderDate()
+                                }
+                            }
+                        })  
                     </div>
                 </div>
             </div>

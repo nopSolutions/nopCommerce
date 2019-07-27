@@ -104,7 +104,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(ProductAttributeSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _productAttributeModelFactory.PrepareProductAttributeListModel(searchModel);
@@ -237,7 +237,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult UsedByProducts(ProductAttributeProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a product attribute with the specified id
             var productAttribute = _productAttributeService.GetProductAttributeById(searchModel.ProductAttributeId)
@@ -257,7 +257,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult PredefinedProductAttributeValueList(PredefinedProductAttributeValueSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a product attribute with the specified id
             var productAttribute = _productAttributeService.GetProductAttributeById(searchModel.ProductAttributeId)

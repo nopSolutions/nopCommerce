@@ -1,8 +1,9 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
+﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Models
 {
-    public class FixedTaxRateModel
+    public class FixedTaxRateModel: BaseNopModel
     {
         public int TaxCategoryId { get; set; }
 

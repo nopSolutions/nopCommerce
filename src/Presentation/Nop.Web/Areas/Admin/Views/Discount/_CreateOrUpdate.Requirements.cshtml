@@ -51,11 +51,14 @@
                         $.ajax({
                             cache: false,
                             url: "@(Url.Action("GetDiscountRequirementConfigurationUrl", "Discount"))",
-                            data: { "systemName": ruleSystemName, "discountId": @Model.Id },
-                            success: function(result) {
-                                loadRequirementIntoBox(result.url, '#addrequirementplaceholder');
+                            data: {
+                                "systemName": ruleSystemName,
+                                "discountId": @Model.Id 
                             },
-                            error: function(xhr, ajaxOptions, thrownError) {
+                            success: function (data, textStatus, jqXHR) {
+                                loadRequirementIntoBox(data.url, '#addrequirementplaceholder');
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
                                 $('#addrequirementplaceholder').html('Failed to load requirement URL');
                             }
                         });
@@ -74,10 +77,10 @@
                     cache: false,
                     url: configureRuleUrl,
                     dataType: "html",
-                    success: function(result) {
-                        $(placeholderName).html(result);
+                    success: function (data, textStatus, jqXHR) {
+                        $(placeholderName).html(data);
                     },
-                    error: function(xhr, ajaxOptions, thrownError) {
+                    error: function (jqXHR, textStatus, errorThrown) {
                         $(placeholderName).html('Failed to load requirement content.');
                     }
                 });
@@ -98,14 +101,14 @@
                     type: "POST",
                     url: "@(Url.Action("GetDiscountRequirements", "Discount"))",
                     data: postData,
-                    success: function (result) {
+                    success: function (data, textStatus, jqXHR) {
                         //set requirements
-                        loadRequirementBoxes(result.Requirements, "#discountRequirementContainer", true);
+                        loadRequirementBoxes(data.Requirements, "#discountRequirementContainer", true);
 
                         //set available groups
                         var groupsElement = $("#@Html.IdFor(model => model.RequirementGroupId)");
                         groupsElement.html('');
-                        $.each(result.AvailableGroups, function (id, option) {
+                        $.each(data.AvailableGroups, function (id, option) {
                             groupsElement.append($('<option></option>').val(option.Value).html(option.Text));
                         });
                         var ruleSystemName = $("#@Html.IdFor(model => model.AddDiscountRequirement)").val();
@@ -116,7 +119,7 @@
                             $("#pnlGroup").hide();
                         }
                     },
-                    error: function(xhr, ajaxOptions, thrownError) {
+                    error: function (jqXHR, textStatus, errorThrown) {
                         $("#getDiscountRequirementsAlert").click();
                     }
                 });
@@ -156,10 +159,10 @@
                     type: "POST",
                     data: postData,
                     url: "@(Url.Action("AddNewGroup", "Discount"))",
-                    success: function (data) {
+                    success: function (data, textStatus, jqXHR) {
                         $("#discountRequirementContainer").trigger('nopnewdiscountruleadded', [data.NewRequirementId]);
                     },
-                    error:function (xhr, ajaxOptions, thrownError) {
+                    error: function (jqXHR, textStatus, errorThrown) {
                         $("#failedToSave").click();
                     }
                 });

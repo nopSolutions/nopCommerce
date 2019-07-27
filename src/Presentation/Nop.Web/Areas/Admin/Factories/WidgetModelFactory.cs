@@ -62,12 +62,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get widgets
-            var widgets = _widgetPluginManager.LoadAllPlugins().ToPagedList(searchModel);
+            var widgets = _widgetPluginManager.LoadAllPlugins()
+                .Where(widget => !widget.HideInWidgetList).ToList()
+                .ToPagedList(searchModel);
 
             //prepare grid model
-            var model = new WidgetListModel
+            var model = new WidgetListModel().PrepareToGrid(searchModel, widgets, () =>
             {
-                Data = widgets.Select(widget =>
+                return widgets.Select(widget =>
                 {
                     //fill in model values from the entity
                     var widgetMethodModel = widget.ToPluginModel<WidgetModel>();
@@ -77,9 +79,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     widgetMethodModel.ConfigurationUrl = widget.GetConfigurationPageUrl();
 
                     return widgetMethodModel;
-                }),
-                Total = widgets.TotalCount
-            };
+                });
+            });
 
             return model;
         }

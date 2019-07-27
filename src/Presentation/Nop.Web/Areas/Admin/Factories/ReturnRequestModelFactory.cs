@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Customers;
@@ -8,8 +9,10 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
+using Nop.Web.Areas.Admin.Models.Discounts;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -107,9 +110,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new ReturnRequestListModel
+            var model = new ReturnRequestListModel().PrepareToGrid(searchModel, returnRequests, () =>
             {
-                Data = returnRequests.Select(returnRequest =>
+                return returnRequests.Select(returnRequest =>
                 {
                     //fill in model values from the entity
                     var returnRequestModel = returnRequest.ToModel<ReturnRequestModel>();
@@ -132,9 +135,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     returnRequestModel.CustomOrderNumber = orderItem.Order.CustomOrderNumber;
 
                     return returnRequestModel;
-                }),
-                Total = returnRequests.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -218,12 +220,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var reasons = _returnRequestService.GetAllReturnRequestReasons().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ReturnRequestReasonListModel
+            var model = new ReturnRequestReasonListModel().PrepareToGrid(searchModel, reasons, () =>
             {
-                //fill in model values from the entity
-                Data = reasons.Select(reason => reason.ToModel<ReturnRequestReasonModel>()),
-                Total = reasons.TotalCount
-            };
+                return reasons.Select(reason => reason.ToModel<ReturnRequestReasonModel>());
+            });
 
             return model;
         }
@@ -289,12 +289,10 @@ namespace Nop.Web.Areas.Admin.Factories
             var actions = _returnRequestService.GetAllReturnRequestActions().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ReturnRequestActionListModel
+            var model = new ReturnRequestActionListModel().PrepareToGrid(searchModel, actions, () =>
             {
-                //fill in model values from the entity
-                Data = actions.Select(action => action.ToModel<ReturnRequestActionModel>()),
-                Total = actions.TotalCount
-            };
+                return actions.Select(reason => reason.ToModel<ReturnRequestActionModel>());
+            });
 
             return model;
         }

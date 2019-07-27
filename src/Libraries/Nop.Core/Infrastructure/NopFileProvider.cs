@@ -19,7 +19,7 @@ namespace Nop.Core.Infrastructure
         /// Initializes a new instance of a NopFileProvider
         /// </summary>
         /// <param name="hostingEnvironment">Hosting environment</param>
-        public NopFileProvider(IHostingEnvironment hostingEnvironment) 
+        public NopFileProvider(IHostingEnvironment hostingEnvironment)
             : base(File.Exists(hostingEnvironment.WebRootPath) ? Path.GetDirectoryName(hostingEnvironment.WebRootPath) : hostingEnvironment.WebRootPath)
         {
             var path = hostingEnvironment.ContentRootPath ?? string.Empty;
@@ -50,10 +50,22 @@ namespace Nop.Core.Infrastructure
             }
         }
 
+        /// <summary>
+        /// Determines if the string is a valid Universal Naming Convention (UNC)
+        /// for a server and share path.
+        /// </summary>
+        /// <param name="path">The path to be tested.</param>
+        /// <returns><see langword="true"/> if the path is a valid UNC path; 
+        /// otherwise, <see langword="false"/>.</returns>
+        protected static bool IsUncPath(string path)
+        {
+            return Uri.TryCreate(path, UriKind.Absolute, out var uri) && uri.IsUnc;
+        }
+
         #endregion
 
         #region Methods
-
+        
         /// <summary>
         /// Combines an array of strings into a path
         /// </summary>
@@ -61,9 +73,10 @@ namespace Nop.Core.Infrastructure
         /// <returns>The combined paths</returns>
         public virtual string Combine(params string[] paths)
         {
-            var path = Path.Combine(paths.SelectMany(p => p.Split('\\', '/')).ToArray());
+            var path = Path.Combine(paths.SelectMany(p => IsUncPath(p) ? new[] { p } : p.Split('\\', '/')).ToArray());
 
-            if (path.Contains('/'))
+            if (Environment.OSVersion.Platform == PlatformID.Unix && !IsUncPath(path))
+                //add leading slash to correctly form path in the UNIX system
                 path = "/" + path;
 
             return path;
@@ -429,6 +442,24 @@ namespace Nop.Core.Infrastructure
         }
 
         /// <summary>
+        /// Gets a virtual path from a physical disk path.
+        /// </summary>
+        /// <param name="path">The physical disk path</param>
+        /// <returns>The virtual path. E.g. "~/bin"</returns>
+        public virtual string GetVirtualPath(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return path;
+
+            if (!IsDirectory(path) && FileExists(path))
+                path = new FileInfo(path).DirectoryName;
+
+            path = path?.Replace(Root, "").Replace('\\', '/').Trim('/').TrimStart('~', '/');
+
+            return $"~/{path ?? ""}";
+        }
+
+        /// <summary>
         /// Checks if the path is directory
         /// </summary>
         /// <param name="path">Path for check</param>
@@ -446,9 +477,13 @@ namespace Nop.Core.Infrastructure
         public virtual string MapPath(string path)
         {
             path = path.Replace("~/", string.Empty).TrimStart('/');
-            return Combine(BaseDirectory ?? string.Empty, path);
+
+            //if virtual path has slash on the end, it should be after transform the virtual path to physical path too
+            var pathEnd = path.EndsWith('/') ? Path.DirectorySeparatorChar.ToString() : string.Empty;
+
+            return Combine(BaseDirectory ?? string.Empty, path) + pathEnd;
         }
-        
+
         /// <summary>
         /// Reads the contents of the file into a byte array
         /// </summary>

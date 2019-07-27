@@ -239,7 +239,121 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        @await Html.PartialAsync("Table", Model.Grid)                        
+                        @{
+                            var gridModel = new DataTablesModel
+                            {
+                                Name = "customers-grid",
+                                UrlRead = new DataUrl("CustomerList", "Customer", null),
+                                SearchButtonId = "search-customers",
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                Filters = new List<FilterParameter>
+                                {
+                                    new FilterParameter(nameof(Model.SelectedCustomerRoleIds)),
+                                    new FilterParameter(nameof(Model.SearchEmail)),
+                                    new FilterParameter(nameof(Model.SearchUsername)),
+                                    new FilterParameter(nameof(Model.SearchFirstName)),
+                                    new FilterParameter(nameof(Model.SearchLastName)),
+                                    new FilterParameter(nameof(Model.SearchDayOfBirth)),
+                                    new FilterParameter(nameof(Model.SearchMonthOfBirth)),
+                                    new FilterParameter(nameof(Model.SearchCompany)),
+                                    new FilterParameter(nameof(Model.SearchPhone)),
+                                    new FilterParameter(nameof(Model.SearchZipPostalCode)),
+                                    new FilterParameter(nameof(Model.SearchIpAddress)),
+                                }
+                            };
+
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Id))
+                            {
+                                IsMasterCheckBox = true,
+                                Render = new RenderCheckBox("checkbox_customers"),
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Width = "50",
+                            });
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Email))
+                            {
+                                Title = T("Admin.Customers.Customers.Fields.Email").Text,
+                                Width = "200"
+                            });
+                            if (Model.AvatarEnabled)
+                            {
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.AvatarUrl))
+                                {
+                                    Title = T("Admin.Customers.Customers.Fields.Avatar").Text,
+                                    Width = "100",
+                                    Render = new RenderPicture()
+                                });
+                            }
+                            if (Model.UsernamesEnabled)
+                            {
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Username))
+                                {
+                                    Title = T("Admin.Customers.Customers.Fields.Username").Text,
+                                    Width = "200"
+                                });
+                            }
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.FullName))
+                            {
+                                Title = T("Admin.Customers.Customers.Fields.FullName").Text,
+                                Width = "200"
+                            });
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.CustomerRoleNames))
+                            {
+                                Title = T("Admin.Customers.Customers.Fields.CustomerRoles").Text,
+                                Width = "200"
+                            });
+                            if (Model.CompanyEnabled)
+                            {
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Company))
+                                {
+                                    Title = T("Admin.Customers.Customers.Fields.Company").Text,
+                                    Width = "200"
+                                });
+                            }
+                            if (Model.PhoneEnabled)
+                            {
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Phone))
+                                {
+                                    Title = T("Admin.Customers.Customers.Fields.Phone").Text,
+                                    Width = "200"
+                                });
+                            }
+                            if (Model.ZipPostalCodeEnabled)
+                            {
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.ZipPostalCode))
+                                {
+                                    Title = T("Admin.Customers.Customers.Fields.ZipPostalCode").Text,
+                                    Width = "200"
+                                });
+                            }
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Active))
+                            {
+                                Title = T("Admin.Customers.Customers.Fields.Active").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            });
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.CreatedOn))
+                            {
+                                Title = T("Admin.Customers.Customers.Fields.CreatedOn").Text,
+                                Width = "200",
+                                Render = new RenderDate()
+                            });
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.LastActivityDate))
+                            {
+                                Title = T("Admin.Customers.Customers.Fields.LastActivityDate").Text,
+                                Width = "200",
+                                Render = new RenderDate()
+                            });
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            });
+                        }
+                        @await Html.PartialAsync("Table", gridModel)
                     </div>
                 </div>
             </div>
@@ -258,6 +372,7 @@
             var ids = selectedIds.join(",");
             $('#export-xml-selected-form #selectedIds').val(ids);
             $('#export-xml-selected-form').submit();
+            updateTable('#customers-grid');
             return false;
         });
     });
@@ -274,6 +389,7 @@
             var ids = selectedIds.join(",");
             $('#export-excel-selected-form #selectedIds').val(ids);
             $('#export-excel-selected-form').submit();
+            updateTable('#customers-grid');
             return false;
         });
     });

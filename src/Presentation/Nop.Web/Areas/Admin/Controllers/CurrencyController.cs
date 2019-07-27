@@ -148,7 +148,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ListGrid(CurrencySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _currencyModelFactory.PrepareCurrencyListModel(searchModel);

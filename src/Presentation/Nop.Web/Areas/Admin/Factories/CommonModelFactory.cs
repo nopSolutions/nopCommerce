@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Security.Principal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
@@ -36,7 +37,6 @@ using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Localization;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 using Nop.Web.Framework.Security;
 
@@ -72,6 +72,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IReturnRequestService _returnRequestService;
         private readonly ISearchTermService _searchTermService;
         private readonly IShippingPluginManager _shippingPluginManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly ITaxPluginManager _taxPluginManager;
@@ -81,6 +82,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IWidgetPluginManager _widgetPluginManager;
         private readonly IWorkContext _workContext;
         private readonly MeasureSettings _measureSettings;
+        private readonly NopConfig _nopConfig;
         private readonly NopHttpClient _nopHttpClient;
         private readonly ProxySettings _proxySettings;
 
@@ -111,6 +113,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IReturnRequestService returnRequestService,
             ISearchTermService searchTermService,
             IShippingPluginManager shippingPluginManager,
+            IStaticCacheManager cacheManager,
             IStoreContext storeContext,
             IStoreService storeService,
             ITaxPluginManager taxPluginManager,
@@ -120,6 +123,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IWidgetPluginManager widgetPluginManager,
             IWorkContext workContext,
             MeasureSettings measureSettings,
+            NopConfig nopConfig,
             NopHttpClient nopHttpClient,
             ProxySettings proxySettings)
         {
@@ -146,6 +150,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _returnRequestService = returnRequestService;
             _searchTermService = searchTermService;
             _shippingPluginManager = shippingPluginManager;
+            _cacheManager = cacheManager;
             _storeContext = storeContext;
             _storeService = storeService;
             _taxPluginManager = taxPluginManager;
@@ -155,6 +160,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _widgetPluginManager = widgetPluginManager;
             _workContext = workContext;
             _measureSettings = measureSettings;
+            _nopConfig = nopConfig;
             _nopHttpClient = nopHttpClient;
             _proxySettings = proxySettings;
         }
@@ -596,85 +602,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 });
             }
         }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareUrlRecordGridModel(UrlRecordSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "sename-grid",
-                UrlRead = new DataUrl("SeNames", "Common", null),
-                SearchButtonId = "search-senames",
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = new List<FilterParameter>()
-            {
-                new FilterParameter(nameof(searchModel.SeName))
-            };
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(UrlRecordModel.Id))
-                {
-                    IsMasterCheckBox = true,
-                    Render = new RenderCheckBox("checkbox_senames"),
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(UrlRecordModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.System.SeNames.Id"),
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(UrlRecordModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.System.SeNames.Name"),
-                    Width = "300",
-                },
-                new ColumnProperty(nameof(UrlRecordModel.EntityId))
-                {
-                    Title = _localizationService.GetResource("Admin.System.SeNames.EntityId"),
-                    Width = "50",
-                },
-                new ColumnProperty(nameof(UrlRecordModel.EntityName))
-                {
-                    Title = _localizationService.GetResource("Admin.System.SeNames.EntityName"),
-                    Width = "100",
-                },
-                new ColumnProperty(nameof(UrlRecordModel.IsActive))
-                {
-                    Title = _localizationService.GetResource("Admin.System.SeNames.IsActive"),
-                    ClassName =  StyleColumn.CenterAll,
-                    Width = "50",
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(UrlRecordModel.Language))
-                {
-                    Title = _localizationService.GetResource("Admin.System.SeNames.Language"),
-                    Width = "100",
-                },
-                new ColumnProperty(nameof(UrlRecordModel.DetailsUrl))
-                {
-                    Title = _localizationService.GetResource("Admin.System.SeNames.Details"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderCustom("renderColumnDetailsUrl")
-                }
-            };
-
-            return model;
-        }
-
+        
         #endregion
 
         #region Methods
@@ -737,6 +665,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 catch { }
                 model.LoadedAssemblies.Add(loadedAssemblyModel);
             }
+            
+            model.CurrentStaticCacheManager = _cacheManager.GetType().Name;
+
+            model.RedisEnabled = _nopConfig.RedisEnabled;
+            model.UseRedisToStoreDataProtectionKeys = _nopConfig.UseRedisToStoreDataProtectionKeys;
+            model.UseRedisForCaching = _nopConfig.UseRedisForCaching;
+            model.UseRedisToStorePluginsInfo = _nopConfig.UseRedisToStorePluginsInfo;
+
+            model.AzureBlobStorageEnabled = _nopConfig.AzureBlobStorageEnabled;
 
             return model;
         }
@@ -857,24 +794,16 @@ namespace Nop.Web.Areas.Admin.Factories
             var backupFiles = _maintenanceService.GetAllBackupFiles().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new BackupFileListModel
+            var model = new BackupFileListModel().PrepareToGrid(searchModel, backupFiles, ()=>
             {
-                Data = backupFiles.Select(file =>
+                return backupFiles.Select(file => new BackupFileModel
                 {
-                    //fill in model values from the entity
-                    var backupFileModel = new BackupFileModel
-                    {
-                        Name = _fileProvider.GetFileName(file)
-                    };
-
+                    Name = _fileProvider.GetFileName(file),
                     //fill in additional values (not existing in the entity)
-                    backupFileModel.Length = $"{_fileProvider.FileLength(file) / 1024f / 1024f:F2} Mb";
-                    backupFileModel.Link = $"{_webHelper.GetStoreLocation(false)}db_backups/{backupFileModel.Name}";
-
-                    return backupFileModel;
-                }),
-                Total = backupFiles.TotalCount
-            };
+                    Length = $"{_fileProvider.FileLength(file) / 1024f / 1024f:F2} Mb",
+                    Link = $"{_webHelper.GetStoreLocation(false)}db_backups/{_fileProvider.GetFileName(file)}"
+                });
+            });
 
             return model;
         }
@@ -891,7 +820,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareUrlRecordGridModel(searchModel);
 
             return searchModel;
         }
@@ -991,7 +919,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //prepare page parameters
-            searchModel.SetGridPageSize(5, "5");
+            searchModel.SetGridPageSize(5);
 
             return searchModel;
         }
@@ -1010,16 +938,14 @@ namespace Nop.Web.Areas.Admin.Factories
             var searchTermRecordLines = _searchTermService.GetStats(pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new PopularSearchTermListModel
+            var model = new PopularSearchTermListModel().PrepareToGrid(searchModel, searchTermRecordLines, () =>
             {
-                //fill in model values from the entity
-                Data = searchTermRecordLines.Select(searchTerm => new PopularSearchTermModel
+                return searchTermRecordLines.Select(searchTerm => new PopularSearchTermModel
                 {
                     Keyword = searchTerm.Keyword,
                     Count = searchTerm.Count
-                }),
-                Total = searchTermRecordLines.TotalCount
-            };
+                });
+            });
 
             return model;
         }

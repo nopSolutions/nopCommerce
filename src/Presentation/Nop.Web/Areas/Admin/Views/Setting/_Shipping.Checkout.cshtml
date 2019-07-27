@@ -45,17 +45,17 @@
 
 <script>
     $(document).ready(function () {
-        $("#@Html.IdFor(model => model.AllowPickUpInStore)").click(toggleAllowPickUpInStore);
-        $("#@Html.IdFor(model => model.DisplayPickupPointsOnMap)").click(toggleAllowPickUpInStore);
+        $("#@Html.IdFor(model => model.AllowPickupInStore)").click(toggleAllowPickupInStore);
+        $("#@Html.IdFor(model => model.DisplayPickupPointsOnMap)").click(toggleAllowPickupInStore);
         $("#@Html.IdFor(model => model.FreeShippingOverXEnabled)").click(toggleFreeShippingOverX);
-        toggleAllowPickUpInStore();
+        toggleAllowPickupInStore();
         toggleFreeShippingOverX();
     });
 
-    function toggleAllowPickUpInStore() {
-        if ($('#@Html.IdFor(model => model.AllowPickUpInStore)').is(':checked')) {
+    function toggleAllowPickupInStore() {
+        if ($('#@Html.IdFor(model => model.AllowPickupInStore)').is(':checked')) {
             $('#pnlDisplayPickupPointsOnMap').show();
-            $('#pnlIgnoreAdditionalShippingChargeForPickUpInStore').show();
+            $('#pnlIgnoreAdditionalShippingChargeForPickupInStore').show();
             if ($('#@Html.IdFor(model => model.DisplayPickupPointsOnMap)').is(':checked')) {
                 $('#pnlGoogleMapsApiKey').show();
             } else {
@@ -63,7 +63,7 @@
             }
         } else {
             $('#pnlDisplayPickupPointsOnMap').hide();
-            $('#pnlIgnoreAdditionalShippingChargeForPickUpInStore').hide();
+            $('#pnlIgnoreAdditionalShippingChargeForPickupInStore').hide();
             $('#pnlGoogleMapsApiKey').hide();
         }
     }

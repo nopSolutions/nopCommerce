@@ -5,7 +5,7 @@
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
-    <Version>4.1.0.0</Version>
+    <Version>4.2.0.0</Version>
     <Description>The project contains a set of classes for testing of Nop.Core</Description>
     <PackageLicenseUrl>http://www.nopcommerce.com/licensev3.aspx</PackageLicenseUrl>
     <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl>
@@ -14,8 +14,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
-    <PackageReference Include="NUnit" Version="3.11.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
   </ItemGroup>
 

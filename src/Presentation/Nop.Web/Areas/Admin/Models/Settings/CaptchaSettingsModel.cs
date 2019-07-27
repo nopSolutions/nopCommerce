@@ -56,6 +56,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool ShowOnForgotPasswordPage { get; set; }
         public bool ShowOnForgotPasswordPage_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForum")]
+        public bool ShowOnForum { get; set; }
+        public bool ShowOnForum_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPublicKey")]
         public string ReCaptchaPublicKey { get; set; }
         public bool ReCaptchaPublicKey_OverrideForStore { get; set; }

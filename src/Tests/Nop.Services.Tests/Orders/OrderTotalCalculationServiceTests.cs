@@ -126,7 +126,7 @@ namespace Nop.Services.Tests.Orders
             var customerService = new Mock<ICustomerService>();
             var loger = new Mock<ILogger>();
 
-            var pluginService = new PluginService(customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, _webHelper.Object);
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, _webHelper.Object);
 
             _pickupPluginManager = new PickupPluginManager(pluginService, _shippingSettings);
             _shippingPluginManager = new ShippingPluginManager(pluginService, _shippingSettings);
@@ -136,8 +136,8 @@ namespace Nop.Services.Tests.Orders
             _shippingSettings = new ShippingSettings
             {
                 ActiveShippingRateComputationMethodSystemNames = new List<string>(),
-                AllowPickUpInStore = true,
-                IgnoreAdditionalShippingChargeForPickUpInStore = false
+                AllowPickupInStore = true,
+                IgnoreAdditionalShippingChargeForPickupInStore = false
             };
             _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add("FixedRateTestShippingRateComputationMethod");
 

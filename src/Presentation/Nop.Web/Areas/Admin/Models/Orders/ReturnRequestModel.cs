@@ -1,6 +1,4 @@
 ﻿using System;
-using FluentValidation.Attributes;
-using Nop.Web.Areas.Admin.Validators.Orders;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
@@ -9,7 +7,6 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a return request model
     /// </summary>
-    [Validator(typeof(ReturnRequestValidator))]
     public partial class ReturnRequestModel : BaseNopEntityModel
     {
         #region Properties

@@ -138,13 +138,13 @@ namespace Nop.Web.Controllers
         /// <param name="trustedConnection">Avalue that indicates whether User ID and Password are specified in the connection (when false) or whether the current Windows account credentials are used for authentication (when true)</param>
         /// <param name="serverName">The name or network address of the instance of SQL Server to connect to</param>
         /// <param name="databaseName">The name of the database associated with the connection</param>
-        /// <param name="userName">The user ID to be used when connecting to SQL Server</param>
+        /// <param name="username">The user ID to be used when connecting to SQL Server</param>
         /// <param name="password">The password for the SQL Server account</param>
         /// <param name="timeout">The connection timeout</param>
         /// <returns>Connection string</returns>
         protected virtual string CreateConnectionString(bool trustedConnection,
             string serverName, string databaseName,
-            string userName, string password, int timeout = 0)
+            string username, string password, int timeout = 0)
         {
             var builder = new SqlConnectionStringBuilder
             {
@@ -155,7 +155,7 @@ namespace Nop.Web.Controllers
 
             if (!trustedConnection)
             {
-                builder.UserID = userName;
+                builder.UserID = username;
                 builder.Password = password;
             }
 
@@ -380,7 +380,7 @@ namespace Nop.Web.Controllers
 
                 foreach (var plugin in plugins)
                 {
-                    pluginService.PreparePluginToInstall(plugin.SystemName);
+                    pluginService.PreparePluginToInstall(plugin.SystemName, checkDependencies: false);
                 }
 
                 //register default permissions

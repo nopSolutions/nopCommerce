@@ -4,8 +4,6 @@
 @using Nop.Services.Stores
 
 @{
-    var stores = storeService.GetAllStores();
-
     //page title
     ViewBag.Title = T("Admin.Orders").Text;
     //active menu item (system name)
@@ -282,34 +280,143 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        @await Html.PartialAsync("Table", Model.Grid)
+                        @{
+                            var gridModel = new DataTablesModel
+                            {
+                                Name = "orders-grid",
+                                UrlRead = new DataUrl("OrderList", "Order", null),
+                                SearchButtonId = "search-orders",
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                FooterCallback = !Model.IsLoggedInAsVendor ? "ordersfootercallback" : null,
+                                FooterColumns = !Model.IsLoggedInAsVendor ? 10 : 0,
+                                Filters = new List<FilterParameter>
+                                                {
+                                                    new FilterParameter(nameof(Model.StartDate)),
+                                                    new FilterParameter(nameof(Model.EndDate)),
+                                                    new FilterParameter(nameof(Model.OrderStatusIds)),
+                                                    new FilterParameter(nameof(Model.PaymentStatusIds)),
+                                                    new FilterParameter(nameof(Model.ShippingStatusIds)),
+                                                    new FilterParameter(nameof(Model.StoreId)),
+                                                    new FilterParameter(nameof(Model.VendorId)),
+                                                    new FilterParameter(nameof(Model.WarehouseId)),
+                                                    new FilterParameter(nameof(Model.BillingEmail)),
+                                                    new FilterParameter(nameof(Model.BillingPhone)),
+                                                    new FilterParameter(nameof(Model.BillingLastName)),
+                                                    new FilterParameter(nameof(Model.BillingCountryId)),
+                                                    new FilterParameter(nameof(Model.PaymentMethodSystemName)),
+                                                    new FilterParameter(nameof(Model.ProductId)),
+                                                    new FilterParameter(nameof(Model.OrderNotes))
+                                                }
+                            };
+                            gridModel.ColumnCollection = new List<ColumnProperty>
+                                            {
+                                                new ColumnProperty(nameof(OrderModel.Id))
+                                                {
+                                                    IsMasterCheckBox = true,
+                                                    Render = new RenderCheckBox("checkbox_orders"),
+                                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                                    Width = "50",
+                                                },
+                                                new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
+                                                {
+                                                    Title = T("Admin.Orders.Fields.CustomOrderNumber").Text,
+                                                    Width = "80"
+                                                }
+                                            };
+                            //a vendor does not have access to this functionality
+                            if (!Model.IsLoggedInAsVendor)
+                            {
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderStatus))
+                                {
+                                    Title = T("Admin.Orders.Fields.OrderStatus").Text,
+                                    Width = "100",
+                                    Render = new RenderCustom("renderColumnOrderStatus")
+                                });
+                            }
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.PaymentStatus))
+                            {
+                                Title = T("Admin.Orders.Fields.PaymentStatus").Text,
+                                Width = "150"
+                            });
+                            //a vendor does not have access to this functionality
+                            if (!Model.IsLoggedInAsVendor)
+                            {
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.ShippingStatus))
+                                {
+                                    Title = T("Admin.Orders.Fields.ShippingStatus").Text,
+                                    Width = "150"
+                                });
+                            }
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerEmail))
+                            {
+                                Title = T("Admin.Orders.Fields.Customer").Text,
+                                Width = "250",
+                                Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(OrderModel.CustomerId)))
+                            });
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.StoreName))
+                            {
+                                Title = T("Admin.Orders.Fields.Store").Text,
+                                Width = "100",
+                                Visible = storeService.GetAllStores().Count > 1
+                            });
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
+                            {
+                                Title = T("Admin.Orders.Fields.CreatedOn").Text,
+                                Width = "100",
+                                Render = new RenderDate()
+                            });
+                            //a vendor does not have access to this functionality
+                            if (!Model.IsLoggedInAsVendor)
+                            {
+                                gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.OrderTotal))
+                                {
+                                    Title = T("Admin.Orders.Fields.OrderTotal").Text,
+                                    Width = "100",
+                                });
+                            }
+                            gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.Id))
+                            {
+                                Title = T("Admin.Common.View").Text,
+                                Width = "50",
+                                ClassName = NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            });
+                            var orderSummaryColumnNumber = 8;
+                        }
+
+                        @await Html.PartialAsync("Table", gridModel)
 
                         <script>
                             function renderColumnOrderStatus(data, type, row, meta) {
-                                var color; 
+                                var color;
                                 switch (row.OrderStatusId) {
-                                    case 10: color = 'yellow'; break;
-                                    case 20: color = 'blue'; break;
-                                    case 30: color = 'green'; break;
-                                    case 40: color = 'red'; break;
+                                case 10:
+                                    color = 'yellow';
+                                    break;
+                                case 20:
+                                    color = 'blue';
+                                    break;
+                                case 30:
+                                    color = 'green';
+                                    break;
+                                case 40:
+                                    color = 'red';
+                                    break;
                                 }
                                 return '<span class="grid-report-item ' + color + '">' + data + '</span >';
                             }
-                        </script>
-                        <script>                            
-                            var reportAggregates = "";
 
-                            $(document).ready(function () {
-                                $("#@Html.IdFor(model => model.GoDirectlyToCustomOrderNumber)").keydown(function(event) {
-                                    if (event.keyCode === 13) {
-                                        $("#go-to-order-by-number").click();
-                                        return false;
-                                    }
-                                });
-                                
+                            $(document).ready(function() {
+                                $("#@Html.IdFor(model => model.GoDirectlyToCustomOrderNumber)").keydown(
+                                    function(event) {
+                                        if (event.keyCode === 13) {
+                                            $("#go-to-order-by-number").click();
+                                            return false;
+                                        }
+                                    });
                             });
-
-                            function onDataBound(e) {
+                            function ordersfootercallback(tfoot, data, start, end, display) {
                                 //update order totals summary
                                 var postData = {
                                     StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
@@ -331,17 +438,20 @@
                                 addAntiForgeryToken(postData);
 
                                 $.ajax({
-                                    cache:false,
+                                    cache: false,
                                     type: "POST",
                                     url: "@(Url.Action("ReportAggregates", "Order"))",
                                     data: postData,
-                                    success: function (data) {
+                                    success: function (data, textStatus, jqXHR) {
                                         if (data) {
                                             for (var key in data) {
-                                                $('#aggregator-profit-block').text(data['aggregatorprofit']);
-                                                $('#aggregator-shipping-block').text(data['aggregatorshipping']);
-                                                $('#aggregator-tax-block').text(data['aggregatortax']);
-                                                $('#aggregator-total-block').text(data['aggregatortotal']);
+                                                var reportSummary = '<div><strong>@T("Admin.Orders.Report.Summary")</strong></div>' +
+                                                    '<div>@T("Admin.Orders.Report.Profit") <span>' + data['aggregatorprofit'] +'</span></div>' +
+                                                    '<div>@T("Admin.Orders.Report.Shipping") <span>' + data['aggregatorshipping'] + '</span></div>' +
+                                                    '<div>@T("Admin.Orders.Report.Tax") <span>' +  data['aggregatortax'] + '</span></div>' +
+                                                    '<div>@T("Admin.Orders.Report.Total") <span>' + data['aggregatortotal'] + '</span></div>'
+                                                var orderTotalsColumn = $('#orders-grid').DataTable().column(@(orderSummaryColumnNumber));
+                                                $(orderTotalsColumn.footer()).html(reportSummary);
                                             }
                                         }
                                     }
@@ -367,6 +477,7 @@
             var ids = selectedIds.join(",");
             $('#export-xml-selected-form #selectedIds').val(ids);
             $('#export-xml-selected-form').submit();
+            updateTable('#orders-grid');
             return false;
         });
     });
@@ -384,6 +495,7 @@
             var ids = selectedIds.join(",");
             $('#export-excel-selected-form #selectedIds').val(ids);
             $('#export-excel-selected-form').submit();
+            updateTable('#orders-grid');
             return false;
         });
     });
@@ -401,6 +513,7 @@
             var ids = selectedIds.join(",");
             $('#pdf-invoice-selected-form #selectedIds').val(ids);
             $('#pdf-invoice-selected-form').submit();
+            updateTable('#orders-grid');
             return false;
         });
     });

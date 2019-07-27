@@ -38,7 +38,6 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
-using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Validators;
 using Nop.Web.Models.Customer;
 
@@ -564,9 +563,13 @@ namespace Nop.Web.Controllers
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult PasswordRecoveryConfirm(string token, string email)
+        public virtual IActionResult PasswordRecoveryConfirm(string token, string email, Guid guid)
         {
+            //For backward compatibility with previous versions where email was used as a parameter in the URL
             var customer = _customerService.GetCustomerByEmail(email);
+            if (customer == null)
+                customer = _customerService.GetCustomerByGuid(guid);
+
             if (customer == null)
                 return RedirectToRoute("Homepage");
 
@@ -603,9 +606,13 @@ namespace Nop.Web.Controllers
         [FormValueRequired("set-password")]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult PasswordRecoveryConfirmPOST(string token, string email, PasswordRecoveryConfirmModel model)
+        public virtual IActionResult PasswordRecoveryConfirmPOST(string token, string email, Guid guid, PasswordRecoveryConfirmModel model)
         {
+            //For backward compatibility with previous versions where email was used as a parameter in the URL
             var customer = _customerService.GetCustomerByEmail(email);
+            if (customer == null)
+                customer = _customerService.GetCustomerByGuid(guid);
+
             if (customer == null)
                 return RedirectToRoute("Homepage");
 
@@ -627,7 +634,7 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var response = _customerRegistrationService.ChangePassword(new ChangePasswordRequest(email,
+                var response = _customerRegistrationService.ChangePassword(new ChangePasswordRequest(customer.Email,
                     false, _customerSettings.DefaultPasswordFormat, model.NewPassword));
                 if (response.Success)
                 {
@@ -1003,9 +1010,13 @@ namespace Nop.Web.Controllers
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult AccountActivation(string token, string email)
+        public virtual IActionResult AccountActivation(string token, string email, Guid guid)
         {
+            //For backward compatibility with previous versions where email was used as a parameter in the URL
             var customer = _customerService.GetCustomerByEmail(email);
+            if (customer == null)
+                customer = _customerService.GetCustomerByGuid(guid);
+
             if (customer == null)
                 return RedirectToRoute("Homepage");
 
@@ -1250,9 +1261,13 @@ namespace Nop.Web.Controllers
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult EmailRevalidation(string token, string email)
+        public virtual IActionResult EmailRevalidation(string token, string email, Guid guid)
         {
+            //For backward compatibility with previous versions where email was used as a parameter in the URL
             var customer = _customerService.GetCustomerByEmail(email);
+            if (customer == null)
+                customer = _customerService.GetCustomerByGuid(guid);
+
             if (customer == null)
                 return RedirectToRoute("Homepage");
 

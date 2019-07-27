@@ -38,14 +38,13 @@
                 };
                 addAntiForgeryToken(postData);
 
-
                 $.ajax({
                     cache: false,
-                    type: 'POST',
-                    url: '@Url.RouteUrl("TopicAuthenticate")',
+                    type: "POST",
+                    url: "@Url.RouteUrl("TopicAuthenticate")",
                     data: postData,
-                    dataType: 'json',
-                    success: function (data) {
+                    dataType: "json",
+                    success: function (data, textStatus, jqXHR) {
                         if (data.Authenticated) {
                             $('#ph-topic #ph-title h1').html(data.Title);
                             if ($('#ph-topic #ph-title h1').text().length == 0) {

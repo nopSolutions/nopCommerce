@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using FluentValidation.Attributes;
-using Nop.Web.Areas.Admin.Validators.Orders;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -9,7 +7,6 @@ namespace Nop.Web.Areas.Admin.Models.Orders
     /// <summary>
     /// Represents a checkout attribute value model
     /// </summary>
-    [Validator(typeof(CheckoutAttributeValueValidator))]
     public partial class CheckoutAttributeValueModel : BaseNopEntityModel, ILocalizedModel<CheckoutAttributeValueLocalizedModel>
     {
         #region Ctor

@@ -150,13 +150,15 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <summary>
         /// Prepare order average line summary report list model
         /// </summary>
+        /// <param name="searchModel">Order average line summary report search model</param>
         /// <returns>Order average line summary report list model</returns>
-        OrderAverageReportListModel PrepareOrderAverageReportListModel();
+        OrderAverageReportListModel PrepareOrderAverageReportListModel(OrderAverageReportSearchModel searchModel);
 
         /// <summary>
         /// Prepare incomplete order report list model
         /// </summary>
+        /// <param name="searchModel">Incomplete order report search model</param>
         /// <returns>Incomplete order report list model</returns>
-        OrderIncompleteReportListModel PrepareOrderIncompleteReportListModel();
+        OrderIncompleteReportListModel PrepareOrderIncompleteReportListModel(OrderIncompleteReportSearchModel searchModel);
     }
 }

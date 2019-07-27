@@ -39,7 +39,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-
+        
         /// <summary>
         /// Prepare vendor attribute value search model
         /// </summary>
@@ -62,63 +62,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
-        /// <summary>
-        /// Prepare datatables model
-        /// </summary>
-        /// <param name="searchModel">Search model</param>
-        /// <returns>Datatables model</returns>
-        protected virtual DataTablesModel PrepareVendorAttributeGridModel(VendorAttributeSearchModel searchModel)
-        {
-            //prepare common properties
-            var model = new DataTablesModel
-            {
-                Name = "vendorattributes-grid",
-                UrlRead = new DataUrl("List", "VendorAttribute", null),
-                Length = searchModel.PageSize,
-                LengthMenu = searchModel.AvailablePageSizes
-            };
-
-            //prepare filters to search
-            model.Filters = null;
-
-            //prepare model columns
-            model.ColumnCollection = new List<ColumnProperty>
-            {
-                new ColumnProperty(nameof(VendorAttributeModel.Name))
-                {
-                    Title = _localizationService.GetResource("Admin.Vendors.VendorAttributes.Fields.Name"),
-                    Width = "300"
-                },
-                new ColumnProperty(nameof(VendorAttributeModel.AttributeControlTypeName))
-                {
-                    Title = _localizationService.GetResource("Admin.Vendors.VendorAttributes.Fields.AttributeControlType"),
-                    Width = "200"
-                },
-                new ColumnProperty(nameof(VendorAttributeModel.IsRequired))
-                {
-                    Title = _localizationService.GetResource("Admin.Vendors.VendorAttributes.Fields.IsRequired"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderBoolean()
-                },
-                new ColumnProperty(nameof(VendorAttributeModel.DisplayOrder))
-                {
-                    Title = _localizationService.GetResource("Admin.Vendors.VendorAttributes.Fields.DisplayOrder"),
-                    Width = "100"
-                },
-                new ColumnProperty(nameof(VendorAttributeModel.Id))
-                {
-                    Title = _localizationService.GetResource("Admin.Common.Edit"),
-                    Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderButtonEdit(new DataUrl("~/Admin/VendorAttribute/Edit/"))
-                }
-            };
-
-            return model;
-        }
-
+        
         #endregion
 
         #region Methods
@@ -135,7 +79,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare page parameters
             searchModel.SetGridPageSize();
-            searchModel.Grid = PrepareVendorAttributeGridModel(searchModel);
 
             return searchModel;
         }
@@ -224,12 +167,11 @@ namespace Nop.Web.Areas.Admin.Factories
             var vendorAttributeValues = _vendorAttributeService.GetVendorAttributeValues(vendorAttribute.Id).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new VendorAttributeValueListModel
+            var model = new VendorAttributeValueListModel().PrepareToGrid(searchModel, vendorAttributeValues, () =>
             {
                 //fill in model values from the entity
-                Data = vendorAttributeValues.Select(value => value.ToModel<VendorAttributeValueModel>()),
-                Total = vendorAttributeValues.TotalCount
-            };
+                return vendorAttributeValues.Select(value => value.ToModel<VendorAttributeValueModel>());
+            });
 
             return model;
         }

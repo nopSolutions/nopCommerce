@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
-using Nop.Web.Areas.Admin.Validators.Messages;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -9,7 +7,6 @@ namespace Nop.Web.Areas.Admin.Models.Messages
     /// <summary>
     /// Represents a newsletter subscription model
     /// </summary>
-    [Validator(typeof(NewsLetterSubscriptionValidator))]
     public partial class NewsletterSubscriptionModel : BaseNopEntityModel
     {
         #region Properties

@@ -38,7 +38,7 @@
 
             <nop-panels id="gdprsettings-panels">
                 <nop-panel asp-name="gdprsettings-common" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.Gdpr.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Gdpr.Common", Model)</nop-panel>
-                <nop-panel id="pnlConsent" asp-name="gdprsettings-consents" asp-icon="fa fa-thumbs-o-up" asp-title="@T("Admin.Configuration.Settings.Gdpr.BlockTitle.Consents")" asp-hide-block-attribute-name="@hideConsentsBlockAttributeName" asp-hide="@hideConsentsBlock" asp-advanced="true">@await Html.PartialAsync("_Gdpr.Consents", Model)</nop-panel>
+                <nop-panel asp-name="gdprsettings-consents" asp-icon="fa fa-thumbs-o-up" asp-title="@T("Admin.Configuration.Settings.Gdpr.BlockTitle.Consents")" asp-hide-block-attribute-name="@hideConsentsBlockAttributeName" asp-hide="@hideConsentsBlock" asp-advanced="true">@await Html.PartialAsync("_Gdpr.Consents", Model)</nop-panel>
 
                 @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GdprSettingsDetailsBlock, additionalData = Model })
             </nop-panels>

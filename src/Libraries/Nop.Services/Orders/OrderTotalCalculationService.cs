@@ -385,10 +385,10 @@ namespace Nop.Services.Orders
                     if (!string.IsNullOrEmpty(updatedOrder.ShippingRateComputationMethodSystemName))
                     {
                         //in the updated order were shipping items
-                        if (updatedOrder.PickUpInStore)
+                        if (updatedOrder.PickupInStore)
                         {
                             //customer chose pickup in store method, try to get chosen pickup point
-                            if (_shippingSettings.AllowPickUpInStore)
+                            if (_shippingSettings.AllowPickupInStore)
                             {
                                 var pickupPointsResponse = _shippingService.GetPickupPoints(updatedOrder.BillingAddress, updatedOrder.Customer,
                                     updatedOrder.ShippingRateComputationMethodSystemName, _storeContext.CurrentStore.Id);
@@ -430,7 +430,7 @@ namespace Nop.Services.Orders
                     else
                     {
                         //before updating order was without shipping
-                        if (_shippingSettings.AllowPickUpInStore)
+                        if (_shippingSettings.AllowPickupInStore)
                         {
                             //try to get the cheapest pickup point
                             var pickupPointsResponse = _shippingService.GetPickupPoints(updatedOrder.BillingAddress, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
@@ -965,7 +965,7 @@ namespace Nop.Services.Orders
 
             var adjustedRate = shippingRate;
 
-            if (!_shippingSettings.AllowPickUpInStore || pickupPoint == null || !_shippingSettings.IgnoreAdditionalShippingChargeForPickUpInStore)
+            if (!_shippingSettings.AllowPickupInStore || pickupPoint == null || !_shippingSettings.IgnoreAdditionalShippingChargeForPickupInStore)
             {
                 adjustedRate += GetShoppingCartAdditionalShippingCharge(cart);
             }
@@ -1060,7 +1060,7 @@ namespace Nop.Services.Orders
 
                 if (shippingRateComputationMethods != null)
                 {
-                    if (!shippingRateComputationMethods.Any() && !_shippingSettings.AllowPickUpInStore)
+                    if (!shippingRateComputationMethods.Any() && !_shippingSettings.AllowPickupInStore)
                         throw new NopException("Shipping rate computation method could not be loaded");
 
                     if (shippingRateComputationMethods.Count == 1)
