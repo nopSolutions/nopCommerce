@@ -1499,10 +1499,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //update order totals
-            var updateOrderParameters = new UpdateOrderParameters
+            var updateOrderParameters = new UpdateOrderParameters(order, orderItem)
             {
-                UpdatedOrder = order,
-                UpdatedOrderItem = orderItem,
                 PriceInclTax = unitPriceInclTax,
                 PriceExclTax = unitPriceExclTax,
                 DiscountAmountInclTax = discountInclTax,
@@ -1585,11 +1583,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _orderService.DeleteOrderItem(orderItem);
 
                 //update order totals
-                var updateOrderParameters = new UpdateOrderParameters
-                {
-                    UpdatedOrder = order,
-                    UpdatedOrderItem = orderItem
-                };
+                var updateOrderParameters = new UpdateOrderParameters(order, orderItem);
                 _orderProcessingService.UpdateOrderTotals(updateOrderParameters);
 
                 //add a note
@@ -1930,10 +1924,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                     string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.EditOrder"), order.Id));
 
                 //update order totals
-                var updateOrderParameters = new UpdateOrderParameters
+                var updateOrderParameters = new UpdateOrderParameters(order, orderItem)
                 {
-                    UpdatedOrder = order,
-                    UpdatedOrderItem = orderItem,
                     PriceInclTax = unitPriceInclTax,
                     PriceExclTax = unitPriceExclTax,
                     SubTotalInclTax = priceInclTax,

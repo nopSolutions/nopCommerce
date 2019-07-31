@@ -1618,28 +1618,15 @@ namespace Nop.Services.Orders
             var updatedOrderItem = updateOrderParameters.UpdatedOrderItem;
 
             //restore shopping cart from order items
-            var restoredCart = updatedOrder.OrderItems.Select(orderItem => new ShoppingCartItem
-            {
-                Id = orderItem.Id,
-                AttributesXml = orderItem.AttributesXml,
-                Customer = updatedOrder.Customer,
-                Product = orderItem.Product,
-                Quantity = orderItem.Id == updatedOrderItem.Id ? updateOrderParameters.Quantity : orderItem.Quantity,
-                RentalEndDateUtc = orderItem.RentalEndDateUtc,
-                RentalStartDateUtc = orderItem.RentalStartDateUtc,
-                ShoppingCartType = ShoppingCartType.ShoppingCart,
-                StoreId = updatedOrder.StoreId
-            }).ToList();
+            var (restoredCart, updatedShoppingCartItem) = restoreShoppingCart(updatedOrder, updatedOrderItem.Id);
 
-            //get shopping cart item which has been updated
-            var updatedShoppingCartItem = restoredCart.FirstOrDefault(shoppingCartItem => shoppingCartItem.Id == updatedOrderItem.Id);
-            var itemDeleted = updatedShoppingCartItem == null;
+            var itemDeleted = updatedShoppingCartItem is null;
 
             //validate shopping cart for warnings
             updateOrderParameters.Warnings.AddRange(_shoppingCartService.GetShoppingCartWarnings(restoredCart, string.Empty, false));
             if (!itemDeleted)
-                updateOrderParameters.Warnings.AddRange(_shoppingCartService.GetShoppingCartItemWarnings(updatedOrder.Customer, updatedShoppingCartItem.ShoppingCartType,
-                    updatedShoppingCartItem.Product, updatedOrder.StoreId, updatedShoppingCartItem.AttributesXml, updatedShoppingCartItem.CustomerEnteredPrice,
+                updateOrderParameters.Warnings.AddRange(_shoppingCartService.GetShoppingCartItemWarnings(updateOrderParameters.OrderCustomer, updatedShoppingCartItem.ShoppingCartType,
+                    updatedShoppingCartItem.Product, updateOrderParameters.UpdatedOrder.StoreId, updatedShoppingCartItem.AttributesXml, updatedShoppingCartItem.CustomerEnteredPrice,
                     updatedShoppingCartItem.RentalStartDateUtc, updatedShoppingCartItem.RentalEndDateUtc, updatedShoppingCartItem.Quantity, false, updatedShoppingCartItem.Id));
 
             _orderTotalCalculationService.UpdateOrderTotals(updateOrderParameters, restoredCart);
@@ -1693,6 +1680,31 @@ namespace Nop.Services.Orders
             }
 
             CheckOrderStatus(updatedOrder);
+
+            (List<ShoppingCartItem> restoredCart, ShoppingCartItem updatedShoppingCartItem) restoreShoppingCart(Order order, int updatedOrderItemId)
+            {
+
+                if (order is null)
+                    throw new ArgumentNullException(nameof(order));
+                
+                var cart = order.OrderItems.Select(item => new ShoppingCartItem
+                {
+                    Id = item.Id,
+                    AttributesXml = item.AttributesXml,
+                    Customer = order.Customer,
+                    Product = item.Product,
+                    Quantity = item.Id == updatedOrderItemId ? updateOrderParameters.Quantity : item.Quantity,
+                    RentalEndDateUtc = item.RentalEndDateUtc,
+                    RentalStartDateUtc = item.RentalStartDateUtc,
+                    ShoppingCartType = ShoppingCartType.ShoppingCart,
+                    StoreId = order.StoreId
+                }).ToList();
+
+                //get shopping cart item which has been updated
+                var cartItem = cart.FirstOrDefault(shoppingCartItem => shoppingCartItem.Id == updatedOrderItemId);
+
+                return (cart, cartItem);
+            }
         }
 
         /// <summary>
