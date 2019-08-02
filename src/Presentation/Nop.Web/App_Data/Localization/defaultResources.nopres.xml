@@ -12018,6 +12018,18 @@
   <LocaleResource Name="Admin.Orders.Shipments.BackToOrder">
     <Value>back to order details</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.CanDeliver">
+    <Value>Delivered</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.CanDeliver.Hint">
+    <Value>Check to apply current date to delivery.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.CanShip">
+    <Value>Shipped</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.CanShip.Hint">
+    <Value>Check to apply current date to shipment.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.CustomOrderNumber">
     <Value>Order #</Value>
   </LocaleResource>

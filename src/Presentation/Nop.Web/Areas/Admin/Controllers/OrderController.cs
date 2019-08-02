@@ -2143,13 +2143,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
-        public virtual IActionResult AddShipment(int orderId)
+        public virtual IActionResult AddShipment(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
             //try to get an order with the specified id
-            var order = _orderService.GetOrderById(orderId);
+            var order = _orderService.GetOrderById(id);
             if (order == null)
                 return RedirectToAction("List");
 
@@ -2165,13 +2165,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public virtual IActionResult AddShipment(int orderId, IFormCollection form, bool continueEditing)
+        public virtual IActionResult AddShipment(ShipmentModel model, IFormCollection form, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
             //try to get an order with the specified id
-            var order = _orderService.GetOrderById(orderId);
+            var order = _orderService.GetOrderById(model.OrderId);
             if (order == null)
                 return RedirectToAction("List");
 
@@ -2186,8 +2186,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 orderItems = orderItems.Where(HasAccessToOrderItem).ToList();
             }
 
-            Shipment shipment = null;
+            var shipment = new Shipment
+            {
+                OrderId = order.Id,
+                TrackingNumber = model.TrackingNumber,
+                TotalWeight = null,
+                ShippedDateUtc = model.CanShip ? DateTime.UtcNow : default(DateTime?),
+                DeliveryDateUtc = (model.CanShip && model.CanDeliver) ? DateTime.UtcNow : default(DateTime?),
+                AdminComment = model.AdminComment,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+
             decimal? totalWeight = null;
+
             foreach (var orderItem in orderItems)
             {
                 //is shippable
@@ -2249,30 +2260,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                     totalWeight += orderItemTotalWeight.Value;
                 }
 
-                if (shipment == null)
-                {
-                    var trackingNumber = form["TrackingNumber"];
-                    var adminComment = form["AdminComment"];
-                    shipment = new Shipment
-                    {
-                        OrderId = order.Id,
-                        TrackingNumber = trackingNumber,
-                        TotalWeight = null,
-                        ShippedDateUtc = null,
-                        DeliveryDateUtc = null,
-                        AdminComment = adminComment,
-                        CreatedOnUtc = DateTime.UtcNow
-                    };
-                }
-
                 //create a shipment item
-                var shipmentItem = new ShipmentItem
+                shipment.ShipmentItems.Add(new ShipmentItem
                 {
                     OrderItemId = orderItem.Id,
                     Quantity = qtyToAdd,
                     WarehouseId = warehouseId
-                };
-                shipment.ShipmentItems.Add(shipmentItem);
+                });
 
                 var quantityWithReserved = _productService.GetTotalStockQuantity(orderItem.Product, true, warehouseId);
                 var quantityTotal = _productService.GetTotalStockQuantity(orderItem.Product, false, warehouseId);
@@ -2283,14 +2277,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //If the quantity of the reserve product in the warehouse does not coincide with the total quantity of goods in the basket, 
                 //it is necessary to redistribute the reserve to the warehouse
                 if (!(quantityReserved == qtyToAdd && quantityReserved == maxQtyToAdd))
-                    _productService.BalanceInventory(orderItem.Product, warehouseId, qtyToAdd);                
+                    _productService.BalanceInventory(orderItem.Product, warehouseId, qtyToAdd);
             }
 
             //if we have at least one item in the shipment, then save it
-            if (shipment != null && shipment.ShipmentItems.Any())
+            if (shipment.ShipmentItems.Any())
             {
                 shipment.TotalWeight = totalWeight;
-                _shipmentService.InsertShipment(shipment);                
+                _shipmentService.InsertShipment(shipment);
 
                 //add a note
                 order.OrderNotes.Add(new OrderNote
@@ -2305,12 +2299,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Added"));
                 return continueEditing
                            ? RedirectToAction("ShipmentDetails", new { id = shipment.Id })
-                           : RedirectToAction("Edit", new { id = orderId });
+                           : RedirectToAction("Edit", new { id = model.OrderId });
             }
 
             _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.NoProductsSelected"));
 
-            return RedirectToAction("AddShipment", new { orderId });
+            return RedirectToAction("AddShipment", model);
         }
 
         public virtual IActionResult ShipmentDetails(int id)
@@ -2759,7 +2753,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (string.IsNullOrEmpty(message))
                 return ErrorJson(_localizationService.GetResource("Admin.Orders.OrderNotes.Fields.Note.Validation"));
-            
+
             //try to get an order with the specified id
             var order = _orderService.GetOrderById(orderId);
             if (order == null)

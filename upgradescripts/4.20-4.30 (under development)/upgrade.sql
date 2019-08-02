@@ -44,6 +44,18 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForum.Hint">
     <Value>Check to show CAPTCHA on forum, when editing and creating a topic or post.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.CanDeliver">
+    <Value>Delivered</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.CanDeliver.Hint">
+    <Value>Check to apply current date to delivery.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.CanShip">
+    <Value>Shipped</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.CanShip.Hint">
+    <Value>Check to apply current date to shipment.</Value>
+  </LocaleResource>
 </Language>
 '
 
