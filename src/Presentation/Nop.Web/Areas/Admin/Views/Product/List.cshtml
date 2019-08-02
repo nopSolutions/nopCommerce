@@ -238,6 +238,7 @@
                                 new ColumnProperty(nameof(ProductModel.Name))
                                 {
                                     Title = T("Admin.Catalog.Products.Fields.Name").Text,
+                                    Render = new RenderLink(new DataUrl("~/", nameof(ProductModel.SeName))),
                                     Width = "300"
                                 },
                                 new ColumnProperty(nameof(ProductModel.Sku))
