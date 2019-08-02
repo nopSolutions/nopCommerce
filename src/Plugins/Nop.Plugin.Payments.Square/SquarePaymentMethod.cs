@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
@@ -86,24 +87,43 @@ namespace Nop.Plugin.Payments.Square
         #region Utilities
 
         /// <summary>
+        /// Check supported currency 
+        /// </summary>
+        /// <param name="currency">Currency</param>
+        /// <returns>True - value must be correspond to ISO 4217, else - false</returns>
+        private bool CheckSupportCurrency(Currency currency)
+        {
+            foreach (var culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
+            {
+                var regionInfo = new RegionInfo(culture.LCID);
+                if (currency.CurrencyCode.Equals(regionInfo.ISOCurrencySymbol, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Gets a payment status by tender card details status
         /// </summary>
         /// <param name="status">Tender card details status</param>
         /// <returns>Payment status</returns>
-        private PaymentStatus GetPaymentStatus(SquareModel.TenderCardDetails.StatusEnum? status)
+        private PaymentStatus GetPaymentStatus(string status)
         {
             switch (status)
             {
-                case SquareModel.TenderCardDetails.StatusEnum.AUTHORIZED:
+                case SquarePaymentDefaults.TENDERCARDDETAILS_AUTHORIZED_STATUS:
                     return PaymentStatus.Authorized;
 
-                case SquareModel.TenderCardDetails.StatusEnum.CAPTURED:
+                case SquarePaymentDefaults.TENDERCARDDETAILS_CAPTURED_STATUS:
                     return PaymentStatus.Paid;
 
-                case SquareModel.TenderCardDetails.StatusEnum.FAILED:
+                case SquarePaymentDefaults.TENDERCARDDETAILS_FAILED_STATUS:
                     return PaymentStatus.Pending;
 
-                case SquareModel.TenderCardDetails.StatusEnum.VOIDED:
+                case SquarePaymentDefaults.TENDERCARDDETAILS_VOIDED_STATUS:
                     return PaymentStatus.Voided;
 
                 default:
@@ -176,18 +196,18 @@ namespace Nop.Plugin.Payments.Square
                 throw new NopException("Primary store currency cannot be loaded");
 
             //whether the currency is supported by the Square
-            if (!Enum.TryParse(currency.CurrencyCode, out SquareModel.Money.CurrencyEnum moneyCurrency))
+            if (!CheckSupportCurrency(currency))
                 throw new NopException($"The {currency.CurrencyCode} currency is not supported by the Square");
 
             //check customer's billing address, shipping address and email, 
-            Func<Address, SquareModel.Address> createAddress = (address) => address == null ? null : new SquareModel.Address
+            SquareModel.Address createAddress(Address address) => address == null ? null : new SquareModel.Address
             (
                 AddressLine1: address.Address1,
                 AddressLine2: address.Address2,
                 AdministrativeDistrictLevel1: address.StateProvince?.Abbreviation,
                 AdministrativeDistrictLevel2: address.County,
-                Country: Enum.TryParse(address.Country?.TwoLetterIsoCode, out SquareModel.Address.CountryEnum countryCode)
-                    ? (SquareModel.Address.CountryEnum?)countryCode : null,
+                Country: string.Equals(address.Country?.TwoLetterIsoCode, new RegionInfo(address.Country?.TwoLetterIsoCode).TwoLetterISORegionName, StringComparison.InvariantCultureIgnoreCase)
+                    ? address.Country?.TwoLetterIsoCode : null,
                 FirstName: address.FirstName,
                 LastName: address.LastName,
                 Locality: address.City,
@@ -204,7 +224,7 @@ namespace Nop.Plugin.Payments.Square
             //the amount of money, in the smallest denomination of the currency indicated by currency. For example, when currency is USD, amount is in cents;
             //most currencies consist of 100 units of smaller denomination, so we multiply the total by 100
             var orderTotal = (int)(paymentRequest.OrderTotal * 100);
-            var amountMoney = new SquareModel.Money(Amount: orderTotal, Currency: moneyCurrency);
+            var amountMoney = new SquareModel.Money(Amount: orderTotal, Currency: currency.CurrencyCode);
 
             //create common charge request parameters
             var chargeRequest = new ExtendedChargeRequest
@@ -412,13 +432,13 @@ namespace Nop.Plugin.Payments.Square
                 throw new NopException("Primary store currency cannot be loaded");
 
             //whether the currency is supported by the Square
-            if (!Enum.TryParse(currency.CurrencyCode, out SquareModel.Money.CurrencyEnum moneyCurrency))
-                throw new NopException($"The {currency.CurrencyCode} currency is not supported by the service");
+            if (!CheckSupportCurrency(currency))
+                throw new NopException($"The {currency.CurrencyCode} currency is not supported by the Square");
 
             //the amount of money in the smallest denomination of the currency indicated by currency. For example, when currency is USD, amount is in cents;
             //most currencies consist of 100 units of smaller denomination, so we multiply the total by 100
             var orderTotal = (int)(refundPaymentRequest.AmountToRefund * 100);
-            var amountMoney = new SquareModel.Money(Amount: orderTotal, Currency: moneyCurrency);
+            var amountMoney = new SquareModel.Money(Amount: orderTotal, Currency: currency.CurrencyCode);
 
             //first try to get the transaction
             var transactionId = refundPaymentRequest.Order.CaptureTransactionId;
@@ -443,7 +463,7 @@ namespace Nop.Plugin.Payments.Square
                 throw new NopException(refundError);
 
             //if refund status is 'pending', try to refund once more with the same request parameters
-            if (createdRefund.Status == SquareModel.Refund.StatusEnum.PENDING)
+            if (createdRefund.Status == SquarePaymentDefaults.REFUND_STATUS_PENDING)
             {
                 (createdRefund, refundError) = _squarePaymentManager.CreateRefund(transactionId, refundRequest);
                 if (createdRefund == null)
@@ -451,10 +471,10 @@ namespace Nop.Plugin.Payments.Square
             }
 
             //check whether refund is approved
-            if (createdRefund.Status != SquareModel.Refund.StatusEnum.APPROVED)
+            if (createdRefund.Status != SquarePaymentDefaults.REFUND_STATUS_APPROVED)
             {
                 //change error notification to warning one (for the pending status)
-                if (createdRefund.Status == SquareModel.Refund.StatusEnum.PENDING)
+                if (createdRefund.Status == SquarePaymentDefaults.REFUND_STATUS_PENDING)
                     _pageHeadBuilder.AddCssFileParts(ResourceLocation.Head, @"~/Plugins/Payments.Square/Content/styles.css", null);
 
                 return new RefundPaymentResult { Errors = new[] { $"Refund is {createdRefund.Status}" }.ToList() };

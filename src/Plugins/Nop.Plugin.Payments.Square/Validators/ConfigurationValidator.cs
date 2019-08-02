@@ -16,8 +16,8 @@ namespace Nop.Plugin.Payments.Square.Validators
         {
             //rules for sandbox credentials
             RuleFor(model => model.SandboxAccessToken)
-                .Must((model, name) => model.SandboxAccessToken?.StartsWith(SquarePaymentDefaults.SandboxCredentialsPrefix, StringComparison.InvariantCultureIgnoreCase) ?? false)
-                .WithMessage($"Sandbox access token should start with '{SquarePaymentDefaults.SandboxCredentialsPrefix}'")
+                .Must((model, name) => !string.IsNullOrEmpty(model.SandboxAccessToken))
+                .WithMessage("Sandbox access token should not be empty")
                 .When(model => model.UseSandbox);
 
             RuleFor(model => model.SandboxApplicationId)
