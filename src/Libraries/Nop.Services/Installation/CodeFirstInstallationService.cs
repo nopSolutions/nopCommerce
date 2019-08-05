@@ -6664,6 +6664,7 @@ namespace Nop.Services.Installation
                 ReCaptchaDefaultLanguage = string.Empty,
                 ReCaptchaPrivateKey = string.Empty,
                 ReCaptchaPublicKey = string.Empty,
+                ReCaptchaRequestTimeout = 20,
                 ReCaptchaTheme = string.Empty,
                 AutomaticallyChooseLanguage = true,
                 Enabled = false,

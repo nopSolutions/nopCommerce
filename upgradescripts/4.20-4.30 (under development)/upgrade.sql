@@ -137,3 +137,11 @@ BEGIN
     VALUES (N'captchasettings.showonforum', N'False', 0)
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'captchasettings.recaptcharequesttimeout')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'captchasettings.recaptcharequesttimeout', 20, 0)
+END
+GO

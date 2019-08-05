@@ -28,14 +28,16 @@ namespace Nop.Web.Framework.Security.Captcha
             HttpClient client,
             IWebHelper webHelper)
         {
-            //configure client
-            client.BaseAddress = new Uri(NopSecurityDefaults.RecaptchaApiUrl);
-            client.Timeout = TimeSpan.FromMilliseconds(5000);
-            client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CurrentVersion}");
-
             _captchaSettings = captchaSettings;
             _httpClient = client;
             _webHelper = webHelper;
+
+            //configure client
+            client.BaseAddress = new Uri(NopSecurityDefaults.RecaptchaApiUrl);
+            client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CurrentVersion}");
+
+            if (captchaSettings.ReCaptchaRequestTimeout is int timeout && timeout > 0)
+                client.Timeout = TimeSpan.FromSeconds(timeout);
         }
 
         #endregion
