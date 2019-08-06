@@ -420,6 +420,21 @@ namespace Nop.Services.Blogs
             }
         }
 
+        /// <summary>
+        /// Inserts a blog comment
+        /// </summary>
+        /// <param name="blogPost">Blog comment</param>
+        public virtual void InsertBlogComment(BlogComment blogComment)
+        {
+            if (blogComment == null)
+                throw new ArgumentNullException(nameof(blogComment));
+
+            _blogCommentRepository.Insert(blogComment);
+
+            //event notification
+            _eventPublisher.EntityInserted(blogComment);
+        }
+
         #endregion
 
         #endregion

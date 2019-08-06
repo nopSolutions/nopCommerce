@@ -86,19 +86,22 @@ namespace Nop.Web.Factories
             if (blogComment == null)
                 throw new ArgumentNullException(nameof(blogComment));
 
+            var customer = _customerService.GetCustomerById(blogComment.CustomerId);
+
             var model = new BlogCommentModel
             {
                 Id = blogComment.Id,
                 CustomerId = blogComment.CustomerId,
-                CustomerName = _customerService.FormatUsername(blogComment.Customer),
+                CustomerName = _customerService.FormatUsername(customer),
                 CommentText = blogComment.CommentText,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc),
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && blogComment.Customer != null && !blogComment.Customer.IsGuest()
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !customer.IsGuest()
             };
+
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
                 model.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                    _genericAttributeService.GetAttribute<int>(blogComment.Customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                    _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
                     _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
             }
 
@@ -138,10 +141,14 @@ namespace Nop.Web.Factories
             model.NumberOfComments = _cacheManager.Get(cacheKey, () => _blogService.GetBlogCommentsCount(blogPost, storeId, true));
 
             if (prepareComments)
-            {
-                var blogComments = blogPost.BlogComments.Where(comment => comment.IsApproved);
+            {                
+                var blogComments = _blogService.GetAllComments(blogPostId: blogPost.Id, approved: true);
+
+                if (blogComments is null)
+                    return;
+
                 if (_blogSettings.ShowBlogCommentsPerStore)
-                    blogComments = blogComments.Where(comment => comment.StoreId == _storeContext.CurrentStore.Id);
+                    blogComments = blogComments.Where(comment => comment.StoreId == _storeContext.CurrentStore.Id).ToList();
 
                 foreach (var bc in blogComments.OrderBy(comment => comment.CreatedOnUtc))
                 {

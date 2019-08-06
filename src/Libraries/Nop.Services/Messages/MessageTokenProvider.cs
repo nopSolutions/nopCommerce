@@ -27,6 +27,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Html;
 using Nop.Core.Infrastructure;
+using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -56,6 +57,7 @@ namespace Nop.Services.Messages
         private readonly CurrencySettings _currencySettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+        private readonly IBlogService _blogService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
         private readonly ICustomerService _customerService;
@@ -90,6 +92,7 @@ namespace Nop.Services.Messages
             CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
             IAddressAttributeFormatter addressAttributeFormatter,
+            IBlogService blogService,
             ICurrencyService currencyService,
             ICustomerAttributeFormatter customerAttributeFormatter,
             ICustomerService customerService,
@@ -118,6 +121,7 @@ namespace Nop.Services.Messages
             _currencySettings = currencySettings;
             _actionContextAccessor = actionContextAccessor;
             _addressAttributeFormatter = addressAttributeFormatter;
+            _blogService = blogService;
             _currencyService = currencyService;
             _customerAttributeFormatter = customerAttributeFormatter;
             _customerService = customerService;
@@ -1124,6 +1128,18 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="customer">Customer</param>
+        public virtual void AddCustomerTokens(IList<Token> tokens, int customerId)
+        {
+            var customer = _customerService.GetCustomerById(customerId) ?? throw new Exception("Customer is not found");
+
+            AddCustomerTokens(tokens, customer);
+        }
+
+        /// <summary>
+        /// Add customer tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="customer">Customer</param>
         public virtual void AddCustomerTokens(IList<Token> tokens, Customer customer)
         {
             tokens.Add(new Token("Customer.Email", customer.Email));
@@ -1211,7 +1227,9 @@ namespace Nop.Services.Messages
         /// <param name="blogComment">Blog post comment</param>
         public virtual void AddBlogCommentTokens(IList<Token> tokens, BlogComment blogComment)
         {
-            tokens.Add(new Token("BlogComment.BlogPostTitle", blogComment.BlogPost.Title));
+            var blogPost = _blogService.GetBlogPostById(blogComment.BlogPostId);
+
+            tokens.Add(new Token("BlogComment.BlogPostTitle", blogPost.Title));
 
             //event notification
             _eventPublisher.EntityTokensAdded(blogComment, tokens);

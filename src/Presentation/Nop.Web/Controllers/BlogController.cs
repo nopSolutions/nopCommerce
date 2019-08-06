@@ -203,7 +203,8 @@ namespace Nop.Web.Controllers
                     StoreId = _storeContext.CurrentStore.Id,
                     CreatedOnUtc = DateTime.UtcNow,
                 };
-                blogPost.BlogComments.Add(comment);
+
+                _blogService.InsertBlogComment(comment);
                 _blogService.UpdateBlogPost(blogPost);
 
                 //notify a store owner

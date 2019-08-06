@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Blogs;
 
@@ -24,11 +24,6 @@ namespace Nop.Data.Mapping.Blogs
             builder.Property(blogPost => blogPost.Body).IsRequired();
             builder.Property(blogPost => blogPost.MetaKeywords).HasMaxLength(400);
             builder.Property(blogPost => blogPost.MetaTitle).HasMaxLength(400);
-
-            builder.HasOne(blogPost => blogPost.Language)
-                .WithMany()
-                .HasForeignKey(blogPost => blogPost.LanguageId)
-                .IsRequired();
 
             base.Configure(builder);
         }

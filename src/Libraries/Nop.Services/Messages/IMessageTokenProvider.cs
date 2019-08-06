@@ -87,6 +87,13 @@ namespace Nop.Services.Messages
         void AddCustomerTokens(IList<Token> tokens, Customer customer);
 
         /// <summary>
+        /// Add customer tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="customer">Customer identifier</param>
+        void AddCustomerTokens(IList<Token> tokens, int customerId);
+
+        /// <summary>
         /// Add vendor tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>

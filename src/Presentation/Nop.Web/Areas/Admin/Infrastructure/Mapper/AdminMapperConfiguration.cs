@@ -210,29 +210,28 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         protected virtual void CreateBlogsMaps()
         {
             CreateMap<BlogComment, BlogCommentModel>()
+                .ForMember(model => model.BlogPostTitle, options => options.Ignore())
                 .ForMember(model => model.Comment, options => options.Ignore())
                 .ForMember(model => model.CreatedOn, options => options.Ignore())
-                .ForMember(model => model.CustomerInfo, options => options.Ignore());
+                .ForMember(model => model.CustomerInfo, options => options.Ignore())
+                .ForMember(model => model.StoreName, options => options.Ignore());
+
             CreateMap<BlogCommentModel, BlogComment>()
-                .ForMember(entity => entity.BlogPost, options => options.Ignore())
                 .ForMember(entity => entity.CommentText, options => options.Ignore())
                 .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-                .ForMember(entity => entity.Customer, options => options.Ignore())
                 .ForMember(entity => entity.BlogPostId, options => options.Ignore())
                 .ForMember(entity => entity.CustomerId, options => options.Ignore())
-                .ForMember(entity => entity.StoreId, options => options.Ignore())
-                .ForMember(entity => entity.Store, options => options.Ignore());
+                .ForMember(entity => entity.StoreId, options => options.Ignore());
 
             CreateMap<BlogPost, BlogPostModel>()
                 .ForMember(model => model.ApprovedComments, options => options.Ignore())
                 .ForMember(model => model.AvailableLanguages, options => options.Ignore())
                 .ForMember(model => model.CreatedOn, options => options.Ignore())
+                .ForMember(model => model.LanguageName, options => options.Ignore())
                 .ForMember(model => model.NotApprovedComments, options => options.Ignore())
                 .ForMember(model => model.SeName, options => options.Ignore());
             CreateMap<BlogPostModel, BlogPost>()
-                .ForMember(entity => entity.BlogComments, options => options.Ignore())
-                .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-                .ForMember(entity => entity.Language, options => options.Ignore());
+                .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore());
 
             CreateMap<BlogSettings, BlogSettingsModel>()
                 .ForMember(model => model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, options => options.Ignore())

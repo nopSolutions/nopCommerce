@@ -1955,8 +1955,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddBlogCommentTokens(commonTokens, blogComment);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, blogComment.Customer);
+            _messageTokenProvider.AddBlogCommentTokens(commonTokens, blogComment);            
+            _messageTokenProvider.AddCustomerTokens(commonTokens, blogComment.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {

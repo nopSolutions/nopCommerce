@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Html;
 using Nop.Services.Blogs;
+using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
@@ -28,6 +30,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly CatalogSettings _catalogSettings;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly IBlogService _blogService;
+        private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -42,6 +45,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public BlogModelFactory(CatalogSettings catalogSettings,
             IBaseAdminModelFactory baseAdminModelFactory,
             IBlogService blogService,
+            ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             ILanguageService languageService,
             ILocalizationService localizationService,
@@ -52,6 +56,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _catalogSettings = catalogSettings;
             _baseAdminModelFactory = baseAdminModelFactory;
             _blogService = blogService;
+            _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _languageService = languageService;
             _localizationService = localizationService;
@@ -61,7 +66,7 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -244,6 +249,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 toUtc: createdOnToValue,
                 commentText: searchModel.SearchText).ToPagedList(searchModel);
 
+            if (!comments?.Any() ?? true)
+                return new BlogCommentListModel();
+
+            var blogPosts = _blogService.GetBlogPostsByIds(comments.Select(x => x.BlogPostId).ToArray());
+
+            if (!blogPosts?.Any() ?? true)
+                return new BlogCommentListModel();
+
             //prepare store names (to avoid loading for each comment)
             var storeNames = _storeService.GetAllStores().ToDictionary(store => store.Id, store => store.Name);
 
@@ -255,9 +268,15 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in model values from the entity
                     var commentModel = blogComment.ToModel<BlogCommentModel>();
 
+                    //TODO: needed found better way
+                    //set title from linked blog post
+                    commentModel.BlogPostTitle = blogPosts.FirstOrDefault(x => x.Id == blogComment.BlogPostId)?.Title;
+
+                    if (_customerService.GetCustomerById(blogComment.CustomerId) is Customer customer)
+                        commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+                    //TODO end
+
                     //fill in additional values (not existing in the entity)
-                    commentModel.CustomerInfo = blogComment.Customer.IsRegistered()
-                        ? blogComment.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc);
                     commentModel.Comment = HtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);
                     commentModel.StoreName = storeNames.ContainsKey(blogComment.StoreId) ? storeNames[blogComment.StoreId] : "Deleted";
