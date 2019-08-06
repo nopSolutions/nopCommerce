@@ -1,0 +1,359 @@
+/*!
+ * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+@form-line-height: (20 / 14);
+@card-border-radius: 4px;
+@card-border-width: 1px;
+@card-header-padding-x: 8px;
+@card-header-padding-y: 4px;
+@card-header-border-width: 1px;
+@card-body-padding-x: 8px;
+@card-body-padding-y: 8px;
+@paragraph-margin-bottom: 8px;
+@card-title-margin-bottom: 8px;
+@card-subtitle-margin-bottom: 8px;
+@card-actions-padding-x: 8px;
+@card-actions-padding-y: 8px;
+@card-actions-border-width: 1px;
+@card-button-padding-x: 8px;
+@card-button-padding-y: 4px;
+@card-deck-gap: 16px;
+
+
+@card-deck-scroll-button-radius: 0;
+@card-deck-scroll-button-offset: -1px;
+
+// Card
+.k-card {
+    .border-radius( @card-border-radius );
+    // .box-shadow( @card-box-shadow );
+    border-width: @card-border-width;
+    border-style: solid;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.k-card.k-card-flat {
+    box-shadow: none;
+}
+
+
+// Placeholder selectors
+// %top-rounded-child {
+//     .k-card > &:first-child {
+//         .border-top-radius( @card-border-radius );
+//     }
+// }
+// %bottom-rounded-child {
+//     .k-card > &:last-child {
+//         .border-bottom-radius( @card-border-radius );
+//     }
+// }
+
+
+// Header
+.k-card-header {
+    // @extend %top-rounded-child;
+    // @extend %bottom-rounded-child;
+    padding: @card-header-padding-y @card-header-padding-x;
+    border-width: 0 0 @card-header-border-width;
+    border-style: solid;
+    overflow: hidden;
+
+    .k-card > &:first-child {
+        .border-top-radius( @card-border-radius );
+    }
+    .k-card > &:last-child {
+        .border-bottom-radius( @card-border-radius );
+    }
+
+    > h1,
+    > h2,
+    > h3,
+    > h4,
+    > h5,
+    > h6 {
+        margin: 0;
+    }
+}
+
+
+// Body
+.k-card-body {
+    // @extend %top-rounded-child;
+    // @extend %bottom-rounded-child;
+    padding: @card-body-padding-y @card-body-padding-x;
+    flex: 1 1 0;
+
+    .k-card > &:first-child {
+        .border-top-radius( @card-border-radius );
+    }
+    .k-card > &:last-child {
+        .border-bottom-radius( @card-border-radius );
+    }
+
+    p {
+        margin: 0 0 @paragraph-margin-bottom;
+    }
+
+    > .k-last,
+    > :last-child {
+        margin-bottom: 0;
+    }
+}
+
+
+// Card image
+.k-card-image {
+    // @extend %top-rounded-child;
+    // @extend %bottom-rounded-child;
+    border: 0;
+    max-width: 100%;
+    overflow: hidden;
+
+    .k-card > &:first-child {
+        .border-top-radius( @card-border-radius );
+    }
+    .k-card > &:last-child {
+        .border-bottom-radius( @card-border-radius );
+    }
+
+    > img {
+        border: 0;
+        max-width: 100%;
+    }
+}
+
+
+// Card title
+.k-card-title {
+    // @include typography-styles( card-title );
+    margin: 0 0 @card-title-margin-bottom;
+}
+
+
+// Card subtitle
+.k-card-subtitle {
+    // @include typography-styles( card-subtitle );
+    margin: 0 0 @card-subtitle-margin-bottom;
+}
+.k-card-title + .k-card-subtitle {
+    margin-top: ( -@card-title-margin-bottom * .75 );
+}
+
+
+// Separator
+.k-card > .k-hr {
+    margin: 0;
+    flex: 0 0 auto;
+    border-color: inherit;
+}
+
+
+// Card actions
+.k-card-actions {
+    // @extend %top-rounded-child;
+    // @extend %bottom-rounded-child;
+    padding: @card-actions-padding-y @card-actions-padding-x;
+    border-width: 0;
+    border-style: solid;
+    border-color: inherit;
+    overflow: hidden;
+    flex-shrink: 0;
+    flex-basis: auto;
+
+    .k-card > &:first-child {
+        .border-top-radius( @card-border-radius );
+    }
+    .k-card > &:last-child {
+        .border-bottom-radius( @card-border-radius );
+    }
+
+    .k-card > & {
+        border-top-width: @card-actions-border-width;
+        border-color: inherit;
+    }
+
+    > .k-button.k-flat:first-child {
+        margin-left: (-@card-button-padding-x);
+    }
+}
+.k-card-action {
+    border-width: 0;
+    border-style: solid;
+    border-color: inherit;
+    display: inline-flex;
+    flex: 1 1 auto;
+
+    > .k-button {
+        .border-radius( 0 );
+        padding: (@card-actions-padding-y + @card-button-padding-y) @card-actions-padding-x;
+        flex: 1 1 auto;
+    }
+}
+
+.k-card-actions-vertical {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+
+    .k-card-action + .k-card-action {
+        border-top-width: @card-actions-border-width;
+    }
+}
+.k-card-actions-stretched {
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+
+    .k-card-action + .k-card-action {
+        border-left-width: @card-actions-border-width;
+    }
+}
+
+
+// List
+.k-card-list {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    flex: 0 0 auto;
+
+    .k-card {
+        flex: 0 0 auto;
+    }
+    .k-card + .k-card {
+        margin-top: @card-deck-gap;
+    }
+}
+
+
+// Deck
+.k-card-deck {
+    display: flex;
+    margin-top: @card-deck-gap;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    flex: 0 0 auto;
+
+    .k-card {
+        flex: 0 0 auto;
+    }
+    .k-card + .k-card {
+        margin-left: @card-deck-gap;
+    }
+}
+.k-card-deck-scrollwrap {
+    display: flex;
+    position: relative;
+    align-items: center;
+
+    > .k-button {
+        .border-radius( @card-deck-scroll-button-radius );
+        flex: 0 0 auto;
+        position: absolute;
+
+        &:first-child {
+            left: @card-deck-scroll-button-offset;
+        }
+
+        &:last-child {
+            right: @card-deck-scroll-button-offset;
+        }
+    }
+
+    > .k-card-deck {
+        flex: 1 1 auto;
+    }
+}
+
+
+// Group
+.k-card-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    flex: 0 0 auto;
+
+    .k-card {
+        .border-radius(0);
+        flex: 0 0 auto;
+
+        > .k-card-header {
+            .border-radius(0);
+        }
+    }
+    .k-card + .k-card {
+        margin-left: -1px;
+    }
+
+
+    // Border-radius
+    .k-card.k-first {
+        .border-left-radius( @card-border-radius );
+
+        > .k-card-header {
+            border-top-left-radius: @card-border-radius;
+        }
+    }
+    .k-card.k-last {
+        .border-right-radius( @card-border-radius );
+
+        > .k-card-header {
+            border-top-right-radius: @card-border-radius;
+        }
+    }
+    .k-card.k-only {
+        .border-radius( @card-border-radius );
+
+        > .k-card-header {
+            .border-top-radius( @card-border-radius );
+        }
+    }
+}
+
+
+
+
+// RTL
+.k-rtl,
+[dir="rtl"] {
+
+    // Deck
+    .k-card-deck {
+        .k-card + .k-card {
+            margin-left: 0;
+            margin-right: @card-deck-gap;
+        }
+    }
+}
+
+
+
+
+// IE 11
+.k-ie11 {
+
+    // IE11 needs units to be added to flex-basis when in shorthand
+    // Thus, `flex: x x 0` will be ignored and we need `flex: x x auto`
+    // See https://github.com/philipwalton/flexbugs#flexbug-4
+    .k-card-body {
+        flex: 1 1 auto;
+    }
+
+}

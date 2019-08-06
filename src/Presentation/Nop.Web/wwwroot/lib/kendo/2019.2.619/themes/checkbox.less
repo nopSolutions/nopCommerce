@@ -1,0 +1,102 @@
+/*!
+ * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+@checkbox-border-color: darken(@base, 12%);
+@checkbox-border-radius: 3px;
+@checkbox-background-color: @background;
+@checkbox-hover-border-color: darken(@base, 24%);
+@checkbox-hover-box-shadow: none;
+@checkbox-checked-border-color: darken(@base, 12%);
+@checkbox-checked-background-color: @background;
+@checkbox-checked-color: @accent;
+@checkbox-active-border-color: lighten(@accent, 13%);
+@checkbox-active-box-shadow: 0 0 2px 0 @checkbox-active-border-color;
+@checkbox-disabled-background-color: @background;
+@checkbox-disabled-color: darken(@base, 29%);
+@checkbox-disabled-border-color: darken(@base, 12%);
+@checkbox-indeterminate-gradient: @selected-gradient;
+@checkbox-indeterminate-border-color: @checkbox-active-border-color;
+@checkbox-indeterminate-background-color: @checkbox-checked-color;
+@checkbox-indeterminate-hover-background-color: @checkbox-indeterminate-background-color;
+@checkbox-indeterminate-hover-border-color: @checkbox-indeterminate-background-color;
+@checkbox-indeterminate-border-radius: (@checkbox-border-radius - 1);
+
+.k-checkbox-label:before{
+    border-color: @checkbox-border-color;
+    background: @checkbox-background-color;
+    border-radius: @checkbox-border-radius;
+}
+
+.k-checkbox:hover + .k-checkbox-label:before,
+.k-checkbox:checked:hover + .k-checkbox-label:before,
+.k-checkbox-label:hover:before,
+.k-checkbox:checked + .k-checkbox-label:hover:before  {
+    border-color: @checkbox-hover-border-color;
+    box-shadow: @checkbox-hover-box-shadow;
+}
+
+.k-checkbox:checked + .k-checkbox-label:before {
+    background-color: @checkbox-checked-background-color;
+    border-color: @checkbox-checked-border-color;
+    color: @checkbox-checked-color;
+}
+
+.k-checkbox:active + .k-checkbox-label:before,
+.k-checkbox-label:active:before {
+    box-shadow: @checkbox-active-box-shadow;
+    border-color: @checkbox-active-border-color;
+}
+
+.k-checkbox:checked:active + .k-checkbox-label:before,
+.k-checkbox:checked + .k-checkbox-label:active:before {
+    box-shadow: @checkbox-active-box-shadow;
+    border-color: @checkbox-active-border-color;
+}
+
+.k-checkbox:disabled + .k-checkbox-label {
+    color: @checkbox-disabled-color;
+}
+
+.k-checkbox:disabled + .k-checkbox-label:hover:before {
+    box-shadow: none;
+}
+
+.k-checkbox:disabled + .k-checkbox-label:before,
+.k-checkbox:checked:disabled + .k-checkbox-label:before,
+.k-checkbox:checked:disabled + .k-checkbox-label:active:before,
+.k-checkbox:checked:disabled + .k-checkbox-label:hover:before  {
+    color: @checkbox-disabled-color;
+    background: @checkbox-disabled-background-color;
+    border-color: @checkbox-disabled-border-color;
+    border-radius: @checkbox-border-radius;
+}
+
+.k-checkbox:focus + .k-checkbox-label:before,
+.k-checkbox:focus + .k-checkbox-label:hover:before {
+    border-color: @checkbox-active-border-color;
+    box-shadow: @checkbox-active-box-shadow;
+}
+
+.k-checkbox:indeterminate + .k-checkbox-label:after {
+    background-color: @checkbox-indeterminate-background-color;
+    .composite-background(@checkbox-indeterminate-gradient);
+    border-color: @checkbox-indeterminate-border-color;
+    border-radius: @checkbox-indeterminate-border-radius;
+}
+
+.k-checkbox:indeterminate:hover + .k-checkbox-label:after {
+    border-color: @checkbox-indeterminate-hover-border-color;
+    background-color: @checkbox-indeterminate-hover-background-color;
+}
