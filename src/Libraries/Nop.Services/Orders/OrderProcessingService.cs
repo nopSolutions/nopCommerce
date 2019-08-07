@@ -1019,7 +1019,7 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //order notes, notifications
-            AddOrderNote(order, $"Order status has been changed to {os.GetLocalizedEnum(_localizationService,_workContext}");
+            AddOrderNote(order, $"Order status has been changed to {os.GetLocalizedEnum(_localizationService,_workContext)}");
 
             if (prevOrderStatus != OrderStatus.Complete &&
                 os == OrderStatus.Complete
