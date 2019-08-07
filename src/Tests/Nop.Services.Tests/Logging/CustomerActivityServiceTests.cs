@@ -59,16 +59,14 @@ namespace Nop.Services.Tests.Logging
             _activity1 = new ActivityLog
             {
                 Id = 1,
-                ActivityLogType = _activityType1,
-                CustomerId = _customer1.Id,
-                Customer = _customer1
+                ActivityLogTypeId = _activityType1.Id,
+                CustomerId = _customer1.Id
             };
             _activity2 = new ActivityLog
             {
                 Id = 2,
-                ActivityLogType = _activityType2,
-                CustomerId = _customer2.Id,
-                Customer = _customer2
+                ActivityLogTypeId = _activityType2.Id,
+                CustomerId = _customer2.Id
             };
             _cacheManager = new TestCacheManager();
             _workContext = new Mock<IWorkContext>();

@@ -1035,7 +1035,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 var customerActivityLogModel = logItem.ToModel<CustomerActivityLogModel>();
 
                 //fill in additional values (not existing in the entity)
-                customerActivityLogModel.ActivityLogTypeName = logItem.ActivityLogType.Name;
+                customerActivityLogModel.ActivityLogTypeName = _customerActivityService.GetActivityTypeById(logItem.ActivityLogTypeId)?.Name;
 
                 //convert dates to the user time
                 customerActivityLogModel.CreatedOn =

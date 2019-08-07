@@ -40,6 +40,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Seo;
 
@@ -5302,6 +5303,8 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallActivityLog(string defaultUserEmail)
         {
+            var customerActivityService = EngineContext.Current.Resolve<ICustomerActivityService>();
+
             //default customer/user
             var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
             if (defaultCustomer == null)
@@ -5309,42 +5312,46 @@ namespace Nop.Services.Installation
 
             _activityLogRepository.Insert(new ActivityLog
             {
-                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("EditCategory")),
+                ActivityLogTypeId = customerActivityService.GetActivityTypeBySystemKeyword("EditCategory")?.Id ?? throw new Exception("Cannot load LogType: EditCategory"),
                 Comment = "Edited a category ('Computers')",
                 CreatedOnUtc = DateTime.UtcNow,
-                Customer = defaultCustomer,
+                CustomerId = defaultCustomer.Id,
                 IpAddress = "127.0.0.1"
             });
+
             _activityLogRepository.Insert(new ActivityLog
             {
-                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("EditDiscount")),
+                ActivityLogTypeId = customerActivityService.GetActivityTypeBySystemKeyword("EditDiscount")?.Id ?? throw new Exception("Cannot load LogType: EditDiscount"),
                 Comment = "Edited a discount ('Sample discount with coupon code')",
                 CreatedOnUtc = DateTime.UtcNow,
-                Customer = defaultCustomer,
+                CustomerId = defaultCustomer.Id,
                 IpAddress = "127.0.0.1"
             });
+
             _activityLogRepository.Insert(new ActivityLog
             {
-                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("EditSpecAttribute")),
+                ActivityLogTypeId = customerActivityService.GetActivityTypeBySystemKeyword("EditSpecAttribute")?.Id ?? throw new Exception("Cannot load LogType: EditSpecAttribute"),
                 Comment = "Edited a specification attribute ('CPU Type')",
                 CreatedOnUtc = DateTime.UtcNow,
-                Customer = defaultCustomer,
+                CustomerId = defaultCustomer.Id,
                 IpAddress = "127.0.0.1"
             });
+
             _activityLogRepository.Insert(new ActivityLog
             {
-                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("AddNewProductAttribute")),
+                ActivityLogTypeId = customerActivityService.GetActivityTypeBySystemKeyword("AddNewProductAttribute")?.Id ?? throw new Exception("Cannot load LogType: AddNewProductAttribute"),
                 Comment = "Added a new product attribute ('Some attribute')",
                 CreatedOnUtc = DateTime.UtcNow,
-                Customer = defaultCustomer,
+                CustomerId = defaultCustomer.Id,
                 IpAddress = "127.0.0.1"
             });
+
             _activityLogRepository.Insert(new ActivityLog
             {
-                ActivityLogType = _activityLogTypeRepository.Table.First(alt => alt.SystemKeyword.Equals("DeleteGiftCard")),
+                ActivityLogTypeId = customerActivityService.GetActivityTypeBySystemKeyword("DeleteGiftCard")?.Id ?? throw new Exception("Cannot load LogType: DeleteGiftCard"),
                 Comment = "Deleted a gift card ('bdbbc0ef-be57')",
                 CreatedOnUtc = DateTime.UtcNow,
-                Customer = defaultCustomer,
+                CustomerId = defaultCustomer.Id,
                 IpAddress = "127.0.0.1"
             });
         }

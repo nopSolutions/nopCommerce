@@ -43,6 +43,13 @@ namespace Nop.Services.Logging
         ActivityLogType GetActivityTypeById(int activityLogTypeId);
 
         /// <summary>
+        /// Gets an activity log type item
+        /// </summary>
+        /// <param name="activityLogTypeId">Activity log type identifier</param>
+        /// <returns>Activity log type item</returns>
+        ActivityLogType GetActivityTypeBySystemKeyword(string systemKeyword);
+
+        /// <summary>
         /// Inserts an activity log item
         /// </summary>
         /// <param name="systemKeyword">System keyword</param>

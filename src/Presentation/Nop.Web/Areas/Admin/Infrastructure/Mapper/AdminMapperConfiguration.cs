@@ -1033,10 +1033,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.CreatedOn, options => options.Ignore())
                 .ForMember(model => model.CustomerEmail, options => options.Ignore());
             CreateMap<ActivityLogModel, ActivityLog>()
-                .ForMember(entity => entity.ActivityLogType, options => options.Ignore())
                 .ForMember(entity => entity.ActivityLogTypeId, options => options.Ignore())
                 .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-                .ForMember(entity => entity.Customer, options => options.Ignore())
                 .ForMember(entity => entity.EntityId, options => options.Ignore())
                 .ForMember(entity => entity.EntityName, options => options.Ignore());
 
@@ -1050,7 +1048,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.CustomerEmail, options => options.Ignore());
             CreateMap<LogModel, Log>()
                 .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-                .ForMember(entity => entity.Customer, options => options.Ignore())
                 .ForMember(entity => entity.LogLevelId, options => options.Ignore());
         }
 

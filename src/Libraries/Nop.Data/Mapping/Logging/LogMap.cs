@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Logging;
 
@@ -24,11 +24,6 @@ namespace Nop.Data.Mapping.Logging
             builder.Property(logItem => logItem.IpAddress).HasMaxLength(200);
 
             builder.Ignore(logItem => logItem.LogLevel);
-
-            builder.HasOne(logItem => logItem.Customer)
-                .WithMany()
-                .HasForeignKey(logItem => logItem.CustomerId)
-                .OnDelete(DeleteBehavior.Cascade);
 
             base.Configure(builder);
         }

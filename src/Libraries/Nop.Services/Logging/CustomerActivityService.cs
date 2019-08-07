@@ -175,6 +175,14 @@ namespace Nop.Services.Logging
             return _activityLogTypeRepository.GetById(activityLogTypeId);
         }
 
+        public ActivityLogType GetActivityTypeBySystemKeyword(string systemKeyword)
+        {
+            if (string.IsNullOrEmpty(systemKeyword))
+                return null;
+
+            return _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword.Equals(systemKeyword));
+        }
+
         /// <summary>
         /// Inserts an activity log item
         /// </summary>
