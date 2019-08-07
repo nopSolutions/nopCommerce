@@ -1127,7 +1127,7 @@ namespace Nop.Services.Messages
         /// Add customer tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
-        /// <param name="customer">Customer</param>
+        /// <param name="customerId">Customer</param>
         public virtual void AddCustomerTokens(IList<Token> tokens, int customerId)
         {
             var customer = _customerService.GetCustomerById(customerId) ?? throw new Exception("Customer is not found");
