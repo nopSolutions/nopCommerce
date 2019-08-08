@@ -249,32 +249,27 @@ namespace Nop.Web.Areas.Admin.Factories
                 toUtc: createdOnToValue,
                 commentText: searchModel.SearchText).ToPagedList(searchModel);
 
-            if (!comments?.Any() ?? true)
+            if (comments is null)
                 return new BlogCommentListModel();
-
-            var blogPosts = _blogService.GetBlogPostsByIds(comments.Select(x => x.BlogPostId).ToArray());
-
-            if (!blogPosts?.Any() ?? true)
-                return new BlogCommentListModel();
-
-            //prepare store names (to avoid loading for each comment)
-            var storeNames = _storeService.GetAllStores().ToDictionary(store => store.Id, store => store.Name);
 
             //prepare list model
             var model = new BlogCommentListModel().PrepareToGrid(searchModel, comments, () =>
             {
+                var blogPosts = _blogService.GetBlogPostsByIds(comments.GroupBy(x => x.BlogPostId).Select(x => x.Key).ToArray());
+
+                //prepare store names (to avoid loading for each comment)
+                var storeNames = _storeService.GetAllStores().ToDictionary(store => store.Id, store => store.Name);
+
                 return comments.Select(blogComment =>
                 {
                     //fill in model values from the entity
                     var commentModel = blogComment.ToModel<BlogCommentModel>();
 
-                    //TODO: needed found better way
                     //set title from linked blog post
-                    commentModel.BlogPostTitle = blogPosts.FirstOrDefault(x => x.Id == blogComment.BlogPostId)?.Title;
+                    commentModel.BlogPostTitle = blogPosts?.FirstOrDefault(x => x.Id == blogComment.BlogPostId)?.Title;
 
                     if (_customerService.GetCustomerById(blogComment.CustomerId) is Customer customer)
                         commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
-                    //TODO end
 
                     //fill in additional values (not existing in the entity)
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc);

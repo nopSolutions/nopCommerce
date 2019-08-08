@@ -121,15 +121,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 ipAddress: searchModel.IpAddress,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
+            if (activityLog is null)
+                return new ActivityLogListModel();
+
             //prepare list model
             var model = new ActivityLogListModel().PrepareToGrid(searchModel, activityLog, () =>
             {
+                var activityLogCustomers = _customerService.GetCustomersByIds(activityLog.GroupBy(x => x.CustomerId).Select(x => x.Key).ToArray());
+
                 return activityLog.Select(logItem =>
                 {
                     //fill in model values from the entity
                     var logItemModel = logItem.ToModel<ActivityLogModel>();
                     logItemModel.ActivityLogTypeName = _customerActivityService.GetActivityTypeById(logItem.ActivityLogTypeId)?.Name;
-                    logItemModel.CustomerEmail = _customerService.GetCustomerById(logItem.CustomerId)?.Email;
+                    logItemModel.CustomerEmail = activityLogCustomers?.FirstOrDefault(x => x.Id == logItem.CustomerId)?.Email;
 
                     //convert dates to the user time
                     logItemModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(logItem.CreatedOnUtc, DateTimeKind.Utc);

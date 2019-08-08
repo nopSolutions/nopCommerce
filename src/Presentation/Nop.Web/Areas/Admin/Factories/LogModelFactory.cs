@@ -91,9 +91,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 logLevel: logLevel,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
+            if (logItems is null)
+                return new LogListModel();
+
             //prepare list model
             var model = new LogListModel().PrepareToGrid(searchModel, logItems, () =>
             {
+                var logCustomers = _customerService.GetCustomersByIds(logItems.GroupBy(x => x.CustomerId ?? 0).Select(x => x.Key).ToArray());
+
                 //fill in model values from the entity
                 return logItems.Select(logItem =>
                 {
@@ -107,7 +112,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     logModel.LogLevel = _localizationService.GetLocalizedEnum(logItem.LogLevel);
                     logModel.ShortMessage = HtmlHelper.FormatText(logItem.ShortMessage, false, true, false, false, false, false);
                     logModel.FullMessage = string.Empty;
-                    logModel.CustomerEmail = logItem.CustomerId.HasValue ? _customerService.GetCustomerById(logItem.CustomerId.Value)?.Email : string.Empty;
+                    logModel.CustomerEmail = logCustomers?.FirstOrDefault(x => x.Id == logItem.CustomerId)?.Email ?? string.Empty;
 
                     return logModel;
                 });
