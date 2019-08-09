@@ -339,7 +339,12 @@ namespace Nop.Core.Domain.Catalog
         public int MinStockQuantity { get; set; }
 
         /// <summary>
-        /// Gets or sets the low stock activity identifier
+        /// Gets or sets the low stock quantity (value which indicates that only few products left in stock)
+        /// </summary>
+        public int LowStockQuantity { get; set; }
+
+        /// <summary>
+        /// Gets or sets the low (min) stock activity identifier (action to perform when min value is reached)
         /// </summary>
         public int LowStockActivityId { get; set; }
 

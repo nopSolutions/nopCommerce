@@ -203,6 +203,11 @@ namespace Nop.Core.Domain.Catalog
         public bool MinimumStockQuantity { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether 'Low stock quantity' field is shown
+        /// </summary>
+        public bool LowStockQuantity { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether 'Low stock activity' field is shown
         /// </summary>
         public bool LowStockActivity { get; set; }
