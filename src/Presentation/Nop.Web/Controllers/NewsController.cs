@@ -187,7 +187,8 @@ namespace Nop.Web.Controllers
                     StoreId = _storeContext.CurrentStore.Id,
                     CreatedOnUtc = DateTime.UtcNow,
                 };
-                newsItem.NewsComments.Add(comment);
+
+                _newsService.InsertNewsComment(comment);
                 _newsService.UpdateNews(newsItem);
 
                 //notify a store owner;

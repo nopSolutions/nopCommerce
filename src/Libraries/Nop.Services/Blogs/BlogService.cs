@@ -423,7 +423,7 @@ namespace Nop.Services.Blogs
         /// <summary>
         /// Inserts a blog comment
         /// </summary>
-        /// <param name="blogPost">Blog comment</param>
+        /// <param name="blogComment">Blog comment</param>
         public virtual void InsertBlogComment(BlogComment blogComment)
         {
             if (blogComment == null)

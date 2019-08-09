@@ -665,12 +665,28 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
+        /// Gets formatted customer name
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <param name="stripTooLong">Strip too long customer name</param>
+        /// <param name="maxLength">Maximum customer name length</param>
+        /// <returns>Formatted text</returns>
+        public virtual string FormatUsername(int customerId, bool stripTooLong = false, int maxLength = 0)
+        {
+            if (customerId == 0)
+                return string.Empty;
+
+            return FormatUsername(_customerRepository.GetById(customerId), stripTooLong, maxLength);
+        }
+
+        /// <summary>
         /// Formats the customer name
         /// </summary>
         /// <param name="customer">Source</param>
         /// <param name="stripTooLong">Strip too long customer name</param>
         /// <param name="maxLength">Maximum customer name length</param>
         /// <returns>Formatted text</returns>
+        [Obsolete("Will be removed after branch merge issue-239-ef-performance. The recommended alternative is FormatUsername(int customerId, bool stripTooLong = false, int maxLength = 0)")]
         public virtual string FormatUsername(Customer customer, bool stripTooLong = false, int maxLength = 0)
         {
             if (customer == null)
@@ -1145,6 +1161,29 @@ namespace Nop.Services.Customers
 
             //event notification
             _eventPublisher.EntityUpdated(customerPassword);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether customer is in a certain customer role
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <param name="customerRoleSystemName">Customer role system name</param>
+        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
+        /// <returns>Result</returns>
+        public bool IsInCustomerRole(int customerId,
+            string customerRoleSystemName, bool onlyActiveCustomerRoles = true)
+        {
+            var customer = GetCustomerById(customerId);
+
+            if (customer == null)
+                throw new ArgumentException(nameof(customerId));
+
+            if (string.IsNullOrEmpty(customerRoleSystemName))
+                throw new ArgumentNullException(nameof(customerRoleSystemName));
+
+            var result = customer.CustomerRoles
+                .FirstOrDefault(cr => (!onlyActiveCustomerRoles || cr.Active) && cr.SystemName == customerRoleSystemName) != null;
+            return result;
         }
 
         /// <summary>

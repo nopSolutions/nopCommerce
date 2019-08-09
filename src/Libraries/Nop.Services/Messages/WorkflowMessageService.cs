@@ -1997,7 +1997,7 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddNewsCommentTokens(commonTokens, newsComment);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, newsComment.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, newsComment.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {

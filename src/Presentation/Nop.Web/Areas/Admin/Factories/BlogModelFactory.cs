@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -249,14 +248,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 toUtc: createdOnToValue,
                 commentText: searchModel.SearchText).ToPagedList(searchModel);
 
-            if (comments is null)
-                return new BlogCommentListModel();
-
             //prepare list model
             var model = new BlogCommentListModel().PrepareToGrid(searchModel, comments, () =>
-            {
-                var blogPosts = _blogService.GetBlogPostsByIds(comments.GroupBy(x => x.BlogPostId).Select(x => x.Key).ToArray());
-
+            {                
                 //prepare store names (to avoid loading for each comment)
                 var storeNames = _storeService.GetAllStores().ToDictionary(store => store.Id, store => store.Name);
 
@@ -264,9 +258,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     //fill in model values from the entity
                     var commentModel = blogComment.ToModel<BlogCommentModel>();
-
+                    
                     //set title from linked blog post
-                    commentModel.BlogPostTitle = blogPosts?.FirstOrDefault(x => x.Id == blogComment.BlogPostId)?.Title;
+                    commentModel.BlogPostTitle = _blogService.GetBlogPostById(blogComment.BlogPostId)?.Title;
 
                     if (_customerService.GetCustomerById(blogComment.CustomerId) is Customer customer)
                         commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");

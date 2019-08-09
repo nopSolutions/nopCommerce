@@ -184,12 +184,22 @@ namespace Nop.Services.Customers
         string GetCustomerFullName(Customer customer);
 
         /// <summary>
+        /// Gets formatted customer name
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <param name="stripTooLong">Strip too long customer name</param>
+        /// <param name="maxLength">Maximum customer name length</param>
+        /// <returns>Formatted text</returns>
+        string FormatUsername(int customerId, bool stripTooLong = false, int maxLength = 0);
+
+        /// <summary>
         /// Formats the customer name
         /// </summary>
         /// <param name="customer">Source</param>
         /// <param name="stripTooLong">Strip too long customer name</param>
         /// <param name="maxLength">Maximum customer name length</param>
         /// <returns>Formatted text</returns>
+        [Obsolete("Will be removed after branch merge issue-239-ef-performance. The recommended alternative is FormatUsername(int customerId, bool stripTooLong = false, int maxLength = 0)")]
         string FormatUsername(Customer customer, bool stripTooLong = false, int maxLength = 0);
 
         /// <summary>
@@ -330,6 +340,15 @@ namespace Nop.Services.Customers
         bool IsPasswordRecoveryLinkExpired(Customer customer);
 
         /// <summary>
+        /// Gets a value indicating whether customer is in a certain customer role
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <param name="customerRoleSystemName">Customer role system name</param>
+        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
+        /// <returns>Result</returns>
+        bool IsInCustomerRole(int customerId, string customerRoleSystemName, bool onlyActiveCustomerRoles = true);
+        
+            /// <summary>
         /// Check whether customer password is expired 
         /// </summary>
         /// <param name="customer">Customer</param>

@@ -1153,11 +1153,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.NewsItemTitle, options => options.Ignore())
                 .ForMember(model => model.StoreName, options => options.Ignore());
             CreateMap<NewsCommentModel, NewsComment>()
-                .ForMember(entity => entity.NewsItem, options => options.Ignore())
                 .ForMember(entity => entity.CommentTitle, options => options.Ignore())
                 .ForMember(entity => entity.CommentText, options => options.Ignore())
                 .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-                .ForMember(entity => entity.Customer, options => options.Ignore())
                 .ForMember(entity => entity.NewsItemId, options => options.Ignore())
                 .ForMember(entity => entity.CustomerId, options => options.Ignore())
                 .ForMember(entity => entity.StoreId, options => options.Ignore())
@@ -1167,12 +1165,11 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ApprovedComments, options => options.Ignore())
                 .ForMember(model => model.AvailableLanguages, options => options.Ignore())
                 .ForMember(model => model.CreatedOn, options => options.Ignore())
+                .ForMember(model => model.LanguageName, options => options.Ignore())
                 .ForMember(model => model.NotApprovedComments, options => options.Ignore())
                 .ForMember(model => model.SeName, options => options.Ignore());
             CreateMap<NewsItemModel, NewsItem>()
-                .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-                .ForMember(entity => entity.Language, options => options.Ignore())
-                .ForMember(entity => entity.NewsComments, options => options.Ignore());
+                .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore());
 
             CreateMap<NewsSettings, NewsSettingsModel>()
                 .ForMember(model => model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, options => options.Ignore())

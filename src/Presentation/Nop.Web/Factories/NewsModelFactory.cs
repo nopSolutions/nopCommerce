@@ -89,16 +89,17 @@ namespace Nop.Web.Factories
             {
                 Id = newsComment.Id,
                 CustomerId = newsComment.CustomerId,
-                CustomerName = _customerService.FormatUsername(newsComment.Customer),
+                CustomerName = _customerService.FormatUsername(newsComment.CustomerId),
                 CommentTitle = newsComment.CommentTitle,
                 CommentText = newsComment.CommentText,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc),
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && newsComment.Customer != null && !newsComment.Customer.IsGuest(),
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && newsComment.CustomerId != 0 && !_customerService.IsInCustomerRole(newsComment.CustomerId, NopCustomerDefaults.GuestsRoleName),
             };
+
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
                 model.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                    _genericAttributeService.GetAttribute<int>(newsComment.Customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                    _genericAttributeService.GetAttribute<Customer, int>(newsComment.CustomerId, NopCustomerDefaults.AvatarPictureIdAttribute),
                     _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
             }
 
@@ -139,9 +140,11 @@ namespace Nop.Web.Factories
 
             if (prepareComments)
             {
-                var newsComments = newsItem.NewsComments.Where(comment => comment.IsApproved);
-                if (_newsSettings.ShowNewsCommentsPerStore)
-                    newsComments = newsComments.Where(comment => comment.StoreId == _storeContext.CurrentStore.Id);
+
+                var newsComments = _newsService.GetAllComments(
+                    newsItemId: newsItem.Id,
+                    approved: true,
+                    storeId: _newsSettings.ShowNewsCommentsPerStore ? _storeContext.CurrentStore.Id : 0);
 
                 foreach (var nc in newsComments.OrderBy(comment => comment.CreatedOnUtc))
                 {
@@ -198,8 +201,10 @@ namespace Nop.Web.Factories
                 WorkingLanguageId = _workContext.WorkingLanguage.Id
             };
 
-            if (command.PageSize <= 0) command.PageSize = _newsSettings.NewsArchivePageSize;
-            if (command.PageNumber <= 0) command.PageNumber = 1;
+            if (command.PageSize <= 0)
+                command.PageSize = _newsSettings.NewsArchivePageSize;
+            if (command.PageNumber <= 0)
+                command.PageNumber = 1;
 
             var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id,
                 command.PageNumber - 1, command.PageSize);

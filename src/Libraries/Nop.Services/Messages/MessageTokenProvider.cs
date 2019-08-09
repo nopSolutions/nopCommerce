@@ -37,6 +37,7 @@ using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
+using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Seo;
@@ -67,6 +68,7 @@ namespace Nop.Services.Messages
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
+        private readonly INewsService _newsService;
         private readonly IOrderService _orderService;
         private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IPaymentService _paymentService;
@@ -102,6 +104,7 @@ namespace Nop.Services.Messages
             IGenericAttributeService genericAttributeService,
             ILanguageService languageService,
             ILocalizationService localizationService,
+            INewsService newsService,
             IOrderService orderService,
             IPaymentPluginManager paymentPluginManager,
             IPaymentService paymentService,
@@ -131,6 +134,7 @@ namespace Nop.Services.Messages
             _genericAttributeService = genericAttributeService;
             _languageService = languageService;
             _localizationService = localizationService;
+            _newsService = newsService;
             _orderService = orderService;
             _paymentPluginManager = paymentPluginManager;
             _paymentService = paymentService;
@@ -1140,6 +1144,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="customer">Customer identifier</param>
+        [Obsolete("Will be removed after branch merge issue-239-ef-performance. The recommended alternative is AddCustomerTokens(IList<Token> tokens, int customerId)")]
         public virtual void AddCustomerTokens(IList<Token> tokens, Customer customer)
         {
             tokens.Add(new Token("Customer.Email", customer.Email));
@@ -1240,9 +1245,27 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="newsComment">News comment</param>
+        public virtual void AddNewsCommentTokens(IList<Token> tokens, int newsItemId)
+        {
+            var newsItem = _newsService.GetNewsById(newsItemId);
+
+            tokens.Add(new Token("NewsComment.NewsTitle", newsItem.Title));
+
+            //event notification
+            _eventPublisher.EntityTokensAdded(newsItem, tokens);
+        }
+
+        /// <summary>
+        /// Add news comment tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="newsComment">News comment</param>
+        [Obsolete("Will be removed after branch merge issue-239-ef-performance")]
         public virtual void AddNewsCommentTokens(IList<Token> tokens, NewsComment newsComment)
         {
-            tokens.Add(new Token("NewsComment.NewsTitle", newsComment.NewsItem.Title));
+            var newsItem = _newsService.GetNewsById(newsComment.NewsItemId);
+
+            tokens.Add(new Token("NewsComment.NewsTitle", newsItem.Title));
 
             //event notification
             _eventPublisher.EntityTokensAdded(newsComment, tokens);

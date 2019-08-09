@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.News;
 
@@ -25,11 +25,6 @@ namespace Nop.Data.Mapping.News
             builder.Property(newsItem => newsItem.Full).IsRequired();
             builder.Property(newsItem => newsItem.MetaKeywords).HasMaxLength(400);
             builder.Property(newsItem => newsItem.MetaTitle).HasMaxLength(400);
-
-            builder.HasOne(newsItem => newsItem.Language)
-                .WithMany()
-                .HasForeignKey(newsItem => newsItem.LanguageId)
-                .IsRequired();
 
             base.Configure(builder);
         }

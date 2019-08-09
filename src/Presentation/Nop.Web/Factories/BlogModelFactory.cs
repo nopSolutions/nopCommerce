@@ -137,18 +137,16 @@ namespace Nop.Web.Factories
 
             //number of blog comments
             var storeId = _blogSettings.ShowBlogCommentsPerStore ? _storeContext.CurrentStore.Id : 0;
+
             var cacheKey = string.Format(NopModelCacheDefaults.BlogCommentsNumberKey, blogPost.Id, storeId, true);
             model.NumberOfComments = _cacheManager.Get(cacheKey, () => _blogService.GetBlogCommentsCount(blogPost, storeId, true));
 
             if (prepareComments)
             {                
-                var blogComments = _blogService.GetAllComments(blogPostId: blogPost.Id, approved: true);
-
-                if (blogComments is null)
-                    return;
-
-                if (_blogSettings.ShowBlogCommentsPerStore)
-                    blogComments = blogComments.Where(comment => comment.StoreId == _storeContext.CurrentStore.Id).ToList();
+                var blogComments = _blogService.GetAllComments(
+                    blogPostId: blogPost.Id, 
+                    approved: true,
+                    storeId: storeId);
 
                 foreach (var bc in blogComments.OrderBy(comment => comment.CreatedOnUtc))
                 {

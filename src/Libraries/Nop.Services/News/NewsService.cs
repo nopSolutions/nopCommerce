@@ -311,6 +311,21 @@ namespace Nop.Services.News
             }
         }
 
+        /// <summary>
+        /// Inserts a news comment
+        /// </summary>
+        /// <param name="comment">News comment</param>
+        public virtual void InsertNewsComment(NewsComment comment)
+        {
+            if (comment == null)
+                throw new ArgumentNullException(nameof(comment));
+
+            _newsCommentRepository.Insert(comment);
+
+            //event notification
+            _eventPublisher.EntityInserted(comment);
+        }
+
         #endregion
 
         #endregion

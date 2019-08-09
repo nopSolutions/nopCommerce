@@ -42,6 +42,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
+using Nop.Services.News;
 using Nop.Services.Seo;
 
 namespace Nop.Services.Installation
@@ -5304,7 +5305,6 @@ namespace Nop.Services.Installation
         protected virtual void InstallActivityLog(string defaultUserEmail)
         {
             var customerActivityService = EngineContext.Current.Resolve<ICustomerActivityService>();
-
             //default customer/user
             var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
             if (defaultCustomer == null)
@@ -5312,7 +5312,7 @@ namespace Nop.Services.Installation
 
             _activityLogRepository.Insert(new ActivityLog
             {
-                ActivityLogTypeId = customerActivityService.GetActivityTypeBySystemKeyword("EditCategory")?.Id ?? throw new Exception("Cannot load LogType: EditCategory"),
+                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword.Equals("EditCategory"))?.Id ?? throw new Exception("Cannot load LogType: EditCategory"),
                 Comment = "Edited a category ('Computers')",
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = defaultCustomer.Id,
@@ -5321,7 +5321,7 @@ namespace Nop.Services.Installation
 
             _activityLogRepository.Insert(new ActivityLog
             {
-                ActivityLogTypeId = customerActivityService.GetActivityTypeBySystemKeyword("EditDiscount")?.Id ?? throw new Exception("Cannot load LogType: EditDiscount"),
+                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword.Equals("EditDiscount"))?.Id ?? throw new Exception("Cannot load LogType: EditDiscount"),
                 Comment = "Edited a discount ('Sample discount with coupon code')",
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = defaultCustomer.Id,
@@ -5330,7 +5330,7 @@ namespace Nop.Services.Installation
 
             _activityLogRepository.Insert(new ActivityLog
             {
-                ActivityLogTypeId = customerActivityService.GetActivityTypeBySystemKeyword("EditSpecAttribute")?.Id ?? throw new Exception("Cannot load LogType: EditSpecAttribute"),
+                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword.Equals("EditSpecAttribute"))?.Id ?? throw new Exception("Cannot load LogType: EditSpecAttribute"),
                 Comment = "Edited a specification attribute ('CPU Type')",
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = defaultCustomer.Id,
@@ -5339,7 +5339,7 @@ namespace Nop.Services.Installation
 
             _activityLogRepository.Insert(new ActivityLog
             {
-                ActivityLogTypeId = customerActivityService.GetActivityTypeBySystemKeyword("AddNewProductAttribute")?.Id ?? throw new Exception("Cannot load LogType: AddNewProductAttribute"),
+                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword.Equals("AddNewProductAttribute"))?.Id ?? throw new Exception("Cannot load LogType: AddNewProductAttribute"),
                 Comment = "Added a new product attribute ('Some attribute')",
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = defaultCustomer.Id,
@@ -5348,7 +5348,7 @@ namespace Nop.Services.Installation
 
             _activityLogRepository.Insert(new ActivityLog
             {
-                ActivityLogTypeId = customerActivityService.GetActivityTypeBySystemKeyword("DeleteGiftCard")?.Id ?? throw new Exception("Cannot load LogType: DeleteGiftCard"),
+                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword.Equals("DeleteGiftCard"))?.Id ?? throw new Exception("Cannot load LogType: DeleteGiftCard"),
                 Comment = "Deleted a gift card ('bdbbc0ef-be57')",
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = defaultCustomer.Id,
@@ -11077,13 +11077,14 @@ namespace Nop.Services.Installation
         protected virtual void InstallNews(string defaultUserEmail)
         {
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
+            var newsService = EngineContext.Current.Resolve<INewsService>();
 
             var news = new List<NewsItem>
             {
                 new NewsItem
                 {
                     AllowComments = true,
-                    Language = defaultLanguage,
+                    LanguageId = defaultLanguage.Id,
                     Title = "About nopCommerce",
                     Short = "It's stable and highly usable. From downloads to documentation, www.nopCommerce.com offers a comprehensive base of information, resources, and support to the nopCommerce community.",
                     Full = "<p>For full feature list go to <a href=\"https://www.nopCommerce.com\">nopCommerce.com</a></p><p>Providing outstanding custom search engine optimization, web development services and e-commerce development solutions to our clients at a fair price in a professional manner.</p>",
@@ -11093,7 +11094,7 @@ namespace Nop.Services.Installation
                 new NewsItem
                 {
                     AllowComments = true,
-                    Language = defaultLanguage,
+                    LanguageId = defaultLanguage.Id,
                     Title = "nopCommerce new release!",
                     Short = "nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included! nopCommerce is a fully customizable shopping cart",
                     Full = "<p>nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included!</p>",
@@ -11103,7 +11104,7 @@ namespace Nop.Services.Installation
                 new NewsItem
                 {
                     AllowComments = true,
-                    Language = defaultLanguage,
+                    LanguageId = defaultLanguage.Id,
                     Title = "New online store is open!",
                     Short = "The new nopCommerce store is open now! We are very excited to offer our new range of products. We will be constantly adding to our range so please register on our site.",
                     Full = "<p>Our online store is officially up and running. Stock up for the holiday season! We have a great selection of items. We will be constantly adding to our range so please register on our site, this will enable you to keep up to date with any new products.</p><p>All shipping is worldwide and will leave the same day an order is placed! Happy Shopping and spread the word!!</p>",
@@ -11138,7 +11139,7 @@ namespace Nop.Services.Installation
 
             foreach (var newsItem in news)
             {
-                newsItem.NewsComments.Add(new NewsComment
+                newsService.InsertNewsComment(new NewsComment
                 {
                     NewsItemId = newsItem.Id,
                     CustomerId = defaultCustomer.Id,
