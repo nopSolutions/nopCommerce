@@ -161,7 +161,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("BlogPosts");
-                
+
                 return RedirectToAction("BlogPostEdit", new { id = blogPost.Id });
             }
 
@@ -219,7 +219,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("BlogPosts");
-                
+
                 return RedirectToAction("BlogPostEdit", new { id = blogPost.Id });
             }
 
@@ -299,9 +299,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             //fill entity from model
             comment = model.ToEntity(comment);
 
-            var blogPost =_blogService.GetBlogPostById(comment.BlogPostId);
-            _blogService.UpdateBlogPost(blogPost);
-
             //raise event (only if it wasn't approved before and is approved now)
             if (!previousIsApproved && comment.IsApproved)
                 _eventPublisher.Publish(new BlogCommentApprovedEvent(comment));
@@ -369,10 +366,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 blogComment.IsApproved = true;
 
-                var blogPost = _blogService.GetBlogPostById(blogComment.BlogPostId);
-                _blogService.UpdateBlogPost(blogPost);
-
-
                 //raise event 
                 _eventPublisher.Publish(new BlogCommentApprovedEvent(blogComment));
 
@@ -399,9 +392,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var blogComment in blogComments)
             {
                 blogComment.IsApproved = false;
-
-                var blogPost = _blogService.GetBlogPostById(blogComment.BlogPostId);
-                _blogService.UpdateBlogPost(blogPost);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditBlogComment",

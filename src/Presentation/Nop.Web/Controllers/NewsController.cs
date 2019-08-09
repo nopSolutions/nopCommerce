@@ -189,7 +189,6 @@ namespace Nop.Web.Controllers
                 };
 
                 _newsService.InsertNewsComment(comment);
-                _newsService.UpdateNews(newsItem);
 
                 //notify a store owner;
                 if (_newsSettings.NotifyAboutNewNewsComments)

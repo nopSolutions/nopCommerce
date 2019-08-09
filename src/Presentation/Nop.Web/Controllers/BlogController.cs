@@ -205,7 +205,6 @@ namespace Nop.Web.Controllers
                 };
 
                 _blogService.InsertBlogComment(comment);
-                _blogService.UpdateBlogPost(blogPost);
 
                 //notify a store owner
                 if (_blogSettings.NotifyAboutNewBlogComments)

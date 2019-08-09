@@ -299,9 +299,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             //fill entity from model
             comment = model.ToEntity(comment);
 
-            if (_newsService.GetNewsById(comment.NewsItemId) is NewsItem newsItem)
-                _newsService.UpdateNews(newsItem);
-
             //activity log
             _customerActivityService.InsertActivity("EditNewsComment",
                 string.Format(_localizationService.GetResource("ActivityLog.EditNewsComment"), comment.Id), comment);
@@ -371,9 +368,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 newsComment.IsApproved = true;
 
-                if (_newsService.GetNewsById(newsComment.NewsItemId) is NewsItem newsItem)
-                    _newsService.UpdateNews(newsItem);
-
                 //raise event 
                 _eventPublisher.Publish(new NewsCommentApprovedEvent(newsComment));
 
@@ -400,9 +394,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var newsComment in newsComments)
             {
                 newsComment.IsApproved = false;
-
-                if (_newsService.GetNewsById(newsComment.NewsItemId) is NewsItem newsItem)
-                    _newsService.UpdateNews(newsItem);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditNewsComment",
