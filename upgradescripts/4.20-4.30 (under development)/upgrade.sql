@@ -56,6 +56,18 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.CanShip.Hint">
     <Value>Check to apply current date to shipment.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.LowStockQuantity">
+    <Value>Low stock qty</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.LowStockQuantity.Hint">
+    <Value>When ''Manage Stock'' and ''Display availability'' are enabled and stock quantity will reach this value customers will see information about low stock (last pieces available).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.LowStockQuantity">
+    <Value>Low stock qty</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Availability.LowStock">
+    <Value>Low stock</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -144,4 +156,9 @@ BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'captchasettings.recaptcharequesttimeout', 20, 0)
 END
+GO
+
+
+--Low stock quantity
+ALTER TABLE [dbo].[Product] ADD [LowStockQuantity] int not null default(0);
 GO
