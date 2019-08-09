@@ -4,7 +4,26 @@
     <div class="availability">
         @if (!string.IsNullOrWhiteSpace(Model.StockAvailability))
         {
-            <div class="stock">
+            string stockClass = "";
+            if (Model.StockStatus != null)
+            {
+                switch (Model.StockStatus)
+                {
+                    case ProductStockStatus.InStock:
+                        stockClass = "in-stock";
+                        break;
+
+                    case ProductStockStatus.LowStock:
+                        stockClass = "low-stock";
+                        break;
+
+                    case ProductStockStatus.OutOfStock:
+                        stockClass = "out-of-stock";
+                        break;
+                }
+            }
+
+            <div class="stock @stockClass">
                 <span class="label">@T("Products.Availability"):</span>
                 <span class="value" id="stock-availability-value-@Model.Id">@Model.StockAvailability</span>
             </div>
