@@ -238,13 +238,20 @@ namespace Nop.Services.Catalog
             var stockQuantity = GetTotalStockQuantity(product);
             if (stockQuantity > 0)
             {
-                stockMessage = product.DisplayStockQuantity
-                    ?
+                if (product.DisplayStockQuantity)
+                {
                     //display "in stock" with stock quantity
-                    string.Format(_localizationService.GetResource("Products.Availability.InStockWithQuantity"), stockQuantity)
-                    :
-                    //display "in stock" without stock quantity
-                    _localizationService.GetResource("Products.Availability.InStock");
+                    stockMessage = string.Format(_localizationService.GetResource("Products.Availability.InStockWithQuantity"), stockQuantity);
+                }
+                else
+                {
+                    stockMessage = (stockQuantity > product.LowStockQuantity) ?
+                        //display "in stock" without stock quantity
+                        _localizationService.GetResource("Products.Availability.InStock")
+                                                :
+                        //display "low stock" without stock quantity
+                        _localizationService.GetResource("Products.Availability.LowStock");
+                }
             }
             else
             {
@@ -1137,6 +1144,29 @@ namespace Nop.Services.Catalog
             }
 
             return result;
+        }
+        
+        /// <summary>
+        /// Get product's in stock status. If value is <see langword="null"/> it means produt don't have managed stock.
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>In stock status</returns>
+        public virtual ProductStockStatus? GetInStockStatus(Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
+                return null;
+
+            var totalStockQuantity = GetTotalStockQuantity(product);
+
+            if (totalStockQuantity > product.LowStockQuantity)
+                return ProductStockStatus.InStock;
+            else if (totalStockQuantity > 0 && totalStockQuantity <= product.LowStockQuantity)
+                return ProductStockStatus.LowStock;
+
+            return ProductStockStatus.OutOfStock;
         }
 
         /// <summary>

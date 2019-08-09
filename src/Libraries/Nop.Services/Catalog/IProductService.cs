@@ -324,6 +324,13 @@ namespace Nop.Services.Catalog
         int GetTotalStockQuantity(Product product, bool useReservedQuantity = true, int warehouseId = 0);
 
         /// <summary>
+        /// Get product's in stock status. If value is <see langword="null"/> it means produt don't have managed stock.
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>In stock status</returns>
+        ProductStockStatus? GetInStockStatus(Product product);
+
+        /// <summary>
         /// Get number of rental periods (price ratio)
         /// </summary>
         /// <param name="product">Product</param>
