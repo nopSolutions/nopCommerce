@@ -1244,7 +1244,7 @@ namespace Nop.Services.Messages
         /// Add news comment tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
-        /// <param name="newsComment">News comment</param>
+        /// <param name="newsItemId">News item identifier</param>
         public virtual void AddNewsCommentTokens(IList<Token> tokens, int newsItemId)
         {
             var newsItem = _newsService.GetNewsById(newsItemId);

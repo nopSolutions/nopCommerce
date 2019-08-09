@@ -64,13 +64,13 @@ namespace Nop.Data.Extensions
         /// <summary>
         /// Check whether an entity is proxy
         /// </summary>
-        /// <param name="entity">Entity</param>
+        /// <param name="entityType">Entity</param>
         /// <returns>Result</returns>
-        private static bool IsProxy(this Type entity)
+        private static bool IsProxy(this Type entityType)
         {
             //in EF 6 we could use ObjectContext.GetObjectType. Now it's not available. Here is a workaround:
             //e.g. "CustomerProxy" will be derived from "Customer". And "Customer" is derived from BaseEntity
-            return entity.BaseType != null && entity.BaseType.BaseType != null && entity.BaseType.BaseType == typeof(BaseEntity);
+            return entityType.BaseType != null && entityType.BaseType.BaseType != null && entityType.BaseType.BaseType == typeof(BaseEntity);
         }
 
         /// <summary>
@@ -82,24 +82,24 @@ namespace Nop.Data.Extensions
         /// and overrides its virtual properties by inserting specific code useful for example 
         /// for tracking changes and lazy loading.
         /// </remarks>
-        /// <param name="entity"></param>
+        /// <param name="entityType"></param>
         /// <returns></returns>
-        public static Type GetUnproxiedEntityType(this Type entity)
+        public static Type GetUnproxiedEntityType(this Type entityType)
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            if (entityType == null)
+                throw new ArgumentNullException(nameof(entityType));
 
-            switch (entity)
+            switch (entityType)
             {
                 //cachable entity (get the base entity type)
                 case Type cachingType when typeof(IEntityForCaching).IsAssignableFrom(cachingType):
                     return cachingType.BaseType;
                 //EF proxy
                 case Type proxy when proxy.IsProxy():
-                    return entity.BaseType;
+                    return entityType.BaseType;
                 //not proxied entity
                 default:
-                    return entity;
+                    return entityType;
             }
         }
     }

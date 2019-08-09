@@ -74,7 +74,7 @@ namespace Nop.Services.Common
         /// Get an attribute of an entity
         /// </summary>
         /// <typeparam name="TPropType">Property type</typeparam>
-        /// <param name="entity">Entity</param>
+        /// <param name="entityId">Entity identifier</param>
         /// <param name="key">Key</param>
         /// <param name="storeId">Load a value specific for a certain store; pass 0 to load a value shared for all stores</param>
         /// <param name="defaultValue">Default value</param>

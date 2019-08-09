@@ -140,7 +140,6 @@ namespace Nop.Web.Factories
 
             if (prepareComments)
             {
-
                 var newsComments = _newsService.GetAllComments(
                     newsItemId: newsItem.Id,
                     approved: true,
