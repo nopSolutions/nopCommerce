@@ -1019,7 +1019,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<LanguageModel, Language>();
 
             CreateMap<LocaleResourceModel, LocaleStringResource>()
-                .ForMember(entity => entity.Language, options => options.Ignore())
                 .ForMember(entity => entity.LanguageId, options => options.Ignore());
         }
 

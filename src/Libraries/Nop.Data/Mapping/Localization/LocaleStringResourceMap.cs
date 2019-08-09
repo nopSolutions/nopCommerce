@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Localization;
 
@@ -22,11 +22,6 @@ namespace Nop.Data.Mapping.Localization
 
             builder.Property(locale => locale.ResourceName).HasMaxLength(200).IsRequired();
             builder.Property(locale => locale.ResourceValue).IsRequired();
-
-            builder.HasOne(locale => locale.Language)
-                .WithMany()
-                .HasForeignKey(locale => locale.LanguageId)
-                .IsRequired();
 
             base.Configure(builder);
         }
