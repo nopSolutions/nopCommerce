@@ -2913,6 +2913,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.LowStockActivity.Hint">
     <Value>Action to be taken when your current stock quantity falls below (reaches) the 'Minimum stock quantity'. Activation of the action will occur only after an order is placed.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.LowStockQuantity">
+    <Value>Low stock qty</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.LowStockQuantity.Hint">
+    <Value>When 'Manage Stock' and 'Display availability' are enabled and stock quantity will reach this value customers will see information about low stock (last pieces available).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManageInventoryMethod">
     <Value>Inventory method</Value>
   </LocaleResource>
@@ -7745,6 +7751,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.LowStockActivity">
     <Value>Low stock activity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.LowStockQuantity">
+    <Value>Low stock qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.ManufacturerPartNumber">
     <Value>Manufacturer part number</Value>

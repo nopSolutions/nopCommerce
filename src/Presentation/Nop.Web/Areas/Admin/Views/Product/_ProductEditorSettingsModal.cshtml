@@ -482,6 +482,15 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-10">
+                                                <nop-label asp-for="ProductEditorSettingsModel.LowStockQuantity" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <nop-editor asp-for="ProductEditorSettingsModel.LowStockQuantity" />
+                                                <span asp-validation-for="ProductEditorSettingsModel.LowStockQuantity"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10">
                                                 <nop-label asp-for="ProductEditorSettingsModel.LowStockActivity" />
                                             </div>
                                             <div class="col-md-2">

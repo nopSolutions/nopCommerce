@@ -265,6 +265,9 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MinStockQuantity")]
         public int MinStockQuantity { get; set; }
+        
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.LowStockQuantity")]
+        public int LowStockQuantity { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.LowStockActivity")]
         public int LowStockActivityId { get; set; }
