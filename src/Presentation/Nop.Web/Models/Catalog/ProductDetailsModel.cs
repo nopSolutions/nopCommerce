@@ -71,6 +71,8 @@ namespace Nop.Web.Models.Catalog
         public DateTime? RentalEndDate { get; set; }
 
         public ManageInventoryMethod ManageInventoryMethod { get; set; }
+        
+        public ProductStockStatus? StockStatus { get; set; }
 
         public string StockAvailability { get; set; }
 

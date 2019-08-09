@@ -17013,6 +17013,9 @@
   <LocaleResource Name="Products.Availability.InStockWithQuantity">
     <Value>{0} in stock</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Availability.LowStock">
+    <Value>Low stock</Value>
+  </LocaleResource>
   <LocaleResource Name="Products.Availability.OutOfStock">
     <Value>Out of stock</Value>
   </LocaleResource>
