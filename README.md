@@ -21,9 +21,9 @@ nopCommerce demo store: [https://www.nopCommerce.com/demo.aspx](https://www.nopC
 
 Feature list: [https://www.nopcommerce.com/featurelist.aspx](https://www.nopcommerce.com/featurelist.aspx)
 
-Technology & system Requirements: [http://docs.nopcommerce.com/pages/viewpage.action?pageId=10256757](http://docs.nopcommerce.com/pages/viewpage.action?pageId=10256757)
+Technology & system Requirements: [http://docs.nopcommerce.com/user-guide/installing/technology-system-requirements.html](http://docs.nopcommerce.com/user-guide/installing/technology-system-requirements.html)
 
-Documentation: [http://docs.nopcommerce.com/](http://docs.nopcommerce.com/)
+Documentation: [https://docs.nopcommerce.com/](https://docs.nopcommerce.com/)
 
 Forums: [https://www.nopcommerce.com/boards/](https://www.nopcommerce.com/boards/)
 
@@ -36,7 +36,7 @@ Our annual conference will be held in Mumbai, India, on October 10-11, 2019. Com
 
 The conference will bring together developers, heads of web agencies, representatives of leading tech companies and online stores.
 
-Conference official site: [http://days19.nopcommerce.com/](http://days19.nopcommerce.com/)
+Conference official site: [https://days19.nopcommerce.com/](https://days19.nopcommerce.com/)
 
 
 ## Store demo: ##
