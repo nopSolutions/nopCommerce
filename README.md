@@ -29,6 +29,16 @@ Forums: [https://www.nopcommerce.com/boards/](https://www.nopcommerce.com/boards
 
 Gitter.im chat room: [https://gitter.im/nopCommerce-official/Lobby](https://gitter.im/nopCommerce-official/Lobby)
 
+
+## nopCommerce Days 2019: ##
+
+Our annual conference will be held in Mumbai, India, on October 10-11, 2019. Come and let's get acquainted in person!
+
+The conference will bring together developers, heads of web agencies, representatives of leading tech companies and online stores.
+
+Conference official site: [http://days19.nopcommerce.com/](http://days19.nopcommerce.com/)
+
+
 ## Store demo: ##
 
 Browse our shopping cart demo store to get a feel for nopCommerce shopping cart. Browse through the store from the customer's perspective and place an order. You won't be billed for or receive any products – the demo store examples are there only to show the extensive functionality of the shopping cart. Get a better feel for it by going through the admin panel and make changes.
