@@ -1430,6 +1430,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<CaptchaSettingsModel, CaptchaSettings>()
                 .ForMember(settings => settings.AutomaticallyChooseLanguage, options => options.Ignore())
                 .ForMember(settings => settings.ReCaptchaDefaultLanguage, options => options.Ignore())
+                .ForMember(settings => settings.ReCaptchaRequestTimeout, options => options.Ignore())
                 .ForMember(settings => settings.ReCaptchaTheme, options => options.Ignore());
         }
 

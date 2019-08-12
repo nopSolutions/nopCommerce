@@ -68,6 +68,10 @@ namespace Nop.Core.Domain.Security
         /// </summary>
         public string ReCaptchaTheme { get; set; }
         /// <summary>
+        /// The length of time, in seconds, before the reCAPTCHA request times out
+        /// </summary>
+        public int? ReCaptchaRequestTimeout { get; set; }
+        /// <summary>
         /// reCAPTCHA default language
         /// </summary>
         public string ReCaptchaDefaultLanguage { get; set; }

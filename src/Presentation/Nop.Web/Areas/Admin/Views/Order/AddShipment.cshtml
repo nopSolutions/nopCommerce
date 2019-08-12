@@ -13,7 +13,7 @@
         .ToList();
 }
 
-<form asp-controller="Order" asp-action="AddShipment" asp-route-orderId="@Model.OrderId" method="post">
+<form asp-controller="Order" asp-action="AddShipment" method="post">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.CustomOrderNumber)
@@ -32,11 +32,14 @@
                 @T("Admin.Common.SaveContinue")
             </button>
             <nop-action-confirmation asp-button-id="shipment-save" asp-additional-confirm="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough" />
-            <nop-action-confirmation asp-button-id="shipment-save-continue" asp-additional-confirm="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough"/>
+            <nop-action-confirmation asp-button-id="shipment-save-continue" asp-additional-confirm="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough" />
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderShipmentAddButtons })
         </div>
     </div>
     <div asp-validation-summary="All"></div>
+
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="OrderId" />
 
     <div class="content">
         <div class="form-horizontal">
@@ -59,6 +62,24 @@
                                 <nop-editor asp-for="AdminComment" />
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="CanShip" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="CanShip" />
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="CanShip">
+                            <div class="form-group" id="pnlHasDelivery">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="CanDeliver" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="CanDeliver" />
+                                </div>
+                            </div>
+                        </nop-nested-setting>
                     </div>
                     <script>
                         $(document).ready(function () {
@@ -79,7 +100,22 @@
                             }).bind("click", function () {
                                 return validateWarehouseAvailability("continue");
                             });;
+
+                            $("#@Html.IdFor(model => model.CanShip)").click(toggleDelivery);
+                            toggleDelivery();
+
                         });
+
+                        function toggleDelivery() {
+                            if ($('#@Html.IdFor(model => model.CanShip)').is(':checked'))
+                            {
+                                $('#pnlHasDelivery').show();
+                            }
+                            else
+                            {
+                                $('#pnlHasDelivery').hide();
+                            }
+                        }
 
                         function validateWarehouseAvailability(action) {
                             @{

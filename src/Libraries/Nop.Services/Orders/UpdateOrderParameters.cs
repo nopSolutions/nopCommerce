@@ -1,4 +1,6 @@
+﻿using System;
 using System.Collections.Generic;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Discounts;
@@ -10,21 +12,36 @@ namespace Nop.Services.Orders
     /// </summary>
     public class UpdateOrderParameters
     {
-        public UpdateOrderParameters()
+        #region Ctor
+
+        public UpdateOrderParameters(Order updatedOrder, OrderItem updatedOrderItem)
         {
-            Warnings = new List<string>();
-            AppliedDiscounts = new List<DiscountForCaching>();
+            if (updatedOrder is null)
+                throw new ArgumentNullException(nameof(updatedOrder));
+
+            if (updatedOrderItem is null)
+                throw new ArgumentNullException(nameof(updatedOrderItem));
+
+            UpdatedOrder = updatedOrder;
+            UpdatedOrderItem = updatedOrderItem;
         }
+
+        #endregion
+
+        /// <summary>
+        /// Gets customer of order
+        /// </summary>
+        public Customer OrderCustomer => UpdatedOrder?.Customer;
 
         /// <summary>
         /// The updated order
         /// </summary>
-        public Order UpdatedOrder { get; set; }
+        public Order UpdatedOrder { get; protected set; }
 
         /// <summary>
         /// The updated order item
         /// </summary>
-        public OrderItem UpdatedOrderItem { get; set; }
+        public OrderItem UpdatedOrderItem { get; protected set; }
 
         /// <summary>
         /// The price of item with tax
@@ -64,12 +81,12 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Warnings
         /// </summary>
-        public List<string> Warnings { get; set; }
+        public List<string> Warnings { get; } = new List<string>();
 
         /// <summary>
         /// Applied discounts
         /// </summary>
-        public List<DiscountForCaching> AppliedDiscounts { get; set; }
+        public List<DiscountForCaching> AppliedDiscounts { get; } = new List<DiscountForCaching>();
 
         /// <summary>
         /// Pickup point
