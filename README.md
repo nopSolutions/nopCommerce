@@ -2,7 +2,7 @@
 ===========
 nopCommerce is the best open-source e-commerce shopping cart. nopCommerce is available for free. Today it's the best and most popular ASP.NET ecommerce software. It has been downloaded more than 2.5 million times!
 
-nopCommerce is a fully customizable shopping cart. It's stable and highly usable. nopCommerce is an open source ecommerce solution that is **ASP.NET Core** based with a MS SQL 2008 (or higher) backend database. Our easy-to-use shopping cart solution is uniquely suited for merchants that have outgrown existing systems, and may be hosted with your current web host or our hosting partners. It has everything you need to get started in selling physical and digital goods over the internet.
+nopCommerce is a fully customizable shopping cart. It's stable and highly usable. nopCommerce is an open source ecommerce solution that is **ASP.NET Core** based with a MS SQL 2012 (or higher) backend database. Our easy-to-use shopping cart solution is uniquely suited for merchants that have outgrown existing systems, and may be hosted with your current web host or our hosting partners. It has everything you need to get started in selling physical and digital goods over the internet.
 
 ![nopCommerce demo](https://www.nopcommerce.com/images/features/responsive_devices_codeplex.jpg)
 
@@ -46,7 +46,7 @@ Browse our shopping cart demo store to get a feel for nopCommerce shopping cart.
 
 Front End | Admin area
 ----|------
-[![ScreenShot](https://www.nopcommerce.com/images/demo/demo3.png)](https://demo.nopcommerce.com/) | [![ScreenShot](https://www.nopcommerce.com/images/demo/admindemo_500.png)](https://admin-demo.nopcommerce.com/)
+[![ScreenShot](https://www.nopcommerce.com/images/demo/demo3.png)](https://demo.nopcommerce.com/) | [![ScreenShot](https://www.nopcommerce.com/images/demo/admindemo_500.png)](https://admin-demo.nopcommerce.com/admin/)
 
 
 ## Survey for developers and product managers: ##
