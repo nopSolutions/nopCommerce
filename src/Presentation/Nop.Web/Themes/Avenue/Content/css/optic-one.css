@@ -4,6 +4,7 @@ html body, body .header, body .header-lower {
 
 html body {
 	color: #18073a;
+	font-family:Rubik, Tahoma, Arial ,sans-serif;
 }
 
 body .header-upper {
@@ -21,6 +22,10 @@ body .header-logo a {
 
 body .header-lower .nav-button .trigger:before {
 	color: #fff;
+}
+
+.mega-menu > li > a > span {
+	font-weight: 500;
 }
 
 
@@ -47,10 +52,12 @@ body .overview {
 .item-box {
 	background: #fff;
 }
-.category-page .item-box {
+.category-page .item-box, .manufacturer-page .item-box {
 	min-height: 400px;
 	padding-bottom: 10px;
 }
+
+
 /** ============= MIN width Queries ========== **/
 @media all and (min-width: 1201px) {
 	body .header-menu ul li > a, body .header-menu ul li > span, body .header-links a {
@@ -84,6 +91,12 @@ body .overview {
 	body .responsive-nav-content {
 		top: 61px
 	}
+
+	.category-page .item-box, .manufacturer-page .item-box {
+		min-height: auto;
+
+	}
+
 }
 
 
@@ -135,7 +148,7 @@ body .anywhere-page-map .map-title {
 
 }
 body .getUserGeoLocation {
-	color: #00B5B8;
+	color: #fff;
 	background: url(../img/icon-current-location.png) no-repeat left center;
 }
 body .current-location-wrap .additional-info {
