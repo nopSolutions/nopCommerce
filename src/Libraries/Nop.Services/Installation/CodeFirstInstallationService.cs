@@ -622,440 +622,7 @@ namespace Nop.Services.Installation
                 DisplayOrder = 1,
                 Published = true
             };
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "AA (Armed Forces Americas)",
-                Abbreviation = "AA",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "AE (Armed Forces Europe)",
-                Abbreviation = "AE",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Alabama",
-                Abbreviation = "AL",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Alaska",
-                Abbreviation = "AK",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "American Samoa",
-                Abbreviation = "AS",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "AP (Armed Forces Pacific)",
-                Abbreviation = "AP",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Arizona",
-                Abbreviation = "AZ",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Arkansas",
-                Abbreviation = "AR",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "California",
-                Abbreviation = "CA",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Colorado",
-                Abbreviation = "CO",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Connecticut",
-                Abbreviation = "CT",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Delaware",
-                Abbreviation = "DE",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "District of Columbia",
-                Abbreviation = "DC",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Federated States of Micronesia",
-                Abbreviation = "FM",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Florida",
-                Abbreviation = "FL",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Georgia",
-                Abbreviation = "GA",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Guam",
-                Abbreviation = "GU",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Hawaii",
-                Abbreviation = "HI",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Idaho",
-                Abbreviation = "ID",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Illinois",
-                Abbreviation = "IL",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Indiana",
-                Abbreviation = "IN",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Iowa",
-                Abbreviation = "IA",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Kansas",
-                Abbreviation = "KS",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Kentucky",
-                Abbreviation = "KY",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Louisiana",
-                Abbreviation = "LA",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Maine",
-                Abbreviation = "ME",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Marshall Islands",
-                Abbreviation = "MH",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Maryland",
-                Abbreviation = "MD",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Massachusetts",
-                Abbreviation = "MA",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Michigan",
-                Abbreviation = "MI",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Minnesota",
-                Abbreviation = "MN",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Mississippi",
-                Abbreviation = "MS",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Missouri",
-                Abbreviation = "MO",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Montana",
-                Abbreviation = "MT",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Nebraska",
-                Abbreviation = "NE",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Nevada",
-                Abbreviation = "NV",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "New Hampshire",
-                Abbreviation = "NH",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "New Jersey",
-                Abbreviation = "NJ",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "New Mexico",
-                Abbreviation = "NM",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "New York",
-                Abbreviation = "NY",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "North Carolina",
-                Abbreviation = "NC",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "North Dakota",
-                Abbreviation = "ND",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Northern Mariana Islands",
-                Abbreviation = "MP",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Ohio",
-                Abbreviation = "OH",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Oklahoma",
-                Abbreviation = "OK",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Oregon",
-                Abbreviation = "OR",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Palau",
-                Abbreviation = "PW",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Pennsylvania",
-                Abbreviation = "PA",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Puerto Rico",
-                Abbreviation = "PR",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Rhode Island",
-                Abbreviation = "RI",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "South Carolina",
-                Abbreviation = "SC",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "South Dakota",
-                Abbreviation = "SD",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Tennessee",
-                Abbreviation = "TN",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Texas",
-                Abbreviation = "TX",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Utah",
-                Abbreviation = "UT",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Vermont",
-                Abbreviation = "VT",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Virgin Islands",
-                Abbreviation = "VI",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Virginia",
-                Abbreviation = "VA",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Washington",
-                Abbreviation = "WA",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "West Virginia",
-                Abbreviation = "WV",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Wisconsin",
-                Abbreviation = "WI",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cUsa.StateProvinces.Add(new StateProvince
-            {
-                Name = "Wyoming",
-                Abbreviation = "WY",
-                Published = true,
-                DisplayOrder = 1
-            });
+
             var cCanada = new Country
             {
                 Name = "Canada",
@@ -1068,97 +635,7 @@ namespace Nop.Services.Installation
                 DisplayOrder = 100,
                 Published = true
             };
-            cCanada.StateProvinces.Add(new StateProvince
-            {
-                Name = "Alberta",
-                Abbreviation = "AB",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cCanada.StateProvinces.Add(new StateProvince
-            {
-                Name = "British Columbia",
-                Abbreviation = "BC",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cCanada.StateProvinces.Add(new StateProvince
-            {
-                Name = "Manitoba",
-                Abbreviation = "MB",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cCanada.StateProvinces.Add(new StateProvince
-            {
-                Name = "New Brunswick",
-                Abbreviation = "NB",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cCanada.StateProvinces.Add(new StateProvince
-            {
-                Name = "Newfoundland and Labrador",
-                Abbreviation = "NL",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cCanada.StateProvinces.Add(new StateProvince
-            {
-                Name = "Northwest Territories",
-                Abbreviation = "NT",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cCanada.StateProvinces.Add(new StateProvince
-            {
-                Name = "Nova Scotia",
-                Abbreviation = "NS",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cCanada.StateProvinces.Add(new StateProvince
-            {
-                Name = "Nunavut",
-                Abbreviation = "NU",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cCanada.StateProvinces.Add(new StateProvince
-            {
-                Name = "Ontario",
-                Abbreviation = "ON",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cCanada.StateProvinces.Add(new StateProvince
-            {
-                Name = "Prince Edward Island",
-                Abbreviation = "PE",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cCanada.StateProvinces.Add(new StateProvince
-            {
-                Name = "Quebec",
-                Abbreviation = "QC",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cCanada.StateProvinces.Add(new StateProvince
-            {
-                Name = "Saskatchewan",
-                Abbreviation = "SK",
-                Published = true,
-                DisplayOrder = 1
-            });
-            cCanada.StateProvinces.Add(new StateProvince
-            {
-                Name = "Yukon Territory",
-                Abbreviation = "YT",
-                Published = true,
-                DisplayOrder = 1
-            });
+
             var countries = new List<Country>
             {
                 cUsa,
@@ -4034,6 +3511,548 @@ namespace Nop.Services.Installation
                 }
             };
             _countryRepository.Insert(countries);
+            
+            var statesUsa = new List<StateProvince> {
+                new StateProvince
+                {
+                    Name = "AA (Armed Forces Americas)",
+                    Abbreviation = "AA",
+                    Published = true,
+                    DisplayOrder = 1,
+                    CountryId = cUsa.Id
+                },
+                new StateProvince
+            {
+                Name = "AE (Armed Forces Europe)",
+                Abbreviation = "AE",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Alabama",
+                Abbreviation = "AL",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Alaska",
+                Abbreviation = "AK",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "American Samoa",
+                Abbreviation = "AS",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "AP (Armed Forces Pacific)",
+                Abbreviation = "AP",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Arizona",
+                Abbreviation = "AZ",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Arkansas",
+                Abbreviation = "AR",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "California",
+                Abbreviation = "CA",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Colorado",
+                Abbreviation = "CO",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Connecticut",
+                Abbreviation = "CT",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Delaware",
+                Abbreviation = "DE",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "District of Columbia",
+                Abbreviation = "DC",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Federated States of Micronesia",
+                Abbreviation = "FM",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Florida",
+                Abbreviation = "FL",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Georgia",
+                Abbreviation = "GA",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Guam",
+                Abbreviation = "GU",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Hawaii",
+                Abbreviation = "HI",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Idaho",
+                Abbreviation = "ID",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Illinois",
+                Abbreviation = "IL",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Indiana",
+                Abbreviation = "IN",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Iowa",
+                Abbreviation = "IA",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Kansas",
+                Abbreviation = "KS",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Kentucky",
+                Abbreviation = "KY",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Louisiana",
+                Abbreviation = "LA",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Maine",
+                Abbreviation = "ME",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Marshall Islands",
+                Abbreviation = "MH",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Maryland",
+                Abbreviation = "MD",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Massachusetts",
+                Abbreviation = "MA",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Michigan",
+                Abbreviation = "MI",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Minnesota",
+                Abbreviation = "MN",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Mississippi",
+                Abbreviation = "MS",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Missouri",
+                Abbreviation = "MO",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Montana",
+                Abbreviation = "MT",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Nebraska",
+                Abbreviation = "NE",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Nevada",
+                Abbreviation = "NV",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "New Hampshire",
+                Abbreviation = "NH",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "New Jersey",
+                Abbreviation = "NJ",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "New Mexico",
+                Abbreviation = "NM",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "New York",
+                Abbreviation = "NY",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "North Carolina",
+                Abbreviation = "NC",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "North Dakota",
+                Abbreviation = "ND",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Northern Mariana Islands",
+                Abbreviation = "MP",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Ohio",
+                Abbreviation = "OH",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Oklahoma",
+                Abbreviation = "OK",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Oregon",
+                Abbreviation = "OR",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Palau",
+                Abbreviation = "PW",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Pennsylvania",
+                Abbreviation = "PA",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Puerto Rico",
+                Abbreviation = "PR",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Rhode Island",
+                Abbreviation = "RI",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "South Carolina",
+                Abbreviation = "SC",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "South Dakota",
+                Abbreviation = "SD",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Tennessee",
+                Abbreviation = "TN",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Texas",
+                Abbreviation = "TX",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Utah",
+                Abbreviation = "UT",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Vermont",
+                Abbreviation = "VT",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Virgin Islands",
+                Abbreviation = "VI",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Virginia",
+                Abbreviation = "VA",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Washington",
+                Abbreviation = "WA",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "West Virginia",
+                Abbreviation = "WV",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Wisconsin",
+                Abbreviation = "WI",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+            {
+                Name = "Wyoming",
+                Abbreviation = "WY",
+                Published = true,
+                DisplayOrder = 1
+            }
+
+        };
+
+            statesUsa.ForEach(x => x.CountryId = cUsa.Id);
+            _stateProvinceRepository.Insert(statesUsa);
+
+            var statesCanada = new List<StateProvince>
+            {
+
+                new StateProvince
+            {
+                Name = "Alberta",
+                Abbreviation = "AB",
+                Published = true,
+                DisplayOrder = 1
+            },
+                new StateProvince
+                {
+                    Name = "British Columbia",
+                    Abbreviation = "BC",
+                    Published = true,
+                    DisplayOrder = 1
+                },
+                new StateProvince
+                {
+                    Name = "Manitoba",
+                    Abbreviation = "MB",
+                    Published = true,
+                    DisplayOrder = 1
+                },
+                new StateProvince
+                {
+                    Name = "New Brunswick",
+                    Abbreviation = "NB",
+                    Published = true,
+                    DisplayOrder = 1
+                },
+                new StateProvince
+                {
+                    Name = "Newfoundland and Labrador",
+                    Abbreviation = "NL",
+                    Published = true,
+                    DisplayOrder = 1
+                },
+                new StateProvince
+                {
+                    Name = "Northwest Territories",
+                    Abbreviation = "NT",
+                    Published = true,
+                    DisplayOrder = 1
+                },
+                new StateProvince
+                {
+                    Name = "Nova Scotia",
+                    Abbreviation = "NS",
+                    Published = true,
+                    DisplayOrder = 1
+                },
+                new StateProvince
+                {
+                    Name = "Nunavut",
+                    Abbreviation = "NU",
+                    Published = true,
+                    DisplayOrder = 1
+                },
+                new StateProvince
+                {
+                    Name = "Ontario",
+                    Abbreviation = "ON",
+                    Published = true,
+                    DisplayOrder = 1
+                },
+                new StateProvince
+                {
+                    Name = "Prince Edward Island",
+                    Abbreviation = "PE",
+                    Published = true,
+                    DisplayOrder = 1
+                },
+                new StateProvince
+                {
+                    Name = "Quebec",
+                    Abbreviation = "QC",
+                    Published = true,
+                    DisplayOrder = 1
+                },
+                new StateProvince
+                {
+                    Name = "Saskatchewan",
+                    Abbreviation = "SK",
+                    Published = true,
+                    DisplayOrder = 1
+                },
+                new StateProvince
+                {
+                    Name = "Yukon Territory",
+                    Abbreviation = "YT",
+                    Published = true,
+                    DisplayOrder = 1
+                }
+
+            };
+
+            statesCanada.ForEach(x => x.CountryId = cCanada.Id);
+            _stateProvinceRepository.Insert(statesCanada);
         }
 
         protected virtual void InstallShippingMethods()
@@ -4155,12 +4174,12 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow
             };
             //secondUser.Addresses.Add(defaultSecondUserAddress);
-            secondUser.CustomerAddressMappings.Add(new CustomerAddressMapping {Address = defaultSecondUserAddress});
+            secondUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultSecondUserAddress });
             secondUser.BillingAddress = defaultSecondUserAddress;
             secondUser.ShippingAddress = defaultSecondUserAddress;
 
             //secondUser.CustomerRoles.Add(crRegistered);
-            secondUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping {CustomerRole = crRegistered});
+            secondUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(secondUser);
             //set default customer name
@@ -4205,12 +4224,12 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow
             };
             //thirdUser.Addresses.Add(defaultThirdUserAddress);
-            thirdUser.CustomerAddressMappings.Add(new CustomerAddressMapping {Address = defaultThirdUserAddress});
+            thirdUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultThirdUserAddress });
             thirdUser.BillingAddress = defaultThirdUserAddress;
             thirdUser.ShippingAddress = defaultThirdUserAddress;
 
             //thirdUser.CustomerRoles.Add(crRegistered);
-            thirdUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping {CustomerRole = crRegistered});
+            thirdUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(thirdUser);
             //set default customer name
@@ -4255,12 +4274,12 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow
             };
             //fourthUser.Addresses.Add(defaultFourthUserAddress);
-            fourthUser.CustomerAddressMappings.Add(new CustomerAddressMapping {Address = defaultFourthUserAddress});
+            fourthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultFourthUserAddress });
             fourthUser.BillingAddress = defaultFourthUserAddress;
             fourthUser.ShippingAddress = defaultFourthUserAddress;
 
             //fourthUser.CustomerRoles.Add(crRegistered);
-            fourthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping {CustomerRole = crRegistered});
+            fourthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(fourthUser);
             //set default customer name
@@ -4306,12 +4325,12 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow
             };
             //fifthUser.Addresses.Add(defaultFifthUserAddress);
-            fifthUser.CustomerAddressMappings.Add(new CustomerAddressMapping {Address = defaultFifthUserAddress});
+            fifthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultFifthUserAddress });
             fifthUser.BillingAddress = defaultFifthUserAddress;
             fifthUser.ShippingAddress = defaultFifthUserAddress;
 
             //fifthUser.CustomerRoles.Add(crRegistered);
-            fifthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping {CustomerRole = crRegistered});
+            fifthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(fifthUser);
             //set default customer name
@@ -4359,13 +4378,13 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow
             };
             //sixthUser.Addresses.Add(defaultSixthUserAddress);
-            sixthUser.CustomerAddressMappings.Add(new CustomerAddressMapping {Address = defaultSixthUserAddress});
+            sixthUser.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = defaultSixthUserAddress });
             sixthUser.BillingAddress = defaultSixthUserAddress;
             sixthUser.ShippingAddress = defaultSixthUserAddress;
 
             //sixthUser.CustomerRoles.Add(crRegistered);
             //__sixthUser.CustomerCustomerRoleMappings.Add(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
-            sixthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping {CustomerRole = crRegistered});
+            sixthUser.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = crRegistered });
 
             _customerRepository.Insert(sixthUser);
             //set default customer name
@@ -4487,7 +4506,7 @@ namespace Nop.Services.Installation
             var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
             customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
                  PasswordFormat.Hashed, defaultUserPassword, null, NopCustomerServiceDefaults.DefaultHashedPasswordFormat));
-            
+
             //search engine (crawler) built-in user
             var searchEngineUser = new Customer
             {
@@ -12404,7 +12423,7 @@ namespace Nop.Services.Installation
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Install required data
         /// </summary>

@@ -1725,7 +1725,7 @@ namespace Nop.Services.ExportImport
             var sb = new StringBuilder();
             foreach (var state in states)
             {
-                sb.Append(state.Country.TwoLetterIsoCode);
+                sb.Append(_countryService.GetCountryById(state.CountryId).TwoLetterIsoCode);
                 sb.Append(separator);
                 sb.Append(state.Name);
                 sb.Append(separator);

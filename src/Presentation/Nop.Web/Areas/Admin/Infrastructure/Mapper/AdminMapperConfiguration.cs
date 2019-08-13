@@ -851,9 +851,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<Country, CountryModel>()
                 .ForMember(model => model.NumberOfStates, options => options.Ignore())
                 .ForMember(model => model.StateProvinceSearchModel, options => options.Ignore());
-            CreateMap<CountryModel, Country>()
-                .ForMember(entity => entity.ShippingMethodCountryMappings, options => options.Ignore())
-                .ForMember(entity => entity.StateProvinces, options => options.Ignore());
+            CreateMap<CountryModel, Country>();
 
             CreateMap<Currency, CurrencyModel>()
                 .ForMember(model => model.CreatedOn, options => options.Ignore())
@@ -873,8 +871,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<MeasureWeightModel, MeasureWeight>();
 
             CreateMap<StateProvince, StateProvinceModel>();
-            CreateMap<StateProvinceModel, StateProvince>()
-                .ForMember(entity => entity.Country, options => options.Ignore());
+            CreateMap<StateProvinceModel, StateProvince>();
         }
 
         /// <summary>

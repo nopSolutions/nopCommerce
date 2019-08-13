@@ -1,4 +1,4 @@
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Directory
 {
@@ -31,10 +31,5 @@ namespace Nop.Core.Domain.Directory
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
-
-        /// <summary>
-        /// Gets or sets the country
-        /// </summary>
-        public virtual Country Country { get; set; }
     }
 }

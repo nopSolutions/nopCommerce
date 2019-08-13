@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Directory;
 
@@ -22,11 +22,6 @@ namespace Nop.Data.Mapping.Directory
 
             builder.Property(state => state.Name).HasMaxLength(100).IsRequired();
             builder.Property(state => state.Abbreviation).HasMaxLength(100);
-
-            builder.HasOne(state => state.Country)
-                .WithMany(country => country.StateProvinces)
-                .HasForeignKey(state => state.CountryId)
-                .IsRequired();
 
             base.Configure(builder);
         }

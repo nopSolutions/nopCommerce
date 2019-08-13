@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Shipping;
 
@@ -22,11 +22,6 @@ namespace Nop.Data.Mapping.Shipping
 
             builder.Property(mapping => mapping.ShippingMethodId).HasColumnName("ShippingMethod_Id");
             builder.Property(mapping => mapping.CountryId).HasColumnName("Country_Id");
-
-            builder.HasOne(mapping => mapping.Country)
-                .WithMany(country => country.ShippingMethodCountryMappings)
-                .HasForeignKey(mapping => mapping.CountryId)
-                .IsRequired();
 
             builder.HasOne(mapping => mapping.ShippingMethod)
                 .WithMany(method => method.ShippingMethodCountryMappings)
