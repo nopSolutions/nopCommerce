@@ -182,7 +182,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
             else
             {
                 //shipping rate calculation by fixed rate
-                var restrictByCountryId = getShippingOptionRequest.ShippingAddress?.Country?.Id;
+                var restrictByCountryId =  getShippingOptionRequest.ShippingAddress?.CountryId;
                 response.ShippingOptions = _shippingService.GetAllShippingMethods(restrictByCountryId).Select(shippingMethod => new ShippingOption
                 {
                     Name = _localizationService.GetLocalized(shippingMethod, x => x.Name),
@@ -208,7 +208,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
             if (_fixedByWeightByTotalSettings.ShippingByWeightByTotalEnabled)
                 return null;
 
-            var restrictByCountryId = getShippingOptionRequest.ShippingAddress?.Country?.Id;
+            var restrictByCountryId = getShippingOptionRequest.ShippingAddress?.CountryId;
             var rates = _shippingService.GetAllShippingMethods(restrictByCountryId)
                 .Select(shippingMethod => GetRate(shippingMethod.Id)).Distinct().ToList();
 

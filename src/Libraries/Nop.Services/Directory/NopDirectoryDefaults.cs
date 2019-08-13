@@ -133,6 +133,13 @@
         /// </remarks>
         public static string StateProvincesByAbbreviationCacheKey => "Nop.stateprovince.abbreviationcountryid-{0}";
 
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : stateprovince ID
+        /// </remarks>
+        public static string StateProvincesByIdCacheKey => "Nop.stateprovince.id-{0}";
 
         /// <summary>
         /// Gets a key pattern to clear cache

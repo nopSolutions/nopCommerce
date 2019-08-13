@@ -30,12 +30,14 @@ namespace Nop.Plugin.Payments.PayPalStandard
 
         private readonly CurrencySettings _currencySettings;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
+        private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILocalizationService _localizationService;
         private readonly IPaymentService _paymentService;
         private readonly ISettingService _settingService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly ITaxService _taxService;
         private readonly IWebHelper _webHelper;
         private readonly PayPalStandardHttpClient _payPalStandardHttpClient;
@@ -47,12 +49,14 @@ namespace Nop.Plugin.Payments.PayPalStandard
 
         public PayPalStandardPaymentProcessor(CurrencySettings currencySettings,
             ICheckoutAttributeParser checkoutAttributeParser,
+            ICountryService countryService,
             ICurrencyService currencyService,
             IGenericAttributeService genericAttributeService,
             IHttpContextAccessor httpContextAccessor,
             ILocalizationService localizationService,
             IPaymentService paymentService,
             ISettingService settingService,
+            IStateProvinceService stateProvinceService,
             ITaxService taxService,
             IWebHelper webHelper,
             PayPalStandardHttpClient payPalStandardHttpClient,
@@ -60,12 +64,14 @@ namespace Nop.Plugin.Payments.PayPalStandard
         {
             _currencySettings = currencySettings;
             _checkoutAttributeParser = checkoutAttributeParser;
+            _countryService = countryService;
             _currencyService = currencyService;
             _genericAttributeService = genericAttributeService;
             _httpContextAccessor = httpContextAccessor;
             _localizationService = localizationService;
             _paymentService = paymentService;
             _settingService = settingService;
+            _stateProvinceService = stateProvinceService;
             _taxService = taxService;
             _webHelper = webHelper;
             _payPalStandardHttpClient = payPalStandardHttpClient;
@@ -178,8 +184,8 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 ["address1"] = orderAddress?.Address1,
                 ["address2"] = orderAddress?.Address2,
                 ["city"] = orderAddress?.City,
-                ["state"] = orderAddress?.StateProvince?.Abbreviation,
-                ["country"] = orderAddress?.Country?.TwoLetterIsoCode,
+                ["state"] = _stateProvinceService.GetStateProvinceByAddress(orderAddress)?.Abbreviation,
+                ["country"] = _countryService.GetCountryByAddress(orderAddress)?.TwoLetterIsoCode,
                 ["zip"] = orderAddress?.ZipPostalCode,
                 ["email"] = orderAddress?.Email
             };

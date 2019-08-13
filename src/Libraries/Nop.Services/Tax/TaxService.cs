@@ -95,12 +95,12 @@ namespace Nop.Services.Tax
 
             //get country from billing address
             if (_addressSettings.CountryEnabled && customer.BillingAddress != null)
-                country = customer.BillingAddress.Country;
+                country = _countryService.GetCountryByAddress(customer.BillingAddress);
 
             //get country specified during registration?
             if (country == null && _customerSettings.CountryEnabled)
             {
-                var countryId = _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.CountryIdAttribute);
+                var countryId = _genericAttributeService.GetAttribute<Customer, int>(customer.Id, NopCustomerDefaults.CountryIdAttribute);
                 country = _countryService.GetCountryById(countryId);
             }
 

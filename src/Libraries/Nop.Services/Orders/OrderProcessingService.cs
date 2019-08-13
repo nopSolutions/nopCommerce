@@ -439,8 +439,9 @@ namespace Nop.Services.Orders
                 throw new NopException("Email is not valid");
 
             details.BillingAddress = (Address)details.Customer.BillingAddress.Clone();
-            if (details.BillingAddress.Country != null && !details.BillingAddress.Country.AllowsBilling)
-                throw new NopException($"Country '{details.BillingAddress.Country.Name}' is not allowed for billing");
+
+            if (_countryService.GetCountryByAddress(details.BillingAddress) is Country billingCountry && !billingCountry.AllowsBilling)
+                throw new NopException($"Country '{billingCountry.Name}' is not allowed for billing");
 
             //checkout attributes
             details.CheckoutAttributesXml = _genericAttributeService.GetAttribute<string>(details.Customer, NopCustomerDefaults.CheckoutAttributes, processPaymentRequest.StoreId);
@@ -520,8 +521,8 @@ namespace Nop.Services.Orders
                         Address1 = pickupPoint.Address,
                         City = pickupPoint.City,
                         County = pickupPoint.County,
-                        Country = country,
-                        StateProvince = state,
+                        CountryId = country?.Id,
+                        StateProvinceId = state?.Id,
                         ZipPostalCode = pickupPoint.ZipPostalCode,
                         CreatedOnUtc = DateTime.UtcNow
                     };
@@ -536,8 +537,9 @@ namespace Nop.Services.Orders
 
                     //clone shipping address
                     details.ShippingAddress = (Address)details.Customer.ShippingAddress.Clone();
-                    if (details.ShippingAddress.Country != null && !details.ShippingAddress.Country.AllowsShipping)
-                        throw new NopException($"Country '{details.ShippingAddress.Country.Name}' is not allowed for shipping");
+
+                    if (_countryService.GetCountryByAddress(details.ShippingAddress) is Country shippingCountry && !shippingCountry.AllowsShipping)
+                        throw new NopException($"Country '{shippingCountry.Name}' is not allowed for shipping");
                 }
 
                 var shippingOption = _genericAttributeService.GetAttribute<ShippingOption>(details.Customer,
@@ -668,8 +670,8 @@ namespace Nop.Services.Orders
                 throw new NopException("Billing address is not available");
 
             details.BillingAddress = (Address)details.InitialOrder.BillingAddress.Clone();
-            if (details.BillingAddress.Country != null && !details.BillingAddress.Country.AllowsBilling)
-                throw new NopException($"Country '{details.BillingAddress.Country.Name}' is not allowed for billing");
+            if (_countryService.GetCountryByAddress(details.BillingAddress) is Country billingCountry && !billingCountry.AllowsBilling)
+                throw new NopException($"Country '{billingCountry.Name}' is not allowed for billing");
 
             //checkout attributes
             details.CheckoutAttributesXml = details.InitialOrder.CheckoutAttributesXml;
@@ -695,8 +697,8 @@ namespace Nop.Services.Orders
 
                     //clone shipping address
                     details.ShippingAddress = (Address)details.InitialOrder.ShippingAddress.Clone();
-                    if (details.ShippingAddress.Country != null && !details.ShippingAddress.Country.AllowsShipping)
-                        throw new NopException($"Country '{details.ShippingAddress.Country.Name}' is not allowed for shipping");
+                    if (_countryService.GetCountryByAddress(details.ShippingAddress) is Country shippingCountry && !shippingCountry.AllowsShipping)
+                        throw new NopException($"Country '{shippingCountry.Name}' is not allowed for shipping");
                 }
                 else
                     if (details.InitialOrder.PickupAddress != null)
@@ -1639,7 +1641,7 @@ namespace Nop.Services.Orders
                     Address1 = updateOrderParameters.PickupPoint.Address,
                     City = updateOrderParameters.PickupPoint.City,
                     County = updateOrderParameters.PickupPoint.County,
-                    Country = _countryService.GetCountryByTwoLetterIsoCode(updateOrderParameters.PickupPoint.CountryCode),
+                    CountryId = _countryService.GetCountryByTwoLetterIsoCode(updateOrderParameters.PickupPoint.CountryCode)?.Id,
                     ZipPostalCode = updateOrderParameters.PickupPoint.ZipPostalCode,
                     CreatedOnUtc = DateTime.UtcNow
                 };

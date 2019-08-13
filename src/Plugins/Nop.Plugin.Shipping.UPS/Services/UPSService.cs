@@ -76,6 +76,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
         private readonly IMeasureService _measureService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IShippingService _shippingService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IWorkContext _workContext;
         private readonly UPSSettings _upsSettings;
 
@@ -91,6 +92,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
             IMeasureService measureService,
             IOrderTotalCalculationService orderTotalCalculationService,
             IShippingService shippingService,
+            IStateProvinceService stateProvinceService,
             IWorkContext workContext,
             UPSSettings upsSettings)
         {
@@ -102,6 +104,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
             _measureService = measureService;
             _orderTotalCalculationService = orderTotalCalculationService;
             _shippingService = shippingService;
+            _stateProvinceService = stateProvinceService;
             _workContext = workContext;
             _upsSettings = upsSettings;
         }
@@ -380,7 +383,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
             };
 
             //prepare addresses details
-            var stateCodeTo = shippingOptionRequest.ShippingAddress.StateProvince?.Abbreviation;
+            var stateCodeTo = _stateProvinceService.GetStateProvinceByAddress(shippingOptionRequest.ShippingAddress)?.Abbreviation;
             var stateCodeFrom = shippingOptionRequest.StateProvinceFrom?.Abbreviation;
             var countryCodeFrom = (shippingOptionRequest.CountryFrom ?? _countryService.GetAllCountries().FirstOrDefault())
                 .TwoLetterIsoCode ?? string.Empty;
@@ -398,7 +401,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 AddressLine = new[] { shippingOptionRequest.ShippingAddress.Address1, shippingOptionRequest.ShippingAddress.Address2 },
                 City = shippingOptionRequest.ShippingAddress.City,
                 StateProvinceCode = stateCodeTo,
-                CountryCode = shippingOptionRequest.ShippingAddress.Country.TwoLetterIsoCode,
+                CountryCode = _countryService.GetCountryByAddress(shippingOptionRequest.ShippingAddress)?.TwoLetterIsoCode,
                 PostalCode = shippingOptionRequest.ShippingAddress.ZipPostalCode,
                 ResidentialAddressIndicator = string.Empty
             };

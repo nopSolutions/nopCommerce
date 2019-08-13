@@ -35,6 +35,7 @@ namespace Nop.Plugin.Payments.Square
         #region Fields
 
         private readonly CurrencySettings _currencySettings;
+        private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -44,6 +45,7 @@ namespace Nop.Plugin.Payments.Square
         private readonly IPageHeadBuilder _pageHeadBuilder;
         private readonly ISettingService _settingService;
         private readonly IScheduleTaskService _scheduleTaskService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IWebHelper _webHelper;
         private readonly SquarePaymentManager _squarePaymentManager;
         private readonly SquarePaymentSettings _squarePaymentSettings;
@@ -53,6 +55,7 @@ namespace Nop.Plugin.Payments.Square
         #region Ctor
 
         public SquarePaymentMethod(CurrencySettings currencySettings,
+            ICountryService countryService,
             ICurrencyService currencyService,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
@@ -62,11 +65,13 @@ namespace Nop.Plugin.Payments.Square
             IPageHeadBuilder pageHeadBuilder,
             ISettingService settingService,
             IScheduleTaskService scheduleTaskService,
+            IStateProvinceService stateProvinceService,
             IWebHelper webHelper,
             SquarePaymentManager squarePaymentManager,
             SquarePaymentSettings squarePaymentSettings)
         {
             _currencySettings = currencySettings;
+            _countryService = countryService;
             _currencyService = currencyService;
             _customerService = customerService;
             _genericAttributeService = genericAttributeService;
@@ -76,6 +81,7 @@ namespace Nop.Plugin.Payments.Square
             _pageHeadBuilder = pageHeadBuilder;
             _settingService = settingService;
             _scheduleTaskService = scheduleTaskService;
+            _stateProvinceService = stateProvinceService;
             _webHelper = webHelper;
             _squarePaymentManager = squarePaymentManager;
             _squarePaymentSettings = squarePaymentSettings;
@@ -184,9 +190,9 @@ namespace Nop.Plugin.Payments.Square
             (
                 AddressLine1: address.Address1,
                 AddressLine2: address.Address2,
-                AdministrativeDistrictLevel1: address.StateProvince?.Abbreviation,
+                AdministrativeDistrictLevel1: _stateProvinceService.GetStateProvinceByAddress(address)?.Abbreviation,
                 AdministrativeDistrictLevel2: address.County,
-                Country: Enum.TryParse(address.Country?.TwoLetterIsoCode, out SquareModel.Address.CountryEnum countryCode)
+                Country: Enum.TryParse(_countryService.GetCountryByAddress(address)?.TwoLetterIsoCode, out SquareModel.Address.CountryEnum countryCode)
                     ? (SquareModel.Address.CountryEnum?)countryCode : null,
                 FirstName: address.FirstName,
                 LastName: address.LastName,

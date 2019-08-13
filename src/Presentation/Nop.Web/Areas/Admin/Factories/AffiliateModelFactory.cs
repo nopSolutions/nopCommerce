@@ -5,7 +5,9 @@ using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Common;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -25,11 +27,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
         private readonly IAffiliateService _affiliateService;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        private readonly ICountryService _countryService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IOrderService _orderService;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IStateProvinceService _stateProvinceService;
 
         #endregion
 
@@ -37,19 +41,23 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public AffiliateModelFactory(IAffiliateService affiliateService,
             IBaseAdminModelFactory baseAdminModelFactory,
+            ICountryService countryService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             IOrderService orderService,
-            IPriceFormatter priceFormatter)
+            IPriceFormatter priceFormatter,
+            IStateProvinceService stateProvinceService)
         {
             _affiliateService = affiliateService;
             _baseAdminModelFactory = baseAdminModelFactory;
+            _countryService = countryService;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _localizationService = localizationService;
             _orderService = orderService;
             _priceFormatter = priceFormatter;
+            _stateProvinceService = stateProvinceService;
         }
 
         #endregion
@@ -193,8 +201,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     var affiliateModel = affiliate.ToModel<AffiliateModel>();
                     affiliateModel.Address = affiliate.Address.ToModel<AddressModel>();
-                    affiliateModel.Address.CountryName = affiliate.Address.Country?.Name;
-                    affiliateModel.Address.StateProvinceName = affiliate.Address.StateProvince?.Name;
+                    affiliateModel.Address.CountryName = _countryService.GetCountryByAddress(affiliate.Address)?.Name;
+                    affiliateModel.Address.StateProvinceName = _stateProvinceService.GetStateProvinceByAddress(affiliate.Address)?.Name;
 
                     return affiliateModel;
                 });

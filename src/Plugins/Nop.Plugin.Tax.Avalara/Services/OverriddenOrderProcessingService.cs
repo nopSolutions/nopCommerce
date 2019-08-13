@@ -232,8 +232,8 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 throw new NopException("Email is not valid");
 
             details.BillingAddress = (Address)details.Customer.BillingAddress.Clone();
-            if (details.BillingAddress.Country != null && !details.BillingAddress.Country.AllowsBilling)
-                throw new NopException($"Country '{details.BillingAddress.Country.Name}' is not allowed for billing");
+            if (_countryService.GetCountryByAddress(details.BillingAddress) is Country countryBilling && !countryBilling.AllowsBilling)
+                throw new NopException($"Country '{countryBilling.Name}' is not allowed for billing");
 
             //checkout attributes
             details.CheckoutAttributesXml = _genericAttributeService.GetAttribute<string>(details.Customer, NopCustomerDefaults.CheckoutAttributes, processPaymentRequest.StoreId);
@@ -313,8 +313,8 @@ namespace Nop.Plugin.Tax.Avalara.Services
                         Address1 = pickupPoint.Address,
                         City = pickupPoint.City,
                         County = pickupPoint.County,
-                        Country = country,
-                        StateProvince = state,
+                        CountryId = country?.Id,
+                        StateProvinceId = state?.Id,
                         ZipPostalCode = pickupPoint.ZipPostalCode,
                         CreatedOnUtc = DateTime.UtcNow
                     };
@@ -329,8 +329,8 @@ namespace Nop.Plugin.Tax.Avalara.Services
 
                     //clone shipping address
                     details.ShippingAddress = (Address)details.Customer.ShippingAddress.Clone();
-                    if (details.ShippingAddress.Country != null && !details.ShippingAddress.Country.AllowsShipping)
-                        throw new NopException($"Country '{details.ShippingAddress.Country.Name}' is not allowed for shipping");
+                    if (_countryService.GetCountryByAddress(details.ShippingAddress) is Country countryShipping && !countryShipping.AllowsShipping)
+                        throw new NopException($"Country '{countryShipping.Name}' is not allowed for shipping");
                 }
 
                 var shippingOption = _genericAttributeService.GetAttribute<ShippingOption>(details.Customer,

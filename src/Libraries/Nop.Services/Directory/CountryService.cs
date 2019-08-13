@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Events;
@@ -134,6 +135,16 @@ namespace Nop.Services.Directory
         public virtual IList<Country> GetAllCountriesForShipping(int languageId = 0, bool showHidden = false)
         {
             return GetAllCountries(languageId, showHidden).Where(c => c.AllowsShipping).ToList();
+        }
+
+        /// <summary>
+        /// Gets a country by address 
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <returns>Country</returns>
+        public virtual Country GetCountryByAddress(Address address)
+        {
+            return GetCountryById(address?.CountryId ?? 0);
         }
 
         /// <summary>

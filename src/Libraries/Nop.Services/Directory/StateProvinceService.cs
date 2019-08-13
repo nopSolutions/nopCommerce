@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -66,7 +67,9 @@ namespace Nop.Services.Directory
             if (stateProvinceId == 0)
                 return null;
 
-            return _stateProvinceRepository.GetById(stateProvinceId);
+            var key = string.Format(NopDirectoryDefaults.StateProvincesByIdCacheKey, stateProvinceId);
+
+            return _cacheManager.Get(key, () => _stateProvinceRepository.GetById(stateProvinceId));
         }
 
         /// <summary>
@@ -91,6 +94,16 @@ namespace Nop.Services.Directory
 
                 return query.FirstOrDefault();
             });
+        }
+
+        /// <summary>
+        /// Gets a state/province by address 
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <returns>Country</returns>
+        public virtual StateProvince GetStateProvinceByAddress(Address address)
+        {
+            return GetStateProvinceById(address?.StateProvinceId ?? 0);
         }
 
         /// <summary>

@@ -78,6 +78,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IReturnRequestService _returnRequestService;
         private readonly IShipmentService _shipmentService;
         private readonly IShippingService _shippingService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreService _storeService;
         private readonly ITaxService _taxService;
         private readonly IUrlHelperFactory _urlHelperFactory;
@@ -123,6 +124,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IReturnRequestService returnRequestService,
             IShipmentService shipmentService,
             IShippingService shippingService,
+            IStateProvinceService stateProvinceService,
             IStoreService storeService,
             ITaxService taxService,
             IUrlHelperFactory urlHelperFactory,
@@ -164,6 +166,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _returnRequestService = returnRequestService;
             _shipmentService = shipmentService;
             _shippingService = shippingService;
+            _stateProvinceService = stateProvinceService;
             _storeService = storeService;
             _taxService = taxService;
             _urlHelperFactory = urlHelperFactory;
@@ -487,8 +490,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare billing address
             model.BillingAddress = order.BillingAddress.ToModel(model.BillingAddress);
-            model.BillingAddress.CountryName = order.BillingAddress.Country?.Name;
-            model.BillingAddress.StateProvinceName = order.BillingAddress.StateProvince?.Name;
+            model.BillingAddress.CountryName = _countryService.GetCountryByAddress(order.BillingAddress)?.Name;
+            model.BillingAddress.StateProvinceName = _stateProvinceService.GetStateProvinceByAddress(order.BillingAddress)?.Name;
             PrepareAddressModel(model.BillingAddress, order.BillingAddress);
 
             if (order.AllowStoringCreditCardNumber)
@@ -569,19 +572,25 @@ namespace Nop.Web.Areas.Admin.Factories
             model.PickupInStore = order.PickupInStore;
             if (!order.PickupInStore)
             {
+                var shippingCountry = _countryService.GetCountryByAddress(order.ShippingAddress);
+
                 model.ShippingAddress = order.ShippingAddress.ToModel(model.ShippingAddress);
-                model.ShippingAddress.CountryName = order.ShippingAddress.Country?.Name;
-                model.ShippingAddress.StateProvinceName = order.ShippingAddress.StateProvince?.Name;
+                model.ShippingAddress.CountryName = shippingCountry?.Name;
+                model.ShippingAddress.StateProvinceName = _stateProvinceService.GetStateProvinceByAddress(order.ShippingAddress)?.Name;
                 PrepareAddressModel(model.ShippingAddress, order.ShippingAddress);
-                model.ShippingAddressGoogleMapsUrl = $"https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={WebUtility.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : ""))}";
+                model.ShippingAddressGoogleMapsUrl = $"https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q=" +
+                    $"{WebUtility.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (shippingCountry?.Name ?? string.Empty))}";
             }
             else
             {
                 if (order.PickupAddress == null)
                     return;
 
+                var pickupCountry = _countryService.GetCountryByAddress(order.PickupAddress);
+
                 model.PickupAddress = order.PickupAddress.ToModel(model.PickupAddress);
-                model.PickupAddressGoogleMapsUrl = $"https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={WebUtility.UrlEncode($"{order.PickupAddress.Address1} {order.PickupAddress.ZipPostalCode} {order.PickupAddress.City} {(order.PickupAddress.Country != null ? order.PickupAddress.Country.Name : string.Empty)}")}";
+                model.PickupAddressGoogleMapsUrl = $"https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q=" +
+                    $"{WebUtility.UrlEncode($"{order.PickupAddress.Address1} {order.PickupAddress.ZipPostalCode} {order.PickupAddress.City} {(pickupCountry?.Name ?? string.Empty)}")}";
             }
         }
 

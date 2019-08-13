@@ -46,6 +46,7 @@ namespace Nop.Plugin.Tax.Avalara
         private readonly ILocalizationService _localizationService;
         private readonly IProductService _productService;
         private readonly ISettingService _settingService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITaxPluginManager _taxPluginManager;
@@ -71,6 +72,7 @@ namespace Nop.Plugin.Tax.Avalara
             ILocalizationService localizationService,
             IProductService productService,
             ISettingService settingService,
+            IStateProvinceService stateProvinceService,
             IStaticCacheManager cacheManager,
             ITaxCategoryService taxCategoryService,
             ITaxPluginManager taxPluginManager,
@@ -92,6 +94,7 @@ namespace Nop.Plugin.Tax.Avalara
             _localizationService = localizationService;
             _productService = productService;
             _settingService = settingService;
+            _stateProvinceService = stateProvinceService;
             _cacheManager = cacheManager;
             _taxCategoryService = taxCategoryService;
             _taxPluginManager = taxPluginManager;
@@ -237,11 +240,11 @@ namespace Nop.Plugin.Tax.Avalara
             return address == null ? null : new AddressLocationInfo
             {
                 city = CommonHelper.EnsureMaximumLength(address.City, 50),
-                country = CommonHelper.EnsureMaximumLength(address.Country?.TwoLetterIsoCode, 2),
+                country = CommonHelper.EnsureMaximumLength(_countryService.GetCountryByAddress(address)?.TwoLetterIsoCode, 2),
                 line1 = CommonHelper.EnsureMaximumLength(address.Address1, 50),
                 line2 = CommonHelper.EnsureMaximumLength(address.Address2, 100),
                 postalCode = CommonHelper.EnsureMaximumLength(address.ZipPostalCode, 11),
-                region = CommonHelper.EnsureMaximumLength(address.StateProvince?.Abbreviation, 3)
+                region = CommonHelper.EnsureMaximumLength(_stateProvinceService.GetStateProvinceByAddress(address)?.Abbreviation, 3)
             };
         }
 
@@ -331,7 +334,7 @@ namespace Nop.Plugin.Tax.Avalara
                 //force to use billing address as the destination one in the accordance with EU VAT rules (if enabled)
                 var useEuVatRules = _taxSettings.EuVatEnabled
                     && (orderItem.Product?.IsTelecommunicationsOrBroadcastingOrElectronicServices ?? false)
-                    && ((order.BillingAddress.Country
+                    && ((_countryService.GetCountryByAddress(order.BillingAddress)
                         ?? _countryService.GetCountryById(_genericAttributeService.GetAttribute<int>(order.Customer, NopCustomerDefaults.CountryIdAttribute))
                         ?? _countryService.GetCountryByTwoLetterIsoCode(_geoLookupService.LookupCountryIsoCode(order.Customer.LastIpAddress)))
                         ?.SubjectToVat ?? false)

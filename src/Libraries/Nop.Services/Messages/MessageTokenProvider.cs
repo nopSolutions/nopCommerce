@@ -59,6 +59,7 @@ namespace Nop.Services.Messages
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IBlogService _blogService;
+        private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
         private readonly ICustomerService _customerService;
@@ -73,6 +74,7 @@ namespace Nop.Services.Messages
         private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IPaymentService _paymentService;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IUrlHelperFactory _urlHelperFactory;
@@ -95,6 +97,7 @@ namespace Nop.Services.Messages
             IActionContextAccessor actionContextAccessor,
             IAddressAttributeFormatter addressAttributeFormatter,
             IBlogService blogService,
+            ICountryService countryService,
             ICurrencyService currencyService,
             ICustomerAttributeFormatter customerAttributeFormatter,
             ICustomerService customerService,
@@ -109,6 +112,7 @@ namespace Nop.Services.Messages
             IPaymentPluginManager paymentPluginManager,
             IPaymentService paymentService,
             IPriceFormatter priceFormatter,
+            IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IStoreService storeService,
             IUrlHelperFactory urlHelperFactory,
@@ -125,6 +129,7 @@ namespace Nop.Services.Messages
             _actionContextAccessor = actionContextAccessor;
             _addressAttributeFormatter = addressAttributeFormatter;
             _blogService = blogService;
+            _countryService = countryService;
             _currencyService = currencyService;
             _customerAttributeFormatter = customerAttributeFormatter;
             _customerService = customerService;
@@ -139,6 +144,7 @@ namespace Nop.Services.Messages
             _paymentPluginManager = paymentPluginManager;
             _paymentService = paymentService;
             _priceFormatter = priceFormatter;
+            _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
             _storeService = storeService;
             _urlHelperFactory = urlHelperFactory;
@@ -940,9 +946,9 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.BillingAddress2", order.BillingAddress.Address2));
             tokens.Add(new Token("Order.BillingCity", order.BillingAddress.City));
             tokens.Add(new Token("Order.BillingCounty", order.BillingAddress.County));
-            tokens.Add(new Token("Order.BillingStateProvince", order.BillingAddress.StateProvince != null ? _localizationService.GetLocalized(order.BillingAddress.StateProvince, x => x.Name) : string.Empty));
+            tokens.Add(new Token("Order.BillingStateProvince", _stateProvinceService.GetStateProvinceByAddress(order.BillingAddress) is StateProvince billingStateProvince ? _localizationService.GetLocalized(billingStateProvince, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.BillingZipPostalCode", order.BillingAddress.ZipPostalCode));
-            tokens.Add(new Token("Order.BillingCountry", order.BillingAddress.Country != null ? _localizationService.GetLocalized(order.BillingAddress.Country, x => x.Name) : string.Empty));
+            tokens.Add(new Token("Order.BillingCountry", _countryService.GetCountryByAddress(order?.BillingAddress) is Country billingCountry ? _localizationService.GetLocalized(billingCountry, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.BillingCustomAttributes", _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes), true));
 
             tokens.Add(new Token("Order.Shippable", !string.IsNullOrEmpty(order.ShippingMethod)));
@@ -958,9 +964,9 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.ShippingAddress2", orderAddress(order)?.Address2 ?? string.Empty));
             tokens.Add(new Token("Order.ShippingCity", orderAddress(order)?.City ?? string.Empty));
             tokens.Add(new Token("Order.ShippingCounty", orderAddress(order)?.County ?? string.Empty));
-            tokens.Add(new Token("Order.ShippingStateProvince", orderAddress(order)?.StateProvince != null ? _localizationService.GetLocalized(orderAddress(order)?.StateProvince, x => x.Name) : string.Empty));
+            tokens.Add(new Token("Order.ShippingStateProvince", _stateProvinceService.GetStateProvinceByAddress(orderAddress(order)) is StateProvince shippingStateProvince ? _localizationService.GetLocalized(shippingStateProvince, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.ShippingZipPostalCode", orderAddress(order)?.ZipPostalCode ?? string.Empty));
-            tokens.Add(new Token("Order.ShippingCountry", orderAddress(order)?.Country != null ? _localizationService.GetLocalized(orderAddress(order)?.Country, x => x.Name) : string.Empty));
+            tokens.Add(new Token("Order.ShippingCountry", _countryService.GetCountryByAddress(orderAddress(order)) is Country orderCountry ? _localizationService.GetLocalized(orderCountry, x => x.Name) : string.Empty));
             tokens.Add(new Token("Order.ShippingCustomAttributes", _addressAttributeFormatter.FormatAttributes(orderAddress(order)?.CustomAttributes ?? string.Empty), true));
 
             var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(order.PaymentMethodSystemName);

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Http;
 using Nop.Core;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
@@ -11,6 +12,7 @@ using Nop.Plugin.Widgets.GoogleAnalytics.Api;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
+using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Logging;
 using Nop.Services.Stores;
@@ -20,30 +22,36 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
     public class EventConsumer : IConsumer<OrderCancelledEvent>, IConsumer<OrderPaidEvent>, IConsumer<EntityDeletedEvent<Order>>
     {
         private readonly ICategoryService _categoryService;
+        private readonly ICountryService _countryService;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger _logger;
         private readonly IProductService _productService;
         private readonly ISettingService _settingService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IWebHelper _webHelper;
         private readonly IWidgetPluginManager _widgetPluginManager;
 
         public EventConsumer(ICategoryService categoryService,
+            ICountryService countryService,
             IHttpClientFactory httpClientFactory,
             ILogger logger,
             IProductService productService,
             ISettingService settingService,
+            IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IStoreService storeService,
             IWebHelper webHelper,
             IWidgetPluginManager widgetPluginManager)
         {
             _categoryService = categoryService;
+            _countryService = countryService;
             _httpClientFactory = httpClientFactory;
             _logger = logger;
             _productService = productService;
             _settingService = settingService;
+            _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
             _storeService = storeService;
             _webHelper = webHelper;
@@ -93,8 +101,8 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                 }
                 var trans = new Transaction(FixIllegalJavaScriptChars(orderId),
                     order.BillingAddress == null ? "" : FixIllegalJavaScriptChars(order.BillingAddress.City),
-                    order.BillingAddress == null || order.BillingAddress.Country == null ? "" : FixIllegalJavaScriptChars(order.BillingAddress.Country.Name),
-                    order.BillingAddress == null || order.BillingAddress.StateProvince == null ? "" : FixIllegalJavaScriptChars(order.BillingAddress.StateProvince.Name),
+                    _countryService.GetCountryByAddress(order.BillingAddress) is Country country ? FixIllegalJavaScriptChars(country.Name) : string.Empty,
+                    _stateProvinceService.GetStateProvinceByAddress(order.BillingAddress) is StateProvince stateProvince ? FixIllegalJavaScriptChars(stateProvince.Name) : string.Empty,
                     store.Name,
                     orderShipping,
                     orderTax,
@@ -111,7 +119,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                         qty = -qty;
 
                     var sku = _productService.FormatSku(item.Product, item.AttributesXml);
-                    if (String.IsNullOrEmpty(sku))
+                    if (string.IsNullOrEmpty(sku))
                         sku = item.Product.Id.ToString();
                     var product = new TransactionItem(FixIllegalJavaScriptChars(orderId),
                       FixIllegalJavaScriptChars(sku),

@@ -11,6 +11,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -29,6 +30,7 @@ namespace Nop.Services.Shipping
         private readonly IAddressService _addressService;
         private readonly ICacheManager _cacheManager;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
+        private readonly ICountryService _countryService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
@@ -40,6 +42,7 @@ namespace Nop.Services.Shipping
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IShippingPluginManager _shippingPluginManager;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly ShippingSettings _shippingSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -51,6 +54,7 @@ namespace Nop.Services.Shipping
         public ShippingService(IAddressService addressService,
             ICacheManager cacheManager,
             ICheckoutAttributeParser checkoutAttributeParser,
+            ICountryService countryService,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
@@ -62,6 +66,7 @@ namespace Nop.Services.Shipping
             IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<Warehouse> warehouseRepository,
             IShippingPluginManager shippingPluginManager,
+            IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             ShippingSettings shippingSettings,
             ShoppingCartSettings shoppingCartSettings)
@@ -69,6 +74,7 @@ namespace Nop.Services.Shipping
             _addressService = addressService;
             _cacheManager = cacheManager;
             _checkoutAttributeParser = checkoutAttributeParser;
+            _countryService = countryService;
             _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
@@ -80,6 +86,7 @@ namespace Nop.Services.Shipping
             _shippingMethodRepository = shippingMethodRepository;
             _warehouseRepository = warehouseRepository;
             _shippingPluginManager = shippingPluginManager;
+            _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
             _shippingSettings = shippingSettings;
             _shoppingCartSettings = shoppingCartSettings;
@@ -706,8 +713,8 @@ namespace Nop.Services.Shipping
 
                     if (originAddress != null)
                     {
-                        request.CountryFrom = originAddress.Country;
-                        request.StateProvinceFrom = originAddress.StateProvince;
+                        request.CountryFrom = _countryService.GetCountryByAddress(originAddress);
+                        request.StateProvinceFrom = _stateProvinceService.GetStateProvinceByAddress(originAddress);
                         request.ZipPostalCodeFrom = originAddress.ZipPostalCode;
                         request.CountyFrom = originAddress.County;
                         request.CityFrom = originAddress.City;

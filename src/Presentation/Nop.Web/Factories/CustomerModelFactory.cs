@@ -795,7 +795,7 @@ namespace Nop.Web.Factories
         {
             var addresses = _workContext.CurrentCustomer.Addresses
                 //enabled for the current store
-                .Where(a => a.Country == null || _storeMappingService.Authorize(a.Country))
+                .Where(a => a.CountryId == null || _storeMappingService.Authorize(_countryService.GetCountryByAddress(a)))
                 .ToList();
 
             var model = new CustomerAddressListModel();

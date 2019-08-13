@@ -42,6 +42,7 @@ namespace Nop.Services.Common
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+        private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILanguageService _languageService;
@@ -55,6 +56,7 @@ namespace Nop.Services.Common
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductService _productService;
         private readonly ISettingService _settingService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IVendorService _vendorService;
@@ -72,6 +74,7 @@ namespace Nop.Services.Common
             CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
             IAddressAttributeFormatter addressAttributeFormatter,
+            ICountryService countryService,
             ICurrencyService currencyService,
             IDateTimeHelper dateTimeHelper,
             ILanguageService languageService,
@@ -85,6 +88,7 @@ namespace Nop.Services.Common
             IPriceFormatter priceFormatter,
             IProductService productService,
             ISettingService settingService,
+            IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IStoreService storeService,
             IVendorService vendorService,
@@ -96,6 +100,7 @@ namespace Nop.Services.Common
         {
             _addressSettings = addressSettings;
             _catalogSettings = catalogSettings;
+            _countryService = countryService;
             _currencySettings = currencySettings;
             _addressAttributeFormatter = addressAttributeFormatter;
             _currencyService = currencyService;
@@ -112,6 +117,7 @@ namespace Nop.Services.Common
             _productService = productService;
             _settingService = settingService;
             _storeContext = storeContext;
+            _stateProvinceService = stateProvinceService;
             _storeService = storeService;
             _vendorService = vendorService;
             _workContext = workContext;
@@ -953,14 +959,16 @@ namespace Nop.Services.Common
                     {
                         var addressLine = $"{indent}{order.ShippingAddress.City}, " +
                             $"{(!string.IsNullOrEmpty(order.ShippingAddress.County) ? $"{order.ShippingAddress.County}, " : string.Empty)}" +
-                            $"{(order.ShippingAddress.StateProvince != null ? _localizationService.GetLocalized(order.ShippingAddress.StateProvince, x => x.Name, lang.Id) : string.Empty)} " +
+                            $"{(_stateProvinceService.GetStateProvinceByAddress(order.ShippingAddress) is StateProvince stateProvince ? _localizationService.GetLocalized(stateProvince, x => x.Name, lang.Id) : string.Empty)} " +
                             $"{order.ShippingAddress.ZipPostalCode}";
                         shippingAddress.AddCell(new Paragraph(addressLine, font));
                     }
 
-                    if (_addressSettings.CountryEnabled && order.ShippingAddress.Country != null)
+                    if (_addressSettings.CountryEnabled && _countryService.GetCountryByAddress(order.ShippingAddress) is Country country)
+                    {
                         shippingAddress.AddCell(
-                            new Paragraph(indent + _localizationService.GetLocalized(order.ShippingAddress.Country, x => x.Name, lang.Id), font));
+                            new Paragraph(indent + _localizationService.GetLocalized(country, x => x.Name, lang.Id, true), font));
+                    }
                     //custom attributes
                     var customShippingAddressAttributes =
                         _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
@@ -976,19 +984,25 @@ namespace Nop.Services.Common
                 else if (order.PickupAddress != null)
                 {
                     shippingAddress.AddCell(GetParagraph("PDFInvoice.Pickup", lang, titleFont));
+
                     if (!string.IsNullOrEmpty(order.PickupAddress.Address1))
                         shippingAddress.AddCell(new Paragraph(
                             $"{indent}{string.Format(_localizationService.GetResource("PDFInvoice.Address", lang.Id), order.PickupAddress.Address1)}",
                             font));
+
                     if (!string.IsNullOrEmpty(order.PickupAddress.City))
                         shippingAddress.AddCell(new Paragraph($"{indent}{order.PickupAddress.City}", font));
+
                     if (!string.IsNullOrEmpty(order.PickupAddress.County))
                         shippingAddress.AddCell(new Paragraph($"{indent}{order.PickupAddress.County}", font));
-                    if (order.PickupAddress.Country != null)
+
+                    if (_countryService.GetCountryByAddress(order.PickupAddress) is Country country)
                         shippingAddress.AddCell(
-                            new Paragraph($"{indent}{_localizationService.GetLocalized(order.PickupAddress.Country, x => x.Name, lang.Id)}", font));
+                            new Paragraph($"{indent}{_localizationService.GetLocalized(country, x => x.Name, lang.Id)}", font));
+
                     if (!string.IsNullOrEmpty(order.PickupAddress.ZipPostalCode))
                         shippingAddress.AddCell(new Paragraph($"{indent}{order.PickupAddress.ZipPostalCode}", font));
+
                     shippingAddress.AddCell(new Paragraph(" "));
                 }
 
@@ -1025,35 +1039,39 @@ namespace Nop.Services.Common
                 billingAddress.AddCell(GetParagraph("PDFInvoice.Company", indent, lang, font, order.BillingAddress.Company));
 
             billingAddress.AddCell(GetParagraph("PDFInvoice.Name", indent, lang, font, order.BillingAddress.FirstName + " " + order.BillingAddress.LastName));
+
             if (_addressSettings.PhoneEnabled)
                 billingAddress.AddCell(GetParagraph("PDFInvoice.Phone", indent, lang, font, order.BillingAddress.PhoneNumber));
+
             if (_addressSettings.FaxEnabled && !string.IsNullOrEmpty(order.BillingAddress.FaxNumber))
                 billingAddress.AddCell(GetParagraph("PDFInvoice.Fax", indent, lang, font, order.BillingAddress.FaxNumber));
+
             if (_addressSettings.StreetAddressEnabled)
                 billingAddress.AddCell(GetParagraph("PDFInvoice.Address", indent, lang, font, order.BillingAddress.Address1));
+
             if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(order.BillingAddress.Address2))
                 billingAddress.AddCell(GetParagraph("PDFInvoice.Address2", indent, lang, font, order.BillingAddress.Address2));
+
             if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled ||
                 _addressSettings.CountyEnabled || _addressSettings.ZipPostalCodeEnabled)
             {
                 var addressLine = $"{indent}{order.BillingAddress.City}, " +
                     $"{(!string.IsNullOrEmpty(order.BillingAddress.County) ? $"{order.BillingAddress.County}, " : string.Empty)}" +
-                    $"{(order.BillingAddress.StateProvince != null ? _localizationService.GetLocalized(order.BillingAddress.StateProvince, x => x.Name, lang.Id) : string.Empty)} " +
+                    $"{(_stateProvinceService.GetStateProvinceByAddress(order.BillingAddress) is StateProvince stateProvince ? _localizationService.GetLocalized(stateProvince, x => x.Name, lang.Id) : string.Empty)} " +
                     $"{order.BillingAddress.ZipPostalCode}";
                 billingAddress.AddCell(new Paragraph(addressLine, font));
             }
 
-            if (_addressSettings.CountryEnabled && order.BillingAddress.Country != null)
-                billingAddress.AddCell(new Paragraph(indent + _localizationService.GetLocalized(order.BillingAddress.Country, x => x.Name, lang.Id),
-                    font));
+            if (_addressSettings.CountryEnabled && _countryService.GetCountryByAddress(order.BillingAddress) is Country country)
+                billingAddress.AddCell(new Paragraph(indent + _localizationService.GetLocalized(country, x => x.Name, lang.Id), font));
 
             //VAT number
             if (!string.IsNullOrEmpty(order.VatNumber))
                 billingAddress.AddCell(GetParagraph("PDFInvoice.VATNumber", indent, lang, font, order.VatNumber));
 
             //custom attributes
-            var customBillingAddressAttributes =
-                _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes);
+            var customBillingAddressAttributes = _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes);
+
             if (!string.IsNullOrEmpty(customBillingAddressAttributes))
             {
                 //TODO: we should add padding to each line (in case if we have several custom address attributes)
@@ -1334,13 +1352,13 @@ namespace Nop.Services.Common
                     {
                         var addressLine = $"{order.ShippingAddress.City}, " +
                             $"{(!string.IsNullOrEmpty(order.ShippingAddress.County) ? $"{order.ShippingAddress.County}, " : string.Empty)}" +
-                            $"{(order.ShippingAddress.StateProvince != null ? _localizationService.GetLocalized(order.ShippingAddress.StateProvince, x => x.Name, lang.Id) : string.Empty)} " +
+                            $"{(_stateProvinceService.GetStateProvinceByAddress(order.ShippingAddress) is StateProvince stateProvince ? _localizationService.GetLocalized(stateProvince, x => x.Name, lang.Id) : string.Empty)} " +
                             $"{order.ShippingAddress.ZipPostalCode}";
                         addressTable.AddCell(new Paragraph(addressLine, font));
                     }
 
-                    if (_addressSettings.CountryEnabled && order.ShippingAddress.Country != null)
-                        addressTable.AddCell(new Paragraph(_localizationService.GetLocalized(order.ShippingAddress.Country, x => x.Name, lang.Id), font));
+                    if (_addressSettings.CountryEnabled && _countryService.GetCountryByAddress(order.ShippingAddress) is Country country)
+                        addressTable.AddCell(new Paragraph(_localizationService.GetLocalized(country, x => x.Name, lang.Id), font));
 
                     //custom attributes
                     var customShippingAddressAttributes = _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
@@ -1353,16 +1371,22 @@ namespace Nop.Services.Common
                     if (order.PickupAddress != null)
                 {
                     addressTable.AddCell(new Paragraph(_localizationService.GetResource("PDFInvoice.Pickup", lang.Id), titleFont));
+
                     if (!string.IsNullOrEmpty(order.PickupAddress.Address1))
                         addressTable.AddCell(new Paragraph($"   {string.Format(_localizationService.GetResource("PDFInvoice.Address", lang.Id), order.PickupAddress.Address1)}", font));
+
                     if (!string.IsNullOrEmpty(order.PickupAddress.City))
                         addressTable.AddCell(new Paragraph($"   {order.PickupAddress.City}", font));
+
                     if (!string.IsNullOrEmpty(order.PickupAddress.County))
                         addressTable.AddCell(new Paragraph($"   {order.PickupAddress.County}", font));
-                    if (order.PickupAddress.Country != null)
-                        addressTable.AddCell(new Paragraph($"   {_localizationService.GetLocalized(order.PickupAddress.Country, x => x.Name, lang.Id)}", font));
+
+                    if (_countryService.GetCountryByAddress(order.PickupAddress) is Country country)
+                        addressTable.AddCell(new Paragraph($"   {_localizationService.GetLocalized(country, x => x.Name, lang.Id)}", font));
+
                     if (!string.IsNullOrEmpty(order.PickupAddress.ZipPostalCode))
                         addressTable.AddCell(new Paragraph($"   {order.PickupAddress.ZipPostalCode}", font));
+
                     addressTable.AddCell(new Paragraph(" "));
                 }
 

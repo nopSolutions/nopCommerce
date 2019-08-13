@@ -10,6 +10,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -209,16 +210,18 @@ namespace Nop.Web.Factories
                         excludeProperties: false,
                         addressSettings: _addressSettings);
                 }
-                else
-                    if (order.PickupAddress != null)
+                else if (order.PickupAddress != null)
+                {
                     model.PickupAddress = new AddressModel
                     {
                         Address1 = order.PickupAddress.Address1,
                         City = order.PickupAddress.City,
                         County = order.PickupAddress.County,
-                        CountryName = order.PickupAddress.Country != null ? order.PickupAddress.Country.Name : string.Empty,
+                        CountryName = _countryService.GetCountryByAddress(order.PickupAddress)?.Name ?? string.Empty,
                         ZipPostalCode = order.PickupAddress.ZipPostalCode
                     };
+                }
+
                 model.ShippingMethod = order.ShippingMethod;
 
                 //shipments (only already shipped)

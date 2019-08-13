@@ -20,14 +20,6 @@ namespace Nop.Data.Mapping.Common
             builder.ToTable(nameof(Address));
             builder.HasKey(address => address.Id);
 
-            builder.HasOne(address => address.Country)
-                .WithMany()
-                .HasForeignKey(address => address.CountryId);
-
-            builder.HasOne(address => address.StateProvince)
-                .WithMany()
-                .HasForeignKey(address => address.StateProvinceId);
-
             base.Configure(builder);
         }
 

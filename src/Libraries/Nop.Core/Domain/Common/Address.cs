@@ -84,16 +84,6 @@ namespace Nop.Core.Domain.Common
         public DateTime CreatedOnUtc { get; set; }
         
         /// <summary>
-        /// Gets or sets the country
-        /// </summary>
-        public virtual Country Country { get; set; }
-
-        /// <summary>
-        /// Gets or sets the state/province
-        /// </summary>
-        public virtual StateProvince StateProvince { get; set; }
-
-        /// <summary>
         /// Clone
         /// </summary>
         /// <returns></returns>
@@ -105,9 +95,7 @@ namespace Nop.Core.Domain.Common
                 LastName = LastName,
                 Email = Email,
                 Company = Company,
-                Country = Country,
                 CountryId = CountryId,
-                StateProvince = StateProvince,
                 StateProvinceId = StateProvinceId,
                 County = County,
                 City = City,

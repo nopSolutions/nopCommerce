@@ -55,7 +55,7 @@ namespace Nop.Plugin.Shipping.UPS
             if (!getShippingOptionRequest.Items?.Any() ?? true)
                 return new GetShippingOptionResponse { Errors = new[] { "No shipment items" } };
 
-            if (getShippingOptionRequest.ShippingAddress?.Country == null)
+            if (getShippingOptionRequest.ShippingAddress?.CountryId == null)
                 return new GetShippingOptionResponse { Errors = new[] { "Shipping address is not set" } };
 
             return _upsService.GetRates(getShippingOptionRequest);

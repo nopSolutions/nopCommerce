@@ -662,21 +662,17 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ZipPostalCodeEnabled, options => options.Ignore())
                 .ForMember(model => model.ZipPostalCodeRequired, options => options.Ignore());
             CreateMap<AddressModel, Address>()
-                .ForMember(entity => entity.Country, options => options.Ignore())
                 .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-                .ForMember(entity => entity.CustomAttributes, options => options.Ignore())
-                .ForMember(entity => entity.StateProvince, options => options.Ignore());
+                .ForMember(entity => entity.CustomAttributes, options => options.Ignore());
 
             CreateMap<AddressAttribute, AddressAttributeModel>()
                 .ForMember(model => model.AddressAttributeValueSearchModel, options => options.Ignore())
                 .ForMember(model => model.AttributeControlTypeName, options => options.Ignore());
             CreateMap<AddressAttributeModel, AddressAttribute>()
-                .ForMember(entity => entity.AddressAttributeValues, options => options.Ignore())
                 .ForMember(entity => entity.AttributeControlType, options => options.Ignore());
 
             CreateMap<AddressAttributeValue, AddressAttributeValueModel>();
-            CreateMap<AddressAttributeValueModel, AddressAttributeValue>()
-                .ForMember(entity => entity.AddressAttribute, options => options.Ignore());
+            CreateMap<AddressAttributeValueModel, AddressAttributeValue>();
 
             CreateMap<AddressSettings, AddressSettingsModel>();
             CreateMap<AddressSettingsModel, AddressSettings>()

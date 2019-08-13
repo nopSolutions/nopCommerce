@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -327,7 +328,7 @@ namespace Nop.Web.Controllers
 
             //ship to the same address?
             //by default Shipping is available if the country is not specified
-            var shippingAllowed = _addressSettings.CountryEnabled ? address.Country?.AllowsShipping ?? false : true;
+            var shippingAllowed = _addressSettings.CountryEnabled ? _countryService.GetCountryByAddress(address)?.AllowsShipping ?? false : true;
             if (_shippingSettings.ShipToSameAddress && shipToSameAddress && _shoppingCartService.ShoppingCartRequiresShipping(cart) && shippingAllowed)
             {
                 _workContext.CurrentCustomer.ShippingAddress = _workContext.CurrentCustomer.BillingAddress;
@@ -708,11 +709,9 @@ namespace Nop.Web.Controllers
 
             //filter by country
             var filterByCountryId = 0;
-            if (_addressSettings.CountryEnabled &&
-                _workContext.CurrentCustomer.BillingAddress != null &&
-                _workContext.CurrentCustomer.BillingAddress.Country != null)
+            if (_addressSettings.CountryEnabled)
             {
-                filterByCountryId = _workContext.CurrentCustomer.BillingAddress.Country.Id;
+                filterByCountryId = _workContext.CurrentCustomer.BillingAddress?.CountryId ?? 0;
             }
 
             //model
@@ -1022,11 +1021,9 @@ namespace Nop.Web.Controllers
             {
                 //filter by country
                 var filterByCountryId = 0;
-                if (_addressSettings.CountryEnabled &&
-                    _workContext.CurrentCustomer.BillingAddress != null &&
-                    _workContext.CurrentCustomer.BillingAddress.Country != null)
+                if (_addressSettings.CountryEnabled)
                 {
-                    filterByCountryId = _workContext.CurrentCustomer.BillingAddress.Country.Id;
+                    filterByCountryId = _workContext.CurrentCustomer.BillingAddress?.CountryId ?? 0;
                 }
 
                 //payment is required
@@ -1211,15 +1208,14 @@ namespace Nop.Web.Controllers
                         address = newAddress.ToEntity();
                         address.CustomAttributes = customAttributes;
                         address.CreatedOnUtc = DateTime.UtcNow;
+
                         //some validation
                         if (address.CountryId == 0)
                             address.CountryId = null;
+
                         if (address.StateProvinceId == 0)
                             address.StateProvinceId = null;
-                        if (address.CountryId.HasValue && address.CountryId.Value > 0)
-                        {
-                            address.Country = _countryService.GetCountryById(address.CountryId.Value);
-                        }
+
                         //_workContext.CurrentCustomer.Addresses.Add(address);
                         _workContext.CurrentCustomer.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = address });
                     }
@@ -1233,7 +1229,7 @@ namespace Nop.Web.Controllers
                     var address = _workContext.CurrentCustomer.BillingAddress;
 
                     //by default Shipping is available if the country is not specified
-                    var shippingAllowed = _addressSettings.CountryEnabled ? address.Country?.AllowsShipping ?? false : true;
+                    var shippingAllowed = _addressSettings.CountryEnabled ? _countryService.GetCountryByAddress(address)?.AllowsShipping ?? false : true;
                     if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress && shippingAllowed)
                     {
                         //ship to the same address
@@ -1386,21 +1382,7 @@ namespace Nop.Web.Controllers
                         address = newAddress.ToEntity();
                         address.CustomAttributes = customAttributes;
                         address.CreatedOnUtc = DateTime.UtcNow;
-                        //little hack here (TODO: find a better solution)
-                        //EF does not load navigation properties for newly created entities (such as this "Address").
-                        //we have to load them manually 
-                        //otherwise, "Country" property of "Address" entity will be null in shipping rate computation methods
-                        if (address.CountryId.HasValue)
-                            address.Country = _countryService.GetCountryById(address.CountryId.Value);
-                        if (address.StateProvinceId.HasValue)
-                            address.StateProvince = _stateProvinceService.GetStateProvinceById(address.StateProvinceId.Value);
 
-                        //other null validations
-                        if (address.CountryId == 0)
-                            address.CountryId = null;
-                        if (address.StateProvinceId == 0)
-                            address.StateProvinceId = null;
-                        //_workContext.CurrentCustomer.Addresses.Add(address);
                         _workContext.CurrentCustomer.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = address });
                     }
                     _workContext.CurrentCustomer.ShippingAddress = address;

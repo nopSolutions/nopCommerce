@@ -10,6 +10,7 @@ using Nop.Core.Domain.Stores;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -31,6 +32,7 @@ namespace Nop.Services.Tests.Shipping
         private NullLogger _logger;
         private Mock<IProductAttributeParser> _productAttributeParser;
         private Mock<ICheckoutAttributeParser> _checkoutAttributeParser;
+        private Mock<ICountryService> _countryService;
         private Mock<IProductService> _productService;
         private Mock<IEventPublisher> _eventPublisher;
         private Mock<ILocalizationService> _localizationService;
@@ -43,6 +45,7 @@ namespace Nop.Services.Tests.Shipping
         private Mock<IPriceCalculationService> _priceCalcService;
         private IPickupPluginManager _pickupPluginManager;
         private IShippingPluginManager _shippingPluginManager;
+        private Mock<IStateProvinceService> _stateProvinceService;
         private CatalogSettings _catalogSettings;
 
         [SetUp]
@@ -60,6 +63,7 @@ namespace Nop.Services.Tests.Shipping
             _logger = new NullLogger();
             _productAttributeParser = new Mock<IProductAttributeParser>();
             _checkoutAttributeParser = new Mock<ICheckoutAttributeParser>();
+            _countryService = new Mock<ICountryService>();
 
             var cacheManager = new TestCacheManager();
 
@@ -82,6 +86,8 @@ namespace Nop.Services.Tests.Shipping
             _genericAttributeService = new Mock<IGenericAttributeService>();
             _priceCalcService = new Mock<IPriceCalculationService>();
 
+            _stateProvinceService = new Mock<IStateProvinceService>();
+
             _store = new Store { Id = 1 };
             _storeContext = new Mock<IStoreContext>();
             _storeContext.Setup(x => x.CurrentStore).Returns(_store);
@@ -91,6 +97,7 @@ namespace Nop.Services.Tests.Shipping
             _shippingService = new ShippingService(_addressService.Object,
                 cacheManager,
                 _checkoutAttributeParser.Object,
+                _countryService.Object,
                 _eventPublisher.Object,
                 _genericAttributeService.Object,
                 _localizationService.Object,
@@ -102,6 +109,7 @@ namespace Nop.Services.Tests.Shipping
                 _shippingMethodRepository.Object,
                 _warehouseRepository.Object,
                 _shippingPluginManager,
+                _stateProvinceService.Object,
                 _storeContext.Object,
                 _shippingSettings,
                 _shoppingCartSettings);

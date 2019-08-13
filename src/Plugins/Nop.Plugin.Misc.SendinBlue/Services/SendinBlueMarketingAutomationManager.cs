@@ -31,6 +31,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
 
         private readonly CurrencySettings _currencySettings;
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILogger _logger;
@@ -40,6 +41,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IShoppingCartService _shoppingCartService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlRecordService _urlRecordService;
@@ -53,6 +55,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
 
         public SendinBlueMarketingAutomationManager(CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
+            ICountryService countryService,
             ICurrencyService currencyService,
             IGenericAttributeService genericAttributeService,
             ILogger logger,
@@ -62,6 +65,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             IProductAttributeParser productAttributeParser,
             IShippingPluginManager shippingPluginManager,
             IShoppingCartService shoppingCartService,
+            IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IUrlHelperFactory urlHelperFactory,
             IUrlRecordService urlRecordService,
@@ -71,6 +75,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         {
             _currencySettings = currencySettings;
             _actionContextAccessor = actionContextAccessor;
+            _countryService = countryService;
             _currencyService = currencyService;
             _genericAttributeService = genericAttributeService;
             _logger = logger;
@@ -80,6 +85,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             _productAttributeParser = productAttributeParser;
             _shippingPluginManager = shippingPluginManager;
             _shoppingCartService = shoppingCartService;
+            _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
             _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
@@ -311,8 +317,8 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     address1 = shippingAddress?.Address1,
                     address2 = shippingAddress?.Address2,
                     city = shippingAddress?.City,
-                    country = shippingAddress?.Country?.Name,
-                    state = shippingAddress?.StateProvince?.Name,
+                    country = _countryService.GetCountryByAddress(shippingAddress)?.Name,
+                    state = _stateProvinceService.GetStateProvinceByAddress(shippingAddress)?.Name,
                     zipcode = shippingAddress?.ZipPostalCode
                 };
 
@@ -325,8 +331,8 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     address1 = billingAddress?.Address1,
                     address2 = billingAddress?.Address2,
                     city = billingAddress?.City,
-                    country = billingAddress?.Country?.Name,
-                    state = billingAddress?.StateProvince?.Name,
+                    country = _countryService.GetCountryByAddress(billingAddress)?.Name,
+                    state = _stateProvinceService.GetStateProvinceByAddress(billingAddress)?.Name,
                     zipcode = billingAddress?.ZipPostalCode
                 };
 

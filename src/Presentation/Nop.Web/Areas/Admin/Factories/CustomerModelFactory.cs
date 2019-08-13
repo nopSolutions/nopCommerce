@@ -54,6 +54,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        private readonly ICountryService _countryService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerAttributeParser _customerAttributeParser;
         private readonly ICustomerAttributeService _customerAttributeService;
@@ -70,6 +71,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IRewardPointService _rewardPointService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly ITaxService _taxService;
@@ -92,6 +94,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IAuthenticationPluginManager authenticationPluginManager,
             IBackInStockSubscriptionService backInStockSubscriptionService,
             IBaseAdminModelFactory baseAdminModelFactory,
+            ICountryService countryService,
             ICustomerActivityService customerActivityService,
             ICustomerAttributeParser customerAttributeParser,
             ICustomerAttributeService customerAttributeService,
@@ -108,6 +111,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IPriceFormatter priceFormatter,
             IProductAttributeFormatter productAttributeFormatter,
             IRewardPointService rewardPointService,
+            IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IStoreService storeService,
             ITaxService taxService,
@@ -126,6 +130,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _authenticationPluginManager = authenticationPluginManager;
             _backInStockSubscriptionService = backInStockSubscriptionService;
             _baseAdminModelFactory = baseAdminModelFactory;
+            _countryService = countryService;
             _customerActivityService = customerActivityService;
             _customerAttributeParser = customerAttributeParser;
             _customerAttributeService = customerAttributeService;
@@ -142,6 +147,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _priceFormatter = priceFormatter;
             _productAttributeFormatter = productAttributeFormatter;
             _rewardPointService = rewardPointService;
+            _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
             _storeService = storeService;
             _taxService = taxService;
@@ -875,8 +881,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     //fill in model values from the entity        
                     var addressModel = address.ToModel<AddressModel>();
-                    addressModel.CountryName = address.Country?.Name;
-                    addressModel.StateProvinceName = address.StateProvince?.Name;
+                    addressModel.CountryName = _countryService.GetCountryByAddress(address)?.Name;
+                    addressModel.StateProvinceName = _stateProvinceService.GetStateProvinceByAddress(address)?.Name;
 
                     //fill in additional values (not existing in the entity)
                     PrepareModelAddressHtml(addressModel, address);

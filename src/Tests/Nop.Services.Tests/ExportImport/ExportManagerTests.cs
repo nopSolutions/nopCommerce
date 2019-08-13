@@ -42,6 +42,8 @@ namespace Nop.Services.Tests.ExportImport
     [TestFixture]
     public class ExportManagerTests : ServiceTest
     {
+        #region Fields
+
         private Mock<IPictureService> _pictureService;
         private IExportManager _exportManager;
         private Mock<IAuthenticationService> _authenticationService;
@@ -75,6 +77,10 @@ namespace Nop.Services.Tests.ExportImport
         private AddressSettings _addressSettings;
         private Mock<ICurrencyService> _currencyService;
         private Mock<IUrlRecordService> _urlRecordService;
+
+        #endregion
+
+        #region Setup
 
         [SetUp]
         public new void SetUp()
@@ -114,13 +120,13 @@ namespace Nop.Services.Tests.ExportImport
             _urlRecordService = new Mock<IUrlRecordService>();
 
             var nopEngine = new Mock<NopEngine>();
-            
+
             var picture = new Picture
             {
                 Id = 1,
                 SeoFilename = "picture"
             };
-            
+
             _authenticationService.Setup(p => p.GetAuthenticatedCustomer()).Returns(GetTestCustomer());
             _pictureService.Setup(p => p.GetPictureById(1)).Returns(picture);
             _pictureService.Setup(p => p.GetThumbLocalPath(picture, 0, true)).Returns(@"c:\temp\picture.png");
@@ -133,12 +139,14 @@ namespace Nop.Services.Tests.ExportImport
             _measureService.Setup(m => m.GetAllMeasureWeights()).Returns(new List<MeasureWeight> { new MeasureWeight() });
             _categoryService.Setup(c => c.GetProductCategoriesByProductId(1, true)).Returns(new List<ProductCategory>());
             _manufacturerService.Setup(m => m.GetProductManufacturersByProductId(1, true)).Returns(new List<ProductManufacturer>());
+            _countryService.Setup(c => c.GetCountryByAddress(It.Is<Address>(a=>a.Id == TestBillingAddress.Id))).Returns(TestBillingCountry);
+            _countryService.Setup(c => c.GetCountryByAddress(It.Is<Address>(a => a.Id == TestShippingAddress.Id))).Returns(TestShippingCountry);
 
             var serviceProvider = new TestServiceProvider();
             nopEngine.Setup(x => x.ServiceProvider).Returns(serviceProvider);
 
             EngineContext.Replace(nopEngine.Object);
-           
+
 
             _exportManager = new ExportManager(_addressSettings,
                 _catalogSettings,
@@ -174,6 +182,8 @@ namespace Nop.Services.Tests.ExportImport
                 serviceProvider.WorkContext.Object,
                 _orderSettings, _productEditorSettings);
         }
+
+        #endregion
 
         [OneTimeTearDown]
         public void TearDown()
@@ -264,45 +274,60 @@ namespace Nop.Services.Tests.ExportImport
             return obj;
         }
 
-        protected Address GetTestBillingAddress()
+        protected Country TestBillingCountry => new Country
         {
-            return new Address
-            {
-                FirstName = "FirstName 1",
-                LastName = "LastName 1",
-                Email = "Email 1",
-                Company = "Company 1",
-                City = "City 1",
-                County = "County 1",
-                Address1 = "Address1a",
-                Address2 = "Address1a",
-                ZipPostalCode = "ZipPostalCode 1",
-                PhoneNumber = "PhoneNumber 1",
-                FaxNumber = "FaxNumber 1",
-                CreatedOnUtc = new DateTime(2010, 01, 01),
-                Country = GetTestCountry()
-            };
-        }
+            Id = 1,
+            Name = "BILLING_COUNTRY_NAME"
 
-        protected Address GetTestShippingAddress()
+        };
+
+        protected Country TestShippingCountry => new Country
         {
-            return new Address
-            {
-                FirstName = "FirstName 2",
-                LastName = "LastName 2",
-                Email = "Email 2",
-                Company = "Company 2",
-                City = "City 2",
-                County = "County 2",
-                Address1 = "Address2a",
-                Address2 = "Address2b",
-                ZipPostalCode = "ZipPostalCode 2",
-                PhoneNumber = "PhoneNumber 2",
-                FaxNumber = "FaxNumber 2",
-                CreatedOnUtc = new DateTime(2010, 01, 01),
-                Country = GetTestCountry()
-            };
-        }
+            Id = 2,
+            Name = "SHIPPING_COUNTRY_NAME"
+
+        };
+
+        protected Address TestBillingAddress => new Address
+        {
+            Id = 1,
+            FirstName = "FirstName 1",
+            LastName = "LastName 1",
+            Email = "Email 1",
+            Company = "Company 1",
+            City = "City 1",
+            County = "County 1",
+            Address1 = "Address1a",
+            Address2 = "Address1a",
+            ZipPostalCode = "ZipPostalCode 1",
+            PhoneNumber = "PhoneNumber 1",
+            FaxNumber = "FaxNumber 1",
+            CreatedOnUtc = new DateTime(2010, 01, 01),
+            CountryId = TestBillingCountry.Id
+        };
+
+
+        protected Address TestShippingAddress => new Address
+        {
+            Id = 2,
+            FirstName = "FirstName 2",
+            LastName = "LastName 2",
+            Email = "Email 2",
+            Company = "Company 2",
+            City = "City 2",
+            County = "County 2",
+            Address1 = "Address2a",
+            Address2 = "Address2b",
+            ZipPostalCode = "ZipPostalCode 2",
+            PhoneNumber = "PhoneNumber 2",
+            FaxNumber = "FaxNumber 2",
+            CreatedOnUtc = new DateTime(2010, 01, 01),
+            CountryId = TestShippingCountry.Id
+        };
+
+
+
+
 
         protected Country GetTestCountry()
         {
@@ -341,8 +366,6 @@ namespace Nop.Services.Tests.ExportImport
         public void Can_export_orders_xlsx()
         {
             var orderGuid = Guid.NewGuid();
-            var billingAddress = GetTestBillingAddress();
-            var shippingAddress = GetTestShippingAddress();
 
             var orders = new List<Order>
             {
@@ -395,8 +418,8 @@ namespace Nop.Services.Tests.ExportImport
                     SubscriptionTransactionId = "SubscriptionTransactionId1",
                     PaidDateUtc = new DateTime(2010, 01, 01),
                     CustomValuesXml = "<test>test</test>",
-                    BillingAddress = billingAddress,
-                    ShippingAddress = shippingAddress,
+                    BillingAddress = TestBillingAddress,
+                    ShippingAddress = TestShippingAddress,
                     ShippingMethod = "ShippingMethod1",
                     ShippingRateComputationMethodSystemName = "ShippingRateComputationMethodSystemName1",
                     Deleted = false,
@@ -465,13 +488,13 @@ namespace Nop.Services.Tests.ExportImport
 
             const string billingPatern = "Billing";
             replacePairse = addressFilds.ToDictionary(p => billingPatern + p, p => p);
-            PropertiesShouldEqual(billingAddress, manager, replacePairse, "CreatedOnUtc", "BillingCountry");
-            manager.GetProperties.First(p => p.PropertyName == "BillingCountry").PropertyValue.ShouldEqual(billingAddress.Country.Name);
+            PropertiesShouldEqual(TestBillingAddress, manager, replacePairse, "CreatedOnUtc", "BillingCountry");
+            manager.GetProperties.First(p => p.PropertyName == "BillingCountry").PropertyValue.ShouldEqual(TestBillingCountry.Name);
 
             const string shippingPatern = "Shipping";
             replacePairse = addressFilds.ToDictionary(p => shippingPatern + p, p => p);
-            PropertiesShouldEqual(shippingAddress, manager, replacePairse, "CreatedOnUtc", "ShippingCountry");
-            manager.GetProperties.First(p => p.PropertyName == "ShippingCountry").PropertyValue.ShouldEqual(shippingAddress.Country.Name);
+            PropertiesShouldEqual(TestShippingAddress, manager, replacePairse, "CreatedOnUtc", "ShippingCountry");
+            manager.GetProperties.First(p => p.PropertyName == "ShippingCountry").PropertyValue.ShouldEqual(TestShippingCountry.Name);
         }
 
         [Test]
@@ -543,7 +566,7 @@ namespace Nop.Services.Tests.ExportImport
                 "ReturnRequests", "BillingAddress", "ShippingAddress", "Addresses", "AdminComment",
                 "EmailToRevalidate", "HasShoppingCartItems", "RequireReLogin", "FailedLoginAttempts",
                 "CannotLoginUntilDateUtc", "Deleted", "IsSystemAccount", "SystemName", "LastIpAddress",
-                "LastLoginDateUtc", "LastActivityDateUtc", "RegisteredInStoreId", "BillingAddressId", "ShippingAddressId", 
+                "LastLoginDateUtc", "LastActivityDateUtc", "RegisteredInStoreId", "BillingAddressId", "ShippingAddressId",
                 "CustomerCustomerRoleMappings", "CustomerAddressMappings" };
 
             AreAllObjectPropertiesPresent(customer, manager, ignore.ToArray());
@@ -748,7 +771,7 @@ namespace Nop.Services.Tests.ExportImport
 
             manager.ReadFromXlsx(worksheet, 2);
             var product = products.First();
-            
+
             AreAllObjectPropertiesPresent(product, manager, ignore.ToArray());
             PropertiesShouldEqual(product, manager, replacePairse);
         }

@@ -146,6 +146,7 @@ namespace Nop.Services.Tests.Orders
             _shippingService = new ShippingService(_addressService.Object,
                 cacheManager,
                 _checkoutAttributeParser.Object,
+                _countryService.Object,
                 _eventPublisher.Object,
                 _genericAttributeService.Object,
                 _localizationService.Object,
@@ -157,6 +158,7 @@ namespace Nop.Services.Tests.Orders
                 _shippingMethodRepository.Object,
                 _warehouseRepository.Object,
                 _shippingPluginManager,
+                _stateProvinceService.Object,
                 _storeContext.Object,
                 _shippingSettings,
                 _shoppingCartSettings

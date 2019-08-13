@@ -45,6 +45,7 @@ namespace Nop.Plugin.Payments.Qualpay.Services
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
+        private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
         private readonly IEmailAccountService _emailAccountService;
@@ -58,6 +59,7 @@ namespace Nop.Plugin.Payments.Qualpay.Services
         private readonly IProductService _productService;
         private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IShoppingCartService _shoppingCartService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly ITaxService _taxService;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IWorkContext _workContext;
@@ -74,6 +76,7 @@ namespace Nop.Plugin.Payments.Qualpay.Services
             EmailAccountSettings emailAccountSettings,
             IActionContextAccessor actionContextAccessor,
             ICheckoutAttributeParser checkoutAttributeParser,
+            ICountryService countryService,
             ICurrencyService currencyService,
             ICustomerService customerService,
             IEmailAccountService emailAccountService,
@@ -87,6 +90,7 @@ namespace Nop.Plugin.Payments.Qualpay.Services
             IProductService productService,
             IShippingPluginManager shippingPluginManager,
             IShoppingCartService shoppingCartService,
+            IStateProvinceService stateProvinceService,
             ITaxService taxService,
             IUrlHelperFactory urlHelperFactory,
             IWorkContext workContext,
@@ -96,6 +100,7 @@ namespace Nop.Plugin.Payments.Qualpay.Services
             _emailAccountSettings = emailAccountSettings;
             _actionContextAccessor = actionContextAccessor;
             _checkoutAttributeParser = checkoutAttributeParser;
+            _countryService = countryService;
             _currencyService = currencyService;
             _customerService = customerService;
             _emailAccountService = emailAccountService;
@@ -109,6 +114,7 @@ namespace Nop.Plugin.Payments.Qualpay.Services
             _productService = productService;
             _shippingPluginManager = shippingPluginManager;
             _shoppingCartService = shoppingCartService;
+            _stateProvinceService = stateProvinceService;
             _taxService = taxService;
             _urlHelperFactory = urlHelperFactory;
             _workContext = workContext;
@@ -387,8 +393,8 @@ namespace Nop.Plugin.Payments.Qualpay.Services
                         shippingAddr1: customer.ShippingAddress?.Address1,
                         shippingAddr2: customer.ShippingAddress.Address2,
                         shippingCity: customer.ShippingAddress?.City,
-                        shippingState: customer.ShippingAddress?.StateProvince?.Abbreviation,
-                        shippingCountryCode: customer.ShippingAddress?.Country?.ThreeLetterIsoCode,
+                        shippingState: _stateProvinceService.GetStateProvinceByAddress(customer.ShippingAddress)?.Abbreviation,
+                        shippingCountryCode: _countryService.GetCountryByAddress(customer.ShippingAddress)?.ThreeLetterIsoCode,
                         shippingZip: customer.ShippingAddress?.ZipPostalCode,
                         shippingFirmName: customer.ShippingAddress?.Company
                     )

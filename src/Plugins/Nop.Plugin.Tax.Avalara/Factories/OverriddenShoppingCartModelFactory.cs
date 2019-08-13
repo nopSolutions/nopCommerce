@@ -213,8 +213,8 @@ namespace Nop.Plugin.Tax.Avalara.Factories
                     {
                         Address1 = pickupPoint.Address,
                         City = pickupPoint.City,
-                        Country = country,
-                        StateProvince = _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation, country?.Id),
+                        CountryId = country?.Id,
+                        StateProvinceId = _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation, country?.Id)?.Id,
                         ZipPostalCode = pickupPoint.ZipPostalCode,
                         CreatedOnUtc = DateTime.UtcNow,
                     };

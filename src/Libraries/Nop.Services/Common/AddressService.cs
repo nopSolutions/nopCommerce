@@ -207,10 +207,7 @@ namespace Nop.Services.Common
 
             if (_addressSettings.CountryEnabled)
             {
-                if (address.CountryId == null || address.CountryId.Value == 0)
-                    return false;
-
-                var country = _countryService.GetCountryById(address.CountryId.Value);
+                var country = _countryService.GetCountryByAddress(address);
                 if (country == null)
                     return false;
 

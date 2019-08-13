@@ -6,6 +6,7 @@ using Avalara.AvaTax.RestClient;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Tax;
 using Nop.Plugin.Tax.Avalara.Models.Checkout;
 using Nop.Plugin.Tax.Avalara.Services;
@@ -82,8 +83,8 @@ namespace Nop.Plugin.Tax.Avalara.Components
             return WebUtility.HtmlEncode($"{(!string.IsNullOrEmpty(address.Address1) ? $"{address.Address1}, " : string.Empty)}" +
                 $"{(!string.IsNullOrEmpty(address.Address2) ? $"{address.Address2}, " : string.Empty)}" +
                 $"{(!string.IsNullOrEmpty(address.City) ? $"{address.City}, " : string.Empty)}" +
-                $"{(!string.IsNullOrEmpty(address.StateProvince?.Name) ? $"{address.StateProvince.Name}, " : string.Empty)}" +
-                $"{(!string.IsNullOrEmpty(address.Country?.Name) ? $"{address.Country.Name}, " : string.Empty)}" +
+                $"{(_stateProvinceService.GetStateProvinceByAddress(address) is StateProvince stateProvince ? $"{stateProvince.Name}, " : string.Empty)}" +
+                $"{(_countryService.GetCountryByAddress(address) is Country country ? $"{country.Name}, " : string.Empty)}" +
                 $"{(!string.IsNullOrEmpty(address.ZipPostalCode) ? $"{address.ZipPostalCode}, " : string.Empty)}"
                 .TrimEnd(' ').TrimEnd(','));
         }
@@ -125,11 +126,11 @@ namespace Nop.Plugin.Tax.Avalara.Components
             var validationResult = _avalaraTaxManager.ValidateAddress(new AddressValidationInfo
             {
                 city = CommonHelper.EnsureMaximumLength(address.City, 50),
-                country = CommonHelper.EnsureMaximumLength(address.Country?.TwoLetterIsoCode, 2),
+                country = CommonHelper.EnsureMaximumLength(_countryService.GetCountryByAddress(address)?.TwoLetterIsoCode, 2),
                 line1 = CommonHelper.EnsureMaximumLength(address.Address1, 50),
                 line2 = CommonHelper.EnsureMaximumLength(address.Address2, 100),
                 postalCode = CommonHelper.EnsureMaximumLength(address.ZipPostalCode, 11),
-                region = CommonHelper.EnsureMaximumLength(address.StateProvince?.Abbreviation, 3),
+                region = CommonHelper.EnsureMaximumLength(_stateProvinceService.GetStateProvinceByAddress(address)?.Abbreviation, 3),
                 textCase = TextCase.Mixed
             });
 
@@ -162,11 +163,11 @@ namespace Nop.Plugin.Tax.Avalara.Components
             //create new address as a copy of address to validate and with details of the validated one
             var validatedAddress = address.Clone() as Address;
             validatedAddress.City = validatedAddressInfo.city;
-            validatedAddress.Country = _countryService.GetCountryByTwoLetterIsoCode(validatedAddressInfo.country);
+            validatedAddress.CountryId = _countryService.GetCountryByTwoLetterIsoCode(validatedAddressInfo.country)?.Id;
             validatedAddress.Address1 = validatedAddressInfo.line1;
             validatedAddress.Address2 = validatedAddressInfo.line2;
             validatedAddress.ZipPostalCode = validatedAddressInfo.postalCode;
-            validatedAddress.StateProvince = _stateProvinceService.GetStateProvinceByAbbreviation(validatedAddressInfo.region);
+            validatedAddress.StateProvinceId = _stateProvinceService.GetStateProvinceByAbbreviation(validatedAddressInfo.region)?.Id;
 
             //try to find an existing address with the same values
             var existingAddress = _addressService.FindAddress(_workContext.CurrentCustomer.Addresses.ToList(),

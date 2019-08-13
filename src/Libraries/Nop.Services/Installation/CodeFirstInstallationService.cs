@@ -4149,8 +4149,8 @@ namespace Nop.Services.Installation
                 Address1 = "750 Bel Air Rd.",
                 Address2 = string.Empty,
                 City = "Los Angeles",
-                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "California"),
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
+                StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "California")?.Id,
+                CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA")?.Id,
                 ZipPostalCode = "90077",
                 CreatedOnUtc = DateTime.UtcNow
             };
@@ -4200,7 +4200,7 @@ namespace Nop.Services.Installation
                 Address1 = "221B Baker Street",
                 Address2 = string.Empty,
                 City = "London",
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR"),
+                CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR")?.Id,
                 ZipPostalCode = "NW1 6XE",
                 CreatedOnUtc = DateTime.UtcNow
             };
@@ -4250,7 +4250,7 @@ namespace Nop.Services.Installation
                 Address1 = "St Katharine’s West 16",
                 Address2 = string.Empty,
                 City = "St Andrews",
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR"),
+                CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "GBR")?.Id,
                 ZipPostalCode = "KY16 9AX",
                 CreatedOnUtc = DateTime.UtcNow
             };
@@ -4300,8 +4300,8 @@ namespace Nop.Services.Installation
                 Address1 = "1249 Tongass Avenue, Suite B",
                 Address2 = string.Empty,
                 City = "Ketchikan",
-                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Alaska"),
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
+                StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Alaska")?.Id,
+                CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA")?.Id,
                 ZipPostalCode = "99901",
                 CreatedOnUtc = DateTime.UtcNow
             };
@@ -4353,8 +4353,8 @@ namespace Nop.Services.Installation
                 Address1 = "201 1st Avenue South",
                 Address2 = string.Empty,
                 City = "Saskatoon",
-                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Saskatchewan"),
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "CAN"),
+                StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "Saskatchewan")?.Id,
+                CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "CAN")?.Id,
                 ZipPostalCode = "S7K 1J9",
                 CreatedOnUtc = DateTime.UtcNow
             };
@@ -4461,8 +4461,8 @@ namespace Nop.Services.Installation
                 Address1 = "21 West 52nd Street",
                 Address2 = string.Empty,
                 City = "New York",
-                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "New York"),
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
+                StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "New York")?.Id,
+                CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA")?.Id,
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow
             };
@@ -12268,8 +12268,8 @@ namespace Nop.Services.Installation
             {
                 Address1 = "21 West 52nd Street",
                 City = "New York",
-                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "New York"),
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
+                StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "New York")?.Id,
+                CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA")?.Id,
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow
             };
@@ -12278,8 +12278,8 @@ namespace Nop.Services.Installation
             {
                 Address1 = "300 South Spring Stree",
                 City = "Los Angeles",
-                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "California"),
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
+                StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "California")?.Id,
+                CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA")?.Id,
                 ZipPostalCode = "90013",
                 CreatedOnUtc = DateTime.UtcNow
             };
@@ -12361,8 +12361,8 @@ namespace Nop.Services.Installation
                 Address1 = "21 West 52nd Street",
                 ZipPostalCode = "10021",
                 PhoneNumber = "123456789",
-                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "New York"),
-                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
+                StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "New York")?.Id,
+                CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA")?.Id,
                 CreatedOnUtc = DateTime.UtcNow
             };
             _addressRepository.Insert(affiliateAddress);

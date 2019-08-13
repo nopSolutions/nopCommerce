@@ -1251,9 +1251,7 @@ namespace Nop.Web.Factories
                 var address = new Address
                 {
                     CountryId = countryId,
-                    Country = countryId.HasValue ? _countryService.GetCountryById(countryId.Value) : null,
                     StateProvinceId = stateProvinceId,
-                    StateProvince = stateProvinceId.HasValue ? _stateProvinceService.GetStateProvinceById(stateProvinceId.Value) : null,
                     ZipPostalCode = zipPostalCode,
                 };
 

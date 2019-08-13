@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Common;
 
@@ -22,11 +22,6 @@ namespace Nop.Data.Mapping.Common
             builder.HasKey(value => value.Id);
 
             builder.Property(value => value.Name).HasMaxLength(400).IsRequired();
-
-            builder.HasOne(value => value.AddressAttribute)
-                .WithMany(attribute => attribute.AddressAttributeValues)
-                .HasForeignKey(value => value.AddressAttributeId)
-                .IsRequired();
 
             base.Configure(builder);
         }

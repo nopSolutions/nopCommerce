@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
 
@@ -9,8 +9,6 @@ namespace Nop.Core.Domain.Common
     /// </summary>
     public partial class AddressAttribute : BaseEntity, ILocalizedEntity
     {
-        private ICollection<AddressAttributeValue> _addressAttributeValues;
-
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -38,15 +36,6 @@ namespace Nop.Core.Domain.Common
         {
             get => (AttributeControlType)AttributeControlTypeId;
             set => AttributeControlTypeId = (int)value;
-        }
-
-        /// <summary>
-        /// Gets the address attribute values
-        /// </summary>
-        public virtual ICollection<AddressAttributeValue> AddressAttributeValues
-        {
-            get => _addressAttributeValues ?? (_addressAttributeValues = new List<AddressAttributeValue>());
-            protected set => _addressAttributeValues = value;
         }
     }
 }

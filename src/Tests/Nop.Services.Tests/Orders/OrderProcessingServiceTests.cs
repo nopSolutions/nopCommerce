@@ -56,6 +56,7 @@ namespace Nop.Services.Tests.Orders
         private Mock<IProductService> _productService;
         private Mock<IDiscountService> _discountService;
         private Mock<ICategoryService> _categoryService;
+        private Mock<ICountryService> _countryService;
         private Mock<IManufacturerService> _manufacturerService;
         private Mock<IProductAttributeParser> _productAttributeParser;
         private PriceCalculationService _priceCalcService;
@@ -71,7 +72,6 @@ namespace Nop.Services.Tests.Orders
         private Mock<IGiftCardService> _giftCardService;
         private Mock<IGenericAttributeService> _genericAttributeService;
         private Mock<IGeoLookupService> _geoLookupService;
-        private Mock<ICountryService> _countryService;
         private Mock<IStateProvinceService> _stateProvinceService;
         private Mock<IAddressService> _addressService;
         private TaxService _taxService;
@@ -183,6 +183,7 @@ namespace Nop.Services.Tests.Orders
             _shippingService = new ShippingService(_addressService.Object,
                 cacheManager,
                 _checkoutAttributeParser.Object,
+                _countryService.Object,
                 _eventPublisher.Object,
                 _genericAttributeService.Object,
                 _localizationService.Object,
@@ -194,6 +195,7 @@ namespace Nop.Services.Tests.Orders
                 _shippingMethodRepository.Object,
                 _warehouseRepository.Object,
                 _shippingPluginManager,
+                _stateProvinceService.Object,
                 _storeContext.Object,
                 _shippingSettings,
                 _shoppingCartSettings);

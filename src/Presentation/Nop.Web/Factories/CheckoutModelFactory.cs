@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -141,13 +142,13 @@ namespace Nop.Web.Factories
 
             //existing addresses
             var addresses = _workContext.CurrentCustomer.Addresses
-                .Where(a => a.Country == null ||
+                .Where(a => _countryService.GetCountryByAddress(a) is Country country &&
                     (//published
-                    a.Country.Published &&
+                    country.Published &&
                     //allow billing
-                    a.Country.AllowsBilling &&
+                    country.AllowsBilling &&
                     //enabled for the current store
-                    _storeMappingService.Authorize(a.Country)))
+                    _storeMappingService.Authorize(country)))
                 .ToList();
             foreach (var address in addresses)
             {
@@ -259,13 +260,13 @@ namespace Nop.Web.Factories
 
             //existing addresses
             var addresses = _workContext.CurrentCustomer.Addresses
-                .Where(a => a.Country == null ||
+                .Where(a => _countryService.GetCountryByAddress(a) is Country country &&
                     (//published
-                    a.Country.Published &&
+                    country.Published &&
                     //allow shipping
-                    a.Country.AllowsShipping &&
+                    country.AllowsShipping &&
                     //enabled for the current store
-                    _storeMappingService.Authorize(a.Country)))
+                    _storeMappingService.Authorize(country)))
                 .ToList();
             foreach (var address in addresses)
             {

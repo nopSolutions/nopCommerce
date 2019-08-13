@@ -20,9 +20,7 @@ namespace Nop.Core.Tests.Domain.Common
                 Email = "Email 1",
                 Company = "Company 1",
                 CountryId = 3,
-                Country = new Country { Id = 3, Name = "United States" },
                 StateProvinceId = 4,
-                StateProvince = new StateProvince { Id = 4, Name = "LA" },
                 City = "City 1",
                 County = "County 1",
                 Address1 = "Address1",
@@ -49,13 +47,9 @@ namespace Nop.Core.Tests.Domain.Common
             newAddress.FaxNumber.ShouldEqual("FaxNumber 1");
             newAddress.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
 
-            newAddress.Country.ShouldNotBeNull();
             newAddress.CountryId.ShouldEqual(3);
-            newAddress.Country.Name.ShouldEqual("United States");
 
-            newAddress.StateProvince.ShouldNotBeNull();
             newAddress.StateProvinceId.ShouldEqual(4);
-            newAddress.StateProvince.Name.ShouldEqual("LA");
         }
     }
 }
