@@ -82,7 +82,7 @@
 .shopping-cart-page .cart .remove-from-cart label {
 	margin-left: -5px;
 	padding-left: 20px;
-	font-size: 14px; color: #222;
+	font-size: 14px; color: #18073a;
 	text-transform: uppercase;
 }
 .cart input[type="checkbox"]:checked + label {
@@ -146,7 +146,7 @@
 
 }
 
-@media all and (min-width: 769px) 
+@media all and (min-width: 769px)
 and (max-width: 1024px) { /*additional breakpoint, the master breakpoint is 1200px*/
 
 /* CART TABLES */
@@ -251,7 +251,7 @@ and (max-width: 1024px) { /*additional breakpoint, the master breakpoint is 1200
 }
 .responsive-nav-head {
 	height: 60px;
-	background-color: #222;
+	background-color: #18073a;
 	padding: 15px 20px;
 	line-height: 30px;
 	color: #fff;
@@ -323,7 +323,7 @@ and (max-width: 1024px) { /*additional breakpoint, the master breakpoint is 1200
 	display: block;
 	padding: 20px 12px;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .profile-links #topcartlink {
 	display: none;
@@ -369,7 +369,7 @@ and (max-width: 1024px) { /*additional breakpoint, the master breakpoint is 1200
 	min-width: 75%;
 	padding: 20px 12px;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .header-menu .with-subcategories {
 	max-width: calc(100% - 40px);
@@ -386,7 +386,7 @@ and (max-width: 1024px) { /*additional breakpoint, the master breakpoint is 1200
 .header-menu .trigger:after {
 	content: "\e904";
 	font-size: 10px;
-	color: #222;
+	color: #18073a;
 }
 .header-menu .sublist-wrap {
     position: fixed;
@@ -401,7 +401,7 @@ and (max-width: 1024px) { /*additional breakpoint, the master breakpoint is 1200
     -webkit-transform: translate(-325px);
     -ms-transform: translate(-325px);
     transform: translate(-325px);
-}       
+}
 .header-menu .sublist-wrap.active {
     -webkit-transform: translate(0);
     -ms-transform: translate(0);
