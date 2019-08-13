@@ -10,8 +10,8 @@
 
 .logo .eyes {
 	position: absolute;
-	left: 27px;
-	top: 71px;
+	left: -1px;
+	top: 25px;
 }
 
 
@@ -46,3 +46,26 @@
 	top: 0;
 	left: 15px
 }
+
+
+@media (max-width: 700px) {
+	.header-top__logo.mobile {
+		display: block;
+		max-width: 200px;
+	}
+	.header-top__logo.desktop {
+		display: none;
+	}
+
+	.logo .eyes {
+		display: none;
+	}
+}
+
+@media (max-width: 450px) {
+	.header-top__logo.mobile {
+		max-width: 129px;
+	}
+}
+
+

@@ -12,7 +12,7 @@ input[type="checkbox"]:checked + label:before,
 .slick-dots .slick-active button,
 .blog-search-results .kb-search-link:after,
 .variant-2 .spc-categories .navigation .active span:after {
-  background-color: #00B5B8;
+  background-color: #18073a;
 }
 /* BORDER */
 
@@ -155,15 +155,15 @@ input[type="checkbox"]:checked + label,
 @media all and (min-width: 1201px) {
   .header-menu > ul > li > a:hover,
   .header-menu > ul > li > span:hover {
-    color: #000;
+    color: #18073a;
   }
   .block-account-navigation .list a.active {
-    background-color: #000;
+    background-color: #18073a;
   }
 }
 @media all and (min-width: 1501px) {
   .picture-thumbs .slick-prev:hover:after,
   .picture-thumbs .slick-next:hover:after {
-    color: #000;
+    color: #18073a;
   }
 }
