@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
@@ -67,7 +67,7 @@ namespace Nop.Services.Stores
         /// <returns>Stores</returns>
         public virtual IList<Store> GetAllStores(bool loadCacheableCopy = true)
         {
-            IList<Store> LoadStoresFunc()
+            IList<Store> loadStoresFunc()
             {
                 var query = from s in _storeRepository.Table orderby s.DisplayOrder, s.Id select s;
                 return query.ToList();
@@ -79,13 +79,13 @@ namespace Nop.Services.Stores
                 return _cacheManager.Get(NopStoreDefaults.StoresAllCacheKey, () =>
                 {
                     var result = new List<Store>();
-                    foreach (var store in LoadStoresFunc())
+                    foreach (var store in loadStoresFunc())
                         result.Add(new StoreForCaching(store));
                     return result;
                 });
             }
 
-            return LoadStoresFunc();
+            return loadStoresFunc();
         }
 
         /// <summary>
