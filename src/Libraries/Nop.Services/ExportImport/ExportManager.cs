@@ -286,9 +286,10 @@ namespace Nop.Services.ExportImport
             string limitedToStores = null;
             foreach (var storeMapping in _storeMappingService.GetStoreMappings(product))
             {
-                limitedToStores += _catalogSettings.ExportImportRelatedEntitiesByName
-                    ? storeMapping.Store.Name
-                    : storeMapping.Store.Id.ToString();
+                //TODO: issue-239 - bool loadCacheableCopy = ?
+                var store = _storeService.GetStoreById(storeMapping.StoreId);
+
+                limitedToStores += _catalogSettings.ExportImportRelatedEntitiesByName ? store.Name : store.Id.ToString();
 
                 limitedToStores += ";";
             }
