@@ -614,7 +614,7 @@ namespace Nop.Services.Forums
                 return;
 
             //send notifications
-            var forum = forumTopic.Forum;
+            var forum = GetForumById(forumTopic.ForumId);
             var subscriptions = GetAllSubscriptions(forumId: forum.Id);
             var languageId = _workContext.WorkingLanguage.Id;
 
@@ -625,10 +625,11 @@ namespace Nop.Services.Forums
                     continue;
                 }
 
-                if (!string.IsNullOrEmpty(subscription.Customer.Email))
+                var customer = _customerService.GetCustomerById(subscription.CustomerId);
+
+                if (!string.IsNullOrEmpty(customer?.Email))
                 {
-                    _workflowMessageService.SendNewForumTopicMessage(subscription.Customer, forumTopic,
-                        forum, languageId);
+                    _workflowMessageService.SendNewForumTopicMessage(customer, forumTopic, forum, languageId);
                 }
             }
         }
@@ -838,7 +839,7 @@ namespace Nop.Services.Forums
             if (!sendNotifications) 
                 return;
 
-            var forum = forumTopic.Forum;
+            var forum = GetForumById(forumTopic.ForumId);
             var subscriptions = GetAllSubscriptions(topicId: forumTopic.Id);
 
             var languageId = _workContext.WorkingLanguage.Id;
@@ -854,10 +855,11 @@ namespace Nop.Services.Forums
                     continue;
                 }
 
-                if (!string.IsNullOrEmpty(subscription.Customer.Email))
+                var customer = _customerService.GetCustomerById(subscription.CustomerId);
+
+                if (!string.IsNullOrEmpty(customer?.Email))
                 {
-                    _workflowMessageService.SendNewForumPostMessage(subscription.Customer, forumPost,
-                        forumTopic, forum, friendlyTopicPageIndex, languageId);
+                    _workflowMessageService.SendNewForumPostMessage(customer, forumPost, forumTopic, forum, friendlyTopicPageIndex, languageId);
                 }
             }
         }

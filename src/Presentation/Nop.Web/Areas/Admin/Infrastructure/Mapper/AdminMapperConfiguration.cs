@@ -925,7 +925,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ForumGroups, options => options.Ignore());
             CreateMap<ForumModel, Forum>()
                 .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-                .ForMember(entity => entity.ForumGroup, options => options.Ignore())
                 .ForMember(entity => entity.LastPostCustomerId, options => options.Ignore())
                 .ForMember(entity => entity.LastPostId, options => options.Ignore())
                 .ForMember(entity => entity.LastPostTime, options => options.Ignore())
@@ -938,7 +937,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.CreatedOn, options => options.Ignore());
             CreateMap<ForumGroupModel, ForumGroup>()
                 .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
-                .ForMember(entity => entity.Forums, options => options.Ignore())
                 .ForMember(entity => entity.UpdatedOnUtc, options => options.Ignore());
 
             CreateMap<ForumSettings, ForumSettingsModel>()

@@ -1489,7 +1489,7 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddForumTopicTokens(commonTokens, forumTopic);
-            _messageTokenProvider.AddForumTokens(commonTokens, forumTopic.Forum);
+            _messageTokenProvider.AddForumTokens(commonTokens, forum);
             _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
 
             return messageTemplates.Select(messageTemplate =>
@@ -1535,8 +1535,8 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddForumPostTokens(commonTokens, forumPost);
-            _messageTokenProvider.AddForumTopicTokens(commonTokens, forumPost.ForumTopic, friendlyForumTopicPageIndex, forumPost.Id);
-            _messageTokenProvider.AddForumTokens(commonTokens, forumPost.ForumTopic.Forum);
+            _messageTokenProvider.AddForumTopicTokens(commonTokens, forumTopic, friendlyForumTopicPageIndex, forumPost.Id);
+            _messageTokenProvider.AddForumTokens(commonTokens, forum);
             _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
 
             return messageTemplates.Select(messageTemplate =>
@@ -1577,7 +1577,7 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddPrivateMessageTokens(commonTokens, privateMessage);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, privateMessage.ToCustomer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, privateMessage.ToCustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -1590,8 +1590,9 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = privateMessage.ToCustomer.Email;
-                var toName = _customerService.GetCustomerFullName(privateMessage.ToCustomer);
+                var customer = _customerService.GetCustomerById(privateMessage.ToCustomerId);
+                var toEmail = customer.Email;
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();

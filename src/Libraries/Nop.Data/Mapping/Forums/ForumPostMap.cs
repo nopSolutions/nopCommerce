@@ -23,17 +23,6 @@ namespace Nop.Data.Mapping.Forums
             builder.Property(post => post.Text).IsRequired();
             builder.Property(post => post.IPAddress).HasMaxLength(100);
 
-            builder.HasOne(post => post.ForumTopic)
-                .WithMany()
-                .HasForeignKey(post => post.TopicId)
-                .IsRequired();
-
-            builder.HasOne(post => post.Customer)
-               .WithMany()
-               .HasForeignKey(post => post.CustomerId)
-               .IsRequired()
-               .OnDelete(DeleteBehavior.Restrict);
-
             base.Configure(builder);
         }
 

@@ -23,18 +23,6 @@ namespace Nop.Data.Mapping.Forums
             builder.Property(message => message.Subject).HasMaxLength(450).IsRequired();
             builder.Property(message => message.Text).IsRequired();
 
-            builder.HasOne(message => message.FromCustomer)
-               .WithMany()
-               .HasForeignKey(message => message.FromCustomerId)
-               .IsRequired()
-               .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasOne(message => message.ToCustomer)
-               .WithMany()
-               .HasForeignKey(message => message.ToCustomerId)
-               .IsRequired()
-               .OnDelete(DeleteBehavior.Restrict);
-
             base.Configure(builder);
         }
 

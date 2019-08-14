@@ -22,17 +22,6 @@ namespace Nop.Data.Mapping.Forums
 
             builder.Property(topic => topic.Subject).HasMaxLength(450).IsRequired();
 
-            builder.HasOne(topic => topic.Forum)
-                .WithMany()
-                .HasForeignKey(topic => topic.ForumId)
-                .IsRequired();
-
-            builder.HasOne(topic => topic.Customer)
-               .WithMany()
-               .HasForeignKey(topic => topic.CustomerId)
-               .IsRequired()
-               .OnDelete(DeleteBehavior.Restrict);
-
             builder.Ignore(topic => topic.ForumTopicType);
 
             base.Configure(builder);

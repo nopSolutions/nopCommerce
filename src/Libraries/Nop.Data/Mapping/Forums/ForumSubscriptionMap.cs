@@ -20,12 +20,6 @@ namespace Nop.Data.Mapping.Forums
             builder.ToTable(NopMappingDefaults.ForumsSubscriptionTable);
             builder.HasKey(subscription => subscription.Id);
 
-            builder.HasOne(subscription => subscription.Customer)
-                .WithMany()
-                .HasForeignKey(subscription => subscription.CustomerId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
             base.Configure(builder);
         }
 

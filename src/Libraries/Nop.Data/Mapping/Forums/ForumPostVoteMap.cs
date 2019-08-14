@@ -20,11 +20,6 @@ namespace Nop.Data.Mapping.Forums
             builder.ToTable(NopMappingDefaults.ForumsPostVoteTable);
             builder.HasKey(postVote => postVote.Id);
 
-            builder.HasOne(postVote => postVote.ForumPost)
-                .WithMany()
-                .HasForeignKey(postVote => postVote.ForumPostId)
-                .IsRequired();
-
             base.Configure(builder);
         }
 

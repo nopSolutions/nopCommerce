@@ -10950,7 +10950,7 @@ namespace Nop.Services.Installation
 
             var newProductsForum = new Forum
             {
-                ForumGroup = forumGroup,
+                ForumGroupId = forumGroup.Id,
                 Name = "New Products",
                 Description = "Discuss new products and industry trends",
                 NumTopics = 0,
@@ -10965,7 +10965,7 @@ namespace Nop.Services.Installation
 
             var mobileDevicesForum = new Forum
             {
-                ForumGroup = forumGroup,
+                ForumGroupId = forumGroup.Id,
                 Name = "Mobile Devices Forum",
                 Description = "Discuss the mobile phone market",
                 NumTopics = 0,
@@ -10980,7 +10980,7 @@ namespace Nop.Services.Installation
 
             var packagingShippingForum = new Forum
             {
-                ForumGroup = forumGroup,
+                ForumGroupId = forumGroup.Id,
                 Name = "Packaging & Shipping",
                 Description = "Discuss packaging & shipping",
                 NumTopics = 0,

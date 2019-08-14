@@ -1847,8 +1847,8 @@ namespace Nop.Services.ExportImport
             //customer private messages
             var privateMessageManager = new PropertyManager<PrivateMessage>(new[]
             {
-                new PropertyByName<PrivateMessage>("From", pm => _customerSettings.UsernamesEnabled ? pm.FromCustomer.Username : pm.FromCustomer.Email),
-                new PropertyByName<PrivateMessage>("To", pm => _customerSettings.UsernamesEnabled ? pm.ToCustomer.Username : pm.ToCustomer.Email),
+                new PropertyByName<PrivateMessage>("From", pm => _customerService.GetCustomerById(pm.FromCustomerId) is Customer cFrom ? (_customerSettings.UsernamesEnabled ? cFrom.Username : cFrom.Email) : string.Empty),
+                new PropertyByName<PrivateMessage>("To", pm => _customerService.GetCustomerById(pm.ToCustomerId) is Customer cTo ? (_customerSettings.UsernamesEnabled ? cTo.Username : cTo.Email) : string.Empty),
                 new PropertyByName<PrivateMessage>("Subject", pm => pm.Subject),
                 new PropertyByName<PrivateMessage>("Text", pm => pm.Text),
                 new PropertyByName<PrivateMessage>("Created on", pm => _dateTimeHelper.ConvertToUserTime(pm.CreatedOnUtc, DateTimeKind.Utc).ToString("D"))

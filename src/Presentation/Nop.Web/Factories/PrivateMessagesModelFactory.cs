@@ -190,7 +190,7 @@ namespace Nop.Web.Factories
             var model = new SendPrivateMessageModel
             {
                 ToCustomerId = customerTo.Id,
-                CustomerToName = _customerService.FormatUsername(customerTo),
+                CustomerToName = _customerService.FormatUsername(customerTo.Id),
                 AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !customerTo.IsGuest()
             };
 
@@ -217,15 +217,17 @@ namespace Nop.Web.Factories
             if (pm == null)
                 throw new ArgumentNullException(nameof(pm));
 
+            var customerIsGuest = _customerService.IsInCustomerRole(pm.FromCustomerId, NopCustomerDefaults.GuestsRoleName);
+
             var model = new PrivateMessageModel
             {
                 Id = pm.Id,
-                FromCustomerId = pm.FromCustomer.Id,
-                CustomerFromName = _customerService.FormatUsername(pm.FromCustomer),
-                AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && pm.FromCustomer != null && !pm.FromCustomer.IsGuest(),
-                ToCustomerId = pm.ToCustomer.Id,
-                CustomerToName = _customerService.FormatUsername(pm.ToCustomer),
-                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && pm.ToCustomer != null && !pm.ToCustomer.IsGuest(),
+                FromCustomerId = pm.FromCustomerId,
+                CustomerFromName = _customerService.FormatUsername(pm.FromCustomerId),
+                AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && !customerIsGuest,
+                ToCustomerId = pm.ToCustomerId,
+                CustomerToName = _customerService.FormatUsername(pm.ToCustomerId),
+                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !customerIsGuest,
                 Subject = pm.Subject,
                 Message = _forumService.FormatPrivateMessageText(pm),
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(pm.CreatedOnUtc, DateTimeKind.Utc),
