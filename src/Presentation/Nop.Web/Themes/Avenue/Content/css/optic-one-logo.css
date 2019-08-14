@@ -47,6 +47,13 @@
 	left: 15px
 }
 
+.claim {
+	font-size: 19px;
+	margin-left: 75px;
+	letter-spacing: 1.4px;
+	font-weight: 700;
+	margin-top: -7px;
+}
 
 @media (max-width: 700px) {
 	.header-top__logo.mobile {
@@ -60,11 +67,22 @@
 	.logo .eyes {
 		display: none;
 	}
+	.claim {
+		font-size: 14px;
+		margin-left: 0;
+		margin-top: 0;
+	}
 }
 
 @media (max-width: 450px) {
 	.header-top__logo.mobile {
 		max-width: 129px;
+	}
+	.claim {
+		font-size: 10.9px;
+		margin-left: 0;
+		margin-top: 0;
+		letter-spacing: 0;
 	}
 }
 

@@ -24,6 +24,7 @@ body .header-lower .nav-button .trigger:before {
 	color: #fff;
 }
 
+
 .mega-menu > li > a > span {
 	font-weight: 500;
 }
@@ -71,6 +72,10 @@ body .overview {
 	body .admin-header-links a:after {
 		width: 0;
 	}
+
+	body .header-lower .header-logo {
+		margin-top: -36px;
+	}
 }
 
 @media (min-width: 1501px) {
@@ -83,13 +88,13 @@ body .overview {
 /** ============= MAX width Queries ========== **/
 @media (max-width: 1200px) {
 	body .responsive-nav-content {
-		top: 97px
+		top: 113px
 	}
 }
 
 @media (max-width: 700px) {
 	body .responsive-nav-content {
-		top: 61px
+		top: 78px
 	}
 
 	.category-page .item-box, .manufacturer-page .item-box {
@@ -97,6 +102,12 @@ body .overview {
 
 	}
 
+}
+
+@media (max-width: 450px) {
+	body .responsive-nav-content {
+		top: 60px
+	}
 }
 
 
