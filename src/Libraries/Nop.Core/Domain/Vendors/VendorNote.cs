@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Nop.Core.Domain.Vendors
 {
@@ -21,10 +21,5 @@ namespace Nop.Core.Domain.Vendors
         /// Gets or sets the date and time of vendor note creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-
-        /// <summary>
-        /// Gets the vendor
-        /// </summary>
-        public virtual Vendor Vendor { get; set; }
     }
 }

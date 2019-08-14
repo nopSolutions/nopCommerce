@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Vendors;
 
@@ -21,11 +21,6 @@ namespace Nop.Data.Mapping.Vendors
             builder.HasKey(value => value.Id);
 
             builder.Property(value => value.Name).HasMaxLength(400).IsRequired();
-
-            builder.HasOne(value => value.VendorAttribute)
-                .WithMany(attribute => attribute.VendorAttributeValues)
-                .HasForeignKey(value => value.VendorAttributeId)
-                .IsRequired();
 
             base.Configure(builder);
         }

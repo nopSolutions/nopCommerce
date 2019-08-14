@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -147,6 +147,22 @@ namespace Nop.Services.Vendors
         }
 
         /// <summary>
+        /// Gets all vendor notes
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Vendor notes</returns>
+        public virtual IPagedList<VendorNote> GetVendorNotesByVendor(int vendorId, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var query = _vendorNoteRepository.Table.Where(vn => vn.VendorId == vendorId);
+
+            query = query.OrderBy(v => v.CreatedOnUtc).ThenBy(v => v.Id);
+
+            return new PagedList<VendorNote>(query, pageIndex, pageSize);
+        }
+
+        /// <summary>
         /// Deletes a vendor note
         /// </summary>
         /// <param name="vendorNote">The vendor note</param>
@@ -159,6 +175,21 @@ namespace Nop.Services.Vendors
 
             //event notification
             _eventPublisher.EntityDeleted(vendorNote);
+        }
+
+        /// <summary>
+        /// Inserts a vendor note
+        /// </summary>
+        /// <param name="vendorNote">Vendor note</param>
+        public virtual void InsertVendorNote(VendorNote vendorNote)
+        {
+            if (vendorNote == null)
+                throw new ArgumentNullException(nameof(vendorNote));
+
+            _vendorNoteRepository.Insert(vendorNote);
+
+            //event notification
+            _eventPublisher.EntityInserted(vendorNote);
         }
 
         /// <summary>

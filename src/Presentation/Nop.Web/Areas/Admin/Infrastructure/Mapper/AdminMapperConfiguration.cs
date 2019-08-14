@@ -1581,8 +1581,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.VendorAttributes, options => options.Ignore())
                 .ForMember(model => model.VendorNoteSearchModel, options => options.Ignore());
             CreateMap<VendorModel, Vendor>()
-                .ForMember(entity => entity.Deleted, options => options.Ignore())
-                .ForMember(entity => entity.VendorNotes, options => options.Ignore());
+                .ForMember(entity => entity.Deleted, options => options.Ignore());
 
             CreateMap<VendorNote, VendorNoteModel>()
                .ForMember(model => model.CreatedOn, options => options.Ignore())
@@ -1592,12 +1591,10 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.AttributeControlTypeName, options => options.Ignore())
                 .ForMember(model => model.VendorAttributeValueSearchModel, options => options.Ignore());
             CreateMap<VendorAttributeModel, VendorAttribute>()
-                .ForMember(entity => entity.AttributeControlType, options => options.Ignore())
-                .ForMember(entity => entity.VendorAttributeValues, options => options.Ignore());
+                .ForMember(entity => entity.AttributeControlType, options => options.Ignore());
 
             CreateMap<VendorAttributeValue, VendorAttributeValueModel>();
-            CreateMap<VendorAttributeValueModel, VendorAttributeValue>()
-                .ForMember(entity => entity.VendorAttribute, options => options.Ignore());
+            CreateMap<VendorAttributeValueModel, VendorAttributeValue>();
 
             CreateMap<VendorSettings, VendorSettingsModel>()
                 .ForMember(model => model.AllowCustomersToApplyForVendorAccount_OverrideForStore, options => options.Ignore())
