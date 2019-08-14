@@ -85,6 +85,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<OrderNote> _orderNoteRepository;
+        private readonly IRepository<PollAnswer> _pollAnswerRepository;
         private readonly IRepository<Poll> _pollRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductAttribute> _productAttributeRepository;
@@ -147,6 +148,7 @@ namespace Nop.Services.Installation
             IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
             IRepository<OrderNote> orderNoteRepository,
+            IRepository<PollAnswer> pollAnswerRepository,
             IRepository<Poll> pollRepository,
             IRepository<Product> productRepository,
             IRepository<ProductAttribute> productAttributeRepository,
@@ -204,6 +206,7 @@ namespace Nop.Services.Installation
             _orderItemRepository = orderItemRepository;
             _orderNoteRepository = orderNoteRepository;
             _orderRepository = orderRepository;
+            _pollAnswerRepository = pollAnswerRepository;
             _pollRepository = pollRepository;
             _productAttributeRepository = productAttributeRepository;
             _productAvailabilityRangeRepository = productAvailabilityRangeRepository;
@@ -11178,34 +11181,46 @@ namespace Nop.Services.Installation
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
             var poll1 = new Poll
             {
-                Language = defaultLanguage,
+                LanguageId = defaultLanguage.Id,
                 Name = "Do you like nopCommerce?",
                 SystemKeyword = string.Empty,
                 Published = true,
                 ShowOnHomepage = true,
                 DisplayOrder = 1
             };
-            poll1.PollAnswers.Add(new PollAnswer
+
+
+            _pollRepository.Insert(poll1);
+
+            var answers = new List<PollAnswer>()
+            {
+                new PollAnswer
             {
                 Name = "Excellent",
-                DisplayOrder = 1
-            });
-            poll1.PollAnswers.Add(new PollAnswer
+                DisplayOrder = 1,
+                PollId = poll1.Id
+            },
+                new PollAnswer
             {
                 Name = "Good",
-                DisplayOrder = 2
-            });
-            poll1.PollAnswers.Add(new PollAnswer
+                DisplayOrder = 2,
+                PollId = poll1.Id
+            },
+                new PollAnswer
             {
                 Name = "Poor",
-                DisplayOrder = 3
-            });
-            poll1.PollAnswers.Add(new PollAnswer
+                DisplayOrder = 3,
+                PollId = poll1.Id
+            },
+                new PollAnswer
             {
                 Name = "Very bad",
-                DisplayOrder = 4
-            });
-            _pollRepository.Insert(poll1);
+                DisplayOrder = 4,
+                PollId = poll1.Id
+            }
+            };
+
+            _pollAnswerRepository.Insert(answers);
         }
 
         protected virtual void InstallActivityLogTypes()

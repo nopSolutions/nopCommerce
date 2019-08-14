@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -190,6 +190,54 @@ namespace Nop.Services.Polls
         }
 
         /// <summary>
+        /// Gets a poll answers by parent poll
+        /// </summary>
+        /// <param name="pollId">The poll identifier</param>
+        /// <returns>Poll answer</returns>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        public virtual IPagedList<PollAnswer> GetPollAnswerByPoll(int pollId, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var query = _pollAnswerRepository.Table.Where(pa => pa.PollId == pollId);
+
+            //order records by display order
+            query = query.OrderBy(pa => pa.DisplayOrder).ThenBy(pa => pa.Id);
+
+            //return paged list of polls
+            return new PagedList<PollAnswer>(query, pageIndex, pageSize);
+        }
+
+        /// <summary>
+        /// Inserts a poll answer
+        /// </summary>
+        /// <param name="pollAnswer">Poll answer</param>
+        public virtual void InsertPollAnswer(PollAnswer pollAnswer)
+        {
+            if (pollAnswer == null)
+                throw new ArgumentNullException(nameof(pollAnswer));
+
+            _pollAnswerRepository.Insert(pollAnswer);
+
+            //event notification
+            _eventPublisher.EntityInserted(pollAnswer);
+        }
+
+        /// <summary>
+        /// Updates the poll answer
+        /// </summary>
+        /// <param name="pollAnswer">Poll answer</param>
+        public virtual void UpdatePollAnswer(PollAnswer pollAnswer)
+        {
+            if (pollAnswer == null)
+                throw new ArgumentNullException(nameof(pollAnswer));
+
+            _pollAnswerRepository.Update(pollAnswer);
+
+            //event notification
+            _eventPublisher.EntityUpdated(pollAnswer);
+        }
+
+        /// <summary>
         /// Gets a value indicating whether customer already voted for this poll
         /// </summary>
         /// <param name="pollId">Poll identifier</param>
@@ -205,6 +253,36 @@ namespace Nop.Services.Polls
                           where pa.PollId == pollId && pvr.CustomerId == customerId
                           select pvr).Any();
             return result;
+        }
+
+        /// <summary>
+        /// Inserts a poll voting record
+        /// </summary>
+        /// <param name="pollVotingRecord">Voting record</param>
+        public virtual void InsertPollVotingRecord(PollVotingRecord pollVotingRecord)
+        {
+            if (pollVotingRecord == null)
+                throw new ArgumentNullException(nameof(pollVotingRecord));
+
+            _pollVotingRecordRepository.Insert(pollVotingRecord);
+
+            //event notification
+            _eventPublisher.EntityInserted(pollVotingRecord);
+        }
+
+        /// <summary>
+        /// Gets a poll voting records by parent answer
+        /// </summary>
+        /// <param name="pollAnswerId">Poll answer identifier</param>
+        /// <returns>Poll answer</returns>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        public virtual IPagedList<PollVotingRecord> GetPollVotingRecordsByPollAnswer(int pollAnswerId, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var query = _pollVotingRecordRepository.Table.Where(pa => pa.PollAnswerId == pollAnswerId);
+
+            //return paged list of poll voting records
+            return new PagedList<PollVotingRecord>(query, pageIndex, pageSize);
         }
 
         #endregion

@@ -48,7 +48,8 @@ namespace Nop.Web.Controllers
             if (pollAnswer == null)
                 return Json(new { error = "No poll answer found with the specified id" });
 
-            var poll = pollAnswer.Poll;
+            var poll = _pollService.GetPollById(pollAnswer.PollId);
+
             if (!poll.Published || !_storeMappingService.Authorize(poll))
                 return Json(new { error = "Poll is not available" });
 
@@ -59,7 +60,7 @@ namespace Nop.Web.Controllers
             if (!alreadyVoted)
             {
                 //vote
-                pollAnswer.PollVotingRecords.Add(new PollVotingRecord
+                _pollService.InsertPollVotingRecord(new PollVotingRecord
                 {
                     PollAnswerId = pollAnswer.Id,
                     CustomerId = _workContext.CurrentCustomer.Id,
@@ -67,7 +68,7 @@ namespace Nop.Web.Controllers
                 });
 
                 //update totals
-                pollAnswer.NumberOfVotes = pollAnswer.PollVotingRecords.Count;
+                pollAnswer.NumberOfVotes = _pollService.GetPollVotingRecordsByPollAnswer(pollAnswer.Id).Count;
                 _pollService.UpdatePoll(poll);
             }
 

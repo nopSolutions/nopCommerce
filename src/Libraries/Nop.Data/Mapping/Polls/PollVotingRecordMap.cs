@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Polls;
 
@@ -19,16 +19,6 @@ namespace Nop.Data.Mapping.Polls
         {
             builder.ToTable(nameof(PollVotingRecord));
             builder.HasKey(record => record.Id);
-
-            builder.HasOne(record => record.PollAnswer)
-                .WithMany(pollAnswer => pollAnswer.PollVotingRecords)
-                .HasForeignKey(record => record.PollAnswerId)
-                .IsRequired();
-
-            builder.HasOne(record => record.Customer)
-                .WithMany()
-                .HasForeignKey(record => record.CustomerId)
-                .IsRequired();
 
             base.Configure(builder);
         }

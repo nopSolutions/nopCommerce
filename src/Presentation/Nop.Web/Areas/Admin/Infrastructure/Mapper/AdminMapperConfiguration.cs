@@ -1376,18 +1376,14 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
         protected virtual void CreatePollsMaps()
         {
             CreateMap<PollAnswer, PollAnswerModel>();
-            CreateMap<PollAnswerModel, PollAnswer>()
-                .ForMember(entity => entity.Poll, options => options.Ignore())
-                .ForMember(entity => entity.PollId, options => options.Ignore())
-                .ForMember(entity => entity.PollVotingRecords, options => options.Ignore());
+            CreateMap<PollAnswerModel, PollAnswer>();
 
             CreateMap<Poll, PollModel>()
                 .ForMember(model => model.AvailableLanguages, options => options.Ignore())
-                .ForMember(model => model.PollAnswerSearchModel, options => options.Ignore());
+                .ForMember(model => model.PollAnswerSearchModel, options => options.Ignore())
+                .ForMember(model => model.LanguageName, options => options.Ignore());
             CreateMap<PollModel, Poll>()
-                .ForMember(entity => entity.EndDateUtc, options => options.Ignore())
-                .ForMember(entity => entity.Language, options => options.Ignore())
-                .ForMember(entity => entity.PollAnswers, options => options.Ignore());
+                .ForMember(entity => entity.EndDateUtc, options => options.Ignore());
         }
 
         /// <summary>
