@@ -51,11 +51,9 @@ namespace Nop.Plugin.Payments.Square.Services
         {
             //validate access token
             if (_squarePaymentSettings.UseSandbox &&
-                (string.IsNullOrEmpty(_squarePaymentSettings.AccessToken) ||
-                    !_squarePaymentSettings.AccessToken.StartsWith(SquarePaymentDefaults.SandboxCredentialsPrefix, StringComparison.InvariantCultureIgnoreCase)))
-
+                string.IsNullOrEmpty(_squarePaymentSettings.AccessToken))
             {
-                throw new NopException($"Sandbox access token should start with '{SquarePaymentDefaults.SandboxCredentialsPrefix}'");
+                throw new NopException("Sandbox access token should not be empty");
             }
 
             return new Configuration
@@ -96,8 +94,8 @@ namespace Nop.Plugin.Payments.Square.Services
                 }
 
                 //filter active locations and locations that can process credit cards
-                var activeLocations = listLocationsResponse.Locations?.Where(location => location?.Status == Location.StatusEnum.ACTIVE
-                    && (location.Capabilities?.Contains(Location.CapabilitiesEnum.PROCESSING) ?? false)).ToList();
+                var activeLocations = listLocationsResponse.Locations?.Where(location => location?.Status == SquarePaymentDefaults.LOCATION_STATUS_ACTIVE
+                    && (location.Capabilities?.Contains(SquarePaymentDefaults.LOCATION_CAPABILITIES_PROCESSING) ?? false)).ToList();
                 if (!activeLocations?.Any() ?? true)
                     throw new NopException("There are no active locations for the account");
 
