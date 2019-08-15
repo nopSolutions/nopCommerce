@@ -36,6 +36,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
 
         public SendinBlueMessageService(CommonSettings commonSettings,
             EmailAccountSettings emailAccountSettings,
+            IAddressService addressService,
             IAffiliateService affiliateService,
             ICustomerService customerService,
             IEmailAccountService emailAccountService,
@@ -53,6 +54,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             SendinBlueManager sendinBlueEmailManager)
             : base(commonSettings,
                 emailAccountSettings,
+                addressService,
                 affiliateService,
                 customerService,
                 emailAccountService,

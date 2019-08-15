@@ -1,5 +1,4 @@
 ﻿using System;
-using Nop.Core.Domain.Directory;
 
 namespace Nop.Core.Domain.Common
 {
@@ -82,7 +81,16 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-        
+
+        /// <summary>
+        /// Gets address fullname
+        /// </summary>
+        /// <returns></returns>
+        public string GetFullName() //TODO: issue-239 - mb as property [NotMapped]
+        {
+            return $"{FirstName} {LastName}".Trim();
+        }
+
         /// <summary>
         /// Clone
         /// </summary>

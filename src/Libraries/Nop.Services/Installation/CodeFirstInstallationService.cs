@@ -12403,7 +12403,7 @@ namespace Nop.Services.Installation
             var affilate = new Affiliate
             {
                 Active = true,
-                Address = affiliateAddress
+                AddressId = affiliateAddress.Id
             };
             _affiliateRepository.Insert(affilate);
         }

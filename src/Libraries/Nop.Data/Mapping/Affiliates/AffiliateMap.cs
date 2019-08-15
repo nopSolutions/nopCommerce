@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Affiliates;
 
@@ -19,12 +19,6 @@ namespace Nop.Data.Mapping.Affiliates
         {
             builder.ToTable(nameof(Affiliate));
             builder.HasKey(affiliate => affiliate.Id);
-
-            builder.HasOne(affiliate => affiliate.Address)
-                .WithMany()
-                .HasForeignKey(affiliate => affiliate.AddressId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
 
             base.Configure(builder);
         }

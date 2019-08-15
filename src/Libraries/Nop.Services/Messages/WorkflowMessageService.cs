@@ -14,6 +14,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Affiliates;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -30,6 +31,7 @@ namespace Nop.Services.Messages
 
         private readonly CommonSettings _commonSettings;
         private readonly EmailAccountSettings _emailAccountSettings;
+        private readonly IAddressService _addressService;
         private readonly IAffiliateService _affiliateService;
         private readonly ICustomerService _customerService;
         private readonly IEmailAccountService _emailAccountService;
@@ -49,6 +51,7 @@ namespace Nop.Services.Messages
 
         public WorkflowMessageService(CommonSettings commonSettings,
             EmailAccountSettings emailAccountSettings,
+            IAddressService addressService,
             IAffiliateService affiliateService,
             ICustomerService customerService,
             IEmailAccountService emailAccountService,
@@ -64,6 +67,7 @@ namespace Nop.Services.Messages
         {
             _commonSettings = commonSettings;
             _emailAccountSettings = emailAccountSettings;
+            _addressService = addressService;
             _affiliateService = affiliateService;
             _customerService = customerService;
             _emailAccountService = emailAccountService;
@@ -486,8 +490,9 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = affiliate.Address.Email;
-                var toName = $"{affiliate.Address.FirstName} {affiliate.Address.LastName}";
+                var affiliateAddress =_addressService.GetAddressById(affiliate.AddressId);
+                var toEmail = affiliateAddress.Email;
+                var toName = affiliateAddress.GetFullName();
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -573,8 +578,9 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = affiliate.Address.Email;
-                var toName = $"{affiliate.Address.FirstName} {affiliate.Address.LastName}";
+                var affiliateAddress = _addressService.GetAddressById(affiliate.AddressId);
+                var toEmail = affiliateAddress.Email;
+                var toName = affiliateAddress.GetFullName();
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();

@@ -181,7 +181,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.AffiliatedOrderSearchModel, options => options.Ignore())
                 .ForMember(model => model.Url, options => options.Ignore());
             CreateMap<AffiliateModel, Affiliate>()
-                .ForMember(entity => entity.Address, options => options.Ignore())
                 .ForMember(entity => entity.Deleted, options => options.Ignore());
 
             CreateMap<Order, AffiliatedOrderModel>()

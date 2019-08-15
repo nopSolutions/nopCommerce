@@ -249,8 +249,8 @@ namespace Nop.Services.Common
             var requiredAttributes = _addressAttributeService.GetAllAddressAttributes().Where(x => x.IsRequired);
 
             foreach (var requiredAttribute in requiredAttributes)
-            { 
-                var value  = _addressAttributeParser.ParseValues(address.CustomAttributes, requiredAttribute.Id);
+            {
+                var value = _addressAttributeParser.ParseValues(address.CustomAttributes, requiredAttribute.Id);
 
                 if (!value.Any() || (string.IsNullOrEmpty(value[0])))
                     return false;
@@ -294,7 +294,7 @@ namespace Nop.Services.Common
             ((string.IsNullOrEmpty(a.County) && string.IsNullOrEmpty(county)) || a.County == county) &&
             ((a.StateProvinceId == null && (stateProvinceId == null || stateProvinceId == 0)) || (a.StateProvinceId != null && a.StateProvinceId == stateProvinceId)) &&
             ((string.IsNullOrEmpty(a.ZipPostalCode) && string.IsNullOrEmpty(zipPostalCode)) || a.ZipPostalCode == zipPostalCode) &&
-            ((a.CountryId == null && countryId == null) || (a.CountryId !=null && a.CountryId == countryId)) &&
+            ((a.CountryId == null && countryId == null) || (a.CountryId != null && a.CountryId == countryId)) &&
             //actually we should parse custom address attribute (in case if "Display order" is changed) and then compare
             //bu we simplify this process and simply compare their values in XML
             ((string.IsNullOrEmpty(a.CustomAttributes) && string.IsNullOrEmpty(customAttributes)) || a.CustomAttributes == customAttributes));

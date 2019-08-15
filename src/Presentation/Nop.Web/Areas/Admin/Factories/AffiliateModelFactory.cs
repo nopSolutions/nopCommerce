@@ -25,6 +25,7 @@ namespace Nop.Web.Areas.Admin.Factories
     {
         #region Fields
 
+        private readonly IAddressService _addressService;
         private readonly IAffiliateService _affiliateService;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICountryService _countryService;
@@ -39,7 +40,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Ctor
 
-        public AffiliateModelFactory(IAffiliateService affiliateService,
+        public AffiliateModelFactory(IAddressService addressService,
+            IAffiliateService affiliateService,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICountryService countryService,
             ICustomerService customerService,
@@ -49,6 +51,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IPriceFormatter priceFormatter,
             IStateProvinceService stateProvinceService)
         {
+            _addressService = addressService;
             _affiliateService = affiliateService;
             _baseAdminModelFactory = baseAdminModelFactory;
             _countryService = countryService;
@@ -69,7 +72,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Address model</param>
         /// <param name="address">Address</param>
-        protected virtual void PrepareAddressModel(AddressModel model, Address address)
+        protected virtual void PrepareAddressModel(AddressModel model, Address address = null)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -199,10 +202,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 //fill in model values from the entity
                 return affiliates.Select(affiliate =>
                 {
+                    var address = _addressService.GetAddressById(affiliate.AddressId);
+
                     var affiliateModel = affiliate.ToModel<AffiliateModel>();
-                    affiliateModel.Address = affiliate.Address.ToModel<AddressModel>();
-                    affiliateModel.Address.CountryName = _countryService.GetCountryByAddress(affiliate.Address)?.Name;
-                    affiliateModel.Address.StateProvinceName = _stateProvinceService.GetStateProvinceByAddress(affiliate.Address)?.Name;
+                    affiliateModel.Address = address.ToModel<AddressModel>();
+                    affiliateModel.Address.CountryName = _countryService.GetCountryByAddress(address)?.Name;
+                    affiliateModel.Address.StateProvinceName = _stateProvinceService.GetStateProvinceByAddress(address)?.Name;
 
                     return affiliateModel;
                 });
@@ -230,18 +235,24 @@ namespace Nop.Web.Areas.Admin.Factories
                 PrepareAffiliatedOrderSearchModel(model.AffiliatedOrderSearchModel, affiliate);
                 PrepareAffiliatedCustomerSearchModel(model.AffiliatedCustomerSearchModel, affiliate);
 
+                var address = _addressService.GetAddressById(affiliate.AddressId);
+
                 //whether to fill in some of properties
                 if (!excludeProperties)
                 {
                     model.AdminComment = affiliate.AdminComment;
                     model.FriendlyUrlName = affiliate.FriendlyUrlName;
                     model.Active = affiliate.Active;
-                    model.Address = affiliate.Address.ToModel(model.Address);
+                    model.Address = address.ToModel(model.Address);
+
+                    //prepare address model
+                    PrepareAddressModel(model.Address, address);
                 }
             }
-
-            //prepare address model
-            PrepareAddressModel(model.Address, affiliate?.Address);
+            else
+            {
+                PrepareAddressModel(model.Address);
+            }
 
             return model;
         }
