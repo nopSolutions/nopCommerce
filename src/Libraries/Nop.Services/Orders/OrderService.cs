@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -8,6 +8,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Html;
+using Nop.Services.Catalog;
 using Nop.Services.Events;
 
 namespace Nop.Services.Orders
@@ -20,6 +21,7 @@ namespace Nop.Services.Orders
         #region Fields
 
         private readonly IEventPublisher _eventPublisher;
+        private readonly IProductService _productService;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderItem> _orderItemRepository;
@@ -32,6 +34,7 @@ namespace Nop.Services.Orders
         #region Ctor
 
         public OrderService(IEventPublisher eventPublisher,
+            IProductService productService,
             IRepository<Customer> customerRepository,
             IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
@@ -40,6 +43,7 @@ namespace Nop.Services.Orders
             IRepository<RecurringPayment> recurringPaymentRepository)
         {
             _eventPublisher = eventPublisher;
+            _productService = productService;
             _customerRepository = customerRepository;
             _orderRepository = orderRepository;
             _orderItemRepository = orderItemRepository;
@@ -192,7 +196,7 @@ namespace Nop.Services.Orders
                         //we search in each warehouse
                         (orderItem.Product.ManageInventoryMethodId == manageStockInventoryMethodId &&
                         orderItem.Product.UseMultipleWarehouses &&
-                        orderItem.Product.ProductWarehouseInventory.Any(pwi => pwi.WarehouseId == warehouseId))
+                        _productService.GetAllProductWarehouseInventoryRecords(orderItem.ProductId).Any(pwi => pwi.WarehouseId == warehouseId))
                         ||
                         //"Use multiple warehouses" disabled
                         //we use standard "warehouse" property

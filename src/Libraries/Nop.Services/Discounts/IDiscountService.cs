@@ -54,37 +54,12 @@ namespace Nop.Services.Discounts
         void UpdateDiscount(Discount discount);
 
         /// <summary>
-        /// Get categories for which a discount is applied
+        /// Gets discounts applied to entity
         /// </summary>
-        /// <param name="discountId">Discount identifier; pass null to load all records</param>
-        /// <param name="showHidden">A value indicating whether to load deleted categories</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns>List of categories</returns>
-        IPagedList<Category> GetCategoriesWithAppliedDiscount(int? discountId = null,
-            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue);
-
-        /// <summary>
-        /// Get manufacturers for which a discount is applied
-        /// </summary>
-        /// <param name="discountId">Discount identifier; pass null to load all records</param>
-        /// <param name="showHidden">A value indicating whether to load deleted manufacturers</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns>List of manufacturers</returns>
-        IPagedList<Manufacturer> GetManufacturersWithAppliedDiscount(int? discountId = null,
-            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue);
-
-        /// <summary>
-        /// Get products to which a discount is applied
-        /// </summary>
-        /// <param name="discountId">Discount identifier; pass null to load all records</param>
-        /// <param name="showHidden">A value indicating whether to load deleted products</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns>List of products</returns>
-        IPagedList<Product> GetProductsWithAppliedDiscount(int? discountId = null,
-            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue);
+        /// <typeparam name="T">Type based on <see cref="DiscountMapping" /></typeparam>
+        /// <param name="entity">Entity which supports discounts (<see cref="IDiscountSupported{T}" />)</param>
+        /// <returns>List of discounts</returns>
+        IList<Discount> GetAppliedDiscounts<T>(IDiscountSupported<T> entity) where T : DiscountMapping;
 
         #endregion
 

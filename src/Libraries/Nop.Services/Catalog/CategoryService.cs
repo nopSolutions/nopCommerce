@@ -8,6 +8,7 @@ using Nop.Core.Data.Extensions;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
@@ -35,6 +36,7 @@ namespace Nop.Services.Catalog
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<AclRecord> _aclRepository;
         private readonly IRepository<Category> _categoryRepository;
+        private readonly IRepository<DiscountCategoryMapping> _discountCategoryMappingRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductCategory> _productCategoryRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
@@ -124,7 +126,7 @@ namespace Nop.Services.Catalog
         /// <returns>Categories</returns>
         public virtual IList<Category> GetAllCategories(int storeId = 0, bool showHidden = false, bool loadCacheableCopy = true)
         {
-            IList<Category> LoadCategoriesFunc() => GetAllCategories(string.Empty, storeId, showHidden: showHidden);
+            IList<Category> loadCategoriesFunc() => GetAllCategories(string.Empty, storeId, showHidden: showHidden);
 
             IList<Category> categories;
             if (loadCacheableCopy)
@@ -137,14 +139,14 @@ namespace Nop.Services.Catalog
                 categories = _staticCacheManager.Get(key, () =>
                 {
                     var result = new List<Category>();
-                    foreach (var category in LoadCategoriesFunc())
+                    foreach (var category in loadCategoriesFunc())
                         result.Add(new CategoryForCaching(category));
                     return result;
                 });
             }
             else
             {
-                categories = LoadCategoriesFunc();
+                categories = loadCategoriesFunc();
             }
 
             return categories;
@@ -359,6 +361,33 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Get categories for which a discount is applied
+        /// </summary>
+        /// <param name="discountId">Discount identifier; pass null to load all records</param>
+        /// <param name="showHidden">A value indicating whether to load deleted categories</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>List of categories</returns>
+        public virtual IPagedList<Category> GetCategoriesByAppliedDiscount(int? discountId = null,
+            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var categories = _categoryRepository.Table;
+
+            if (discountId.HasValue)
+                categories = (from category in categories
+                              join dcm in _discountCategoryMappingRepository.Table on category.Id equals dcm.CategoryId
+                              where dcm.DiscountId == discountId.Value
+                              select category);
+
+            if (!showHidden)
+                categories = categories.Where(category => !category.Deleted);
+
+            categories = categories.OrderBy(category => category.DisplayOrder).ThenBy(category => category.Id);
+
+            return new PagedList<Category>(categories, pageIndex, pageSize);
+        }
+
+        /// <summary>
         /// Inserts category
         /// </summary>
         /// <param name="category">Category</param>
@@ -379,6 +408,47 @@ namespace Nop.Services.Catalog
 
             //event notification
             _eventPublisher.EntityInserted(category);
+        }
+
+        /// <summary>
+        /// Get a value indicating whether discount is applied to category
+        /// </summary>
+        /// <param name="categoryId">Category identifier</param>
+        /// <param name="discountId">Discount identifier</param>
+        /// <returns>Result</returns>
+        public virtual DiscountCategoryMapping GetDiscountAppliedToCategory(int categoryId, int discountId)
+        {
+            return _discountCategoryMappingRepository.Table.FirstOrDefault(dcm => dcm.CategoryId == categoryId && dcm.DiscountId == discountId);
+        }
+
+        /// <summary>
+        /// Inserts a discount-category mapping record
+        /// </summary>
+        /// <param name="discountCategoryMapping">Discount-category mapping</param>
+        public virtual void InsertDiscountCategoryMapping(DiscountCategoryMapping discountCategoryMapping)
+        {
+            if (discountCategoryMapping is null)
+                throw new ArgumentNullException(nameof(discountCategoryMapping));
+
+            _discountCategoryMappingRepository.Insert(discountCategoryMapping);
+
+            //event notification
+            _eventPublisher.EntityInserted(discountCategoryMapping);
+        }
+
+        /// <summary>
+        /// Deletes a discount-category mapping record
+        /// </summary>
+        /// <param name="discountCategoryMapping">Discount-category mapping</param>
+        public virtual void DeleteDiscountCategoryMapping(DiscountCategoryMapping discountCategoryMapping)
+        {
+            if (discountCategoryMapping is null)
+                throw new ArgumentNullException(nameof(discountCategoryMapping));
+
+            _discountCategoryMappingRepository.Delete(discountCategoryMapping);
+
+            //event notification
+            _eventPublisher.EntityDeleted(discountCategoryMapping);
         }
 
         /// <summary>
@@ -537,7 +607,7 @@ namespace Nop.Services.Catalog
                     foreach (var pc in allProductCategories)
                     {
                         //ACL (access control list) and store mapping
-                        var category = pc.Category;
+                        var category = GetCategoryById(pc.CategoryId);
                         if (_aclService.Authorize(category) && _storeMappingService.Authorize(category, storeId))
                             result.Add(pc);
                     }

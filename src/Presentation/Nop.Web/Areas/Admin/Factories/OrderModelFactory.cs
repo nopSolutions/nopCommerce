@@ -618,7 +618,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Id = attribute.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
-                    Name = attribute.ProductAttribute.Name,
+                    Name = _productAttributeService.GetProductAttributeById(attribute.ProductAttributeId).Name,
                     TextPrompt = attribute.TextPrompt,
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
@@ -1454,11 +1454,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     //multiple warehouses supported
                     shipmentItemModel.AllowToChooseWarehouse = true;
-                    foreach (var pwi in orderItem.Product.ProductWarehouseInventory.OrderBy(w => w.WarehouseId)
-                        .ToList())
+                    foreach (var pwi in _productService.GetAllProductWarehouseInventoryRecords(orderItem.ProductId).OrderBy(w => w.WarehouseId).ToList())
                     {
-                        var warehouse = pwi.Warehouse;
-                        if (warehouse != null)
+                        if (_productService.GetWarehousesById(pwi.WarehouseId) is Warehouse warehouse)
                         {
                             shipmentItemModel.AvailableWarehouses.Add(new ShipmentItemModel.WarehouseInfo
                             {

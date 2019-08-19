@@ -25,7 +25,6 @@ namespace Nop.Services.Catalog
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
-        private readonly IProductService _productService;
         private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IStaticCacheManager _staticCacheManager;
@@ -53,7 +52,6 @@ namespace Nop.Services.Catalog
             _dataProvider = dataProvider;
             _dbContext = dbContext;
             _eventPublisher = eventPublisher;
-            _productService = productService;
             _productProductTagMappingRepository = productProductTagMappingRepository;
             _productTagRepository = productTagRepository;
             _staticCacheManager = staticCacheManager;
@@ -73,7 +71,7 @@ namespace Nop.Services.Catalog
         /// <returns>Dictionary of "product tag ID : product count"</returns>
         private Dictionary<int, int> GetProductCount(int storeId, bool showHidden)
         {
-            string allowedCustomerRolesIds = "";
+            var allowedCustomerRolesIds = "";
             if (!showHidden && !_catalogSettings.IgnoreAcl)
             {
                 //Access control list. Allowed customer roles
@@ -99,6 +97,24 @@ namespace Nop.Services.Catalog
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Delete a product-product tag mapping
+        /// </summary>
+        /// <param name="tagMapping">Product-product tag mapping</param>
+        public virtual void DeleteProductProductTagMapping(int productId, int productTagId)
+        {
+            var mappitngRecord = _productProductTagMappingRepository.Table.FirstOrDefault(pptm => pptm.ProductId == productId && pptm.ProductTagId == productTagId);
+
+            if (mappitngRecord is null)
+                throw new Exception("Mppaing record not found");
+
+            _productProductTagMappingRepository.Delete(mappitngRecord);
+
+            //event notification
+            _eventPublisher.EntityDeleted(mappitngRecord);
+
+        }
 
         /// <summary>
         /// Delete a product tag
@@ -180,6 +196,21 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Inserts a product-product tag mapping
+        /// </summary>
+        /// <param name="tagMapping">Product-product tag mapping</param>
+        public virtual void InsertProductProductTagMapping(ProductProductTagMapping tagMapping)
+        {
+            if (tagMapping is null)
+                throw new ArgumentNullException(nameof(tagMapping));
+
+            _productProductTagMappingRepository.Insert(tagMapping);
+
+            _eventPublisher.EntityInserted(tagMapping);
+
+        }
+
+        /// <summary>
         /// Inserts a product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>
@@ -196,6 +227,20 @@ namespace Nop.Services.Catalog
 
             //event notification
             _eventPublisher.EntityInserted(productTag);
+        }
+
+        /// <summary>
+        /// Indicates whether a product tag exists
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="productTagId">Product tag identifier</param>
+        /// <returns>Result</returns>
+        public virtual bool ProductTagExists(Product product, int productTagId)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            return _productProductTagMappingRepository.Table.Any(pptm => pptm.ProductId == product.Id && pptm.ProductTagId == productTagId);
         }
 
         /// <summary>
@@ -269,10 +314,7 @@ namespace Nop.Services.Catalog
 
             foreach (var productTag in productTagsToRemove)
             {
-                //product.ProductTags.Remove(productTag);
-                product.ProductProductTagMappings
-                    .Remove(product.ProductProductTagMappings.FirstOrDefault(mapping => mapping.ProductTagId == productTag.Id));
-                _productService.UpdateProduct(product);
+                DeleteProductProductTagMapping(product.Id, productTag.Id);
             }
 
             foreach (var productTagName in productTags)
@@ -293,11 +335,9 @@ namespace Nop.Services.Catalog
                     productTag = productTag2;
                 }
 
-                if (!_productService.ProductTagExists(product, productTag.Id))
+                if (!ProductTagExists(product, productTag.Id))
                 {
-                    //product.ProductTags.Add(productTag);
-                    product.ProductProductTagMappings.Add(new ProductProductTagMapping { ProductTag = productTag });
-                    _productService.UpdateProduct(product);
+                    InsertProductProductTagMapping(new ProductProductTagMapping { ProductTagId = productTag.Id, ProductId = product.Id });
                 }
 
                 var seName = _urlRecordService.ValidateSeName(productTag, string.Empty, productTag.Name, true);

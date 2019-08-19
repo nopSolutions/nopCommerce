@@ -70,6 +70,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
+        private readonly IProductService _productService;
         private readonly IRewardPointService _rewardPointService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
@@ -110,6 +111,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
             IProductAttributeFormatter productAttributeFormatter,
+            IProductService productService,
             IRewardPointService rewardPointService,
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
@@ -146,6 +148,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _priceCalculationService = priceCalculationService;
             _priceFormatter = priceFormatter;
             _productAttributeFormatter = productAttributeFormatter;
+            _productService = productService;
             _rewardPointService = rewardPointService;
             _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
@@ -1087,7 +1090,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 //fill in additional values (not existing in the entity)
                 subscriptionModel.StoreName = _storeService.GetStoreById(subscription.StoreId)?.Name ?? "Unknown";
-                subscriptionModel.ProductName = subscription.Product?.Name ?? "Unknown";
+                subscriptionModel.ProductName = _productService.GetProductById(subscription.ProductId)?.Name ?? "Unknown";
 
                 return subscriptionModel;
             }).ToList().ToPagedList(searchModel);

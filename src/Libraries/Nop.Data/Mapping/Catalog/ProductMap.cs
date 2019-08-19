@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
@@ -50,7 +50,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.Ignore(product => product.ManageInventoryMethod);
             builder.Ignore(product => product.RecurringCyclePeriod);
             builder.Ignore(product => product.RentalPricePeriod);
-            builder.Ignore(product => product.AppliedDiscounts);
 
             base.Configure(builder);
         }

@@ -45,6 +45,7 @@ namespace Nop.Web.Controllers
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
         private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
+        private readonly IReviewTypeService _reviewTypeService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
@@ -71,6 +72,7 @@ namespace Nop.Web.Controllers
             IProductModelFactory productModelFactory,
             IProductService productService,
             IRecentlyViewedProductsService recentlyViewedProductsService,
+            IReviewTypeService reviewTypeService,
             IShoppingCartService shoppingCartService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
@@ -92,6 +94,7 @@ namespace Nop.Web.Controllers
             _permissionService = permissionService;
             _productModelFactory = productModelFactory;
             _productService = productService;
+            _reviewTypeService = reviewTypeService;
             _recentlyViewedProductsService = recentlyViewedProductsService;
             _shoppingCartService = shoppingCartService;
             _storeContext = storeContext;
@@ -358,7 +361,7 @@ namespace Nop.Web.Controllers
                     StoreId = _storeContext.CurrentStore.Id,
                 };
 
-                product.ProductReviews.Add(productReview);
+                _productService.InsertProductReview(productReview);
 
                 //add product review and review type mapping                
                 foreach (var additionalReview in model.AddAdditionalProductReviewList)
@@ -369,7 +372,8 @@ namespace Nop.Web.Controllers
                         ReviewTypeId = additionalReview.ReviewTypeId,
                         Rating = additionalReview.Rating
                     };
-                    productReview.ProductReviewReviewTypeMappingEntries.Add(additionalProductReview);
+
+                    _reviewTypeService.InsertProductReviewReviewTypeMappings(additionalProductReview);
                 }
 
                 //update product totals
@@ -433,31 +437,10 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            //delete previous helpfulness
-            var prh = productReview.ProductReviewHelpfulnessEntries
-                .FirstOrDefault(x => x.CustomerId == _workContext.CurrentCustomer.Id);
-            if (prh != null)
-            {
-                //existing one
-                prh.WasHelpful = washelpful;
-            }
-            else
-            {
-                //insert new helpfulness
-                prh = new ProductReviewHelpfulness
-                {
-                    ProductReviewId = productReview.Id,
-                    CustomerId = _workContext.CurrentCustomer.Id,
-                    WasHelpful = washelpful,
-                };
-                productReview.ProductReviewHelpfulnessEntries.Add(prh);
-            }
-            _productService.UpdateProduct(productReview.Product);
+            _productService.SetProductReviewHelpfulness(productReview, washelpful);
 
             //new totals
-            productReview.HelpfulYesTotal = productReview.ProductReviewHelpfulnessEntries.Count(x => x.WasHelpful);
-            productReview.HelpfulNoTotal = productReview.ProductReviewHelpfulnessEntries.Count(x => !x.WasHelpful);
-            _productService.UpdateProduct(productReview.Product);
+            _productService.UpdateProductReviewHelpfulnessTotals(productReview);
 
             return Json(new
             {

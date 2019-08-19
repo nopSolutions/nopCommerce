@@ -74,6 +74,7 @@ namespace Nop.Services.Messages
         private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IPaymentService _paymentService;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IProductService _productService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
@@ -112,6 +113,7 @@ namespace Nop.Services.Messages
             IPaymentPluginManager paymentPluginManager,
             IPaymentService paymentService,
             IPriceFormatter priceFormatter,
+            IProductService productService,
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IStoreService storeService,
@@ -144,6 +146,7 @@ namespace Nop.Services.Messages
             _paymentPluginManager = paymentPluginManager;
             _paymentService = paymentService;
             _priceFormatter = priceFormatter;
+            _productService = productService;
             _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
             _storeService = storeService;
@@ -454,7 +457,6 @@ namespace Nop.Services.Messages
         /// <returns>HTML table of products</returns>
         protected virtual string ProductListToHtmlTable(Order order, int languageId, int vendorId)
         {
-            var productService = EngineContext.Current.Resolve<IProductService>();
             var language = _languageService.GetLanguageById(languageId);
 
             var sb = new StringBuilder();
@@ -510,9 +512,9 @@ namespace Nop.Services.Messages
                 if (orderItem.Product.IsRental)
                 {
                     var rentalStartDate = orderItem.RentalStartDateUtc.HasValue
-                        ? productService.FormatRentalDate(orderItem.Product, orderItem.RentalStartDateUtc.Value) : string.Empty;
+                        ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalStartDateUtc.Value) : string.Empty;
                     var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
-                        ? productService.FormatRentalDate(orderItem.Product, orderItem.RentalEndDateUtc.Value) : string.Empty;
+                        ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalEndDateUtc.Value) : string.Empty;
                     var rentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
                         rentalStartDate, rentalEndDate);
                     sb.AppendLine("<br />");
@@ -521,7 +523,7 @@ namespace Nop.Services.Messages
                 //SKU
                 if (_catalogSettings.ShowSkuOnProductDetailsPage)
                 {
-                    var sku = productService.FormatSku(product, orderItem.AttributesXml);
+                    var sku = _productService.FormatSku(product, orderItem.AttributesXml);
                     if (!string.IsNullOrEmpty(sku))
                     {
                         sb.AppendLine("<br />");
@@ -790,7 +792,6 @@ namespace Nop.Services.Messages
         /// <returns>HTML table of products</returns>
         protected virtual string ProductListToHtmlTable(Shipment shipment, int languageId)
         {
-            var productService = EngineContext.Current.Resolve<IProductService>();
             var sb = new StringBuilder();
             sb.AppendLine("<table border=\"0\" style=\"width:100%;\">");
 
@@ -826,9 +827,9 @@ namespace Nop.Services.Messages
                 if (orderItem.Product.IsRental)
                 {
                     var rentalStartDate = orderItem.RentalStartDateUtc.HasValue
-                        ? productService.FormatRentalDate(orderItem.Product, orderItem.RentalStartDateUtc.Value) : string.Empty;
+                        ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalStartDateUtc.Value) : string.Empty;
                     var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
-                        ? productService.FormatRentalDate(orderItem.Product, orderItem.RentalEndDateUtc.Value) : string.Empty;
+                        ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalEndDateUtc.Value) : string.Empty;
                     var rentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
                         rentalStartDate, rentalEndDate);
                     sb.AppendLine("<br />");
@@ -838,7 +839,7 @@ namespace Nop.Services.Messages
                 //SKU
                 if (_catalogSettings.ShowSkuOnProductDetailsPage)
                 {
-                    var sku = productService.FormatSku(product, orderItem.AttributesXml);
+                    var sku = _productService.FormatSku(product, orderItem.AttributesXml);
                     if (!string.IsNullOrEmpty(sku))
                     {
                         sb.AppendLine("<br />");
@@ -1137,20 +1138,7 @@ namespace Nop.Services.Messages
         /// Add customer tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
-        /// <param name="customerId">Customer identifier</param>
-        public virtual void AddCustomerTokens(IList<Token> tokens, int customerId)
-        {
-            var customer = _customerService.GetCustomerById(customerId) ?? throw new Exception("Customer is not found");
-
-            AddCustomerTokens(tokens, customer);
-        }
-
-        /// <summary>
-        /// Add customer tokens
-        /// </summary>
-        /// <param name="tokens">List of already added tokens</param>
         /// <param name="customer">Customer identifier</param>
-        [Obsolete("Will be removed after branch merge issue-239-ef-performance. The recommended alternative is AddCustomerTokens(IList<Token> tokens, int customerId)")]
         public virtual void AddCustomerTokens(IList<Token> tokens, Customer customer)
         {
             tokens.Add(new Token("Customer.Email", customer.Email));
@@ -1221,7 +1209,7 @@ namespace Nop.Services.Messages
         /// <param name="productReview">Product review</param>
         public virtual void AddProductReviewTokens(IList<Token> tokens, ProductReview productReview)
         {
-            tokens.Add(new Token("ProductReview.ProductName", productReview.Product.Name));
+            tokens.Add(new Token("ProductReview.ProductName", _productService.GetProductById(productReview.ProductId)?.Name));
             tokens.Add(new Token("ProductReview.Title", productReview.Title));
             tokens.Add(new Token("ProductReview.IsApproved", productReview.IsApproved));
             tokens.Add(new Token("ProductReview.ReviewText", productReview.ReviewText));
@@ -1277,20 +1265,27 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(newsComment, tokens);
         }
 
+        public virtual void AddProductTokens(IList<Token> tokens, int productId, int languageId)
+        {
+            var product = _productService.GetProductById(productId);
+
+            AddProductTokens(tokens, product, languageId);
+        }
+
         /// <summary>
         /// Add product tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="product">Product</param>
         /// <param name="languageId">Language identifier</param>
+        [Obsolete("Will be removed after branch merge issue-239-ef-performance. The recommended alternative is AddProductTokens(IList<Token> tokens, int productId, int languageId)")]
         public virtual void AddProductTokens(IList<Token> tokens, Product product, int languageId)
         {
-            var productService = EngineContext.Current.Resolve<IProductService>();
             tokens.Add(new Token("Product.ID", product.Id));
             tokens.Add(new Token("Product.Name", _localizationService.GetLocalized(product, x => x.Name, languageId)));
             tokens.Add(new Token("Product.ShortDescription", _localizationService.GetLocalized(product, x => x.ShortDescription, languageId), true));
             tokens.Add(new Token("Product.SKU", product.Sku));
-            tokens.Add(new Token("Product.StockQuantity", productService.GetTotalStockQuantity(product)));
+            tokens.Add(new Token("Product.StockQuantity", _productService.GetTotalStockQuantity(product)));
 
             var productUrl = RouteUrl(routeName: "Product", routeValues: new { SeName = _urlRecordService.GetSeName(product) });
             tokens.Add(new Token("Product.ProductURLForCustomer", productUrl, true));
@@ -1311,14 +1306,16 @@ namespace Nop.Services.Messages
             //we cannot inject IProductAttributeFormatter into constructor because it'll cause circular references.
             //that's why we resolve it here this way
             var productAttributeFormatter = EngineContext.Current.Resolve<IProductAttributeFormatter>();
-            var productService = EngineContext.Current.Resolve<IProductService>();
-            var attributes = productAttributeFormatter.FormatAttributes(combination.Product,
+
+            var product = _productService.GetProductById(combination.ProductId);
+
+            var attributes = productAttributeFormatter.FormatAttributes(product,
                 combination.AttributesXml,
                 _workContext.CurrentCustomer,
                 renderPrices: false);
 
             tokens.Add(new Token("AttributeCombination.Formatted", attributes, true));
-            tokens.Add(new Token("AttributeCombination.SKU", productService.FormatSku(combination.Product, combination.AttributesXml)));
+            tokens.Add(new Token("AttributeCombination.SKU", _productService.FormatSku(_productService.GetProductById(combination.ProductId), combination.AttributesXml)));
             tokens.Add(new Token("AttributeCombination.StockQuantity", combination.StockQuantity));
 
             //event notification
@@ -1335,7 +1332,11 @@ namespace Nop.Services.Messages
         public virtual void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic,
             int? friendlyForumTopicPageIndex = null, int? appendedPostIdentifierAnchor = null)
         {
+            //attributes
+            //we cannot inject IForumService into constructor because it'll cause circular references.
+            //that's why we resolve it here this way
             var forumService = EngineContext.Current.Resolve<IForumService>();
+
             string topicUrl;
             if (friendlyForumTopicPageIndex.HasValue && friendlyForumTopicPageIndex.Value > 1)
                 topicUrl = RouteUrl(routeName: "TopicSlugPaged", routeValues: new { id = forumTopic.Id, slug = forumService.GetTopicSeName(forumTopic), pageNumber = friendlyForumTopicPageIndex.Value });
@@ -1357,8 +1358,15 @@ namespace Nop.Services.Messages
         /// <param name="forumPost">Forum post</param>
         public virtual void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost)
         {
+            //TODO: issue-239
+            //attributes
+            //we cannot inject IForumService into constructor because it'll cause circular references.
+            //that's why we resolve it here this way
             var forumService = EngineContext.Current.Resolve<IForumService>();
-            tokens.Add(new Token("Forums.PostAuthor", _customerService.FormatUsername(forumPost.CustomerId)));
+
+            var customer = _customerService.GetCustomerById(forumPost.CustomerId);
+
+            tokens.Add(new Token("Forums.PostAuthor", _customerService.FormatUsername(customer)));
             tokens.Add(new Token("Forums.PostBody", forumService.FormatPostText(forumPost), true));
 
             //event notification
@@ -1372,7 +1380,11 @@ namespace Nop.Services.Messages
         /// <param name="forum">Forum</param>
         public virtual void AddForumTokens(IList<Token> tokens, Forum forum)
         {
+            //attributes
+            //we cannot inject IForumService into constructor because it'll cause circular references.
+            //that's why we resolve it here this way
             var forumService = EngineContext.Current.Resolve<IForumService>();
+
             var forumUrl = RouteUrl(routeName: "ForumSlug", routeValues: new { id = forum.Id, slug = forumService.GetForumSeName(forum) });
             tokens.Add(new Token("Forums.ForumURL", forumUrl, true));
             tokens.Add(new Token("Forums.ForumName", forum.Name));
@@ -1388,7 +1400,11 @@ namespace Nop.Services.Messages
         /// <param name="privateMessage">Private message</param>
         public virtual void AddPrivateMessageTokens(IList<Token> tokens, PrivateMessage privateMessage)
         {
+            //attributes
+            //we cannot inject IForumService into constructor because it'll cause circular references.
+            //that's why we resolve it here this way
             var forumService = EngineContext.Current.Resolve<IForumService>();
+
             tokens.Add(new Token("PrivateMessage.Subject", privateMessage.Subject));
             tokens.Add(new Token("PrivateMessage.Text", forumService.FormatPrivateMessageText(privateMessage), true));
 
@@ -1403,8 +1419,10 @@ namespace Nop.Services.Messages
         /// <param name="subscription">BackInStock subscription</param>
         public virtual void AddBackInStockTokens(IList<Token> tokens, BackInStockSubscription subscription)
         {
-            tokens.Add(new Token("BackInStockSubscription.ProductName", subscription.Product.Name));
-            var productUrl = RouteUrl(subscription.StoreId, "Product", new { SeName = _urlRecordService.GetSeName(subscription.Product) });
+            var product = _productService.GetProductById(subscription.ProductId);
+
+            tokens.Add(new Token("BackInStockSubscription.ProductName", product.Name));
+            var productUrl = RouteUrl(subscription.StoreId, "Product", new { SeName = _urlRecordService.GetSeName(product) });
             tokens.Add(new Token("BackInStockSubscription.ProductUrl", productUrl, true));
 
             //event notification

@@ -9,6 +9,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
+using Nop.Services.Catalog;
 using Nop.Services.Helpers;
 
 namespace Nop.Services.Orders
@@ -22,9 +23,12 @@ namespace Nop.Services.Orders
 
         private readonly CatalogSettings _catalogSettings;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IProductService _productService;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<ProductCategory> _productCategoryRepository;
+        private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
 
         #endregion
@@ -33,16 +37,22 @@ namespace Nop.Services.Orders
 
         public OrderReportService(CatalogSettings catalogSettings,
             IDateTimeHelper dateTimeHelper,
+            IProductService productService,
             IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
             IRepository<Product> productRepository,
+            IRepository<ProductCategory> productCategoryRepository,
+            IRepository<ProductManufacturer> productManufacturerRepository,
             IRepository<StoreMapping> storeMappingRepository)
         {
             _catalogSettings = catalogSettings;
             _dateTimeHelper = dateTimeHelper;
+            _productService = productService;
             _orderRepository = orderRepository;
             _orderItemRepository = orderItemRepository;
             _productRepository = productRepository;
+            _productCategoryRepository = productCategoryRepository;
+            _productManufacturerRepository = productManufacturerRepository;
             _storeMappingRepository = storeMappingRepository;
         }
 
@@ -158,7 +168,7 @@ namespace Nop.Services.Orders
                         //we search in each warehouse
                         orderItem.Product.ManageInventoryMethodId == manageStockInventoryMethodId &&
                         orderItem.Product.UseMultipleWarehouses &&
-                        orderItem.Product.ProductWarehouseInventory.Any(pwi => pwi.WarehouseId == warehouseId)
+                        _productService.GetAllProductWarehouseInventoryRecords(orderItem.ProductId).Any(pwi => pwi.WarehouseId == warehouseId)
                         ||
                         //"Use multiple warehouses" disabled
                         //we use standard "warehouse" property
@@ -328,8 +338,8 @@ namespace Nop.Services.Orders
             var query1 = from orderItem in _orderItemRepository.Table
                          join o in _orderRepository.Table on orderItem.OrderId equals o.Id
                          join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                         //join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId into p_pc from pc in p_pc.DefaultIfEmpty()
-                         //join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId into p_pm from pm in p_pm.DefaultIfEmpty()
+                         join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId into p_pc from pc in p_pc.DefaultIfEmpty()
+                         join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId into p_pm from pm in p_pm.DefaultIfEmpty()
                          where (storeId == 0 || storeId == o.StoreId) &&
                                (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
                                (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
@@ -339,11 +349,11 @@ namespace Nop.Services.Orders
                                !o.Deleted &&
                                !p.Deleted &&
                                (vendorId == 0 || p.VendorId == vendorId) &&
-                               //(categoryId == 0 || pc.CategoryId == categoryId) &&
-                               //(manufacturerId == 0 || pm.ManufacturerId == manufacturerId) &&
-                               (categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
+                               (categoryId == 0 || pc.CategoryId == categoryId) &&
+                               (manufacturerId == 0 || pm.ManufacturerId == manufacturerId) &&
+                               /*(categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
                                (manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) >
-                                0) &&
+                                0) &&*/
                                (billingCountryId == 0 || o.BillingAddress.CountryId == billingCountryId) &&
                                (showHidden || p.Published)
                          select orderItem;
@@ -456,13 +466,17 @@ namespace Nop.Services.Orders
             var simpleProductTypeId = (int)ProductType.SimpleProduct;
 
             var query = from p in _productRepository.Table
+                        join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId into p_pm from pm in p_pm.DefaultIfEmpty()
+                        join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId into p_pc from pc in p_pc.DefaultIfEmpty()
                         where !query_tmp.Contains(p.Id) &&
                               //include only simple products
                               p.ProductTypeId == simpleProductTypeId &&
                               !p.Deleted &&
                               (vendorId == 0 || p.VendorId == vendorId) &&
-                              (categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
-                              (manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) > 0) &&
+                              //(categoryId == 0 || p.ProductCategories.Count(pc => pc.CategoryId == categoryId) > 0) &&
+                              //(manufacturerId == 0 || p.ProductManufacturers.Count(pm => pm.ManufacturerId == manufacturerId) > 0) &&
+                              (manufacturerId == 0 || pm.ManufacturerId == manufacturerId) &&
+                              (categoryId == 0 || pc.CategoryId == categoryId) &&
                               (showHidden || p.Published)
                         select p;
 
@@ -542,7 +556,7 @@ namespace Nop.Services.Orders
                                 //we search in each warehouse
                                 orderItem.Product.ManageInventoryMethodId == manageStockInventoryMethodId &&
                                 orderItem.Product.UseMultipleWarehouses &&
-                                orderItem.Product.ProductWarehouseInventory.Any(pwi => pwi.WarehouseId == warehouseId)
+                                _productService.GetAllProductWarehouseInventoryRecords(orderItem.ProductId).Any(pwi => pwi.WarehouseId == warehouseId)
                                 ||
                                 //"Use multiple warehouses" disabled
                                 //we use standard "warehouse" property

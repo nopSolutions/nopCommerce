@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
@@ -22,11 +22,6 @@ namespace Nop.Data.Mapping.Catalog
 
             builder.Property(option => option.Name).IsRequired();
             builder.Property(option => option.ColorSquaresRgb).HasMaxLength(100);
-
-            builder.HasOne(option => option.SpecificationAttribute)
-                .WithMany(attribute => attribute.SpecificationAttributeOptions)
-                .HasForeignKey(option => option.SpecificationAttributeId)
-                .IsRequired();
 
             base.Configure(builder);
         }

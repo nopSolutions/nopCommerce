@@ -636,19 +636,18 @@ namespace Nop.Services.Orders
                 attributes1 = attributes1.Where(x => !x.IsNonCombinable()).ToList();
             }
 
+            //issue-239
             foreach (var attribute in attributes1)
             {
-                if (attribute.Product != null)
-                {
-                    if (attribute.Product.Id != product.Id)
-                    {
-                        warnings.Add("Attribute error");
-                    }
-                }
-                else
+                if (attribute.ProductId == 0)
                 {
                     warnings.Add("Attribute error");
                     return warnings;
+                }
+
+                if (attribute.ProductId != product.Id)
+                {
+                    warnings.Add("Attribute error");
                 }
             }
 
@@ -695,10 +694,12 @@ namespace Nop.Services.Orders
                     //if not found
                     if (!found)
                     {
+                        var productAttribute = _productAttributeService.GetProductAttributeById(a2.ProductAttributeId);
+
                         var textPrompt = _localizationService.GetLocalized(a2, x => x.TextPrompt);
                         var notFoundWarning = !string.IsNullOrEmpty(textPrompt) ?
                             textPrompt :
-                            string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), _localizationService.GetLocalized(a2.ProductAttribute, a => a.Name));
+                            string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), _localizationService.GetLocalized(productAttribute, a => a.Name));
 
                         warnings.Add(notFoundWarning);
                     }
@@ -733,6 +734,8 @@ namespace Nop.Services.Orders
                 string enteredText;
                 int enteredTextLength;
 
+                var productAttribute = _productAttributeService.GetProductAttributeById(pam.ProductAttributeId);
+
                 //minimum length
                 if (pam.ValidationMinLength.HasValue)
                 {
@@ -744,7 +747,7 @@ namespace Nop.Services.Orders
 
                         if (pam.ValidationMinLength.Value > enteredTextLength)
                         {
-                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMinimumLength"), _localizationService.GetLocalized(pam.ProductAttribute, a => a.Name), pam.ValidationMinLength.Value));
+                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMinimumLength"), _localizationService.GetLocalized(productAttribute, a => a.Name), pam.ValidationMinLength.Value));
                         }
                     }
                 }
@@ -761,7 +764,7 @@ namespace Nop.Services.Orders
 
                 if (pam.ValidationMaxLength.Value < enteredTextLength)
                 {
-                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMaximumLength"), _localizationService.GetLocalized(pam.ProductAttribute, a => a.Name), pam.ValidationMaxLength.Value));
+                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMaximumLength"), _localizationService.GetLocalized(productAttribute, a => a.Name), pam.ValidationMaxLength.Value));
                 }
             }
 
@@ -775,7 +778,9 @@ namespace Nop.Services.Orders
                 if (attributeValue.AttributeValueType != AttributeValueType.AssociatedToProduct)
                     continue;
 
-                if (ignoreNonCombinableAttributes && attributeValue.ProductAttributeMapping.IsNonCombinable())
+                var productAttributeMapping = _productAttributeService.GetProductAttributeMappingById(attributeValue.ProductAttributeMappingId);
+
+                if (ignoreNonCombinableAttributes && productAttributeMapping != null && productAttributeMapping.IsNonCombinable())
                     continue;
 
                 //associated product (bundle)
@@ -786,9 +791,13 @@ namespace Nop.Services.Orders
                     var associatedProductWarnings = GetShoppingCartItemWarnings(customer,
                         shoppingCartType, associatedProduct, _storeContext.CurrentStore.Id,
                         string.Empty, decimal.Zero, null, null, totalQty, false);
+
+                    var productAttribute = _productAttributeService.GetProductAttributeById(productAttributeMapping.ProductAttributeId);
+
                     foreach (var associatedProductWarning in associatedProductWarnings)
                     {
-                        var attributeName = _localizationService.GetLocalized(attributeValue.ProductAttributeMapping.ProductAttribute, a => a.Name);
+                        
+                        var attributeName = _localizationService.GetLocalized(productAttribute, a => a.Name);
                         var attributeValueName = _localizationService.GetLocalized(attributeValue, a => a.Name);
                         warnings.Add(string.Format(
                             _localizationService.GetResource("ShoppingCart.AssociatedAttributeWarning"),

@@ -82,6 +82,7 @@ namespace Nop.Services.Tests.Orders
         private Mock<ILanguageService> _languageService;
         private Mock<IPriceFormatter> _priceFormatter;
         private Mock<IProductAttributeFormatter> _productAttributeFormatter;
+        private Mock<IProductAttributeService> _productAttributeService;
         private Mock<IShoppingCartService> _shoppingCartService;
         private Mock<ICheckoutAttributeFormatter> _checkoutAttributeFormatter;
         private Mock<ICustomerService> _customerService;
@@ -128,6 +129,7 @@ namespace Nop.Services.Tests.Orders
             _languageService = new Mock<ILanguageService>();
             _priceFormatter = new Mock<IPriceFormatter>();
             _productAttributeFormatter = new Mock<IProductAttributeFormatter>();
+            _productAttributeService = new Mock<IProductAttributeService>();
             _shoppingCartService = new Mock<IShoppingCartService>();
             _checkoutAttributeFormatter = new Mock<ICheckoutAttributeFormatter>();
             _customerService = new Mock<ICustomerService>();
@@ -156,7 +158,7 @@ namespace Nop.Services.Tests.Orders
 
             //price calculation service
             _priceCalcService = new PriceCalculationService(_catalogSettings, _currencySettings, _categoryService.Object,
-                _currencyService.Object, _discountService.Object, _manufacturerService.Object, _productAttributeParser.Object,
+                _currencyService.Object, _discountService.Object, _manufacturerService.Object, _productAttributeParser.Object, _productAttributeService.Object,
                 _productService.Object, cacheManager, _storeContext.Object, _workContext, _shoppingCartSettings);
 
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));

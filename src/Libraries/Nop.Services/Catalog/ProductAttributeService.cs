@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -211,9 +211,9 @@ namespace Nop.Services.Catalog
                 return _cacheManager.Get(allCacheKey, () =>
                 {
                     var query = from pam in _productAttributeMappingRepository.Table
-                        orderby pam.DisplayOrder, pam.Id
-                        where pam.ProductId == productId
-                        select pam;
+                                orderby pam.DisplayOrder, pam.Id
+                                where pam.ProductId == productId
+                                select pam;
                     var productAttributeMappings = query.ToList();
                     return productAttributeMappings;
                 });

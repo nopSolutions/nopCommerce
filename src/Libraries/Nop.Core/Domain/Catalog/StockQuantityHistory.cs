@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -41,10 +41,5 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the warehouse identifier
         /// </summary>
         public int? WarehouseId { get; set; }
-
-        /// <summary>
-        /// Gets the product
-        /// </summary>
-        public virtual Product Product { get; set; }
     }
 }

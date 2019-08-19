@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Discounts;
+using Nop.Services.Discounts;
 using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.Factories
@@ -13,6 +14,22 @@ namespace Nop.Web.Framework.Factories
     /// </summary>
     public partial class DiscountSupportedModelFactory : IDiscountSupportedModelFactory
     {
+
+        #region Fields
+
+        private readonly IDiscountService _discountService;
+
+        #endregion
+
+        #region Ctor
+
+        public DiscountSupportedModelFactory(IDiscountService discountService)
+        {
+            _discountService = discountService;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -44,17 +61,17 @@ namespace Nop.Web.Framework.Factories
         /// <param name="entity">Entity</param>
         /// <param name="availableDiscounts">List of all available discounts</param>
         /// <param name="ignoreAppliedDiscounts">Whether to ignore existing applied discounts</param>
-        public virtual void PrepareModelDiscounts<TModel, TEntity>(TModel model, TEntity entity, 
+        public virtual void PrepareModelDiscounts<TModel, TMapping>(TModel model, IDiscountSupported<TMapping> entity,
             IList<Discount> availableDiscounts, bool ignoreAppliedDiscounts)
-            where TModel : IDiscountSupportedModel where TEntity : BaseEntity, IDiscountSupported
+            where TModel : IDiscountSupportedModel where TMapping : DiscountMapping
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
             //prepare already applied discounts
             if (!ignoreAppliedDiscounts && entity != null)
-                model.SelectedDiscountIds = entity.AppliedDiscounts.Select(discount => discount.Id).ToList();
-            
+                model.SelectedDiscountIds = _discountService.GetAppliedDiscounts(entity).Select(discount => discount.Id).ToList();
+
             PrepareModelDiscounts(model, availableDiscounts);
         }
 

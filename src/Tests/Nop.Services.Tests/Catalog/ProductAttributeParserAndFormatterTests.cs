@@ -66,7 +66,6 @@ namespace Nop.Services.Tests.Catalog
                 IsRequired = true,
                 AttributeControlType = AttributeControlType.DropdownList,
                 DisplayOrder = 1,
-                ProductAttribute = pa1,
                 ProductAttributeId = pa1.Id
             };
             pav1_1 = new ProductAttributeValue
@@ -74,7 +73,6 @@ namespace Nop.Services.Tests.Catalog
                 Id = 11,
                 Name = "Green",
                 DisplayOrder = 1,
-                ProductAttributeMapping = pam1_1,
                 ProductAttributeMappingId = pam1_1.Id
             };
             pav1_2 = new ProductAttributeValue
@@ -82,11 +80,8 @@ namespace Nop.Services.Tests.Catalog
                 Id = 12,
                 Name = "Red",
                 DisplayOrder = 2,
-                ProductAttributeMapping = pam1_1,
                 ProductAttributeMappingId = pam1_1.Id
             };
-            pam1_1.ProductAttributeValues.Add(pav1_1);
-            pam1_1.ProductAttributeValues.Add(pav1_2);
 
             //custom option (checkboxes)
             pa2 = new ProductAttribute
@@ -102,7 +97,6 @@ namespace Nop.Services.Tests.Catalog
                 IsRequired = true,
                 AttributeControlType = AttributeControlType.Checkboxes,
                 DisplayOrder = 2,
-                ProductAttribute = pa2,
                 ProductAttributeId = pa2.Id
             };
             pav2_1 = new ProductAttributeValue
@@ -110,7 +104,6 @@ namespace Nop.Services.Tests.Catalog
                 Id = 21,
                 Name = "Option 1",
                 DisplayOrder = 1,
-                ProductAttributeMapping = pam2_1,
                 ProductAttributeMappingId = pam2_1.Id
             };
             pav2_2 = new ProductAttributeValue
@@ -118,11 +111,8 @@ namespace Nop.Services.Tests.Catalog
                 Id = 22,
                 Name = "Option 2",
                 DisplayOrder = 2,
-                ProductAttributeMapping = pam2_1,
                 ProductAttributeMappingId = pam2_1.Id
             };
-            pam2_1.ProductAttributeValues.Add(pav2_1);
-            pam2_1.ProductAttributeValues.Add(pav2_2);
 
             //custom text
             pa3 = new ProductAttribute
@@ -138,7 +128,6 @@ namespace Nop.Services.Tests.Catalog
                 IsRequired = true,
                 AttributeControlType = AttributeControlType.TextBox,
                 DisplayOrder = 1,
-                ProductAttribute = pa1,
                 ProductAttributeId = pa3.Id
             };
 
@@ -156,7 +145,6 @@ namespace Nop.Services.Tests.Catalog
                 IsRequired = true,
                 AttributeControlType = AttributeControlType.RadioList,
                 DisplayOrder = 2,
-                ProductAttribute = pa4,
                 ProductAttributeId = pa4.Id
             };
             pav4_1 = new ProductAttributeValue
@@ -164,7 +152,6 @@ namespace Nop.Services.Tests.Catalog
                 Id = 41,
                 Name = "Option with quantity",
                 DisplayOrder = 1,
-                ProductAttributeMapping = pam4_1,
                 ProductAttributeMappingId = pam4_1.Id
             };
 
@@ -235,6 +222,7 @@ namespace Nop.Services.Tests.Catalog
                 _priceCalculationService.Object,
                 _priceFormatter.Object,
                 _productAttributeParser,
+                _productAttributeService,
                 _taxService.Object,
                 _webHelper.Object,
                 _workContext.Object,
@@ -374,7 +362,7 @@ namespace Nop.Services.Tests.Catalog
             var customer = new Customer();
             var formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
                 attributes, customer, "<br />", false, false);
-            formattedAttributes.ShouldEqual("Color: Green<br />Some custom option: Option 1<br />Some custom option: Option 2<br />Color: Some custom text goes here<br />From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
+            formattedAttributes.ShouldEqual("Color: Green<br />Some custom option: Option 1<br />Some custom option: Option 2<br />Custom text: Some custom text goes here<br />From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
         }
     }
 }

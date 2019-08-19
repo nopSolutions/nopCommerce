@@ -26,7 +26,7 @@ namespace Nop.Tests
             
             PriceCalculationService = new PriceCalculationService(new CatalogSettings(), new CurrencySettings(), 
                 new Mock<ICategoryService>().Object, new Mock<ICurrencyService>().Object, new Mock<IDiscountService>().Object,
-                new Mock<IManufacturerService>().Object, new Mock<IProductAttributeParser>().Object,
+                new Mock<IManufacturerService>().Object, new Mock<IProductAttributeParser>().Object, new Mock<IProductAttributeService>().Object,
                 new Mock<IProductService>().Object, new TestCacheManager(), new Mock<IStoreContext>().Object, WorkContext.Object, new ShoppingCartSettings());
 
             LocalizationService.Setup(l => l.GetResource(It.IsAny<string>())).Returns("Invalid");

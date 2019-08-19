@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Caching.Memory;
+using System.Linq;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -12,17 +12,10 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
-using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Discounts;
-using Nop.Services.Events;
-using Nop.Services.Localization;
-using Nop.Services.Security;
-using Nop.Services.Shipping.Date;
-using Nop.Services.Stores;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -31,11 +24,17 @@ namespace Nop.Services.Tests.Catalog
     [TestFixture]
     public class PriceCalculationServiceTests : ServiceTest
     {
+        #region Fields
+
         private Mock<IStoreContext> _storeContext;
         private IDiscountService _discountService;
         private Mock<ICategoryService> _categoryService;
         private Mock<IManufacturerService> _manufacturerService;
         private Mock<IProductAttributeParser> _productAttributeParser;
+        private Mock<IProductAttributeService> _productAttributeService;
+        private Mock<IRepository<DiscountProductMapping>> _discountProductMappingRepository;
+        private Mock<IRepository<Product>> _productRepository;
+        private Mock<IRepository<TierPrice>> _tierPriceRepository;
         private IProductService _productService;
         private IPriceCalculationService _priceCalcService;
         private ShoppingCartSettings _shoppingCartSettings;
@@ -45,6 +44,10 @@ namespace Nop.Services.Tests.Catalog
         private Store _store;
         private TestServiceProvider _serviceProvider;
 
+        #endregion
+
+        #region SetUp
+
         [SetUp]
         public new void SetUp()
         {
@@ -52,12 +55,27 @@ namespace Nop.Services.Tests.Catalog
             _store = new Store { Id = 1 };
             _storeContext = new Mock<IStoreContext>();
             _storeContext.Setup(x => x.CurrentStore).Returns(_store);
-            
+
             _categoryService = new Mock<ICategoryService>();
             _manufacturerService = new Mock<IManufacturerService>();
-            _productService = TestProductService.Init();
-            
+
+            _productRepository = new Mock<IRepository<Product>>();
+            _productRepository.Setup(p => p.Table).Returns(GetMockProducts);
+            _productRepository.Setup(p => p.GetById(It.IsAny<int>())).Returns((int id) => GetMockProducts().FirstOrDefault(p => p.Id == id));
+
+            _tierPriceRepository = new Mock<IRepository<TierPrice>>();
+            _tierPriceRepository.Setup(t => t.Table).Returns(GetMockTierPrices);
+
+            _discountProductMappingRepository = new Mock<IRepository<DiscountProductMapping>>();
+            _discountProductMappingRepository.Setup(r => r.Table).Returns(GetMockDiscountProductMapping);
+
+            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new TestCacheManager(),
+                null, null, null, null, null, null, null, null, null, null, _discountProductMappingRepository.Object, _productRepository.Object, null, null, null, null, null, null, null, null, null, _tierPriceRepository.Object, null,
+                null, null, null, new LocalizationSettings());
+
             _productAttributeParser = new Mock<IProductAttributeParser>();
+
+            _productAttributeService = new Mock<IProductAttributeService>();
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
@@ -65,10 +83,15 @@ namespace Nop.Services.Tests.Catalog
             _cacheManager = new TestCacheManager();
             _workContext = new Mock<IWorkContext>();
 
-            _discountService = TestDiscountService.Init();
+            _discountService = TestDiscountService.Init(
+                new List<Discount> { _mockDiscount }.AsQueryable(), 
+                new List<DiscountProductMapping>
+                {
+                    new DiscountProductMapping { DiscountId = 1, ProductId = 3 }
+                }.AsQueryable());
 
-            _priceCalcService = new PriceCalculationService(_catalogSettings, new CurrencySettings{ PrimaryStoreCurrencyId = 1 }, _categoryService.Object,
-                _serviceProvider.CurrencyService.Object, _discountService, _manufacturerService.Object, _productAttributeParser.Object,
+            _priceCalcService = new PriceCalculationService(_catalogSettings, new CurrencySettings { PrimaryStoreCurrencyId = 1 }, _categoryService.Object,
+                _serviceProvider.CurrencyService.Object, _discountService, _manufacturerService.Object, _productAttributeParser.Object, _productAttributeService.Object,
                 _productService, _cacheManager, _storeContext.Object, _workContext.Object, _shoppingCartSettings);
 
             var nopEngine = new Mock<NopEngine>();
@@ -76,6 +99,176 @@ namespace Nop.Services.Tests.Catalog
             nopEngine.Setup(x => x.ServiceProvider).Returns(_serviceProvider);
             EngineContext.Replace(nopEngine.Object);
         }
+
+        #endregion
+
+        #region Utilities
+
+        private ShoppingCartItem CreateTestShopCartItem(decimal productPrice, int quantity = 1)
+        {
+            //customer
+            var customer = new Customer();
+
+            //shopping cart
+            var product = _productService.GetProductById(1);
+
+            product.Price = productPrice;
+
+            var shoppingCartItem = new ShoppingCartItem
+            {
+                Customer = customer,
+                CustomerId = customer.Id,
+                Product = product,
+                ProductId = product.Id,
+                Quantity = quantity
+            };
+
+            return shoppingCartItem;
+        }
+
+        private IQueryable<Product> GetMockProducts()
+        {
+            return new List<Product>
+            {
+                new Product
+                {
+                    Id = 1,
+                    Name = "Product name 1",
+                    Price = 12.34M,
+                    CustomerEntersPrice = false,
+                    Published = true,
+                    //set HasTierPrices property
+                    HasTierPrices = true
+                },
+                new Product
+                {
+                    Id = 2,
+                    Name = "Product TierPrices without CustomerRoles",
+                    Price = 12.34M,
+                    CustomerEntersPrice = false,
+                    Published = true,
+                    //set HasTierPrices property
+                    HasTierPrices = true
+                },
+                new Product
+                {
+                    Id = 3,
+                    Name = "Product name 1",
+                    Price = 12.34M,
+                    CustomerEntersPrice = false,
+                    Published = true
+                }
+            }.AsQueryable();
+        }
+
+        private IQueryable<TierPrice> GetMockTierPrices()
+        {
+            return new List<TierPrice>
+            {
+                new TierPrice
+                {
+                    Price = 10,
+                    Quantity = 2,
+                    ProductId = 1,
+                    CustomerRoleId = 1
+                },
+                    new TierPrice
+                {
+                    Price = 9,
+                    Quantity = 2,
+                    ProductId = 1,
+                    CustomerRoleId = 2
+                },
+                    new TierPrice
+                {
+                    Price = 8,
+                    Quantity = 5,
+                    ProductId = 1,
+                    CustomerRoleId = 1
+                },
+                    new TierPrice
+                {
+                    Price = 5,
+                    Quantity = 10,
+                    ProductId = 1,
+                    CustomerRoleId = 2
+                },
+
+                //productId = 2
+                new TierPrice
+                {
+                    Price = 10,
+                    Quantity = 2,
+                    ProductId = 2
+                },
+                new TierPrice
+                {
+                    Price = 9,
+                    Quantity = 5,
+                    ProductId = 2,
+                    StartDateTimeUtc = new DateTime(2010, 01, 03)
+                },
+                 new TierPrice
+                {
+                    Price = 8,
+                    Quantity = 5,
+                    ProductId = 2,
+                    StartDateTimeUtc = new DateTime(2027, 01, 03)
+                },
+                new TierPrice
+                {
+                    Price = 5,
+                    Quantity = 10,
+                    ProductId = 2,
+                    StartDateTimeUtc = new DateTime(2010, 01, 03),
+                    EndDateTimeUtc = new DateTime(2012, 01, 03)
+                }
+            }.AsQueryable();
+        }
+
+        private IQueryable<CustomerRole> GetMockCustomerRoles()
+        {
+            return new List<CustomerRole>
+            {
+                new CustomerRole
+                {
+                    Id = 1,
+                    Name = "Some role 1",
+                    Active = true
+                },
+                new CustomerRole
+                {
+                    Id = 2,
+                    Name = "Some role 2",
+                    Active = true
+                }
+            }.AsQueryable();
+        }
+
+        private Discount _mockDiscount = new Discount
+        {
+            Id = 1,
+            Name = "Discount 1",
+            DiscountType = DiscountType.AssignedToSkus,
+            DiscountAmount = 3,
+            DiscountLimitation = DiscountLimitationType.Unlimited
+        };
+
+        private IQueryable<DiscountProductMapping> GetMockDiscountProductMapping()
+        {
+            return new List<DiscountProductMapping>
+            {
+                new DiscountProductMapping
+                {
+                    ProductId = 1,
+                    DiscountId = _mockDiscount.Id
+            }
+            }.AsQueryable();
+        }
+
+        #endregion
+
+        #region Tests
 
         [OneTimeTearDown]
         public void TearDown()
@@ -86,14 +279,7 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_get_final_product_price()
         {
-            var product = new Product
-            {
-                Id = 1,
-                Name = "Product name 1",
-                Price = 12.34M,
-                CustomerEntersPrice = false,
-                Published = true
-            };
+            var product = _productService.GetProductById(1);
 
             //customer
             var customer = new Customer();
@@ -105,46 +291,7 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_get_final_product_price_with_tier_prices()
         {
-            var product = new Product
-            {
-                Id = 1,
-                Name = "Product name 1",
-                Price = 12.34M,
-                CustomerEntersPrice = false,
-                Published = true
-            };
-
-            //add tier prices
-            product.TierPrices.Add(new TierPrice
-            {
-                Price = 10,
-                Quantity = 2,
-                Product = product
-            });
-            product.TierPrices.Add(new TierPrice
-            {
-                Price = 9,
-                Quantity = 5,
-                Product = product,
-                StartDateTimeUtc = new DateTime(2010, 01, 03)
-            });
-            product.TierPrices.Add(new TierPrice
-            {
-                Price = 8,
-                Quantity = 5,
-                Product = product,
-                StartDateTimeUtc = new DateTime(2027, 01, 03)
-            });
-            product.TierPrices.Add(new TierPrice
-            {
-                Price = 5,
-                Quantity = 10,
-                Product = product,
-                StartDateTimeUtc = new DateTime(2010, 01, 03),
-                EndDateTimeUtc = new DateTime(2012, 01, 03)
-            });
-            //set HasTierPrices property
-            product.HasTierPrices = true;
+            var product = _productService.GetProductById(2);
 
             //customer
             var customer = new Customer();
@@ -159,68 +306,11 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_get_final_product_price_with_tier_prices_by_customerRole()
         {
-            var product = new TestProduct
-            {
-                Id = 1,
-                Name = "Product name 1",
-                Price = 12.34M,
-                CustomerEntersPrice = false,
-                Published = true
-            };
-
-            //customer roles
-            var customerRole1 = new CustomerRole
-            {
-                Id = 1,
-                Name = "Some role 1",
-                Active = true
-            };
-            var customerRole2 = new CustomerRole
-            {
-                Id = 2,
-                Name = "Some role 2",
-                Active = true
-            };
-
-            //add tier prices
-            product.TierPrices.Add(new TierPrice
-            {
-                Price = 10,
-                Quantity = 2,
-                Product= product,
-                CustomerRole = customerRole1,
-                CustomerRoleId = customerRole1.Id
-            });
-            product.TierPrices.Add(new TierPrice
-            {
-                Price = 9,
-                Quantity = 2,
-                Product = product,
-                CustomerRole = customerRole2,
-                CustomerRoleId = customerRole2.Id
-            });
-            product.TierPrices.Add(new TierPrice
-            {
-                Price = 8,
-                Quantity = 5,
-                Product= product,
-                CustomerRole = customerRole1,
-                CustomerRoleId = customerRole1.Id
-            });
-            product.TierPrices.Add(new TierPrice
-            {
-                Price = 5,
-                Quantity = 10,
-                Product = product,
-                CustomerRole = customerRole2,
-                CustomerRoleId = customerRole2.Id
-            });
-            //set HasTierPrices property
-            product.HasTierPrices = true;
+            var product = _productService.GetProductById(1);
 
             //customer
             var customer = new Customer();
-            customer.CustomerRoles.Add(customerRole1);
+            customer.CustomerRoles.Add(GetMockCustomerRoles().FirstOrDefault(cr => cr.Id == 1));
 
             _priceCalcService.GetFinalPrice(product, customer, 0, false).ShouldEqual(12.34M);
             _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).ShouldEqual(10);
@@ -232,14 +322,7 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_get_final_product_price_with_additionalFee()
         {
-            var product = new Product
-            {
-                Id = 1,
-                Name = "Product name 1",
-                Price = 12.34M,
-                CustomerEntersPrice = false,
-                Published = true
-            };
+            var product = _productService.GetProductById(1);
 
             //customer
             var customer = new Customer();
@@ -250,32 +333,16 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_get_final_product_price_with_discount()
         {
-            var product = new TestProduct
-            {
-                Id = 1,
-                Name = "Product name 1",
-                Price = 12.34M,
-                CustomerEntersPrice = false,
-                Published = true
-            };
+            var product = _productService.GetProductById(1);
 
             //customer
             var customer = new Customer();
 
-            //discounts
-            var discount1 = new Discount
-            {
-                Id = 1,
-                Name = "Discount 1",
-                DiscountType = DiscountType.AssignedToSkus,
-                DiscountAmount = 3,
-                DiscountLimitation = DiscountLimitationType.Unlimited
-            };
             //discount1.AppliedToProducts.Add(product);
-            product.AddAppliedDiscounts(discount1);
+            // ------------------- ------------------ --------------product.AddAppliedDiscounts(discount1);
             //set HasDiscountsApplied property
             product.HasDiscountsApplied = true;
-           
+
             _priceCalcService.GetFinalPrice(product, customer).ShouldEqual(9.34M);
         }
 
@@ -286,20 +353,14 @@ namespace Nop.Services.Tests.Catalog
             var customer = new Customer();
 
             //shopping cart
-            var product1 = new Product
-            {
-                Id = 1,
-                Name = "Product name 1",
-                Price = 12.34M,
-                CustomerEntersPrice = false,
-                Published = true
-            };
+            var product = _productService.GetProductById(1);
+
             var sci1 = new ShoppingCartItem
             {
                 Customer = customer,
                 CustomerId = customer.Id,
-                Product= product1,
-                ProductId = product1.Id,
+                Product = product,
+                ProductId = product.Id,
                 Quantity = 2
             };
 
@@ -313,20 +374,14 @@ namespace Nop.Services.Tests.Catalog
             var customer = new Customer();
 
             //shopping cart
-            var product1 = new Product
-            {
-                Id = 1,
-                Name = "Product name 1",
-                Price = 12.34M,
-                CustomerEntersPrice = false,
-                Published = true
-            };
+            var product = _productService.GetProductById(1);
+
             var sci1 = new ShoppingCartItem
             {
                 Customer = customer,
                 CustomerId = customer.Id,
-                Product= product1,
-                ProductId = product1.Id,
+                Product = product,
+                ProductId = product.Id,
                 Quantity = 2
             };
 
@@ -337,7 +392,7 @@ namespace Nop.Services.Tests.Catalog
         [TestCase(12.00009, 12.00)]
         [TestCase(12.119, 12.12)]
         [TestCase(12.115, 12.12)]
-        [TestCase(12.114, 12.11)]        
+        [TestCase(12.114, 12.11)]
         public void Test_GetUnitPrice_WhenRoundPricesDuringCalculationIsTrue_PriceMustBeRounded(decimal inputPrice, decimal expectedPrice)
         {
             // arrange
@@ -410,83 +465,58 @@ namespace Nop.Services.Tests.Catalog
             _priceCalcService.Round(valueToRoundig, roundingType).ShouldEqual(roundedValue);
         }
 
-        private ShoppingCartItem CreateTestShopCartItem(decimal productPrice, int quantity = 1)
-        {
-            //customer
-            var customer = new Customer();
+        #endregion
 
-            //shopping cart
-            var product = new Product
-            {
-                Id = 1,
-                Name = "Product name 1",
-                Price = productPrice,
-                CustomerEntersPrice = false,
-                Published = true
-            };
+        //protected class TestProduct : Product
+        //{
+        //    public TestProduct()
+        //    {
+        //        _discountProductMappings = new List<DiscountProductMapping>();
+        //        _tierPrices = new List<TierPrice>();
+        //    }
 
-            var shoppingCartItem = new ShoppingCartItem
-            {
-                Customer = customer,
-                CustomerId = customer.Id,
-                Product = product,
-                ProductId = product.Id,
-                Quantity = quantity
-            };
+        //    public void AddAppliedDiscounts(Discount discount)
+        //    {
+        //        _discountProductMappings.Add(new DiscountProductMapping
+        //        {
+        //            Discount = discount,
+        //            DiscountId = discount.Id,
+        //            Id = 1,
+        //            Product = this
+        //        });
+        //    }
+        //}
 
-            return shoppingCartItem;
-        }
+        //protected class TestProductService : ProductService
+        //{
+        //    private TestProductService(CatalogSettings catalogSettings, CommonSettings commonSettings,
+        //        IAclService aclService, ICacheManager cacheManager, IDataProvider dataProvider,
+        //        IDateRangeService dateRangeService, IDbContext dbContext, IEventPublisher eventPublisher,
+        //        ILanguageService languageService, ILocalizationService localizationService,
+        //        IProductAttributeParser productAttributeParser, IProductAttributeService productAttributeService,
+        //        IRepository<AclRecord> aclRepository, IRepository<CrossSellProduct> crossSellProductRepository,
+        //        IRepository<Product> productRepository, IRepository<ProductPicture> productPictureRepository,
+        //        IRepository<ProductReview> productReviewRepository,
+        //        IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository,
+        //        IRepository<RelatedProduct> relatedProductRepository,
+        //        IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
+        //        IRepository<StoreMapping> storeMappingRepository, IRepository<TierPrice> tierPriceRepository,
+        //        IStoreService storeService, IStoreMappingService storeMappingService, IWorkContext workContext,
+        //        LocalizationSettings localizationSettings) : base(catalogSettings, commonSettings, aclService,
+        //        cacheManager, dataProvider, dateRangeService, dbContext, eventPublisher, languageService,
+        //        localizationService, productAttributeParser, productAttributeService, aclRepository,
+        //        crossSellProductRepository, productRepository, productPictureRepository, productReviewRepository,
+        //        productWarehouseInventoryRepository, relatedProductRepository, stockQuantityHistoryRepository,
+        //        storeMappingRepository, tierPriceRepository, storeService, storeMappingService, workContext, localizationSettings)
+        //    {
+        //    }
 
-        class TestProduct:Product
-        {
-            public TestProduct()
-            {
-                _discountProductMappings = new List<DiscountProductMapping>();
-                _tierPrices = new List<TierPrice>();
-            }
-
-            public void AddAppliedDiscounts(Discount discount)
-            {
-                _discountProductMappings.Add(new DiscountProductMapping
-                {
-                    Discount = discount,
-                    DiscountId = discount.Id,
-                    Id=1,
-                    Product = this
-                });
-            }
-        }
-
-        class TestProductService : ProductService
-        {
-            private TestProductService(CatalogSettings catalogSettings, CommonSettings commonSettings,
-                IAclService aclService, ICacheManager cacheManager, IDataProvider dataProvider,
-                IDateRangeService dateRangeService, IDbContext dbContext, IEventPublisher eventPublisher,
-                ILanguageService languageService, ILocalizationService localizationService,
-                IProductAttributeParser productAttributeParser, IProductAttributeService productAttributeService,
-                IRepository<AclRecord> aclRepository, IRepository<CrossSellProduct> crossSellProductRepository,
-                IRepository<Product> productRepository, IRepository<ProductPicture> productPictureRepository,
-                IRepository<ProductReview> productReviewRepository,
-                IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository,
-                IRepository<RelatedProduct> relatedProductRepository,
-                IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
-                IRepository<StoreMapping> storeMappingRepository, IRepository<TierPrice> tierPriceRepository,
-                IStoreService storeService, IStoreMappingService storeMappingService, IWorkContext workContext,
-                LocalizationSettings localizationSettings) : base(catalogSettings, commonSettings, aclService,
-                cacheManager, dataProvider, dateRangeService, dbContext, eventPublisher, languageService,
-                localizationService, productAttributeParser, productAttributeService, aclRepository,
-                crossSellProductRepository, productRepository, productPictureRepository, productReviewRepository,
-                productWarehouseInventoryRepository, relatedProductRepository, stockQuantityHistoryRepository,
-                storeMappingRepository,  tierPriceRepository, storeService, storeMappingService, workContext, localizationSettings)
-            {
-            }
-
-            public static TestProductService Init()
-            {
-                return new TestProductService(new CatalogSettings(), new CommonSettings(), null,
-                    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-                    null, null, null, null, null, null, new LocalizationSettings());
-            }
-        }
+        //    public static TestProductService Init()
+        //    {
+        //        return new TestProductService(new CatalogSettings(), new CommonSettings(), null,
+        //            null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+        //            null, null, null, null, null, null, new LocalizationSettings());
+        //    }
+        //}
     }
 }

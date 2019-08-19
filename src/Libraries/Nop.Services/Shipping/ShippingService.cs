@@ -660,7 +660,7 @@ namespace Nop.Services.Shipping
                     {
                         var allWarehouses = new List<Warehouse>();
                         //multiple warehouses supported
-                        foreach (var pwi in product.ProductWarehouseInventory)
+                        foreach (var pwi in _productService.GetAllProductWarehouseInventoryRecords(product.Id))
                         {
                             //TODO validate stock quantity when backorder is not allowed?
                             var tmpWarehouse = GetWarehouseById(pwi.WarehouseId);

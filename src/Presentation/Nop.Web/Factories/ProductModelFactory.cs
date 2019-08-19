@@ -166,12 +166,10 @@ namespace Nop.Web.Factories
                 {
                     return new ProductReviewOverviewModel
                     {
-                        RatingSum = product.ProductReviews
-                                .Where(pr => pr.IsApproved && pr.StoreId == _storeContext.CurrentStore.Id)
+                        RatingSum = _productService.GetAllProductReviews(productId: product.Id, approved: true, storeId: _storeContext.CurrentStore.Id)
                                 .Sum(pr => pr.Rating),
-                        TotalReviews = product
-                                .ProductReviews
-                                .Count(pr => pr.IsApproved && pr.StoreId == _storeContext.CurrentStore.Id)
+                        TotalReviews = _productService.GetAllProductReviews(approved: true, storeId: _storeContext.CurrentStore.Id)
+                                .Count()
                     };
                 });
             }
@@ -285,7 +283,7 @@ namespace Nop.Web.Factories
                             _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: true, quantity: int.MaxValue));
                     }
 
-                    var oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out decimal _);
+                    var oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out var _);
                     var finalPriceWithoutDiscountBase = _taxService.GetProductPrice(product, minPossiblePriceWithoutDiscount, out _);
                     var finalPriceWithDiscountBase = _taxService.GetProductPrice(product, minPossiblePriceWithDiscount, out _);
 
@@ -297,7 +295,7 @@ namespace Nop.Web.Factories
                     var tierPrices = new List<TierPrice>();
                     if (product.HasTierPrices)
                     {
-                        tierPrices.AddRange(product.TierPrices.OrderBy(tp => tp.Quantity)
+                        tierPrices.AddRange(_productService.GetTierPricesByProduct(product.Id).OrderBy(tp => tp.Quantity)
                             .FilterByStore(_storeContext.CurrentStore.Id)
                             .FilterForCustomer(_workContext.CurrentCustomer)
                             .FilterByDate()
@@ -409,7 +407,7 @@ namespace Nop.Web.Factories
                 else
                 {
                     //calculate prices
-                    var finalPriceBase = _taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, out decimal _);
+                    var finalPriceBase = _taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, out var _);
                     var finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
 
                     priceModel.OldPrice = null;
@@ -501,7 +499,7 @@ namespace Nop.Web.Factories
                 if (!productCategories.Any())
                     return breadcrumbModel;
 
-                var category = productCategories[0].Category;
+                var category = _categoryService.GetCategoryById(productCategories[0].CategoryId);
                 if (category == null)
                     return breadcrumbModel;
 
@@ -584,7 +582,7 @@ namespace Nop.Web.Factories
                     }
                     else
                     {
-                        var oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out decimal _);
+                        var oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out var _);
                         var finalPriceWithoutDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: false), out _);
                         var finalPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: true), out _);
 
@@ -731,13 +729,15 @@ namespace Nop.Web.Factories
             var productAttributeMapping = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
             foreach (var attribute in productAttributeMapping)
             {
+                var productAttrubute = _productAttributeService.GetProductAttributeById(attribute.ProductAttributeId);
+
                 var attributeModel = new ProductDetailsModel.ProductAttributeModel
                 {
                     Id = attribute.Id,
                     ProductId = product.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
-                    Name = _localizationService.GetLocalized(attribute.ProductAttribute, x => x.Name),
-                    Description = _localizationService.GetLocalized(attribute.ProductAttribute, x => x.Description),
+                    Name = _localizationService.GetLocalized(productAttrubute, x => x.Name),
+                    Description = _localizationService.GetLocalized(productAttrubute, x => x.Description),
                     TextPrompt = _localizationService.GetLocalized(attribute, x => x.TextPrompt),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
@@ -772,7 +772,7 @@ namespace Nop.Web.Factories
                         if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                         {
                             var attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue, updatecartitem?.Customer ?? _workContext.CurrentCustomer);
-                            var priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, out decimal _);
+                            var priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, out var _);
                             var priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
 
                             if (attributeValue.PriceAdjustmentUsePercentage)
@@ -886,7 +886,7 @@ namespace Nop.Web.Factories
                                 var selectedDateStr = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id);
                                 if (selectedDateStr.Any())
                                 {
-                                    if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime selectedDate))
+                                    if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture, DateTimeStyles.None, out var selectedDate))
                                     {
                                         //successfully parsed
                                         attributeModel.SelectedDay = selectedDate.Day;
@@ -902,7 +902,7 @@ namespace Nop.Web.Factories
                                 if (!string.IsNullOrEmpty(updatecartitem.AttributesXml))
                                 {
                                     var downloadGuidStr = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id).FirstOrDefault();
-                                    Guid.TryParse(downloadGuidStr, out Guid downloadGuid);
+                                    Guid.TryParse(downloadGuidStr, out var downloadGuid);
                                     var download = _downloadService.GetDownloadByGuid(downloadGuid);
                                     if (download != null)
                                         attributeModel.DefaultValue = download.DownloadGuid.ToString();
@@ -930,7 +930,7 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var model = product.TierPrices.OrderBy(x => x.Quantity)
+            var model = _productService.GetTierPricesByProduct(product.Id).OrderBy(x => x.Quantity)
                    .FilterByStore(_storeContext.CurrentStore.Id)
                    .FilterForCustomer(_workContext.CurrentCustomer)
                    .FilterByDate()
@@ -938,7 +938,7 @@ namespace Nop.Web.Factories
                    .Select(tierPrice =>
                    {
                        var priceBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product,
-                       _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts, tierPrice.Quantity), out decimal _);
+                       _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts, tierPrice.Quantity), out var _);
                        var price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
 
                        return new ProductDetailsModel.TierPriceModel
@@ -970,7 +970,7 @@ namespace Nop.Web.Factories
                 () => _manufacturerService.GetProductManufacturersByProductId(product.Id)
                     .Select(pm =>
                     {
-                        var manufacturer = pm.Manufacturer;
+                        var manufacturer = _manufacturerService.GetManufacturerById(pm.ManufacturerId);
                         var modelMan = new ManufacturerBriefInfoModel
                         {
                             Id = manufacturer.Id,
@@ -1264,7 +1264,7 @@ namespace Nop.Web.Factories
 
             //pictures
             model.DefaultPictureZoomEnabled = _mediaSettings.DefaultPictureZoomEnabled;
-            model.DefaultPictureModel = PrepareProductDetailsPictureModel(product, isAssociatedProduct, out IList<PictureModel> allPictureModels);
+            model.DefaultPictureModel = PrepareProductDetailsPictureModel(product, isAssociatedProduct, out var allPictureModels);
             model.PictureModels = allPictureModels;
 
             //price
@@ -1287,8 +1287,8 @@ namespace Nop.Web.Factories
                 else
                 {
                     _productAttributeParser.GetGiftCardAttribute(updatecartitem.AttributesXml,
-                        out string giftCardRecipientName, out string giftCardRecipientEmail,
-                        out string giftCardSenderName, out string giftCardSenderEmail, out string giftCardMessage);
+                        out var giftCardRecipientName, out var giftCardRecipientEmail,
+                        out var giftCardSenderName, out var giftCardSenderEmail, out var giftCardMessage);
 
                     model.GiftCard.RecipientName = giftCardRecipientName;
                     model.GiftCard.RecipientEmail = giftCardRecipientEmail;
@@ -1369,9 +1369,9 @@ namespace Nop.Web.Factories
             model.ProductName = _localizationService.GetLocalized(product, x => x.Name);
             model.ProductSeName = _urlRecordService.GetSeName(product);
 
-            var productReviews = _catalogSettings.ShowProductReviewsPerStore
-                ? product.ProductReviews.Where(pr => pr.IsApproved && pr.StoreId == _storeContext.CurrentStore.Id)
-                : product.ProductReviews.Where(pr => pr.IsApproved);
+            var productReviews = _productService.GetAllProductReviews(
+                approved: true,
+                storeId: _catalogSettings.ShowProductReviewsPerStore ? _storeContext.CurrentStore.Id : 0).AsEnumerable();
 
             productReviews = _catalogSettings.ProductReviewsSortByCreatedDateAscending
                 ? productReviews.OrderBy(pr => pr.CreatedOnUtc)
@@ -1394,7 +1394,8 @@ namespace Nop.Web.Factories
             //filling data from db
             foreach (var pr in productReviews)
             {
-                var customer = pr.Customer;
+                var customer = _customerService.GetCustomerById(pr.CustomerId);
+
                 var productReviewModel = new ProductReviewModel
                 {
                     Id = pr.Id,
@@ -1416,13 +1417,15 @@ namespace Nop.Web.Factories
 
                 foreach (var q in _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewId(pr.Id))
                 {
+                    var reviewType = _reviewTypeService.GetReviewTypeById(q.ReviewTypeId);
+
                     productReviewModel.AdditionalProductReviewList.Add(new ProductReviewReviewTypeMappingModel
                     {
                         ReviewTypeId = q.ReviewTypeId,
                         ProductReviewId = pr.Id,
                         Rating = q.Rating,
-                        Name = _localizationService.GetLocalized(q.ReviewType, x => x.Name),
-                        VisibleToAllCustomers = q.ReviewType.VisibleToAllCustomers || _workContext.CurrentCustomer.Id == pr.CustomerId,
+                        Name = _localizationService.GetLocalized(reviewType, x => x.Name),
+                        VisibleToAllCustomers = reviewType.VisibleToAllCustomers || _workContext.CurrentCustomer.Id == pr.CustomerId,
                     });
                 }
 
@@ -1493,7 +1496,8 @@ namespace Nop.Web.Factories
 
             foreach (var review in list)
             {
-                var product = review.Product;
+                var product = _productService.GetProductById(review.ProductId);
+
                 var productReviewModel = new CustomerProductReviewModel
                 {
                     Title = review.Title,
@@ -1515,12 +1519,14 @@ namespace Nop.Web.Factories
 
                 foreach (var q in _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewId(review.Id))
                 {
+                    var reviewType = _reviewTypeService.GetReviewTypeById(q.ReviewTypeId);
+
                     productReviewModel.AdditionalProductReviewList.Add(new ProductReviewReviewTypeMappingModel
                     {
                         ReviewTypeId = q.ReviewTypeId,
                         ProductReviewId = review.Id,
                         Rating = q.Rating,
-                        Name = _localizationService.GetLocalized(q.ReviewType, x => x.Name),
+                        Name = _localizationService.GetLocalized(reviewType, x => x.Name),
                     });
                 }
 
@@ -1589,18 +1595,21 @@ namespace Nop.Web.Factories
                 _specificationAttributeService.GetProductSpecificationAttributes(product.Id, 0, null, true)
                 .Select(psa =>
                 {
+                    var specAttributeOption = _specificationAttributeService.GetSpecificationAttributeOptionById(psa.SpecificationAttributeOptionId);
+                    var specAttribute = _specificationAttributeService.GetSpecificationAttributeById(specAttributeOption.SpecificationAttributeId);
+
                     var m = new ProductSpecificationModel
                     {
-                        SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
-                        SpecificationAttributeName = _localizationService.GetLocalized(psa.SpecificationAttributeOption.SpecificationAttribute, x => x.Name),
-                        ColorSquaresRgb = psa.SpecificationAttributeOption.ColorSquaresRgb,
+                        SpecificationAttributeId = specAttribute.Id,
+                        SpecificationAttributeName = _localizationService.GetLocalized(specAttribute, x => x.Name),
+                        ColorSquaresRgb = specAttributeOption.ColorSquaresRgb,
                         AttributeTypeId = psa.AttributeTypeId
                     };
 
                     switch (psa.AttributeType)
                     {
                         case SpecificationAttributeType.Option:
-                            m.ValueRaw = WebUtility.HtmlEncode(_localizationService.GetLocalized(psa.SpecificationAttributeOption, x => x.Name));
+                            m.ValueRaw = WebUtility.HtmlEncode(_localizationService.GetLocalized(specAttributeOption, x => x.Name));
                             break;
                         case SpecificationAttributeType.CustomText:
                             m.ValueRaw = WebUtility.HtmlEncode(_localizationService.GetLocalized(psa, x => x.CustomValue));

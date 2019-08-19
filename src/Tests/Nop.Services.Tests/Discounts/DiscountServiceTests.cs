@@ -7,6 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
+using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
@@ -28,6 +29,7 @@ namespace Nop.Services.Tests.Discounts
         private Mock<IEventPublisher> _eventPublisher;
         private Mock<ILocalizationService> _localizationService;
         private Mock<ICategoryService> _categoryService;
+        private Mock<IDbContext> _dbContext;
         private IDiscountPluginManager _discountPluginManager;
         private IDiscountService _discountService;
         private Mock<IStoreContext> _storeContext;
@@ -96,18 +98,18 @@ namespace Nop.Services.Tests.Discounts
             _localizationService = new Mock<ILocalizationService>();
             _categoryService = new Mock<ICategoryService>();
 
+            _dbContext = new Mock<IDbContext>();
+
             _discountPluginManager = new DiscountPluginManager(pluginService);
             _discountService = new DiscountService(_categoryService.Object,
                 _customerService.Object,
+                _dbContext.Object,
                 _discountPluginManager,
                 _eventPublisher.Object,
                 _localizationService.Object,
-                _categoryRepo.Object,
                 _discountRepo.Object,
                 _discountRequirementRepo.Object,
                 _discountUsageHistoryRepo.Object,
-                _manufacturerRepo.Object,
-                _productRepo.Object,
                 cacheManager,
                 _storeContext.Object);
         }
@@ -287,7 +289,7 @@ namespace Nop.Services.Tests.Discounts
         static DiscountExtensions()
         {
             _discountService = new DiscountService(null, null, null, null,
-                null, null, null, null, null, null, null, null, null);
+                null, null, null, null, null, null, null);
         }
 
         public static decimal GetDiscountAmount(this Discount discount, decimal amount)

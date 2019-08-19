@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
@@ -50,11 +50,5 @@ namespace Nop.Services.Catalog
             CreatedOnUtc = c.CreatedOnUtc;
             UpdatedOnUtc = c.UpdatedOnUtc;
         }
-
-        [JsonIgnore]
-        public override ICollection<DiscountCategoryMapping> DiscountCategoryMappings => throw new Exception("Entity for caching doesn't support navigation properties");
-
-        [JsonIgnore]
-        public override IList<Discount> AppliedDiscounts => throw new Exception("Entity for caching doesn't support navigation properties");
     }
 }

@@ -9,6 +9,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -26,15 +27,13 @@ namespace Nop.Services.Discounts
 
         private readonly ICategoryService _categoryService;
         private readonly ICustomerService _customerService;
+        private readonly IDbContext _dbContext;
         private readonly IDiscountPluginManager _discountPluginManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
-        private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<DiscountRequirement> _discountRequirementRepository;
         private readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
-        private readonly IRepository<Manufacturer> _manufacturerRepository;
-        private readonly IRepository<Product> _productRepository;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
 
@@ -44,29 +43,25 @@ namespace Nop.Services.Discounts
 
         public DiscountService(ICategoryService categoryService,
             ICustomerService customerService,
+            IDbContext dbContext,
             IDiscountPluginManager discountPluginManager,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
-            IRepository<Category> categoryRepository,
             IRepository<Discount> discountRepository,
             IRepository<DiscountRequirement> discountRequirementRepository,
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
-            IRepository<Manufacturer> manufacturerRepository,
-            IRepository<Product> productRepository,
             IStaticCacheManager cacheManager,
             IStoreContext storeContext)
         {
             _categoryService = categoryService;
             _customerService = customerService;
+            _dbContext = dbContext;
             _discountPluginManager = discountPluginManager;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
-            _categoryRepository = categoryRepository;
             _discountRepository = discountRepository;
             _discountRequirementRepository = discountRequirementRepository;
             _discountUsageHistoryRepository = discountUsageHistoryRepository;
-            _manufacturerRepository = manufacturerRepository;
-            _productRepository = productRepository;
             _cacheManager = cacheManager;
             _storeContext = storeContext;
         }
@@ -261,6 +256,19 @@ namespace Nop.Services.Discounts
         }
 
         /// <summary>
+        /// Gets discounts applied to entity
+        /// </summary>
+        /// <typeparam name="T">Type based on <see cref="DiscountMapping" /></typeparam>
+        /// <param name="entity">Entity which supports discounts (<see cref="IDiscountSupported{T}" />)</param>
+        /// <returns>List of discounts</returns>
+        public virtual IList<Discount> GetAppliedDiscounts<T>(IDiscountSupported<T> entity) where T : DiscountMapping
+        {
+            return (from d in _discountRepository.Table
+                    join ad in _dbContext.Set<T>() on d.Id equals ad.DiscountId
+                    select d).ToList();
+        }
+
+        /// <summary>
         /// Inserts a discount
         /// </summary>
         /// <param name="discount">Discount</param>
@@ -288,78 +296,6 @@ namespace Nop.Services.Discounts
 
             //event notification
             _eventPublisher.EntityUpdated(discount);
-        }
-
-        /// <summary>
-        /// Get categories for which a discount is applied
-        /// </summary>
-        /// <param name="discountId">Discount identifier; pass null to load all records</param>
-        /// <param name="showHidden">A value indicating whether to load deleted categories</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns>List of categories</returns>
-        public virtual IPagedList<Category> GetCategoriesWithAppliedDiscount(int? discountId = null,
-            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue)
-        {
-            var categories = _categoryRepository.Table;
-
-            if (discountId.HasValue)
-                categories = categories.Where(category => category.DiscountCategoryMappings.Any(mapping => mapping.DiscountId == discountId.Value));
-
-            if (!showHidden)
-                categories = categories.Where(category => !category.Deleted);
-
-            categories = categories.OrderBy(category => category.DisplayOrder).ThenBy(category => category.Id);
-
-            return new PagedList<Category>(categories, pageIndex, pageSize);
-        }
-
-        /// <summary>
-        /// Get manufacturers for which a discount is applied
-        /// </summary>
-        /// <param name="discountId">Discount identifier; pass null to load all records</param>
-        /// <param name="showHidden">A value indicating whether to load deleted manufacturers</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns>List of manufacturers</returns>
-        public virtual IPagedList<Manufacturer> GetManufacturersWithAppliedDiscount(int? discountId = null,
-            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue)
-        {
-            var manufacturers = _manufacturerRepository.Table;
-
-            if (discountId.HasValue)
-                manufacturers = manufacturers.Where(manufacturer => manufacturer.DiscountManufacturerMappings.Any(mapping => mapping.DiscountId == discountId.Value));
-
-            if (!showHidden)
-                manufacturers = manufacturers.Where(manufacturer => !manufacturer.Deleted);
-
-            manufacturers = manufacturers.OrderBy(manufacturer => manufacturer.DisplayOrder).ThenBy(manufacturer => manufacturer.Id);
-
-            return new PagedList<Manufacturer>(manufacturers, pageIndex, pageSize);
-        }
-
-        /// <summary>
-        /// Get products for which a discount is applied
-        /// </summary>
-        /// <param name="discountId">Discount identifier; pass null to load all records</param>
-        /// <param name="showHidden">A value indicating whether to load deleted products</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns>List of products</returns>
-        public virtual IPagedList<Product> GetProductsWithAppliedDiscount(int? discountId = null,
-            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue)
-        {
-            var products = _productRepository.Table.Where(product => product.HasDiscountsApplied);
-
-            if (discountId.HasValue)
-                products = products.Where(product => product.DiscountProductMappings.Any(mapping => mapping.DiscountId == discountId.Value));
-
-            if (!showHidden)
-                products = products.Where(product => !product.Deleted);
-
-            products = products.OrderBy(product => product.DisplayOrder).ThenBy(product => product.Id);
-
-            return new PagedList<Product>(products, pageIndex, pageSize);
         }
 
         #endregion

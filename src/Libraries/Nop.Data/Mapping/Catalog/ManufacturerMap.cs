@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
@@ -26,8 +26,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(manufacturer => manufacturer.PriceRanges).HasMaxLength(400);
             builder.Property(manufacturer => manufacturer.PageSizeOptions).HasMaxLength(200);
             
-            builder.Ignore(manufacturer => manufacturer.AppliedDiscounts);
-
             base.Configure(builder);
         }
 

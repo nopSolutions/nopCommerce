@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Moq;
+using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
@@ -11,15 +15,163 @@ namespace Nop.Services.Tests.Catalog
     [TestFixture]
     public class ProductServiceTests : ServiceTest
     {
+        #region Fields
+
         private IProductService _productService;
+        private Mock<IRepository<Product>> _productRepository;
+        private Mock<IRepository<ProductWarehouseInventory>> _productWarehouseInventoryRepository;
+
+        private Product _productNotUseMultipleWarehouses = new Product
+        {
+            Id = 1,
+            ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+            UseMultipleWarehouses = false,
+            StockQuantity = 6,
+        };
+
+        private Product _productUseMultipleWarehousesWithReserved = new Product
+        {
+            Id = 2,
+            ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+            UseMultipleWarehouses = true,
+            StockQuantity = 6,
+        };
+
+        private Product _productUseMultipleWarehousesWithoutReserved = new Product
+        {
+            Id = 3,
+            ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+            UseMultipleWarehouses = true,
+            StockQuantity = 6,
+        };
+
+        private Product _productUseMultipleWarehousesWithWarehouseSpecified = new Product
+        {
+            Id = 4,
+            ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+            UseMultipleWarehouses = true,
+            StockQuantity = 6,
+        };
+
+        #endregion
+
+        #region SetUp
 
         [SetUp]
         public new void SetUp()
         {
+            _productRepository = new Mock<IRepository<Product>>();
+            _productRepository.Setup(p => p.Table).Returns(GetMockProducts);
+
+            _productWarehouseInventoryRepository = new Mock<IRepository<ProductWarehouseInventory>>();
+            _productWarehouseInventoryRepository.Setup(x => x.Table).Returns(GetMockProductWarehouseInventoryRecords);
+
             _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new TestCacheManager(),
-                null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+                null, null, null, null, null, null, null, null, null, null, null, _productRepository.Object, null, null, null, null, null, null, _productWarehouseInventoryRepository.Object, null, null, null, null, null,
                 null, null, null, new LocalizationSettings());
         }
+
+        #endregion
+
+        #region Utilities
+
+        private IQueryable<Product> GetMockProducts()
+        {
+            return new List<Product>
+            {
+                _productNotUseMultipleWarehouses,
+                _productUseMultipleWarehousesWithReserved,
+                _productUseMultipleWarehousesWithoutReserved,
+                _productUseMultipleWarehousesWithWarehouseSpecified
+            }.AsQueryable();
+        }
+
+        private IQueryable<ProductWarehouseInventory> GetMockProductWarehouseInventoryRecords()
+        {
+            return new List<ProductWarehouseInventory>
+            {
+                new ProductWarehouseInventory
+                {
+                    ProductId = 1,
+                    WarehouseId = 1,
+                    StockQuantity = 7,
+                },
+                new ProductWarehouseInventory
+                {
+                    ProductId = 1,
+                    WarehouseId = 2,
+                    StockQuantity = 8,
+                },
+                new ProductWarehouseInventory
+                {
+                    ProductId = 1,
+                    WarehouseId = 3,
+                    StockQuantity = -2,
+                },
+                new ProductWarehouseInventory
+                {
+                    ProductId = 2,
+                    WarehouseId = 1,
+                    StockQuantity = 7,
+                    ReservedQuantity = 4,
+                },
+                new ProductWarehouseInventory
+                {
+                    ProductId = 2,
+                    WarehouseId = 2,
+                    StockQuantity = 8,
+                    ReservedQuantity = 1,
+                },
+                new ProductWarehouseInventory
+                {
+                    ProductId = 2,
+                    WarehouseId = 3,
+                    StockQuantity = -2,
+                },
+                new ProductWarehouseInventory
+                {
+                    ProductId = 3,
+                    WarehouseId = 1,
+                    StockQuantity = 7,
+                    ReservedQuantity = 4,
+                },
+                new ProductWarehouseInventory
+                {
+                    ProductId = 3,
+                    WarehouseId = 2,
+                    StockQuantity = 8,
+                    ReservedQuantity = 1,
+                },
+                new ProductWarehouseInventory
+                {
+                    ProductId = 3,
+                    WarehouseId = 3,
+                    StockQuantity = -2,
+                },
+                new ProductWarehouseInventory
+                {
+                    ProductId = 4,
+                    WarehouseId = 1,
+                    StockQuantity = 7,
+                    ReservedQuantity = 4,
+                },
+                new ProductWarehouseInventory
+                {
+                    WarehouseId = 2,
+                    StockQuantity = 8,
+                    ReservedQuantity = 1,
+                },
+                new ProductWarehouseInventory
+                {
+                    WarehouseId = 3,
+                    StockQuantity = -2,
+                }
+            }.AsQueryable();
+        }
+
+        #endregion
+
+        #region Tests
 
         [Test]
         public void Can_parse_required_product_ids()
@@ -121,120 +273,29 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_calculate_total_quantity_when_we_do_not_use_multiple_warehouses()
         {
-            var product = new Product
-            {
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                UseMultipleWarehouses = false,
-                StockQuantity = 6,
-            };
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
-            {
-                WarehouseId = 1,
-                StockQuantity = 7,
-            });
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
-            {
-                WarehouseId = 2,
-                StockQuantity = 8,
-            });
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
-            {
-                WarehouseId = 3,
-                StockQuantity = -2,
-            });
-
-
-            var result = _productService.GetTotalStockQuantity(product, true);
+            var result = _productService.GetTotalStockQuantity(_productNotUseMultipleWarehouses, true);
             result.ShouldEqual(6);
         }
+
+
+
         [Test]
         public void Can_calculate_total_quantity_when_we_do_use_multiple_warehouses_with_reserved()
         {
-            var product = new Product
-            {
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                UseMultipleWarehouses = true,
-                StockQuantity = 6,
-            };
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
-            {
-                WarehouseId = 1,
-                StockQuantity = 7,
-                ReservedQuantity = 4,
-            });
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
-            {
-                WarehouseId = 2,
-                StockQuantity = 8,
-                ReservedQuantity = 1,
-            });
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
-            {
-                WarehouseId = 3,
-                StockQuantity = -2,
-            });
 
-            var result = _productService.GetTotalStockQuantity(product, true);
+            var result = _productService.GetTotalStockQuantity(_productUseMultipleWarehousesWithReserved, true);
             result.ShouldEqual(8);
         }
         [Test]
         public void Can_calculate_total_quantity_when_we_do_use_multiple_warehouses_without_reserved()
         {
-            var product = new Product
-            {
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                UseMultipleWarehouses = true,
-                StockQuantity = 6,
-            };
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
-            {
-                WarehouseId = 1,
-                StockQuantity = 7,
-                ReservedQuantity = 4,
-            });
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
-            {
-                WarehouseId = 2,
-                StockQuantity = 8,
-                ReservedQuantity = 1,
-            });
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
-            {
-                WarehouseId = 3,
-                StockQuantity = -2,
-            });
-
-            var result = _productService.GetTotalStockQuantity(product, false);
+            var result = _productService.GetTotalStockQuantity(_productUseMultipleWarehousesWithoutReserved, false);
             result.ShouldEqual(13);
         }
         [Test]
         public void Can_calculate_total_quantity_when_we_do_use_multiple_warehouses_with_warehouse_specified()
         {
-            var product = new Product
-            {
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                UseMultipleWarehouses = true,
-                StockQuantity = 6,
-            };
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
-            {
-                WarehouseId = 1,
-                StockQuantity = 7,
-                ReservedQuantity = 4,
-            });
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
-            {
-                WarehouseId = 2,
-                StockQuantity = 8,
-                ReservedQuantity = 1,
-            });
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
-            {
-                WarehouseId = 3,
-                StockQuantity = -2,
-            });
-
-            var result = _productService.GetTotalStockQuantity(product, true, 1);
+            var result = _productService.GetTotalStockQuantity(_productUseMultipleWarehousesWithWarehouseSpecified, true, 1);
             result.ShouldEqual(3);
         }
 
@@ -393,6 +454,8 @@ namespace Nop.Services.Tests.Catalog
             //more than two year
             _productService.GetRentalPeriods(product, new DateTime(2014, 3, 5), new DateTime(2016, 3, 7)).ShouldEqual(2);
 
-        }
+        } 
+
+        #endregion
     }
 }

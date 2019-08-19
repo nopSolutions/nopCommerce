@@ -195,8 +195,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     WarehouseName = warehouse.Name
                 };
 
-                var productWarehouseInventory = product?.ProductWarehouseInventory
-                    .FirstOrDefault(inventory => inventory.WarehouseId == warehouse.Id);
+                var productWarehouseInventory = _productService.GetAllProductWarehouseInventoryRecords(product.Id)?.FirstOrDefault(inventory => inventory.WarehouseId == warehouse.Id);
                 if (productWarehouseInventory != null)
                 {
                     model.WarehouseUsed = true;
@@ -292,7 +291,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Id = attribute.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
-                    Name = attribute.ProductAttribute.Name,
+                    Name = _productAttributeService.GetProductAttributeById(attribute.ProductAttributeId).Name,
                     TextPrompt = attribute.TextPrompt,
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType
@@ -1383,16 +1382,19 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in model values from the entity
                     var productSpecificationAttributeModel = attribute.ToModel<ProductSpecificationAttributeModel>();
 
+                    var specAttributeOption = _specificationAttributeService.GetSpecificationAttributeOptionById(attribute.SpecificationAttributeOptionId);
+                    var specAttribute = _specificationAttributeService.GetSpecificationAttributeById(specAttributeOption.SpecificationAttributeId);
+
                     //fill in additional values (not existing in the entity)
                     productSpecificationAttributeModel.AttributeTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeType);
-                    productSpecificationAttributeModel.AttributeId = attribute.SpecificationAttributeOption.SpecificationAttribute.Id;
-                    productSpecificationAttributeModel.AttributeName = attribute.SpecificationAttributeOption.SpecificationAttribute.Name;
+                    productSpecificationAttributeModel.AttributeId = specAttribute.Id;
+                    productSpecificationAttributeModel.AttributeName = specAttribute.Name;
 
                     switch (attribute.AttributeType)
                     {
                         case SpecificationAttributeType.Option:
-                            productSpecificationAttributeModel.ValueRaw = WebUtility.HtmlEncode(attribute.SpecificationAttributeOption.Name);
-                            productSpecificationAttributeModel.SpecificationAttributeOptionId = attribute.SpecificationAttributeOptionId;
+                            productSpecificationAttributeModel.ValueRaw = WebUtility.HtmlEncode(specAttributeOption.Name);
+                            productSpecificationAttributeModel.SpecificationAttributeOptionId = specAttributeOption.Id;
                             break;
                         case SpecificationAttributeType.CustomText:
                             productSpecificationAttributeModel.ValueRaw = WebUtility.HtmlEncode(_localizationService.GetLocalized(attribute, x => x.CustomValue, _workContext.WorkingLanguage.Id));
@@ -1446,14 +1448,17 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && attribute.Product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && _productService.GetProductById(attribute.ProductId).VendorId != _workContext.CurrentVendor.Id)
                 throw new UnauthorizedAccessException("This is not your product");
+
+            var specAttributeOption = _specificationAttributeService.GetSpecificationAttributeOptionById(attribute.SpecificationAttributeOptionId);
+            var specAttribute = _specificationAttributeService.GetSpecificationAttributeById(specAttributeOption.SpecificationAttributeId);
 
             var model = attribute.ToModel<AddSpecificationAttributeModel>();
             model.SpecificationId = attribute.Id;
-            model.AttributeId = attribute.SpecificationAttributeOption.SpecificationAttribute.Id;
+            model.AttributeId = specAttribute.Id;
             model.AttributeTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeType);
-            model.AttributeName = attribute.SpecificationAttributeOption.SpecificationAttribute.Name;
+            model.AttributeName = specAttribute.Name;
 
             model.AvailableAttributes = _cacheManager.Get(NopModelCacheDefaults.SpecAttributesModelKey, () =>
             {
@@ -1470,8 +1475,8 @@ namespace Nop.Web.Areas.Admin.Factories
             switch (attribute.AttributeType)
             {
                 case SpecificationAttributeType.Option:
-                    model.ValueRaw = WebUtility.HtmlEncode(attribute.SpecificationAttributeOption.Name);
-                    model.SpecificationAttributeOptionId = attribute.SpecificationAttributeOptionId;
+                    model.ValueRaw = WebUtility.HtmlEncode(specAttributeOption.Name);
+                    model.SpecificationAttributeOptionId = specAttributeOption.Id;
                     break;
                 case SpecificationAttributeType.CustomText:
                     model.Value = WebUtility.HtmlDecode(attribute.CustomValue);
@@ -1656,7 +1661,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(product));
 
             //get tier prices
-            var tierPrices = product.TierPrices
+            var tierPrices = _productService.GetTierPricesByProduct(product.Id)
                 .OrderBy(price => price.StoreId).ThenBy(price => price.Quantity).ThenBy(price => price.CustomerRoleId)
                 .ToList().ToPagedList(searchModel);
 
@@ -1753,7 +1758,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     if (combination != null)
                     {
                         stockQuantityHistoryModel.AttributeCombination = _productAttributeFormatter.FormatAttributes(
-                            historyEntry.Product,
+                            product,
                             combination.AttributesXml, _workContext.CurrentCustomer, renderGiftCardAttributes: false);
                     }
 
@@ -1810,7 +1815,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     if (conditionValue != null)
                     {
                         productAttributeMappingModel.ConditionString =
-                            $"{WebUtility.HtmlEncode(conditionAttribute.ProductAttribute.Name)}: {WebUtility.HtmlEncode(conditionValue.Name)}";
+                            $"{WebUtility.HtmlEncode(_productAttributeService.GetProductAttributeById(conditionAttribute.ProductAttributeId).Name)}: {WebUtility.HtmlEncode(conditionValue.Name)}";
                     }
 
                     return productAttributeMappingModel;
@@ -1918,10 +1923,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     //fill in model values from the entity
                     var productAttributeValueModel = value.ToModel<ProductAttributeValueModel>();
-
+                    
                     //fill in additional values (not existing in the entity)
                     productAttributeValueModel.AttributeValueTypeName = _localizationService.GetLocalizedEnum(value.AttributeValueType);
-                    productAttributeValueModel.Name = value.ProductAttributeMapping.AttributeControlType != AttributeControlType.ColorSquares
+                    productAttributeValueModel.Name = productAttributeMapping.AttributeControlType != AttributeControlType.ColorSquares
                         ? value.Name : $"{value.Name} - {value.ColorSquaresRgb}";
                     if (value.AttributeValueType == AttributeValueType.Simple)
                     {
@@ -1977,11 +1982,9 @@ namespace Nop.Web.Areas.Admin.Factories
                     AssociatedProductId = productAttributeValue.AssociatedProductId,
                     Name = productAttributeValue.Name,
                     ColorSquaresRgb = productAttributeValue.ColorSquaresRgb,
-                    DisplayColorSquaresRgb = productAttributeValue
-                        .ProductAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares,
+                    DisplayColorSquaresRgb = productAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares,
                     ImageSquaresPictureId = productAttributeValue.ImageSquaresPictureId,
-                    DisplayImageSquaresPicture = productAttributeValue
-                        .ProductAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares,
+                    DisplayImageSquaresPicture = productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares,
                     PriceAdjustment = productAttributeValue.PriceAdjustment,
                     PriceAdjustmentUsePercentage = productAttributeValue.PriceAdjustmentUsePercentage,
                     WeightAdjustment = productAttributeValue.WeightAdjustment,
@@ -2132,14 +2135,14 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     productAttributeCombinationModel.AttributesXml = _productAttributeFormatter
-                        .FormatAttributes(combination.Product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false);
+                        .FormatAttributes(product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false);
                     var pictureThumbnailUrl = _pictureService.GetPictureUrl(combination.PictureId, 75, false);
                     //little hack here. Grid is rendered wrong way with <img> without "src" attribute
                     if (string.IsNullOrEmpty(pictureThumbnailUrl))
                         pictureThumbnailUrl = _pictureService.GetPictureUrl(null, 1);
                     productAttributeCombinationModel.PictureThumbnailUrl = pictureThumbnailUrl;
                     var warnings = _shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
-                        ShoppingCartType.ShoppingCart, combination.Product,
+                        ShoppingCartType.ShoppingCart, product,
                         attributesXml: combination.AttributesXml,
                         ignoreNonCombinableAttributes: true).Aggregate(string.Empty, (message, warning) => $"{message}{warning}<br />");
                     productAttributeCombinationModel.Warnings = new List<string> { warnings };
@@ -2215,7 +2218,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Id = attribute.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
-                    Name = attribute.ProductAttribute.Name,
+                    Name = _productAttributeService.GetProductAttributeById(attribute.ProductAttributeId).Name,
                     TextPrompt = attribute.TextPrompt,
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType

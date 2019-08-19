@@ -111,8 +111,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                 foreach (var item in order.OrderItems)
                 {
                     //get category
-                    var category = _categoryService.GetProductCategoriesByProductId(item.ProductId).FirstOrDefault()?.Category?.Name;
-
+                    var category = _categoryService.GetCategoryById(_categoryService.GetProductCategoriesByProductId(item.ProductId).FirstOrDefault()?.CategoryId ?? 0)?.Name;
                     var unitPrice = googleAnalyticsSettings.IncludingTax ? item.UnitPriceInclTax : item.UnitPriceExclTax;
                     var qty = item.Quantity;
                     if (!add)
@@ -198,7 +197,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
 
             //if we use JS to notify GA about new orders (even when they are placed), then we should always notify GA about deleted orders
             //if we use HTTP requests to notify GA about new orders (only when they are paid), then we should notify GA about deleted AND paid orders
-            bool sendRequest = googleAnalyticsSettings.UseJsToSendEcommerceInfo || order.PaymentStatus == PaymentStatus.Paid;
+            var sendRequest = googleAnalyticsSettings.UseJsToSendEcommerceInfo || order.PaymentStatus == PaymentStatus.Paid;
 
             if (sendRequest)
                 ProcessOrderEvent(order, false);
@@ -225,7 +224,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                 return;
 
             //we use HTTP requests to notify GA about new orders (only when they are paid)
-            bool sendRequest = !googleAnalyticsSettings.UseJsToSendEcommerceInfo;
+            var sendRequest = !googleAnalyticsSettings.UseJsToSendEcommerceInfo;
 
             if (sendRequest)
                 ProcessOrderEvent(order, true);

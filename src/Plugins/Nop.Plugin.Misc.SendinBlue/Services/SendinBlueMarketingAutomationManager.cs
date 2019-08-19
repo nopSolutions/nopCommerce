@@ -31,6 +31,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
 
         private readonly CurrencySettings _currencySettings;
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly ICategoryService _categoryService;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -55,6 +56,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
 
         public SendinBlueMarketingAutomationManager(CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
+            ICategoryService categoryService,
             ICountryService countryService,
             ICurrencyService currencyService,
             IGenericAttributeService genericAttributeService,
@@ -75,6 +77,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         {
             _currencySettings = currencySettings;
             _actionContextAccessor = actionContextAccessor;
+            _categoryService = categoryService;
             _countryService = countryService;
             _currencyService = currencyService;
             _genericAttributeService = genericAttributeService;
@@ -188,9 +191,9 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                             variant_id = combination?.Id ?? item.Product.Id,
                             variant_name = combination?.Sku ?? item.Product.Name,
                             sku = combination?.Sku ?? item.Product.Sku,
-                            category = item.Product.ProductCategories.Aggregate(",", (all, category) =>
+                            category = _categoryService.GetProductCategoriesByProductId(item.ProductId).Aggregate(",", (all, pc) =>
                             {
-                                var res = category.Category.Name;
+                                var res = _categoryService.GetCategoryById(pc.CategoryId).Name;
                                 res = all == "," ? res : all + ", " + res;
                                 return res;
                             }),
@@ -292,9 +295,9 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                         variant_id = combination?.Id ?? item.Product.Id,
                         variant_name = combination?.Sku ?? item.Product.Name,
                         sku = combination?.Sku ?? item.Product.Sku,
-                        category = item.Product.ProductCategories.Aggregate(",", (all, category) =>
+                        category = _categoryService.GetProductCategoriesByProductId(item.ProductId).Aggregate(",", (all, pc) =>
                         {
-                            var res = category.Category.Name;
+                            var res = _categoryService.GetCategoryById(pc.CategoryId).Name;
                             res = all == "," ? res : all + ", " + res;
                             return res;
                         }),

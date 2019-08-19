@@ -20,6 +20,7 @@ using Nop.Services.Authentication;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Discounts;
 using Nop.Services.ExportImport;
 using Nop.Services.ExportImport.Help;
 using Nop.Services.Forums;
@@ -50,6 +51,7 @@ namespace Nop.Services.Tests.ExportImport
         private Mock<IVendorService> _vendorService;
         private Mock<IProductTemplateService> _productTemplateService;
         private Mock<IDateRangeService> _dateRangeService;
+        private Mock<IDiscountService> _discountService;
         private Mock<IStoreMappingService> _storeMappingService;
         private Mock<IStoreService> _storeService;
         private Mock<IProductAttributeService> _productAttributeService;
@@ -69,6 +71,7 @@ namespace Nop.Services.Tests.ExportImport
         private Mock<ICountryService> _countryService;
         private Mock<IStateProvinceService> _stateProvinceService;
         private Mock<IPriceFormatter> _priceFormatter;
+        private Mock<IProductService> _productService;
         private ForumSettings _forumSettings;
         private Mock<IForumService> _forumService;
         private Mock<IGdprService> _gdprService;
@@ -90,6 +93,7 @@ namespace Nop.Services.Tests.ExportImport
             _vendorService = new Mock<IVendorService>();
             _productTemplateService = new Mock<IProductTemplateService>();
             _dateRangeService = new Mock<IDateRangeService>();
+            _discountService = new Mock<IDiscountService>();
             _storeMappingService = new Mock<IStoreMappingService>();
             _storeService = new Mock<IStoreService>();
             _productAttributeService = new Mock<IProductAttributeService>();
@@ -110,6 +114,8 @@ namespace Nop.Services.Tests.ExportImport
             _countryService = new Mock<ICountryService>();
             _stateProvinceService = new Mock<IStateProvinceService>();
             _priceFormatter = new Mock<IPriceFormatter>();
+            _productService = new Mock<IProductService>();
+
             _forumSettings = new ForumSettings();
             _forumService = new Mock<IForumService>();
             _gdprService = new Mock<IGdprService>();
@@ -159,6 +165,7 @@ namespace Nop.Services.Tests.ExportImport
                 _customerService.Object,
                 _dateRangeService.Object,
                 _dateTimeHelper.Object,
+                _discountService.Object,
                 _forumService.Object,
                 _gdprService.Object,
                 serviceProvider.GenericAttributeService.Object,
@@ -170,6 +177,7 @@ namespace Nop.Services.Tests.ExportImport
                 _pictureService.Object,
                 _priceFormatter.Object,
                 _productAttributeService.Object,
+                _productService.Object,
                 _productTagService.Object,
                 _productTemplateService.Object,
                 _specificationAttributeService.Object,

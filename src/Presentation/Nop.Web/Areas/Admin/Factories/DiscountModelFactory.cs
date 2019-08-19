@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -19,7 +18,6 @@ using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Discounts;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -425,7 +423,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(discount));
 
             //get products with applied discount
-            var discountProducts = _discountService.GetProductsWithAppliedDiscount(discountId: discount.Id,
+            var discountProducts = _productService.GetProductsWithAppliedDiscount(discountId: discount.Id,
                 showHidden: false,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -527,7 +525,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(discount));
 
             //get categories with applied discount
-            var discountCategories = _discountService.GetCategoriesWithAppliedDiscount(discountId: discount.Id,
+            var discountCategories = _categoryService.GetCategoriesByAppliedDiscount(discountId: discount.Id,
                 showHidden: false,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
@@ -615,7 +613,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(discount));
 
             //get manufacturers with applied discount
-            var discountManufacturers = _discountService.GetManufacturersWithAppliedDiscount(discountId: discount.Id,
+            var discountManufacturers = _manufacturerService.GetManufacturersWithAppliedDiscount(discountId: discount.Id,
                 showHidden: false,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 

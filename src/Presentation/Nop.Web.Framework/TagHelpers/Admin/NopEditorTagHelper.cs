@@ -123,14 +123,14 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 htmlAttributes.Add("value", Value);
 
             //disabled attribute
-            bool.TryParse(IsDisabled, out bool disabled);
+            bool.TryParse(IsDisabled, out var disabled);
             if (disabled)
             {
                 htmlAttributes.Add("disabled", "disabled");
             }
 
             //required asterisk
-            bool.TryParse(IsRequired, out bool required);
+            bool.TryParse(IsRequired, out var required);
             if (required)
             {
                 output.PreElement.SetHtmlContent("<div class='input-group input-group-required'>");
@@ -142,7 +142,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             viewContextAware?.Contextualize(ViewContext);
 
             //add form-control class
-            bool.TryParse(RenderFormControlClass, out bool renderFormControlClass);
+            bool.TryParse(RenderFormControlClass, out var renderFormControlClass);
             if (string.IsNullOrEmpty(RenderFormControlClass) && For.Metadata.ModelType.Name.Equals("String") || renderFormControlClass)
                 htmlAttributes.Add("class", "form-control");
 

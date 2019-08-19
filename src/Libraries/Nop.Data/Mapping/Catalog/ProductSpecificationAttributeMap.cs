@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
@@ -21,16 +21,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.HasKey(productSpecificationAttribute => productSpecificationAttribute.Id);
 
             builder.Property(productSpecificationAttribute => productSpecificationAttribute.CustomValue).HasMaxLength(4000);
-
-            builder.HasOne(productSpecificationAttribute => productSpecificationAttribute.SpecificationAttributeOption)
-                .WithMany()
-                .HasForeignKey(productSpecificationAttribute => productSpecificationAttribute.SpecificationAttributeOptionId)
-                .IsRequired();
-
-            builder.HasOne(productSpecificationAttribute => productSpecificationAttribute.Product)
-                .WithMany(product => product.ProductSpecificationAttributes)
-                .HasForeignKey(productSpecificationAttribute => productSpecificationAttribute.ProductId)
-                .IsRequired();
 
             builder.Ignore(productSpecificationAttribute => productSpecificationAttribute.AttributeType);
 

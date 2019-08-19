@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
@@ -19,11 +19,6 @@ namespace Nop.Data.Mapping.Catalog
         {
             builder.ToTable(nameof(StockQuantityHistory));
             builder.HasKey(historyEntry => historyEntry.Id);
-
-            builder.HasOne(historyEntry => historyEntry.Product)
-                .WithMany()
-                .HasForeignKey(historyEntry => historyEntry.ProductId)
-                .IsRequired();
 
             base.Configure(builder);
         }

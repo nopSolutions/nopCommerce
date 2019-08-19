@@ -42,6 +42,7 @@ namespace Nop.Services.Tests.Orders
         private Mock<ICategoryService> _categoryService;
         private Mock<IManufacturerService> _manufacturerService;
         private Mock<IProductAttributeParser> _productAttributeParser;
+        private Mock<IProductAttributeService> _productAttributeService;
         private ShoppingCartSettings _shoppingCartSettings;
         private CatalogSettings _catalogSettings;
         private CurrencySettings _currencySettings;
@@ -85,6 +86,7 @@ namespace Nop.Services.Tests.Orders
             _categoryService = new Mock<ICategoryService>();
             _manufacturerService = new Mock<IManufacturerService>();
             _productAttributeParser = new Mock<IProductAttributeParser>();
+            _productAttributeService = new Mock<IProductAttributeService>();
             _localizationService = new Mock<ILocalizationService>();
             _webHelper = new Mock<IWebHelper>();
             _shippingMethodRepository = new Mock<IRepository<ShippingMethod>>();
@@ -117,7 +119,7 @@ namespace Nop.Services.Tests.Orders
 
             _priceCalculationService = new PriceCalculationService(_catalogSettings, _currencySettings, _categoryService.Object,
                 _currencyService.Object, _discountService, _manufacturerService.Object,
-                _productAttributeParser.Object, _productService.Object,
+                _productAttributeParser.Object, _productAttributeService.Object, _productService.Object,
                 cacheManager, _storeContext.Object,
                 _workContext.Object, _shoppingCartSettings);
 

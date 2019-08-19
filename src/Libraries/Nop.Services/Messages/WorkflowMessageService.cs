@@ -1580,10 +1580,12 @@ namespace Nop.Services.Messages
             if (!messageTemplates.Any())
                 return new List<int>();
 
+            var toCustomer = _customerService.GetCustomerById(privateMessage.ToCustomerId);
+
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddPrivateMessageTokens(commonTokens, privateMessage);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, privateMessage.ToCustomerId);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, toCustomer);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -1753,10 +1755,12 @@ namespace Nop.Services.Messages
             if (!messageTemplates.Any())
                 return new List<int>();
 
+            var customer = _customerService.GetCustomerById(productReview.CustomerId);
+
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddProductReviewTokens(commonTokens, productReview);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, productReview.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -1786,18 +1790,20 @@ namespace Nop.Services.Messages
         {
             if (productReview == null)
                 throw new ArgumentNullException(nameof(productReview));
-
-            var store = productReview.Store ?? _storeContext.CurrentStore;
+            
+            var store = _storeService.GetStoreById(productReview.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
             var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.ProductReviewReplyCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
+            var customer = _customerService.GetCustomerById(productReview.CustomerId);
+
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddProductReviewTokens(commonTokens, productReview);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, productReview.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -1810,8 +1816,8 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = productReview.Customer.Email;
-                var toName = _customerService.GetCustomerFullName(productReview.Customer);
+                var toEmail = customer.Email;
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -1874,10 +1880,8 @@ namespace Nop.Services.Messages
             if (!messageTemplates.Any())
                 return new List<int>();
 
-            var product = combination.Product;
-
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddProductTokens(commonTokens, product, languageId);
+            _messageTokenProvider.AddProductTokens(commonTokens, combination.ProductId, languageId);
             _messageTokenProvider.AddAttributeCombinationTokens(commonTokens, combination, languageId);
 
             return messageTemplates.Select(messageTemplate =>
@@ -1960,10 +1964,12 @@ namespace Nop.Services.Messages
             if (!messageTemplates.Any())
                 return new List<int>();
 
+            var customer = _customerService.GetCustomerById(blogComment.CustomerId);
+
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddBlogCommentTokens(commonTokens, blogComment);            
-            _messageTokenProvider.AddCustomerTokens(commonTokens, blogComment.CustomerId);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -2001,10 +2007,12 @@ namespace Nop.Services.Messages
             if (!messageTemplates.Any())
                 return new List<int>();
 
+            var customer = _customerService.GetCustomerById(newsComment.CustomerId);
+
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddNewsCommentTokens(commonTokens, newsComment);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, newsComment.CustomerId);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -2035,6 +2043,12 @@ namespace Nop.Services.Messages
             if (subscription == null)
                 throw new ArgumentNullException(nameof(subscription));
 
+            var customer = _customerService.GetCustomerById(subscription.CustomerId);
+
+            //ensure that customer is registered (simple and fast way)
+            if (!CommonHelper.IsValidEmail(customer?.Email))
+                return new List<int>();
+
             var store = _storeService.GetStoreById(subscription.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
@@ -2044,7 +2058,7 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddCustomerTokens(commonTokens, subscription.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
             _messageTokenProvider.AddBackInStockTokens(commonTokens, subscription);
 
             return messageTemplates.Select(messageTemplate =>
@@ -2058,7 +2072,6 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var customer = subscription.Customer;
                 var toEmail = customer.Email;
                 var toName = _customerService.GetCustomerFullName(customer);
 

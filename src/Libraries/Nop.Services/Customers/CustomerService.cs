@@ -665,28 +665,12 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
-        /// Gets formatted customer name
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="stripTooLong">Strip too long customer name</param>
-        /// <param name="maxLength">Maximum customer name length</param>
-        /// <returns>Formatted text</returns>
-        public virtual string FormatUsername(int customerId, bool stripTooLong = false, int maxLength = 0)
-        {
-            if (customerId == 0)
-                return string.Empty;
-
-            return FormatUsername(_customerRepository.GetById(customerId), stripTooLong, maxLength);
-        }
-
-        /// <summary>
         /// Formats the customer name
         /// </summary>
         /// <param name="customer">Source</param>
         /// <param name="stripTooLong">Strip too long customer name</param>
         /// <param name="maxLength">Maximum customer name length</param>
         /// <returns>Formatted text</returns>
-        [Obsolete("Will be removed after branch merge issue-239-ef-performance. The recommended alternative is FormatUsername(int customerId, bool stripTooLong = false, int maxLength = 0)")]
         public virtual string FormatUsername(Customer customer, bool stripTooLong = false, int maxLength = 0)
         {
             if (customer == null)

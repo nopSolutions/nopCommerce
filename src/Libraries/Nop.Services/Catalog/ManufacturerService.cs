@@ -6,6 +6,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Events;
@@ -23,6 +24,7 @@ namespace Nop.Services.Catalog
         private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<AclRecord> _aclRepository;
+        private readonly IRepository<DiscountManufacturerMapping> _discountManufacturerMappingRepository;
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
@@ -38,6 +40,7 @@ namespace Nop.Services.Catalog
             ICacheManager cacheManager,
             IEventPublisher eventPublisher,
             IRepository<AclRecord> aclRepository,
+            IRepository<DiscountManufacturerMapping> discountManufacturerMappingRepository,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Product> productRepository,
             IRepository<ProductManufacturer> productManufacturerRepository,
@@ -49,6 +52,7 @@ namespace Nop.Services.Catalog
             _cacheManager = cacheManager;
             _eventPublisher = eventPublisher;
             _aclRepository = aclRepository;
+            _discountManufacturerMappingRepository = discountManufacturerMappingRepository;
             _manufacturerRepository = manufacturerRepository;
             _productRepository = productRepository;
             _productManufacturerRepository = productManufacturerRepository;
@@ -102,32 +106,32 @@ namespace Nop.Services.Catalog
 
             if ((storeId <= 0 || _catalogSettings.IgnoreStoreLimitations) && (showHidden || _catalogSettings.IgnoreAcl))
                 return new PagedList<Manufacturer>(query, pageIndex, pageSize);
-            
+
             if (!showHidden && !_catalogSettings.IgnoreAcl)
             {
                 //ACL (access control list)
                 var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
                 query = from m in query
-                    join acl in _aclRepository.Table
-                        on new { c1 = m.Id, c2 = nameof(Manufacturer) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into m_acl
-                    from acl in m_acl.DefaultIfEmpty()
-                    where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
-                    select m;
+                        join acl in _aclRepository.Table
+                            on new { c1 = m.Id, c2 = nameof(Manufacturer) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into m_acl
+                        from acl in m_acl.DefaultIfEmpty()
+                        where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
+                        select m;
             }
 
             if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
             {
                 //Store mapping
                 query = from m in query
-                    join sm in _storeMappingRepository.Table
-                        on new { c1 = m.Id, c2 = nameof(Manufacturer) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into m_sm
-                    from sm in m_sm.DefaultIfEmpty()
-                    where !m.LimitedToStores || storeId == sm.StoreId
-                    select m;
+                        join sm in _storeMappingRepository.Table
+                            on new { c1 = m.Id, c2 = nameof(Manufacturer) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into m_sm
+                        from sm in m_sm.DefaultIfEmpty()
+                        where !m.LimitedToStores || storeId == sm.StoreId
+                        select m;
             }
 
             query = query.Distinct().OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
-            
+
             return new PagedList<Manufacturer>(query, pageIndex, pageSize);
         }
 
@@ -143,6 +147,33 @@ namespace Nop.Services.Catalog
 
             var key = string.Format(NopCatalogDefaults.ManufacturersByIdCacheKey, manufacturerId);
             return _cacheManager.Get(key, () => _manufacturerRepository.GetById(manufacturerId));
+        }
+
+        /// <summary>
+        /// Get manufacturers for which a discount is applied
+        /// </summary>
+        /// <param name="discountId">Discount identifier; pass null to load all records</param>
+        /// <param name="showHidden">A value indicating whether to load deleted manufacturers</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>List of manufacturers</returns>
+        public virtual IPagedList<Manufacturer> GetManufacturersWithAppliedDiscount(int? discountId = null,
+            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var manufacturers = _manufacturerRepository.Table;
+
+            if (discountId.HasValue)
+                manufacturers = (from manufacturer in manufacturers
+                                 join dmm in _discountManufacturerMappingRepository.Table on manufacturer.Id equals dmm.ManufacturerId
+                                 where dmm.DiscountId == discountId.Value
+                                 select manufacturer);
+
+            if (!showHidden)
+                manufacturers = manufacturers.Where(manufacturer => !manufacturer.Deleted);
+
+            manufacturers = manufacturers.OrderBy(manufacturer => manufacturer.DisplayOrder).ThenBy(manufacturer => manufacturer.Id);
+
+            return new PagedList<Manufacturer>(manufacturers, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -371,7 +402,7 @@ namespace Nop.Services.Catalog
             //event notification
             _eventPublisher.EntityUpdated(productManufacturer);
         }
-        
+
         /// <summary>
         /// Get manufacturer IDs for products
         /// </summary>
@@ -404,7 +435,7 @@ namespace Nop.Services.Catalog
             queryFilter = queryFilter.Except(filter).ToArray();
 
             //if some names not found
-            if (!queryFilter.Any()) 
+            if (!queryFilter.Any())
                 return queryFilter.ToArray();
 
             //filtering by IDs
@@ -428,6 +459,32 @@ namespace Nop.Services.Catalog
                     return productManufacturer;
 
             return null;
+        }
+
+        public DiscountManufacturerMapping GetDiscountAppliedToManufacturer(int categoryId, int discountId)
+        {
+            return _discountManufacturerMappingRepository.Table.FirstOrDefault(dcm => dcm.ManufacturerId == categoryId && dcm.DiscountId == discountId);
+        }
+        public void InsertDiscountManufacturerMapping(DiscountManufacturerMapping discountManufacturerMapping)
+        {
+            if (discountManufacturerMapping is null)
+                throw new ArgumentNullException(nameof(discountManufacturerMapping));
+
+            _discountManufacturerMappingRepository.Insert(discountManufacturerMapping);
+
+            //event notification
+            _eventPublisher.EntityInserted(discountManufacturerMapping);
+        }
+
+        public void DeleteDiscountManufacturerMapping(DiscountManufacturerMapping discountManufacturerMapping)
+        {
+            if (discountManufacturerMapping is null)
+                throw new ArgumentNullException(nameof(discountManufacturerMapping));
+
+            _discountManufacturerMappingRepository.Delete(discountManufacturerMapping);
+
+            //event notification
+            _eventPublisher.EntityDeleted(discountManufacturerMapping);
         }
         #endregion
     }

@@ -21,6 +21,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Discounts;
 using Nop.Services.ExportImport.Help;
 using Nop.Services.Forums;
 using Nop.Services.Gdpr;
@@ -56,6 +57,7 @@ namespace Nop.Services.ExportImport
         private readonly ICustomerService _customerService;
         private readonly IDateRangeService _dateRangeService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IDiscountService _discountService;
         private readonly IForumService _forumService;
         private readonly IGdprService _gdprService;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -67,6 +69,7 @@ namespace Nop.Services.ExportImport
         private readonly IPictureService _pictureService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeService _productAttributeService;
+        private readonly IProductService _productService;
         private readonly IProductTagService _productTagService;
         private readonly IProductTemplateService _productTemplateService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
@@ -95,6 +98,7 @@ namespace Nop.Services.ExportImport
             ICustomerService customerService,
             IDateRangeService dateRangeService,
             IDateTimeHelper dateTimeHelper,
+            IDiscountService discountService,
             IForumService forumService,
             IGdprService gdprService,
             IGenericAttributeService genericAttributeService,
@@ -106,6 +110,7 @@ namespace Nop.Services.ExportImport
             IPictureService pictureService,
             IPriceFormatter priceFormatter,
             IProductAttributeService productAttributeService,
+            IProductService productService,
             IProductTagService productTagService,
             IProductTemplateService productTemplateService,
             ISpecificationAttributeService specificationAttributeService,
@@ -130,6 +135,7 @@ namespace Nop.Services.ExportImport
             _customerService = customerService;
             _dateRangeService = dateRangeService;
             _dateTimeHelper = dateTimeHelper;
+            _discountService = discountService;
             _forumService = forumService;
             _gdprService = gdprService;
             _genericAttributeService = genericAttributeService;
@@ -141,6 +147,7 @@ namespace Nop.Services.ExportImport
             _pictureService = pictureService;
             _priceFormatter = priceFormatter;
             _productAttributeService = productAttributeService;
+            _productService = productService;
             _productTagService = productTagService;
             _productTemplateService = productTemplateService;
             _specificationAttributeService = specificationAttributeService;
@@ -196,7 +203,7 @@ namespace Nop.Services.ExportImport
                 var productCategories = _categoryService.GetProductCategoriesByCategoryId(category.Id, showHidden: true);
                 foreach (var productCategory in productCategories)
                 {
-                    var product = productCategory.Product;
+                    var product = _productService.GetProductById(productCategory.ProductId);
                     if (product == null || product.Deleted)
                         continue;
 
@@ -241,13 +248,14 @@ namespace Nop.Services.ExportImport
             {
                 if (_catalogSettings.ExportImportRelatedEntitiesByName)
                 {
+                    var category = _categoryService.GetCategoryById(pc.CategoryId);
                     categoryNames += _catalogSettings.ExportImportProductCategoryBreadcrumb
-                        ? _categoryService.GetFormattedBreadCrumb(pc.Category)
-                        : pc.Category.Name;
+                        ? _categoryService.GetFormattedBreadCrumb(category)
+                        : category.Name;
                 }
                 else
                 {
-                    categoryNames += pc.Category.Id.ToString();
+                    categoryNames += pc.CategoryId.ToString();
                 }
 
                 categoryNames += ";";
@@ -266,9 +274,15 @@ namespace Nop.Services.ExportImport
             string manufacturerNames = null;
             foreach (var pm in _manufacturerService.GetProductManufacturersByProductId(product.Id, true))
             {
-                manufacturerNames += _catalogSettings.ExportImportRelatedEntitiesByName
-                    ? pm.Manufacturer.Name
-                    : pm.Manufacturer.Id.ToString();
+                if (_catalogSettings.ExportImportRelatedEntitiesByName)
+                {
+                    var manufacturer = _manufacturerService.GetManufacturerById(pm.ManufacturerId);
+                    manufacturerNames += manufacturer.Name;
+                }
+                else
+                {
+                    manufacturerNames += pm.ManufacturerId.ToString();
+                }
 
                 manufacturerNames += ";";
             }
@@ -510,41 +524,63 @@ namespace Nop.Services.ExportImport
 
         private int ExportProductAttributes(Product item, PropertyManager<ExportProductAttribute> attributeManager, ExcelWorksheet worksheet, int row, ExcelWorksheet faWorksheet)
         {
-            var attributes = item.ProductAttributeMappings.SelectMany(pam => pam.ProductAttributeValues.Select(
-                pav => new ExportProductAttribute
+            var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(item.Id)
+                .SelectMany(pam => 
                 {
-                    AttributeId = pam.ProductAttribute.Id,
-                    AttributeName = pam.ProductAttribute.Name,
-                    AttributeTextPrompt = pam.TextPrompt,
-                    AttributeIsRequired = pam.IsRequired,
-                    AttributeControlTypeId = pam.AttributeControlTypeId,
-                    AssociatedProductId = pav.AssociatedProductId,
-                    AttributeDisplayOrder = pam.DisplayOrder,
-                    Id = pav.Id,
-                    Name = pav.Name,
-                    AttributeValueTypeId = pav.AttributeValueTypeId,
-                    ColorSquaresRgb = pav.ColorSquaresRgb,
-                    ImageSquaresPictureId = pav.ImageSquaresPictureId,
-                    PriceAdjustment = pav.PriceAdjustment,
-                    PriceAdjustmentUsePercentage = pav.PriceAdjustmentUsePercentage,
-                    WeightAdjustment = pav.WeightAdjustment,
-                    Cost = pav.Cost,
-                    CustomerEntersQty = pav.CustomerEntersQty,
-                    Quantity = pav.Quantity,
-                    IsPreSelected = pav.IsPreSelected,
-                    DisplayOrder = pav.DisplayOrder,
-                    PictureId = pav.PictureId
-                })).ToList();
+                    var productAttribute = _productAttributeService.GetProductAttributeById(pam.ProductAttributeId);
 
-            attributes.AddRange(item.ProductAttributeMappings.Where(pam => !pam.ProductAttributeValues.Any()).Select(
-                pam => new ExportProductAttribute
-                {
-                    AttributeId = pam.ProductAttribute.Id,
-                    AttributeName = pam.ProductAttribute.Name,
-                    AttributeTextPrompt = pam.TextPrompt,
-                    AttributeIsRequired = pam.IsRequired,
-                    AttributeControlTypeId = pam.AttributeControlTypeId
-                }));
+                    if (_productAttributeService.GetProductAttributeValues(pam.Id) is IList<ProductAttributeValue> values)
+                    {
+                        return values.Select(pav =>
+                            new ExportProductAttribute
+                            {
+                                AttributeId = productAttribute.Id,
+                                AttributeName = productAttribute.Name,
+                                AttributeTextPrompt = pam.TextPrompt,
+                                AttributeIsRequired = pam.IsRequired,
+                                AttributeControlTypeId = pam.AttributeControlTypeId,
+                                AssociatedProductId = pav.AssociatedProductId,
+                                AttributeDisplayOrder = pam.DisplayOrder,
+                                Id = pav.Id,
+                                Name = pav.Name,
+                                AttributeValueTypeId = pav.AttributeValueTypeId,
+                                ColorSquaresRgb = pav.ColorSquaresRgb,
+                                ImageSquaresPictureId = pav.ImageSquaresPictureId,
+                                PriceAdjustment = pav.PriceAdjustment,
+                                PriceAdjustmentUsePercentage = pav.PriceAdjustmentUsePercentage,
+                                WeightAdjustment = pav.WeightAdjustment,
+                                Cost = pav.Cost,
+                                CustomerEntersQty = pav.CustomerEntersQty,
+                                Quantity = pav.Quantity,
+                                IsPreSelected = pav.IsPreSelected,
+                                DisplayOrder = pav.DisplayOrder,
+                                PictureId = pav.PictureId
+                            });
+                    }
+                    else
+                    {
+                        return new List<ExportProductAttribute> {
+                            new ExportProductAttribute
+                            {
+                                AttributeId = productAttribute.Id,
+                                AttributeName = productAttribute.Name,
+                                AttributeTextPrompt = pam.TextPrompt,
+                                AttributeIsRequired = pam.IsRequired,
+                                AttributeControlTypeId = pam.AttributeControlTypeId
+                            }
+                        };
+                    }
+                }).ToList();
+
+            //attributes.AddRange(item.ProductAttributeMappings.Where(pam => !pam.ProductAttributeValues.Any()).Select(
+            //    pam => new ExportProductAttribute
+            //    {
+            //        AttributeId = pam.ProductAttribute.Id,
+            //        AttributeName = pam.ProductAttribute.Name,
+            //        AttributeTextPrompt = pam.TextPrompt,
+            //        AttributeIsRequired = pam.IsRequired,
+            //        AttributeControlTypeId = pam.AttributeControlTypeId
+            //    }));
 
             if (!attributes.Any())
                 return row;
@@ -567,7 +603,8 @@ namespace Nop.Services.ExportImport
 
         private int ExportSpecificationAttributes(Product item, PropertyManager<ExportSpecificationAttribute> attributeManager, ExcelWorksheet worksheet, int row, ExcelWorksheet faWorksheet)
         {
-            var attributes = item.ProductSpecificationAttributes.Select(
+            var attributes = _specificationAttributeService
+                .GetProductSpecificationAttributes(item.Id).Select(
                 psa => new ExportSpecificationAttribute
                 {
                     AttributeTypeId = psa.AttributeTypeId,
@@ -576,7 +613,7 @@ namespace Nop.Services.ExportImport
                     ShowOnProductPage = psa.ShowOnProductPage,
                     DisplayOrder = psa.DisplayOrder,
                     SpecificationAttributeOptionId = psa.SpecificationAttributeOptionId,
-                    SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttribute.Id
+                    SpecificationAttributeId = _specificationAttributeService.GetSpecificationAttributeOptionById(psa.SpecificationAttributeOptionId).SpecificationAttributeId
                 }).ToList();
 
             if (!attributes.Any())
@@ -724,7 +761,7 @@ namespace Nop.Services.ExportImport
                 {
                     foreach (var productManufacturer in productManufacturers)
                     {
-                        var product = productManufacturer.Product;
+                        var product = _productService.GetProductById(productManufacturer.ProductId);
                         if (product == null || product.Deleted)
                             continue;
 
@@ -956,8 +993,8 @@ namespace Nop.Services.ExportImport
                 if (!IgnoreExportPoductProperty(p => p.Discounts))
                 {
                     xmlWriter.WriteStartElement("ProductDiscounts");
-                    var discounts = product.AppliedDiscounts;
-                    foreach (var discount in discounts)
+
+                    foreach (var discount in _discountService.GetAppliedDiscounts(product))
                     {
                         xmlWriter.WriteStartElement("Discount");
                         xmlWriter.WriteString("DiscountId", discount.Id);
@@ -971,7 +1008,7 @@ namespace Nop.Services.ExportImport
                 if (!IgnoreExportPoductProperty(p => p.TierPrices))
                 {
                     xmlWriter.WriteStartElement("TierPrices");
-                    var tierPrices = product.TierPrices;
+                    var tierPrices = _productService.GetTierPricesByProduct(product.Id);
                     foreach (var tierPrice in tierPrices)
                     {
                         xmlWriter.WriteStartElement("TierPrice");
@@ -995,10 +1032,12 @@ namespace Nop.Services.ExportImport
                         _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
                     foreach (var productAttributeMapping in productAttributMappings)
                     {
+                        var productAttribute = _productAttributeService.GetProductAttributeById(productAttributeMapping.ProductAttributeId);
+
                         xmlWriter.WriteStartElement("ProductAttributeMapping");
                         xmlWriter.WriteString("ProductAttributeMappingId", productAttributeMapping.Id);
                         xmlWriter.WriteString("ProductAttributeId", productAttributeMapping.ProductAttributeId);
-                        xmlWriter.WriteString("ProductAttributeName", productAttributeMapping.ProductAttribute.Name);
+                        xmlWriter.WriteString("ProductAttributeName", productAttribute.Name);
                         xmlWriter.WriteString("TextPrompt", productAttributeMapping.TextPrompt);
                         xmlWriter.WriteString("IsRequired", productAttributeMapping.IsRequired);
                         xmlWriter.WriteString("AttributeControlTypeId", productAttributeMapping.AttributeControlTypeId);
@@ -1037,7 +1076,7 @@ namespace Nop.Services.ExportImport
                             productAttributeMapping.ConditionAttributeXml);
 
                         xmlWriter.WriteStartElement("ProductAttributeValues");
-                        var productAttributeValues = productAttributeMapping.ProductAttributeValues;
+                        var productAttributeValues = _productAttributeService.GetProductAttributeValues(productAttributeMapping.Id);
                         foreach (var productAttributeValue in productAttributeValues)
                         {
                             xmlWriter.WriteStartElement("ProductAttributeValue");
@@ -1067,7 +1106,7 @@ namespace Nop.Services.ExportImport
                 }
 
                 xmlWriter.WriteStartElement("ProductPictures");
-                var productPictures = product.ProductPictures;
+                var productPictures = _productService.GetProductPicturesByProductId(product.Id);
                 foreach (var productPicture in productPictures)
                 {
                     xmlWriter.WriteStartElement("ProductPicture");
@@ -1119,7 +1158,7 @@ namespace Nop.Services.ExportImport
                 if (!IgnoreExportPoductProperty(p => p.SpecificationAttributes))
                 {
                     xmlWriter.WriteStartElement("ProductSpecificationAttributes");
-                    var productSpecificationAttributes = product.ProductSpecificationAttributes;
+                    var productSpecificationAttributes = _specificationAttributeService.GetProductSpecificationAttributes(product.Id);
                     foreach (var productSpecificationAttribute in productSpecificationAttributes)
                     {
                         xmlWriter.WriteStartElement("ProductSpecificationAttribute");

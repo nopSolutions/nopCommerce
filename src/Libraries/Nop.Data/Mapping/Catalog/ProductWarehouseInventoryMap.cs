@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
@@ -19,16 +19,6 @@ namespace Nop.Data.Mapping.Catalog
         {
             builder.ToTable(nameof(ProductWarehouseInventory));
             builder.HasKey(productWarehouseInventory => productWarehouseInventory.Id);
-
-            builder.HasOne(productWarehouseInventory => productWarehouseInventory.Product)
-                .WithMany(product => product.ProductWarehouseInventory)
-                .HasForeignKey(productWarehouseInventory => productWarehouseInventory.ProductId)
-                .IsRequired();
-
-            builder.HasOne(productWarehouseInventory => productWarehouseInventory.Warehouse)
-                .WithMany()
-                .HasForeignKey(productWarehouseInventory => productWarehouseInventory.WarehouseId)
-                .IsRequired();
 
             base.Configure(builder);
         }

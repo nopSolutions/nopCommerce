@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -28,6 +28,7 @@ namespace Nop.Services.Catalog
         private readonly IDiscountService _discountService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductAttributeService _productAttributeService;
         private readonly IProductService _productService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
@@ -45,6 +46,7 @@ namespace Nop.Services.Catalog
             IDiscountService discountService,
             IManufacturerService manufacturerService,
             IProductAttributeParser productAttributeParser,
+            IProductAttributeService productAttributeService,
             IProductService productService,
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
@@ -58,6 +60,7 @@ namespace Nop.Services.Catalog
             _discountService = discountService;
             _manufacturerService = manufacturerService;
             _productAttributeParser = productAttributeParser;
+            _productAttributeService = productAttributeService;
             _productService = productService;
             _cacheManager = cacheManager;
             _storeContext = storeContext;
@@ -116,7 +119,7 @@ namespace Nop.Services.Catalog
                 return allowedDiscounts;
 
             //we use this property ("HasDiscountsApplied") for performance optimization to avoid unnecessary database calls
-            foreach (var discount in product.AppliedDiscounts)
+            foreach (var discount in _discountService.GetAppliedDiscounts(product))
             {
                 if (discount.DiscountType == DiscountType.AssignedToSkus &&
                     _discountService.ValidateDiscount(discount, customer).IsValid)
@@ -420,18 +423,18 @@ namespace Nop.Services.Catalog
                     price = tierPrice.Price;
 
                 //additional charge
-                price = price + additionalCharge;
+                price += additionalCharge;
 
                 //rental products
                 if (product.IsRental)
                     if (rentalStartDate.HasValue && rentalEndDate.HasValue)
-                        price = price * _productService.GetRentalPeriods(product, rentalStartDate.Value, rentalEndDate.Value);
+                        price *= _productService.GetRentalPeriods(product, rentalStartDate.Value, rentalEndDate.Value);
 
                 if (includeDiscounts)
                 {
                     //discount
                     var tmpDiscountAmount = GetDiscountAmount(product, customer, price, out var tmpAppliedDiscounts);
-                    price = price - tmpDiscountAmount;
+                    price -= tmpDiscountAmount;
 
                     if (tmpAppliedDiscounts?.Any() ?? false)
                     {
@@ -659,7 +662,7 @@ namespace Nop.Services.Catalog
                     //we cannot apply discount for all shopping cart items
                     var discountedQuantity = oneAndOnlyDiscount.MaximumDiscountedQuantity.Value;
                     var discountedSubTotal = unitPrice * discountedQuantity;
-                    discountAmount = discountAmount * discountedQuantity;
+                    discountAmount *= discountedQuantity;
 
                     var notDiscountedQuantity = shoppingCartItem.Quantity - discountedQuantity;
                     var notDiscountedUnitPrice = GetUnitPrice(shoppingCartItem, false);
@@ -671,7 +674,7 @@ namespace Nop.Services.Catalog
                 {
                     //discount is applied to all items (quantity)
                     //calculate discount amount for all items
-                    discountAmount = discountAmount * shoppingCartItem.Quantity;
+                    discountAmount *= shoppingCartItem.Quantity;
 
                     subTotal = unitPrice * shoppingCartItem.Quantity;
                 }
@@ -731,9 +734,13 @@ namespace Nop.Services.Catalog
                     //simple attribute
                     if (value.PriceAdjustmentUsePercentage)
                     {
+                        //TODO issue-239
                         if (!productPrice.HasValue)
-                            productPrice = GetFinalPrice(value.ProductAttributeMapping.Product, customer);
+                        {
 
+                            var product = _productService.GetProductById(_productAttributeService.GetProductAttributeMappingById(value.ProductAttributeMappingId).ProductId);
+                            productPrice = GetFinalPrice(product, customer);
+                        }
                         adjustment = (decimal)((float)productPrice * (float)value.PriceAdjustment / 100f);
                     }
                     else
@@ -798,14 +805,14 @@ namespace Nop.Services.Catalog
                 case RoundingType.Rounding005Down:
                     fractionPart = (fractionPart - Math.Truncate(fractionPart)) * 10;
 
-                    fractionPart = fractionPart % 5;
+                    fractionPart %= 5;
                     if (fractionPart == 0)
                         break;
 
                     if (roundingType == RoundingType.Rounding005Up)
                         fractionPart = 5 - fractionPart;
                     else
-                        fractionPart = fractionPart * -1;
+                        fractionPart *= -1;
 
                     rez += fractionPart / 100;
                     break;

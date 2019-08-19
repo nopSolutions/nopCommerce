@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
@@ -24,11 +24,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(combination => combination.ManufacturerPartNumber).HasMaxLength(400);
             builder.Property(combination => combination.Gtin).HasMaxLength(400);
             builder.Property(combination => combination.OverriddenPrice).HasColumnType("decimal(18, 4)");
-
-            builder.HasOne(combination => combination.Product)
-                .WithMany(product => product.ProductAttributeCombinations)
-                .HasForeignKey(combination => combination.ProductId)
-                .IsRequired();
 
             base.Configure(builder);
         }

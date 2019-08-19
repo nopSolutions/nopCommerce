@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
@@ -21,16 +21,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.HasKey(price => price.Id);
 
             builder.Property(price => price.Price).HasColumnType("decimal(18, 4)");
-
-            builder.HasOne(price => price.Product)
-                .WithMany(product => product.TierPrices)
-                .HasForeignKey(price => price.ProductId)
-                .IsRequired();
-
-            builder.HasOne(price => price.CustomerRole)
-                .WithMany()
-                .HasForeignKey(price => price.CustomerRoleId)
-                .OnDelete(DeleteBehavior.Cascade);
 
             base.Configure(builder);
         }

@@ -141,6 +141,22 @@ namespace Nop.Services.Catalog
             });
         }
 
+        /// <summary>
+        /// Inserts a product review and review type mapping
+        /// </summary>
+        /// <param name="productReviewReviewType">Product review and review type mapping</param>
+        public virtual void InsertProductReviewReviewTypeMappings(ProductReviewReviewTypeMapping productReviewReviewType)
+        {
+            if (productReviewReviewType == null)
+                throw new ArgumentNullException(nameof(productReviewReviewType));
+
+            _productReviewReviewTypeMappingRepository.Insert(productReviewReviewType);
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ReviewTypeByPrefixCacheKey);
+
+            //event notification
+            _eventPublisher.EntityInserted(productReviewReviewType);
+        }
+
         #endregion
 
         #endregion

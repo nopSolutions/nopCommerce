@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -18,6 +18,7 @@ namespace Nop.Services.Catalog
 
         private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRepository;
@@ -28,12 +29,14 @@ namespace Nop.Services.Catalog
 
         public SpecificationAttributeService(ICacheManager cacheManager,
             IEventPublisher eventPublisher,
+            IRepository<Product> productRepository,
             IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository)
         {
             _cacheManager = cacheManager;
             _eventPublisher = eventPublisher;
+            _productRepository = productRepository;
             _productSpecificationAttributeRepository = productSpecificationAttributeRepository;
             _specificationAttributeRepository = specificationAttributeRepository;
             _specificationAttributeOptionRepository = specificationAttributeOptionRepository;
@@ -79,9 +82,9 @@ namespace Nop.Services.Catalog
         /// <returns>Specification attributes that have available options</returns>
         public virtual IList<SpecificationAttribute> GetSpecificationAttributesWithOptions()
         {
-            return GetSpecificationAttributes()
-                .Where(sa => sa.SpecificationAttributeOptions.Any())
-                .ToList();
+            return (from sa in _specificationAttributeRepository.Table
+                    join sao in _specificationAttributeOptionRepository.Table on sa.Id equals sao.SpecificationAttributeId
+                    select sa).ToList();
         }
 
         /// <summary>
@@ -388,12 +391,13 @@ namespace Nop.Services.Catalog
         /// <returns>Products</returns>
         public virtual IPagedList<Product> GetProductsBySpecificationAttributeId(int specificationAttributeId, int pageIndex, int pageSize)
         {
-            var query = _productSpecificationAttributeRepository.Table;
+            var query = (from product in _productRepository.Table
+                         join psa in _productSpecificationAttributeRepository.Table on product.Id equals psa.ProductId
+                         where psa.Id == specificationAttributeId
+                         orderby product.Name
+                         select product);
 
-            var products = query.Where(psa => psa.SpecificationAttributeOption.SpecificationAttributeId == specificationAttributeId)
-                .Select(psa => psa.Product).Distinct().OrderBy(p => p.Name);
-
-            return new PagedList<Product>(products, pageIndex, pageSize);
+            return new PagedList<Product>(query, pageIndex, pageSize);
         }
 
         #endregion

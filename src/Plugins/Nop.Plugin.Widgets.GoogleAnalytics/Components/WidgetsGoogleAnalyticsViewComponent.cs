@@ -71,7 +71,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
         private string FixIllegalJavaScriptChars(string text)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return text;
 
             //replace ' with \' (http://stackoverflow.com/questions/4292761/need-to-url-encode-labels-when-tracking-events-with-google-analytics)
@@ -129,13 +129,13 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SHIP}", orderShipping.ToString("0.00", usCulture));
 
                 var sb = new StringBuilder();
-                int listingPosition = 1;
+                var listingPosition = 1;
                 foreach (var item in order.OrderItems)
                 {
-                    if (!String.IsNullOrEmpty(sb.ToString()))
+                    if (!string.IsNullOrEmpty(sb.ToString()))
                         sb.AppendLine(",");
 
-                    string analyticsEcommerceDetailScript = @"{
+                    var analyticsEcommerceDetailScript = @"{
                     'id': '{PRODUCTSKU}',
                     'name': '{PRODUCTNAME}',
                     'category': '{CATEGORYNAME}',
@@ -145,11 +145,11 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
                     }
                     ";
                     var sku = _productService.FormatSku(item.Product, item.AttributesXml);
-                    if (String.IsNullOrEmpty(sku))
+                    if (string.IsNullOrEmpty(sku))
                         sku = item.Product.Id.ToString();
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTSKU}", FixIllegalJavaScriptChars(sku));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTNAME}", FixIllegalJavaScriptChars(item.Product.Name));
-                    string category = _categoryService.GetProductCategoriesByProductId(item.ProductId).FirstOrDefault()?.Category.Name;
+                    var category = _categoryService.GetCategoryById(_categoryService.GetProductCategoriesByProductId(item.ProductId).FirstOrDefault()?.CategoryId ?? 0)?.Name;
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{CATEGORYNAME}", FixIllegalJavaScriptChars(category));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{LISTPOSITION}", listingPosition.ToString());
                     var unitPrice = googleAnalyticsSettings.IncludingTax ? item.UnitPriceInclTax : item.UnitPriceExclTax;
@@ -180,7 +180,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
         public IViewComponentResult Invoke(string widgetZone, object additionalData)
         {
-            string script = "";
+            var script = "";
             var routeData = Url.ActionContext.RouteData;
 
             try

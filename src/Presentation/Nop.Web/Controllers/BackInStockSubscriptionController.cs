@@ -126,8 +126,8 @@ namespace Nop.Web.Controllers
                 }
                 subscription = new BackInStockSubscription
                 {
-                    Customer = _workContext.CurrentCustomer,
-                    Product = product,
+                    CustomerId = _workContext.CurrentCustomer.Id,
+                    ProductId = product.Id,
                     StoreId = _storeContext.CurrentStore.Id,
                     CreatedOnUtc = DateTime.UtcNow
                 };
@@ -166,7 +166,7 @@ namespace Nop.Web.Controllers
 
             foreach (var subscription in list)
             {
-                var product = subscription.Product;
+                var product = _productService.GetProductById(subscription.ProductId);
 
                 if (product != null)
                 {
@@ -205,7 +205,7 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("biss", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("biss", "").Trim();
-                    if (int.TryParse(id, out int subscriptionId))
+                    if (int.TryParse(id, out var subscriptionId))
                     {
                         var subscription = _backInStockSubscriptionService.GetSubscriptionById(subscriptionId);
                         if (subscription != null && subscription.CustomerId == _workContext.CurrentCustomer.Id)
