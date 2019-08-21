@@ -21,7 +21,7 @@ nopCommerce demo store: [https://www.nopCommerce.com/demo.aspx](https://www.nopC
 
 Feature list: [https://www.nopcommerce.com/featurelist.aspx](https://www.nopcommerce.com/featurelist.aspx)
 
-Technology & system Requirements: [http://docs.nopcommerce.com/user-guide/installing/technology-system-requirements.html](http://docs.nopcommerce.com/user-guide/installing/technology-system-requirements.html)
+Technology & system Requirements: [https://docs.nopcommerce.com/user-guide/installing/technology-system-requirements.html](https://docs.nopcommerce.com/user-guide/installing/technology-system-requirements.html)
 
 Documentation: [https://docs.nopcommerce.com/](https://docs.nopcommerce.com/)
 
