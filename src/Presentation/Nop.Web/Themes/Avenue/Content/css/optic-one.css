@@ -58,6 +58,16 @@ body .overview {
 	padding-bottom: 10px;
 }
 
+body .page-title h1 {
+	text-decoration: none;
+	font-weight: 500;
+	font-size: 30px;
+}
+
+body .page-title h1:after {
+	display: none;
+}
+
 body .block .title strong {
 	font-weight: 600;
 }
@@ -211,6 +221,19 @@ body .featured-categories.in-header .sub-category-list {
 
 	body .admin-header-links a:after {
 		width: 0;
+	}
+
+	body .master-wrapper-content {
+		padding-top: 100px;
+	}
+
+	body .page-title {
+		background: none;
+		height: 100px;
+	}
+	body .page-title h1 {
+		margin-top: 25px;
+
 	}
 
 	body .header-lower .header-logo {
