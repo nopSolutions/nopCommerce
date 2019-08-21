@@ -188,3 +188,8 @@ src/Presentation/Nop.Web/wwwroot/images/uploaded/*
 src/Presentation/Nop.Web/wwwroot/files/exportimport/*
 !src/Presentation/Nop.Web/wwwroot/files/exportimport/Index.htm
 src/packages/*
+
+#######################
+## nopCommerce change storeLocator Icons
+###########
+!src/Presentation/Nop.Web/Plugins/SevenSpikes.Nop.Plugins.StoreLocator/Scripts/StoreLocatorCore.min.js
