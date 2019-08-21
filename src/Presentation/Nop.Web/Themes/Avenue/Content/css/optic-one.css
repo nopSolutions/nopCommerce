@@ -58,6 +58,23 @@ body .overview {
 	padding-bottom: 10px;
 }
 
+body .block .title strong {
+	font-weight: 600;
+}
+body .topic-block, body .contact-page .topic-block {
+	background: url(../img/pattern.png) repeat;
+	padding: 20px;
+	max-width: 1200px;
+}
+body .topic-block-body {
+	background: #fff;
+	padding: 2%;
+}
+
+body .topic-page .page-body {
+	background: #fff;
+	padding: 2%;
+}
 
 /** ============= MIN width Queries ========== **/
 @media all and (min-width: 1201px) {
@@ -149,6 +166,10 @@ body .ajaxFilters .k-window-action {
 
 body .ajaxFilters .k-window-action:hover {
 	outline-color: #18073a;
+}
+
+body .filter-block .toggleControl, body .filtersHead .text  {
+	font-weight: 600;
 }
 
 
