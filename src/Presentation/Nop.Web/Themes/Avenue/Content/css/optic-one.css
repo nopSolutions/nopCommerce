@@ -25,11 +25,15 @@ body .header-lower .nav-button .trigger:before {
 }
 
 
-.mega-menu > li > a > span {
+.mega-menu > li > a > span, .with-dropdown-in-grid > span {
 	font-weight: 500;
 }
 
-
+.with-dropdown-in-grid a {
+	color: #18073a;
+	font-size: 14px;
+	text-transform: uppercase;
+}
 body .overview {
 	background: #fff;
 	padding: 2%;
@@ -247,7 +251,7 @@ body .featured-categories.in-header .sub-category-list {
 	body .header-menu > ul > li > a, body .header-menu > ul > li > span {
 		font-size: 18px;
 	}
-	body .header-menu .sublist-wrap {
+	body .header-menu .sublist-wrap, body .mega-menu .dropdown  {
 		padding-top: 47px;
 	}
 
