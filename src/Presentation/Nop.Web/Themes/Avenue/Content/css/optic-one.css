@@ -76,6 +76,129 @@ body .topic-page .page-body {
 	padding: 2%;
 }
 
+/** ============= home page featured categories ========== **/
+
+
+/* FEATURED CATEGORIES */
+
+body .featured-categories.default {
+	margin-bottom: 60px;
+}
+
+body .featured-categories.default .item-grid{
+	text-align: center;
+	padding-left: 30px;
+	margin-left: -15px;
+	width: calc(100% + 30px);
+}
+body .featured-categories.default .item-box {
+	display: inline-block;
+	clear: none !important;
+	float: none;
+	width: 350px;
+	margin: 30px 0 0 0 !important;
+	padding: 0;
+	height: 350px;
+	background: none;
+}
+body .featured-categories.default .wrapper {
+	display: block;
+	height: 100%;
+	margin: 0 30px 30px 0;
+}
+body .featured-categories.default .details {
+	display: block;
+	position: relative;
+	width: 100%;
+	height: 175px;
+	background: none;
+	text-align: center;
+	vertical-align: top;
+	background: #ccc;
+	color: #18073a;
+}
+body .featured-categories.default .details:before {
+	content: "";
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	bottom: 20px;
+	left: 20px;
+	margin: auto;
+	background-color: transparent;
+}
+body .featured-categories.default .title {
+	position: absolute;
+	top: 49%;
+	right: 0;
+	left: 0;
+	margin: auto;
+	padding: 0 20px;
+	font-size: 20px;
+	font-weight: 500;
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+body .featured-categories.default .text {
+	display: inline-block;
+	position: absolute;
+	top: 15%;
+	right: 0;
+	left: 0;
+	margin: auto;
+	padding: 0 20px;
+}
+body .featured-categories.default .text:after {
+	content: "";
+	display: block;
+	width: 30px;
+	height: 3px;
+	margin: 5px auto 0;
+	background-color: #00B5B8;
+}
+body .featured-categories.default .button {
+	display: inline-block;
+	position: absolute;
+	left: 0; right: 0;
+	bottom: 8%;
+	width: 120px;
+	margin: auto;
+	border: 1px solid #18073a;
+	background: #fff;
+	padding: 11px 10px 9px;
+	font-size: 11px;
+	white-space: nowrap;
+	text-transform: uppercase;
+}
+body .featured-categories.default .picture {
+	display: block;
+	width: 100%;
+	height: 175px;
+	background: #fff;
+}
+
+body .featured-categories.default .picture img {
+	max-width: 100%;
+	height: auto;
+	top: auto;
+}
+
+body .featured-categories.default .picture a {
+	height: 175px;
+}
+
+body .featured-categories.default .item-box:nth-child(n+3) {
+	margin-top: 30px !important;
+}
+
+body .featured-categories.in-header .sub-category-list {
+	display: block;
+	margin: 0 !important;
+}
+
+
+
 /** ============= MIN width Queries ========== **/
 @media all and (min-width: 1201px) {
 	body .header-menu ul li > a, body .header-menu ul li > span, body .header-links a {
@@ -93,6 +216,33 @@ body .topic-page .page-body {
 	body .header-lower .header-logo {
 		margin-top: -36px;
 	}
+
+	html body .header-menu > ul > li {
+		margin: 0 15px;
+	}
+
+	body .header-menu > ul > li > a, body .header-menu > ul > li > span {
+		font-size: 18px;
+	}
+	body .header-menu .sublist-wrap {
+		padding-top: 47px;
+	}
+
+	body .mega-menu {
+		display: block;
+	}
+
+	body .header-menu {
+		text-align: left;
+	}
+
+	body .header-menu > ul, body .nav-button {
+		margin-top: -28px;
+	}
+
+	body .header-menu > ul > li.has-sublist:after {
+		bottom: -47px;
+	}
 }
 
 @media (min-width: 1501px) {
@@ -106,6 +256,9 @@ body .topic-page .page-body {
 @media (max-width: 1200px) {
 	body .responsive-nav-content {
 		top: 113px
+	}
+	body .header-wrapper {
+		height: 114px;
 	}
 }
 
