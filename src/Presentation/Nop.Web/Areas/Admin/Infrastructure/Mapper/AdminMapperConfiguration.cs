@@ -387,7 +387,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.CustomerInfo, mo => mo.Ignore())
                 .ForMember(model => model.IsLoggedInAsVendor, mo => mo.Ignore())
                 .ForMember(model => model.ProductReviewReviewTypeMappingSearchModel, mo => mo.Ignore())
-                .ForMember(model => model.CreatedOn, mo => mo.Ignore());
+                .ForMember(model => model.CreatedOn, mo => mo.Ignore())
+                .ForMember(model => model.StoreName, mo => mo.Ignore())
+                .ForMember(model => model.ProductName, mo => mo.Ignore());
 
             //product review type mapping
             CreateMap<ProductReviewReviewTypeMapping, ProductReviewReviewTypeMappingModel>()

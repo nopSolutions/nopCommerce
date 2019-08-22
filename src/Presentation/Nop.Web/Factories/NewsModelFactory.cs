@@ -85,15 +85,17 @@ namespace Nop.Web.Factories
             if (newsComment == null)
                 throw new ArgumentNullException(nameof(newsComment));
 
+            var customer = _customerService.GetCustomerById(newsComment.CustomerId);
+
             var model = new NewsCommentModel
             {
                 Id = newsComment.Id,
                 CustomerId = newsComment.CustomerId,
-                CustomerName = _customerService.FormatUsername(newsComment.CustomerId),
+                CustomerName = _customerService.FormatUsername(customer),
                 CommentTitle = newsComment.CommentTitle,
                 CommentText = newsComment.CommentText,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc),
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && newsComment.CustomerId != 0 && !_customerService.IsInCustomerRole(newsComment.CustomerId, NopCustomerDefaults.GuestsRoleName),
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && newsComment.CustomerId != 0 && !customer.IsGuest(),
             };
 
             if (_customerSettings.AllowCustomersToUploadAvatars)

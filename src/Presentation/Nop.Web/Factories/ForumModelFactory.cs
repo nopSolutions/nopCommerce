@@ -145,6 +145,8 @@ namespace Nop.Web.Factories
             if (topic == null)
                 throw new ArgumentNullException(nameof(topic));
 
+            var customer = _customerService.GetCustomerById(topic.CustomerId);
+
             var topicModel = new ForumTopicRowModel
             {
                 Id = topic.Id,
@@ -156,8 +158,8 @@ namespace Nop.Web.Factories
                 NumReplies = topic.NumReplies,
                 ForumTopicType = topic.ForumTopicType,
                 CustomerId = topic.CustomerId,
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !_customerService.IsInCustomerRole(topic.CustomerId, NopCustomerDefaults.GuestsRoleName),
-                CustomerName = _customerService.FormatUsername(topic.CustomerId)
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !customer.IsGuest(),
+                CustomerName = _customerService.FormatUsername(customer)
             };
 
             var forumPosts = _forumService.GetAllPosts(topic.Id, 0, string.Empty, 1, _forumSettings.PostsPageSize);
@@ -381,9 +383,10 @@ namespace Nop.Web.Factories
             model.PostsTotalRecords = posts.TotalCount;
             foreach (var post in posts)
             {
-                var customerIsGuest = _customerService.IsInCustomerRole(post.CustomerId, NopCustomerDefaults.GuestsRoleName);
-                var customerIsModerator = customerIsGuest || _customerService.IsInCustomerRole(post.CustomerId, NopCustomerDefaults.ForumModeratorsRoleName);
+                var customer = _customerService.GetCustomerById(post.CustomerId);
 
+                var customerIsGuest = customer.IsGuest();
+                var customerIsModerator = customerIsGuest ? false : customer.IsForumModerator();
 
                 var forumPostModel = new ForumPostModel
                 {
@@ -395,7 +398,7 @@ namespace Nop.Web.Factories
                     IsCurrentCustomerAllowedToDeletePost = _forumService.IsCustomerAllowedToDeletePost(_workContext.CurrentCustomer, post),
                     CustomerId = post.CustomerId,
                     AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !customerIsGuest,
-                    CustomerName = _customerService.FormatUsername(post.CustomerId),
+                    CustomerName = _customerService.FormatUsername(customer),
                     IsCustomerForumModerator = customerIsModerator,
                     ShowCustomersPostCount = _forumSettings.ShowCustomersPostCount,
                     ForumPostCount = _genericAttributeService.GetAttribute<Customer, int>(post.CustomerId, NopCustomerDefaults.ForumPostCountAttribute),
@@ -584,6 +587,8 @@ namespace Nop.Web.Factories
                 if (quote.HasValue)
                 {
                     var quotePost = _forumService.GetPostById(quote.Value);
+                    var customer = _customerService.GetCustomerById(quotePost.CustomerId);
+
                     if (quotePost != null && quotePost.TopicId == forumTopic.Id)
                     {
                         var quotePostText = quotePost.Text;
@@ -591,10 +596,10 @@ namespace Nop.Web.Factories
                         switch (_forumSettings.ForumEditor)
                         {
                             case EditorType.SimpleTextBox:
-                                text = $"{_customerService.FormatUsername(quotePost.CustomerId)}:\n{quotePostText}\n";
+                                text = $"{_customerService.FormatUsername(customer)}:\n{quotePostText}\n";
                                 break;
                             case EditorType.BBCodeEditor:
-                                text = $"[quote={_customerService.FormatUsername(quotePost.CustomerId)}]{BBCodeHelper.RemoveQuotes(quotePostText)}[/quote]";
+                                text = $"[quote={_customerService.FormatUsername(customer)}]{BBCodeHelper.RemoveQuotes(quotePostText)}[/quote]";
                                 break;
                         }
                         model.Text = text;
@@ -863,13 +868,15 @@ namespace Nop.Web.Factories
             if (topic is null)
                 return model;
 
+            var customer = _customerService.GetCustomerById(forumPost.CustomerId);
+
             model.Id = forumPost.Id;
             model.ForumTopicId = topic.Id;
             model.ForumTopicSeName = _forumService.GetTopicSeName(topic);
             model.ForumTopicSubject = _forumService.StripTopicSubject(topic);
             model.CustomerId = forumPost.CustomerId;
-            model.AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !_customerService.IsInCustomerRole(forumPost.CustomerId, NopCustomerDefaults.GuestsRoleName);
-            model.CustomerName = _customerService.FormatUsername(forumPost.CustomerId);
+            model.AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !customer.IsGuest();
+            model.CustomerName = _customerService.FormatUsername(customer);
             //created on string
             var languageCode = _workContext.WorkingLanguage.LanguageCulture;
             if (_forumSettings.RelativeDateTimeFormattingEnabled)
