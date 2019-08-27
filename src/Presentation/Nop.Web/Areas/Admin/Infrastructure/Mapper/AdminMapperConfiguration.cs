@@ -665,18 +665,15 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.AttributeControlTypeName, options => options.Ignore())
                 .ForMember(model => model.CustomerAttributeValueSearchModel, options => options.Ignore());
             CreateMap<CustomerAttributeModel, CustomerAttribute>()
-                .ForMember(entity => entity.AttributeControlType, options => options.Ignore())
-                .ForMember(entity => entity.CustomerAttributeValues, options => options.Ignore());
+                .ForMember(entity => entity.AttributeControlType, options => options.Ignore());
 
             CreateMap<CustomerAttributeValue, CustomerAttributeValueModel>();
-            CreateMap<CustomerAttributeValueModel, CustomerAttributeValue>()
-                .ForMember(entity => entity.CustomerAttribute, options => options.Ignore());
+            CreateMap<CustomerAttributeValueModel, CustomerAttributeValue>();
 
             CreateMap<CustomerRole, CustomerRoleModel>()
                 .ForMember(model => model.PurchasedWithProductName, options => options.Ignore())
                 .ForMember(model => model.TaxDisplayTypeValues, options => options.Ignore());
-            CreateMap<CustomerRoleModel, CustomerRole>()
-                .ForMember(entity => entity.PermissionRecordCustomerRoleMappings, options => options.Ignore());
+            CreateMap<CustomerRoleModel, CustomerRole>();
 
             CreateMap<CustomerSettings, CustomerSettingsModel>();
             CreateMap<CustomerSettingsModel, CustomerSettings>()
@@ -794,13 +791,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(entity => entity.LastLoginDateUtc, options => options.Ignore())
                 .ForMember(entity => entity.BillingAddressId, options => options.Ignore())
                 .ForMember(entity => entity.ShippingAddressId, options => options.Ignore())
-                .ForMember(entity => entity.ExternalAuthenticationRecords, options => options.Ignore())
-                .ForMember(entity => entity.CustomerCustomerRoleMappings, options => options.Ignore())
-                .ForMember(entity => entity.ShoppingCartItems, options => options.Ignore())
-                .ForMember(entity => entity.ReturnRequests, options => options.Ignore())
-                .ForMember(entity => entity.BillingAddress, options => options.Ignore())
-                .ForMember(entity => entity.ShippingAddress, options => options.Ignore())
-                .ForMember(entity => entity.CustomerAddressMappings, options => options.Ignore())
                 .ForMember(entity => entity.RegisteredInStoreId, options => options.Ignore());
 
             CreateMap<Customer, OnlineCustomerModel>()

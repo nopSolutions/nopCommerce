@@ -199,9 +199,13 @@ namespace Nop.Plugin.Payments.Square
                 Locality: address.City,
                 PostalCode: address.ZipPostalCode
             );
-            var billingAddress = createAddress(customer.BillingAddress);
-            var shippingAddress = billingAddress == null ? createAddress(customer.ShippingAddress) : null;
-            var email = customer.BillingAddress != null ? customer.BillingAddress.Email : customer.ShippingAddress?.Email;
+
+            var customerBillingAddress = _customerService.GetCustomerBillingAddress(customer);
+            var customerShippingAddress = _customerService.GetCustomerShippingAddress(customer);
+
+            var billingAddress = createAddress(customerBillingAddress);
+            var shippingAddress = billingAddress == null ? createAddress(customerShippingAddress) : null;
+            var email = customerBillingAddress != null ? customerBillingAddress.Email : customerShippingAddress?.Email;
 
             //the transaction is ineligible for chargeback protection if they are not provided
             if ((billingAddress == null && shippingAddress == null) || string.IsNullOrEmpty(email))
@@ -252,7 +256,7 @@ namespace Nop.Plugin.Payments.Square
 
             //whether to save card details for the future purchasing
             var saveCardKey = _localizationService.GetResource("Plugins.Payments.Square.Fields.SaveCard.Key");
-            if (paymentRequest.CustomValues.TryGetValue(saveCardKey, out var saveCardValue) && saveCardValue is bool saveCard && saveCard && !customer.IsGuest())
+            if (paymentRequest.CustomValues.TryGetValue(saveCardKey, out var saveCardValue) && saveCardValue is bool saveCard && saveCard && !_customerService.IsGuest(customer))
             {
                 //remove the value from payment custom values, since it is no longer needed
                 paymentRequest.CustomValues.Remove(saveCardKey);

@@ -10,6 +10,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -33,6 +34,7 @@ namespace Nop.Web.Factories
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IOrderProcessingService _orderProcessingService;
@@ -65,6 +67,7 @@ namespace Nop.Web.Factories
             IAddressService addressService,
             ICountryService countryService,
             ICurrencyService currencyService,
+            ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IOrderProcessingService orderProcessingService,
@@ -93,6 +96,7 @@ namespace Nop.Web.Factories
             _addressService = addressService;
             _countryService = countryService;
             _currencyService = currencyService;
+            _customerService = customerService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _orderProcessingService = orderProcessingService;
@@ -141,7 +145,7 @@ namespace Nop.Web.Factories
             };
 
             //existing addresses
-            var addresses = _workContext.CurrentCustomer.Addresses
+            var addresses = _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id)
                 .Where(a => _countryService.GetCountryByAddress(a) is Country country &&
                     (//published
                     country.Published &&
@@ -205,7 +209,7 @@ namespace Nop.Web.Factories
                 if (pickupPointProviders.Any())
                 {
                     var languageId = _workContext.WorkingLanguage.Id;
-                    var pickupPointsResponse = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddress,
+                    var pickupPointsResponse = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddressId ?? 0,
                         _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
                     if (pickupPointsResponse.Success)
                         model.PickupPoints = pickupPointsResponse.PickupPoints.Select(point =>
@@ -259,7 +263,7 @@ namespace Nop.Web.Factories
             }
 
             //existing addresses
-            var addresses = _workContext.CurrentCustomer.Addresses
+            var addresses = _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id)
                 .Where(a => _countryService.GetCountryByAddress(a) is Country country &&
                     (//published
                     country.Published &&
@@ -390,7 +394,7 @@ namespace Nop.Web.Factories
         public virtual CheckoutPaymentMethodModel PreparePaymentMethodModel(IList<ShoppingCartItem> cart, int filterByCountryId)
         {
             var model = new CheckoutPaymentMethodModel();
-
+            
             //reward points
             if (_rewardPointsSettings.Enabled && !_shoppingCartService.ShoppingCartIsRecurring(cart))
             {
@@ -541,7 +545,7 @@ namespace Nop.Web.Factories
             var model = new OnePageCheckoutModel
             {
                 ShippingRequired = _shoppingCartService.ShoppingCartRequiresShipping(cart),
-                DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep && _workContext.CurrentCustomer.Addresses.Any(),
+                DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep && _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id).Any(),
                 BillingAddress = PrepareBillingAddressModel(cart, prePopulateNewAddressWithCustomerFields: true)
             };
             return model;

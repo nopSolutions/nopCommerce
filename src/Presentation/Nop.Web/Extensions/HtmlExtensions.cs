@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Services.Topics;
@@ -224,12 +225,13 @@ namespace Nop.Web.Extensions
         {
             var workContext = EngineContext.Current.Resolve<IWorkContext>();
             var storeContext = EngineContext.Current.Resolve<IStoreContext>();
+            var customerService = EngineContext.Current.Resolve<ICustomerService>();
 
             //static cache manager
             var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
             var cacheKey = string.Format(NopModelCacheDefaults.TopicSenameBySystemName,
                 systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id,
-                string.Join(",", workContext.CurrentCustomer.GetCustomerRoleIds()));
+                string.Join(",", customerService.GetCustomerRoleIds(workContext.CurrentCustomer)));
             var cachedSeName = cacheManager.Get(cacheKey, () =>
             {
                 var topicService = EngineContext.Current.Resolve<ITopicService>();
@@ -254,12 +256,13 @@ namespace Nop.Web.Extensions
         {
             var workContext = EngineContext.Current.Resolve<IWorkContext>();
             var storeContext = EngineContext.Current.Resolve<IStoreContext>();
+            var customerService = EngineContext.Current.Resolve<ICustomerService>();
 
             //static cache manager
             var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
             var cacheKey = string.Format(NopModelCacheDefaults.TopicTitleBySystemName,
                 systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id,
-                string.Join(",", workContext.CurrentCustomer.GetCustomerRoleIds()));
+                string.Join(",", customerService.GetCustomerRoleIds(workContext.CurrentCustomer)));
             var cachedTitle = cacheManager.Get(cacheKey, () =>
             {
                 var topicService = EngineContext.Current.Resolve<ITopicService>();

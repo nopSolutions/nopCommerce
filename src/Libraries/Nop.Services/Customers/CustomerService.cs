@@ -33,7 +33,9 @@ namespace Nop.Services.Customers
         private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IRepository<Address> _customerAddressRepository;
         private readonly IRepository<Customer> _customerRepository;
+        private readonly IRepository<CustomerAddressMapping> _customerAddressMappingRepository;
         private readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
         private readonly IRepository<CustomerPassword> _customerPasswordRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
@@ -52,7 +54,9 @@ namespace Nop.Services.Customers
             IDbContext dbContext,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
+            IRepository<Address> customerAddressRepository,
             IRepository<Customer> customerRepository,
+            IRepository<CustomerAddressMapping> customerAddressMappingRepository,
             IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository,
             IRepository<CustomerPassword> customerPasswordRepository,
             IRepository<CustomerRole> customerRoleRepository,
@@ -67,7 +71,9 @@ namespace Nop.Services.Customers
             _dbContext = dbContext;
             _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
+            _customerAddressRepository = customerAddressRepository;
             _customerRepository = customerRepository;
+            _customerAddressMappingRepository = customerAddressMappingRepository;
             _customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
             _customerPasswordRepository = customerPasswordRepository;
             _customerRoleRepository = customerRoleRepository;
@@ -121,6 +127,7 @@ namespace Nop.Services.Customers
                 query = query.Where(c => affiliateId == c.AffiliateId);
             if (vendorId > 0)
                 query = query.Where(c => vendorId == c.VendorId);
+
             query = query.Where(c => !c.Deleted);
 
             if (customerRoleIds != null && customerRoleIds.Length > 0)
@@ -255,8 +262,8 @@ namespace Nop.Services.Customers
             var query = _customerRepository.Table;
             query = query.Where(c => lastActivityFromUtc <= c.LastActivityDateUtc);
             query = query.Where(c => !c.Deleted);
-            if (customerRoleIds != null && customerRoleIds.Length > 0)
-                query = query.Where(c => c.CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRoleId).Intersect(customerRoleIds).Any());
+            if (customerRoleIds != null && customerRoleIds.Length > 0) //TODO: issue-239 mb join?
+                query = query.Where(c => _customerCustomerRoleMappingRepository.Table.Any(ccrm => ccrm.CustomerId == c.Id && customerRoleIds.Contains(ccrm.CustomerRoleId)));
 
             query = query.OrderByDescending(c => c.LastActivityDateUtc);
             var customers = new PagedList<Customer>(query, pageIndex, pageSize);
@@ -306,7 +313,10 @@ namespace Nop.Services.Customers
 
             //filter customers by billing country
             if (countryId > 0)
-                customers = customers.Where(customer => customer.BillingAddress.CountryId == countryId);
+                customers = (from c in customers
+                             join a in _customerAddressRepository.Table on c.BillingAddressId equals a.Id
+                             where a.CountryId == countryId
+                             select c);
 
             //get customers with shopping carts
             var customersWithCarts = items.GroupBy(item => item.CustomerId)
@@ -477,7 +487,7 @@ namespace Nop.Services.Customers
             if (guestRole == null)
                 throw new NopException("'Guests' role could not be loaded");
             //customer.CustomerRoles.Add(guestRole);
-            customer.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = guestRole });
+            AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = guestRole.Id });
 
             _customerRepository.Insert(customer);
 
@@ -606,34 +616,11 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var roleWithOverriddenTaxType = customer.CustomerRoles.FirstOrDefault(cr => cr.Active && cr.OverrideTaxDisplayType);
+            var roleWithOverriddenTaxType = GetCustomerRoles(customer).FirstOrDefault(cr => cr.Active && cr.OverrideTaxDisplayType);
             if (roleWithOverriddenTaxType == null)
                 return null;
 
             return (TaxDisplayType)roleWithOverriddenTaxType.DefaultTaxDisplayTypeId;
-        }
-
-        /// <summary>
-        /// Remove address
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="address">Address</param>
-        public virtual void RemoveCustomerAddress(Customer customer, Address address)
-        {
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
-
-            if (!customer.Addresses.Contains(address))
-                return;
-
-            if (customer.BillingAddress == address)
-                customer.BillingAddress = null;
-            if (customer.ShippingAddress == address)
-                customer.ShippingAddress = null;
-
-            //customer.Addresses.Remove(address);
-            customer.CustomerAddressMappings
-                .Remove(customer.CustomerAddressMappings.FirstOrDefault(mapping => mapping.AddressId == address.Id));
         }
 
         /// <summary>
@@ -676,7 +663,7 @@ namespace Nop.Services.Customers
             if (customer == null)
                 return string.Empty;
 
-            if (customer.IsGuest())
+            if (IsGuest(customer))
                 return EngineContext.Current.Resolve<ILocalizationService>().GetResource("Customer.Guest");
 
             var result = string.Empty;
@@ -965,6 +952,48 @@ namespace Nop.Services.Customers
         #region Customer roles
 
         /// <summary>
+        /// Add a customer-customer role mapping
+        /// </summary>
+        /// <param name="roleMapping">Customer-customer role mapping</param>
+        public void AddCustomerRoleMapping(CustomerCustomerRoleMapping roleMapping)
+        {
+            if (roleMapping is null)
+                throw new ArgumentNullException(nameof(roleMapping));
+
+            _customerCustomerRoleMappingRepository.Insert(roleMapping);
+
+            //TODO: issue-239  and reset customer roles cache...
+
+            _eventPublisher.EntityInserted(roleMapping);
+
+        }
+
+        /// <summary>
+        /// Remove a customer-customer role mapping
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="role">Customer role</param>
+        public void RemoveCustomerRoleMapping(Customer customer, CustomerRole role)
+        {
+            if (customer is null)
+                throw new ArgumentNullException(nameof(customer));
+
+            if (role is null)
+                throw new ArgumentNullException(nameof(role));
+
+            var mapping = _customerCustomerRoleMappingRepository.Table.SingleOrDefault(ccrm => ccrm.CustomerId == customer.Id && ccrm.CustomerRoleId == role.Id);
+
+            if (mapping != null)
+            {
+                _customerCustomerRoleMappingRepository.Delete(mapping);
+
+                //TODO: issue-239  and reset customer roles cache...
+
+                _eventPublisher.EntityDeleted(mapping);
+            }
+        }
+
+        /// <summary>
         /// Delete a customer role
         /// </summary>
         /// <param name="customerRole">Customer role</param>
@@ -1020,6 +1049,44 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
+        /// Get customer role identifiers
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="showHidden">A value indicating whether to load hidden records</param>
+        /// <returns>Customer role identifiers</returns>
+        public virtual int[] GetCustomerRoleIds(Customer customer, bool showHidden = false)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var query = from cr in _customerRoleRepository.Table
+                        join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerId
+                        where showHidden || cr.Active
+                        select cr.Id;
+
+            return query.ToArray();
+        }
+
+        /// <summary>
+        /// Gets list of customer roles
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="showHidden">A value indicating whether to load hidden records</param>
+        /// <returns>Result</returns>
+        public virtual IList<CustomerRole> GetCustomerRoles(Customer customer, bool showHidden = false)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var query = from cr in _customerRoleRepository.Table
+                        join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerId
+                        where showHidden || cr.Active
+                        select cr;
+
+            return query.ToList();
+        }
+
+        /// <summary>
         /// Gets all customer roles
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
@@ -1053,6 +1120,88 @@ namespace Nop.Services.Customers
 
             //event notification
             _eventPublisher.EntityInserted(customerRole);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether customer is in a certain customer role
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="customerRoleSystemName">Customer role system name</param>
+        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
+        /// <returns>Result</returns>
+        public virtual bool IsInCustomerRole(Customer customer,
+            string customerRoleSystemName, bool onlyActiveCustomerRoles = true)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            if (string.IsNullOrEmpty(customerRoleSystemName))
+                throw new ArgumentNullException(nameof(customerRoleSystemName));
+
+            var query = (from cr in _customerRoleRepository.Table
+                         join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerRoleId
+                         where
+                            crm.CustomerId == customer.Id &&
+                            cr.SystemName == customerRoleSystemName &&
+                            (!onlyActiveCustomerRoles || cr.Active)
+                         select cr);
+
+            return query.Any();
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether customer is administrator
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
+        /// <returns>Result</returns>
+        public virtual bool IsAdmin(Customer customer, bool onlyActiveCustomerRoles = true)
+        {
+            return IsInCustomerRole(customer, NopCustomerDefaults.AdministratorsRoleName, onlyActiveCustomerRoles);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether customer is a forum moderator
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
+        /// <returns>Result</returns>
+        public virtual bool IsForumModerator(Customer customer, bool onlyActiveCustomerRoles = true)
+        {
+            return IsInCustomerRole(customer, NopCustomerDefaults.ForumModeratorsRoleName, onlyActiveCustomerRoles);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether customer is registered
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
+        /// <returns>Result</returns>
+        public virtual bool IsRegistered(Customer customer, bool onlyActiveCustomerRoles = true)
+        {
+            return IsInCustomerRole(customer, NopCustomerDefaults.RegisteredRoleName, onlyActiveCustomerRoles);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether customer is guest
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
+        /// <returns>Result</returns>
+        public virtual bool IsGuest(Customer customer, bool onlyActiveCustomerRoles = true)
+        {
+            return IsInCustomerRole(customer, NopCustomerDefaults.GuestsRoleName, onlyActiveCustomerRoles);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether customer is vendor
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
+        /// <returns>Result</returns>
+        public virtual bool IsVendor(Customer customer, bool onlyActiveCustomerRoles = true)
+        {
+            return IsInCustomerRole(customer, NopCustomerDefaults.VendorsRoleName, onlyActiveCustomerRoles);
         }
 
         /// <summary>
@@ -1165,9 +1314,13 @@ namespace Nop.Services.Customers
             if (string.IsNullOrEmpty(customerRoleSystemName))
                 throw new ArgumentNullException(nameof(customerRoleSystemName));
 
-            var result = customer.CustomerRoles
-                .FirstOrDefault(cr => (!onlyActiveCustomerRoles || cr.Active) && cr.SystemName == customerRoleSystemName) != null;
-            return result;
+            return (from cr in _customerRoleRepository.Table
+                    join ccrm in _customerCustomerRoleMappingRepository.Table on cr.Id equals ccrm.CustomerRoleId
+                    where
+                       ccrm.CustomerId == customerId &&
+                       !onlyActiveCustomerRoles || cr.Active &&
+                       cr.SystemName == customerRoleSystemName
+                    select cr).Any();
         }
 
         /// <summary>
@@ -1226,11 +1379,11 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException(nameof(customer));
 
             //the guests don't have a password
-            if (customer.IsGuest())
+            if (IsGuest(customer))
                 return false;
 
             //password lifetime is disabled for user
-            if (!customer.CustomerRoles.Any(role => role.Active && role.EnablePasswordLifetime))
+            if (!GetCustomerRoles(customer).Any(role => role.Active && role.EnablePasswordLifetime))
                 return false;
 
             //setting disabled for all
@@ -1252,6 +1405,120 @@ namespace Nop.Services.Customers
             });
 
             return currentLifetime >= _customerSettings.PasswordLifetime;
+        }
+
+        #endregion
+
+        #region Customer address mapping
+
+        /// <summary>
+        /// Remove a customer-address mapping record
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="address">Address</param>
+        public virtual void RemoveCustomerAddress(Customer customer, Address address)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            if (_customerAddressMappingRepository.Table.FirstOrDefault(m => m.AddressId == address.Id && m.CustomerId == customer.Id) is CustomerAddressMapping mapping)
+            {
+                if (customer.BillingAddressId == address.Id)
+                    customer.BillingAddressId = null;
+                if (customer.ShippingAddressId == address.Id)
+                    customer.ShippingAddressId = null;
+
+                _customerAddressMappingRepository.Delete(mapping);
+
+                _eventPublisher.EntityDeleted(mapping);
+            }
+        }
+
+        /// <summary>
+        /// Inserts a customer-address mapping record
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="address">Address</param>
+        public virtual void InsertCustomerAddress(Customer customer, Address address)
+        {
+            if (customer is null)
+                throw new ArgumentNullException(nameof(customer));
+
+            if (address is null)
+                throw new ArgumentNullException(nameof(address));
+
+            if (_customerAddressMappingRepository.Table.FirstOrDefault(m => m.AddressId == address.Id && m.CustomerId == customer.Id) is null)
+            {
+                var mapping = new CustomerAddressMapping
+                {
+                    AddressId = address.Id,
+                    CustomerId = customer.Id
+                };
+
+                _customerAddressMappingRepository.Insert(mapping);
+
+                _eventPublisher.EntityInserted(mapping);
+            }
+        }
+
+        /// <summary>
+        /// Gets a list of addresses mapped to customer
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <returns>Result</returns>
+        public virtual IList<Address> GetAddressesByCustomerId(int customerId)
+        {
+            var query = (from address in _customerAddressRepository.Table
+                         join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
+                         where cam.CustomerId == customerId
+                         select address);
+
+            return query.ToList();
+        }
+
+        /// <summary>
+        /// Gets a address mapped to customer
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <param name="addressId">Address identifier</param>
+        /// <returns>Result</returns>
+        public virtual Address GetCustomerAddress(int customerId, int addressId)
+        {
+            if (customerId == 0 || addressId == 0)
+                return null;
+
+            var query = (from address in _customerAddressRepository.Table
+                         join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
+                         where cam.CustomerId == customerId
+                         select address);
+
+            return query.Single();
+        }
+
+        /// <summary>
+        /// Gets a customer billing address
+        /// </summary>
+        /// <param name="customer">Customer identifier</param>
+        /// <returns>Result</returns>
+        public virtual Address GetCustomerBillingAddress(Customer customer)
+        {
+            if (customer is null)
+                throw new ArgumentNullException(nameof(customer));
+
+            return GetCustomerAddress(customer.Id, customer.BillingAddressId ?? 0);
+        }
+
+        /// <summary>
+        /// Gets a customer shipping address
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        public virtual Address GetCustomerShippingAddress(Customer customer)
+        {
+            if (customer is null)
+                throw new ArgumentNullException(nameof(customer));
+
+            return GetCustomerAddress(customer.Id, customer.ShippingAddressId ?? 0);
         }
 
         #endregion

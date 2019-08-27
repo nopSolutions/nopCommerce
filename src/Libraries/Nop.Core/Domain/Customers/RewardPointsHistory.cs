@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Core.Domain.Customers
@@ -56,11 +56,6 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the order for which points were redeemed as a payment (spent by a customer when placing this order)
         /// </summary>
-        public virtual Order UsedWithOrder { get; set; }
-
-        /// <summary>
-        /// Gets or sets the customer
-        /// </summary>
-        public virtual Customer Customer { get; set; }
+        public virtual int? OrderId { get; set; }
     }
 }

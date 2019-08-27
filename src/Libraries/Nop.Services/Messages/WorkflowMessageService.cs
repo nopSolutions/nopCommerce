@@ -1411,10 +1411,10 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = returnRequest.Customer.IsGuest() ?
+                var toEmail = _customerService.IsGuest(returnRequest.Customer) ?
                     orderItem.Order.BillingAddress.Email :
                     returnRequest.Customer.Email;
-                var toName = returnRequest.Customer.IsGuest() ?
+                var toName = _customerService.IsGuest(returnRequest.Customer) ?
                     orderItem.Order.BillingAddress.FirstName :
                     _customerService.GetCustomerFullName(returnRequest.Customer);
 
@@ -1458,10 +1458,10 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = returnRequest.Customer.IsGuest() ?
+                var toEmail = _customerService.IsGuest(returnRequest.Customer) ?
                     orderItem.Order.BillingAddress.Email :
                     returnRequest.Customer.Email;
-                var toName = returnRequest.Customer.IsGuest() ?
+                var toName = _customerService.IsGuest(returnRequest.Customer) ?
                     orderItem.Order.BillingAddress.FirstName :
                     _customerService.GetCustomerFullName(returnRequest.Customer);
 

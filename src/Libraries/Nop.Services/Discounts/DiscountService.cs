@@ -347,7 +347,7 @@ namespace Nop.Services.Discounts
             var discountId = discount.Id;
             var cacheKey = string.Format(NopDiscountDefaults.DiscountCategoryIdsModelCacheKey,
                 discountId,
-                string.Join(",", customer.GetCustomerRoleIds()),
+                string.Join(",", _customerService.GetCustomerRoleIds(customer)),
                 _storeContext.CurrentStore.Id);
             var result = _cacheManager.Get(cacheKey, () =>
             {
@@ -391,7 +391,7 @@ namespace Nop.Services.Discounts
             var discountId = discount.Id;
             var cacheKey = string.Format(NopDiscountDefaults.DiscountManufacturerIdsModelCacheKey,
                 discountId,
-                string.Join(",", customer.GetCustomerRoleIds()),
+                string.Join(",", _customerService.GetCustomerRoleIds(customer)),
                 _storeContext.CurrentStore.Id);
             var result = _cacheManager.Get(cacheKey, () =>
             {
@@ -709,7 +709,7 @@ namespace Nop.Services.Discounts
                     break;
                 case DiscountLimitationType.NTimesPerCustomer:
                     {
-                        if (customer.IsRegistered())
+                        if (_customerService.IsRegistered(customer))
                         {
                             var usedTimes = GetAllDiscountUsageHistory(discount.Id, customer.Id, null, 0, 1).TotalCount;
                             if (usedTimes >= discount.LimitationTimes)

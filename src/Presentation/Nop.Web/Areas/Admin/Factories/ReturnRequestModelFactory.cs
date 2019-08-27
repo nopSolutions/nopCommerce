@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
-using Nop.Web.Areas.Admin.Models.Discounts;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -27,6 +24,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDownloadService _downloadService;
+        private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IOrderService _orderService;
@@ -39,6 +37,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public ReturnRequestModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
             IDateTimeHelper dateTimeHelper,
             IDownloadService downloadService,
+            ICustomerService customerService,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
             IOrderService orderService,
@@ -47,6 +46,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory = baseAdminModelFactory;
             _dateTimeHelper = dateTimeHelper;
             _downloadService = downloadService;
+            _customerService = customerService;
             _localizationService = localizationService;
             _localizedModelFactory = localizedModelFactory;
             _orderService = orderService;
@@ -121,7 +121,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     returnRequestModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    returnRequestModel.CustomerInfo = returnRequest.Customer.IsRegistered()
+                    returnRequestModel.CustomerInfo = _customerService.IsRegistered(returnRequest.Customer)
                         ? returnRequest.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     returnRequestModel.ReturnRequestStatusStr = _localizationService.GetLocalizedEnum(returnRequest.ReturnRequestStatus);
                     var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
@@ -165,7 +165,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
 
-            model.CustomerInfo = returnRequest.Customer.IsRegistered()
+            model.CustomerInfo = _customerService.IsRegistered(returnRequest.Customer)
                 ? returnRequest.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
             model.UploadedFileGuid = _downloadService.GetDownloadById(returnRequest.UploadedFileId)?.DownloadGuid ?? Guid.Empty;
             var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);

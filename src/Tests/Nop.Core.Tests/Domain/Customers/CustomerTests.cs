@@ -16,193 +16,269 @@ namespace Nop.Core.Tests.Domain.Customers
     [TestFixture]
     public class CustomerTests
     {
-        CustomerRole customerRoleAdmin = new CustomerRole
+        private ICustomerService _customerService;
+        private Mock<IRepository<CustomerCustomerRoleMapping>> _customerCustomerRoleMappingRepository;
+        private Mock<IRepository<CustomerRole>> _customerRoleRepository;
+
+        private CustomerRole _customerRoleAdmin = new CustomerRole
         {
+            Id = 1,
             Active = true,
             Name = "Administrators",
             SystemName = NopCustomerDefaults.AdministratorsRoleName
         };
 
-        CustomerRole customerRoleGuests = new CustomerRole
+        private CustomerRole _customerRoleGuests = new CustomerRole
         {
+            Id = 2,
             Active = true,
             Name = "Guests",
             SystemName = NopCustomerDefaults.GuestsRoleName
         };
 
-        CustomerRole customerRoleRegistered = new CustomerRole
+        private CustomerRole _customerRoleRegistered = new CustomerRole
         {
+            Id = 3,
             Active = true,
             Name = "Registered",
             SystemName = NopCustomerDefaults.RegisteredRoleName
         };
 
+        private CustomerRole _customerRoleForumModerators = new CustomerRole
+        {
+            Id = 4,
+            Active = true,
+            Name = "ForumModerators",
+            SystemName = NopCustomerDefaults.ForumModeratorsRoleName
+        };
+
+        private CustomerRole _customerRole1 = new CustomerRole
+        {
+            Id = 5,
+            Active = true,
+            Name = "Test name 1",
+            SystemName = "Test system name 1"
+        };
+
+        private CustomerRole _customerRole2 = new CustomerRole
+        {
+            Id = 6,
+            Active = false,
+            Name = "Test name 2",
+            SystemName = "Test system name 2"
+        };
+
+        private readonly CustomerCustomerRoleMapping _clearingMapping = new CustomerCustomerRoleMapping() { Id = 0 };
+
+        [SetUp]
+        public void Setup()
+        {
+            _customerRoleRepository = new Mock<IRepository<CustomerRole>>();
+            _customerRoleRepository.Setup(r => r.Table).Returns(Roles);
+
+            _customerCustomerRoleMappingRepository = new Mock<IRepository<CustomerCustomerRoleMapping>>();
+
+            var customerCustomerRoleMapping = new List<CustomerCustomerRoleMapping>();
+            _customerCustomerRoleMappingRepository.Setup(r => r.Table).Returns(customerCustomerRoleMapping.AsQueryable());
+
+            _customerCustomerRoleMappingRepository.Setup(r => r.Insert(It.IsAny<CustomerCustomerRoleMapping>()))
+                .Callback(
+                    (CustomerCustomerRoleMapping ccrm) => { customerCustomerRoleMapping.Add(ccrm); });
+
+            _customerCustomerRoleMappingRepository.Setup(r => r.Delete(It.Is<CustomerCustomerRoleMapping>(m => m.Id == 0))).Callback(
+                    (CustomerCustomerRoleMapping ccrm) => { customerCustomerRoleMapping.Clear(); });
+
+            _customerService = TestCustomerService.Get(
+                customerRoleRepository: _customerRoleRepository, 
+                customerCustomerRoleMappingRepository: _customerCustomerRoleMappingRepository);
+        }
+
+        private IQueryable<CustomerRole> Roles()
+        {
+            return new List<CustomerRole> {
+                _customerRoleAdmin,
+                _customerRoleGuests,
+                _customerRoleRegistered,
+                _customerRoleForumModerators,
+                _customerRole1,
+                _customerRole2
+
+            }.AsQueryable();
+        }
+
         [Test]
         public void Can_check_IsInCustomerRole()
         {
-            var customer = new Customer();
+            var customer = new Customer() { Id = 1 };
 
-            var customerRole1 = new CustomerRole
-            {
-                Active = true,
-                Name = "Test name 1",
-                SystemName = "Test system name 1"
-            };
+            _customerCustomerRoleMappingRepository.Object.Insert(new CustomerCustomerRoleMapping { CustomerRoleId = _customerRole1.Id, CustomerId = customer.Id });
+            _customerCustomerRoleMappingRepository.Object.Insert(new CustomerCustomerRoleMapping { CustomerRoleId = _customerRole2.Id, CustomerId = customer.Id });
 
-            var customerRole2 = new CustomerRole
-            {
-                Active = false,
-                Name = "Test name 2",
-                SystemName = "Test system name 2"
-            };
 
-            customer.AddCustomerRoleMapping(
-                new CustomerCustomerRoleMapping { CustomerRole = customerRole1 }
-            );
+            _customerService.IsInCustomerRole(customer, "Test system name 1", false).ShouldBeTrue();
+            _customerService.IsInCustomerRole(customer, "Test system name 1").ShouldBeTrue();
 
-            customer.AddCustomerRoleMapping(
-                new CustomerCustomerRoleMapping { CustomerRole = customerRole2 }
-            );
+            _customerService.IsInCustomerRole(customer, "Test system name 2", false).ShouldBeTrue();
+            _customerService.IsInCustomerRole(customer, "Test system name 2").ShouldBeFalse();
 
-            customer.IsInCustomerRole("Test system name 1", false).ShouldBeTrue();
-            customer.IsInCustomerRole("Test system name 1").ShouldBeTrue();
+            _customerService.IsInCustomerRole(customer, "Test system name 3", false).ShouldBeFalse();
+            _customerService.IsInCustomerRole(customer, "Test system name 3").ShouldBeFalse();
 
-            customer.IsInCustomerRole("Test system name 2", false).ShouldBeTrue();
-            customer.IsInCustomerRole("Test system name 2").ShouldBeFalse();
-
-            customer.IsInCustomerRole("Test system name 3", false).ShouldBeFalse();
-            customer.IsInCustomerRole("Test system name 3").ShouldBeFalse();
+            _customerCustomerRoleMappingRepository.Object.Delete(_clearingMapping);
         }
         [Test]
         public void Can_check_whether_customer_is_admin()
         {
-            var customer = new Customer();
+            var customer = new Customer() { Id = 1 };
 
-            customer.AddCustomerRoleMapping(
-                new CustomerCustomerRoleMapping { CustomerRole = customerRoleRegistered }
-            );
+            _customerCustomerRoleMappingRepository.Object.Insert(
+                new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleRegistered.Id, CustomerId = customer.Id });
+            _customerCustomerRoleMappingRepository.Object.Insert(
+                new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleGuests.Id, CustomerId = customer.Id });
+            _customerCustomerRoleMappingRepository.Object.Insert(
+                new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleAdmin.Id, CustomerId = customer.Id });
 
-            customer.AddCustomerRoleMapping(
-                new CustomerCustomerRoleMapping { CustomerRole = customerRoleGuests }
-            );
+            _customerService.IsAdmin(customer).ShouldBeTrue();
 
-            customer.IsAdmin().ShouldBeFalse();
-
-            customer.AddCustomerRoleMapping(
-                new CustomerCustomerRoleMapping { CustomerRole = customerRoleAdmin }
-            );
-
-            customer.IsAdmin().ShouldBeTrue();
+            _customerCustomerRoleMappingRepository.Object.Delete(_clearingMapping);
         }
         [Test]
         public void Can_check_whether_customer_is_forum_moderator()
         {
-            var customer = new TestCustomer();
+            var customer = new Customer() { Id = 1 };
 
-            customer.AddCustomerRoleMapping(
-                new CustomerCustomerRoleMapping { CustomerRole = customerRoleRegistered }
-            );
+            _customerCustomerRoleMappingRepository.Object.Insert(
+                new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleRegistered.Id, CustomerId = customer.Id });
+            _customerCustomerRoleMappingRepository.Object.Insert(
+                new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleGuests.Id, CustomerId = customer.Id });
 
-            customer.AddCustomerRoleMapping(
-                new CustomerCustomerRoleMapping { CustomerRole = customerRoleGuests }
-            );
+            _customerService.IsForumModerator(customer).ShouldBeFalse();
 
-            customer.IsForumModerator().ShouldBeFalse();
+            _customerCustomerRoleMappingRepository.Object.Insert(
+                new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleForumModerators.Id, CustomerId = customer.Id });
 
-            var customerRoleForumModerators = new CustomerRole
-            {
-                Active = true,
-                Name = "ForumModerators",
-                SystemName = NopCustomerDefaults.ForumModeratorsRoleName
-            };
+            _customerService.IsForumModerator(customer).ShouldBeTrue();
 
-            customer.AddCustomerRoleMapping(
-                new CustomerCustomerRoleMapping { CustomerRole = customerRoleForumModerators }
-            );
-
-            customer.IsForumModerator().ShouldBeTrue();
+            _customerCustomerRoleMappingRepository.Object.Delete(_clearingMapping);
         }
+
         [Test]
         public void Can_check_whether_customer_is_guest()
         {
-            var customer = new Customer();
+            var customer = new Customer() { Id = 1 };
 
-            customer.AddCustomerRoleMapping(
-                new CustomerCustomerRoleMapping { CustomerRole = customerRoleRegistered }
-            );
+            _customerCustomerRoleMappingRepository.Object.Insert(
+                new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleRegistered.Id, CustomerId = customer.Id });
+            _customerCustomerRoleMappingRepository.Object.Insert(
+                new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleAdmin.Id, CustomerId = customer.Id });
 
-            customer.AddCustomerRoleMapping(
-                new CustomerCustomerRoleMapping { CustomerRole = customerRoleAdmin }
-            );
+            _customerService.IsGuest(customer).ShouldBeFalse();
 
-            customer.IsGuest().ShouldBeFalse();
+            _customerCustomerRoleMappingRepository.Object.Insert(
+                new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleGuests.Id, CustomerId = customer.Id });
 
-            customer.AddCustomerRoleMapping(
-                new CustomerCustomerRoleMapping { CustomerRole = customerRoleGuests }
-            );
+            _customerService.IsGuest(customer).ShouldBeTrue();
 
-            customer.IsGuest().ShouldBeTrue();
+            _customerCustomerRoleMappingRepository.Object.Delete(_clearingMapping);
         }
         [Test]
         public void Can_check_whether_customer_is_registered()
         {
             var customer = new Customer();
 
-            customer.AddCustomerRoleMapping(
-                new CustomerCustomerRoleMapping { CustomerRole = customerRoleAdmin }
-            );
+            _customerCustomerRoleMappingRepository.Object.Insert(
+                new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleGuests.Id, CustomerId = customer.Id });
+            _customerCustomerRoleMappingRepository.Object.Insert(
+                new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleAdmin.Id, CustomerId = customer.Id });
 
-            customer.AddCustomerRoleMapping(
-                new CustomerCustomerRoleMapping { CustomerRole = customerRoleGuests }
-            );
 
-            customer.IsRegistered().ShouldBeFalse();
+            _customerService.IsRegistered(customer).ShouldBeFalse();
 
-            customer.AddCustomerRoleMapping(
-                new CustomerCustomerRoleMapping { CustomerRole = customerRoleRegistered }
-            );
+            _customerCustomerRoleMappingRepository.Object.Insert(
+                new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleRegistered.Id, CustomerId = customer.Id });
 
-            customer.IsRegistered().ShouldBeTrue();
+            _customerService.IsRegistered(customer).ShouldBeTrue();
+
+            _customerCustomerRoleMappingRepository.Object.Delete(_clearingMapping);
         }
 
         [Test]
         public void Can_remove_address_assigned_as_billing_address()
         {
-            var _customerRepo = new Mock<IRepository<Customer>>();
-            var _customerCustomerRoleMappingRepo = new Mock<IRepository<CustomerCustomerRoleMapping>>();
-            var _customerPasswordRepo = new Mock<IRepository<CustomerPassword>>();
-            var _genericAttributeRepo = new Mock<IRepository<GenericAttribute>>();
-            var _shoppingCartRepo = new Mock<IRepository<ShoppingCartItem>>();
-            var _genericAttributeService = new Mock<IGenericAttributeService>();
-            var _eventPublisher = new Mock<IEventPublisher>();
-            var _customerRoleRepo = new Mock<IRepository<CustomerRole>>();
+            var customerRepo = new Mock<IRepository<Customer>>();
+            var customerAddressRepo = new Mock<IRepository<Address>>();
+            var customerAddressMappingRepo = new Mock<IRepository<CustomerAddressMapping>>();
+            var customerCustomerRoleMappingRepo = new Mock<IRepository<CustomerCustomerRoleMapping>>();
+            var customerPasswordRepo = new Mock<IRepository<CustomerPassword>>();
+            var genericAttributeRepo = new Mock<IRepository<GenericAttribute>>();
+            var shoppingCartRepo = new Mock<IRepository<ShoppingCartItem>>();
+            var genericAttributeService = new Mock<IGenericAttributeService>();
+            var eventPublisher = new Mock<IEventPublisher>();
+            var customerRoleRepo = new Mock<IRepository<CustomerRole>>();
 
-            var _customerService = new CustomerService(new CustomerSettings(), 
-                new TestCacheManager(), 
+
+            var customer = new Customer() { Id = 1 };
+
+            var customers = new List<Customer>
+            {
+                customer
+            };
+
+            var address = new Address { Id = 1 };
+
+            var addresses = new List<Address>
+            {
+                address
+            };
+
+            var addressesMapping = new List<CustomerAddressMapping>();
+
+            customerRepo.Setup(r => r.Table).Returns(customers.AsQueryable());
+            customerAddressRepo.Setup(r => r.Table).Returns(addresses.AsQueryable());
+            customerAddressMappingRepo.Setup(r => r.Table).Returns(addressesMapping.AsQueryable());
+            customerAddressMappingRepo.Setup(r => r.Insert(It.IsAny<CustomerAddressMapping>())).Callback(
+                (CustomerAddressMapping cam) => { addressesMapping.Add(cam); });
+            customerAddressMappingRepo.Setup(r => r.Delete(It.IsAny<CustomerAddressMapping>())).Callback(
+                (CustomerAddressMapping cam) => { addressesMapping.Remove(cam); });
+
+            var customerService = new CustomerService(new CustomerSettings(),
+                new TestCacheManager(),
                 null,
                 null,
-                _eventPublisher.Object,
-                _genericAttributeService.Object,
-                _customerRepo.Object,
-                _customerCustomerRoleMappingRepo.Object,
-                _customerPasswordRepo.Object,
-                _customerRoleRepo.Object,
-                _genericAttributeRepo.Object,
-                _shoppingCartRepo.Object,
+                eventPublisher.Object,
+                genericAttributeService.Object,
+                customerAddressRepo.Object,
+                customerRepo.Object,
+                customerAddressMappingRepo.Object,
+                customerCustomerRoleMappingRepo.Object,
+                customerPasswordRepo.Object,
+                customerRoleRepo.Object,
+                genericAttributeRepo.Object,
+                shoppingCartRepo.Object,
                 new TestCacheManager(),
                 null);
 
-            var customer = new TestCustomer();
-            var address = new Address { Id = 1 };
 
-            customer.AddAddresses(address);
-            customer.BillingAddress  = address;
 
-            customer.BillingAddress.ShouldBeTheSameAs(customer.Addresses.First());
+            customerService.InsertCustomerAddress(customer, address);
 
-            _customerService.RemoveCustomerAddress(customer, address);
-            customer.Addresses.Count.ShouldEqual(0);
-            customer.BillingAddress.ShouldBeNull();
+            customerService.GetAddressesByCustomerId(customer.Id).Count().ShouldEqual(1);
+
+            customerService.InsertCustomerAddress(customer, address);
+
+            customerService.GetAddressesByCustomerId(customer.Id).Count().ShouldEqual(1);
+
+            customer.BillingAddressId = address.Id;
+
+            customerService.GetCustomerBillingAddress(customer).ShouldNotBeNull();
+
+            customerService.GetCustomerBillingAddress(customer).Id.ShouldEqual(address.Id);
+
+            customerService.RemoveCustomerAddress(customer, address);
+
+            customerService.GetAddressesByCustomerId(customer.Id).Count.ShouldEqual(0);
+
+            customer.BillingAddressId.ShouldBeNull();
         }
 
         [Test]
@@ -226,19 +302,6 @@ namespace Nop.Core.Tests.Domain.Customers
             //customer.AddRewardPointsHistoryEntry(1, 0, "Points for registration");
 
             //customer.GetRewardPointsBalance(0).ShouldEqual(1);
-        }
-
-        class TestCustomer : Customer
-        {
-            public TestCustomer()
-            {
-                _customerAddressMappings = new List<CustomerAddressMapping>();
-            }
-
-            public void AddAddresses(Address address)
-            {
-                _customerAddressMappings.Add(new CustomerAddressMapping{Address = address, AddressId = address.Id});
-            }
         }
     }
 }

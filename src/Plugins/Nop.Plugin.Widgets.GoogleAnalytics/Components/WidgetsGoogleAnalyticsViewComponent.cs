@@ -10,6 +10,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
@@ -28,6 +29,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
         private readonly GoogleAnalyticsSettings _googleAnalyticsSettings;
         private readonly ICategoryService _categoryService;
         private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILogger _logger;
         private readonly IOrderService _orderService;
@@ -44,6 +46,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
             GoogleAnalyticsSettings googleAnalyticsSettings,
             ICategoryService categoryService,
             ICurrencyService currencyService,
+            ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             ILogger logger,
             IOrderService orderService,
@@ -56,6 +59,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
             _googleAnalyticsSettings = googleAnalyticsSettings;
             _categoryService = categoryService;
             _currencyService = currencyService;
+            _customerService = customerService;
             _genericAttributeService = genericAttributeService;
             _logger = logger;
             _orderService = orderService;
@@ -97,7 +101,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
             //whether to include customer identifier
             var customerIdCode = string.Empty;
-            if (_googleAnalyticsSettings.IncludeCustomerId && !_workContext.CurrentCustomer.IsGuest())
+            if (_googleAnalyticsSettings.IncludeCustomerId && !_customerService.IsGuest(_workContext.CurrentCustomer))
                 customerIdCode = $"gtag('set', {{'user_id': '{_workContext.CurrentCustomer.Id}'}});{Environment.NewLine}";
             analyticsTrackingScript = analyticsTrackingScript.Replace("{CUSTOMER_TRACKING}", customerIdCode);
 

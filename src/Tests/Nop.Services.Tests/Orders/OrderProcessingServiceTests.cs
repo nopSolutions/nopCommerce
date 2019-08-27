@@ -158,8 +158,8 @@ namespace Nop.Services.Tests.Orders
 
             //price calculation service
             _priceCalcService = new PriceCalculationService(_catalogSettings, _currencySettings, _categoryService.Object,
-                _currencyService.Object, _discountService.Object, _manufacturerService.Object, _productAttributeParser.Object, _productAttributeService.Object,
-                _productService.Object, cacheManager, _storeContext.Object, _workContext, _shoppingCartSettings);
+                _currencyService.Object, _customerService.Object, _discountService.Object, _manufacturerService.Object, _productAttributeParser.Object, _productAttributeService.Object,
+                _productService.Object, _shoppingCartService.Object, cacheManager, _storeContext.Object, _workContext, _shoppingCartSettings);
 
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
@@ -216,6 +216,7 @@ namespace Nop.Services.Tests.Orders
                 _customerSettings,
                 _addressService.Object,
                 _countryService.Object,
+                _customerService.Object,
                 _genericAttributeService.Object,
                 _geoLookupService.Object,
                 _logger,
@@ -232,6 +233,7 @@ namespace Nop.Services.Tests.Orders
 
             _orderTotalCalcService = new OrderTotalCalculationService(_catalogSettings,
                 _checkoutAttributeParser.Object,
+                _customerService.Object,
                 _discountService.Object,
                 _genericAttributeService.Object,
                 _giftCardService.Object,

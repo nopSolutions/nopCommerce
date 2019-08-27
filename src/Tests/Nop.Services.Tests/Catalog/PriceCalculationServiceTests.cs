@@ -15,7 +15,9 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
+using Nop.Services.Customers;
 using Nop.Services.Discounts;
+using Nop.Services.Orders;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -29,6 +31,11 @@ namespace Nop.Services.Tests.Catalog
         private Mock<IStoreContext> _storeContext;
         private IDiscountService _discountService;
         private Mock<ICategoryService> _categoryService;
+
+        private CustomerService _customerService;
+        private Mock<IRepository<CustomerCustomerRoleMapping>> _customerCustomerRoleMappingRepository;
+        private Mock<IRepository<CustomerRole>> _customerRoleRepository;
+
         private Mock<IManufacturerService> _manufacturerService;
         private Mock<IProductAttributeParser> _productAttributeParser;
         private Mock<IProductAttributeService> _productAttributeService;
@@ -37,8 +44,9 @@ namespace Nop.Services.Tests.Catalog
         private Mock<IRepository<TierPrice>> _tierPriceRepository;
         private IProductService _productService;
         private IPriceCalculationService _priceCalcService;
+        private Mock<IShoppingCartService> _shoppingCartService;
         private ShoppingCartSettings _shoppingCartSettings;
-        private CatalogSettings _catalogSettings;
+        private CatalogSettings _catalogSettings;        
         private IStaticCacheManager _cacheManager;
         private Mock<IWorkContext> _workContext;
         private Store _store;
@@ -57,6 +65,22 @@ namespace Nop.Services.Tests.Catalog
             _storeContext.Setup(x => x.CurrentStore).Returns(_store);
 
             _categoryService = new Mock<ICategoryService>();
+
+
+            _customerRoleRepository = new Mock<IRepository<CustomerRole>>();
+            _customerRoleRepository.Setup(r => r.Table).Returns(GetMockCustomerRoles);
+
+            _customerCustomerRoleMappingRepository = new Mock<IRepository<CustomerCustomerRoleMapping>>();
+
+            var customerCustomerRoleMapping = new List<CustomerCustomerRoleMapping>();
+            _customerCustomerRoleMappingRepository.Setup(r => r.Table).Returns(customerCustomerRoleMapping.AsQueryable());
+
+            _customerCustomerRoleMappingRepository.Setup(r => r.Insert(It.IsAny<CustomerCustomerRoleMapping>()))
+                .Callback(
+                    (CustomerCustomerRoleMapping ccrm) => { customerCustomerRoleMapping.Add(ccrm); });
+
+            _customerService = new CustomerService(null, null, null, null, null, null, null, null, null, _customerCustomerRoleMappingRepository.Object, null, _customerRoleRepository.Object, null, null, null, null);
+
             _manufacturerService = new Mock<IManufacturerService>();
 
             _productRepository = new Mock<IRepository<Product>>();
@@ -69,7 +93,7 @@ namespace Nop.Services.Tests.Catalog
             _discountProductMappingRepository = new Mock<IRepository<DiscountProductMapping>>();
             _discountProductMappingRepository.Setup(r => r.Table).Returns(GetMockDiscountProductMapping);
 
-            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new TestCacheManager(),
+            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new TestCacheManager(), _customerService,
                 null, null, null, null, null, null, null, null, null, null, _discountProductMappingRepository.Object, _productRepository.Object, null, null, null, null, null, null, null, null, null, null, _tierPriceRepository.Object, null,
                 null, null, null, new LocalizationSettings());
 
@@ -77,6 +101,7 @@ namespace Nop.Services.Tests.Catalog
 
             _productAttributeService = new Mock<IProductAttributeService>();
 
+            _shoppingCartService = new Mock<IShoppingCartService>();
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
 
@@ -91,8 +116,8 @@ namespace Nop.Services.Tests.Catalog
                 }.AsQueryable());
 
             _priceCalcService = new PriceCalculationService(_catalogSettings, new CurrencySettings { PrimaryStoreCurrencyId = 1 }, _categoryService.Object,
-                _serviceProvider.CurrencyService.Object, _discountService, _manufacturerService.Object, _productAttributeParser.Object, _productAttributeService.Object,
-                _productService, _cacheManager, _storeContext.Object, _workContext.Object, _shoppingCartSettings);
+                _serviceProvider.CurrencyService.Object, _customerService, _discountService, _manufacturerService.Object, _productAttributeParser.Object, _productAttributeService.Object,
+                _productService, _shoppingCartService.Object, _cacheManager, _storeContext.Object, _workContext.Object, _shoppingCartSettings);
 
             var nopEngine = new Mock<NopEngine>();
 
@@ -309,8 +334,11 @@ namespace Nop.Services.Tests.Catalog
             var product = _productService.GetProductById(1);
 
             //customer
-            var customer = new Customer();
-            customer.CustomerRoles.Add(GetMockCustomerRoles().FirstOrDefault(cr => cr.Id == 1));
+            var customer = new Customer() { Id = 1 };
+
+            var customerRole = GetMockCustomerRoles().FirstOrDefault(cr => cr.Id == 1);
+
+            _customerCustomerRoleMappingRepository.Object.Insert(new CustomerCustomerRoleMapping { CustomerRoleId = customerRole.Id, CustomerId = customer.Id });
 
             _priceCalcService.GetFinalPrice(product, customer, 0, false).ShouldEqual(12.34M);
             _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).ShouldEqual(10);

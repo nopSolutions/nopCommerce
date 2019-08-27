@@ -64,7 +64,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Homepage");
             }
 
-            if (_workContext.CurrentCustomer.IsGuest())
+            if (_customerService.IsGuest(_workContext.CurrentCustomer))
             {
                 return Challenge();
             }
@@ -163,11 +163,11 @@ namespace Nop.Web.Controllers
             if (!_forumSettings.AllowPrivateMessages)
                 return RedirectToRoute("Homepage");
 
-            if (_workContext.CurrentCustomer.IsGuest())
+            if (_customerService.IsGuest(_workContext.CurrentCustomer))
                 return Challenge();
 
             var customerTo = _customerService.GetCustomerById(toCustomerId);
-            if (customerTo == null || customerTo.IsGuest())
+            if (customerTo == null || _customerService.IsGuest(customerTo))
                 return RedirectToRoute("PrivateMessages");
 
             PrivateMessage replyToPM = null;
@@ -190,7 +190,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Homepage");
             }
 
-            if (_workContext.CurrentCustomer.IsGuest())
+            if (_customerService.IsGuest(_workContext.CurrentCustomer))
             {
                 return Challenge();
             }
@@ -218,7 +218,7 @@ namespace Nop.Web.Controllers
                 toCustomer = _customerService.GetCustomerById(model.ToCustomerId);
             }
 
-            if (toCustomer == null || toCustomer.IsGuest())
+            if (toCustomer == null || _customerService.IsGuest(toCustomer))
             {
                 return RedirectToRoute("PrivateMessages");
             }
@@ -279,7 +279,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Homepage");
             }
 
-            if (_workContext.CurrentCustomer.IsGuest())
+            if (_customerService.IsGuest(_workContext.CurrentCustomer))
             {
                 return Challenge();
             }
@@ -314,7 +314,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Homepage");
             }
 
-            if (_workContext.CurrentCustomer.IsGuest())
+            if (_customerService.IsGuest(_workContext.CurrentCustomer))
             {
                 return Challenge();
             }

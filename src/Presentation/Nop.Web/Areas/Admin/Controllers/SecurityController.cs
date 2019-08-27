@@ -57,7 +57,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult AccessDenied(string pageUrl)
         {
             var currentCustomer = _workContext.CurrentCustomer;
-            if (currentCustomer == null || currentCustomer.IsGuest())
+            if (currentCustomer == null || _customerService.IsGuest(currentCustomer))
             {
                 _logger.Information($"Access denied to anonymous request on {pageUrl}");
                 return View();

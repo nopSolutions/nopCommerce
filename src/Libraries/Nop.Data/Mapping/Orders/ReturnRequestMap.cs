@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
@@ -22,11 +22,6 @@ namespace Nop.Data.Mapping.Orders
 
             builder.Property(returnRequest => returnRequest.ReasonForReturn).IsRequired();
             builder.Property(returnRequest => returnRequest.RequestedAction).IsRequired();
-
-            builder.HasOne(returnRequest => returnRequest.Customer)
-                .WithMany(customer => customer.ReturnRequests)
-                .HasForeignKey(returnRequest => returnRequest.CustomerId)
-                .IsRequired();
 
             builder.Ignore(returnRequest => returnRequest.ReturnRequestStatus);
 

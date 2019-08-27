@@ -191,7 +191,7 @@ namespace Nop.Web.Factories
             {
                 ToCustomerId = customerTo.Id,
                 CustomerToName = _customerService.FormatUsername(customerTo),
-                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !customerTo.IsGuest()
+                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !_customerService.IsGuest(customerTo)
             };
 
             if (replyToPM == null)
@@ -229,10 +229,10 @@ namespace Nop.Web.Factories
                 Id = pm.Id,
                 FromCustomerId = pm.FromCustomerId,
                 CustomerFromName = _customerService.FormatUsername(fromCustomer),
-                AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && !fromCustomer.IsGuest(),
+                AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && !_customerService.IsGuest(fromCustomer),
                 ToCustomerId = pm.ToCustomerId,
                 CustomerToName = _customerService.FormatUsername(toCustomer),
-                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !toCustomer.IsGuest(),
+                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !_customerService.IsGuest(toCustomer),
                 Subject = pm.Subject,
                 Message = _forumService.FormatPrivateMessageText(pm),
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(pm.CreatedOnUtc, DateTimeKind.Utc),

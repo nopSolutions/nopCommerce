@@ -95,6 +95,7 @@ namespace Nop.Core.Domain.Common
         /// Clone
         /// </summary>
         /// <returns></returns>
+        //TODO: issue-239 Why returning not Address type?
         public object Clone()
         {
             var addr = new Address

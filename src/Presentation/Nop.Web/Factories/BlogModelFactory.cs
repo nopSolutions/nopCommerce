@@ -95,7 +95,7 @@ namespace Nop.Web.Factories
                 CustomerName = _customerService.FormatUsername(customer),
                 CommentText = blogComment.CommentText,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc),
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !customer.IsGuest()
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !_customerService.IsGuest(customer)
             };
 
             if (_customerSettings.AllowCustomersToUploadAvatars)

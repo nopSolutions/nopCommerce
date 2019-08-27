@@ -538,7 +538,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var customer = _customerService.GetCustomerById(item.CustomerId);
                    if (customer != null)
                    {
-                       bestCustomersReportModel.CustomerName = customer.IsRegistered() ? customer.Email :
+                       bestCustomersReportModel.CustomerName = _customerService.IsRegistered(customer) ? customer.Email :
                            _localizationService.GetResource("Admin.Customers.Guest");
                    }
 

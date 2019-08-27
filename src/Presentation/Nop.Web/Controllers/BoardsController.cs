@@ -8,6 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Security;
 using Nop.Core.Rss;
+using Nop.Services.Customers;
 using Nop.Services.Forums;
 using Nop.Services.Localization;
 using Nop.Web.Factories;
@@ -25,6 +26,7 @@ namespace Nop.Web.Controllers
 
         private readonly CaptchaSettings _captchaSettings;
         private readonly ForumSettings _forumSettings;
+        private readonly ICustomerService _customerService;
         private readonly IForumModelFactory _forumModelFactory;
         private readonly IForumService _forumService;
         private readonly ILocalizationService _localizationService;
@@ -38,6 +40,7 @@ namespace Nop.Web.Controllers
 
         public BoardsController(CaptchaSettings captchaSettings,
             ForumSettings forumSettings,
+            ICustomerService customerService,
             IForumModelFactory forumModelFactory,
             IForumService forumService,
             ILocalizationService localizationService,
@@ -47,6 +50,7 @@ namespace Nop.Web.Controllers
         {
             _captchaSettings = captchaSettings;
             _forumSettings = forumSettings;
+            _customerService = customerService;
             _forumModelFactory = forumModelFactory;
             _forumService = forumService;
             _localizationService = localizationService;
@@ -947,7 +951,7 @@ namespace Nop.Web.Controllers
             if (forumPost == null)
                 return new NullJsonResult();
 
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Json(new
                 {
                     Error = _localizationService.GetResource("Forum.Votes.Login"),

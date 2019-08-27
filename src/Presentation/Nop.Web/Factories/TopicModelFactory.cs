@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Topics;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Seo;
@@ -22,6 +23,7 @@ namespace Nop.Web.Factories
         #region Fields
 
         private readonly IAclService _aclService;
+        private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
@@ -36,6 +38,7 @@ namespace Nop.Web.Factories
         #region Ctor
 
         public TopicModelFactory(IAclService aclService,
+            ICustomerService customerService,
             ILocalizationService localizationService,
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
@@ -46,6 +49,7 @@ namespace Nop.Web.Factories
             IWorkContext workContext)
         {
             _aclService = aclService;
+            _customerService = customerService;
             _localizationService = localizationService;
             _cacheManager = cacheManager;
             _storeContext = storeContext;
@@ -103,7 +107,7 @@ namespace Nop.Web.Factories
                 topicId,
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                 showHidden);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
@@ -138,7 +142,7 @@ namespace Nop.Web.Factories
                 systemName,
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
+                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)));
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 //load by store

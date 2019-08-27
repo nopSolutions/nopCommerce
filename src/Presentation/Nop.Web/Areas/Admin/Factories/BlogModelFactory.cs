@@ -263,7 +263,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     commentModel.BlogPostTitle = _blogService.GetBlogPostById(blogComment.BlogPostId)?.Title;
 
                     if (_customerService.GetCustomerById(blogComment.CustomerId) is Customer customer)
-                        commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+                        commentModel.CustomerInfo = _customerService.IsRegistered(customer) ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
 
                     //fill in additional values (not existing in the entity)
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc);

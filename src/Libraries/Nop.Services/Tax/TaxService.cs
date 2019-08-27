@@ -14,6 +14,7 @@ using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Logging;
 using Nop.Services.Catalog;
+using Nop.Services.Customers;
 
 namespace Nop.Services.Tax
 {
@@ -28,6 +29,7 @@ namespace Nop.Services.Tax
         private readonly CustomerSettings _customerSettings;
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
+        private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGeoLookupService _geoLookupService;
         private readonly ILogger _logger;
@@ -48,6 +50,7 @@ namespace Nop.Services.Tax
             CustomerSettings customerSettings,
             IAddressService addressService,
             ICountryService countryService,
+            ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             IGeoLookupService geoLookupService,
             ILogger logger,
@@ -64,6 +67,7 @@ namespace Nop.Services.Tax
             _customerSettings = customerSettings;
             _addressService = addressService;
             _countryService = countryService;
+            _customerService = customerService;
             _genericAttributeService = genericAttributeService;
             _geoLookupService = geoLookupService;
             _logger = logger;
@@ -94,8 +98,8 @@ namespace Nop.Services.Tax
             Country country = null;
 
             //get country from billing address
-            if (_addressSettings.CountryEnabled && customer.BillingAddress != null)
-                country = _countryService.GetCountryByAddress(customer.BillingAddress);
+            if (_addressSettings.CountryEnabled && _customerService.GetCustomerShippingAddress(customer) is Address billingAddress)
+                country = _countryService.GetCountryByAddress(billingAddress);
 
             //get country specified during registration?
             if (country == null && _customerSettings.CountryEnabled)
@@ -248,8 +252,8 @@ namespace Nop.Services.Tax
                 }
             }
 
-            if (basedOn == TaxBasedOn.BillingAddress && customer.BillingAddress == null ||
-                basedOn == TaxBasedOn.ShippingAddress && customer.ShippingAddress == null)
+            if (basedOn == TaxBasedOn.BillingAddress && customer.BillingAddressId == null ||
+                basedOn == TaxBasedOn.ShippingAddress && customer.ShippingAddressId == null)
             {
                 basedOn = TaxBasedOn.DefaultAddress;
             }
@@ -257,10 +261,12 @@ namespace Nop.Services.Tax
             switch (basedOn)
             {
                 case TaxBasedOn.BillingAddress:
-                    calculateTaxRequest.Address = PrepareTaxAddress(customer.BillingAddress);
+                    var billingAddress = _customerService.GetCustomerBillingAddress(customer);
+                    calculateTaxRequest.Address = PrepareTaxAddress(billingAddress);
                     break;
                 case TaxBasedOn.ShippingAddress:
-                    calculateTaxRequest.Address = PrepareTaxAddress(customer.ShippingAddress);
+                    var shippingAddress = _customerService.GetCustomerShippingAddress(customer);
+                    calculateTaxRequest.Address = PrepareTaxAddress(shippingAddress);
                     break;
                 case TaxBasedOn.DefaultAddress:
                 default:
@@ -807,7 +813,7 @@ namespace Nop.Services.Tax
                 if (customer.IsTaxExempt)
                     return true;
 
-                if (customer.CustomerRoles.Where(cr => cr.Active).Any(cr => cr.TaxExempt))
+                if (_customerService.GetCustomerRoles(customer).Any(cr => cr.TaxExempt))
                     return true;
             }
 

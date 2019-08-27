@@ -200,8 +200,10 @@ namespace Nop.Plugin.Tax.Avalara.Factories
             var order = new Order { Customer = _workContext.CurrentCustomer };
 
             //addresses
-            order.BillingAddress = _workContext.CurrentCustomer.BillingAddress;
-            order.ShippingAddress = _workContext.CurrentCustomer.ShippingAddress;
+            //TODO: issue-239 order.BillingAddressId - int, _workContext.CurrentCustomer.BillingAddressId nullable int
+            order.BillingAddressId = _workContext.CurrentCustomer.BillingAddressId ?? 0;
+            order.ShippingAddressId = _workContext.CurrentCustomer.ShippingAddressId;
+
             if (_shippingSettings.AllowPickupInStore)
             {
                 var pickupPoint = _genericAttributeService.GetAttribute<PickupPoint>(_workContext.CurrentCustomer,

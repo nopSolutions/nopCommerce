@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Messages;
@@ -44,6 +45,7 @@ namespace Nop.Plugin.Payments.Qualpay.Services
         private readonly CurrencySettings _currencySettings;
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IAddressService _addressService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
@@ -75,6 +77,7 @@ namespace Nop.Plugin.Payments.Qualpay.Services
         public QualpayManager(CurrencySettings currencySettings,
             EmailAccountSettings emailAccountSettings,
             IActionContextAccessor actionContextAccessor,
+            IAddressService addressService,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICountryService countryService,
             ICurrencyService currencyService,
@@ -99,6 +102,7 @@ namespace Nop.Plugin.Payments.Qualpay.Services
             _currencySettings = currencySettings;
             _emailAccountSettings = emailAccountSettings;
             _actionContextAccessor = actionContextAccessor;
+            _addressService = addressService;
             _checkoutAttributeParser = checkoutAttributeParser;
             _countryService = countryService;
             _currencyService = currencyService;
@@ -383,22 +387,22 @@ namespace Nop.Plugin.Payments.Qualpay.Services
                 customerLastName: _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastNameAttribute),
                 customerFirmName: _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute),
                 customerPhone: _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute),
-                shippingAddresses: customer.ShippingAddress == null ? null : new List<AddShippingAddressRequest>
+                shippingAddresses: _customerService.GetCustomerShippingAddress(customer) is Address shippingAddress ? new List<AddShippingAddressRequest>
                 {
                     new AddShippingAddressRequest
                     (
                         primary: true,
-                        shippingFirstName: customer.ShippingAddress.FirstName,
-                        shippingLastName: customer.ShippingAddress.LastName,
-                        shippingAddr1: customer.ShippingAddress?.Address1,
-                        shippingAddr2: customer.ShippingAddress.Address2,
-                        shippingCity: customer.ShippingAddress?.City,
-                        shippingState: _stateProvinceService.GetStateProvinceByAddress(customer.ShippingAddress)?.Abbreviation,
-                        shippingCountryCode: _countryService.GetCountryByAddress(customer.ShippingAddress)?.ThreeLetterIsoCode,
-                        shippingZip: customer.ShippingAddress?.ZipPostalCode,
-                        shippingFirmName: customer.ShippingAddress?.Company
+                        shippingFirstName: shippingAddress.FirstName,
+                        shippingLastName: shippingAddress.LastName,
+                        shippingAddr1: shippingAddress.Address1,
+                        shippingAddr2: shippingAddress.Address2,
+                        shippingCity: shippingAddress.City,
+                        shippingState: _stateProvinceService.GetStateProvinceByAddress(shippingAddress)?.Abbreviation,
+                        shippingCountryCode: _countryService.GetCountryByAddress(shippingAddress)?.ThreeLetterIsoCode,
+                        shippingZip: shippingAddress.ZipPostalCode,
+                        shippingFirmName: shippingAddress.Company
                     )
-                }
+                } : null
             );
         }
 
@@ -461,7 +465,7 @@ namespace Nop.Plugin.Payments.Qualpay.Services
                 ?? throw new NopException("Customer cannot be loaded");
 
             //Recurring Billing is available only for registered customers
-            if (customer.IsGuest())
+            if (_customerService.IsGuest(customer))
                 throw new NopException("Recurring payments are available only for registered customers");
 
             //Qualpay Payment Gateway supports only USD currency
@@ -487,6 +491,8 @@ namespace Nop.Plugin.Payments.Qualpay.Services
                 interval: interval,
                 dateStart: startDate.ToString("yyyy-MM-dd")
             );
+
+            var billingAddress = _customerService.GetCustomerBillingAddress(customer);
             
             //whether the customer has chosen a previously saved card
             var selectedCard = GetPreviouslySavedBillingCard(processPaymentRequest, customer);
@@ -495,12 +501,14 @@ namespace Nop.Plugin.Payments.Qualpay.Services
                 //ensure that the selected card is default card
                 if (!selectedCard.Primary ?? true)
                 {
+                    
+
                     var updated = UpdateCustomerCard(customer.Id, new UpdateBillingCardRequest
                     (
                         cardId: selectedCard.CardId,
                         primary: true,
-                        billingAddr1: customer.BillingAddress?.Address1,
-                        billingZip: customer.BillingAddress?.ZipPostalCode
+                        billingAddr1: billingAddress?.Address1,
+                        billingZip: billingAddress?.ZipPostalCode
                     ));
                     if (!updated)
                         throw new NopException("Qualpay Payment Gateway error: Failed to pay by the selected card.");
@@ -520,8 +528,8 @@ namespace Nop.Plugin.Payments.Qualpay.Services
                 verify: true,
                 primary: true,
                 cardId: tokenizedCardId,
-                billingAddr1: customer.BillingAddress?.Address1,
-                billingZip: customer.BillingAddress?.ZipPostalCode
+                billingAddr1: billingAddress?.Address1,
+                billingZip: billingAddress?.ZipPostalCode
             ));
             if (!created)
                 throw new NopException("Qualpay Payment Gateway error: Failed to pay by the selected card.");
@@ -544,6 +552,8 @@ namespace Nop.Plugin.Payments.Qualpay.Services
             if (!primaryStoreCurrency.CurrencyCode.Equals("USD", StringComparison.InvariantCultureIgnoreCase))
                 throw new NopException("USD is not a primary store currency");
 
+            var billingAddress = _customerService.GetCustomerBillingAddress(customer);
+
             var (items, taxAmount) = GetItems(customer, processPaymentRequest.StoreId, processPaymentRequest.OrderTotal);
             var transactionRequest = new PGApiTransactionRequest
             (
@@ -552,8 +562,8 @@ namespace Nop.Plugin.Payments.Qualpay.Services
                 purchaseId: CommonHelper.EnsureMaximumLength(processPaymentRequest.OrderGuid.ToString(), 25),
                 amtTran: Convert.ToDouble(Math.Round(processPaymentRequest.OrderTotal, 2)),
                 tranCurrency: QualpayDefaults.UsdNumericIsoCode,
-                emailReceipt: !string.IsNullOrEmpty(customer.BillingAddress?.Email),
-                customerEmail: customer.BillingAddress?.Email,
+                emailReceipt: !string.IsNullOrEmpty(billingAddress?.Email),
+                customerEmail: billingAddress?.Email,
                 lineItems: JsonConvert.SerializeObject(items),
                 amtTax: Convert.ToDouble(Math.Round(taxAmount, 2))
             );
@@ -591,8 +601,8 @@ namespace Nop.Plugin.Payments.Qualpay.Services
             (
                 verify: true,
                 cardId: transactionRequest.CardId,
-                billingAddr1: customer.BillingAddress?.Address1,
-                billingZip: customer.BillingAddress?.ZipPostalCode
+                billingAddr1: billingAddress?.Address1,
+                billingZip: billingAddress?.ZipPostalCode
             ));
 
             return transactionRequest;
@@ -643,6 +653,8 @@ namespace Nop.Plugin.Payments.Qualpay.Services
             }
             else
             {
+                var billingAddress = _customerService.GetCustomerBillingAddress(customer);
+
                 //or try to tokenize card data now
                 cardId = TokenizeCard(new PGApiTokenizeRequest
                 (
@@ -653,8 +665,8 @@ namespace Nop.Plugin.Payments.Qualpay.Services
                     cardNumber: processPaymentRequest.CreditCardNumber,
                     cvv2: processPaymentRequest.CreditCardCvv2,
                     expDate: $"{processPaymentRequest.CreditCardExpireMonth:D2}{processPaymentRequest.CreditCardExpireYear.ToString().Substring(2)}",
-                    avsAddress: CommonHelper.EnsureMaximumLength(customer.BillingAddress?.Address1, 20),
-                    avsZip: customer.BillingAddress?.ZipPostalCode
+                    avsAddress: CommonHelper.EnsureMaximumLength(billingAddress?.Address1, 20),
+                    avsZip: billingAddress?.ZipPostalCode
                 ));
             }
 

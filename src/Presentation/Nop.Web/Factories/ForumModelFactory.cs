@@ -158,7 +158,7 @@ namespace Nop.Web.Factories
                 NumReplies = topic.NumReplies,
                 ForumTopicType = topic.ForumTopicType,
                 CustomerId = topic.CustomerId,
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !customer.IsGuest(),
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !_customerService.IsGuest(customer),
                 CustomerName = _customerService.FormatUsername(customer)
             };
 
@@ -385,8 +385,8 @@ namespace Nop.Web.Factories
             {
                 var customer = _customerService.GetCustomerById(post.CustomerId);
 
-                var customerIsGuest = customer.IsGuest();
-                var customerIsModerator = customerIsGuest ? false : customer.IsForumModerator();
+                var customerIsGuest = _customerService.IsGuest(customer);
+                var customerIsModerator = customerIsGuest ? false : _customerService.IsForumModerator(customer);
 
                 var forumPostModel = new ForumPostModel
                 {
@@ -875,7 +875,7 @@ namespace Nop.Web.Factories
             model.ForumTopicSeName = _forumService.GetTopicSeName(topic);
             model.ForumTopicSubject = _forumService.StripTopicSubject(topic);
             model.CustomerId = forumPost.CustomerId;
-            model.AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !customer.IsGuest();
+            model.AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !_customerService.IsGuest(customer);
             model.CustomerName = _customerService.FormatUsername(customer);
             //created on string
             var languageCode = _workContext.WorkingLanguage.LanguageCulture;

@@ -160,7 +160,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     };
 
                     //fill in additional values (not existing in the entity)
-                    shoppingCartModel.CustomerEmail = customer.IsRegistered()
+                    shoppingCartModel.CustomerEmail = _customerService.IsRegistered(customer)
                         ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     shoppingCartModel.TotalItems = _shoppingCartService.GetShoppingCart(customer, searchModel.ShoppingCartType,
                         searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate).Sum(item => item.Quantity);

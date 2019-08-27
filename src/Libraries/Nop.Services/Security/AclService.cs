@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -8,6 +8,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Data.Extensions;
+using Nop.Services.Customers;
 using Nop.Services.Events;
 
 namespace Nop.Services.Security
@@ -20,6 +21,7 @@ namespace Nop.Services.Security
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
+        private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<AclRecord> _aclRecordRepository;
         private readonly IStaticCacheManager _cacheManager;
@@ -30,12 +32,14 @@ namespace Nop.Services.Security
         #region Ctor
 
         public AclService(CatalogSettings catalogSettings,
+            ICustomerService customerService,
             IEventPublisher eventPublisher,
             IRepository<AclRecord> aclRecordRepository,
             IStaticCacheManager cacheManager,
             IWorkContext workContext)
         {
             _catalogSettings = catalogSettings;
+            _customerService = customerService;
             _eventPublisher = eventPublisher;
             _aclRecordRepository = aclRecordRepository;
             _cacheManager = cacheManager;
@@ -219,7 +223,7 @@ namespace Nop.Services.Security
             if (!entity.SubjectToAcl)
                 return true;
 
-            foreach (var role1 in customer.CustomerRoles.Where(cr => cr.Active))
+            foreach (var role1 in _customerService.GetCustomerRoles(customer))
                 foreach (var role2Id in GetCustomerRoleIdsWithAccess(entity))
                     if (role1.Id == role2Id)
                         //yes, we have such permission

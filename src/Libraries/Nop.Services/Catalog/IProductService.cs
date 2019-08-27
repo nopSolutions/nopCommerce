@@ -538,6 +538,14 @@ namespace Nop.Services.Catalog
         #region Tier prices
 
         /// <summary>
+        /// Gets a product tier prices for customer
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store identifier</param>
+        IList<TierPrice> GetTierPrices(Product product, Customer customer, int storeId);
+
+        /// <summary>
         /// Gets a tier prices by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>

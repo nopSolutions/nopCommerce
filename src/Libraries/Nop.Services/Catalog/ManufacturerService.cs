@@ -9,6 +9,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
+using Nop.Services.Customers;
 using Nop.Services.Events;
 
 namespace Nop.Services.Catalog
@@ -22,6 +23,7 @@ namespace Nop.Services.Catalog
 
         private readonly CatalogSettings _catalogSettings;
         private readonly ICacheManager _cacheManager;
+        private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<AclRecord> _aclRepository;
         private readonly IRepository<DiscountManufacturerMapping> _discountManufacturerMappingRepository;
@@ -38,6 +40,7 @@ namespace Nop.Services.Catalog
 
         public ManufacturerService(CatalogSettings catalogSettings,
             ICacheManager cacheManager,
+            ICustomerService customerService,
             IEventPublisher eventPublisher,
             IRepository<AclRecord> aclRepository,
             IRepository<DiscountManufacturerMapping> discountManufacturerMappingRepository,
@@ -50,6 +53,7 @@ namespace Nop.Services.Catalog
         {
             _catalogSettings = catalogSettings;
             _cacheManager = cacheManager;
+            _customerService = customerService;
             _eventPublisher = eventPublisher;
             _aclRepository = aclRepository;
             _discountManufacturerMappingRepository = discountManufacturerMappingRepository;
@@ -110,7 +114,7 @@ namespace Nop.Services.Catalog
             if (!showHidden && !_catalogSettings.IgnoreAcl)
             {
                 //ACL (access control list)
-                var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
                 query = from m in query
                         join acl in _aclRepository.Table
                             on new { c1 = m.Id, c2 = nameof(Manufacturer) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into m_acl
@@ -263,7 +267,7 @@ namespace Nop.Services.Catalog
                     if (!_catalogSettings.IgnoreAcl)
                     {
                         //ACL (access control list)
-                        var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                        var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
                         query = from pm in query
                                 join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                                 join acl in _aclRepository.Table
@@ -321,7 +325,7 @@ namespace Nop.Services.Catalog
                     if (!_catalogSettings.IgnoreAcl)
                     {
                         //ACL (access control list)
-                        var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                        var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
                         query = from pm in query
                                 join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                                 join acl in _aclRepository.Table

@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
@@ -39,16 +39,6 @@ namespace Nop.Data.Mapping.Orders
                 .WithMany()
                 .HasForeignKey(order => order.CustomerId)
                 .IsRequired();
-
-            builder.HasOne(order => order.BillingAddress)
-                .WithMany()
-                .HasForeignKey(order => order.BillingAddressId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasOne(order => order.ShippingAddress)
-                .WithMany()
-                .HasForeignKey(order => order.ShippingAddressId);
 
             builder.HasOne(order => order.PickupAddress)
                 .WithMany()

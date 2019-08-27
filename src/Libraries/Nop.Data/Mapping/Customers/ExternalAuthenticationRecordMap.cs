@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Customers;
 
@@ -19,11 +19,6 @@ namespace Nop.Data.Mapping.Customers
         {
             builder.ToTable(nameof(ExternalAuthenticationRecord));
             builder.HasKey(record => record.Id);
-
-            builder.HasOne(record => record.Customer)
-                .WithMany(customer => customer.ExternalAuthenticationRecords)
-                .HasForeignKey(record => record.CustomerId)
-                .IsRequired();
 
             base.Configure(builder);
         }

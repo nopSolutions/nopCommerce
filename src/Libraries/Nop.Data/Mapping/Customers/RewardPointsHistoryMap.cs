@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -22,16 +22,6 @@ namespace Nop.Data.Mapping.Customers
             builder.HasKey(historyEntry => historyEntry.Id);
 
             builder.Property(historyEntry => historyEntry.UsedAmount).HasColumnType("decimal(18, 4)");
-
-            builder.HasOne(historyEntry => historyEntry.Customer)
-                .WithMany()
-                .HasForeignKey(historyEntry => historyEntry.CustomerId)
-                .IsRequired();
-
-            builder.HasOne(historyEntry => historyEntry.UsedWithOrder)
-                .WithOne(order => order.RedeemedRewardPointsEntry)
-                .HasForeignKey<Order>(order => order.RewardPointsHistoryEntryId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
 
             base.Configure(builder);
         }

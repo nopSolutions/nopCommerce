@@ -60,6 +60,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICustomerAttributeService _customerAttributeService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly IGdprService _gdprService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGeoLookupService _geoLookupService;
@@ -72,6 +73,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IProductService _productService;
         private readonly IRewardPointService _rewardPointService;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
@@ -101,6 +103,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ICustomerAttributeService customerAttributeService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
+            IExternalAuthenticationService externalAuthenticationService,
             IGdprService gdprService,
             IGenericAttributeService genericAttributeService,
             IGeoLookupService geoLookupService,
@@ -113,6 +116,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IProductAttributeFormatter productAttributeFormatter,
             IProductService productService,
             IRewardPointService rewardPointService,
+            IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IStoreService storeService,
@@ -138,6 +142,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _customerAttributeService = customerAttributeService;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
+            _externalAuthenticationService = externalAuthenticationService;
             _gdprService = gdprService;
             _genericAttributeService = genericAttributeService;
             _geoLookupService = geoLookupService;
@@ -150,6 +155,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _productAttributeFormatter = productAttributeFormatter;
             _productService = productService;
             _rewardPointService = rewardPointService;
+            _shoppingCartService = shoppingCartService;
             _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
             _storeService = storeService;
@@ -193,7 +199,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            foreach (var record in customer.ExternalAuthenticationRecords)
+            foreach (var record in _externalAuthenticationService.GetCustomerExternalAuthenticationRecords(customer))
             {
                 var method = _authenticationPluginManager.LoadPluginBySystemName(record.ProviderSystemName);
                 if (method == null)
@@ -635,7 +641,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var customerModel = customer.ToModel<CustomerModel>();
 
                     //convert dates to the user time
-                    customerModel.Email = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+                    customerModel.Email = _customerService.IsRegistered(customer) ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     customerModel.FullName = _customerService.GetCustomerFullName(customer);
                     customerModel.Company = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute);
                     customerModel.Phone = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute);
@@ -645,7 +651,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     customerModel.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    customerModel.CustomerRoleNames = string.Join(", ", customer.CustomerRoles.Select(role => role.Name));
+                    customerModel.CustomerRoleNames = string.Join(", ", _customerService.GetCustomerRoles(customer).Select(role => role.Name));
                     if (_customerSettings.AllowCustomersToUploadAvatars)
                     {
                         var avatarPictureId = _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute);
@@ -676,9 +682,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 model.Id = customer.Id;
                 model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-                model.AllowSendingOfWelcomeMessage = customer.IsRegistered() &&
+                model.AllowSendingOfWelcomeMessage = _customerService.IsRegistered(customer) &&
                     _customerSettings.UserRegistrationType == UserRegistrationType.AdminApproval;
-                model.AllowReSendingOfActivationMessage = customer.IsRegistered() && !customer.Active &&
+                model.AllowReSendingOfActivationMessage = _customerService.IsRegistered(customer) && !customer.Active &&
                     _customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation;
                 model.GdprEnabled = _gdprSettings.GdprEnabled;
 
@@ -713,7 +719,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
                     model.LastIpAddress = customer.LastIpAddress;
                     model.LastVisitedPage = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastVisitedPageAttribute);
-                    model.SelectedCustomerRoleIds = customer.CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRoleId).ToList();
+                    model.SelectedCustomerRoleIds = _customerService.GetCustomerRoleIds(customer).ToList();
                     model.RegisteredInStore = _storeService.GetAllStores()
                         .FirstOrDefault(store => store.Id == customer.RegisteredInStoreId)?.Name ?? string.Empty;
 
@@ -873,7 +879,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customer));
 
             //get customer addresses
-            var addresses = customer.Addresses
+            var addresses = _customerService.GetAddressesByCustomerId(customer.Id)
                 .OrderByDescending(address => address.CreatedOnUtc).ThenByDescending(address => address.Id).ToList()
                 .ToPagedList(searchModel);
 
@@ -988,8 +994,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(customer));
 
             //get customer shopping cart
-            var shoppingCart = customer.ShoppingCartItems
-                .Where(item => item.ShoppingCartTypeId == searchModel.ShoppingCartTypeId).ToList()
+            var shoppingCart = _shoppingCartService.GetShoppingCart(customer, (ShoppingCartType)searchModel.ShoppingCartTypeId)
                 .ToPagedList(searchModel);
 
             //prepare list model
@@ -1146,7 +1151,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     customerModel.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    customerModel.CustomerInfo = customer.IsRegistered()
+                    customerModel.CustomerInfo = _customerService.IsRegistered(customer)
                         ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     customerModel.LastIpAddress = _customerSettings.StoreIpAddresses
                         ? customer.LastIpAddress : _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.IPAddress.Disabled");

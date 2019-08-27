@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.AspNetCore.Routing;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -25,6 +22,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderService _orderService;
@@ -36,6 +34,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public RecurringPaymentModelFactory(IDateTimeHelper dateTimeHelper,
+            ICustomerService customerService,
             ILocalizationService localizationService,
             IOrderProcessingService orderProcessingService,
             IOrderService orderService,
@@ -43,6 +42,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IWorkContext workContext)
         {
             _dateTimeHelper = dateTimeHelper;
+            _customerService = customerService;
             _localizationService = localizationService;
             _orderProcessingService = orderProcessingService;
             _orderService = orderService;
@@ -133,7 +133,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     recurringPaymentModel.CustomerId = recurringPayment.InitialOrder.CustomerId;
                     recurringPaymentModel.InitialOrderId = recurringPayment.InitialOrder.Id;
                     recurringPaymentModel.CyclePeriodStr = _localizationService.GetLocalizedEnum(recurringPayment.CyclePeriod);
-                    recurringPaymentModel.CustomerEmail = recurringPayment.InitialOrder.Customer.IsRegistered()
+                    recurringPaymentModel.CustomerEmail = _customerService.IsRegistered(recurringPayment.InitialOrder.Customer)
                         ? recurringPayment.InitialOrder.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
 
                     return recurringPaymentModel;
@@ -167,7 +167,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             model.CustomerId = recurringPayment.InitialOrder.CustomerId;
             model.InitialOrderId = recurringPayment.InitialOrder.Id;
-            model.CustomerEmail = recurringPayment.InitialOrder.Customer.IsRegistered()
+            model.CustomerEmail = _customerService.IsRegistered(recurringPayment.InitialOrder.Customer)
                 ? recurringPayment.InitialOrder.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
             model.PaymentType = _localizationService.GetLocalizedEnum(_paymentService
                 .GetRecurringPaymentType(recurringPayment.InitialOrder.PaymentMethodSystemName));

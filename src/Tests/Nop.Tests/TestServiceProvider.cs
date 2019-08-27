@@ -13,6 +13,8 @@ using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
+using Nop.Services.Orders;
+using Nop.Services.Customers;
 
 namespace Nop.Tests
 {
@@ -25,9 +27,9 @@ namespace Nop.Tests
             WorkContext = new Mock<IWorkContext>();
             
             PriceCalculationService = new PriceCalculationService(new CatalogSettings(), new CurrencySettings(), 
-                new Mock<ICategoryService>().Object, new Mock<ICurrencyService>().Object, new Mock<IDiscountService>().Object,
+                new Mock<ICategoryService>().Object, new Mock<ICurrencyService>().Object, new Mock<ICustomerService>().Object, new Mock<IDiscountService>().Object,
                 new Mock<IManufacturerService>().Object, new Mock<IProductAttributeParser>().Object, new Mock<IProductAttributeService>().Object,
-                new Mock<IProductService>().Object, new TestCacheManager(), new Mock<IStoreContext>().Object, WorkContext.Object, new ShoppingCartSettings());
+                new Mock<IProductService>().Object, new Mock<IShoppingCartService>().Object, new TestCacheManager(), new Mock<IStoreContext>().Object, WorkContext.Object, new ShoppingCartSettings());
 
             LocalizationService.Setup(l => l.GetResource(It.IsAny<string>())).Returns("Invalid");
             WorkContext.Setup(p => p.WorkingLanguage).Returns(new Language {Id = 1});

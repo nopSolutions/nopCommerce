@@ -207,7 +207,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 details.AffiliateId = affiliate.Id;
 
             //check whether customer is guest
-            if (details.Customer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
+            if (_customerService.IsGuest(details.Customer) && !_orderSettings.AnonymousCheckoutAllowed)
                 throw new NopException("Anonymous checkout is not allowed");
 
             //customer currency
@@ -225,13 +225,15 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 details.CustomerLanguage = _workContext.WorkingLanguage;
 
             //billing address
-            if (details.Customer.BillingAddress == null)
+            if (details.Customer.BillingAddressId == null)
                 throw new NopException("Billing address is not provided");
 
-            if (!CommonHelper.IsValidEmail(details.Customer.BillingAddress.Email))
+            var customerBillingAddress = _customerService.GetCustomerBillingAddress(details.Customer);
+
+            if (!CommonHelper.IsValidEmail(customerBillingAddress?.Email))
                 throw new NopException("Email is not valid");
 
-            details.BillingAddress = (Address)details.Customer.BillingAddress.Clone();
+            details.BillingAddress = (Address)customerBillingAddress.Clone();
             if (_countryService.GetCountryByAddress(details.BillingAddress) is Country countryBilling && !countryBilling.AllowsBilling)
                 throw new NopException($"Country '{countryBilling.Name}' is not allowed for billing");
 
@@ -321,14 +323,16 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 }
                 else
                 {
-                    if (details.Customer.ShippingAddress == null)
+                    if (details.Customer.ShippingAddressId == null)
                         throw new NopException("Shipping address is not provided");
 
-                    if (!CommonHelper.IsValidEmail(details.Customer.ShippingAddress.Email))
+                    var customerShippingAddress = _customerService.GetCustomerShippingAddress(details.Customer);
+
+                    if (!CommonHelper.IsValidEmail(customerShippingAddress?.Email))
                         throw new NopException("Email is not valid");
 
                     //clone shipping address
-                    details.ShippingAddress = (Address)details.Customer.ShippingAddress.Clone();
+                    details.ShippingAddress = (Address)customerShippingAddress.Clone();
                     if (_countryService.GetCountryByAddress(details.ShippingAddress) is Country countryShipping && !countryShipping.AllowsShipping)
                         throw new NopException($"Country '{countryShipping.Name}' is not allowed for shipping");
                 }

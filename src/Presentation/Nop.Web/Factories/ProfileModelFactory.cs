@@ -144,7 +144,7 @@ namespace Nop.Web.Factories
             }
 
             //private message
-            var pmEnabled = _forumSettings.AllowPrivateMessages && !customer.IsGuest();
+            var pmEnabled = _forumSettings.AllowPrivateMessages && !_customerService.IsGuest(customer);
 
             //total forum posts
             var totalPostsEnabled = false;

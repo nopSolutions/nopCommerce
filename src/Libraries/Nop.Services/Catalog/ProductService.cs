@@ -16,6 +16,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -36,6 +37,7 @@ namespace Nop.Services.Catalog
         private readonly CommonSettings _commonSettings;
         private readonly IAclService _aclService;
         private readonly ICacheManager _cacheManager;
+        private readonly ICustomerService _customerService;
         private readonly IDataProvider _dataProvider;
         private readonly IDateRangeService _dateRangeService;
         private readonly IDbContext _dbContext;
@@ -73,6 +75,7 @@ namespace Nop.Services.Catalog
             CommonSettings commonSettings,
             IAclService aclService,
             ICacheManager cacheManager,
+            ICustomerService customerService,
             IDataProvider dataProvider,
             IDateRangeService dateRangeService,
             IDbContext dbContext,
@@ -106,6 +109,7 @@ namespace Nop.Services.Catalog
             _commonSettings = commonSettings;
             _aclService = aclService;
             _cacheManager = cacheManager;
+            _customerService = customerService;
             _dataProvider = dataProvider;
             _dateRangeService = dateRangeService;
             _dbContext = dbContext;
@@ -481,7 +485,7 @@ namespace Nop.Services.Catalog
             if (!_catalogSettings.IgnoreAcl)
             {
                 //Access control list. Allowed customer roles
-                var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
 
                 query = from p in query
                         join acl in _aclRepository.Table
@@ -658,7 +662,7 @@ namespace Nop.Services.Catalog
                 categoryIds.Remove(0);
 
             //Access control list. Allowed customer roles
-            var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+            var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
 
             //pass category identifiers as comma-delimited string
             var commaSeparatedCategoryIds = categoryIds == null ? string.Empty : string.Join(",", categoryIds);
@@ -1942,6 +1946,42 @@ namespace Nop.Services.Catalog
         #region Tier prices
 
         /// <summary>
+        /// Gets a product tier prices for customer
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store identifier</param>
+        public virtual IList<TierPrice> GetTierPrices(Product product, Customer customer, int storeId)
+        {
+            if (product is null)
+                throw new ArgumentNullException(nameof(product));
+
+            if (customer is null)
+                throw new ArgumentNullException(nameof(customer));
+
+            if (!product.HasTierPrices)
+                return null;
+
+            //get actual tier prices
+            var actualTierPrices = GetTierPricesByProduct(product.Id).OrderBy(price => price.Quantity)
+                .FilterByStore(storeId)
+                .FilterByDate()
+                .RemoveDuplicatedQuantities();
+
+            if (!_catalogSettings.IgnoreAcl)
+            {
+                var customerRoleIds = _customerService.GetCustomerRoleIds(customer);
+
+                actualTierPrices = actualTierPrices.Where(tierPrice =>
+                   !tierPrice.CustomerRoleId.HasValue ||
+                   tierPrice.CustomerRoleId.Value == 0 ||
+                   customerRoleIds.Contains(tierPrice.CustomerRoleId.Value));
+            }
+
+            return actualTierPrices.ToList();
+        }
+
+        /// <summary>
         /// Gets a tier prices by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>
@@ -2024,19 +2064,17 @@ namespace Nop.Services.Catalog
         /// <returns>Tier price</returns>
         public virtual TierPrice GetPreferredTierPrice(Product product, Customer customer, int storeId, int quantity)
         {
+            if (product is null)
+                throw new ArgumentNullException(nameof(product));
+
+            if (customer is null)
+                throw new ArgumentNullException(nameof(customer));
+
             if (!product.HasTierPrices)
                 return null;
 
-            //get actual tier prices
-            var actualTierPrices = GetTierPricesByProduct(product.Id).OrderBy(price => price.Quantity).ToList()
-                .FilterByStore(storeId)
-                .FilterForCustomer(customer)
-                .FilterByDate()
-                .RemoveDuplicatedQuantities();
-
             //get the most suitable tier price based on the passed quantity
-            var tierPrice = actualTierPrices.LastOrDefault(price => quantity >= price.Quantity);
-            return tierPrice;
+            return GetTierPrices(product, customer, storeId)?.LastOrDefault(price => quantity >= price.Quantity);
         }
 
         #endregion

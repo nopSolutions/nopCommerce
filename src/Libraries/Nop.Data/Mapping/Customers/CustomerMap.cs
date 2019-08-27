@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Customers;
 
@@ -27,17 +27,6 @@ namespace Nop.Data.Mapping.Customers
 
             builder.Property(customer => customer.BillingAddressId).HasColumnName("BillingAddress_Id");
             builder.Property(customer => customer.ShippingAddressId).HasColumnName("ShippingAddress_Id");
-
-            builder.HasOne(customer => customer.BillingAddress)
-                .WithMany()
-                .HasForeignKey(customer => customer.BillingAddressId);
-
-            builder.HasOne(customer => customer.ShippingAddress)
-                .WithMany()
-                .HasForeignKey(customer => customer.ShippingAddressId);
-
-            builder.Ignore(customer => customer.CustomerRoles);
-            builder.Ignore(customer => customer.Addresses);
 
             base.Configure(builder);
         }

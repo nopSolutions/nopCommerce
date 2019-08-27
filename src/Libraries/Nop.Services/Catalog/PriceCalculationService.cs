@@ -9,8 +9,10 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
+using Nop.Services.Orders;
 
 namespace Nop.Services.Catalog
 {
@@ -25,11 +27,13 @@ namespace Nop.Services.Catalog
         private readonly CurrencySettings _currencySettings;
         private readonly ICategoryService _categoryService;
         private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly IDiscountService _discountService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductService _productService;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
@@ -43,11 +47,13 @@ namespace Nop.Services.Catalog
             CurrencySettings currencySettings,
             ICategoryService categoryService,
             ICurrencyService currencyService,
+            ICustomerService customerService,
             IDiscountService discountService,
             IManufacturerService manufacturerService,
             IProductAttributeParser productAttributeParser,
             IProductAttributeService productAttributeService,
             IProductService productService,
+            IShoppingCartService shoppingCartService,
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
             IWorkContext workContext,
@@ -57,11 +63,13 @@ namespace Nop.Services.Catalog
             _currencySettings = currencySettings;
             _categoryService = categoryService;
             _currencyService = currencyService;
+            _customerService = customerService;
             _discountService = discountService;
             _manufacturerService = manufacturerService;
             _productAttributeParser = productAttributeParser;
             _productAttributeService = productAttributeService;
             _productService = productService;
+            _shoppingCartService = shoppingCartService;
             _cacheManager = cacheManager;
             _storeContext = storeContext;
             _workContext = workContext;
@@ -154,7 +162,7 @@ namespace Nop.Services.Catalog
                     //load identifier of categories of this product
                     var cacheKey = string.Format(NopCatalogDefaults.ProductCategoryIdsModelCacheKey,
                         product.Id,
-                        string.Join(",", customer.GetCustomerRoleIds()),
+                        string.Join(",", _customerService.GetCustomerRoleIds(customer)),
                         _storeContext.CurrentStore.Id);
                     productCategoryIds = _cacheManager.Get(cacheKey, () =>
                         _categoryService
@@ -201,7 +209,7 @@ namespace Nop.Services.Catalog
                     //load identifier of manufacturers of this product
                     var cacheKey = string.Format(NopCatalogDefaults.ProductManufacturerIdsModelCacheKey,
                         product.Id,
-                        string.Join(",", customer.GetCustomerRoleIds()),
+                        string.Join(",", _customerService.GetCustomerRoleIds(customer)),
                         _storeContext.CurrentStore.Id);
                     productManufacturerIds = _cacheManager.Get(cacheKey, () =>
                         _manufacturerService
@@ -403,7 +411,7 @@ namespace Nop.Services.Catalog
                 additionalCharge.ToString(CultureInfo.InvariantCulture),
                 includeDiscounts,
                 quantity,
-                string.Join(",", customer.GetCustomerRoleIds()),
+                string.Join(",", _customerService.GetCustomerRoleIds(customer)),
                 _storeContext.CurrentStore.Id);
             var cacheTime = _catalogSettings.CacheProductPrices ? 60 : 0;
             //we do not cache price for rental products
@@ -577,11 +585,10 @@ namespace Nop.Services.Catalog
                     if (_shoppingCartSettings.GroupTierPricesForDistinctShoppingCartItems)
                     {
                         //the same products with distinct product attributes could be stored as distinct "ShoppingCartItem" records
-                        //so let's find how many of the current products are in the cart
-                        qty = customer.ShoppingCartItems
-                            .Where(x => x.ProductId == product.Id)
-                            .Where(x => x.ShoppingCartType == shoppingCartType)
+                        //so let's find how many of the current products are in the cart                        
+                        qty = _shoppingCartService.GetShoppingCart(customer, shoppingCartType: shoppingCartType, productId: product.Id)
                             .Sum(x => x.Quantity);
+
                         if (qty == 0)
                         {
                             qty = quantity;

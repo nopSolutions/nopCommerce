@@ -295,11 +295,7 @@ namespace Nop.Web.Factories
                     var tierPrices = new List<TierPrice>();
                     if (product.HasTierPrices)
                     {
-                        tierPrices.AddRange(_productService.GetTierPricesByProduct(product.Id).OrderBy(tp => tp.Quantity)
-                            .FilterByStore(_storeContext.CurrentStore.Id)
-                            .FilterForCustomer(_workContext.CurrentCustomer)
-                            .FilterByDate()
-                            .RemoveDuplicatedQuantities());
+                        tierPrices.AddRange(_productService.GetTierPrices(product, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id));
                     }
                     //When there is just one tier price (with  qty 1), there are no actual savings in the list.
                     var displayFromMessage = tierPrices.Any() && !(tierPrices.Count == 1 && tierPrices[0].Quantity <= 1);
@@ -319,7 +315,7 @@ namespace Nop.Web.Factories
                         if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
                             strikeThroughPrice = finalPriceWithoutDiscount;
 
-                        if(strikeThroughPrice > decimal.Zero)
+                        if (strikeThroughPrice > decimal.Zero)
                             priceModel.OldPrice = _priceFormatter.FormatPrice(strikeThroughPrice);
 
                         priceModel.Price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
@@ -411,7 +407,7 @@ namespace Nop.Web.Factories
                     var finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
 
                     priceModel.OldPrice = null;
-                    priceModel.Price = string.Format(_localizationService.GetResource("Products.PriceRangeFrom"),_priceFormatter.FormatPrice(finalPrice));
+                    priceModel.Price = string.Format(_localizationService.GetResource("Products.PriceRangeFrom"), _priceFormatter.FormatPrice(finalPrice));
                     priceModel.PriceValue = finalPrice;
 
                     //PAngV default baseprice (used in Germany)
@@ -484,7 +480,7 @@ namespace Nop.Web.Factories
             var cacheKey = string.Format(NopModelCacheDefaults.ProductBreadcrumbModelKey,
                     product.Id,
                     _workContext.WorkingLanguage.Id,
-                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                    string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                     _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
@@ -529,10 +525,10 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var productTagsCacheKey = string.Format(NopModelCacheDefaults.ProductTagByProductModelKey, 
-                product.Id, 
+            var productTagsCacheKey = string.Format(NopModelCacheDefaults.ProductTagByProductModelKey,
+                product.Id,
                 _workContext.WorkingLanguage.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                 _storeContext.CurrentStore.Id);
             var model = _cacheManager.Get(productTagsCacheKey, () =>
                 _productTagService.GetAllProductTagsByProductId(product.Id)
@@ -930,11 +926,7 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var model = _productService.GetTierPricesByProduct(product.Id).OrderBy(x => x.Quantity)
-                   .FilterByStore(_storeContext.CurrentStore.Id)
-                   .FilterForCustomer(_workContext.CurrentCustomer)
-                   .FilterByDate()
-                   .RemoveDuplicatedQuantities()
+            var model = _productService.GetTierPrices(product, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
                    .Select(tierPrice =>
                    {
                        var priceBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product,
@@ -964,7 +956,7 @@ namespace Nop.Web.Factories
             var manufacturersCacheKey = string.Format(NopModelCacheDefaults.ProductManufacturersModelKey,
                      product.Id,
                      _workContext.WorkingLanguage.Id,
-                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                     string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                      _storeContext.CurrentStore.Id);
             var model = _cacheManager.Get(manufacturersCacheKey,
                 () => _manufacturerService.GetProductManufacturersByProductId(product.Id)
@@ -1401,7 +1393,7 @@ namespace Nop.Web.Factories
                     Id = pr.Id,
                     CustomerId = pr.CustomerId,
                     CustomerName = _customerService.FormatUsername(customer),
-                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !customer.IsGuest(),
+                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !_customerService.IsGuest(customer),
                     Title = pr.Title,
                     ReviewText = pr.ReviewText,
                     ReplyText = pr.ReplyText,
@@ -1434,7 +1426,8 @@ namespace Nop.Web.Factories
 
             foreach (var rt in model.ReviewTypeList)
             {
-                if (model.ReviewTypeList.Count <= model.AddAdditionalProductReviewList.Count) continue;
+                if (model.ReviewTypeList.Count <= model.AddAdditionalProductReviewList.Count)
+                    continue;
                 var reviewType = _reviewTypeService.GetReviewTypeById(rt.Id);
                 var reviewTypeMappingModel = new AddProductReviewReviewTypeMappingModel
                 {
@@ -1465,7 +1458,7 @@ namespace Nop.Web.Factories
                 rtm.AverageRating = (double)totalRating / (totalCount > 0 ? totalCount : 1);
             }
 
-            model.AddProductReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !_workContext.CurrentCustomer.IsGuest();
+            model.AddProductReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !_customerService.IsGuest(_workContext.CurrentCustomer);
             model.AddProductReview.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage;
 
             return model;

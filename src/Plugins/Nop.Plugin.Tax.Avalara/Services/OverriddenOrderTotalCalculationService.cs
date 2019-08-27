@@ -11,6 +11,7 @@ using Nop.Core.Http.Extensions;
 using Nop.Plugin.Tax.Avalara.Domain;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
@@ -42,6 +43,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
 
         public OverriddenOrderTotalCalculationService(CatalogSettings catalogSettings,
             ICheckoutAttributeParser checkoutAttributeParser,
+            ICustomerService customerSercice,
             IDiscountService discountService,
             IGenericAttributeService genericAttributeService,
             IGiftCardService giftCardService,
@@ -60,6 +62,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             ShoppingCartSettings shoppingCartSettings,
             TaxSettings taxSettings) : base(catalogSettings,
                 checkoutAttributeParser,
+                customerSercice,
                 discountService,
                 genericAttributeService,
                 giftCardService,

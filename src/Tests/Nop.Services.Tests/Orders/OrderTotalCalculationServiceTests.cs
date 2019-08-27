@@ -54,12 +54,17 @@ namespace Nop.Services.Tests.Orders
         private Mock<ILocalizationService> _localizationService;
         private Mock<IWebHelper> _webHelper;
         private ShippingSettings _shippingSettings;
+
+        private Mock<IRepository<Customer>> _customerRepository;
+        private Mock<IRepository<CustomerRole>> _customerRoleRepository;        
+
         private Mock<IRepository<ShippingMethod>> _shippingMethodRepository;
         private Mock<IRepository<Warehouse>> _warehouseRepository;
         private NullLogger _logger;
         private ShippingService _shippingService;
         private Mock<IPaymentService> _paymentService;
         private Mock<ICheckoutAttributeParser> _checkoutAttributeParser;
+        private ICustomerService _customerService;
         private Mock<IGiftCardService> _giftCardService;
         private Mock<IGenericAttributeService> _genericAttributeService;
         private Mock<IGeoLookupService> _geoLookupService;
@@ -94,6 +99,7 @@ namespace Nop.Services.Tests.Orders
             _eventPublisher = new Mock<IEventPublisher>();
             _paymentService = new Mock<IPaymentService>();
             _checkoutAttributeParser = new Mock<ICheckoutAttributeParser>();
+            
             _giftCardService = new Mock<IGiftCardService>();
             _genericAttributeService = new Mock<IGenericAttributeService>();
             _eventPublisher = new Mock<IEventPublisher>();
@@ -105,7 +111,35 @@ namespace Nop.Services.Tests.Orders
             _currencyService = new Mock<ICurrencyService>();
             _shoppingCartService = new Mock<IShoppingCartService>();
 
+            _customerRepository = new Mock<IRepository<Customer>>();
+            _customerRepository.Setup(r => r.Table).Returns(
+                new List<Customer>
+                {
+                    new Customer() { Id = 1 }
+                }.AsQueryable());
+            _customerRepository.Setup(r => r.GetById(It.IsAny<int>())).Returns((int id) => _customerRepository.Object.Table.FirstOrDefault(c => c.Id == id));
 
+
+            _customerRoleRepository = new Mock<IRepository<CustomerRole>>();
+
+            _customerRoleRepository.Setup(r => r.Table).Returns(
+                new List<CustomerRole>
+                {
+                    new CustomerRole
+                    {
+                        Id = 1,
+                        Active = true,
+                        FreeShipping = true
+                    },
+                    new CustomerRole
+                    {
+                        Id = 2,
+                        Active = true,
+                        FreeShipping = false
+                    }
+                }.AsQueryable());
+
+            _customerService = TestCustomerService.Get(customerRepository: _customerRepository, customerRoleRepository: _customerRoleRepository);
 
             _store = new Store { Id = 1 };
 
@@ -118,8 +152,8 @@ namespace Nop.Services.Tests.Orders
             _currencySettings = new CurrencySettings();
 
             _priceCalculationService = new PriceCalculationService(_catalogSettings, _currencySettings, _categoryService.Object,
-                _currencyService.Object, _discountService, _manufacturerService.Object,
-                _productAttributeParser.Object, _productAttributeService.Object, _productService.Object,
+                _currencyService.Object, _customerService, _discountService, _manufacturerService.Object,
+                _productAttributeParser.Object, _productAttributeService.Object, _productService.Object, _shoppingCartService.Object,
                 cacheManager, _storeContext.Object,
                 _workContext.Object, _shoppingCartSettings);
 
@@ -185,6 +219,7 @@ namespace Nop.Services.Tests.Orders
                 _customerSettings,
                 _addressService.Object,
                 _countryService.Object,
+                _customerService,
                 _genericAttributeService.Object,
                 _geoLookupService.Object,
                 _logger,
@@ -201,6 +236,7 @@ namespace Nop.Services.Tests.Orders
 
             _orderTotalCalcService = new OrderTotalCalculationService(_catalogSettings,
                 _checkoutAttributeParser.Object,
+                _customerService,
                 _discountService,
                 _genericAttributeService.Object,
                 _giftCardService.Object,
@@ -601,20 +637,14 @@ namespace Nop.Services.Tests.Orders
                 }
             };
             var cart = new List<ShoppingCartItem> { sci1, sci2 };
-            var customer = new Customer();
-            var customerRole1 = new CustomerRole
-            {
-                Active = true,
-                FreeShipping = true
-            };
-            var customerRole2 = new CustomerRole
-            {
-                Active = true,
-                FreeShipping = false
-            };
-            customer.CustomerRoles.Add(customerRole1);
-            customer.CustomerRoles.Add(customerRole2);
-            cart.ForEach(sci => sci.Customer = customer);
+
+            var customer = _customerRepository.Object.GetById(1);
+            var customerRole1 = _customerRoleRepository.Object.Table.FirstOrDefault(c => c.Id == 1);
+            var customerRole2 = _customerRoleRepository.Object.Table.FirstOrDefault(c => c.Id == 2);
+
+            _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole1.Id });
+            _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole2.Id });
+
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
             _orderTotalCalcService.IsFreeShipping(cart).ShouldEqual(true);

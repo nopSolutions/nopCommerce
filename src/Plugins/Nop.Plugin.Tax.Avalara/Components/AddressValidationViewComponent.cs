@@ -11,6 +11,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Plugin.Tax.Avalara.Models.Checkout;
 using Nop.Plugin.Tax.Avalara.Services;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -32,6 +33,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
         private readonly AvalaraTaxSettings _avalaraTaxSettings;
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
+        private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
         private readonly IStateProvinceService _stateProvinceService;
@@ -48,6 +50,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
             AvalaraTaxSettings avalaraTaxSettings,
             IAddressService addressService,
             ICountryService countryService,
+            ICustomerService customerService,
             ILocalizationService localizationService,
             ILogger logger,
             IStateProvinceService stateProvinceService,
@@ -60,6 +63,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
             _avalaraTaxSettings = avalaraTaxSettings;
             _addressService = addressService;
             _countryService = countryService;
+            _customerService = customerService;
             _localizationService = localizationService;
             _logger = logger;
             _stateProvinceService = stateProvinceService;
@@ -114,11 +118,14 @@ namespace Nop.Plugin.Tax.Avalara.Components
                 return Content(string.Empty);
 
             //validate entered by customer addresses only
-            var address = _taxSettings.TaxBasedOn == TaxBasedOn.BillingAddress
-                ? _workContext.CurrentCustomer.BillingAddress
+            var addressId = _taxSettings.TaxBasedOn == TaxBasedOn.BillingAddress
+                ? _workContext.CurrentCustomer.BillingAddressId
                 : _taxSettings.TaxBasedOn == TaxBasedOn.ShippingAddress
-                ? _workContext.CurrentCustomer.ShippingAddress
+                ? _workContext.CurrentCustomer.ShippingAddressId
                 : null;
+
+            var address = _addressService.GetAddressById(addressId ?? 0);
+
             if (address == null)
                 return Content(string.Empty);
 
@@ -170,7 +177,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
             validatedAddress.StateProvinceId = _stateProvinceService.GetStateProvinceByAbbreviation(validatedAddressInfo.region)?.Id;
 
             //try to find an existing address with the same values
-            var existingAddress = _addressService.FindAddress(_workContext.CurrentCustomer.Addresses.ToList(),
+            var existingAddress = _addressService.FindAddress(_customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id).ToList(),
                 validatedAddress.FirstName, validatedAddress.LastName, validatedAddress.PhoneNumber,
                 validatedAddress.Email, validatedAddress.FaxNumber, validatedAddress.Company,
                 validatedAddress.Address1, validatedAddress.Address2, validatedAddress.City,

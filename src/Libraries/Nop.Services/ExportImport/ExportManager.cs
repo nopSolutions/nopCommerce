@@ -1610,10 +1610,10 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer>("AffiliateId", p => p.AffiliateId),
                 new PropertyByName<Customer>("VendorId", p => p.VendorId),
                 new PropertyByName<Customer>("Active", p => p.Active),
-                new PropertyByName<Customer>("IsGuest", p => p.IsGuest()),
-                new PropertyByName<Customer>("IsRegistered", p => p.IsRegistered()),
-                new PropertyByName<Customer>("IsAdministrator", p => p.IsAdmin()),
-                new PropertyByName<Customer>("IsForumModerator", p => p.IsForumModerator()),
+                new PropertyByName<Customer>("IsGuest", p => _customerService.IsGuest(p)),
+                new PropertyByName<Customer>("IsRegistered", p => _customerService.IsRegistered(p)),
+                new PropertyByName<Customer>("IsAdministrator", p => _customerService.IsAdmin(p)),
+                new PropertyByName<Customer>("IsForumModerator", p => _customerService.IsForumModerator(p)),
                 new PropertyByName<Customer>("CreatedOnUtc", p => p.CreatedOnUtc),
                 //attributes
                 new PropertyByName<Customer>("FirstName", p => _genericAttributeService.GetAttribute<string>(p, NopCustomerDefaults.FirstNameAttribute)),
@@ -1673,10 +1673,10 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("VendorId", null, customer.VendorId.ToString());
                 xmlWriter.WriteElementString("Active", null, customer.Active.ToString());
 
-                xmlWriter.WriteElementString("IsGuest", null, customer.IsGuest().ToString());
-                xmlWriter.WriteElementString("IsRegistered", null, customer.IsRegistered().ToString());
-                xmlWriter.WriteElementString("IsAdministrator", null, customer.IsAdmin().ToString());
-                xmlWriter.WriteElementString("IsForumModerator", null, customer.IsForumModerator().ToString());
+                xmlWriter.WriteElementString("IsGuest", null, _customerService.IsGuest(customer).ToString());
+                xmlWriter.WriteElementString("IsRegistered", null, _customerService.IsRegistered(customer).ToString());
+                xmlWriter.WriteElementString("IsAdministrator", null, _customerService.IsAdmin(customer).ToString());
+                xmlWriter.WriteElementString("IsForumModerator", null, _customerService.IsForumModerator(customer).ToString());
                 xmlWriter.WriteElementString("CreatedOnUtc", null, customer.CreatedOnUtc.ToString(CultureInfo.InvariantCulture));
 
                 xmlWriter.WriteElementString("FirstName", null, _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute));
@@ -1931,7 +1931,7 @@ namespace Nop.Services.ExportImport
                     customerManager.WriteToXlsx(customerInfoWorksheet, customerInfoRow);
 
                     //customer addresses
-                    if (customer.Addresses.Any())
+                    if (_customerService.GetAddressesByCustomerId(customer.Id) is IList<Address> addresses && addresses.Any())
                     {
                         customerInfoRow += 2;
 
@@ -1941,7 +1941,7 @@ namespace Nop.Services.ExportImport
                         addressManager.SetCaptionStyle(cell);
                         addressManager.WriteCaption(customerInfoWorksheet, customerInfoRow);
 
-                        foreach (var customerAddress in customer.Addresses)
+                        foreach (var customerAddress in addresses)
                         {
                             customerInfoRow += 1;
                             addressManager.CurrentObject = customerAddress;

@@ -151,7 +151,7 @@ namespace Nop.Plugin.Tax.Avalara
             transactionModel.lines = GetItemLines(order);
 
             //set whole request tax exemption
-            var exemptedCustomerRole = order.Customer?.CustomerRoles.FirstOrDefault(role => role.Active && role.TaxExempt);
+            var exemptedCustomerRole = order.Customer is null ? null : _customerService.GetCustomerRoles(order.Customer).FirstOrDefault(role => role.TaxExempt);
             if (order.Customer?.IsTaxExempt ?? false)
                 transactionModel.exemptionNo = CommonHelper.EnsureMaximumLength($"Exempt-customer-#{order.Customer?.Id}", 25);
             else if (!string.IsNullOrEmpty(exemptedCustomerRole?.Name))

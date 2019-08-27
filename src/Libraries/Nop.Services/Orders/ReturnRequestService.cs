@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -151,6 +151,21 @@ namespace Nop.Services.Orders
                 return null;
 
             return _returnRequestActionRepository.GetById(returnRequestActionId);
+        }
+
+        /// <summary>
+        /// Inserts a return request
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        public virtual void InsertReturnRequest(ReturnRequest returnRequest)
+        {
+            if (returnRequest == null)
+                throw new ArgumentNullException(nameof(returnRequest));
+
+            _returnRequestRepository.Insert(returnRequest);
+
+            //event notification
+            _eventPublisher.EntityInserted(returnRequest);
         }
 
         /// <summary>

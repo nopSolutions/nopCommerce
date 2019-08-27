@@ -12,6 +12,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
@@ -28,6 +29,7 @@ namespace Nop.Services.Orders
 
         private readonly CatalogSettings _catalogSettings;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
+        private readonly ICustomerService _customerService;
         private readonly IDiscountService _discountService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGiftCardService _giftCardService;
@@ -51,6 +53,7 @@ namespace Nop.Services.Orders
 
         public OrderTotalCalculationService(CatalogSettings catalogSettings,
             ICheckoutAttributeParser checkoutAttributeParser,
+            ICustomerService customerService,
             IDiscountService discountService,
             IGenericAttributeService genericAttributeService,
             IGiftCardService giftCardService,
@@ -70,6 +73,7 @@ namespace Nop.Services.Orders
         {
             _catalogSettings = catalogSettings;
             _checkoutAttributeParser = checkoutAttributeParser;
+            _customerService = customerService;
             _discountService = discountService;
             _genericAttributeService = genericAttributeService;
             _giftCardService = giftCardService;
@@ -237,7 +241,7 @@ namespace Nop.Services.Orders
 
             //reward points
             var rewardPointsOfOrder = _rewardPointService.GetRewardPointsHistory(customer.Id)
-                .FirstOrDefault(history => history.UsedWithOrder == updatedOrder);
+                .FirstOrDefault(history => history.OrderId == updatedOrder.Id);
             if (rewardPointsOfOrder != null)
             {
                 var rewardPoints = -rewardPointsOfOrder.Points;
@@ -397,7 +401,7 @@ namespace Nop.Services.Orders
                             //customer chose pickup in store method, try to get chosen pickup point
                             if (_shippingSettings.AllowPickupInStore)
                             {
-                                var pickupPointsResponse = _shippingService.GetPickupPoints(updatedOrder.BillingAddress, updatedOrder.Customer,
+                                var pickupPointsResponse = _shippingService.GetPickupPoints(updatedOrder.BillingAddressId, updatedOrder.Customer,
                                     updatedOrder.ShippingRateComputationMethodSystemName, _storeContext.CurrentStore.Id);
                                 if (pickupPointsResponse.Success)
                                 {
@@ -440,7 +444,7 @@ namespace Nop.Services.Orders
                         if (_shippingSettings.AllowPickupInStore)
                         {
                             //try to get the cheapest pickup point
-                            var pickupPointsResponse = _shippingService.GetPickupPoints(updatedOrder.BillingAddress, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
+                            var pickupPointsResponse = _shippingService.GetPickupPoints(updatedOrder.BillingAddressId, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
                             if (pickupPointsResponse.Success)
                             {
                                 updateOrderParameters.PickupPoint = pickupPointsResponse.PickupPoints
@@ -459,7 +463,9 @@ namespace Nop.Services.Orders
                             var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
                             if (shippingRateComputationMethods.Any())
                             {
-                                var shippingOptionsResponse = _shippingService.GetShippingOptions(restoredCart, customer.ShippingAddress, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
+                                var customerShippingAddress = _customerService.GetCustomerShippingAddress(customer);
+
+                                var shippingOptionsResponse = _shippingService.GetShippingOptions(restoredCart, customerShippingAddress, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
                                 if (shippingOptionsResponse.Success)
                                 {
                                     var shippingOption = shippingOptionsResponse.ShippingOptions.OrderBy(option => option.Rate)
@@ -467,7 +473,7 @@ namespace Nop.Services.Orders
                                     updatedOrder.ShippingRateComputationMethodSystemName =
                                         shippingOption.ShippingRateComputationMethodSystemName;
                                     updatedOrder.ShippingMethod = shippingOption.Name;
-                                    updatedOrder.ShippingAddress = (Address)customer.ShippingAddress.Clone();
+                                    updatedOrder.ShippingAddress = (Address)customerShippingAddress.Clone();
                                     shippingTotal = shippingOption.Rate;
                                 }
                                 else
@@ -922,8 +928,9 @@ namespace Nop.Services.Orders
         public virtual bool IsFreeShipping(IList<ShoppingCartItem> cart, decimal? subTotal = null)
         {
             //check whether customer is in a customer role with free shipping applied
-            var customer = cart.FirstOrDefault(item => item.Customer != null)?.Customer;
-            if (customer != null && customer.CustomerRoles.Where(role => role.Active).Any(role => role.FreeShipping))
+            var customer = _customerService.GetCustomerById(cart.FirstOrDefault()?.CustomerId ?? 0);
+
+            if (customer != null && _customerService.GetCustomerRoles(customer).Any(role => role.FreeShipping))
                 return true;
 
             //check whether all shopping cart items and their associated products marked as free shipping
@@ -1060,7 +1067,7 @@ namespace Nop.Services.Orders
                 //use fixed rate (if possible)
                 Address shippingAddress = null;
                 if (customer != null)
-                    shippingAddress = customer.ShippingAddress;
+                    shippingAddress = _customerService.GetCustomerShippingAddress(customer);
 
                 if (shippingRateComputationMethods != null)
                 {
@@ -1441,7 +1448,7 @@ namespace Nop.Services.Orders
                 return 0;
 
             //ensure that reward points are applied only to registered users
-            if (customer == null || customer.IsGuest())
+            if (customer == null || _customerService.IsGuest(customer))
                 return 0;
 
             var points = (int)Math.Truncate(amount / _rewardPointsSettings.PointsForPurchases_Amount * _rewardPointsSettings.PointsForPurchases_Points);

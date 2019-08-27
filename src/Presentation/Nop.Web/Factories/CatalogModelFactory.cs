@@ -21,6 +21,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -47,6 +48,7 @@ namespace Nop.Web.Factories
         private readonly ICategoryService _categoryService;
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILocalizationService _localizationService;
@@ -82,6 +84,7 @@ namespace Nop.Web.Factories
             ICategoryService categoryService,
             ICategoryTemplateService categoryTemplateService,
             ICurrencyService currencyService,
+            ICustomerService customerService,
             IEventPublisher eventPublisher,
             IHttpContextAccessor httpContextAccessor,
             ILocalizationService localizationService,
@@ -113,6 +116,7 @@ namespace Nop.Web.Factories
             _categoryService = categoryService;
             _categoryTemplateService = categoryTemplateService;
             _currencyService = currencyService;
+            _customerService = customerService;
             _eventPublisher = eventPublisher;
             _httpContextAccessor = httpContextAccessor;
             _localizationService = localizationService;
@@ -372,7 +376,7 @@ namespace Nop.Web.Factories
 
                 var breadcrumbCacheKey = string.Format(NopModelCacheDefaults.CategoryBreadcrumbKey,
                     category.Id,
-                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                    string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                     _storeContext.CurrentStore.Id,
                     _workContext.WorkingLanguage.Id);
                 model.CategoryBreadcrumb = _cacheManager.Get(breadcrumbCacheKey, () =>
@@ -392,7 +396,7 @@ namespace Nop.Web.Factories
             var subCategoriesCacheKey = string.Format(NopModelCacheDefaults.CategorySubcategoriesKey,
                 category.Id,
                 pictureSize,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                 _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id,
                 _webHelper.IsCurrentConnectionSecured());
@@ -434,7 +438,7 @@ namespace Nop.Web.Factories
                 //We cache a value indicating whether we have featured products
                 IPagedList<Product> featuredProducts = null;
                 var cacheKey = string.Format(NopModelCacheDefaults.CategoryHasFeaturedProductsKey, category.Id,
-                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id);
+                    string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)), _storeContext.CurrentStore.Id);
                 var hasFeaturedProductsCache = _cacheManager.Get(cacheKey, () =>
                 {
                     //no value in the cache yet
@@ -564,7 +568,7 @@ namespace Nop.Web.Factories
             var topicCacheKey = string.Format(NopModelCacheDefaults.TopicTopMenuModelKey,
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
+                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)));
             var cachedTopicModel = _cacheManager.Get(topicCacheKey, () =>
                 _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
                 .Where(t => t.IncludeInTopMenu)
@@ -604,7 +608,7 @@ namespace Nop.Web.Factories
             var pictureSize = _mediaSettings.CategoryThumbPictureSize;
 
             var categoriesCacheKey = string.Format(NopModelCacheDefaults.CategoryHomepageKey,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                 pictureSize,
                 _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id,
@@ -657,7 +661,7 @@ namespace Nop.Web.Factories
             //load and cache them
             var cacheKey = string.Format(NopModelCacheDefaults.CategoryAllModelKey,
                 _workContext.WorkingLanguage.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                 _storeContext.CurrentStore.Id);
             return _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels(0));
         }
@@ -693,7 +697,7 @@ namespace Nop.Web.Factories
                 if (_catalogSettings.ShowCategoryProductNumber)
                 {
                     var cacheKey = string.Format(NopModelCacheDefaults.CategoryNumberOfProductsModelKey,
-                        string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                        string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                         _storeContext.CurrentStore.Id,
                         category.Id);
                     categoryModel.NumberOfProducts = _cacheManager.Get(cacheKey, () =>
@@ -730,7 +734,7 @@ namespace Nop.Web.Factories
         {
             var cacheKey = string.Format(NopModelCacheDefaults.CategoryXmlAllModelKey,
                 _workContext.WorkingLanguage.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                 _storeContext.CurrentStore.Id);
 
             return _cacheManager.Get(cacheKey, () => {
@@ -843,7 +847,7 @@ namespace Nop.Web.Factories
                 //We cache a value indicating whether we have featured products
                 var cacheKey = string.Format(NopModelCacheDefaults.ManufacturerHasFeaturedProductsKey,
                     manufacturer.Id,
-                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                    string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                     _storeContext.CurrentStore.Id);
                 var hasFeaturedProductsCache = _cacheManager.Get(cacheKey, () =>
                 {
@@ -963,7 +967,7 @@ namespace Nop.Web.Factories
             var cacheKey = string.Format(NopModelCacheDefaults.ManufacturerNavigationModelKey,
                 currentManufacturerId,
                 _workContext.WorkingLanguage.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                 _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
@@ -1269,7 +1273,7 @@ namespace Nop.Web.Factories
 
             var cacheKey = string.Format(NopModelCacheDefaults.SearchCategoriesModelKey,
                 _workContext.WorkingLanguage.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                 _storeContext.CurrentStore.Id);
             var categories = _cacheManager.Get(cacheKey, () =>
             {

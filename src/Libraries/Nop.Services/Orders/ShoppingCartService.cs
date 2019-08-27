@@ -178,6 +178,16 @@ namespace Nop.Services.Orders
             return rentalInfoEqual;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether customer shopping cart is empty
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        protected virtual bool IsCustomerShoppingCartEmpty(Customer customer)
+        {
+            return !_sciRepository.Table.Any(sci => sci.CustomerId == customer.Id);
+        }
+
         #endregion
 
         #region Methods
@@ -207,7 +217,7 @@ namespace Nop.Services.Orders
             _sciRepository.Delete(shoppingCartItem);
 
             //reset "HasShoppingCartItems" property used for performance optimization
-            customer.HasShoppingCartItems = customer.ShoppingCartItems.Any();
+            customer.HasShoppingCartItems = IsCustomerShoppingCartEmpty(customer);
             _customerService.UpdateCustomer(customer);
 
             //validate checkout attributes
@@ -233,8 +243,7 @@ namespace Nop.Services.Orders
                 return;
 
             var requiredProductIds = _productService.ParseRequiredProductIds(product);
-            var requiredShoppingCartItems = customer.ShoppingCartItems
-                .Where(x => x.ShoppingCartType == shoppingCartItem.ShoppingCartType)
+            var requiredShoppingCartItems = GetShoppingCart(customer, shoppingCartType: shoppingCartItem.ShoppingCartType)
                 .Where(item => requiredProductIds.Any(id => id == item.ProductId))
                 .ToList();
 
@@ -582,7 +591,7 @@ namespace Nop.Services.Orders
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var items = customer.ShoppingCartItems.AsEnumerable();
+            var items = _sciRepository.Table.Where(sci => sci.CustomerId == customer.Id);
 
             //filter by type
             if (shoppingCartType.HasValue)
@@ -1260,13 +1269,15 @@ namespace Nop.Services.Orders
                     RentalStartDateUtc = rentalStartDate,
                     RentalEndDateUtc = rentalEndDate,
                     CreatedOnUtc = now,
-                    UpdatedOnUtc = now
+                    UpdatedOnUtc = now,
+                    CustomerId = customer.Id
                 };
-                customer.ShoppingCartItems.Add(shoppingCartItem);
-                _customerService.UpdateCustomer(customer);
+
+                _sciRepository.Insert(shoppingCartItem);
 
                 //updated "HasShoppingCartItems" property used for performance optimization
-                customer.HasShoppingCartItems = customer.ShoppingCartItems.Any();
+                customer.HasShoppingCartItems = IsCustomerShoppingCartEmpty(customer);
+
                 _customerService.UpdateCustomer(customer);
 
                 //event notification
@@ -1299,8 +1310,9 @@ namespace Nop.Services.Orders
 
             var warnings = new List<string>();
 
-            var shoppingCartItem = customer.ShoppingCartItems.FirstOrDefault(sci => sci.Id == shoppingCartItemId);
-            if (shoppingCartItem == null)
+            var shoppingCartItem = _sciRepository.GetById(shoppingCartItemId);
+
+            if (shoppingCartItem == null || shoppingCartItem.CustomerId != customer.Id)
                 return warnings;
 
             if (resetCheckoutData)
@@ -1363,7 +1375,8 @@ namespace Nop.Services.Orders
                 return; //the same customer
 
             //shopping cart items
-            var fromCart = fromCustomer.ShoppingCartItems.ToList();
+            var fromCart = GetShoppingCart(fromCustomer);
+
             for (var i = 0; i < fromCart.Count; i++)
             {
                 var sci = fromCart[i];

@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Polls;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Polls;
 using Nop.Services.Stores;
@@ -14,6 +14,7 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
+        private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly IPollModelFactory _pollModelFactory;
         private readonly IPollService _pollService;
@@ -24,12 +25,14 @@ namespace Nop.Web.Controllers
 
         #region Ctor
 
-        public PollController(ILocalizationService localizationService, 
+        public PollController(ICustomerService customerService, 
+            ILocalizationService localizationService, 
             IPollModelFactory pollModelFactory,
             IPollService pollService,
             IStoreMappingService storeMappingService,
             IWorkContext workContext)
         {
+            _customerService = customerService;
             _localizationService = localizationService;
             _pollModelFactory = pollModelFactory;
             _pollService = pollService;
@@ -53,7 +56,7 @@ namespace Nop.Web.Controllers
             if (!poll.Published || !_storeMappingService.Authorize(poll))
                 return Json(new { error = "Poll is not available" });
 
-            if (_workContext.CurrentCustomer.IsGuest() && !poll.AllowGuestsToVote)
+            if (_customerService.IsGuest(_workContext.CurrentCustomer) && !poll.AllowGuestsToVote)
                 return Json(new { error = _localizationService.GetResource("Polls.OnlyRegisteredUsersVote") });
 
             var alreadyVoted = _pollService.AlreadyVoted(poll.Id, _workContext.CurrentCustomer.Id);

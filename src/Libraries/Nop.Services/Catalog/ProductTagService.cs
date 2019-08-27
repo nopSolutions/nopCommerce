@@ -8,6 +8,7 @@ using Nop.Core.Data.Extensions;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
+using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Seo;
 
@@ -22,6 +23,7 @@ namespace Nop.Services.Catalog
 
         private readonly CatalogSettings _catalogSettings;
         private readonly ICacheManager _cacheManager;
+        private readonly ICustomerService _customerService;
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
@@ -37,10 +39,10 @@ namespace Nop.Services.Catalog
 
         public ProductTagService(CatalogSettings catalogSettings,
             ICacheManager cacheManager,
+            ICustomerService customerService,
             IDataProvider dataProvider,
             IDbContext dbContext,
             IEventPublisher eventPublisher,
-            IProductService productService,
             IRepository<ProductProductTagMapping> productProductTagMappingRepository,
             IRepository<ProductTag> productTagRepository,
             IStaticCacheManager staticCacheManager,
@@ -49,6 +51,7 @@ namespace Nop.Services.Catalog
         {
             _catalogSettings = catalogSettings;
             _cacheManager = cacheManager;
+            _customerService = customerService;
             _dataProvider = dataProvider;
             _dbContext = dbContext;
             _eventPublisher = eventPublisher;
@@ -76,7 +79,7 @@ namespace Nop.Services.Catalog
             {
                 //Access control list. Allowed customer roles
                 //pass customer role identifiers as comma-delimited string
-                allowedCustomerRolesIds = string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds());
+                allowedCustomerRolesIds = string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
             }
 
             var key = string.Format(NopCatalogDefaults.ProductTagCountCacheKey, storeId, allowedCustomerRolesIds, showHidden);

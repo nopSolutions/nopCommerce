@@ -12,6 +12,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
+using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Security;
@@ -30,6 +31,7 @@ namespace Nop.Services.Catalog
         private readonly CommonSettings _commonSettings;
         private readonly IAclService _aclService;
         private readonly ICacheManager _cacheManager;
+        private readonly ICustomerService _customerService;
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
@@ -53,12 +55,14 @@ namespace Nop.Services.Catalog
             CommonSettings commonSettings,
             IAclService aclService,
             ICacheManager cacheManager,
+            ICustomerService customerService,
             IDataProvider dataProvider,
             IDbContext dbContext,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             IRepository<AclRecord> aclRepository,
             IRepository<Category> categoryRepository,
+            IRepository<DiscountCategoryMapping> discountCategoryMappingRepository,
             IRepository<Product> productRepository,
             IRepository<ProductCategory> productCategoryRepository,
             IRepository<StoreMapping> storeMappingRepository,
@@ -71,12 +75,14 @@ namespace Nop.Services.Catalog
             _commonSettings = commonSettings;
             _aclService = aclService;
             _cacheManager = cacheManager;
+            _customerService = customerService;
             _dataProvider = dataProvider;
             _dbContext = dbContext;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
             _aclRepository = aclRepository;
             _categoryRepository = categoryRepository;
+            _discountCategoryMappingRepository = discountCategoryMappingRepository;
             _productRepository = productRepository;
             _productCategoryRepository = productCategoryRepository;
             _storeMappingRepository = storeMappingRepository;
@@ -134,7 +140,7 @@ namespace Nop.Services.Catalog
                 //cacheable copy
                 var key = string.Format(NopCatalogDefaults.CategoriesAllCacheKey,
                     storeId,
-                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                    string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                     showHidden);
                 categories = _staticCacheManager.Get(key, () =>
                 {
@@ -176,7 +182,7 @@ namespace Nop.Services.Catalog
                 var pageIndexParameter = _dataProvider.GetInt32Parameter("PageIndex", pageIndex);
                 var pageSizeParameter = _dataProvider.GetInt32Parameter("PageSize", pageSize);
                 //pass allowed customer role identifiers as comma-delimited string
-                var customerRoleIdsParameter = _dataProvider.GetStringParameter("CustomerRoleIds", !_catalogSettings.IgnoreAcl ? string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()) : string.Empty);
+                var customerRoleIdsParameter = _dataProvider.GetStringParameter("CustomerRoleIds", !_catalogSettings.IgnoreAcl ? string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)) : string.Empty);
 
                 var totalRecordsParameter = _dataProvider.GetOutputInt32Parameter("TotalRecords");
 
@@ -204,7 +210,7 @@ namespace Nop.Services.Catalog
                 if (!showHidden && !_catalogSettings.IgnoreAcl)
                 {
                     //ACL (access control list)
-                    var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                    var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
                     query = from c in query
                             join acl in _aclRepository.Table
                                 on new { c1 = c.Id, c2 = nameof(Category) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
@@ -260,7 +266,7 @@ namespace Nop.Services.Catalog
                     if (!_catalogSettings.IgnoreAcl)
                     {
                         //ACL (access control list)
-                        var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                        var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
                         query = from c in query
                                 join acl in _aclRepository.Table
                                 on new { c1 = c.Id, c2 = nameof(Category) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
@@ -325,7 +331,7 @@ namespace Nop.Services.Catalog
         {
             var cacheKey = string.Format(NopCatalogDefaults.CategoriesChildIdentifiersCacheKey,
                 parentCategoryId,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                 _storeContext.CurrentStore.Id,
                 showHidden);
             return _staticCacheManager.Get(cacheKey, () =>
@@ -535,7 +541,7 @@ namespace Nop.Services.Catalog
                     if (!_catalogSettings.IgnoreAcl)
                     {
                         //ACL (access control list)
-                        var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                        var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
                         query = from pc in query
                                 join c in _categoryRepository.Table on pc.CategoryId equals c.Id
                                 join acl in _aclRepository.Table

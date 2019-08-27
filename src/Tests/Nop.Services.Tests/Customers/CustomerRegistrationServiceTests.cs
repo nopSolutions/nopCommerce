@@ -33,21 +33,37 @@ namespace Nop.Services.Tests.Customers
         private Mock<IEventPublisher> _eventPublisher;
         private Mock<IStoreService> _storeService;
         private Mock<IRepository<CustomerRole>> _customerRoleRepo;
-        private Mock<IRepository<GenericAttribute>> _genericAttributeRepo;
-        private Mock<IRepository<ShoppingCartItem>> _shoppingCartRepo;
         private Mock<IGenericAttributeService> _genericAttributeService;
         private Mock<INewsLetterSubscriptionService> _newsLetterSubscriptionService;
         private Mock<IRewardPointService> _rewardPointService;
         private Mock<ILocalizationService> _localizationService;
         private Mock<IWorkContext> _workContext;
         private Mock<IWorkflowMessageService> _workflowMessageService;
-        private CustomerService _customerService;
+        private ICustomerService _customerService;
         private CustomerRegistrationService _customerRegistrationService;
-        private Mock<IRepository<CustomerCustomerRoleMapping>> _customerCustomerRoleMappingRepo;
 
         [SetUp]
         public new void SetUp()
         {
+
+            _eventPublisher = new Mock<IEventPublisher>();
+            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
+
+            _customerRoleRepo = new Mock<IRepository<CustomerRole>>();
+
+            _customerRoleRepo.Setup(r => r.Table).Returns(new List<CustomerRole>
+            {
+                new CustomerRole
+                {
+                    Id = 1,
+                    Active = true,
+                    IsSystemRole = true,
+                    SystemName = NopCustomerDefaults.RegisteredRoleName
+                }
+            }.AsQueryable());
+
+             
+
             _customerSettings = new CustomerSettings
             {
                 UnduplicatedPasswordsNumber = 1,
@@ -64,6 +80,13 @@ namespace Nop.Services.Tests.Customers
 
             _encryptionService = new EncryptionService(_securitySettings);
             _customerRepo = new Mock<IRepository<Customer>>();
+            _customerPasswordRepo = new Mock<IRepository<CustomerPassword>>();
+
+            _customerService = TestCustomerService.Get(
+                eventPublisher: _eventPublisher,
+                customerRepository: _customerRepo,
+                customerPasswordRepository: _customerPasswordRepo,
+                customerRoleRepository: _customerRoleRepo);
 
             var customer1 = new Customer
             {
@@ -110,7 +133,7 @@ namespace Nop.Services.Tests.Customers
             };
             _customerRepo.Setup(x => x.Table).Returns(new List<Customer> { customer1, customer2, customer3, customer4, customer5 }.AsQueryable());
 
-            _customerPasswordRepo = new Mock<IRepository<CustomerPassword>>();
+            
             var saltKey = _encryptionService.CreateSaltKey(5);
             var password = _encryptionService.CreatePasswordHash("password", saltKey, "SHA512");
             var password1 = new CustomerPassword
@@ -151,13 +174,8 @@ namespace Nop.Services.Tests.Customers
             };
             _customerPasswordRepo.Setup(x => x.Table).Returns(new[] { password1, password2, password3, password4, password5 }.AsQueryable());
 
-            _eventPublisher = new Mock<IEventPublisher>();
-            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
-
             _storeService = new Mock<IStoreService>();
-            _customerRoleRepo = new Mock<IRepository<CustomerRole>>();
-            _genericAttributeRepo = new Mock<IRepository<GenericAttribute>>();
-            _shoppingCartRepo = new Mock<IRepository<ShoppingCartItem>>();
+
             _genericAttributeService = new Mock<IGenericAttributeService>();
             _newsLetterSubscriptionService = new Mock<INewsLetterSubscriptionService>();
             _rewardPointService = new Mock<IRewardPointService>();
@@ -165,22 +183,8 @@ namespace Nop.Services.Tests.Customers
             _localizationService = new Mock<ILocalizationService>();
             _workContext = new Mock<IWorkContext>();
             _workflowMessageService = new Mock<IWorkflowMessageService>();
-            _customerCustomerRoleMappingRepo = new Mock<IRepository<CustomerCustomerRoleMapping>>();
-            
-             _customerService = new CustomerService(new CustomerSettings(),
-                new TestCacheManager(),
-                null,
-                null,
-                _eventPublisher.Object,
-                _genericAttributeService.Object,
-                _customerRepo.Object,
-                _customerCustomerRoleMappingRepo.Object,
-                _customerPasswordRepo.Object,
-                _customerRoleRepo.Object,
-                _genericAttributeRepo.Object,
-                 _shoppingCartRepo.Object,
-                 new TestCacheManager(),
-                null);
+
+
 
             _customerRegistrationService = new CustomerRegistrationService(_customerSettings,
                 _customerService,
@@ -252,12 +256,9 @@ namespace Nop.Services.Tests.Customers
 
         private void AddCustomerToRegisteredRole(Customer customer)
         {
-            customer.CustomerRoles.Add(new CustomerRole
-            {
-                Active = true,
-                IsSystemRole = true,
-                SystemName = NopCustomerDefaults.RegisteredRoleName
-            });
+            var regRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
+
+            _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = regRole.Id });
         }
 
         [Test]

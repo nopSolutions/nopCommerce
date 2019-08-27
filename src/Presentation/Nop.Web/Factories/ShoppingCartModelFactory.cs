@@ -624,7 +624,7 @@ namespace Nop.Web.Factories
             };
 
             //billing info
-            var billingAddress = _workContext.CurrentCustomer.BillingAddress;
+            var billingAddress = _customerService.GetCustomerBillingAddress(_workContext.CurrentCustomer);
             if (billingAddress != null)
             {
                 _addressModelFactory.PrepareAddressModel(model.BillingAddress,
@@ -643,10 +643,10 @@ namespace Nop.Web.Factories
                 model.SelectedPickupInStore = _shippingSettings.AllowPickupInStore && pickupPoint != null;
                 if (!model.SelectedPickupInStore)
                 {
-                    if (_workContext.CurrentCustomer.ShippingAddress != null)
+                    if (_customerService.GetCustomerShippingAddress(_workContext.CurrentCustomer) is Address address)
                     {
                         _addressModelFactory.PrepareAddressModel(model.ShippingAddress,
-                            address: _workContext.CurrentCustomer.ShippingAddress,
+                            address: address,
                             excludeProperties: false,
                             addressSettings: _addressSettings);
                     }
@@ -710,9 +710,11 @@ namespace Nop.Web.Factories
             };
             if (model.Enabled)
             {
+                var shippingAddress = _customerService.GetCustomerShippingAddress(_workContext.CurrentCustomer);
+
                 //countries
-                var defaultEstimateCountryId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
-                    ? _workContext.CurrentCustomer.ShippingAddress.CountryId
+                var defaultEstimateCountryId = (setEstimateShippingDefaultAddress && shippingAddress != null)
+                    ? shippingAddress.CountryId
                     : model.CountryId;
                 model.AvailableCountries.Add(new SelectListItem
                 {
@@ -729,8 +731,8 @@ namespace Nop.Web.Factories
                     });
 
                 //states
-                var defaultEstimateStateId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
-                    ? _workContext.CurrentCustomer.ShippingAddress.StateProvinceId
+                var defaultEstimateStateId = (setEstimateShippingDefaultAddress && shippingAddress != null)
+                    ? shippingAddress.StateProvinceId
                     : model.StateProvinceId;
                 var states = defaultEstimateCountryId.HasValue
                     ? _stateProvinceService.GetStateProvincesByCountryId(defaultEstimateCountryId.Value, _workContext.WorkingLanguage.Id).ToList()
@@ -756,8 +758,8 @@ namespace Nop.Web.Factories
                     });
                 }
 
-                if (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
-                    model.ZipPostalCode = _workContext.CurrentCustomer.ShippingAddress.ZipPostalCode;
+                if (setEstimateShippingDefaultAddress && shippingAddress != null)
+                    model.ZipPostalCode = shippingAddress.ZipPostalCode;
             }
 
             return model;
@@ -968,7 +970,7 @@ namespace Nop.Web.Factories
                 ShowProductImages = _shoppingCartSettings.ShowProductImagesInMiniShoppingCart,
                 //let's always display it
                 DisplayShoppingCartButton = true,
-                CurrentCustomerIsGuest = _workContext.CurrentCustomer.IsGuest(),
+                CurrentCustomerIsGuest = _customerService.IsGuest(_workContext.CurrentCustomer),
                 AnonymousCheckoutAllowed = _orderSettings.AnonymousCheckoutAllowed,
             };
 
@@ -1014,7 +1016,7 @@ namespace Nop.Web.Factories
                         minOrderSubtotalAmountOk &&
                         !checkoutAttributesExist &&
                         !(downloadableProductsRequireRegistration
-                            && _workContext.CurrentCustomer.IsGuest());
+                            && _customerService.IsGuest(_workContext.CurrentCustomer));
 
                     //products. sort descending (recently added products)
                     foreach (var sci in cart
@@ -1283,7 +1285,7 @@ namespace Nop.Web.Factories
 
                 if (_shippingSettings.AllowPickupInStore)
                 {
-                    var pickupPointsResponse = _shippingService.GetPickupPoints(address, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
+                    var pickupPointsResponse = _shippingService.GetPickupPoints(address.Id, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
                     if (pickupPointsResponse.Success)
                     {
                         if (pickupPointsResponse.PickupPoints.Any())

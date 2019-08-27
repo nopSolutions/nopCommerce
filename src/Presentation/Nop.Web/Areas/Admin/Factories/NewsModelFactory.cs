@@ -272,7 +272,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     commentModel.NewsItemTitle = _newsService.GetNewsById(newsComment.NewsItemId)?.Title;
 
                     if (_customerService.GetCustomerById(newsComment.CustomerId) is Customer customer)
-                        commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+                        commentModel.CustomerInfo = _customerService.IsRegistered(customer) ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
 
                     commentModel.CommentText = HtmlHelper.FormatText(newsComment.CommentText, false, true, false, false, false, false);
                     commentModel.StoreName = storeNames.ContainsKey(newsComment.StoreId) ? storeNames[newsComment.StoreId] : "Deleted";

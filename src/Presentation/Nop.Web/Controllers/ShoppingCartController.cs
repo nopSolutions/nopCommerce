@@ -1395,7 +1395,7 @@ namespace Nop.Web.Controllers
             var anonymousPermissed = _orderSettings.AnonymousCheckoutAllowed 
                                      && _customerSettings.UserRegistrationType == UserRegistrationType.Disabled;
 
-            if (anonymousPermissed || !_workContext.CurrentCustomer.IsGuest())
+            if (anonymousPermissed || !_customerService.IsGuest(_workContext.CurrentCustomer))
                 return RedirectToRoute("Checkout");
             
             var downloadableProductsRequireRegistration =
@@ -1787,7 +1787,7 @@ namespace Nop.Web.Controllers
             }
 
             //check whether the current customer is guest and ia allowed to email wishlist
-            if (_workContext.CurrentCustomer.IsGuest() && !_shoppingCartSettings.AllowAnonymousUsersToEmailWishlist)
+            if (_customerService.IsGuest(_workContext.CurrentCustomer) && !_shoppingCartSettings.AllowAnonymousUsersToEmailWishlist)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Wishlist.EmailAFriend.OnlyRegisteredUsers"));
             }

@@ -5,10 +5,10 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Topics;
+using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -25,6 +25,7 @@ namespace Nop.Services.Topics
         private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
         private readonly ICacheManager _cacheManager;
+        private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<AclRecord> _aclRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
@@ -39,7 +40,8 @@ namespace Nop.Services.Topics
         public TopicService(CatalogSettings catalogSettings,
             IAclService aclService,
             ICacheManager cacheManager,
-            IEventPublisher eventPublisher,
+            ICustomerService customerService,
+        IEventPublisher eventPublisher,
             IRepository<AclRecord> aclRepository,
             IRepository<StoreMapping> storeMappingRepository,
             IRepository<Topic> topicRepository,
@@ -49,6 +51,7 @@ namespace Nop.Services.Topics
             _catalogSettings = catalogSettings;
             _aclService = aclService;
             _cacheManager = cacheManager;
+            _customerService = customerService;
             _eventPublisher = eventPublisher;
             _aclRepository = aclRepository;
             _storeMappingRepository = storeMappingRepository;
@@ -150,7 +153,7 @@ namespace Nop.Services.Topics
                     if (!ignorAcl && !_catalogSettings.IgnoreAcl)
                     {
                         //ACL (access control list)
-                        var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                        var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
                         query = from c in query
                                 join acl in _aclRepository.Table
                                 on new { c1 = c.Id, c2 = nameof(Topic) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into cAcl

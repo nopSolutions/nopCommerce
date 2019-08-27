@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -22,6 +22,7 @@ namespace Nop.Services.Messages
         private readonly IDbContext _context;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Customer> _customerRepository;
+        private readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
         private readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
 
         #endregion
@@ -32,12 +33,14 @@ namespace Nop.Services.Messages
             IDbContext context,
             IEventPublisher eventPublisher,
             IRepository<Customer> customerRepository,
+            IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository,
             IRepository<NewsLetterSubscription> subscriptionRepository)
         {
             _customerService = customerService;
             _context = context;
             _eventPublisher = eventPublisher;
             _customerRepository = customerRepository;
+            _customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
             _subscriptionRepository = subscriptionRepository;
         }
 
@@ -285,7 +288,10 @@ namespace Nop.Services.Messages
                         NewsletterSubscribers = nls,
                         Customer = c
                     });
-                query = query.Where(x => x.Customer.CustomerCustomerRoleMappings.Any(mapping => mapping.CustomerRoleId == customerRoleId));
+
+                //TODO: issue-239
+                query = query.Where(x => _customerCustomerRoleMappingRepository.Table.Any(ccrm => ccrm.CustomerId == x.Customer.Id && ccrm.CustomerRoleId == customerRoleId));
+
                 if (!string.IsNullOrEmpty(email))
                     query = query.Where(x => x.NewsletterSubscribers.Email.Contains(email));
                 if (createdFromUtc.HasValue)

@@ -147,7 +147,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     productReviewModel.StoreName = _storeService.GetStoreById(productReview.StoreId)?.Name;
                     productReviewModel.ProductName = _productService.GetProductById(productReview.ProductId)?.Name;
-                    productReviewModel.CustomerInfo = _customerService.GetCustomerById(productReview.CustomerId) is Customer customer && customer.IsRegistered()
+                    productReviewModel.CustomerInfo = _customerService.GetCustomerById(productReview.CustomerId) is Customer customer && _customerService.IsRegistered(customer)
                         ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     productReviewModel.ReviewText = HtmlHelper.FormatText(productReview.ReviewText, false, true, false, false, false, false);
                     productReviewModel.ReplyText = HtmlHelper.FormatText(productReview.ReplyText, false, true, false, false, false, false);
@@ -182,7 +182,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     Rating = productReview.Rating
                 };
 
-                model.CustomerInfo = _customerService.GetCustomerById(productReview.CustomerId) is Customer customer && customer.IsRegistered()
+                model.CustomerInfo = _customerService.GetCustomerById(productReview.CustomerId) is Customer customer && _customerService.IsRegistered(customer)
                     ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
 
                 model.CreatedOn = _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc);

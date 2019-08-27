@@ -414,7 +414,7 @@ namespace Nop.Services.Orders
                 details.AffiliateId = affiliate.Id;
 
             //check whether customer is guest
-            if (details.Customer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
+            if (_customerService.IsGuest(details.Customer) && !_orderSettings.AnonymousCheckoutAllowed)
                 throw new NopException("Anonymous checkout is not allowed");
 
             //customer currency
@@ -432,13 +432,15 @@ namespace Nop.Services.Orders
                 details.CustomerLanguage = _workContext.WorkingLanguage;
 
             //billing address
-            if (details.Customer.BillingAddress == null)
+            if (details.Customer.BillingAddressId is null)
                 throw new NopException("Billing address is not provided");
 
-            if (!CommonHelper.IsValidEmail(details.Customer.BillingAddress.Email))
+            var billingAddress = _customerService.GetCustomerBillingAddress(details.Customer);
+
+            if (!CommonHelper.IsValidEmail(billingAddress?.Email))
                 throw new NopException("Email is not valid");
 
-            details.BillingAddress = (Address)details.Customer.BillingAddress.Clone();
+            details.BillingAddress = (Address)billingAddress.Clone();
 
             if (_countryService.GetCountryByAddress(details.BillingAddress) is Country billingCountry && !billingCountry.AllowsBilling)
                 throw new NopException($"Country '{billingCountry.Name}' is not allowed for billing");
@@ -529,14 +531,16 @@ namespace Nop.Services.Orders
                 }
                 else
                 {
-                    if (details.Customer.ShippingAddress == null)
+                    if (details.Customer.ShippingAddressId == null)
                         throw new NopException("Shipping address is not provided");
 
-                    if (!CommonHelper.IsValidEmail(details.Customer.ShippingAddress.Email))
+                    var shippingAddress = _customerService.GetCustomerShippingAddress(details.Customer);
+
+                    if (!CommonHelper.IsValidEmail(shippingAddress?.Email))
                         throw new NopException("Email is not valid");
 
                     //clone shipping address
-                    details.ShippingAddress = (Address)details.Customer.ShippingAddress.Clone();
+                    details.ShippingAddress = (Address)shippingAddress.Clone();
 
                     if (_countryService.GetCountryByAddress(details.ShippingAddress) is Country shippingCountry && !shippingCountry.AllowsShipping)
                         throw new NopException($"Country '{shippingCountry.Name}' is not allowed for shipping");
@@ -653,7 +657,7 @@ namespace Nop.Services.Orders
                 details.AffiliateId = affiliate.Id;
 
             //check whether customer is guest
-            if (details.Customer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
+            if (_customerService.IsGuest(details.Customer) && !_orderSettings.AnonymousCheckoutAllowed)
                 throw new NopException("Anonymous checkout is not allowed");
 
             //customer currency
@@ -1155,13 +1159,13 @@ namespace Nop.Services.Orders
             var customer = order.Customer;
             foreach (var customerRole in customerRoles)
             {
-                if (customer.CustomerCustomerRoleMappings.Count(mapping => mapping.CustomerRoleId == customerRole.Id) == 0)
+                if (!_customerService.IsInCustomerRole(customer, customerRole.SystemName))
                 {
                     //not in the list yet
                     if (add)
                     {
                         //add
-                        customer.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = customerRole });
+                        _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole.Id });
                     }
                 }
                 else
@@ -1170,8 +1174,7 @@ namespace Nop.Services.Orders
                     if (!add)
                     {
                         //remove
-                        customer.RemoveCustomerRoleMapping(
-                            customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == customerRole.Id));
+                        _customerService.RemoveCustomerRoleMapping(customer, customerRole);
                     }
                 }
             }
@@ -2068,7 +2071,7 @@ namespace Nop.Services.Orders
             if (initialOrder.OrderStatus == OrderStatus.Cancelled)
                 return false;
 
-            if (!customerToValidate.IsAdmin())
+            if (!_customerService.IsAdmin(customerToValidate))
             {
                 if (customer.Id != customerToValidate.Id)
                     return false;
@@ -2097,7 +2100,7 @@ namespace Nop.Services.Orders
             if (!recurringPayment.LastPaymentFailed || _paymentService.GetRecurringPaymentType(recurringPayment.InitialOrder.PaymentMethodSystemName) != RecurringPaymentType.Manual)
                 return false;
 
-            if (recurringPayment.InitialOrder.Customer == null || (!customer.IsAdmin() && recurringPayment.InitialOrder.Customer.Id != customer.Id))
+            if (recurringPayment.InitialOrder.Customer == null || (!_customerService.IsAdmin(customer) && recurringPayment.InitialOrder.Customer.Id != customer.Id))
                 return false;
 
             return true;

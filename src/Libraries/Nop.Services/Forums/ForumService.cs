@@ -1126,7 +1126,7 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (customer.IsGuest() && !_forumSettings.AllowGuestsToCreateTopics)
+            if (_customerService.IsGuest(customer) && !_forumSettings.AllowGuestsToCreateTopics)
             {
                 return false;
             }
@@ -1152,12 +1152,12 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (customer.IsGuest())
+            if (_customerService.IsGuest(customer))
             {
                 return false;
             }
 
-            if (customer.IsForumModerator())
+            if (_customerService.IsForumModerator(customer))
             {
                 return true;
             }
@@ -1188,12 +1188,12 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (customer.IsGuest())
+            if (_customerService.IsGuest(customer))
             {
                 return false;
             }
 
-            return customer.IsForumModerator();
+            return _customerService.IsForumModerator(customer);
         }
 
         /// <summary>
@@ -1214,12 +1214,12 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (customer.IsGuest())
+            if (_customerService.IsGuest(customer))
             {
                 return false;
             }
 
-            if (customer.IsForumModerator())
+            if (_customerService.IsForumModerator(customer))
             {
                 return true;
             }
@@ -1250,7 +1250,7 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (customer.IsGuest() && !_forumSettings.AllowGuestsToCreatePosts)
+            if (_customerService.IsGuest(customer) && !_forumSettings.AllowGuestsToCreatePosts)
             {
                 return false;
             }
@@ -1276,12 +1276,12 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (customer.IsGuest())
+            if (_customerService.IsGuest(customer))
             {
                 return false;
             }
 
-            if (customer.IsForumModerator())
+            if (_customerService.IsForumModerator(customer))
             {
                 return true;
             }
@@ -1312,12 +1312,12 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (customer.IsGuest())
+            if (_customerService.IsGuest(customer))
             {
                 return false;
             }
 
-            if (customer.IsForumModerator())
+            if (_customerService.IsForumModerator(customer))
             {
                 return true;
             }
@@ -1341,12 +1341,12 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (customer.IsGuest())
+            if (_customerService.IsGuest(customer))
             {
                 return false;
             }
 
-            return customer.IsForumModerator();
+            return _customerService.IsForumModerator(customer);
         }
 
         /// <summary>
@@ -1361,7 +1361,7 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (customer.IsGuest())
+            if (_customerService.IsGuest(customer))
             {
                 return false;
             }
