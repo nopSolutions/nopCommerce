@@ -18,6 +18,7 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.4.0" />
     <PackageReference Include="WebMarkupMin.AspNetCore2" Version="2.5.0" />
     <PackageReference Include="WebMarkupMin.NUglify" Version="2.5.9" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <ItemGroup>
