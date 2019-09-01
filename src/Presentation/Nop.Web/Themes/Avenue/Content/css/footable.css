@@ -18,7 +18,7 @@ td.footable-first-column {
 	width: 21px; height: 21px;
 	margin: auto;
 	overflow: hidden;
-	border: 1px solid #222;
+	border: 1px solid #18073a;
 	border-radius: 50%;
 	background-color: #fff;
 	background-position: center;
@@ -42,7 +42,7 @@ td.footable-first-column {
 .footable-row-detail-value {
     display: table-cell;
 	padding: 5px 10px;
-	color: #222;
+	color: #18073a;
 }
 
 .footable-toggle {
@@ -57,27 +57,27 @@ td.footable-first-column {
 
 
 @media all and (min-width: 512px) {
-	
+
 	.return-request-page
 	.footable-element {
 		display: none !important;
 	}
 }
 @media all and (min-width: 1024px) {
-	
+
 	.footable-element {
 		display: none !important;
 	}
 }
 /*@media all and (min-width: 769px) {
-	
+
 	.forum-table .footable-element,
 	.private-messages .footable-element {
 		display: none !important;
 	}
 }*/
 @media all and (min-width: 1501px) {
-	
+
 	.lt-footable-element {
 		display: none !important;
 	}

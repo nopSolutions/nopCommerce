@@ -70,7 +70,7 @@
 
 /* HEADER */
 
-.header > 
+.header >
 .admin-header-links {
 	display: none;
 }
@@ -137,7 +137,7 @@
 	transition: all 0.2s ease;
 }
 .header-links a:hover {
-	color: #222;
+	color: #18073a;
 	text-shadow: 0 0 rgba(0,0,0,0.5);
 }
 .header-links #wishlistlink,
@@ -176,7 +176,7 @@
 }
 .header-selects select:focus {
 	background-color: transparent;
-	color: #222;
+	color: #18073a;
 }
 .language-list {
 	padding-left: 3px;
@@ -299,7 +299,7 @@
 	padding: 2px 0;
 	font-size: 14px; /*reset zeroing*/
 	text-transform: uppercase;
-	color: #222; cursor: pointer;
+	color: #18073a; cursor: pointer;
 	transition: box-shadow 0.5s ease, color 0.2s ease;
 }
 .header-menu > ul > li > a:hover,
@@ -366,7 +366,7 @@
 	font-size: 13px; /*reset zeroing*/
 }
 .header-menu .sublist li a:hover {
-	color: #222;
+	color: #18073a;
 	text-shadow: 0 0 rgba(0,0,0,0.5);
 }
 .header-menu .sublist li a:before {
@@ -673,7 +673,7 @@ div:nth-child(2n+1) {
 /* REGISTRATION & LOGIN */
 /* ACCOUNT PAGES */
 
-.customer-pages-body 
+.customer-pages-body
 .master-column-wrapper {
 	padding: 30px;
 }
@@ -806,7 +806,7 @@ div:nth-child(2n+1) {
 	text-align: left;
 	padding: 14px 0;
 	font-size: 16px;
-	color: #222;
+	color: #18073a;
 }
 .blog-pages-body .block .title:after,
 .news-pages-body .block .title:after {
@@ -817,7 +817,7 @@ div:nth-child(2n+1) {
 	width: 30px;
 	height: 2px;
 	margin: auto;
-	background-color: #222;
+	background-color: #18073a;
 }
 .blog-pages-body .block .listbox,
 .news-pages-body .block .listbox {
@@ -889,5 +889,5 @@ div:nth-child(2n+1) {
 .news-list-homepage .view-all {
 	margin-top: 0;
 }
- 
+
 }

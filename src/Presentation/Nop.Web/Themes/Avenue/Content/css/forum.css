@@ -14,7 +14,7 @@
 	font-weight: 400;
 	letter-spacing: 1.5px;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .forums-main-page .topic-block-title h2:after,
 .forum-group-page .forums-table-section-title a:after,
@@ -25,7 +25,7 @@
 	right: 0;
 	bottom: -3px;
 	height: 2px;
-	background-color: #222;
+	background-color: #18073a;
 }
 
 /* forum main */
@@ -54,7 +54,7 @@
 }
 .forums-header .advanced {
 	margin-top: 20px;
-	color: #222;
+	color: #18073a;
 }
 .forum-search-page .search-error {
 	margin: 60px 0 0;
@@ -78,7 +78,7 @@
 	line-height: 30px;
 	letter-spacing: 1.5px;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .forums-main-page .forums-table-section-title > a,
 .forums-main-page .forums-table-section-title strong {
@@ -93,7 +93,7 @@
 	right: 0;
 	bottom: -2px;
 	height: 2px;
-	background-color: #222;
+	background-color: #18073a;
 }
 .forums-main-page .forum-group + .topic-group {
 	margin-top: 65px;
@@ -113,7 +113,7 @@
 	content: "\e039";
 	display: block;
 	font-size: 34px;
-	color: #222;
+	color: #18073a;
 }
 .forums-table-section .image div.sticky:after {
 	color: #f61853;
@@ -155,19 +155,19 @@
 	display: inline-block;
 	min-width: 250px;
 	margin: 10px 5px;
-	border: 1px solid #222;
+	border: 1px solid #18073a;
 	outline: 1px solid transparent;
 	padding: 10px 20px;
 	text-align: left;
 	font-size: 12px;
 	font-weight: 400;
-	color: #222;
+	color: #18073a;
 	text-transform: uppercase;
 	transition: all 0.2s ease;
 }
 .forum-actions .actions a:hover,
 .topic-actions .actions a:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 .forum-actions .actions a:before,
 .topic-actions .actions a:before {
@@ -257,13 +257,13 @@
 .topic-post .username {
 	display: block;
 	margin: 0 0 10px;
-	color: #222;
+	color: #18073a;
 	font-weight: 400;
 	text-transform: uppercase;
 }
 .topic-post .user-stats {
 	margin: 0 0 15px;
-	color: #222;
+	color: #18073a;
 }
 .topic-post .user-stats li {
 	margin: 0 0 5px;
@@ -276,19 +276,19 @@
 .topic-post .pm-button,
 .profile-info-box .pm-button {
 	display: inline-block;
-	border: 1px solid #222;
+	border: 1px solid #18073a;
 	outline: 1px solid transparent;
 	padding: 9px 20px;
 	text-align: left;
 	font-size: 12px;
 	font-weight: 400;
-	color: #222;
+	color: #18073a;
 	text-transform: uppercase;
 	transition: all 0.2s ease;
 }
 .topic-post .pm-button:hover,
 .profile-info-box .pm-button:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 .topic-post .pm-button:before,
 .profile-info-box .pm-button:before {
@@ -316,17 +316,17 @@
 	width: 34px;
 	height: 34px;
 	margin: 0 5px;
-	border: 1px solid #222;
+	border: 1px solid #18073a;
 	outline: 1px solid transparent;
 	text-align: center;
 	vertical-align: middle;
-	font-size: 0; color: #222;
+	font-size: 0; color: #18073a;
 	transition: all 0.2s ease;
 }
 .topic-post .post-actions .edit-post-button:hover,
 .topic-post .post-actions .delete-post-button:hover,
 .topic-post .post-actions .quote-post-button:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 .topic-post .post-actions .edit-post-button:before,
 .topic-post .post-actions .delete-post-button:before {
@@ -346,7 +346,7 @@
 	padding: 18px;
 	font-size: 18px;
 	font-weight: 800;
-	color: #222;
+	color: #18073a;
 }
 .topic-post .post-actions .quote-post-button {
 	width: auto;
@@ -366,7 +366,7 @@
 	display: none;
 	text-align: center;
 	font-weight: 400;
-	color: #222;
+	color: #18073a;
 }
 .topic-post .post-body {
 	text-align: justify;
@@ -383,7 +383,7 @@
 	text-align: center;
 	font-size: 0;
 	line-height: normal;
-	color: #222;
+	color: #18073a;
 }
 .topic-post .post-vote > span {
 	display: inline-block;
@@ -440,7 +440,7 @@
 	vertical-align: middle;
 	font-size: 17px;
 	font-weight: 800;
-	color: #222;
+	color: #18073a;
 }
 .forum-edit-page .toolbar,
 .private-message-send-page .toolbar {
@@ -456,7 +456,7 @@
 .private-messages .buttons input {
 	min-width: 115px;
     margin: 0 3px;
-    border: 1px solid #222;
+    border: 1px solid #18073a;
 	outline: 1px solid transparent;
 	padding: 10px 25px;
     font-size: 14px;
@@ -466,19 +466,19 @@
 .forum-edit-page .buttons input:hover,
 .move-topic-page .buttons input:hover,
 .private-messages .buttons input:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 .forum-edit-page .button-1,
 .move-topic-page .button-1,
 .private-messages .button-1 {
-	background-color: #222;
+	background-color: #18073a;
 	color: #fff;
 }
 .forum-edit-page .button-2,
 .move-topic-page .button-2,
 .private-messages .button-2 {
 	background-color: #fff;
-	color: #222;
+	color: #18073a;
 }
 .forum-edit-page .inputs:first-child {
 	display: none;
@@ -514,7 +514,7 @@
 	display: inline-block;
 }
 .private-message-view-page .message-head label {
-	color: #222;
+	color: #18073a;
 }
 .private-message-view-page .message-head span {
 	vertical-align: middle;
@@ -543,7 +543,7 @@
 .profile-page .profile-stats .title {
 	margin: 0 0 10px;
 	font-size: 17px;
-	color: #222;
+	color: #18073a;
 }
 .profile-page .topic {
 	margin: 0 0 30px;
@@ -560,7 +560,7 @@
 }
 .profile-page p:first-child b {
 	font-weight: 400;
-	color: #222;
+	color: #18073a;
 }
 .profile-page .topic-body {
 	margin: 20px 0;
@@ -611,7 +611,7 @@
 	.forums-table-section .latest-post {
 		width: 300px;
 	}
-	
+
 	.topic-post {
 		overflow: hidden;
 	}

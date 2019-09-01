@@ -9,18 +9,16 @@
 @inject ILocalizationService localizationService
 
 @{
-    var logoPath = $"~/Themes/{themeContext.WorkingThemeName}/Content/img/logo.png";
-    var themeLogo = await Component.InvokeAsync("Widget", new { widgetZone = "avenue_theme_logo" });
+    var logoPath = $"~/Themes/{themeContext.WorkingThemeName}/Content/img/optik-one.svg";
+    var logoPathMobile = $"~/Themes/{themeContext.WorkingThemeName}/Content/img/optik-one-mobile.svg";
 }
 
 <a href="@Url.RouteUrl("Homepage")" class="logo">
-    @if (!String.IsNullOrEmpty(themeLogo.ToHtmlString()))
-    {
-        @themeLogo
-    }
-    else
-    {
-        string storeName = localizationService.GetLocalized(storeContext.CurrentStore, x => x.Name);
-        <img title="" alt="@storeName" src="@Url.Content(logoPath)">
-    }
+    <img class="header-top__logo desktop" src="@Url.Content(logoPath)" alt="shop optik.one">
+    <img class="header-top__logo mobile" src="@Url.Content(logoPathMobile)" alt="shop optik.one">
+    <div class="claim">reserve & collect shop</div>
+    <section class="eyes lazyload">
+        <div class="eye"></div>
+        <div class="eye"></div>
+    </section>
 </a>

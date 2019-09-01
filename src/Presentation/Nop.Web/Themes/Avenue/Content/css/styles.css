@@ -108,7 +108,7 @@ a {
 	cursor: pointer;
 }
 p a {
-	color: #222;
+	color: #18073a;
 }
 img {
 	max-width: 100%;
@@ -151,7 +151,7 @@ input[type="tel"]:focus,
 textarea:focus, select:focus {
 	border-color: #f6f6f6;
 	background-color: #f6f6f6;
-	color: #222;
+	color: #18073a;
 }
 input:focus::-webkit-input-placeholder,
 textarea:focus::-webkit-input-placeholder {
@@ -197,7 +197,7 @@ input[type="checkbox"] + label {
 	position: relative;
 	padding-top: 1px; /*cross-browser consistency*/
 	padding-left: 20px;
-	color: #222;
+	color: #18073a;
 	cursor: pointer;
 }
 input[type="radio"] + label:before,
@@ -266,7 +266,7 @@ input[type="checkbox"]:checked + label:before {
 	font-weight: 400;
 	letter-spacing: 1.5px;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .page-title h1:after {
 	content: "";
@@ -275,7 +275,7 @@ input[type="checkbox"]:checked + label:before {
 	right: 0;
 	bottom: -3px;
 	height: 2px;
-	background-color: #222;
+	background-color: #18073a;
 }
 .page-title h1:empty {
 	display: none;
@@ -298,7 +298,7 @@ input[type="checkbox"]:checked + label:before {
 	font-size: 21px;
 	letter-spacing: 1.5px;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .home-page .title strong {
 	position: relative;
@@ -311,7 +311,7 @@ input[type="checkbox"]:checked + label:before {
 	right: 0;
 	bottom: -2px;
 	height: 2px;
-	background-color: #222;
+	background-color: #18073a;
 }
 
 .category-description ul,
@@ -367,7 +367,7 @@ input[type="checkbox"]:checked + label:before {
 .no-data {
 	padding: 20px;
 	text-align: center;
-	color: #222;
+	color: #18073a;
 }
 .noscript {
     background-color: #ff9;
@@ -397,7 +397,7 @@ input[type="checkbox"]:checked + label:before {
 	line-height: 30px;
 	letter-spacing: 1.5px;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .fieldset .title strong,
 .section .title strong {
@@ -412,7 +412,7 @@ input[type="checkbox"]:checked + label:before {
 	right: 0;
 	bottom: -2px;
 	height: 2px;
-	background-color: #222;
+	background-color: #18073a;
 }
 .form-fields {
 	font-size: 0;
@@ -440,7 +440,7 @@ input[type="checkbox"]:checked + label:before {
 	text-align: center;
     font-size: 14px; /*reset zeroing*/
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .inputs input[type="text"],
 .inputs input[type="password"],
@@ -506,7 +506,7 @@ input[type="checkbox"]:checked + label:before {
 .terms-of-service {
 	margin: 0 0 25px;
 	text-align: center;
-	color: #222;
+	color: #18073a;
 }
 .accept-privacy-policy .read,
 .terms-of-service .read {
@@ -525,7 +525,7 @@ input[type="checkbox"]:checked + label:before {
 .terms-of-service label:before {
 	/*multi-line txt workaround*/
 	bottom: auto !important;
-	top: 4px !important; 
+	top: 4px !important;
 }
 
 .captcha-box {
@@ -561,7 +561,7 @@ input[type="checkbox"]:checked + label:before {
 	text-align: left;
 	font-size: 12px;
 	font-weight: 800;
-	color: #222;
+	color: #18073a;
 	text-transform: uppercase;
     white-space: nowrap;
 }
@@ -577,7 +577,7 @@ input[type="checkbox"]:checked + label:before {
 .cart a, .data-table a,
 .forums-table-section a {
 	font-weight: 400;
-    color: #222;
+    color: #18073a;
 }
 .cart .product,
 .data-table .product,
@@ -694,7 +694,7 @@ input[type="checkbox"]:checked + label:before {
 	width: 100%;
 	overflow: hidden;
 	box-shadow: 0 0 10px rgba(0,0,0,0.25);
-	background-color: #222;
+	background-color: #18073a;
 	padding: 25px;
 	text-align: center;
 	color: #fff;
@@ -760,7 +760,7 @@ input[type="checkbox"]:checked + label:before {
 	font-size: 21px;
 	line-height: 30px;
 	font-weight: 400;
-	color: #222;
+	color: #18073a;
 }
 .ui-dialog-titlebar button {
 	position: absolute;
@@ -770,7 +770,7 @@ input[type="checkbox"]:checked + label:before {
 	height: 50px;
 	margin: auto;
 	outline: 1px solid transparent;
-	background-color: #222;
+	background-color: #18073a;
 	font-size: 0;
 	transition: all 0.2s ease;
 }
@@ -783,7 +783,7 @@ input[type="checkbox"]:checked + label:before {
 	transition: all 0.2s ease;
 }
 .ui-dialog-titlebar button:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 .ui-dialog-content {
 	height: auto !important;
@@ -812,7 +812,7 @@ input[type="checkbox"]:checked + label:before {
 .ui-dialog-content .page-body button {
 	margin: 20px 0 0;
 	outline: 1px solid transparent;
-	background-color: #222;
+	background-color: #18073a;
 	padding: 10px 25px;
 	font-size: 11px;
 	color: #fff;
@@ -820,7 +820,7 @@ input[type="checkbox"]:checked + label:before {
 	transition: all 0.2s ease;
 }
 .ui-dialog-content .page-body button:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 
 
@@ -876,7 +876,7 @@ input[type="checkbox"]:checked + label:before {
 }
 
 .admin-header-links {
-	background-color: #222;
+	background-color: #18073a;
 	padding: 5px 15px;
 	text-align: center;
 	color: #fff;
@@ -905,7 +905,7 @@ input[type="checkbox"]:checked + label:before {
 	border-width: 0 0 1px;
 	border-color: #ddd;
 	padding: 0 10px; /*4px diff between Chrome and FF*/
-	color: #222;
+	color: #18073a;
 	text-transform: uppercase;
 }
 .language-list {
@@ -913,9 +913,9 @@ input[type="checkbox"]:checked + label:before {
 	font-size: 0;
 }
 .language-list li {
-	display: inline-block; 
+	display: inline-block;
 }
-.language-list a { 
+.language-list a {
 	display: block;
 	position: relative;
 	width: 42px;
@@ -960,7 +960,7 @@ input[type="checkbox"]:checked + label:before {
 	position: relative;
 	font-size: 18px;
 	line-height: 50px;
-	color: #222;
+	color: #18073a;
 }
 .header-lower .menu-button .trigger:before {
 	content: "\e909";
@@ -1051,7 +1051,7 @@ input[type="checkbox"]:checked + label:before {
 	content: "\e090";
 	margin-right: 3px;
 	font-size: 16px;
-	color: #222;
+	color: #18073a;
 }
 .ui-helper-hidden-accessible {
 	display: none;
@@ -1088,7 +1088,7 @@ input[type="checkbox"]:checked + label:before {
 	font-size: 13px;
 }
 .ui-autocomplete .ui-state-active {
-	color: #222;
+	color: #18073a;
 }
 
 .mini-shopping-cart {
@@ -1136,7 +1136,7 @@ input[type="checkbox"]:checked + label:before {
 	max-height: 40px;
 	overflow: hidden;
 	margin: 0 0 10px;
-	color: #222;
+	color: #18073a;
 }
 .mini-shopping-cart .attributes {
 	margin: 10px 0;
@@ -1157,13 +1157,13 @@ input[type="checkbox"]:checked + label:before {
 .mini-shopping-cart .remove:after {
 	content: "\e082";
 	font-size: 18px;
-	color: #222;
+	color: #18073a;
 }
 .mini-shopping-cart .totals {
 	padding: 20px 0;
 	font-size: 17px;
 	font-weight: 400;
-	color: #222;
+	color: #18073a;
 	text-transform: uppercase;
 }
 .mini-shopping-cart .totals strong {
@@ -1178,7 +1178,7 @@ input[type="checkbox"]:checked + label:before {
 	width: 48.5%;
 	height: 40px;
 	margin-right: 3%;
-	border: 1px solid #222;
+	border: 1px solid #18073a;
 	outline: 1px solid transparent;
 	overflow: hidden;
 	padding: 0 20px;
@@ -1186,22 +1186,22 @@ input[type="checkbox"]:checked + label:before {
 	line-height: 40px;
 	text-transform: uppercase;
 	white-space: nowrap;
-	color: #222;
+	color: #18073a;
 	transition: all 0.2s ease;
 }
 .mini-shopping-cart .button-1 + input {
-	background-color: #222;
+	background-color: #18073a;
 	color: #fff;
 }
 .mini-shopping-cart .button-1:only-child {
 	width: 100%;
-	background-color: #222;
+	background-color: #18073a;
 	font-size: 14px;
 	line-height: normal;
 	color: #fff;
 }
 .mini-shopping-cart .button-1:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 
 
@@ -1223,7 +1223,7 @@ input[type="checkbox"]:checked + label:before {
 	margin: 0 0 20px;
 	padding: 0 20px;
 	font-size: 28px;
-	color: #222;
+	color: #18073a;
 }
 .newsletter .title .color {
 	color: #f61853;
@@ -1247,7 +1247,7 @@ input[type="checkbox"]:checked + label:before {
 	float: left;
 	width: 100%;
 	height: 46px;
-	background-color: #222 !important;
+	background-color: #18073a !important;
 	padding: 0 20px;
 	font-size: 12px !important;
 	color: #fff !important;
@@ -1268,7 +1268,7 @@ input[type="checkbox"]:checked + label:before {
 	padding: 15px 20px;
 	line-height: 30px;
 	text-transform: lowercase;
-	color: #222;
+	color: #18073a;
 }
 .newsletter-result:empty {
 	display: none;
@@ -1278,7 +1278,7 @@ input[type="checkbox"]:checked + label:before {
 }
 
 .footer-middle {
-	background-color: #222;
+	background-color: #18073a;
 	color: #a9a9a9;
 }
 .footer-text {
@@ -1377,7 +1377,7 @@ input[type="checkbox"]:checked + label:before {
 .footer-social-buttons a:before {
 	font-size: 13px;
 	line-height: 32px;
-	color: #222;
+	color: #18073a;
 }
 .footer-social-buttons .facebook:before {
 	content: "\e90a";
@@ -1410,7 +1410,7 @@ input[type="checkbox"]:checked + label:before {
 .footer-site-info {
 	font-size: 13px;
 	line-height: 25px;
-	color: #222;
+	color: #18073a;
 }
 .footer-site-info a {
 	color: #f61853;
@@ -1422,7 +1422,7 @@ input[type="checkbox"]:checked + label:before {
 .footer-payment-methods ul {
 	font-size: 0;
 }
-.footer-payment-methods li { 
+.footer-payment-methods li {
 	display: inline-block;
 	width: 34px;
 	height: 22px;
@@ -1458,7 +1458,7 @@ input[type="checkbox"]:checked + label:before {
 	border: none;
 	outline: 25px solid #fff;
 	background-color: #ebebeb !important;
-	color: #222;
+	color: #18073a;
 }
 .theme-selector:before {
 	content: "";
@@ -1515,7 +1515,7 @@ input[type="checkbox"]:checked + label:before {
 	text-align: left;
 }
 .block .title {
-	background-color: #222;
+	background-color: #18073a;
 	padding: 14px 30px;
 	letter-spacing: 1.2px;
 	color: #fff;
@@ -1560,7 +1560,7 @@ input[type="checkbox"]:checked + label:before {
 	overflow: hidden;
 	padding: 15px 0;
 	line-height: 20px;
-	color: #222;
+	color: #18073a;
 	transition: all 0.2s ease;
 }
 .block .list a:before,
@@ -1583,7 +1583,7 @@ input[type="checkbox"]:checked + label:before {
 }
 .block .list .number {
 	float: right;
-	color: #222;
+	color: #18073a;
 }
 .block .sublist a {
 	padding-left: 15px;
@@ -1613,7 +1613,7 @@ input[type="checkbox"]:checked + label:before {
 .product-tags-all-page a {
 	float: left;
 	line-height: 30px;
-	color: #222;
+	color: #18073a;
 	transition: all 0.2s ease;
 }
 .block .tags a:hover,
@@ -1636,7 +1636,7 @@ input[type="checkbox"]:checked + label:before {
 	margin: 0 0 10px;
 	font-weight: 800;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .poll-options li,
 .poll-results li {
@@ -1647,7 +1647,7 @@ input[type="checkbox"]:checked + label:before {
 	text-align: left;
 }
 .poll .buttons input {
-	background-color: #222;
+	background-color: #18073a;
 	padding: 8px 24px;
 	font-size: 11px;
 	text-transform: uppercase;
@@ -1660,7 +1660,7 @@ input[type="checkbox"]:checked + label:before {
 	display: block;
 	margin: 10px 0 0;
 	line-height: 20px;
-	color: #222;
+	color: #18073a;
 }
 
 
@@ -1690,7 +1690,7 @@ input[type="checkbox"]:checked + label:before {
 	font-weight: 300;
 }
 .breadcrumb a:hover {
-	color: #222;
+	color: #18073a;
 }
 .breadcrumb .delimiter {
 	margin-top: -1px;
@@ -1731,7 +1731,7 @@ input[type="checkbox"]:checked + label:before {
 	padding: 5px;
 }
 .sub-category-item .name:hover {
-	color: #222;
+	color: #18073a;
 }
 
 .category-description,
@@ -1745,7 +1745,7 @@ input[type="checkbox"]:checked + label:before {
 	margin: 0 0 40px;
 }
 .contact-vendor-button {
-	background-color: #222 !important;
+	background-color: #18073a !important;
 	padding: 8px 24px;
 	font-size: 12px !important;
 	text-transform: uppercase;
@@ -1755,7 +1755,7 @@ input[type="checkbox"]:checked + label:before {
 .filters-button {
 	display: none;
 	margin: 0 0 15px;
-	background-color: #222;
+	background-color: #18073a;
 	padding: 15px;
 	font-weight: 400;
 	color: #fff;
@@ -1801,7 +1801,7 @@ input[type="checkbox"]:checked + label:before {
 	border-color: #666;
 	background-color: #fff !important;
 	text-transform: lowercase;
-	color: #222;
+	color: #18073a;
 }
 .product-page-size {
 	margin-right: 0 !important;
@@ -1833,7 +1833,7 @@ input[type="checkbox"]:checked + label:before {
 	content: "\e067";
 }
 .product-viewmode a.selected {
-	background-color: #222;
+	background-color: #18073a;
 	color: #fff;
 }
 
@@ -1886,7 +1886,7 @@ input[type="checkbox"]:checked + label:before {
 	overflow: hidden;
 	font-size: 14px;
 	font-weight: 300;
-	color: #222;
+	color: #18073a;
 }
 .item-box .product-title a {
 	display: block;
@@ -1942,7 +1942,7 @@ input[type="checkbox"]:checked + label:before {
 	margin: 0 3px;
 	font-size: 17px;
 	font-weight: 400;
-	color: #222;
+	color: #18073a;
 }
 .item-box .buttons {
 	display: none; /*not available on small screens*/
@@ -1958,7 +1958,7 @@ input[type="checkbox"]:checked + label:before {
 	position: relative;
 	font-size: 18px;
 	line-height: 40px;
-	color: #222;
+	color: #18073a;
 }
 .quick-view-button:before {
 	content: "\e090";
@@ -1984,7 +1984,7 @@ input[type="checkbox"]:checked + label:before {
 	font-size: 17px;
 	line-height: 24px;
 	font-weight: 400;
-	color: #222;
+	color: #18073a;
 }
 .manufacturer-item .title a,
 .vendor-item .title a {
@@ -2006,7 +2006,7 @@ input[type="checkbox"]:checked + label:before {
 	font-size: 21px;
 	letter-spacing: 1.5px;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .product-grid .title strong {
 	position: relative;
@@ -2019,7 +2019,7 @@ input[type="checkbox"]:checked + label:before {
 	right: 0;
 	bottom: -2px;
 	height: 2px;
-	background-color: #222;
+	background-color: #18073a;
 }
 
 .home-page .product-grid {
@@ -2058,17 +2058,17 @@ input[type="checkbox"]:checked + label:before {
 	font-size: 14px; /*reset zeroing*/
 	line-height: 49px; /*odd number for cross-browser consistency*/
 	font-weight: 400;
-	color: #222;
+	color: #18073a;
 	cursor: pointer;
 	transition: all 0.2s ease;
 }
 .pager li a:hover {
-	background-color: #222;
+	background-color: #18073a;
 	color: #fff;
 }
 .pager li span {
-	border-color: #222;
-	background-color: #222;
+	border-color: #18073a;
+	background-color: #18073a;
 	color: #fff;
 }
 .pager .previous-page a,
@@ -2295,7 +2295,7 @@ input[type="checkbox"]:checked + label:before {
 .overview .product-name h1 {
 	font-size: 20px;
 	font-weight: 300;
-	color: #222;
+	color: #18073a;
 }
 
 .product-reviews-overview {
@@ -2312,7 +2312,7 @@ input[type="checkbox"]:checked + label:before {
 .product-no-reviews a,
 .product-review-links a {
 	font-size: 13px;
-	color: #222;
+	color: #18073a;
 }
 
 .overview .prices label,
@@ -2348,9 +2348,9 @@ input[type="checkbox"]:checked + label:before {
 	text-transform: uppercase;
 }
 .manufacturers .label {
-	display: none; 
+	display: none;
 }
-.manufacturers + 
+.manufacturers +
 .additional-details {
 	margin-top: -25px;
 }
@@ -2377,7 +2377,7 @@ input[type="checkbox"]:checked + label:before {
 .delivery .free-shipping {
 	font-weight: 400;
     text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .delivery .free-shipping:before {
     content: "\e00c";
@@ -2388,15 +2388,15 @@ input[type="checkbox"]:checked + label:before {
 	font-size: 20px;
 }
 
-.download-sample { 
+.download-sample {
 	margin: 0 0 40px;
 }
-.download-sample-button { 
+.download-sample-button {
 	font-weight: 400;
     text-transform: uppercase;
 	color: #f61853;
 }
-.download-sample-button:before { 
+.download-sample-button:before {
 	content: "\e083";
 	position: relative;
 	top: -1px;
@@ -2413,7 +2413,7 @@ input[type="checkbox"]:checked + label:before {
 	margin: 30px 0 15px;
 	font-weight: 400;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .attributes dd {
 	margin: 15px 0 30px;
@@ -2464,7 +2464,7 @@ input[type="checkbox"]:checked + label:before {
 	margin: 0 0 10px;
 	font-weight: 400;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .rental-attributes .datepicker {
 	width: 130px;
@@ -2479,7 +2479,7 @@ input[type="checkbox"]:checked + label:before {
 .ui-datepicker-header {
 	position: relative;
 	height: 42px;
-	background-color: #222;
+	background-color: #18073a;
 	color: #fff;
 }
 .ui-datepicker-header .ui-datepicker-prev,
@@ -2519,8 +2519,8 @@ input[type="checkbox"]:checked + label:before {
 }
 .ui-datepicker-calendar th {
 	font-weight: 400;
-	color: #222;
-	text-shadow: 0 0 0 #222;
+	color: #18073a;
+	text-shadow: 0 0 0 #18073a;
 }
 .ui-datepicker-calendar th,
 .ui-datepicker-calendar td {
@@ -2652,7 +2652,7 @@ input[type="checkbox"]:checked + label:before {
 .giftcard label {
 	display: block;
 	margin: 0 0 5px;
-	color: #222;
+	color: #18073a;
 	text-transform: uppercase;
 }
 .giftcard input,
@@ -2670,7 +2670,7 @@ input[type="checkbox"]:checked + label:before {
 .tier-prices .title {
 	margin: 0 0 10px;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .tier-prices .title strong {
 	font-weight: 400;
@@ -2692,10 +2692,10 @@ input[type="checkbox"]:checked + label:before {
 }
 .tier-prices .field-header {
 	border-top: none !important;
-    color: #222;
+    color: #18073a;
 }
 .tier-prices .item-quantity {
-    color: #222;
+    color: #18073a;
 }
 
 .cart-buttons-wrapper {
@@ -2711,7 +2711,7 @@ input[type="checkbox"]:checked + label:before {
 	margin: 0 0 10px;
 	font-weight: 400;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .customer-entered-price .enter-price-input {
 	width: 300px;
@@ -2727,13 +2727,13 @@ input[type="checkbox"]:checked + label:before {
 }
 .pre-order-availability-date label {
 	display: block;
-	color: #222;
+	color: #18073a;
 }
 
 .min-qty-notification {
 	margin: 0 0 10px;
 	font-size: 14px; /*reset zeroing*/
-	color: #222;
+	color: #18073a;
 }
 
 .overview .add-to-cart,
@@ -2748,7 +2748,7 @@ input[type="checkbox"]:checked + label:before {
 	margin: 8px 4px;
 	border: none;
 	outline: 1px solid transparent;
-	background-color: #222;
+	background-color: #18073a;
 	padding: 0 20px;
 	text-align: center;
 	vertical-align: middle;
@@ -2761,12 +2761,12 @@ input[type="checkbox"]:checked + label:before {
 }
 .add-to-cart .qty-input:hover,
 .add-to-cart .qty-dropdown:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 .overview .qty-input:focus,
 .variant-overview .qty-input:focus {
-	outline-color: #222;
-	background-color: #222;
+	outline-color: #18073a;
+	background-color: #18073a;
 	color: #fff;
 }
 .overview .add-to-cart-button,
@@ -2776,7 +2776,7 @@ input[type="checkbox"]:checked + label:before {
 	margin: 8px 4px;
 	outline: 1px solid transparent;
 	overflow: hidden;
-	background-color: #222;
+	background-color: #18073a;
     padding: 0 20px;
 	vertical-align: middle;
 	font-size: 14px;
@@ -2803,7 +2803,7 @@ input[type="checkbox"]:checked + label:before {
 }
 .overview .add-to-cart-button:hover,
 .variant-overview .add-to-cart-button:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 
 .overview-buttons {
@@ -2825,7 +2825,7 @@ input[type="checkbox"]:checked + label:before {
 	width: 45px;
 	height: 42px;
 	outline: 1px solid transparent;
-	background-color: #222;
+	background-color: #18073a;
 	font-size: 0;
 	color: #fff;
 	text-transform: uppercase;
@@ -2837,7 +2837,7 @@ input[type="checkbox"]:checked + label:before {
 	outline: none !important;
 	background-color: transparent;
 	font-size: 14px; /*reset zeroing*/
-	color: #222;
+	color: #18073a;
 }
 .overview-buttons .variants-scroll-button {
 	width: auto;
@@ -2849,7 +2849,7 @@ input[type="checkbox"]:checked + label:before {
 .overview-buttons .add-to-wishlist-button:hover,
 .overview-buttons .add-to-compare-list-button:hover,
 .overview-buttons .variants-scroll-button:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 .overview-buttons .add-to-wishlist-button:before,
 .overview-buttons .add-to-compare-list-button:before,
@@ -2869,7 +2869,7 @@ input[type="checkbox"]:checked + label:before {
 	display: inline;
 	top: 1px;
 	margin-right: 10px;
-	color: #222;
+	color: #18073a;
 }
 .overview-buttons .variants-scroll-button:before {
 	content: "\e07b";
@@ -2896,7 +2896,7 @@ input[type="checkbox"]:checked + label:before {
 	margin: 0 0 5px;
 	font-weight: 400;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .product-share .share-item {
 	display: inline-block;
@@ -2910,7 +2910,7 @@ input[type="checkbox"]:checked + label:before {
 .product-share .share-link:before {
 	font-size: 13px;
 	line-height: 32px;
-	color: #222;
+	color: #18073a;
 }
 .product-share .facebook a:before {
 	content: "\e90a";
@@ -2952,7 +2952,7 @@ input[type="checkbox"]:checked + label:before {
 .variant-overview .variant-name {
 	margin: 0 0 10px;
 	font-size: 20px;
-	color: #222;
+	color: #18073a;
 }
 .variant-overview .variant-description {
 	margin: -5px 0 35px;
@@ -2972,7 +2972,7 @@ input[type="checkbox"]:checked + label:before {
 	font-size: 20px;
 	letter-spacing: 1.5px;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .product-collateral .title strong {
 	position: relative;
@@ -2985,7 +2985,7 @@ input[type="checkbox"]:checked + label:before {
 	right: 0;
 	bottom: -2px;
 	height: 2px;
-	background-color: #222;
+	background-color: #18073a;
 }
 
 .product-specs-box {
@@ -3001,7 +3001,7 @@ input[type="checkbox"]:checked + label:before {
 	text-align: center;
 }
 .product-specs-box .spec-name {
-	color: #222;
+	color: #18073a;
 }
 .product-specs-box thead {
     display: none;
@@ -3053,7 +3053,7 @@ input[type="checkbox"]:checked + label:before {
 	position: relative;
 	font-size: 18px;
 	font-weight: 800;
-	color: #222;
+	color: #18073a;
 	text-transform: uppercase;
 }
 .ui-tabs .ui-tabs-nav a:after {
@@ -3104,17 +3104,17 @@ input[type="checkbox"]:checked + label:before {
 }
 .write-review-button {
 	display: inline-block;
-	border: 1px solid #222;
+	border: 1px solid #18073a;
 	outline: 1px solid transparent;
 	padding: 10px 25px;
 	font-weight: 300;
-	color: #222;
+	color: #18073a;
 	cursor: pointer;
 	text-transform: uppercase;
 	transition: all 0.2s ease;
 }
 .write-review-button:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 .write-review-button .close {
 	display: none;
@@ -3143,7 +3143,7 @@ input[type="checkbox"]:checked + label:before {
     margin: 0 0 10px;
     font-size: 14px;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .write-review .rating-options {
     display: inline-block;
@@ -3170,27 +3170,27 @@ input[type="checkbox"]:checked + label:before {
 	font-size: 14px;
 	color: #f6e030;
 }
-.write-review .rating-options 
+.write-review .rating-options
 input:checked + label ~ label:before {
 	content: "\e900";
 }
 .write-review .button-1 {
 	min-width: 180px;
 	outline: 1px solid transparent;
-	background-color: #222;
+	background-color: #18073a;
 	padding: 15px 25px;
 	color: #fff;
 	text-transform: uppercase;
 	transition: all 0.2s ease;
 }
 .write-review .button-1:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 
 .write-review-result {
 	margin: 50px 0;
 	text-align: center;
-	color: #222;
+	color: #18073a;
 }
 
 .product-review-list {
@@ -3209,7 +3209,7 @@ input:checked + label ~ label:before {
 	margin: 0 0 10px;
 	font-size: 15px;
 	font-weight: 400;
-	color: #222;
+	color: #18073a;
 }
 .review-item-head .rating-box {
 	display: inline-block;
@@ -3285,7 +3285,7 @@ input:checked + label ~ label:before {
 	margin: 0 0 10px;
 	font-weight: 400;
 	font-style: italic;
-	color: #222;
+	color: #18073a;
 }
 .product-review-item .reply-text {
 	line-height: 25px;
@@ -3311,24 +3311,24 @@ input:checked + label ~ label:before {
 .wishlist-content .button-2 {
 	min-width: 200px;
 	margin: 0 5px 5px;
-	border: 1px solid #222;
+	border: 1px solid #18073a;
 	outline: 1px solid transparent;
 	padding: 10px 25px;
-	color: #222;
+	color: #18073a;
 	text-transform: uppercase;
 	transition: all 0.2s ease;
 }
 .wishlist-content .button-2:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 .wishlist-content .buttons
 .wishlist-add-to-cart-button {
-	background-color: #222;
+	background-color: #18073a;
 	color: #fff;
 }
 .wishlist-page .share-info {
 	text-align: center;
-	color: #222;
+	color: #18073a;
 }
 .wishlist-page .share-info a {
 	display: block;
@@ -3348,14 +3348,14 @@ input:checked + label ~ label:before {
 .compare-products-page .clear-list,
 .compare-products-page .remove-button {
 	display: inline-block;
-	border: 1px solid #222;
+	border: 1px solid #18073a;
 	outline: 1px solid transparent;
 	background-color: #fff;
 	padding: 5px 15px;
 	white-space: nowrap;
 	font-size: 12px;
 	font-weight: 800;
-	color: #222;
+	color: #18073a;
 	text-transform: uppercase;
 	transition: all 0.2s ease;
 }
@@ -3369,7 +3369,7 @@ input:checked + label ~ label:before {
 }
 /*.compare-products-page .clear-list:hover,
 .compare-products-page .remove-button:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }*/
 .compare-section {
 	margin: 20px 0 0;
@@ -3382,7 +3382,7 @@ input:checked + label ~ label:before {
 	text-align: center;
 	font-weight: 800;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .compare-section .item {
 	display: table;
@@ -3441,7 +3441,7 @@ input:checked + label ~ label:before {
 }
 .topic-block-title {
 	display: none;
-	color: #222;
+	color: #18073a;
 }
 .topic-block-body,
 .topic-page .page-body {
@@ -3449,7 +3449,7 @@ input:checked + label ~ label:before {
 }
 .topic-block a, .topic-page a {
 	text-decoration: underline;
-	color: #222;
+	color: #18073a;
 }
 
 .home-page .topic-block {
@@ -3480,7 +3480,7 @@ input:checked + label ~ label:before {
 }
 .not-found-page strong {
 	font-weight: 400;
-	color: #222;
+	color: #18073a;
 }
 
 .topic-password {
@@ -3495,7 +3495,7 @@ input:checked + label ~ label:before {
 }
 .enter-password-title {
 	margin: 0 0 15px;
-	color: #222;
+	color: #18073a;
 }
 .topic-password #password {
 	display: block;
@@ -3506,14 +3506,14 @@ input:checked + label ~ label:before {
 .topic-password #button-password {
 	min-width: 180px;
 	outline: 1px solid transparent;
-	background-color: #222;
+	background-color: #18073a;
 	padding: 15px 25px;
 	color: #fff;
 	text-transform: uppercase;
 	transition: all 0.2s ease;
 }
 .topic-password #button-password:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 .topic-password .password-error {
 	margin: 10px 0 0;
@@ -3554,7 +3554,7 @@ input:checked + label ~ label:before {
 .apply-vendor-page .button-1 {
 	min-width: 180px;
 	outline: 1px solid transparent;
-	background-color: #222;
+	background-color: #18073a;
 	padding: 15px 25px;
 	color: #fff;
 	text-transform: uppercase;
@@ -3563,7 +3563,7 @@ input:checked + label ~ label:before {
 .contact-page .button-1:hover,
 .email-a-friend-page .button-1:hover,
 .apply-vendor-page .button-1:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 
 .contact-page .topic-block,
@@ -3571,11 +3571,11 @@ input:checked + label ~ label:before {
 .apply-vendor-page .topic-block {
 	padding: 30px 0;
 }
-.contact-page .topic-block 
+.contact-page .topic-block
 ~ form .message-error,
-.email-a-friend-page .title 
+.email-a-friend-page .title
 ~ form .message-error,
-.apply-vendor-page .topic-block 
+.apply-vendor-page .topic-block
 ~ form .message-error {
 	margin-top: -20px;
 }
@@ -3587,7 +3587,7 @@ input:checked + label ~ label:before {
 .email-a-friend-page .title h2 {
 	letter-spacing: 1.5px;
 	font-weight: 400;
-	color: #222;
+	color: #18073a;
 	text-transform: uppercase;
 }
 
@@ -3636,7 +3636,7 @@ input:checked + label ~ label:before {
 
 #check-availability-button {
 	margin: 20px 0 0;
-	background-color: #222;
+	background-color: #18073a;
 	padding: 10px 20px;
 	font-size: 12px;
 	text-transform: uppercase;
@@ -3663,7 +3663,7 @@ input:checked + label ~ label:before {
 .password-recovery-page .button-1 {
 	min-width: 180px;
 	outline: 1px solid transparent;
-	background-color: #222;
+	background-color: #18073a;
 	padding: 15px 25px;
 	color: #fff;
 	text-transform: uppercase;
@@ -3673,14 +3673,14 @@ input:checked + label ~ label:before {
 .registration-page .button-1:hover,
 .registration-result-page .button-1:hover,
 .password-recovery-page .button-1:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 
 .registration-result-page .result,
 .account-activation-page .result {
 	margin: 60px 0;
 	text-align: center;
-	color: #222;
+	color: #18073a;
 }
 
 .registration-page .message-error,
@@ -3704,7 +3704,7 @@ input:checked + label ~ label:before {
 	font-size: 17px;
 	letter-spacing: 1.5px;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .customer-block .title strong {
 	font-weight: 800;
@@ -3717,12 +3717,12 @@ input:checked + label ~ label:before {
 	margin: 0 5px;
 	padding-top: 1px;
 	font-size: 14px; /*reset zeroing*/
-	color: #222;
+	color: #18073a;
 	transition: all 0.1s ease;
 }
 .customer-block .remember:hover,
 .customer-block .forgot-password:hover {
-	text-shadow: 0 0 0 #222;
+	text-shadow: 0 0 0 #18073a;
 }
 .customer-block .captcha-box {
 	margin-bottom: 35px;
@@ -3738,7 +3738,7 @@ input:checked + label ~ label:before {
 	width: 60px;
 	height: 60px;
 	margin: 0 auto 30px;;
-	background-color: #222;
+	background-color: #18073a;
 	padding: 17px 18px 19px;
 	font-size: 28px;
 	color: #fff;
@@ -3771,7 +3771,7 @@ input:checked + label ~ label:before {
 	transition: all 0.2s ease;
 }
 .external-authentication .facebook-btn:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 
 .password-recovery-page .tooltip {
@@ -3796,7 +3796,7 @@ input:checked + label ~ label:before {
 }
 .block-account-navigation .list a:before {
 	font-size: 14px;
-	color: #222;
+	color: #18073a;
 }
 .block-account-navigation .customer-info a:before {
 	content: "\e005";
@@ -3862,7 +3862,7 @@ input:checked + label ~ label:before {
 .user-agreement-page .button-1 {
 	min-width: 180px;
 	outline: 1px solid transparent;
-	background-color: #222;
+	background-color: #18073a;
 	padding: 15px 25px;
 	color: #fff;
 	text-transform: uppercase;
@@ -3871,15 +3871,15 @@ input:checked + label ~ label:before {
 .account-page .button-1:hover,
 .return-request-page .button-1:hover,
 .user-agreement-page .button-1:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 .account-page .button-2 {
 	min-width: 100px;
-	border: 1px solid #222;
+	border: 1px solid #18073a;
 	outline: 1px solid transparent;
 	padding: 8px 24px;
 	font-size: 12px;
-	color: #222;
+	color: #18073a;
 	text-transform: uppercase;
 	transition: all 0.2s ease;
 }
@@ -3896,7 +3896,7 @@ input:checked + label ~ label:before {
 .account-page .description {
 	margin: 0 0 30px;
 	text-align: center;
-	color: #222;
+	color: #18073a;
 }
 
 .customer-info-page,
@@ -3990,7 +3990,7 @@ input:checked + label ~ label:before {
 .address-list-page .info .name,
 .address-list-page .info .email {
 	font-weight: 400;
-	color: #222;
+	color: #18073a;
 }
 .address-list-page .info .email {
 	margin: 0 0 20px;
@@ -4008,7 +4008,7 @@ input:checked + label ~ label:before {
 }
 .return-request-list .comments {
 	margin: 20px 0 0;
-	color: #222;
+	color: #18073a;
 }
 
 .downloadable-products-page table {
@@ -4033,7 +4033,7 @@ input:checked + label ~ label:before {
     background-color: #fff;
 	padding: 30px 5%;
 	text-align: center;
-	color: #222;
+	color: #18073a;
 }
 .reward-points-overview strong {
 	display: block;
@@ -4082,7 +4082,7 @@ input:checked + label ~ label:before {
 .customer-avatar-page .button-2 {
 	min-width: 115px;
 	margin: 0 3px;
-	border: 1px solid #222;
+	border: 1px solid #18073a;
 	padding: 10px 25px;
 	font-size: 14px;
 }
@@ -4099,7 +4099,7 @@ input:checked + label ~ label:before {
 }
 .customer-reviews-page .review-title {
 	font-size: 16px;
-	color: #222;
+	color: #18073a;
 }
 .customer-reviews-page .title-text {
 	font-weight: 400;
@@ -4120,7 +4120,7 @@ input:checked + label ~ label:before {
 .giftcard-balance-page .result {
 	margin: 0 0 30px;
 	text-align: center;
-	color: #222;
+	color: #18073a;
 }
 .vendor-info-page .vendor-picture {
 	margin: 20px 0;
@@ -4177,17 +4177,17 @@ input:checked + label ~ label:before {
 .cart-options button {
 	min-width: 240px;
 	margin: 0 5px 5px;
-	border: 1px solid #222;
+	border: 1px solid #18073a;
 	outline: 1px solid transparent;
 	padding: 10px 20px;
 	text-align: left;
 	font-size: 12px;
-	color: #222;
+	color: #18073a;
 	text-transform: uppercase;
 	transition: all 0.2s ease;
 }
 .cart-options button:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 .cart-options button span {
 	vertical-align: middle;
@@ -4227,7 +4227,7 @@ input:checked + label ~ label:before {
 	padding: 15px 20px;
 	text-align: left;
 	font-weight: 800;
-	color: #222;
+	color: #18073a;
 	text-transform: uppercase;
 	cursor: pointer;
 }
@@ -4256,7 +4256,7 @@ input:checked + label ~ label:before {
 }
 .cart-collaterals .box .title {
 	margin: -5px 0 10px;
-	color: #222;
+	color: #18073a;
 	text-transform: uppercase;
 }
 .cart-collaterals .box .hint {
@@ -4265,16 +4265,16 @@ input:checked + label ~ label:before {
 }
 .cart-collaterals .box .button-2 {
 	height: 42px;
-	border: 1px solid #222;
+	border: 1px solid #18073a;
 	outline: 1px solid transparent;
 	padding: 0 20px;
 	font-size: 12px;
-	color: #222;
+	color: #18073a;
 	text-transform: uppercase;
 	transition: all 0.2s ease;
 }
 .cart-collaterals .box .button-2:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 
 .cart-collaterals .coupon-code {
@@ -4286,7 +4286,7 @@ input:checked + label ~ label:before {
 }
 .cart-collaterals .coupon-code .button-2 {
 	width: 100%;
-	background-color: #222;
+	background-color: #18073a;
 	color: #fff;
 }
 .cart-collaterals .message-failure {
@@ -4306,7 +4306,7 @@ input:checked + label ~ label:before {
 	content: "\e905";
 	display: block;
 	font-size: 11px;
-	color: #222;
+	color: #18073a;
 }
 .remove-discount-button,
 .remove-giftcard-button {
@@ -4336,7 +4336,7 @@ input:checked + label ~ label:before {
 .estimate-shipping-result strong {
 	display: block;
 	margin-bottom: 2px;
-	color: #222;
+	color: #18073a;
 }
 .estimate-shipping-result span {
 	font-size: 13px;
@@ -4384,7 +4384,7 @@ input:checked + label ~ label:before {
 	min-width: 200px;
 	height: 50px;
 	outline: 1px solid transparent;
-	background-color: #222;
+	background-color: #18073a;
 	padding: 0 25px;
 	font-size: 16px;
 	color: #fff;
@@ -4392,7 +4392,7 @@ input:checked + label ~ label:before {
 	transition: all 0.2s ease;
 }
 .cart-footer .checkout-button:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 .cart-footer .checkout-disabled {
 	font-size: 18px;
@@ -4420,14 +4420,14 @@ input:checked + label ~ label:before {
 .checkout-page .button-1 {
 	min-width: 180px;
 	outline: 1px solid transparent;
-	background-color: #222;
+	background-color: #18073a;
 	padding: 15px 25px;
 	color: #fff;
 	text-transform: uppercase;
 	transition: all 0.2s ease;
 }
 .checkout-page .button-1:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 
 .checkout-page .order-summary {
@@ -4468,7 +4468,7 @@ input:checked + label ~ label:before {
 .checkout-page .address-box .name,
 .checkout-page .address-box .email {
 	font-size: 16px;
-	color: #222;
+	color: #18073a;
 }
 .checkout-page .address-box .email {
 	margin: 0 0 20px;
@@ -4560,7 +4560,7 @@ li .payment-logo {
 	padding: 5px;
 }
 .payment-info label {
-	color: #222;
+	color: #18073a;
 }
 .payment-info select {
 	width: 100%;
@@ -4597,7 +4597,7 @@ li .payment-logo {
 }
 .order-completed .order-number {
 	text-transform: uppercase;
-    color: #222;
+    color: #18073a;
 }
 .order-completed .details-link {
 	margin: 10px 0 0;
@@ -4640,7 +4640,7 @@ li .payment-logo {
 .opc .allow .step-title .number,
 .opc .allow .step-title .title {
 	font-weight: 800;
-	color: #222;
+	color: #18073a;
 	cursor: pointer;
 }
 .opc .active .step-title .number,
@@ -4660,7 +4660,7 @@ li .payment-logo {
 
 .opc .section i {
 	font-style: normal;
-	color: #222;
+	color: #18073a;
 }
 .opc .section > label {
 	display: block;
@@ -4721,16 +4721,16 @@ li .payment-logo {
 	display: inline-block;
 	min-width: 100px;
 	margin: 10px 0;
-	border: 1px solid #222;
+	border: 1px solid #18073a;
 	outline: 1px solid transparent;
 	padding: 14px 24px;
 	font-weight: 400;
-	color: #222;
+	color: #18073a;
 	text-transform: uppercase;
 	transition: all 0.2s ease;
 }
 .opc .back-link:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 .opc .please-wait {
 	display: block;
@@ -4744,7 +4744,7 @@ li .payment-logo {
 .order-review-data,
 .order-details-area,
 .shipment-details-area {
-	margin: 0 0 60px;  
+	margin: 0 0 60px;
 }
 .order-review-data > div,
 .order-details-area > div,
@@ -4774,7 +4774,7 @@ li .payment-logo {
 .order-review-data .email,
 .order-details-area .email {
 	font-size: 16px;
-	color: #222;
+	color: #18073a;
 }
 .order-review-data .email,
 .order-details-area .email {
@@ -4784,7 +4784,7 @@ li .payment-logo {
 .shipping-method-info ul {
 	margin-top: -40px;
 	font-size: 16px;
-	color: #222;
+	color: #18073a;
 }
 .payment-method-info .label,
 .shipping-method-info .label,
@@ -4802,7 +4802,7 @@ li .payment-logo {
 	display: inline-block;
 	margin: 0 3px;
 	outline: 1px solid transparent;
-	background-color: #222;
+	background-color: #18073a;
 	padding: 12px 24px;
 	font-size: 14px; /*reset zeroing*/
 	line-height: normal;
@@ -4812,7 +4812,7 @@ li .payment-logo {
 	transition: all 0.2s ease;
 }
 .order-details-page .button-2:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 
 .order-details-page .order-overview {
@@ -4828,11 +4828,11 @@ li .payment-logo {
 	margin: 0 0 15px;
 	font-weight: 800;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }
 .order-details-page .order-info {
 	font-weight: 400;
-	color: #222;
+	color: #18073a;
 }
 .order-details-page .order-price {
 	font-weight: 400;
@@ -4859,7 +4859,7 @@ li .payment-logo {
 	margin-top: 15px;
 }
 .order-details-page .cart-footer {
-	color: #222;
+	color: #18073a;
 }
 .order-details-page .actions {
 	text-align: center;
@@ -4926,14 +4926,14 @@ li .payment-logo {
 .search-input .button-1 {
 	min-width: 180px;
 	outline: 1px solid transparent;
-	background-color: #222;
+	background-color: #18073a;
 	padding: 15px 25px;
 	color: #fff;
 	text-transform: uppercase;
 	transition: all 0.2s ease;
 }
 .search-input .button-1:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 .search-input ~ .search-results {
 	margin: 60px 0 0;
@@ -4946,7 +4946,7 @@ li .payment-logo {
 .search-results .warning,
 .search-results .no-result {
 	text-align: center;
-	color: #222;
+	color: #18073a;
 }
 
 .sitemap-page .entity {
@@ -4960,7 +4960,7 @@ li .payment-logo {
     line-height: 30px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    color: #222;
+    color: #18073a;
 }
 .sitemap-page .entity-body {
 	margin: 0 -3%;
@@ -4977,7 +4977,7 @@ li .payment-logo {
 }
 .sitemap-page .entity-list a {
 	display: block;
-	color: #222;
+	color: #18073a;
 }
 .sitemap-page .entity-list a:hover {
 	color: #f61853;
@@ -4998,7 +4998,7 @@ li .payment-logo {
 	display: block;
 	padding: 15px 0;
 	font-weight: 800;
-	color: #222;
+	color: #18073a;
 }
 .blog-post,.news-item {
 	margin: 0 auto 50px;
@@ -5017,7 +5017,7 @@ li .payment-logo {
 	margin: 0 auto 30px;
 	font-size: 30px;
 	font-weight: 400;
-	color: #222;
+	color: #18073a;
 }
 .blog-post .post-title:after,
 .news-item .news-title:after {
@@ -5059,7 +5059,7 @@ li .payment-logo {
 	display: inline-block;
 	min-width: 130px;
 	outline: 1px solid transparent;
-	background-color: #222;
+	background-color: #18073a;
 	padding: 12px 24px;
 	text-align: center;
 	font-size: 12px;
@@ -5070,14 +5070,14 @@ li .payment-logo {
 }
 .blog-posts .read-more:hover,
 .news-items .read-more:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 .blog-page .tags {
 	margin: 30px 0 0;
 }
 .blog-page .tags label {
 	margin: 0 5px;
-	color: #222;
+	color: #18073a;
 }
 .blog-page .tags ul,
 .blogpost-page .tags ul {
@@ -5120,17 +5120,17 @@ li .payment-logo {
 }
 .new-comment button {
 	display: inline-block;
-	border: 1px solid #222;
+	border: 1px solid #18073a;
 	outline: 1px solid transparent;
 	padding: 10px 25px;
 	font-weight: 300;
-	color: #222;
+	color: #18073a;
 	cursor: pointer;
 	text-transform: uppercase;
 	transition: all 0.2s ease;
 }
 .new-comment button:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 .new-comment button .close {
 	display: none;
@@ -5140,7 +5140,7 @@ li .payment-logo {
 }
 .new-comment .result {
 	margin-top: 30px;
-	color: #222;
+	color: #18073a;
 }
 .new-comment .form {
 	display: none;
@@ -5161,14 +5161,14 @@ li .payment-logo {
 .new-comment .button-1 {
 	min-width: 180px;
 	outline: 1px solid transparent;
-	background-color: #222;
+	background-color: #18073a;
 	padding: 15px 25px;
 	color: #fff;
 	text-transform: uppercase;
 	transition: all 0.2s ease;
 }
 .new-comment .button-1:hover {
-	outline-color: #222;
+	outline-color: #18073a;
 }
 
 .blog-comment,
@@ -5208,7 +5208,7 @@ li .payment-logo {
 .comment-author {
 	font-size: 16px;
 	font-weight: 800;
-	color: #222;
+	color: #18073a;
 	text-transform: uppercase;
 }
 .comment-time {
@@ -5244,5 +5244,5 @@ li .payment-logo {
 .news-list-homepage .view-all a {
 	font-weight: 800;
 	text-transform: uppercase;
-	color: #222;
+	color: #18073a;
 }

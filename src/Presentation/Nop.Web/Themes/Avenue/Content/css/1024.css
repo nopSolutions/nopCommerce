@@ -96,7 +96,7 @@
 	background: url('../img/pattern.png') repeat;
 	text-align: center;
 	vertical-align: top;
-	color: #222;
+	color: #18073a;
 }
 .featured-categories.default .details:before {
 	content: "";
@@ -145,7 +145,7 @@
 	bottom: 15%;
 	width: 120px;
 	margin: auto;
-	border: 1px solid #222;
+	border: 1px solid #18073a;
 	padding: 11px 10px 9px;
 	font-size: 11px;
 	white-space: nowrap;
@@ -157,7 +157,7 @@
 	vertical-align: top;
 }
 
-.featured-categories.default 
+.featured-categories.default
 .item-box:nth-child(n+3) {
 	margin-top: 30px !important;
 }
@@ -209,7 +209,7 @@
 	background-color: #fff;
 	text-align: center;
 	vertical-align: top;
-	color: #222;
+	color: #18073a;
 }
 .compare-products-table td:first-child {
     text-align: right;
