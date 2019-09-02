@@ -703,6 +703,7 @@
       
       More details here: https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals#concurrent-garbage-collection-->
     <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+    <UserSecretsId>c20f847e-2ee1-450e-9d29-aa574405dab6</UserSecretsId>
   </PropertyGroup>
 
 </Project>

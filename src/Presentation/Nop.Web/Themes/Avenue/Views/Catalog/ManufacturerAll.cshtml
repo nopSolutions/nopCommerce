@@ -26,9 +26,9 @@
                                     {
                                         @await Component.InvokeAsync("LazyLoadImage", new (string Key, string Value)[]
                                         {
-                                            ("src", Model.PictureModel.ImageUrl),
-                                            ("alt", Model.PictureModel.AlternateText),
-                                            ("title", Model.PictureModel.Title)
+                                            ("src", item.PictureModel.ImageUrl),
+                                            ("alt", item.PictureModel.AlternateText),
+                                            ("title", item.PictureModel.Title)
                                         })
                                     }
                                     else
