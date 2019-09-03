@@ -8,11 +8,9 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
-using Nop.Core.Domain.Orders;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
-using Nop.Services.Orders;
 
 namespace Nop.Services.Catalog
 {
@@ -33,11 +31,9 @@ namespace Nop.Services.Catalog
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductService _productService;
-        private readonly IShoppingCartService _shoppingCartService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
 
@@ -53,11 +49,9 @@ namespace Nop.Services.Catalog
             IProductAttributeParser productAttributeParser,
             IProductAttributeService productAttributeService,
             IProductService productService,
-            IShoppingCartService shoppingCartService,
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
-            IWorkContext workContext,
-            ShoppingCartSettings shoppingCartSettings)
+            IWorkContext workContext)
         {
             _catalogSettings = catalogSettings;
             _currencySettings = currencySettings;
@@ -69,11 +63,9 @@ namespace Nop.Services.Catalog
             _productAttributeParser = productAttributeParser;
             _productAttributeService = productAttributeService;
             _productService = productService;
-            _shoppingCartService = shoppingCartService;
             _cacheManager = cacheManager;
             _storeContext = storeContext;
             _workContext = workContext;
-            _shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
@@ -153,7 +145,7 @@ namespace Nop.Services.Catalog
             foreach (var discount in _discountService.GetAllDiscountsForCaching(DiscountType.AssignedToCategories))
             {
                 //load identifier of categories with this discount applied to
-                var discountCategoryIds = _discountService.GetAppliedCategoryIds(discount, customer);
+                var discountCategoryIds = _categoryService.GetAppliedCategoryIds(discount, customer);
 
                 //compare with categories of this product
                 var productCategoryIds = new List<int>();
@@ -200,7 +192,7 @@ namespace Nop.Services.Catalog
             foreach (var discount in _discountService.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers))
             {
                 //load identifier of manufacturers with this discount applied to
-                var discountManufacturerIds = _discountService.GetAppliedManufacturerIds(discount, customer);
+                var discountManufacturerIds = _manufacturerService.GetAppliedManufacturerIds(discount, customer);
 
                 //compare with manufacturers of this product
                 var productManufacturerIds = new List<int>();
@@ -468,230 +460,6 @@ namespace Nop.Services.Catalog
             discountAmount = cachedPrice.AppliedDiscountAmount;
 
             return cachedPrice.Price;
-        }
-
-        /// <summary>
-        /// Gets the shopping cart unit price (one item)
-        /// </summary>
-        /// <param name="shoppingCartItem">The shopping cart item</param>
-        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
-        /// <returns>Shopping cart unit price (one item)</returns>
-        public virtual decimal GetUnitPrice(ShoppingCartItem shoppingCartItem,
-            bool includeDiscounts = true)
-        {
-            return GetUnitPrice(shoppingCartItem, includeDiscounts, out _, out _);
-        }
-
-        /// <summary>
-        /// Gets the shopping cart unit price (one item)
-        /// </summary>
-        /// <param name="shoppingCartItem">The shopping cart item</param>
-        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
-        /// <param name="discountAmount">Applied discount amount</param>
-        /// <param name="appliedDiscounts">Applied discounts</param>
-        /// <returns>Shopping cart unit price (one item)</returns>
-        public virtual decimal GetUnitPrice(ShoppingCartItem shoppingCartItem,
-            bool includeDiscounts,
-            out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts)
-        {
-            if (shoppingCartItem == null)
-                throw new ArgumentNullException(nameof(shoppingCartItem));
-
-            return GetUnitPrice(shoppingCartItem.Product,
-                shoppingCartItem.Customer,
-                shoppingCartItem.ShoppingCartType,
-                shoppingCartItem.Quantity,
-                shoppingCartItem.AttributesXml,
-                shoppingCartItem.CustomerEnteredPrice,
-                shoppingCartItem.RentalStartDateUtc,
-                shoppingCartItem.RentalEndDateUtc,
-                includeDiscounts,
-                out discountAmount,
-                out appliedDiscounts);
-        }
-
-        /// <summary>
-        /// Gets the shopping cart unit price (one item)
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="customer">Customer</param>
-        /// <param name="shoppingCartType">Shopping cart type</param>
-        /// <param name="quantity">Quantity</param>
-        /// <param name="attributesXml">Product attributes (XML format)</param>
-        /// <param name="customerEnteredPrice">Customer entered price (if specified)</param>
-        /// <param name="rentalStartDate">Rental start date (null for not rental products)</param>
-        /// <param name="rentalEndDate">Rental end date (null for not rental products)</param>
-        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
-        /// <param name="discountAmount">Applied discount amount</param>
-        /// <param name="appliedDiscounts">Applied discounts</param>
-        /// <returns>Shopping cart unit price (one item)</returns>
-        public virtual decimal GetUnitPrice(Product product,
-            Customer customer,
-            ShoppingCartType shoppingCartType,
-            int quantity,
-            string attributesXml,
-            decimal customerEnteredPrice,
-            DateTime? rentalStartDate, DateTime? rentalEndDate,
-            bool includeDiscounts,
-            out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts)
-        {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
-
-            discountAmount = decimal.Zero;
-            appliedDiscounts = new List<DiscountForCaching>();
-
-            decimal finalPrice;
-
-            var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
-            if (combination?.OverriddenPrice.HasValue ?? false)
-            {
-                finalPrice = GetFinalPrice(product,
-                        customer,
-                        combination.OverriddenPrice.Value,
-                        decimal.Zero,
-                        includeDiscounts,
-                        quantity,
-                        product.IsRental ? rentalStartDate : null,
-                        product.IsRental ? rentalEndDate : null,
-                        out discountAmount, out appliedDiscounts);
-            }
-            else
-            {
-                //summarize price of all attributes
-                var attributesTotalPrice = decimal.Zero;
-                var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
-                if (attributeValues != null)
-                {
-                    foreach (var attributeValue in attributeValues)
-                    {
-                        attributesTotalPrice += GetProductAttributeValuePriceAdjustment(attributeValue, customer, product.CustomerEntersPrice ? (decimal?)customerEnteredPrice : null);
-                    }
-                }
-
-                //get price of a product (with previously calculated price of all attributes)
-                if (product.CustomerEntersPrice)
-                {
-                    finalPrice = customerEnteredPrice;
-                }
-                else
-                {
-                    int qty;
-                    if (_shoppingCartSettings.GroupTierPricesForDistinctShoppingCartItems)
-                    {
-                        //the same products with distinct product attributes could be stored as distinct "ShoppingCartItem" records
-                        //so let's find how many of the current products are in the cart                        
-                        qty = _shoppingCartService.GetShoppingCart(customer, shoppingCartType: shoppingCartType, productId: product.Id)
-                            .Sum(x => x.Quantity);
-
-                        if (qty == 0)
-                        {
-                            qty = quantity;
-                        }
-                    }
-                    else
-                    {
-                        qty = quantity;
-                    }
-
-                    finalPrice = GetFinalPrice(product,
-                        customer,
-                        attributesTotalPrice,
-                        includeDiscounts,
-                        qty,
-                        product.IsRental ? rentalStartDate : null,
-                        product.IsRental ? rentalEndDate : null,
-                        out discountAmount, out appliedDiscounts);
-                }
-            }
-
-            //rounding
-            if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                finalPrice = RoundPrice(finalPrice);
-
-            return finalPrice;
-        }
-
-        /// <summary>
-        /// Gets the shopping cart item sub total
-        /// </summary>
-        /// <param name="shoppingCartItem">The shopping cart item</param>
-        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
-        /// <returns>Shopping cart item sub total</returns>
-        public virtual decimal GetSubTotal(ShoppingCartItem shoppingCartItem,
-            bool includeDiscounts = true)
-        {
-            return GetSubTotal(shoppingCartItem, includeDiscounts, out var _, out var _, out var _);
-        }
-
-        /// <summary>
-        /// Gets the shopping cart item sub total
-        /// </summary>
-        /// <param name="shoppingCartItem">The shopping cart item</param>
-        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
-        /// <param name="discountAmount">Applied discount amount</param>
-        /// <param name="appliedDiscounts">Applied discounts</param>
-        /// <param name="maximumDiscountQty">Maximum discounted qty. Return not nullable value if discount cannot be applied to ALL items</param>
-        /// <returns>Shopping cart item sub total</returns>
-        public virtual decimal GetSubTotal(ShoppingCartItem shoppingCartItem,
-            bool includeDiscounts,
-            out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts,
-            out int? maximumDiscountQty)
-        {
-            if (shoppingCartItem == null)
-                throw new ArgumentNullException(nameof(shoppingCartItem));
-
-            decimal subTotal;
-            maximumDiscountQty = null;
-
-            //unit price
-            var unitPrice = GetUnitPrice(shoppingCartItem, includeDiscounts,
-                out discountAmount, out appliedDiscounts);
-
-            //discount
-            if (appliedDiscounts.Any())
-            {
-                //we can properly use "MaximumDiscountedQuantity" property only for one discount (not cumulative ones)
-                DiscountForCaching oneAndOnlyDiscount = null;
-                if (appliedDiscounts.Count == 1)
-                    oneAndOnlyDiscount = appliedDiscounts.First();
-
-                if ((oneAndOnlyDiscount?.MaximumDiscountedQuantity.HasValue ?? false) &&
-                    shoppingCartItem.Quantity > oneAndOnlyDiscount.MaximumDiscountedQuantity.Value)
-                {
-                    maximumDiscountQty = oneAndOnlyDiscount.MaximumDiscountedQuantity.Value;
-                    //we cannot apply discount for all shopping cart items
-                    var discountedQuantity = oneAndOnlyDiscount.MaximumDiscountedQuantity.Value;
-                    var discountedSubTotal = unitPrice * discountedQuantity;
-                    discountAmount *= discountedQuantity;
-
-                    var notDiscountedQuantity = shoppingCartItem.Quantity - discountedQuantity;
-                    var notDiscountedUnitPrice = GetUnitPrice(shoppingCartItem, false);
-                    var notDiscountedSubTotal = notDiscountedUnitPrice * notDiscountedQuantity;
-
-                    subTotal = discountedSubTotal + notDiscountedSubTotal;
-                }
-                else
-                {
-                    //discount is applied to all items (quantity)
-                    //calculate discount amount for all items
-                    discountAmount *= shoppingCartItem.Quantity;
-
-                    subTotal = unitPrice * shoppingCartItem.Quantity;
-                }
-            }
-            else
-            {
-                subTotal = unitPrice * shoppingCartItem.Quantity;
-            }
-
-            return subTotal;
         }
 
         /// <summary>

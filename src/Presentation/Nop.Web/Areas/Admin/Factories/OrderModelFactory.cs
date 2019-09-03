@@ -464,10 +464,12 @@ namespace Nop.Web.Areas.Admin.Factories
             var duh = _discountService.GetAllDiscountUsageHistory(orderId: order.Id);
             foreach (var d in duh)
             {
+                var discount = _discountService.GetDiscountById(d.DiscountId);
+
                 model.UsedDiscounts.Add(new OrderModel.UsedDiscountModel
                 {
                     DiscountId = d.DiscountId,
-                    DiscountName = d.Discount.Name
+                    DiscountName = discount.Name
                 });
             }
 

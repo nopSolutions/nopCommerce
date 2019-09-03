@@ -2592,6 +2592,33 @@ namespace Nop.Services.Catalog
         #region Product discounts
 
         /// <summary>
+        /// Clean up product references for a specified discount
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        public virtual void ClearDiscountProductMapping(Discount discount)
+        {
+            if (discount is null)
+                throw new ArgumentNullException(nameof(discount));
+
+            var mappingsWithProducts =
+                (from dcm in _discountProductMappingRepository.Table
+                 join p in _productRepository.Table on dcm.ProductId equals p.Id
+                 where dcm.DiscountId == discount.Id
+                 select new { product = p, dcm });
+                _discountProductMappingRepository.Table.Where(dcm => dcm.DiscountId == discount.Id);
+
+            if (!mappingsWithProducts.Any())
+                return;
+
+            foreach (var pdcm in mappingsWithProducts)
+            {
+                _discountProductMappingRepository.Delete(pdcm.dcm);
+                //update "HasDiscountsApplied" property
+                UpdateHasDiscountsApplied(pdcm.product);                    
+            }   
+        }        
+
+        /// <summary>
         /// Get a discount-product mapping records by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>

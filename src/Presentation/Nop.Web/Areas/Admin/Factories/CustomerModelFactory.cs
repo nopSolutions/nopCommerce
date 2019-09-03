@@ -68,7 +68,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IOrderService _orderService;
         private readonly IPictureService _pictureService;
-        private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IProductService _productService;
@@ -111,7 +110,6 @@ namespace Nop.Web.Areas.Admin.Factories
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IOrderService orderService,
             IPictureService pictureService,
-            IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
             IProductAttributeFormatter productAttributeFormatter,
             IProductService productService,
@@ -150,7 +148,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _newsLetterSubscriptionService = newsLetterSubscriptionService;
             _orderService = orderService;
             _pictureService = pictureService;
-            _priceCalculationService = priceCalculationService;
             _priceFormatter = priceFormatter;
             _productAttributeFormatter = productAttributeFormatter;
             _productService = productService;
@@ -1010,9 +1007,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 shoppingCartItemModel.AttributeInfo =
                     _productAttributeFormatter.FormatAttributes(item.Product, item.AttributesXml);
                 shoppingCartItemModel.UnitPrice = _priceFormatter.FormatPrice(
-                    _taxService.GetProductPrice(item.Product, _priceCalculationService.GetUnitPrice(item), out var _));
+                    _taxService.GetProductPrice(item.Product, _shoppingCartService.GetUnitPrice(item), out var _));
                 shoppingCartItemModel.Total = _priceFormatter.FormatPrice(
-                    _taxService.GetProductPrice(item.Product, _priceCalculationService.GetSubTotal(item), out _));
+                    _taxService.GetProductPrice(item.Product, _shoppingCartService.GetSubTotal(item), out _));
                 //convert dates to the user time
                 shoppingCartItemModel.UpdatedOn =
                     _dateTimeHelper.ConvertToUserTime(item.UpdatedOnUtc, DateTimeKind.Utc);

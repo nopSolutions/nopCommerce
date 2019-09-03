@@ -4,9 +4,9 @@ using Nop.Core;
 using Nop.Core.Domain.Shipping;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Data;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Services;
-using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
@@ -22,7 +22,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
 
         private readonly FixedByWeightByTotalSettings _fixedByWeightByTotalSettings;
         private readonly ILocalizationService _localizationService;
-        private readonly IPriceCalculationService _priceCalculationService;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly ISettingService _settingService;
         private readonly IShippingByWeightByTotalService _shippingByWeightByTotalService;
         private readonly IShippingService _shippingService;
@@ -36,7 +36,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
 
         public FixedByWeightByTotalComputationMethod(FixedByWeightByTotalSettings fixedByWeightByTotalSettings,
             ILocalizationService localizationService,
-            IPriceCalculationService priceCalculationService,
+            IShoppingCartService shoppingCartService,
             ISettingService settingService,
             IShippingByWeightByTotalService shippingByWeightByTotalService,
             IShippingService shippingService,
@@ -46,7 +46,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         {
             _fixedByWeightByTotalSettings = fixedByWeightByTotalSettings;
             _localizationService = localizationService;
-            _priceCalculationService = priceCalculationService;
+            _shoppingCartService = shoppingCartService;
             _settingService = settingService;
             _shippingByWeightByTotalService = shippingByWeightByTotalService;
             _shippingService = shippingService;
@@ -159,7 +159,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
                         continue;
 
                     //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal
-                    subTotal += _priceCalculationService.GetSubTotal(packageItem.ShoppingCartItem);
+                    subTotal += _shoppingCartService.GetSubTotal(packageItem.ShoppingCartItem);
                 }
 
                 //get weight of shipped items (excluding items with free shipping)

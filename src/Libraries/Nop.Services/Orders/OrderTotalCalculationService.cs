@@ -768,7 +768,7 @@ namespace Nop.Services.Orders
             var subTotalInclTaxWithoutDiscount = decimal.Zero;
             foreach (var shoppingCartItem in cart)
             {
-                var sciSubTotal = _priceCalculationService.GetSubTotal(shoppingCartItem);
+                var sciSubTotal = _shoppingCartService.GetSubTotal(shoppingCartItem);
 
                 var sciExclTax = _taxService.GetProductPrice(shoppingCartItem.Product, sciSubTotal, false, customer, out var taxRate);
                 var sciInclTax = _taxService.GetProductPrice(shoppingCartItem.Product, sciSubTotal, true, customer, out taxRate);

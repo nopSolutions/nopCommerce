@@ -32,7 +32,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
-        private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IShoppingCartService _shoppingCartService;
@@ -49,7 +48,6 @@ namespace Nop.Web.Areas.Admin.Factories
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
-            IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
             IProductAttributeFormatter productAttributeFormatter,
             IShoppingCartService shoppingCartService,
@@ -62,7 +60,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _localizationService = localizationService;
-            _priceCalculationService = priceCalculationService;
             _priceFormatter = priceFormatter;
             _productAttributeFormatter = productAttributeFormatter;
             _shoppingCartService = shoppingCartService;
@@ -204,9 +201,9 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     itemModel.Store = _storeService.GetStoreById(item.StoreId)?.Name ?? "Deleted";
                     itemModel.AttributeInfo = _productAttributeFormatter.FormatAttributes(item.Product, item.AttributesXml, item.Customer);
-                    var unitPrice = _priceCalculationService.GetUnitPrice(item);
+                    var unitPrice = _shoppingCartService.GetUnitPrice(item);
                     itemModel.UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, unitPrice, out var _));
-                    var subTotal = _priceCalculationService.GetSubTotal(item);
+                    var subTotal = _shoppingCartService.GetSubTotal(item);
                     itemModel.Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, subTotal, out _));
 
                     //set product name since it does not survive mapping

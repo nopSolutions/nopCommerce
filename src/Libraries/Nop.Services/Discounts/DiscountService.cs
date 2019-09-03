@@ -4,7 +4,6 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
@@ -25,7 +24,6 @@ namespace Nop.Services.Discounts
     {
         #region Fields
 
-        private readonly ICategoryService _categoryService;
         private readonly ICustomerService _customerService;
         private readonly IDbContext _dbContext;
         private readonly IDiscountPluginManager _discountPluginManager;
@@ -34,6 +32,7 @@ namespace Nop.Services.Discounts
         private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<DiscountRequirement> _discountRequirementRepository;
         private readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
+        private readonly IRepository<Order> _orderRepository;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
 
@@ -41,8 +40,7 @@ namespace Nop.Services.Discounts
 
         #region Ctor
 
-        public DiscountService(ICategoryService categoryService,
-            ICustomerService customerService,
+        public DiscountService(ICustomerService customerService,
             IDbContext dbContext,
             IDiscountPluginManager discountPluginManager,
             IEventPublisher eventPublisher,
@@ -50,10 +48,10 @@ namespace Nop.Services.Discounts
             IRepository<Discount> discountRepository,
             IRepository<DiscountRequirement> discountRequirementRepository,
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
+            IRepository<Order> orderRepository,
             IStaticCacheManager cacheManager,
             IStoreContext storeContext)
         {
-            _categoryService = categoryService;
             _customerService = customerService;
             _dbContext = dbContext;
             _discountPluginManager = discountPluginManager;
@@ -62,58 +60,14 @@ namespace Nop.Services.Discounts
             _discountRepository = discountRepository;
             _discountRequirementRepository = discountRequirementRepository;
             _discountUsageHistoryRepository = discountUsageHistoryRepository;
+            _orderRepository = orderRepository;
             _cacheManager = cacheManager;
             _storeContext = storeContext;
         }
 
         #endregion
 
-        #region Nested classes
-
-        /// <summary>
-        /// DiscountRequirement (for caching)
-        /// </summary>
-        [Serializable]
-        public class DiscountRequirementForCaching
-        {
-            public DiscountRequirementForCaching()
-            {
-                ChildRequirements = new List<DiscountRequirementForCaching>();
-            }
-
-            public int Id { get; set; }
-
-            public string SystemName { get; set; }
-
-            public bool IsGroup { get; set; }
-
-            public RequirementGroupInteractionType? InteractionType { get; set; }
-
-            public IList<DiscountRequirementForCaching> ChildRequirements { get; set; }
-        }
-
-        #endregion
-
         #region Utilities
-
-        /// <summary>
-        /// Get requirements for caching
-        /// </summary>
-        /// <param name="requirements">Collection of discount requirement</param>
-        /// <returns>List of DiscountRequirementForCaching</returns>
-        protected IList<DiscountRequirementForCaching> GetReqirementsForCaching(IEnumerable<DiscountRequirement> requirements)
-        {
-            var requirementForCaching = requirements.Select(requirement => new DiscountRequirementForCaching
-            {
-                Id = requirement.Id,
-                IsGroup = requirement.IsGroup,
-                SystemName = requirement.DiscountRequirementRuleSystemName,
-                InteractionType = requirement.InteractionType,
-                ChildRequirements = GetReqirementsForCaching(requirement.ChildRequirements)
-            });
-
-            return requirementForCaching.ToList();
-        }
 
         /// <summary>
         /// Get discount validation result
@@ -123,7 +77,7 @@ namespace Nop.Services.Discounts
         /// <param name="customer">Customer</param>
         /// <param name="errors">Errors</param>
         /// <returns>True if result is valid; otherwise false</returns>
-        protected bool GetValidationResult(IEnumerable<DiscountRequirementForCaching> requirements,
+        protected bool GetValidationResult(IEnumerable<DiscountRequirement> requirements,
             RequirementGroupInteractionType groupInteractionType, Customer customer, List<string> errors)
         {
             var result = false;
@@ -132,15 +86,16 @@ namespace Nop.Services.Discounts
             {
                 if (requirement.IsGroup)
                 {
+                    var childRequirements = GetDiscountRequirementsByParent(requirement);
                     //get child requirements for the group
                     var interactionType = requirement.InteractionType ?? RequirementGroupInteractionType.And;
-                    result = GetValidationResult(requirement.ChildRequirements, interactionType, customer, errors);
+                    result = GetValidationResult(childRequirements, interactionType, customer, errors);
                 }
                 else
                 {
                     //or try to get validation result for the requirement
                     var requirementRulePlugin = _discountPluginManager
-                        .LoadPluginBySystemName(requirement.SystemName, customer, _storeContext.CurrentStore.Id);
+                        .LoadPluginBySystemName(requirement.DiscountRequirementRuleSystemName, customer, _storeContext.CurrentStore.Id);
                     if (requirementRulePlugin == null)
                         continue;
 
@@ -334,76 +289,6 @@ namespace Nop.Services.Discounts
         }
 
         /// <summary>
-        /// Get category identifiers to which a discount is applied
-        /// </summary>
-        /// <param name="discount">Discount</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Category identifiers</returns>
-        public virtual IList<int> GetAppliedCategoryIds(DiscountForCaching discount, Customer customer)
-        {
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
-
-            var discountId = discount.Id;
-            var cacheKey = string.Format(NopDiscountDefaults.DiscountCategoryIdsModelCacheKey,
-                discountId,
-                string.Join(",", _customerService.GetCustomerRoleIds(customer)),
-                _storeContext.CurrentStore.Id);
-            var result = _cacheManager.Get(cacheKey, () =>
-            {
-                var ids = new List<int>();
-                var rootCategoryIds = _discountRepository.Table.Where(x => x.Id == discountId)
-                        .SelectMany(x => x.DiscountCategoryMappings.Select(mapping => mapping.CategoryId))
-                        .ToList();
-                foreach (var categoryId in rootCategoryIds)
-                {
-                    if (!ids.Contains(categoryId))
-                        ids.Add(categoryId);
-
-                    if (!discount.AppliedToSubCategories)
-                        continue;
-
-                    //include subcategories
-                    foreach (var childCategoryId in _categoryService.GetChildCategoryIds(categoryId, _storeContext.CurrentStore.Id))
-                    {
-                        if (!ids.Contains(childCategoryId))
-                            ids.Add(childCategoryId);
-                    }
-                }
-
-                return ids;
-            });
-
-            return result;
-        }
-
-        /// <summary>
-        /// Get manufacturer identifiers to which a discount is applied
-        /// </summary>
-        /// <param name="discount">Discount</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Manufacturer identifiers</returns>
-        public virtual IList<int> GetAppliedManufacturerIds(DiscountForCaching discount, Customer customer)
-        {
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
-
-            var discountId = discount.Id;
-            var cacheKey = string.Format(NopDiscountDefaults.DiscountManufacturerIdsModelCacheKey,
-                discountId,
-                string.Join(",", _customerService.GetCustomerRoleIds(customer)),
-                _storeContext.CurrentStore.Id);
-            var result = _cacheManager.Get(cacheKey, () =>
-            {
-                return _discountRepository.Table.Where(x => x.Id == discountId)
-                    .SelectMany(x => x.DiscountManufacturerMappings.Select(mapping => mapping.ManufacturerId))
-                    .ToList();
-            });
-
-            return result;
-        }
-
-        /// <summary>
         /// Map a discount to the same class for caching
         /// </summary>
         /// <param name="discount">Discount</param>
@@ -561,18 +446,81 @@ namespace Nop.Services.Discounts
         }
 
         /// <summary>
+        /// Get a discount requirement
+        /// </summary>
+        /// <param name="discountRequirementId">Discount requirement identifier</param>
+        public virtual DiscountRequirement GetDiscountRequirementById(int discountRequirementId)
+        {
+            if (discountRequirementId == 0)
+                return null;
+
+            return _discountRequirementRepository.GetById(discountRequirementId);
+        }
+
+        /// <summary>
+        /// Gets child discount requirements
+        /// </summary>
+        /// <param name="discountRequirement">Parent discount requirement</param>
+        public virtual IList<DiscountRequirement> GetDiscountRequirementsByParent(DiscountRequirement discountRequirement)
+        {
+            if (discountRequirement is null)
+                throw new ArgumentNullException(nameof(discountRequirement));
+
+            return _discountRequirementRepository.Table.Where(dr => dr.ParentId == discountRequirement.Id).ToList();
+        }
+
+        /// <summary>
         /// Delete discount requirement
         /// </summary>
         /// <param name="discountRequirement">Discount requirement</param>
-        public virtual void DeleteDiscountRequirement(DiscountRequirement discountRequirement)
+        /// <param name="recursive">A value indicating whether to recursively delete child requirements</param>
+        public virtual void DeleteDiscountRequirement(DiscountRequirement discountRequirement, bool recursive = false)
         {
             if (discountRequirement == null)
                 throw new ArgumentNullException(nameof(discountRequirement));
+
+            if (recursive && GetDiscountRequirementsByParent(discountRequirement) is IList<DiscountRequirement> children && children.Any())
+            {
+                foreach (var child in children)
+                {
+                    DeleteDiscountRequirement(child, recursive);
+                }
+            }
 
             _discountRequirementRepository.Delete(discountRequirement);
 
             //event notification
             _eventPublisher.EntityDeleted(discountRequirement);
+        }
+
+        /// <summary>
+        /// Inserts a discount requirement
+        /// </summary>
+        /// <param name="discountRequirement">Discount requirement</param>
+        public virtual void InsertDiscountRequirement(DiscountRequirement discountRequirement)
+        {
+            if (discountRequirement is null)
+                throw new ArgumentNullException(nameof(discountRequirement));
+
+            _discountRequirementRepository.Insert(discountRequirement);
+
+            //event notification
+            _eventPublisher.EntityInserted(discountRequirement);
+        }
+
+        /// <summary>
+        /// Updates a discount requirement
+        /// </summary>
+        /// <param name="discountRequirement">Discount requirement</param>
+        public virtual void UpdateDiscountRequirement(DiscountRequirement discountRequirement)
+        {
+            if (discountRequirement is null)
+                throw new ArgumentNullException(nameof(discountRequirement));
+
+            _discountRequirementRepository.Update(discountRequirement);
+
+            //event notification
+            _eventPublisher.EntityUpdated(discountRequirement);
         }
 
         #endregion
@@ -728,15 +676,14 @@ namespace Nop.Services.Discounts
 
             //discount requirements
             var key = string.Format(NopDiscountDefaults.DiscountRequirementModelCacheKey, discount.Id);
-            var requirementsForCaching = _cacheManager.Get(key, () =>
+            var requirements = _cacheManager.Get(key, () =>
             {
-                var requirements = GetAllDiscountRequirements(discount.Id, true);
-                return GetReqirementsForCaching(requirements);
+                return GetAllDiscountRequirements(discount.Id, true);
             });
 
             //get top-level group
-            var topLevelGroup = requirementsForCaching.FirstOrDefault();
-            if (topLevelGroup == null || (topLevelGroup.IsGroup && !topLevelGroup.ChildRequirements.Any()) || !topLevelGroup.InteractionType.HasValue)
+            var topLevelGroup = requirements.FirstOrDefault();
+            if (topLevelGroup == null || (topLevelGroup.IsGroup && !GetDiscountRequirementsByParent(topLevelGroup).Any()) || !topLevelGroup.InteractionType.HasValue)
             {
                 //there are no requirements, so discount is valid
                 result.IsValid = true;
@@ -745,7 +692,7 @@ namespace Nop.Services.Discounts
 
             //requirements exist, let's check them
             var errors = new List<string>();
-            result.IsValid = GetValidationResult(requirementsForCaching, topLevelGroup.InteractionType.Value, customer, errors);
+            result.IsValid = GetValidationResult(requirements, topLevelGroup.InteractionType.Value, customer, errors);
 
             //set errors if result is not valid
             if (!result.IsValid)
@@ -791,14 +738,20 @@ namespace Nop.Services.Discounts
 
             //filter by customer
             if (customerId.HasValue && customerId.Value > 0)
-                discountUsageHistory = discountUsageHistory.Where(historyRecord => historyRecord.Order != null && historyRecord.Order.CustomerId == customerId.Value);
+                discountUsageHistory = (from duh in discountUsageHistory
+                                        join order in _orderRepository.Table on duh.OrderId equals order.Id
+                                        where order.CustomerId == customerId
+                                        select duh);
 
             //filter by order
             if (orderId.HasValue && orderId.Value > 0)
                 discountUsageHistory = discountUsageHistory.Where(historyRecord => historyRecord.OrderId == orderId.Value);
 
             //ignore deleted orders
-            discountUsageHistory = discountUsageHistory.Where(historyRecord => historyRecord.Order != null && !historyRecord.Order.Deleted);
+            discountUsageHistory = (from duh in discountUsageHistory
+                                    join order in _orderRepository.Table on duh.OrderId equals order.Id
+                                    where !order.Deleted
+                                    select duh);
 
             //order
             discountUsageHistory = discountUsageHistory.OrderByDescending(historyRecord => historyRecord.CreatedOnUtc).ThenBy(historyRecord => historyRecord.Id);

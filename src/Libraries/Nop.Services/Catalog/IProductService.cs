@@ -798,6 +798,12 @@ namespace Nop.Services.Catalog
         #region Product discounts
 
         /// <summary>
+        /// Clean up product references for a specified discount
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        void ClearDiscountProductMapping(Discount discount);
+
+        /// <summary>
         /// Get a discount-product mapping records by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>

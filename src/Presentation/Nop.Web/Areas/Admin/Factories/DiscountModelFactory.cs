@@ -280,7 +280,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 });
 
                 //prepare available requirement groups
-                var requirementGroups = discount.DiscountRequirements.Where(requirement => requirement.IsGroup);
+                var requirementGroups = _discountService.GetAllDiscountRequirements(discount.Id).Where(requirement => requirement.IsGroup);
                 model.AvailableRequirementGroups = requirementGroups.Select(requirement =>
                     new SelectListItem { Value = requirement.Id.ToString(), Text = requirement.DiscountRequirementRuleSystemName }).ToList();
 
@@ -344,8 +344,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (requirement.IsGroup)
                 {
                     //get child requirements for the group
+                    var childRequirements = _discountService.GetDiscountRequirementsByParent(requirement);
+
                     requirementModel
-                        .ChildRequirements = PrepareDiscountRequirementRuleModels(requirement.ChildRequirements, discount, interactionType);
+                        .ChildRequirements = PrepareDiscountRequirementRuleModels(childRequirements, discount, interactionType);
 
                     return requirementModel;
                 }

@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Discounts;
 
@@ -25,11 +25,6 @@ namespace Nop.Data.Mapping.Discounts
             builder.Property(discount => discount.DiscountPercentage).HasColumnType("decimal(18, 4)");
             builder.Property(discount => discount.DiscountAmount).HasColumnType("decimal(18, 4)");
             builder.Property(discount => discount.MaximumDiscountAmount).HasColumnType("decimal(18, 4)");
-
-            builder.HasMany(discount => discount.DiscountRequirements)
-                .WithOne(requirement => requirement.Discount)
-                .HasForeignKey(requirement => requirement.DiscountId)
-                .IsRequired();
 
             builder.Ignore(discount => discount.DiscountType);
             builder.Ignore(discount => discount.DiscountLimitation);

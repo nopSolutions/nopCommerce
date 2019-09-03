@@ -1,6 +1,4 @@
-﻿using Nop.Core.Domain.Catalog;
-
-namespace Nop.Core.Domain.Discounts
+﻿namespace Nop.Core.Domain.Discounts
 {
     /// <summary>
     /// Represents a discount-manufacturer mapping class

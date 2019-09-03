@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Discounts;
 
@@ -19,10 +19,6 @@ namespace Nop.Data.Mapping.Discounts
         {
             builder.ToTable(nameof(DiscountRequirement));
             builder.HasKey(requirement => requirement.Id);
-
-            builder.HasMany(requirement => requirement.ChildRequirements)
-                .WithOne()
-                .HasForeignKey(requirement => requirement.ParentId);
 
             builder.Ignore(requirement => requirement.InteractionType);
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-
-namespace Nop.Core.Domain.Discounts
+﻿namespace Nop.Core.Domain.Discounts
 {
     /// <summary>
     /// Represents an entity which supports discounts

@@ -10,6 +10,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Customers;
+using Nop.Services.Discounts;
 using Nop.Services.Events;
 
 namespace Nop.Services.Catalog
@@ -68,6 +69,23 @@ namespace Nop.Services.Catalog
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Clean up manufacturer references for a specified discount
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        public virtual void ClearDiscountManufacturerMapping(Discount discount)
+        {
+            if (discount is null)
+                throw new ArgumentNullException(nameof(discount));
+
+            var mappings = _discountManufacturerMappingRepository.Table.Where(dcm => dcm.DiscountId == discount.Id);
+
+            if (mappings.Any())
+            {
+                _discountManufacturerMappingRepository.Delete(mappings);
+            }
+        }
 
         /// <summary>
         /// Deletes a manufacturer
@@ -137,6 +155,30 @@ namespace Nop.Services.Catalog
             query = query.Distinct().OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
 
             return new PagedList<Manufacturer>(query, pageIndex, pageSize);
+        }
+
+        /// <summary>
+        /// Get manufacturer identifiers to which a discount is applied
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Manufacturer identifiers</returns>
+        public virtual IList<int> GetAppliedManufacturerIds(DiscountForCaching discount, Customer customer)
+        {
+            if (discount == null)
+                throw new ArgumentNullException(nameof(discount));
+
+            var discountId = discount.Id;
+            var cacheKey = string.Format(NopDiscountDefaults.DiscountManufacturerIdsModelCacheKey,
+                discountId,
+                string.Join(",", _customerService.GetCustomerRoleIds(customer)),
+                _storeContext.CurrentStore.Id);
+            var result = _cacheManager.Get(cacheKey, () =>
+            {
+                return _discountManufacturerMappingRepository.Table.Where(dmm => dmm.DiscountId == discountId).Select(dmm => dmm.ManufacturerId).ToList();
+            });
+
+            return result;
         }
 
         /// <summary>

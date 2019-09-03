@@ -33,7 +33,6 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
-using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
@@ -60,7 +59,6 @@ namespace Nop.Web.Controllers
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
-        private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductAttributeService _productAttributeService;
@@ -98,7 +96,6 @@ namespace Nop.Web.Controllers
             INotificationService notificationService,
             IPermissionService permissionService,
             IPictureService pictureService,
-            IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
             IProductAttributeParser productAttributeParser,
             IProductAttributeService productAttributeService,
@@ -132,7 +129,6 @@ namespace Nop.Web.Controllers
             _notificationService = notificationService;
             _permissionService = permissionService;
             _pictureService = pictureService;
-            _priceCalculationService = priceCalculationService;
             _priceFormatter = priceFormatter;
             _productAttributeParser = productAttributeParser;
             _productAttributeService = productAttributeService;
@@ -983,7 +979,7 @@ namespace Nop.Web.Controllers
             {
                 //we do not calculate price of "customer enters price" option is enabled
                 List<DiscountForCaching> scDiscounts;
-                var finalPrice = _priceCalculationService.GetUnitPrice(product,
+                var finalPrice = _shoppingCartService.GetUnitPrice(product,
                     _workContext.CurrentCustomer,
                     ShoppingCartType.ShoppingCart,
                     1, attributeXml, 0,

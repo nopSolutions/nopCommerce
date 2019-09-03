@@ -486,10 +486,10 @@ namespace Nop.Services.Customers
             var guestRole = GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
             if (guestRole == null)
                 throw new NopException("'Guests' role could not be loaded");
-            //customer.CustomerRoles.Add(guestRole);
-            AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = guestRole.Id });
 
             _customerRepository.Insert(customer);
+
+            AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = guestRole.Id });
 
             return customer;
         }

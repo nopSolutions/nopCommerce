@@ -159,7 +159,7 @@ namespace Nop.Services.Tests.Orders
             //price calculation service
             _priceCalcService = new PriceCalculationService(_catalogSettings, _currencySettings, _categoryService.Object,
                 _currencyService.Object, _customerService.Object, _discountService.Object, _manufacturerService.Object, _productAttributeParser.Object, _productAttributeService.Object,
-                _productService.Object, _shoppingCartService.Object, cacheManager, _storeContext.Object, _workContext, _shoppingCartSettings);
+                _productService.Object, cacheManager, _storeContext.Object, _workContext);
 
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 

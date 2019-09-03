@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
+using Nop.Services.Discounts;
 
 namespace Nop.Services.Catalog
 {
@@ -10,6 +12,12 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial interface ICategoryService
     {
+        /// <summary>
+        /// Clean up category references for a specified discount
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        void ClearDiscountCategoryMapping(Discount discount);
+
         /// <summary>
         /// Delete category
         /// </summary>
@@ -51,6 +59,14 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
         IList<Category> GetAllCategoriesDisplayedOnHomepage(bool showHidden = false);
+
+        /// <summary>
+        /// Get category identifiers to which a discount is applied
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Category identifiers</returns>
+        IList<int> GetAppliedCategoryIds(DiscountForCaching discount, Customer customer);
 
         /// <summary>
         /// Gets child category identifiers

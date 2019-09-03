@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Discounts;
 
@@ -19,16 +19,6 @@ namespace Nop.Data.Mapping.Discounts
         {
             builder.ToTable(nameof(DiscountUsageHistory));
             builder.HasKey(historyEntry => historyEntry.Id);
-
-            builder.HasOne(historyEntry => historyEntry.Discount)
-                .WithMany()
-                .HasForeignKey(historyEntry => historyEntry.DiscountId)
-                .IsRequired();
-
-            builder.HasOne(historyEntry => historyEntry.Order)
-                .WithMany(order => order.DiscountUsageHistory)
-                .HasForeignKey(historyEntry => historyEntry.OrderId)
-                .IsRequired();
 
             base.Configure(builder);
         }

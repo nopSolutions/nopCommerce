@@ -48,7 +48,6 @@ namespace Nop.Plugin.Tax.Avalara.Factories
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IPaymentService _paymentService;
-        private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IShoppingCartService _shoppingCartService;
@@ -89,7 +88,6 @@ namespace Nop.Plugin.Tax.Avalara.Factories
             IPaymentService paymentService,
             IPermissionService permissionService,
             IPictureService pictureService,
-            IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
             IProductAttributeFormatter productAttributeFormatter,
             IProductService productService,
@@ -135,7 +133,6 @@ namespace Nop.Plugin.Tax.Avalara.Factories
                 paymentService,
                 permissionService,
                 pictureService,
-                priceCalculationService,
                 priceFormatter,
                 productAttributeFormatter,
                 productService,
@@ -165,7 +162,6 @@ namespace Nop.Plugin.Tax.Avalara.Factories
             _httpContextAccessor = httpContextAccessor;
             _orderTotalCalculationService = orderTotalCalculationService;
             _paymentService = paymentService;
-            _priceCalculationService = priceCalculationService;
             _priceFormatter = priceFormatter;
             _shippingPluginManager = shippingPluginManager;
             _shoppingCartService = shoppingCartService;
@@ -254,7 +250,7 @@ namespace Nop.Plugin.Tax.Avalara.Factories
                     Quantity = cartItem.Quantity
                 };
 
-                var itemSubtotal = _priceCalculationService.GetSubTotal(cartItem, true, out _, out _, out _);
+                var itemSubtotal = _shoppingCartService.GetSubTotal(cartItem, true, out _, out _, out _);
                 orderItem.PriceExclTax = _taxService.GetProductPrice(cartItem.Product, itemSubtotal, false, _workContext.CurrentCustomer, out _);
 
                 order.OrderItems.Add(orderItem);

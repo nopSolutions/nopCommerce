@@ -13,6 +13,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Customers;
+using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Security;
@@ -95,6 +96,23 @@ namespace Nop.Services.Catalog
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Clean up category references for a  specified discount
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        public virtual void ClearDiscountCategoryMapping(Discount discount)
+        {
+            if (discount is null)
+                throw new ArgumentNullException(nameof(discount));
+
+            var mappings = _discountCategoryMappingRepository.Table.Where(dcm => dcm.DiscountId == discount.Id);
+
+            if (mappings.Any())
+            {
+                _discountCategoryMappingRepository.Delete(mappings);
+            }
+        }
 
         /// <summary>
         /// Delete category
@@ -318,6 +336,49 @@ namespace Nop.Services.Catalog
             }
 
             return categories;
+        }
+
+        /// <summary>
+        /// Get category identifiers to which a discount is applied
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Category identifiers</returns>
+        public virtual IList<int> GetAppliedCategoryIds(DiscountForCaching discount, Customer customer)
+        {
+            if (discount == null)
+                throw new ArgumentNullException(nameof(discount));
+
+            var discountId = discount.Id;
+            var cacheKey = string.Format(NopDiscountDefaults.DiscountCategoryIdsModelCacheKey,
+                discountId,
+                string.Join(",", _customerService.GetCustomerRoleIds(customer)),
+                _storeContext.CurrentStore.Id);
+            var result = _cacheManager.Get(cacheKey, () =>
+            {
+                var ids = new List<int>();
+                var rootCategoryIds = _discountCategoryMappingRepository.Table.Where(dmm => dmm.DiscountId == discountId).Select(dmm => dmm.CategoryId);
+
+                foreach (var categoryId in rootCategoryIds)
+                {
+                    if (!ids.Contains(categoryId))
+                        ids.Add(categoryId);
+
+                    if (!discount.AppliedToSubCategories)
+                        continue;
+
+                    //include subcategories
+                    foreach (var childCategoryId in GetChildCategoryIds(categoryId, _storeContext.CurrentStore.Id))
+                    {
+                        if (!ids.Contains(childCategoryId))
+                            ids.Add(childCategoryId);
+                    }
+                }
+
+                return ids;
+            });
+
+            return result;
         }
 
         /// <summary>

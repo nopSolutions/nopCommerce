@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nop.Core;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 
@@ -77,22 +76,6 @@ namespace Nop.Services.Discounts
             string couponCode = null, string discountName = null, bool showHidden = false);
 
         /// <summary>
-        /// Get category identifiers to which a discount is applied
-        /// </summary>
-        /// <param name="discount">Discount</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Category identifiers</returns>
-        IList<int> GetAppliedCategoryIds(DiscountForCaching discount, Customer customer);
-
-        /// <summary>
-        /// Get manufacturer identifiers to which a discount is applied
-        /// </summary>
-        /// <param name="discount">Discount</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Manufacturer identifiers</returns>
-        IList<int> GetAppliedManufacturerIds(DiscountForCaching discount, Customer customer);
-
-        /// <summary>
         /// Map a discount to the same class for caching
         /// </summary>
         /// <param name="discount">Discount</param>
@@ -138,10 +121,34 @@ namespace Nop.Services.Discounts
         IList<DiscountRequirement> GetAllDiscountRequirements(int discountId = 0, bool topLevelOnly = false);
 
         /// <summary>
+        /// Get a discount requirement
+        /// </summary>
+        /// <param name="discountRequirementId">Discount requirement identifier</param>
+        DiscountRequirement GetDiscountRequirementById(int discountRequirementId);
+
+        /// <summary>
+        /// Gets child discount requirements
+        /// </summary>
+        /// <param name="discountRequirement">Parent discount requirement</param>
+        IList<DiscountRequirement> GetDiscountRequirementsByParent(DiscountRequirement discountRequirement);
+
+        /// <summary>
         /// Delete discount requirement
         /// </summary>
         /// <param name="discountRequirement">Discount requirement</param>
-        void DeleteDiscountRequirement(DiscountRequirement discountRequirement);
+        void DeleteDiscountRequirement(DiscountRequirement discountRequirement, bool recursively);
+
+        /// <summary>
+        /// Inserts a discount requirement
+        /// </summary>
+        /// <param name="discountRequirement">Discount requirement</param>
+        void InsertDiscountRequirement(DiscountRequirement discountRequirement);
+
+        /// <summary>
+        /// Updates a discount requirement
+        /// </summary>
+        /// <param name="discountRequirement">Discount requirement</param>
+        void UpdateDiscountRequirement(DiscountRequirement discountRequirement);
 
         #endregion
 

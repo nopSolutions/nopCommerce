@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -49,7 +48,6 @@ namespace Nop.Web.Controllers
         private readonly IPaymentService _paymentService;
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
-        private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
@@ -78,7 +76,6 @@ namespace Nop.Web.Controllers
             IPaymentService paymentService,
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
-            IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IWebHelper webHelper,
             IWorkContext workContext,
@@ -103,7 +100,6 @@ namespace Nop.Web.Controllers
             _paymentService = paymentService;
             _shippingService = shippingService;
             _shoppingCartService = shoppingCartService;
-            _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
             _webHelper = webHelper;
             _workContext = workContext;

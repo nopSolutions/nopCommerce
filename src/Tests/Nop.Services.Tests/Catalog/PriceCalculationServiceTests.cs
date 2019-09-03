@@ -11,13 +11,11 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
-using Nop.Services.Orders;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -44,8 +42,6 @@ namespace Nop.Services.Tests.Catalog
         private Mock<IRepository<TierPrice>> _tierPriceRepository;
         private IProductService _productService;
         private IPriceCalculationService _priceCalcService;
-        private Mock<IShoppingCartService> _shoppingCartService;
-        private ShoppingCartSettings _shoppingCartSettings;
         private CatalogSettings _catalogSettings;        
         private IStaticCacheManager _cacheManager;
         private Mock<IWorkContext> _workContext;
@@ -101,8 +97,6 @@ namespace Nop.Services.Tests.Catalog
 
             _productAttributeService = new Mock<IProductAttributeService>();
 
-            _shoppingCartService = new Mock<IShoppingCartService>();
-            _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
 
             _cacheManager = new TestCacheManager();
@@ -117,7 +111,7 @@ namespace Nop.Services.Tests.Catalog
 
             _priceCalcService = new PriceCalculationService(_catalogSettings, new CurrencySettings { PrimaryStoreCurrencyId = 1 }, _categoryService.Object,
                 _serviceProvider.CurrencyService.Object, _customerService, _discountService, _manufacturerService.Object, _productAttributeParser.Object, _productAttributeService.Object,
-                _productService, _shoppingCartService.Object, _cacheManager, _storeContext.Object, _workContext.Object, _shoppingCartSettings);
+                _productService, _cacheManager, _storeContext.Object, _workContext.Object);
 
             var nopEngine = new Mock<NopEngine>();
 
@@ -128,28 +122,6 @@ namespace Nop.Services.Tests.Catalog
         #endregion
 
         #region Utilities
-
-        private ShoppingCartItem CreateTestShopCartItem(decimal productPrice, int quantity = 1)
-        {
-            //customer
-            var customer = new Customer();
-
-            //shopping cart
-            var product = _productService.GetProductById(1);
-
-            product.Price = productPrice;
-
-            var shoppingCartItem = new ShoppingCartItem
-            {
-                Customer = customer,
-                CustomerId = customer.Id,
-                Product = product,
-                ProductId = product.Id,
-                Quantity = quantity
-            };
-
-            return shoppingCartItem;
-        }
 
         private IQueryable<Product> GetMockProducts()
         {
@@ -372,84 +344,6 @@ namespace Nop.Services.Tests.Catalog
             product.HasDiscountsApplied = true;
 
             _priceCalcService.GetFinalPrice(product, customer).ShouldEqual(9.34M);
-        }
-
-        [Test]
-        public void Can_get_shopping_cart_item_unitPrice()
-        {
-            //customer
-            var customer = new Customer();
-
-            //shopping cart
-            var product = _productService.GetProductById(1);
-
-            var sci1 = new ShoppingCartItem
-            {
-                Customer = customer,
-                CustomerId = customer.Id,
-                Product = product,
-                ProductId = product.Id,
-                Quantity = 2
-            };
-
-            _priceCalcService.GetUnitPrice(sci1).ShouldEqual(12.34);
-        }
-
-        [Test]
-        public void Can_get_shopping_cart_item_subTotal()
-        {
-            //customer
-            var customer = new Customer();
-
-            //shopping cart
-            var product = _productService.GetProductById(1);
-
-            var sci1 = new ShoppingCartItem
-            {
-                Customer = customer,
-                CustomerId = customer.Id,
-                Product = product,
-                ProductId = product.Id,
-                Quantity = 2
-            };
-
-            _priceCalcService.GetSubTotal(sci1).ShouldEqual(24.68);
-        }
-
-        [Test]
-        [TestCase(12.00009, 12.00)]
-        [TestCase(12.119, 12.12)]
-        [TestCase(12.115, 12.12)]
-        [TestCase(12.114, 12.11)]
-        public void Test_GetUnitPrice_WhenRoundPricesDuringCalculationIsTrue_PriceMustBeRounded(decimal inputPrice, decimal expectedPrice)
-        {
-            // arrange
-            var shoppingCartItem = CreateTestShopCartItem(inputPrice);
-
-            // act
-            _shoppingCartSettings.RoundPricesDuringCalculation = true;
-            var resultPrice = _priceCalcService.GetUnitPrice(shoppingCartItem);
-
-            // assert
-            resultPrice.ShouldEqual(expectedPrice);
-        }
-
-        [Test]
-        [TestCase(12.00009, 12.00009)]
-        [TestCase(12.119, 12.119)]
-        [TestCase(12.115, 12.115)]
-        [TestCase(12.114, 12.114)]
-        public void Test_GetUnitPrice_WhenNotRoundPricesDuringCalculationIsFalse_PriceMustNotBeRounded(decimal inputPrice, decimal expectedPrice)
-        {
-            // arrange            
-            var shoppingCartItem = CreateTestShopCartItem(inputPrice);
-
-            // act
-            _shoppingCartSettings.RoundPricesDuringCalculation = false;
-            var resultPrice = _priceCalcService.GetUnitPrice(shoppingCartItem);
-
-            // assert
-            resultPrice.ShouldEqual(expectedPrice);
         }
 
         [TestCase(12.366, 12.37, RoundingType.Rounding001)]

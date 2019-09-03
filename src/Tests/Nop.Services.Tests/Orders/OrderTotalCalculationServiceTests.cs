@@ -12,6 +12,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -75,7 +76,7 @@ namespace Nop.Services.Tests.Orders
         private TaxSettings _taxSettings;
         private Mock<IAddressService> _addressService;
         private Mock<ICurrencyService> _currencyService;
-        private Mock<IShoppingCartService> _shoppingCartService;
+        private IShoppingCartService _shoppingCartService;
         private TaxService _taxService;
         private Mock<IRewardPointService> _rewardPointService;
         private RewardPointsSettings _rewardPointsSettings;
@@ -109,7 +110,8 @@ namespace Nop.Services.Tests.Orders
             _rewardPointService = new Mock<IRewardPointService>();
             _addressService = new Mock<IAddressService>();
             _currencyService = new Mock<ICurrencyService>();
-            _shoppingCartService = new Mock<IShoppingCartService>();
+
+            _currencyService.Setup(x => x.GetCurrencyById(1, true)).Returns(new Currency { Id = 1, RoundingTypeId = 0 });
 
             _customerRepository = new Mock<IRepository<Customer>>();
             _customerRepository.Setup(r => r.Table).Returns(
@@ -147,26 +149,27 @@ namespace Nop.Services.Tests.Orders
 
             var cacheManager = new TestCacheManager();
 
-            _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
-            _currencySettings = new CurrencySettings();
+            _currencySettings = new CurrencySettings { PrimaryStoreCurrencyId = 1 };
+
 
             _priceCalculationService = new PriceCalculationService(_catalogSettings, _currencySettings, _categoryService.Object,
                 _currencyService.Object, _customerService, _discountService, _manufacturerService.Object,
-                _productAttributeParser.Object, _productAttributeService.Object, _productService.Object, _shoppingCartService.Object,
+                _productAttributeParser.Object, _productAttributeService.Object, _productService.Object,
                 cacheManager, _storeContext.Object,
-                _workContext.Object, _shoppingCartSettings);
+                _workContext.Object);
+
+            _shoppingCartSettings = new ShoppingCartSettings();
+            _shoppingCartService = new ShoppingCartService(
+                null, null, null, null, null, null, null, null, null, null, null, null, null, _priceCalculationService, null, _productAttributeParser.Object, null, null, null, null, null, null, null, null, null, null, _shoppingCartSettings);
+
 
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
             var customerService = new Mock<ICustomerService>();
             var loger = new Mock<ILogger>();
 
-            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, _webHelper.Object);
 
-            _pickupPluginManager = new PickupPluginManager(pluginService, _shippingSettings);
-            _shippingPluginManager = new ShippingPluginManager(pluginService, _shippingSettings);
-            _taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
 
             //shipping
             _shippingSettings = new ShippingSettings
@@ -213,6 +216,12 @@ namespace Nop.Services.Tests.Orders
                 DefaultTaxAddressId = 10
             };
 
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, _webHelper.Object);
+
+            _pickupPluginManager = new PickupPluginManager(pluginService, _shippingSettings);
+            _shippingPluginManager = new ShippingPluginManager(pluginService, _shippingSettings);
+            _taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
+
             _addressService.Setup(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Returns(new Address { Id = _taxSettings.DefaultTaxAddressId });
 
             _taxService = new TaxService(_addressSettings,
@@ -245,7 +254,7 @@ namespace Nop.Services.Tests.Orders
                 _rewardPointService.Object,
                 _shippingPluginManager,
                 _shippingService,
-                _shoppingCartService.Object,
+                _shoppingCartService,
                 _storeContext.Object,
                 _taxService,
                 _workContext.Object,
@@ -254,6 +263,40 @@ namespace Nop.Services.Tests.Orders
                 _shoppingCartSettings,
                 _taxSettings);
         }
+
+        #region Utilities
+
+        private ShoppingCartItem CreateTestShopCartItem(decimal productPrice, int quantity = 1)
+        {
+            //customer
+            var customer = new Customer();
+
+            //shopping cart
+            var product = new Product
+            {
+                Id = 1,
+                Name = "Product name 1",
+                Price = 12.34M,
+                CustomerEntersPrice = false,
+                Published = true,
+                //set HasTierPrices property
+                HasTierPrices = true
+            };
+
+            product.Price = productPrice;
+
+            var shoppingCartItem = new ShoppingCartItem
+            {
+                Customer = customer,
+                CustomerId = customer.Id,
+                Product = product,
+                ProductId = product.Id,
+                Quantity = quantity
+            };
+
+            return shoppingCartItem;
+        }
+        #endregion
 
         [Test]
         public void Can_get_shopping_cart_subTotal_excluding_tax()
@@ -1139,6 +1182,102 @@ namespace Nop.Services.Tests.Orders
             //56 - items, 10 - shipping (fixed), 20 - payment fee, 8.6 - tax
             _orderTotalCalcService.GetShoppingCartTotal(cart, out _, out _, out _, out _, out _)
                 .ShouldEqual(94.6M);
+        }
+
+        [Test]
+        public void Can_get_shopping_cart_item_unitPrice()
+        {
+            //customer
+            var customer = new Customer();
+
+            //shopping cart
+            var product = new Product
+            {
+                Id = 1,
+                Name = "Product name 1",
+                Price = 12.34M,
+                CustomerEntersPrice = false,
+                Published = true,
+                //set HasTierPrices property
+                HasTierPrices = true
+            };
+
+            var sci1 = new ShoppingCartItem
+            {
+                Customer = customer,
+                CustomerId = customer.Id,
+                Product = product,
+                ProductId = product.Id,
+                Quantity = 2
+            };
+
+            _shoppingCartService.GetUnitPrice(sci1).ShouldEqual(12.34);
+        }
+
+        [Test]
+        public void Can_get_shopping_cart_item_subTotal()
+        {
+            //customer
+            var customer = new Customer();
+
+            //shopping cart
+            var product = new Product
+            {
+                Id = 1,
+                Name = "Product name 1",
+                Price = 12.34M,
+                CustomerEntersPrice = false,
+                Published = true,
+                //set HasTierPrices property
+                HasTierPrices = true
+            };
+
+            var sci1 = new ShoppingCartItem
+            {
+                Customer = customer,
+                CustomerId = customer.Id,
+                Product = product,
+                ProductId = product.Id,
+                Quantity = 2
+            };
+
+            _shoppingCartService.GetSubTotal(sci1).ShouldEqual(24.68);
+        }
+
+        [Test]
+        [TestCase(12.00009, 12.00)]
+        [TestCase(12.119, 12.12)]
+        [TestCase(12.115, 12.12)]
+        [TestCase(12.114, 12.11)]
+        public void Test_GetUnitPrice_WhenRoundPricesDuringCalculationIsTrue_PriceMustBeRounded(decimal inputPrice, decimal expectedPrice)
+        {
+            // arrange
+            var shoppingCartItem = CreateTestShopCartItem(inputPrice);
+
+            // act
+            _shoppingCartSettings.RoundPricesDuringCalculation = true;
+            var resultPrice = _shoppingCartService.GetUnitPrice(shoppingCartItem);
+
+            // assert
+            resultPrice.ShouldEqual(expectedPrice);
+        }
+
+        [Test]
+        [TestCase(12.00009, 12.00009)]
+        [TestCase(12.119, 12.119)]
+        [TestCase(12.115, 12.115)]
+        [TestCase(12.114, 12.114)]
+        public void Test_GetUnitPrice_WhenNotRoundPricesDuringCalculationIsFalse_PriceMustNotBeRounded(decimal inputPrice, decimal expectedPrice)
+        {
+            // arrange            
+            var shoppingCartItem = CreateTestShopCartItem(inputPrice);
+
+            // act
+            _shoppingCartSettings.RoundPricesDuringCalculation = false;
+            var resultPrice = _shoppingCartService.GetUnitPrice(shoppingCartItem);
+
+            // assert
+            resultPrice.ShouldEqual(expectedPrice);
         }
 
         /*TODO temporary disabled

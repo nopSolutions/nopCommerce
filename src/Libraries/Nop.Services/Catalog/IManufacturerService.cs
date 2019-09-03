@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
+using Nop.Services.Discounts;
 
 namespace Nop.Services.Catalog
 {
@@ -10,6 +12,18 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial interface IManufacturerService
     {
+        /// <summary>
+        /// Clean up manufacturer references for a specified discount
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        void ClearDiscountManufacturerMapping(Discount discount);
+
+        /// <summary>
+        /// Deletes a discount-manufacturer mapping record
+        /// </summary>
+        /// <param name="discountManufacturerMapping">Discount-manufacturer mapping</param>
+        void DeleteDiscountManufacturerMapping(DiscountManufacturerMapping discountManufacturerMapping);
+
         /// <summary>
         /// Deletes a manufacturer
         /// </summary>
@@ -30,6 +44,14 @@ namespace Nop.Services.Catalog
             int pageIndex = 0,
             int pageSize = int.MaxValue,
             bool showHidden = false);
+
+        /// <summary>
+        /// Get manufacturer identifiers to which a discount is applied
+        /// </summary>
+        /// <param name="discountId">Discount</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Manufacturer identifiers</returns>
+        IList<int> GetAppliedManufacturerIds(DiscountForCaching discount, Customer customer);
 
         /// <summary>
         /// Gets a manufacturer
@@ -141,11 +163,5 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="discountManufacturerMapping">Discount-manufacturer mapping</param>
         void InsertDiscountManufacturerMapping(DiscountManufacturerMapping discountManufacturerMapping);
-
-        /// <summary>
-        /// Deletes a discount-manufacturer mapping record
-        /// </summary>
-        /// <param name="discountManufacturerMapping">Discount-manufacturer mapping</param>
-        void DeleteDiscountManufacturerMapping(DiscountManufacturerMapping discountManufacturerMapping);
     }
 }

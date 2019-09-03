@@ -200,7 +200,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                             url = urlHelper.RouteUrl("Product", new { SeName = seName }, _webHelper.CurrentRequestProtocol),
                             image = _pictureService.GetPictureUrl(picture),
                             quantity = item.Quantity,
-                            price = _priceCalculationService.GetSubTotal(item)
+                            price = _shoppingCartService.GetSubTotal(item)
                         };
                     }).ToArray();
 

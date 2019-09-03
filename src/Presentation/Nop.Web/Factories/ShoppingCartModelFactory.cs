@@ -69,7 +69,6 @@ namespace Nop.Web.Factories
         private readonly IPaymentService _paymentService;
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
-        private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IProductService _productService;
@@ -120,7 +119,6 @@ namespace Nop.Web.Factories
             IPaymentService paymentService,
             IPermissionService permissionService,
             IPictureService pictureService,
-            IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
             IProductAttributeFormatter productAttributeFormatter,
             IProductService productService,
@@ -167,7 +165,6 @@ namespace Nop.Web.Factories
             _paymentService = paymentService;
             _permissionService = permissionService;
             _pictureService = pictureService;
-            _priceCalculationService = priceCalculationService;
             _priceFormatter = priceFormatter;
             _productAttributeFormatter = productAttributeFormatter;
             _productService = productService;
@@ -418,7 +415,7 @@ namespace Nop.Web.Factories
             }
             else
             {
-                var shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci), out var _);
+                var shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(sci.Product, _shoppingCartService.GetUnitPrice(sci), out var _);
                 var shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
                 cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
             }
@@ -432,7 +429,7 @@ namespace Nop.Web.Factories
             else
             {
                 //sub total
-                var shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci, true, out var shoppingCartItemDiscountBase, out var _, out var maximumDiscountQty), out var taxRate);
+                var shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(sci.Product, _shoppingCartService.GetSubTotal(sci, true, out var shoppingCartItemDiscountBase, out var _, out var maximumDiscountQty), out var taxRate);
                 var shoppingCartItemSubTotalWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemSubTotalWithDiscountBase, _workContext.WorkingCurrency);
                 cartItemModel.SubTotal = _priceFormatter.FormatPrice(shoppingCartItemSubTotalWithDiscount);
                 cartItemModel.MaximumDiscountedQty = maximumDiscountQty;
@@ -551,7 +548,7 @@ namespace Nop.Web.Factories
             }
             else
             {
-                var shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci), out var _);
+                var shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(sci.Product, _shoppingCartService.GetUnitPrice(sci), out var _);
                 var shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
                 cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
             }
@@ -565,7 +562,7 @@ namespace Nop.Web.Factories
             else
             {
                 //sub total
-                var shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci, true, out var shoppingCartItemDiscountBase, out var _, out var maximumDiscountQty), out var taxRate);
+                var shoppingCartItemSubTotalWithDiscountBase = _taxService.GetProductPrice(sci.Product, _shoppingCartService.GetSubTotal(sci, true, out var shoppingCartItemDiscountBase, out var _, out var maximumDiscountQty), out var taxRate);
                 var shoppingCartItemSubTotalWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemSubTotalWithDiscountBase, _workContext.WorkingCurrency);
                 cartItemModel.SubTotal = _priceFormatter.FormatPrice(shoppingCartItemSubTotalWithDiscount);
                 cartItemModel.MaximumDiscountedQty = maximumDiscountQty;
@@ -1043,7 +1040,7 @@ namespace Nop.Web.Factories
                         }
                         else
                         {
-                            var shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci), out var _);
+                            var shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(sci.Product, _shoppingCartService.GetUnitPrice(sci), out var _);
                             var shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
                             cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
                         }

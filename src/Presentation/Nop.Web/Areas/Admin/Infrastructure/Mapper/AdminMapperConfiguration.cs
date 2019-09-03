@@ -857,11 +857,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.RequirementGroupId, options => options.Ignore())
                 .ForMember(model => model.TimesUsed, options => options.Ignore());
             CreateMap<DiscountModel, Discount>()
-                .ForMember(entity => entity.DiscountCategoryMappings, options => options.Ignore())
                 .ForMember(entity => entity.DiscountLimitation, options => options.Ignore())
-                .ForMember(entity => entity.DiscountManufacturerMappings, options => options.Ignore())
-                .ForMember(entity => entity.DiscountProductMappings, options => options.Ignore())
-                .ForMember(entity => entity.DiscountRequirements, options => options.Ignore())
                 .ForMember(entity => entity.DiscountType, options => options.Ignore());
 
             CreateMap<DiscountUsageHistory, DiscountUsageHistoryModel>()

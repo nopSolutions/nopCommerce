@@ -153,7 +153,7 @@
                                 <li>
                                     @await Component.InvokeAsync("AdminLanguageSelector")
                                 </li>
-                                @if (currentCustomer.IsRegistered())
+                                @if (customerService.IsRegistered(currentCustomer))
                                 {
                                     <li class="account-info">
                                         @customerService.GetCustomerFullName(currentCustomer)

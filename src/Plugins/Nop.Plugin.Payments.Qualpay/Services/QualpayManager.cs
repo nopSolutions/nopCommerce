@@ -45,7 +45,6 @@ namespace Nop.Plugin.Payments.Qualpay.Services
         private readonly CurrencySettings _currencySettings;
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IAddressService _addressService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
@@ -57,7 +56,6 @@ namespace Nop.Plugin.Payments.Qualpay.Services
         private readonly ILogger _logger;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IPaymentService _paymentService;
-        private readonly IPriceCalculationService _priceCalculationService;
         private readonly IProductService _productService;
         private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IShoppingCartService _shoppingCartService;
@@ -77,7 +75,6 @@ namespace Nop.Plugin.Payments.Qualpay.Services
         public QualpayManager(CurrencySettings currencySettings,
             EmailAccountSettings emailAccountSettings,
             IActionContextAccessor actionContextAccessor,
-            IAddressService addressService,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICountryService countryService,
             ICurrencyService currencyService,
@@ -89,7 +86,6 @@ namespace Nop.Plugin.Payments.Qualpay.Services
             ILogger logger,
             IOrderTotalCalculationService orderTotalCalculationService,
             IPaymentService paymentService,
-            IPriceCalculationService priceCalculationService,
             IProductService productService,
             IShippingPluginManager shippingPluginManager,
             IShoppingCartService shoppingCartService,
@@ -102,7 +98,6 @@ namespace Nop.Plugin.Payments.Qualpay.Services
             _currencySettings = currencySettings;
             _emailAccountSettings = emailAccountSettings;
             _actionContextAccessor = actionContextAccessor;
-            _addressService = addressService;
             _checkoutAttributeParser = checkoutAttributeParser;
             _countryService = countryService;
             _currencyService = currencyService;
@@ -114,7 +109,6 @@ namespace Nop.Plugin.Payments.Qualpay.Services
             _logger = logger;
             _orderTotalCalculationService = orderTotalCalculationService;
             _paymentService = paymentService;
-            _priceCalculationService = priceCalculationService;
             _productService = productService;
             _shippingPluginManager = shippingPluginManager;
             _shoppingCartService = shoppingCartService;
@@ -328,7 +322,7 @@ namespace Nop.Plugin.Payments.Qualpay.Services
             {
                 //item price
                 var price = _taxService.GetProductPrice(shoppingCartItem.Product,
-                    _priceCalculationService.GetUnitPrice(shoppingCartItem), false, shoppingCartItem.Customer, out _);
+                    _shoppingCartService.GetUnitPrice(shoppingCartItem), false, shoppingCartItem.Customer, out _);
 
                 return createItem(price, shoppingCartItem.Product.Name,
                     _productService.FormatSku(shoppingCartItem.Product, shoppingCartItem.AttributesXml),

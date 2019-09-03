@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Discounts;
 
 namespace Nop.Services.Orders
 {
@@ -154,6 +155,78 @@ namespace Nop.Services.Orders
         /// <returns>Warnings</returns>
         IList<string> GetShoppingCartWarnings(IList<ShoppingCartItem> shoppingCart,
             string checkoutAttributesXml, bool validateCheckoutAttributes);
+
+        /// <summary>
+        /// Gets the shopping cart unit price (one item)
+        /// </summary>
+        /// <param name="shoppingCartItem">The shopping cart item</param>
+        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
+        /// <returns>Shopping cart unit price (one item)</returns>
+        decimal GetUnitPrice(ShoppingCartItem shoppingCartItem,
+            bool includeDiscounts = true);
+
+        /// <summary>
+        /// Gets the shopping cart unit price (one item)
+        /// </summary>
+        /// <param name="shoppingCartItem">The shopping cart item</param>
+        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
+        /// <param name="discountAmount">Applied discount amount</param>
+        /// <param name="appliedDiscounts">Applied discounts</param>
+        /// <returns>Shopping cart unit price (one item)</returns>
+        decimal GetUnitPrice(ShoppingCartItem shoppingCartItem,
+            bool includeDiscounts,
+            out decimal discountAmount,
+            out List<DiscountForCaching> appliedDiscounts);
+
+        /// <summary>
+        /// Gets the shopping cart unit price (one item)
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="shoppingCartType">Shopping cart type</param>
+        /// <param name="quantity">Quantity</param>
+        /// <param name="attributesXml">Product attributes (XML format)</param>
+        /// <param name="customerEnteredPrice">Customer entered price (if specified)</param>
+        /// <param name="rentalStartDate">Rental start date (null for not rental products)</param>
+        /// <param name="rentalEndDate">Rental end date (null for not rental products)</param>
+        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
+        /// <param name="discountAmount">Applied discount amount</param>
+        /// <param name="appliedDiscounts">Applied discounts</param>
+        /// <returns>Shopping cart unit price (one item)</returns>
+        decimal GetUnitPrice(Product product,
+            Customer customer,
+            ShoppingCartType shoppingCartType,
+            int quantity,
+            string attributesXml,
+            decimal customerEnteredPrice,
+            DateTime? rentalStartDate, DateTime? rentalEndDate,
+            bool includeDiscounts,
+            out decimal discountAmount,
+            out List<DiscountForCaching> appliedDiscounts);
+
+        /// <summary>
+        /// Gets the shopping cart item sub total
+        /// </summary>
+        /// <param name="shoppingCartItem">The shopping cart item</param>
+        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
+        /// <returns>Shopping cart item sub total</returns>
+        decimal GetSubTotal(ShoppingCartItem shoppingCartItem,
+            bool includeDiscounts = true);
+
+        /// <summary>
+        /// Gets the shopping cart item sub total
+        /// </summary>
+        /// <param name="shoppingCartItem">The shopping cart item</param>
+        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
+        /// <param name="discountAmount">Applied discount amount</param>
+        /// <param name="appliedDiscounts">Applied discounts</param>
+        /// <param name="maximumDiscountQty">Maximum discounted qty. Return not nullable value if discount cannot be applied to ALL items</param>
+        /// <returns>Shopping cart item sub total</returns>
+        decimal GetSubTotal(ShoppingCartItem shoppingCartItem,
+            bool includeDiscounts,
+            out decimal discountAmount,
+            out List<DiscountForCaching> appliedDiscounts,
+            out int? maximumDiscountQty);
 
         /// <summary>
         /// Finds a shopping cart item in the cart

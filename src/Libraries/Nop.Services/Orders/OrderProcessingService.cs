@@ -1260,8 +1260,8 @@ namespace Nop.Services.Orders
             foreach (var sc in details.Cart)
             {
                 //prices
-                var scUnitPrice = _priceCalculationService.GetUnitPrice(sc);
-                var scSubTotal = _priceCalculationService.GetSubTotal(sc, true, out var discountAmount,
+                var scUnitPrice = _shoppingCartService.GetUnitPrice(sc);
+                var scSubTotal = _shoppingCartService.GetSubTotal(sc, true, out var discountAmount,
                     out var scDiscounts, out _);
                 var scUnitPriceInclTax =
                     _taxService.GetProductPrice(sc.Product, scUnitPrice, true, details.Customer, out var _);
@@ -1446,8 +1446,8 @@ namespace Nop.Services.Orders
                 {
                     _discountService.InsertDiscountUsageHistory(new DiscountUsageHistory
                     {
-                        Discount = d,
-                        Order = order,
+                        DiscountId = d.Id,
+                        OrderId = order.Id,
                         CreatedOnUtc = DateTime.UtcNow
                     });
                 }
@@ -1677,8 +1677,8 @@ namespace Nop.Services.Orders
                 {
                     _discountService.InsertDiscountUsageHistory(new DiscountUsageHistory
                     {
-                        Discount = d,
-                        Order = updatedOrder,
+                        DiscountId = d.Id,
+                        OrderId = updatedOrder.Id,
                         CreatedOnUtc = DateTime.UtcNow
                     });
                 }

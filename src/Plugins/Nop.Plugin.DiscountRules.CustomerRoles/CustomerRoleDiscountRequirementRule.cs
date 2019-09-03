@@ -113,7 +113,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
                 .Where(discountRequirement => discountRequirement.DiscountRequirementRuleSystemName == DiscountRequirementDefaults.SystemName);
             foreach (var discountRequirement in discountRequirements)
             {
-                _discountService.DeleteDiscountRequirement(discountRequirement);
+                _discountService.DeleteDiscountRequirement(discountRequirement, false);
             }
 
             //locales

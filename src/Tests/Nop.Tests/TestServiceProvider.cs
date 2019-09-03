@@ -1,20 +1,18 @@
-﻿using Moq;
-using Nop.Core;
-using System;
+﻿using System;
 using Microsoft.AspNetCore.Http;
+using Moq;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
-using Nop.Services.Orders;
-using Nop.Services.Customers;
 
 namespace Nop.Tests
 {
@@ -29,7 +27,7 @@ namespace Nop.Tests
             PriceCalculationService = new PriceCalculationService(new CatalogSettings(), new CurrencySettings(), 
                 new Mock<ICategoryService>().Object, new Mock<ICurrencyService>().Object, new Mock<ICustomerService>().Object, new Mock<IDiscountService>().Object,
                 new Mock<IManufacturerService>().Object, new Mock<IProductAttributeParser>().Object, new Mock<IProductAttributeService>().Object,
-                new Mock<IProductService>().Object, new Mock<IShoppingCartService>().Object, new TestCacheManager(), new Mock<IStoreContext>().Object, WorkContext.Object, new ShoppingCartSettings());
+                new Mock<IProductService>().Object, new TestCacheManager(), new Mock<IStoreContext>().Object, WorkContext.Object);
 
             LocalizationService.Setup(l => l.GetResource(It.IsAny<string>())).Returns("Invalid");
             WorkContext.Setup(p => p.WorkingLanguage).Returns(new Language {Id = 1});
