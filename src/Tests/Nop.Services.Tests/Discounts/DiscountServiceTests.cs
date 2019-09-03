@@ -7,6 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Orders;
 using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -28,7 +29,6 @@ namespace Nop.Services.Tests.Discounts
         private Mock<IRepository<DiscountUsageHistory>> _discountUsageHistoryRepo;
         private Mock<IEventPublisher> _eventPublisher;
         private Mock<ILocalizationService> _localizationService;
-        private Mock<ICategoryService> _categoryService;
         private Mock<IDbContext> _dbContext;
         private IDiscountPluginManager _discountPluginManager;
         private IDiscountService _discountService;
@@ -36,7 +36,8 @@ namespace Nop.Services.Tests.Discounts
         private Mock<ICustomerService> _customerService;
         private Mock<IRepository<Category>> _categoryRepo;
         private Mock<IRepository<Manufacturer>> _manufacturerRepo;
-        private Mock<IRepository<Product>> _productRepo;
+        private Mock<IRepository<Order>> _orderRepo;
+        private Mock<IRepository<Product>> _productRepo;        
         private CatalogSettings _catalogSettings;
 
         [SetUp]
@@ -96,12 +97,12 @@ namespace Nop.Services.Tests.Discounts
             var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
 
             _localizationService = new Mock<ILocalizationService>();
-            _categoryService = new Mock<ICategoryService>();
 
             _dbContext = new Mock<IDbContext>();
+            _orderRepo = new Mock<IRepository<Order>>();
 
             _discountPluginManager = new DiscountPluginManager(pluginService);
-            _discountService = new DiscountService(_categoryService.Object,
+            _discountService = new DiscountService(
                 _customerService.Object,
                 _dbContext.Object,
                 _discountPluginManager,
@@ -110,6 +111,7 @@ namespace Nop.Services.Tests.Discounts
                 _discountRepo.Object,
                 _discountRequirementRepo.Object,
                 _discountUsageHistoryRepo.Object,
+                _orderRepo.Object,
                 cacheManager,
                 _storeContext.Object);
         }

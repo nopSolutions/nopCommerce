@@ -9,6 +9,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Catalog;
@@ -26,7 +27,7 @@ namespace Nop.Services.Tests
     {
         private readonly List<DiscountForCaching> _discountForCaching;
 
-        public TestDiscountService(ICategoryService categoryService,
+        public TestDiscountService(
             ICustomerService customerService,
             IDbContext dbContext,
             IDiscountPluginManager discountPluginManager,
@@ -35,8 +36,9 @@ namespace Nop.Services.Tests
             IRepository<Discount> discountRepository,
             IRepository<DiscountRequirement> discountRequirementRepository,
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
+            IRepository<Order> orderRepository,
             IStaticCacheManager cacheManager,
-            IStoreContext storeContext) : base(categoryService,
+            IStoreContext storeContext) : base(
             customerService,
             dbContext,
             discountPluginManager,
@@ -45,6 +47,7 @@ namespace Nop.Services.Tests
             discountRepository,
             discountRequirementRepository,
             discountUsageHistoryRepository,
+            orderRepository,
             cacheManager,
             storeContext)
         {
@@ -113,13 +116,14 @@ namespace Nop.Services.Tests
             var webHelper = new Mock<IWebHelper>();
 
             var pluginService = new PluginService(new CatalogSettings(), customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
-            var categoryService = new Mock<ICategoryService>();
+
             var discountPluginManager = new DiscountPluginManager(pluginService);
             var store = new Store { Id = 1 };
             var storeContext = new Mock<IStoreContext>();
             storeContext.Setup(x => x.CurrentStore).Returns(store);
 
             var dbContext = new Mock<IDbContext>();
+            var orderRepo = new Mock<IRepository<Order>>();
 
             void setupDbSet<T>(IQueryable<T> result) where T : DiscountMapping
             {
@@ -128,7 +132,7 @@ namespace Nop.Services.Tests
 
             setupDbSet(productDiscountMapping);
 
-            var discountService = new TestDiscountService(categoryService.Object,
+            var discountService = new TestDiscountService(
                 customerService.Object,
                 dbContext.Object,
                 discountPluginManager,
@@ -137,6 +141,7 @@ namespace Nop.Services.Tests
                 discountRepo.Object,
                 discountRequirementRepo.Object,
                 discountUsageHistoryRepo.Object,
+                orderRepo.Object,
                 cacheManager,
                 storeContext.Object);
 
