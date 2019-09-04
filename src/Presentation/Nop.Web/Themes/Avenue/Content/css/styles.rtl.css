@@ -87,6 +87,7 @@ script {
 
 
 body {
+	direction: rtl;
     max-width: 100%;
 	overflow-x: hidden; /* responsive navigation & filters scroll bug fix*/
 	background-color: #fff;
@@ -135,8 +136,8 @@ textarea {
 }
 select {
 	min-width: 60px;
-	background: url('../img/select-arrow.png') right 10px center no-repeat;
-	padding: 0 24px 0 12px; /*select padding is never cross-browser consistent*/
+	background: url('../img/select-arrow.png') left 10px center no-repeat;
+	padding: 0 12px 0 24px; /*select padding is never cross-browser consistent*/
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
@@ -189,14 +190,14 @@ input[type="checkbox"] + span {
 /*custom checkboxes and radio buttons*/
 input[type="radio"],
 input[type="checkbox"] {
-	margin-right: -17px;
+	margin-left: -17px;
 	opacity: 0;
 }
 input[type="radio"] + label,
 input[type="checkbox"] + label {
 	position: relative;
 	padding-top: 1px; /*cross-browser consistency*/
-	padding-left: 20px;
+	padding-right: 20px;
 	color: #222;
 	cursor: pointer;
 }
@@ -206,7 +207,7 @@ input[type="checkbox"] + label:before {
 	position: absolute;
 	top: 0;
 	bottom: 0;
-	left: 0;
+	right: 0;
 	width: 12px;
 	height: 12px;
 	margin: auto;
@@ -322,7 +323,7 @@ input[type="checkbox"]:checked + label:before {
 .topic-page ul, .custom-tab ul,
 .post-body ul, .news-body ul {
 	margin: 20px 0;
-	padding: 0 0 0 36px;
+	padding: 0 36px 0 0;
 	list-style: disc;
 }
 .category-description ol,
@@ -333,7 +334,7 @@ input[type="checkbox"]:checked + label:before {
 .topic-page ol, .custom-tab ol,
 .post-body ol, .news-body ol {
 	margin: 20px 0;
-	padding: 0 0 0 36px;
+	padding: 0 36px 0 0;
 	list-style: decimal;
 }
 .category-description td,
@@ -468,16 +469,16 @@ input[type="checkbox"]:checked + label:before {
 	position: absolute;
 	width: 5px;
 	height: 5px;
-	margin-left: 5px;
+	margin-right: 5px;
 	border-radius: 50%;
 	background-color: #f61853;
 	font-size: 0;
 }
 .inputs .required {
-	margin: 5px 0 0 -10px;
+	margin: 5px -10px 0 0;
 }
 .inputs .option-list + .required {
-	margin-left: 5px;
+	margin-right: 5px;
 }
 .message-error,
 .field-validation-error,
@@ -510,6 +511,7 @@ input[type="checkbox"]:checked + label:before {
 }
 .accept-privacy-policy .read,
 .terms-of-service .read {
+	display: inline-block;
 	color: #f61853;
 	cursor: pointer;
 }
@@ -558,7 +560,7 @@ input[type="checkbox"]:checked + label:before {
 	border-style: solid;
 	border-color: #ebebeb;
     padding: 20px 15px;
-	text-align: left;
+	text-align: right;
 	font-size: 12px;
 	font-weight: 800;
 	color: #222;
@@ -572,7 +574,7 @@ input[type="checkbox"]:checked + label:before {
 	border-style: solid;
 	border-color: #ebebeb;
     padding: 20px 15px;
-	text-align: left;
+	text-align: right;
 }
 .cart a, .data-table a,
 .forums-table-section a {
@@ -584,7 +586,7 @@ input[type="checkbox"]:checked + label:before {
 .data-table .message,
 .data-table .info,
 .data-table .name {
-	text-align: left;
+	text-align: right;
 }
 .cart .remove-from-cart,
 .cart .add-to-cart,
@@ -594,7 +596,7 @@ input[type="checkbox"]:checked + label:before {
 }
 .cart input + .td-title,
 .data-table input + .td-title {
-	padding-left: 1px;
+	padding-right: 1px;
     font-size: 0;
 }
 
@@ -647,12 +649,12 @@ input[type="checkbox"]:checked + label:before {
 	display: none;
 	position: fixed;
 	bottom: 0;
-	left: 0;
+	right: 0;
 	z-index: 1040;
 	width: 100%;
 	box-shadow: 0 0 20px rgba(0,0,0,0.15);
 	background-color: #fff;
-	padding: 15px 30px 15px 15px;
+	padding: 15px 15px 15px 30px;
 	color: #fff !important;
 }
 .bar-notification.success {
@@ -671,7 +673,7 @@ input[type="checkbox"]:checked + label:before {
 .bar-notification .close {
 	position: absolute;
 	top: 0;
-	right: 0;
+	left: 0;
 	bottom: 0;
 	height: 16px;
 	margin: auto;
@@ -689,7 +691,7 @@ input[type="checkbox"]:checked + label:before {
 .eu-cookie-bar-notification {
     position: fixed;
     bottom: 0;
-	left: 0;
+	right: 0;
 	z-index: 1050;
 	width: 100%;
 	overflow: hidden;
@@ -706,13 +708,13 @@ input[type="checkbox"]:checked + label:before {
 .eu-cookie-bar-notification .learn-more {
 	position: relative;
 	margin: 0 10px;
-	padding-left: 30px;
+	padding-right: 30px;
 	text-transform: uppercase;
 }
 .eu-cookie-bar-notification .ok-button:before,
 .eu-cookie-bar-notification .learn-more:before {
 	position: absolute;
-	top: -2px; left: 0;
+	top: -2px; right: 0;
 	font-size: 20px;
 }
 .eu-cookie-bar-notification .ok-button:before {
@@ -765,7 +767,7 @@ input[type="checkbox"]:checked + label:before {
 .ui-dialog-titlebar button {
 	position: absolute;
 	top: 0;
-	right: 0;
+	left: 0;
 	width: 50px;
 	height: 50px;
 	margin: auto;
@@ -777,7 +779,6 @@ input[type="checkbox"]:checked + label:before {
 .ui-dialog-titlebar button:after {
     content: "\e905";
 	display: block;
-	padding-left: 2px;
     font-size: 14px;
 	color: #fff;
 	transition: all 0.2s ease;
@@ -969,7 +970,6 @@ input[type="checkbox"]:checked + label:before {
 .header-lower .search-button .trigger:before {
 	content: "\e090";
 	top: 1px;
-	left: 2px;
 }
 .header-lower .personal-button .trigger:before {
 	content: "\e005";
@@ -983,13 +983,13 @@ input[type="checkbox"]:checked + label:before {
 
 .header-logo-wrapper {
 	padding: 5px 7px;
-	text-align: left;
+	text-align: right;
 	white-space: nowrap;
 }
 .header-logo {
 	display: inline-block;
 	max-width: calc(100% - 43px);
-	margin-left: 3px;
+	margin-right: 3px;
 	vertical-align: middle;
 }
 .header-logo a {
@@ -1002,7 +1002,7 @@ input[type="checkbox"]:checked + label:before {
 
 .responsive-nav-wrapper {
 	padding: 5px 7px;
-	text-align: right;
+	text-align: left;
 	white-space: nowrap;
 }
 /*.responsive-nav-wrapper.nav-down {
@@ -1016,7 +1016,7 @@ input[type="checkbox"]:checked + label:before {
 .responsive-nav-wrapper .counter {
 	position: absolute;
 	top: 7px;
-	right: 0px;
+	left: 0px;
 	width: 18px;
 	border-radius: 50%;
 	background-color: #f61853;
@@ -1037,12 +1037,12 @@ input[type="checkbox"]:checked + label:before {
 }
 .search-box .search-box-text {
 	width: 100%;
-	padding-right: 47px;
+	padding-left: 47px;
 }
 .search-box .search-box-button {
 	position: absolute;
 	top: 0;
-	right: 0;
+	left: 0;
 	width: 47px;
 	height: 50px;
 	font-size: 0;
@@ -1078,7 +1078,7 @@ input[type="checkbox"]:checked + label:before {
 }
 .ui-autocomplete .ui-menu-item-image {
 	width: 50px;
-	margin-right: 10px;
+	margin-left: 10px;
 	vertical-align: middle;
 }
 .ui-autocomplete .ui-menu-item-text {
@@ -1098,6 +1098,7 @@ input[type="checkbox"]:checked + label:before {
 	margin: 0 0 20px;
 }
 .mini-shopping-cart .count a {
+	display: inline-block;
 	color: #f61853;
 }
 .mini-shopping-cart .items {
@@ -1105,7 +1106,7 @@ input[type="checkbox"]:checked + label:before {
 	max-height: 264px; /*two visible items*/
 	overflow: hidden;
 	width: calc(100% + 20px); /*scrollbar space*/
-	padding-right: 20px; /*offset fix*/
+	padding-left: 20px; /*offset fix*/
 }
 .mini-shopping-cart .item {
 	border-bottom: 1px solid #ebebeb;
@@ -1116,7 +1117,7 @@ input[type="checkbox"]:checked + label:before {
 	padding-top: 0;
 }
 .mini-shopping-cart .picture {
-	float: left;
+	float: right;
 	width: 80px;
 	text-align: center;
 	font-size: 0;
@@ -1126,11 +1127,11 @@ input[type="checkbox"]:checked + label:before {
 	max-width: 100%;
 }
 .mini-shopping-cart .picture + .product {
-	margin-left: 100px;
+	margin-right: 100px;
 }
 .mini-shopping-cart .product {
 	position: relative;
-	padding-right: 30px;
+	padding-left: 30px;
 }
 .mini-shopping-cart .name {
 	max-height: 40px;
@@ -1145,10 +1146,14 @@ input[type="checkbox"]:checked + label:before {
 	font-weight: 400;
 	color: #f61853;
 }
+.mini-shopping-cart .price span,
+.mini-shopping-cart .quantity span {
+	display: inline-block;
+}
 .mini-shopping-cart .remove {
 	position: absolute;
 	top: 24px;
-	right: 0;
+	left: 0;
 	height: 30px;
 	font-size: 0;
 	line-height: 30px;
@@ -1167,6 +1172,7 @@ input[type="checkbox"]:checked + label:before {
 	text-transform: uppercase;
 }
 .mini-shopping-cart .totals strong {
+	display: inline-block;
 	font-weight: 400;
 	color: #f61853;
 }
@@ -1177,7 +1183,7 @@ input[type="checkbox"]:checked + label:before {
 .mini-shopping-cart .button-1 {
 	width: 48.5%;
 	height: 40px;
-	margin-right: 3%;
+	margin-left: 3%;
 	border: 1px solid #222;
 	outline: 1px solid transparent;
 	overflow: hidden;
@@ -1238,13 +1244,13 @@ input[type="checkbox"]:checked + label:before {
 	vertical-align: middle;
 }
 .newsletter-subscribe-text {
-	float: left;
+	float: right;
 	width: 100%;
 	border-color: #666 !important;
 	text-align: center;
 }
 .newsletter-subscribe-button {
-	float: left;
+	float: right;
 	width: 100%;
 	height: 46px;
 	background-color: #222 !important;
@@ -1329,10 +1335,10 @@ input[type="checkbox"]:checked + label:before {
 	transition: all 0.2s ease;
 }
 .footer-block .title:before {
-	left: 5px;
+	right: 5px;
 }
 .footer-block .title:after {
-	right: 5px;
+	left: 5px;
 }
 .footer-block .title.open:before,
 .footer-block .title.open:after {
@@ -1484,7 +1490,7 @@ input[type="checkbox"]:checked + label:before {
 	padding: 10px;
 }
 .information-box {
-	float: left;
+	float: right;
 	width: calc(100% - 20px);
 	margin: 10px;
 	background-color: #fff;
@@ -1512,7 +1518,7 @@ input[type="checkbox"]:checked + label:before {
 
 .block {
 	margin: 0 0 10px;
-	text-align: left;
+	text-align: right;
 }
 .block .title {
 	background-color: #222;
@@ -1524,12 +1530,13 @@ input[type="checkbox"]:checked + label:before {
 }
 .block .title:before {
 	content: "\e910";
-	margin-right: 5px;
+	margin-left: 5px;
 	vertical-align: middle;
 	font-size: 6px;
 	color: #f61853;
 }
 .block .title strong {
+	display: inline-block;
 	vertical-align: middle;
 	font-weight: 800;
 }
@@ -1565,9 +1572,9 @@ input[type="checkbox"]:checked + label:before {
 }
 .block .list a:before,
 .block .view-all a:before {
-	content: "\e902";
-	float: left;
-	margin-right: 10px;
+	content: "\e90f";
+	float: right;
+	margin-left: 10px;
 	font-size: 7px;
 	color: #f61853;
 }
@@ -1579,17 +1586,17 @@ input[type="checkbox"]:checked + label:before {
 	color: #f61853;
 }
 .block .list .name {
-	float: left;
+	float: right;
 }
 .block .list .number {
-	float: right;
+	float: left;
 	color: #222;
 }
 .block .sublist a {
-	padding-left: 15px;
+	padding-right: 15px;
 }
 .block .sublist .sublist a {
-	padding-left: 30px;
+	padding-right: 30px;
 }
 .block .view-all {
 	font-weight: 400;
@@ -1605,13 +1612,13 @@ input[type="checkbox"]:checked + label:before {
 .product-tags-all-page li {
 	display: inline-block;
 	position: relative;
-	margin: 0 10px 0 0;
+	margin: 0 0 0 10px;
 	overflow: hidden;
 	font-size: 16px !important; /*base size*/
 }
 .block .tags a,
 .product-tags-all-page a {
-	float: left;
+	float: right;
 	line-height: 30px;
 	color: #222;
 	transition: all 0.2s ease;
@@ -1644,7 +1651,7 @@ input[type="checkbox"]:checked + label:before {
 }
 .poll .buttons {
 	padding: 15px 0 0;
-	text-align: left;
+	text-align: right;
 }
 .poll .buttons input {
 	background-color: #222;
@@ -1697,7 +1704,7 @@ input[type="checkbox"]:checked + label:before {
 	font-size: 0;
 }
 .breadcrumb .delimiter:after {
-	content: "\e902";
+	content: "\e90f";
 	font-size: 7px;
 }
 
@@ -1717,7 +1724,7 @@ input[type="checkbox"]:checked + label:before {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: -1px;
+    right: -1px;
     width: 1px;
     height: 15px;
     margin: auto;
@@ -1764,12 +1771,13 @@ input[type="checkbox"]:checked + label:before {
 }
 .filters-button:before {
 	content: "\e06c";
-	margin-right: 5px;
+	margin-left: 5px;
 	vertical-align: middle;
 	font-size: 17px;
 	color: #fff;
 }
 .filters-button span {
+	display: inline-block;
 	vertical-align: middle;
 }
 
@@ -1786,9 +1794,9 @@ input[type="checkbox"]:checked + label:before {
 	clear: both;
 }
 .product-select-block {
-	float: left;
+	float: right;
 	width: 48%;
-	margin-right: 4%;
+	margin-left: 4%;
 }
 .product-select-block.add {
 	display: none;
@@ -1804,7 +1812,7 @@ input[type="checkbox"]:checked + label:before {
 	color: #222;
 }
 .product-page-size {
-	margin-right: 0 !important;
+	margin-left: 0 !important;
 }
 .product-viewmode {
 	display: none;
@@ -1827,7 +1835,6 @@ input[type="checkbox"]:checked + label:before {
 }
 .product-viewmode a.grid:after {
 	content: "\e06a";
-	left: 1px;
 }
 .product-viewmode a.list:after {
 	content: "\e067";
@@ -1845,13 +1852,13 @@ input[type="checkbox"]:checked + label:before {
 
 .item-box {
 	position: relative;
-	float: left;
+	float: right;
 	width: 48%; /*two per row*/
-	margin: 0 0 30px 4%;
+	margin: 0 4% 30px 0;
 }
 .item-box:nth-child(2n+1) {
 	clear: both;
-	margin-left: 0;
+	margin-right: 0;
 }
 .item-box .picture {
 	margin: 0 0 20px;
@@ -1915,7 +1922,7 @@ input[type="checkbox"]:checked + label:before {
 .search-box .rating-icons:before {
 	content: "\e900 \e900 \e900 \e900 \e900";
 	position: absolute;
-	left: 0;
+	right: 0;
 	font-size: 10px;
 }
 .item-box .rating-icons .rating,
@@ -1963,12 +1970,12 @@ input[type="checkbox"]:checked + label:before {
 .quick-view-button:before {
 	content: "\e090";
 	top: 1px;
-	left: 2px;
+	right: 1px;
 }
 .add-to-compare-list-button:before {
 	content: "\e059";
 	top: -1px;
-	left: 1px;
+	right: 1px;
 }
 .add-to-wishlist-button:before {
 	content: "\e08a";
@@ -2045,7 +2052,7 @@ input[type="checkbox"]:checked + label:before {
 }
 .pager li {
 	display: inline-block;
-	margin: 0 -1px -1px 0;
+	margin: 0 0 -1px -1px;
 	border: 1px solid #ebebeb;
 	vertical-align: middle;
 }
@@ -2086,16 +2093,16 @@ input[type="checkbox"]:checked + label:before {
 	font-size: 11px;
 }
 .pager .previous-page a:before {
-	content: "\e903";
-}
-.pager .next-page a:before {
 	content: "\e904";
 }
+.pager .next-page a:before {
+	content: "\e903";
+}
 .pager .first-page a:before {
-	content: "\e913";
+	content: "\e914";
 }
 .pager .last-page a:before {
-	content: "\e914";
+	content: "\e913";
 }
 
 
@@ -2249,12 +2256,12 @@ input[type="checkbox"]:checked + label:before {
 	position: relative;
 	float: left;
 	width: 22.75%;
-	margin: 3% 0 0 3%;
+	margin: 3% 3% 0 0;
 	overflow: hidden;
 }
 .gallery .thumb-item:nth-child(4n+1) {
 	clear: both;
-	margin-left: 0;
+	margin-right: 0;
 }
 .gallery .thumb-item:before {
 	content: "";
@@ -2337,6 +2344,7 @@ input[type="checkbox"]:checked + label:before {
 
 .overview .value,
 .variant-overview .value {
+	display: inline-block;
 }
 .overview .value a,
 .variant-overview .value a {
@@ -2381,9 +2389,10 @@ input[type="checkbox"]:checked + label:before {
 }
 .delivery .free-shipping:before {
     content: "\e00c";
+	display: inline-block;
 	position: relative;
 	top: -2px;
-	margin: 0 7px 0 -10px;
+	margin: 0 -10px 0 7px;
 	vertical-align: middle;
 	font-size: 20px;
 }
@@ -2398,9 +2407,10 @@ input[type="checkbox"]:checked + label:before {
 }
 .download-sample-button:before { 
 	content: "\e083";
+	display: inline-block;
 	position: relative;
 	top: -1px;
-	margin-right: 7px;
+	margin-left: 7px;
 	vertical-align: middle;
 	font-size: 20px;
 }
@@ -2436,14 +2446,14 @@ input[type="checkbox"]:checked + label:before {
 	max-width: 290px; /*percentage is not working*/
 }
 .attributes .qty-box {
-	margin-left: -5px;
+	margin-right: -5px;
 }
 .attributes .qty-box label {
 	display: none;
 }
 .attributes .qty-box input {
 	width: 60px;
-	padding: 0 1px 0 0;
+	padding: 0 0 0 1px;
 	text-align: center;
 }
 .attributes .qty-box input:focus {
@@ -2494,10 +2504,10 @@ input[type="checkbox"]:checked + label:before {
 	line-height: 42px;
 }
 .ui-datepicker-header .ui-datepicker-prev {
-	left: 0;
+	right: 0;
 }
 .ui-datepicker-header .ui-datepicker-next {
-	right: 0;
+	left: 0;
 }
 .ui-datepicker-header .ui-datepicker-prev:before,
 .ui-datepicker-header .ui-datepicker-next:after {
@@ -2505,12 +2515,12 @@ input[type="checkbox"]:checked + label:before {
 	font-size: 11px;
 }
 .ui-datepicker-header .ui-datepicker-prev:before {
-	content: "\e903";
-	left: 15px;
+	content: "\e904";
+	right: 15px;
 }
 .ui-datepicker-header .ui-datepicker-next:after {
-	content: "\e904";
-	right: 14px;
+	content: "\e903";
+	left: 14px;
 }
 .ui-datepicker-title {
 	line-height: 42px;
@@ -2561,7 +2571,7 @@ input[type="checkbox"]:checked + label:before {
 .attribute-squares input {
 	position: absolute;
 	top: 5px;
-	left: 6px;
+	right: 6px;
 	z-index: -1;
 	margin: 0;
 }
@@ -2593,7 +2603,7 @@ input[type="checkbox"]:checked + label:before {
 	display: none;
 	position: absolute;
 	bottom: 56px;
-	left: -79px;
+	right: -79px;
 	width: 200px;
 	height: 200px;
 	box-shadow: 0 0 10px rgba(0,0,0,0.15);
@@ -2604,8 +2614,8 @@ input[type="checkbox"]:checked + label:before {
 	content: "";
 	position: absolute;
 	bottom: -10px;
-	left: 50%;
-	margin-left: -10px;
+	right: 50%;
+	margin-right: -10px;
 	border-width: 10px 10px 0;
 	border-style: solid dashed dashed;
 	border-color: #fff transparent transparent;
@@ -2623,7 +2633,7 @@ input[type="checkbox"]:checked + label:before {
 	border: 1px solid #ebebeb;
 	background-color: #fff;
 	padding: 15px;
-	text-align: left;
+	text-align: right;
 	font-size: 14px;
 	color: #777;
 }
@@ -2680,7 +2690,7 @@ input[type="checkbox"]:checked + label:before {
     overflow: hidden;
 }
 .tier-prices .prices-row {
-    float: left;
+    float: right;
     width: 50%;
 }
 .tier-prices .prices-row > div {
@@ -2688,7 +2698,7 @@ input[type="checkbox"]:checked + label:before {
     padding: 10px;
 }
 .tier-prices .prices-row.thead > div {
-	border-right: 1px solid #ebebeb;
+	border-left: 1px solid #ebebeb;
 }
 .tier-prices .field-header {
 	border-top: none !important;
@@ -2792,7 +2802,7 @@ input[type="checkbox"]:checked + label:before {
 	display: inline-block;
 	position: relative;
 	top: -1px;
-	left: -5px;
+	right: -5px;
 	height: 42px;
 	vertical-align: middle;
 	font-size: 18px;
@@ -2863,18 +2873,18 @@ input[type="checkbox"]:checked + label:before {
 	content: "\e059";
 	position: relative;
 	top: -2px;
-	left: 0;
+	right: 0;
 }
 .group-product .add-to-compare-list-button:before {
 	display: inline;
 	top: 1px;
-	margin-right: 10px;
+	margin-left: 10px;
 	color: #222;
 }
 .overview-buttons .variants-scroll-button:before {
 	content: "\e07b";
 	display: inline;
-	margin-right: 10px;
+	margin-left: 10px;
 	position: relative;
 	top: 1px;
 }
@@ -3031,7 +3041,7 @@ input[type="checkbox"]:checked + label:before {
 	font-size: 14px; /*reset zeroing*/
 }
 .product-tags-list li.separator {
-	margin: 0 5px 0 3px;
+	margin: 0 3px 0 5px;
 }
 
 .ui-tabs {
@@ -3150,7 +3160,7 @@ input[type="checkbox"]:checked + label:before {
 }
 .write-review .rating-options input {
 	position: absolute;
-	margin: 1px 0 0 5px;
+	margin: 1px 5px 0 0;
 }
 .write-review .rating-options label {
 	display: inline-block;
@@ -3226,7 +3236,7 @@ input:checked + label ~ label:before {
 .review-item-head .rating-icons:before {
 	content: "\e900 \e900 \e900 \e900 \e900";
 	position: absolute;
-	left: 0;
+	right: 0;
 	font-size: 10px;
 }
 .review-item-head .rating-icons .rating {
@@ -3249,6 +3259,11 @@ input:checked + label ~ label:before {
 .product-review-item .review-info {
 	overflow: hidden;
 	font-size: 13px;
+}
+.product-review-info a,
+.product-review-info span,
+.product-review-info label {
+	display: inline-block;
 }
 .product-review-helpfulness {
 	margin: 10px 0 0;
@@ -3362,9 +3377,10 @@ input:checked + label ~ label:before {
 .compare-products-page .clear-list:before,
 .compare-products-page .remove-button:before {
 	content: "\e054";
+	display: inline-block;
 	position: relative;
 	top: 1px;
-	margin-right: 5px;
+	margin-left: 5px;
 	font-size: 14px;
 }
 /*.compare-products-page .clear-list:hover,
@@ -3388,7 +3404,7 @@ input:checked + label ~ label:before {
 	display: table;
 	width: 100%;
 	padding: 15px;
-	text-align: left;
+	text-align: right;
 }
 .compare-section .item + .item {
 	margin-top: -15px;
@@ -3397,7 +3413,7 @@ input:checked + label ~ label:before {
 	display: table-cell;
 	padding: 0;
 	vertical-align: middle;
-	text-align: left;
+	text-align: right;
 }
 .compare-section .picture {
 	width: 50px;
@@ -3426,7 +3442,7 @@ input:checked + label ~ label:before {
 .compare-section .remove-button:before {
 	display: block;
 	top: 0;
-	left: 1px;
+	right: 1px;
 	margin: 0;
 }
 
@@ -3631,7 +3647,7 @@ input:checked + label ~ label:before {
 	width: 31% !important;
 }
 .date-of-birth select + select {
-	margin-left: 3.5%;
+	margin-right: 3.5%;
 }
 
 #check-availability-button {
@@ -3714,6 +3730,7 @@ input:checked + label ~ label:before {
 }
 .customer-block .remember,
 .customer-block .forgot-password {
+	display: inline-block;
 	margin: 0 5px;
 	padding-top: 1px;
 	font-size: 14px; /*reset zeroing*/
@@ -3739,7 +3756,7 @@ input:checked + label ~ label:before {
 	height: 60px;
 	margin: 0 auto 30px;;
 	background-color: #222;
-	padding: 17px 18px 19px;
+	padding: 17px 10px 19px 15px;
 	font-size: 28px;
 	color: #fff;
 }
@@ -3962,7 +3979,8 @@ input:checked + label ~ label:before {
 }
 .address-list button:before,
 .order-list button:before {
-	margin-right: 5px;
+	display: inline-block;
+	margin-left: 5px;
 	vertical-align: middle;
 }
 .edit-address-button:before {
@@ -3976,6 +3994,7 @@ input:checked + label ~ label:before {
 }
 .address-list-page span,
 .order-list-page span {
+	display: inline-block;
 	vertical-align: middle;
 }
 .address-list-page .info,
@@ -4003,6 +4022,11 @@ input:checked + label ~ label:before {
 	margin: 0 -1px;
 }
 
+.return-request-list a,
+.return-request-list span,
+.return-request-list label {
+	display: inline-block;
+}
 .return-request-list .link {
 	color: #f61853;
 }
@@ -4140,7 +4164,7 @@ input:checked + label ~ label:before {
 	overflow: hidden;
 }
 .order-progress li {
-	float: left;
+	float: right;
 	width: calc(50% - 3px);
 	margin: 1.5px;
 }
@@ -4180,7 +4204,7 @@ input:checked + label ~ label:before {
 	border: 1px solid #222;
 	outline: 1px solid transparent;
 	padding: 10px 20px;
-	text-align: left;
+	text-align: right;
 	font-size: 12px;
 	color: #222;
 	text-transform: uppercase;
@@ -4190,10 +4214,12 @@ input:checked + label ~ label:before {
 	outline-color: #222;
 }
 .cart-options button span {
+	display: inline-block;
 	vertical-align: middle;
 }
 .cart-options button:before {
-	margin-right: 10px;
+	display: inline-block;
+	margin-left: 10px;
 	vertical-align: middle;
 	font-size: 18px;
 }
@@ -4225,7 +4251,7 @@ input:checked + label ~ label:before {
 	position: relative;
 	background: url('../img/pattern.png') repeat;
 	padding: 15px 20px;
-	text-align: left;
+	text-align: right;
 	font-weight: 800;
 	color: #222;
 	text-transform: uppercase;
@@ -4235,7 +4261,7 @@ input:checked + label ~ label:before {
     content: "\e910";
 	position: absolute;
 	top: 0;
-	right: 18px;
+	left: 18px;
 	bottom: 0;
 	height: 8px;
 	margin: auto;
@@ -4310,7 +4336,7 @@ input:checked + label ~ label:before {
 }
 .remove-discount-button,
 .remove-giftcard-button {
-	margin-left: 5px;
+	margin-right: 5px;
 	vertical-align: middle;
 	font-size: 0;
 }
@@ -4366,10 +4392,10 @@ input:checked + label ~ label:before {
 	padding: 5px;
 }
 .cart-footer .cart-total-left {
-	text-align: left;
+	text-align: right;
 }
 .cart-footer .cart-total-right {
-	text-align: right;
+	text-align: left;
 }
 .cart-footer .order-total {
 	font-size: 16px;
@@ -4628,7 +4654,7 @@ li .payment-logo {
 	text-transform: uppercase;
 }
 .opc .step-title .number {
-	margin-right: 8px;
+	margin-left: 8px;
 }
 
 .opc .allow .step-title {
@@ -4831,10 +4857,12 @@ li .payment-logo {
 	color: #222;
 }
 .order-details-page .order-info {
+	display: inline-block;
 	font-weight: 400;
 	color: #222;
 }
 .order-details-page .order-price {
+	display: inline-block;
 	font-weight: 400;
 	color: #f61853;
 }
@@ -4921,7 +4949,7 @@ li .payment-logo {
 	max-width: 150px !important;
 }
 .advanced-search .price-to {
-	margin-left: 9px;
+	margin-right: 9px;
 }
 .search-input .button-1 {
 	min-width: 180px;
@@ -5091,7 +5119,7 @@ li .payment-logo {
 }
 .blog-page .tags li.separator,
 .blogpost-page .tags li.separator {
-	margin-right: 5px;
+	margin-left: 5px;
 }
 .blog-page .tags a,
 .blogpost-page .tags a {

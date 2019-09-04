@@ -24,7 +24,7 @@
     var iosFixContentFilePath = CommonHelper.DefaultFileProvider.MapPath(iosFixFilePath);
 
     if(System.IO.File.Exists(iosFixContentFilePath))
-    {
+    {        
 	    Html.AppendScriptParts(ResourceLocation.Footer, iosFixFilePath);
     }
 
@@ -74,7 +74,7 @@
     <meta name="keywords" content="@(Html.NopMetaKeywords())" />
     <meta name="generator" content="nopCommerce" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
-    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,800&amp;subset=latin-ext&display=swap" rel="stylesheet">
     @Html.NopHeadCustom()
     @*This is used so that themes can inject content into the header*@
     @await Html.PartialAsync("Head")

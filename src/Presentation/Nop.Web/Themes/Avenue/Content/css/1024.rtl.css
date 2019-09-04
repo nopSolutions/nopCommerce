@@ -8,7 +8,7 @@
 }
 .cart td .message-error {
 	margin: 5px 0;
-	text-align: left;
+	text-align: right;
 }
 
 /* CATEGORY PAGE & GRIDS */
@@ -18,11 +18,11 @@
 }
 .item-box:nth-child(3n+1) {
 	clear: none; /*revert the fourth item*/
-	margin-left: 2%; /*revert the fourth item*/
+	margin-right: 2%; /*revert the fourth item*/
 }
 .item-box:nth-child(4n+1) {
 	clear: both;
-	margin-left: 0;
+	margin-right: 0;
 }
 
 .item-box .buttons {
@@ -180,12 +180,12 @@
 	margin: 0 0 2%;
 }
 .customer-block.login-block {
-	float: left;
+	float: right;
 	width: 49%;
 }
 .customer-block.register-block,
 .customer-block.checkout-as-guest {
-	float: right;
+	float: left;
 	width: 49%;
 }
 
@@ -212,7 +212,7 @@
 	color: #222;
 }
 .compare-products-table td:first-child {
-    text-align: right;
+    text-align: left;
 }
 .compare-products-table td.empty {
 	text-align: center;
@@ -245,7 +245,7 @@
 /* SHOPPING CART */
 
 .order-progress li {
-	float: left;
+	float: right;
 	width: 155px;
 	margin: 0 1.5px;
 }

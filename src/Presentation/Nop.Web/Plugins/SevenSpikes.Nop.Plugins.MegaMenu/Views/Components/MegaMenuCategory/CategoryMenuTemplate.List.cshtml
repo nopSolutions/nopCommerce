@@ -28,6 +28,14 @@
                 </li>
                 @await Component.InvokeAsync("MegaMenuListSubCategories", new { subCategories = Model.Categories })
             </ul>
+            @if (areCategoriesInASingleItem)
+            {
+                @await Component.InvokeAsync("Widget", new { widgetZone = "mega_menu_categories_before_dropdown_end" })
+            }
+            else
+            {
+                @await Component.InvokeAsync("Widget", new { widgetZone = $"mega_menu_categories_before_dropdown_end_{Model.CategoryMenuItemIndex}" })
+            }
         </div>
     }
 

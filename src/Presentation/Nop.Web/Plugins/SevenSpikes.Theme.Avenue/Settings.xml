@@ -115,9 +115,6 @@
   <Setting Name="CloudZoomSettings.NumberOfPictureThumbnailsInCarousel-Avenue">
     <Value>4</Value>
   </Setting>
-  <Setting Name="CloudZoomSettings.EnableSliderArrows">
-    <Value>true</Value>
-  </Setting>
   <Setting Name="CloudZoomSettings.EnableSliderDots">
     <Value>false</Value>
   </Setting>

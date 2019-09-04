@@ -23,11 +23,11 @@
 
         <link href='https://fonts.googleapis.com/css?family=Open+Sans:700,400' rel='stylesheet' type='text/css'>
 
-        @Html.NopCssFiles(this.Url, ResourceLocation.Head)
+        @Html.NopCssFiles(ResourceLocation.Head)
 
         <script src="@Url.Content("~/lib/jquery/jquery-3.3.1.min.js")"></script>
 
-        @Html.NopScripts(this.Url, ResourceLocation.Head)
+        @Html.NopScripts(ResourceLocation.Head)
     </head>
     <body class="@itemBoxesPerRowClass">
         <div class="master-wrapper-page">
@@ -49,8 +49,8 @@
             </div>
             @await Component.InvokeAsync("FacebookFooter")
         </div>
-        @Html.NopCssFiles(this.Url, ResourceLocation.Footer)
-        @Html.NopScripts(this.Url, ResourceLocation.Footer)
+        @Html.NopCssFiles(ResourceLocation.Footer)
+        @Html.NopScripts(ResourceLocation.Footer)
 
         <div id="fb-root"></div>
         <script type="text/javascript" src="//connect.facebook.net/en_US/all.js"></script>

@@ -56,7 +56,7 @@
 .footer-block {
 	display: table-cell;
 	width: 33.333%;
-	border-right: 1px solid #333;
+	border-left: 1px solid #333;
 	vertical-align: top;
 }
 .footer-block:last-child {
@@ -103,7 +103,7 @@
 .product-selectors {
 	position: relative;
 	border: 1px solid #ebebeb;
-	text-align: left;
+	text-align: right;
 	font-size: 0;
 }
 .product-select-block {
@@ -120,19 +120,19 @@
 
 .item-box {
 	width: 32%;
-	margin-left: 2%;
+	margin-right: 2%;
 }
 .item-box:nth-child(2n+1) {
-	margin-left: 2%;
+	margin-right: 2%;
 }
 .item-box:nth-child(3n+1) {
-	margin-left: 0;
+	margin-right: 0;
 }
 
 .product-list .item-box {
     float: none;
     width: auto !important;
-    margin-left: 0 !important;
+    margin-right: 0 !important;
 	border-bottom: 1px solid #ebebeb;
 	padding-bottom: 30px;
 }
@@ -149,8 +149,8 @@
 .product-list .item-box .details {
 	display: table-cell;
 	width: 50%;
-	padding: 0 2% 0 2.5%;
-	text-align: left;
+	padding: 0 2.5% 0 2.%;
+	text-align: right;
 	vertical-align: top;
 }
 .product-list .item-box .product-title {
@@ -186,7 +186,7 @@
 	width: auto !important;
 	margin-top: 0 !important;
 	padding-top: 50px;
-	text-align: right;
+	text-align: left;
 	white-space: normal !important;
 }
 .product-list .item-box button {
@@ -203,13 +203,13 @@
 	display: inline;
 	position: relative;
 	top: 2px;
-	left: -5px;
+	right: -5px;
 	line-height: normal;
 }
 .product-list .product-box-add-to-cart-button {
 	position: absolute;
 	top: 0;
-	right: 0;
+	left: 0;
 	outline: 1px solid transparent;
 	border-color: #222 !important;
 	background-color: #222;
@@ -227,10 +227,10 @@
 	margin: 20px 0 0;
 }
 .pager .previous-page {
-	margin-right: 20px;
+	margin-left: 20px;
 }
 .pager .next-page {
-	margin-left: 21px;
+	margin-right: 21px;
 }
 
 /* FEATURED CATEGORIES */
@@ -272,23 +272,23 @@
 }
 
 .variant-picture {
-	float: left;
+	float: right;
 	width: 280px;
 }
 .variant-overview {
-	margin-left: 300px;
-	text-align: left;
+	margin-right: 300px;
+	text-align: right;
 }
 .variant-overview 
 .free-shipping:before {
-	margin-left: 0;
+	margin-right: 0;
 }
 .variant-overview .qty-label {
 	display: none;
 }
 .variant-overview .qty-input,
 .variant-overview .qty-dropdown {
-	margin-left: 0;
+	margin-right: 0;
 }
 
 .product-specs-box .table-wrapper {
@@ -317,7 +317,7 @@
 	content: "X";
 	position: absolute;
 	top: 0; bottom: 0;
-	left: -5px;
+	right: -5px;
 	height: 18px;
 	margin: auto;
 	font-family: 'Nunito Sans', sans-serif;
@@ -334,24 +334,24 @@
 	padding-right: 1%;
 }
 .review-item-head .title {
-	float: left;
+	float: right;
 	margin: 0
 }
 .review-item-head .rating-box {
-	float: right;
-}
-.product-review-info {
 	float: left;
 }
-.product-review-helpfulness {
+.product-review-info {
 	float: right;
+}
+.product-review-helpfulness {
+	float: left;
 	margin: 0;
 }
 .product-review-item .reply-wrapper {
 	padding: 30px;
 }
 .product-review-item .review-content {
-	text-align: left;
+	text-align: right;
 }
 
 /* WISHLIST & COMPARE LIST */
@@ -382,18 +382,18 @@
 .contact-page .inputs:nth-child(1),
 .email-a-friend-page .inputs:nth-child(1),
 .apply-vendor-page .inputs:nth-child(1) {
-	float: left;
-	clear: none;
-	width: 46.5%;
-	margin-right: 1.5%;
-}
-.contact-page .inputs:nth-child(2),
-.email-a-friend-page .inputs:nth-child(2),
-.apply-vendor-page .inputs:nth-child(2) {
 	float: right;
 	clear: none;
 	width: 46.5%;
 	margin-left: 1.5%;
+}
+.contact-page .inputs:nth-child(2),
+.email-a-friend-page .inputs:nth-child(2),
+.apply-vendor-page .inputs:nth-child(2) {
+	float: left;
+	clear: none;
+	width: 46.5%;
+	margin-right: 1.5%;
 }
 
 /* REGISTRATION & LOGIN */
@@ -427,7 +427,7 @@
 .order-list-page .section,
 .return-request-list .section,
 .gdpr-tools-page .section {
-	float: left;
+	float: right;
 	width: 48%;
 	margin: 0 1% 2%;
 }
@@ -467,11 +467,11 @@
 	overflow: hidden;
 }
 .customer-reviews-page .review-title {
-	float: left;
+	float: right;
 	max-width: calc(100% - 80px);
 }
 .customer-reviews-page .rating-box {
-	float: right;
+	float: left;
 	margin-top: 5px;
 }
 .gdpr-tools-page .section .info {
@@ -489,7 +489,7 @@
 .coupon-code .button-2 {
 	position: absolute;
 	top: 4px;
-	right: 3px;
+	left: 3px;
 	width: auto !important;
 	min-width: 150px;
 	background-color: #fff !important;
@@ -506,7 +506,7 @@
 	padding: 40px 3%;
 }
 .checkout-page .address-item {
-	float: left;
+	float: right;
 	width: 48%;
 	margin: 1% !important;
 }
