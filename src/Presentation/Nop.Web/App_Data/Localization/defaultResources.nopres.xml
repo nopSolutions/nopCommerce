@@ -14523,6 +14523,9 @@
   <LocaleResource Name="Admin.Vendors.VendorNotes.Fields.Note.Validation">
     <Value>Vendor note can not be empty.</Value>
   </LocaleResource>
+  <LocaleResource Name="AjaxCart.Failure">
+    <Value>Failed to add the product. Please refresh the page and try one more time.</Value>
+  </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.AlreadySubscribed">
     <Value>You're already subscribed for this product back in stock notification</Value>
   </LocaleResource>
@@ -15959,7 +15962,10 @@
   </LocaleResource>
   <LocaleResource Name="Languages.Selector.Label">
     <Value>Languages selector</Value>
-  </LocaleResource>    
+  </LocaleResource>
+  <LocaleResource Name="MainMenu.AjaxFailure">
+    <Value>Failed to open menu. Please refresh the page and try one more time.</Value>
+  </LocaleResource>
   <LocaleResource Name="Manufacturers">
     <Value>Manufacturers</Value>
   </LocaleResource>
@@ -16565,6 +16571,12 @@
   </LocaleResource>
   <LocaleResource Name="Payment.SelectCreditCard">
     <Value>Select credit card</Value>
+  </LocaleResource>
+  <LocaleResource Name="PaymentMethod.NotAvailableMethodsError">
+    <Value>Your order cannot be completed at this time as there is no payment methods available for it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PaymentMethod.SpecifyMethodError">
+    <Value>Please specify payment method.</Value>
   </LocaleResource>
   <LocaleResource Name="PDFInvoice.Address">
     <Value>Address: {0}</Value>
@@ -17558,6 +17570,12 @@
   </LocaleResource>
   <LocaleResource Name="Search.Vendor">
     <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShippingMethod.NotAvailableMethodsError">
+    <Value>Your order cannot be completed at this time as there is no shipping methods available for it. Please make necessary changes in your shipping address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShippingMethod.SpecifyMethodError">
+    <Value>Please specify shipping method.</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart">
     <Value>Shopping cart</Value>
