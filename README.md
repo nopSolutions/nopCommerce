@@ -2,7 +2,7 @@
 ===========
 nopCommerce is the best open-source e-commerce shopping cart. nopCommerce is available for free. Today it's the best and most popular ASP.NET ecommerce software. It has been downloaded more than 2.5 million times!
 
-nopCommerce is a fully customizable shopping cart. It's stable and highly usable. nopCommerce is an open source ecommerce solution that is **ASP.NET Core** based with a MS SQL 2008 (or higher) backend database. Our easy-to-use shopping cart solution is uniquely suited for merchants that have outgrown existing systems, and may be hosted with your current web host or our hosting partners. It has everything you need to get started in selling physical and digital goods over the internet.
+nopCommerce is a fully customizable shopping cart. It's stable and highly usable. nopCommerce is an open source ecommerce solution that is **ASP.NET Core** based with a MS SQL 2012 (or higher) backend database. Our easy-to-use shopping cart solution is uniquely suited for merchants that have outgrown existing systems, and may be hosted with your current web host or our hosting partners. It has everything you need to get started in selling physical and digital goods over the internet.
 
 ![nopCommerce demo](https://www.nopcommerce.com/images/features/responsive_devices_codeplex.jpg)
 
@@ -21,13 +21,23 @@ nopCommerce demo store: [https://www.nopCommerce.com/demo.aspx](https://www.nopC
 
 Feature list: [https://www.nopcommerce.com/featurelist.aspx](https://www.nopcommerce.com/featurelist.aspx)
 
-Technology & system Requirements: [http://docs.nopcommerce.com/pages/viewpage.action?pageId=10256757](http://docs.nopcommerce.com/pages/viewpage.action?pageId=10256757)
+Technology & system Requirements: [https://docs.nopcommerce.com/user-guide/installing/technology-system-requirements.html](https://docs.nopcommerce.com/user-guide/installing/technology-system-requirements.html)
 
-Documentation: [http://docs.nopcommerce.com/](http://docs.nopcommerce.com/)
+Documentation: [https://docs.nopcommerce.com/](https://docs.nopcommerce.com/)
 
 Forums: [https://www.nopcommerce.com/boards/](https://www.nopcommerce.com/boards/)
 
 Gitter.im chat room: [https://gitter.im/nopCommerce-official/Lobby](https://gitter.im/nopCommerce-official/Lobby)
+
+
+## nopCommerce Days 2019: ##
+
+Our annual conference will be held in Mumbai, India, on October 10-11, 2019. Come and let's get acquainted in person!
+
+The conference will bring together developers, heads of web agencies, representatives of leading tech companies and online stores.
+
+Conference official site: [https://days19.nopcommerce.com/](https://days19.nopcommerce.com/)
+
 
 ## Store demo: ##
 
@@ -36,7 +46,7 @@ Browse our shopping cart demo store to get a feel for nopCommerce shopping cart.
 
 Front End | Admin area
 ----|------
-[![ScreenShot](https://www.nopcommerce.com/images/demo/demo3.png)](https://demo.nopcommerce.com/) | [![ScreenShot](https://www.nopcommerce.com/images/demo/admindemo_500.png)](https://admin-demo.nopcommerce.com/)
+[![ScreenShot](https://www.nopcommerce.com/images/demo/demo3.png)](https://demo.nopcommerce.com/) | [![ScreenShot](https://www.nopcommerce.com/images/demo/admindemo_500.png)](https://admin-demo.nopcommerce.com/admin/)
 
 
 ## Survey for developers and product managers: ##

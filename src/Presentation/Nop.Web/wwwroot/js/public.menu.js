@@ -3,10 +3,12 @@
     subCatRoute: '',
     topMenuRootSelector: '',
     mobileMenuRootSelector: '',
+    localized_data: false,
 
-    init: function (rootRoute, subCatRoute, topMenuRootSelector, mobileMenuRootSelector) {
+    init: function (rootRoute, subCatRoute, topMenuRootSelector, mobileMenuRootSelector, localized_data) {
         this.rootRoute = rootRoute;
         this.subCatRoute = subCatRoute;
+        this.localized_data = localized_data;
         this.topMenuRootSelector = $(topMenuRootSelector);
         this.mobileMenuRootSelector = $(mobileMenuRootSelector);
 
@@ -160,6 +162,6 @@
     },
 
     ajaxFailure: function () {
-        alert('Failed to open menu. Please refresh the page and try one more time.');
+        alert(this.localized_data.AjaxFailure);
     }
 };

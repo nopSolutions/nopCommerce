@@ -5,7 +5,7 @@
     Html.AppendCssFileParts("~/lib/ionicons/css/ionicons-2.0.1.min.css");
 
     //page title
-    ViewBag.Title = T("Admin.Dashboard").Text;
+    ViewBag.PageTitle = T("Admin.Dashboard").Text;
 
     var canManageOrders = permissionService.Authorize(StandardPermissionProvider.ManageOrders);
     var canManageCustomers = permissionService.Authorize(StandardPermissionProvider.ManageCustomers);

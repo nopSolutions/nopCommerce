@@ -68,6 +68,24 @@ set @resources='
   <LocaleResource Name="Products.Availability.LowStock">
     <Value>Low stock</Value>
   </LocaleResource>
+  <LocaleResource Name="ShippingMethod.NotAvailableMethodsError">
+    <Value>Your order cannot be completed at this time as there is no shipping methods available for it. Please make necessary changes in your shipping address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShippingMethod.SpecifyMethodError">
+    <Value>Please specify shipping method.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PaymentMethod.NotAvailableMethodsError">
+    <Value>Your order cannot be completed at this time as there is no payment methods available for it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PaymentMethod.SpecifyMethodError">
+    <Value>Please specify payment method.</Value>
+  </LocaleResource>
+  <LocaleResource Name="AjaxCart.Failure">
+    <Value>Failed to add the product. Please refresh the page and try one more time.</Value>
+  </LocaleResource>
+  <LocaleResource Name="MainMenu.AjaxFailure">
+    <Value>Failed to open menu. Please refresh the page and try one more time.</Value>
+  </LocaleResource>
 </Language>
 '
 

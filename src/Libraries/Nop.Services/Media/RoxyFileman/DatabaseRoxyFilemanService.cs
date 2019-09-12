@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
@@ -43,7 +44,9 @@ namespace Nop.Services.Media.RoxyFileman
             IHostingEnvironment hostingEnvironment,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
-            MediaSettings mediaSettings) : base(hostingEnvironment, httpContextAccessor, fileProvider)
+            IWebHelper webHelper,
+            IWorkContext workContext,
+            MediaSettings mediaSettings) : base(hostingEnvironment, httpContextAccessor, fileProvider, webHelper, workContext)
         {
             _pictureService = pictureService;
             _pictureRepository = pictureRepository;
@@ -356,6 +359,8 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         public override void Configure()
         {
+            base.Configure();
+
             foreach (var filePath in _fileProvider.GetFiles(_fileProvider.GetAbsolutePath(NopRoxyFilemanDefaults.DefaultRootDirectory.Split('/')), topDirectoryOnly: false))
             {
                 var uniqueFileName = GetUniqueFileName(filePath, _fileProvider.GetFileNameWithoutExtension(filePath));

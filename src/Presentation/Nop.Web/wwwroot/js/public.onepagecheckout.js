@@ -36,19 +36,20 @@ var Checkout = {
     },
 
     setLoadWaiting: function (step, keepDisabled) {
+      var container;
         if (step) {
             if (this.loadWaiting) {
                 this.setLoadWaiting(false);
             }
-            var container = $('#' + step + '-buttons-container');
+            container = $('#' + step + '-buttons-container');
             container.addClass('disabled');
             container.css('opacity', '.5');
             this._disableEnableAll(container, true);
             $('#' + step + '-please-wait').show();
         } else {
             if (this.loadWaiting) {
-                var container = $('#' + this.loadWaiting + '-buttons-container');
-                var isDisabled = (keepDisabled ? true : false);
+                container = $('#' + this.loadWaiting + '-buttons-container');
+                var isDisabled = keepDisabled ? true : false;
                 if (!isDisabled) {
                     container.removeClass('disabled');
                     container.css('opacity', '1');
@@ -135,7 +136,7 @@ var Billing = {
     },
 
     save: function () {
-        if (Checkout.loadWaiting != false) return;
+        if (Checkout.loadWaiting !== false) return;
 
         Checkout.setLoadWaiting('billing');
         
@@ -157,7 +158,7 @@ var Billing = {
     nextStep: function (response) {
         //ensure that response.wrong_billing_address is set
         //if not set, "true" is the default value
-        if (typeof response.wrong_billing_address == 'undefined') {
+        if (typeof response.wrong_billing_address === 'undefined') {
             response.wrong_billing_address = false;
         }
         if (Billing.disableBillingAddressCheckoutStep) {
@@ -170,7 +171,7 @@ var Billing = {
 
 
         if (response.error) {
-            if ((typeof response.message) == 'string') {
+            if (typeof response.message === 'string') {
                 alert(response.message);
             } else {
                 alert(response.message.join("\n"));
@@ -232,7 +233,7 @@ var Shipping = {
     },
 
     save: function () {
-        if (Checkout.loadWaiting != false) return;
+        if (Checkout.loadWaiting !== false) return;
 
         Checkout.setLoadWaiting('shipping');
 
@@ -253,7 +254,7 @@ var Shipping = {
 
     nextStep: function (response) {
         if (response.error) {
-            if ((typeof response.message) == 'string') {
+            if (typeof response.message === 'string') {
                 alert(response.message);
             } else {
                 alert(response.message.join("\n"));
@@ -277,16 +278,18 @@ var Shipping = {
 var ShippingMethod = {
     form: false,
     saveUrl: false,
+    localized_data: false,
 
-    init: function (form, saveUrl) {
+    init: function (form, saveUrl, localized_data) {
         this.form = form;
         this.saveUrl = saveUrl;
+        this.localized_data = localized_data;
     },
 
     validate: function () {
         var methods = document.getElementsByName('shippingoption');
-        if (methods.length==0) {
-            alert('Your order cannot be completed at this time as there is no shipping methods available for it. Please make necessary changes in your shipping address.');
+        if (methods.length === 0) {
+            alert(this.localized_data.NotAvailableMethodsError);
             return false;
         }
 
@@ -295,12 +298,12 @@ var ShippingMethod = {
                 return true;
             }
         }
-        alert('Please specify shipping method.');
+        alert(this.localized_data.SpecifyMethodError);
         return false;
     },
     
     save: function () {
-        if (Checkout.loadWaiting != false) return;
+        if (Checkout.loadWaiting !== false) return;
         
         if (this.validate()) {
             Checkout.setLoadWaiting('shipping-method');
@@ -323,7 +326,7 @@ var ShippingMethod = {
 
     nextStep: function (response) {
         if (response.error) {
-            if ((typeof response.message) == 'string') {
+            if (typeof response.message === 'string') {
                 alert(response.message);
             } else {
                 alert(response.message.join("\n"));
@@ -341,10 +344,12 @@ var ShippingMethod = {
 var PaymentMethod = {
     form: false,
     saveUrl: false,
+    localized_data: false,
 
-    init: function (form, saveUrl) {
+    init: function (form, saveUrl, localized_data) {
         this.form = form;
         this.saveUrl = saveUrl;
+        this.localized_data = localized_data;
     },
 
     toggleUseRewardPoints: function (useRewardPointsInput) {
@@ -358,8 +363,8 @@ var PaymentMethod = {
 
     validate: function () {
         var methods = document.getElementsByName('paymentmethod');
-        if (methods.length == 0) {
-            alert('Your order cannot be completed at this time as there is no payment methods available for it.');
+        if (methods.length === 0) {
+            alert(this.localized_data.NotAvailableMethodsError);
             return false;
         }
         
@@ -368,12 +373,12 @@ var PaymentMethod = {
                 return true;
             }
         }
-        alert('Please specify payment method.');
+        alert(this.localized_data.SpecifyMethodError);
         return false;
     },
     
     save: function () {
-        if (Checkout.loadWaiting != false) return;
+        if (Checkout.loadWaiting !== false) return;
         
         if (this.validate()) {
             Checkout.setLoadWaiting('payment-method');
@@ -395,7 +400,7 @@ var PaymentMethod = {
 
     nextStep: function (response) {
         if (response.error) {
-            if ((typeof response.message) == 'string') {
+            if (typeof response.message === 'string') {
                 alert(response.message);
             } else {
                 alert(response.message.join("\n"));
@@ -420,7 +425,7 @@ var PaymentInfo = {
     },
 
     save: function () {
-        if (Checkout.loadWaiting != false) return;
+        if (Checkout.loadWaiting !== false) return;
         
         Checkout.setLoadWaiting('payment-info');
         $.ajax({
@@ -440,7 +445,7 @@ var PaymentInfo = {
 
     nextStep: function (response) {
         if (response.error) {
-            if ((typeof response.message) == 'string') {
+            if (typeof response.message === 'string') {
                 alert(response.message);
             } else {
                 alert(response.message.join("\n"));
@@ -466,7 +471,7 @@ var ConfirmOrder = {
     },
 
     save: function () {
-        if (Checkout.loadWaiting != false) return;
+        if (Checkout.loadWaiting !== false) return;
         
         //terms of service
         var termOfServiceOk = true;
@@ -500,7 +505,7 @@ var ConfirmOrder = {
 
     nextStep: function (response) {
         if (response.error) {
-            if ((typeof response.message) == 'string') {
+            if (typeof response.message === 'string') {
                 alert(response.message);
             } else {
                 alert(response.message.join("\n"));
