@@ -29,6 +29,7 @@ namespace Nop.Services.Discounts
         private readonly IDiscountPluginManager _discountPluginManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
+        private readonly IProductService _productService;
         private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<DiscountRequirement> _discountRequirementRepository;
         private readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
@@ -45,6 +46,7 @@ namespace Nop.Services.Discounts
             IDiscountPluginManager discountPluginManager,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
+            IProductService productService,
             IRepository<Discount> discountRepository,
             IRepository<DiscountRequirement> discountRequirementRepository,
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
@@ -57,6 +59,7 @@ namespace Nop.Services.Discounts
             _discountPluginManager = discountPluginManager;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
+            _productService = productService;
             _discountRepository = discountRepository;
             _discountRequirementRepository = discountRequirementRepository;
             _discountUsageHistoryRepository = discountUsageHistoryRepository;
@@ -614,8 +617,9 @@ namespace Nop.Services.Discounts
                 var cart = shoppingCartService.GetShoppingCart(customer,
                     ShoppingCartType.ShoppingCart, storeId: _storeContext.CurrentStore.Id);
 
-                var hasGiftCards = cart.Any(x => x.Product.IsGiftCard);
-                if (hasGiftCards)
+                var cartProductIds = cart.Select(ci => ci.ProductId).ToArray();
+                
+                if (_productService.HasAnyGiftCardProduct(cartProductIds))
                 {
                     result.Errors = new List<string> { _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedWithGiftCards") };
                     return result;

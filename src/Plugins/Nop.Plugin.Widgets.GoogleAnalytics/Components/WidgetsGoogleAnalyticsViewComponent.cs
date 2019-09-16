@@ -134,7 +134,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
                 var sb = new StringBuilder();
                 var listingPosition = 1;
-                foreach (var item in order.OrderItems)
+                foreach (var item in _orderService.GetOrderItems(order.Id))
                 {
                     if (!string.IsNullOrEmpty(sb.ToString()))
                         sb.AppendLine(",");
@@ -148,11 +148,16 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
                     'price': '{UNITPRICE}'
                     }
                     ";
-                    var sku = _productService.FormatSku(item.Product, item.AttributesXml);
+
+                    var product = _productService.GetProductById(item.ProductId);
+
+                    var sku = _productService.FormatSku(product, item.AttributesXml);
+
                     if (string.IsNullOrEmpty(sku))
-                        sku = item.Product.Id.ToString();
+                        sku = product.Id.ToString();
+
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTSKU}", FixIllegalJavaScriptChars(sku));
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTNAME}", FixIllegalJavaScriptChars(item.Product.Name));
+                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTNAME}", FixIllegalJavaScriptChars(product.Name));
                     var category = _categoryService.GetCategoryById(_categoryService.GetProductCategoriesByProductId(item.ProductId).FirstOrDefault()?.CategoryId ?? 0)?.Name;
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{CATEGORYNAME}", FixIllegalJavaScriptChars(category));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{LISTPOSITION}", listingPosition.ToString());

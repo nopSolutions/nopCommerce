@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Shipping;
 
@@ -21,11 +21,6 @@ namespace Nop.Data.Mapping.Shipping
             builder.HasKey(shipment => shipment.Id);
 
             builder.Property(shipment => shipment.TotalWeight).HasColumnType("decimal(18, 4)");
-
-            builder.HasOne(shipment => shipment.Order)
-                .WithMany(order => order.Shipments)
-                .HasForeignKey(shipment => shipment.OrderId)
-                .IsRequired();
 
             base.Configure(builder);
         }

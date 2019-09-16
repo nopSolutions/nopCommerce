@@ -124,7 +124,7 @@ namespace Nop.Services.Tax
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
         decimal GetPaymentMethodAdditionalFee(decimal price, bool includingTax, Customer customer, out decimal taxRate);
-        
+
         #endregion
 
         #region Checkout attribute price
@@ -132,37 +132,41 @@ namespace Nop.Services.Tax
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <returns>Price</returns>
-        decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav);
+        decimal GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav);
 
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price</returns>
-        decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav, Customer customer);
+        decimal GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav, Customer customer);
 
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price</returns>
-        decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
+        decimal GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav,
             bool includingTax, Customer customer);
 
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
+        decimal GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav,
             bool includingTax, Customer customer, out decimal taxRate);
 
         #endregion

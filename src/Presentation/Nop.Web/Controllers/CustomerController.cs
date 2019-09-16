@@ -78,6 +78,7 @@ namespace Nop.Web.Controllers
         private readonly IOrderService _orderService;
         private readonly IPictureService _pictureService;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IProductService _productService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
@@ -125,6 +126,7 @@ namespace Nop.Web.Controllers
             IOrderService orderService,
             IPictureService pictureService,
             IPriceFormatter priceFormatter,
+            IProductService productService,
             IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
@@ -168,6 +170,7 @@ namespace Nop.Web.Controllers
             _orderService = orderService;
             _pictureService = pictureService;
             _priceFormatter = priceFormatter;
+            _productService = productService;
             _shoppingCartService = shoppingCartService;
             _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
@@ -1510,7 +1513,8 @@ namespace Nop.Web.Controllers
             if (orderItem == null)
                 return RedirectToRoute("Homepage");
 
-            var product = orderItem.Product;
+            var product = _productService.GetProductById(orderItem.ProductId);
+
             if (product == null || !product.HasUserAgreement)
                 return RedirectToRoute("Homepage");
 

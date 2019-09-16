@@ -73,6 +73,13 @@ namespace Nop.Services.Customers
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
+        /// Gets customer for shopping cart
+        /// </summary>
+        /// <param name="shoppingCart">Shopping cart</param>
+        /// <returns>Result</returns>
+        Customer GetShoppingCartCustomer(IList<ShoppingCartItem> shoppingCart);
+
+        /// <summary>
         /// Delete a customer
         /// </summary>
         /// <param name="customer">Customer</param>

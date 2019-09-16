@@ -125,7 +125,7 @@ namespace Nop.Web.Controllers
             }
 
             //returnable products
-            var orderItems = order.OrderItems.Where(oi => !oi.Product.NotReturnable);
+            var orderItems = _orderService.GetOrderItems(order.Id, isNotReturnable: false);
             foreach (var orderItem in orderItems)
             {
                 var quantity = 0; //parse quantity
@@ -163,9 +163,9 @@ namespace Nop.Web.Controllers
                     rr.CustomNumber = _customNumberFormatter.GenerateReturnRequestCustomNumber(rr);
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                     //notify store owner
-                    _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, orderItem, _localizationSettings.DefaultAdminLanguageId);
+                    _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, orderItem, order);
                     //notify customer
-                    _workflowMessageService.SendNewReturnRequestCustomerNotification(rr, orderItem, order.CustomerLanguageId);
+                    _workflowMessageService.SendNewReturnRequestCustomerNotification(rr, orderItem, order);
 
                     count++;
                 }

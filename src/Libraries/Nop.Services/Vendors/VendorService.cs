@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Html;
 using Nop.Services.Events;
@@ -17,6 +18,7 @@ namespace Nop.Services.Vendors
         #region Fields
 
         private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<Product> _productRepository;
         private readonly IRepository<Vendor> _vendorRepository;
         private readonly IRepository<VendorNote> _vendorNoteRepository;
 
@@ -25,10 +27,12 @@ namespace Nop.Services.Vendors
         #region Ctor
 
         public VendorService(IEventPublisher eventPublisher,
+            IRepository<Product> productRepository,
             IRepository<Vendor> vendorRepository,
             IRepository<VendorNote> vendorNoteRepository)
         {
             _eventPublisher = eventPublisher;
+            _productRepository = productRepository;
             _vendorRepository = vendorRepository;
             _vendorNoteRepository = vendorNoteRepository;
         }
@@ -48,6 +52,39 @@ namespace Nop.Services.Vendors
                 return null;
 
             return _vendorRepository.GetById(vendorId);
+        }
+
+        /// <summary>
+        /// Gets a vendor by product identifier
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <returns>Vendor</returns>
+        public virtual Vendor GetVendorByProductId(int productId)
+        {
+            if (productId == 0)
+                return null;
+
+            return (from v in _vendorRepository.Table
+                    join p in _productRepository.Table on v.Id equals p.VendorId
+                    //TODO: issue-239 !v.Deleted && v.Active
+                    select v).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets a vendors by product identifiers
+        /// </summary>
+        /// <param name="productIds">Array of product identifiers</param>
+        /// <returns>Vendors</returns>
+        public virtual IList<Vendor> GetVendorsByProductIds(int[] productIds)
+        {
+            if (productIds is null)
+                throw new ArgumentNullException(nameof(productIds));
+
+            return (from v in _vendorRepository.Table
+                    join p in _productRepository.Table on v.Id equals p.VendorId
+                    where productIds.Contains(p.Id) && !v.Deleted && v.Active
+                    group v by p.Id into v
+                    select v.First()).ToList();
         }
 
         /// <summary>

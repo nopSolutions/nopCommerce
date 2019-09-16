@@ -52,7 +52,7 @@ namespace Nop.Tests
         public IPriceCalculationService PriceCalculationService { get; }
         public Mock<ICurrencyService> CurrencyService { get; }
 
-        public object GetService(Type serviceType)
+        public virtual object GetService(Type serviceType)
         {
             if (serviceType == typeof(IHttpContextAccessor))
                 return new Mock<IHttpContextAccessor>().Object;

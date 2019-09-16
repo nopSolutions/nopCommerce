@@ -592,12 +592,13 @@ namespace Nop.Services.Tax
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <returns>Price</returns>
-        public virtual decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav)
+        public virtual decimal GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav)
         {
             var customer = _workContext.CurrentCustomer;
-            return GetCheckoutAttributePrice(cav, customer);
+            return GetCheckoutAttributePrice(ca, cav, customer);
         }
 
         /// <summary>
@@ -606,10 +607,10 @@ namespace Nop.Services.Tax
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price</returns>
-        public virtual decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav, Customer customer)
+        public virtual decimal GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav, Customer customer)
         {
             var includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
-            return GetCheckoutAttributePrice(cav, includingTax, customer);
+            return GetCheckoutAttributePrice(ca, cav, includingTax, customer);
         }
 
         /// <summary>
@@ -619,10 +620,10 @@ namespace Nop.Services.Tax
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price</returns>
-        public virtual decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
+        public virtual decimal GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav,
             bool includingTax, Customer customer)
         {
-            return GetCheckoutAttributePrice(cav, includingTax, customer, out var _);
+            return GetCheckoutAttributePrice(ca, cav, includingTax, customer, out var _);
         }
 
         /// <summary>
@@ -633,7 +634,7 @@ namespace Nop.Services.Tax
         /// <param name="customer">Customer</param>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public virtual decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
+        public virtual decimal GetCheckoutAttributePrice(CheckoutAttribute ca, CheckoutAttributeValue cav,
             bool includingTax, Customer customer, out decimal taxRate)
         {
             if (cav == null)
@@ -641,14 +642,15 @@ namespace Nop.Services.Tax
 
             taxRate = decimal.Zero;
 
+
             var price = cav.PriceAdjustment;
-            if (cav.CheckoutAttribute.IsTaxExempt)
+            if (ca.IsTaxExempt)
             {
                 return price;
             }
 
             var priceIncludesTax = _taxSettings.PricesIncludeTax;
-            var taxClassId = cav.CheckoutAttribute.TaxCategoryId;
+            var taxClassId = ca.TaxCategoryId;
             return GetProductPrice(null, taxClassId, price, includingTax, customer,
                 priceIncludesTax, out taxRate);
         }

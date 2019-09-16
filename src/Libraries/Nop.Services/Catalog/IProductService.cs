@@ -372,6 +372,27 @@ namespace Nop.Services.Catalog
         /// <param name="limitedToStoresIds">A list of store ids for mapping</param>
         void UpdateProductStoreMappings(Product product, IList<int> limitedToStoresIds);
 
+        /// <summary>
+        /// Gets the value whether the sequence contains downloadable products
+        /// </summary>
+        /// <param name="productIds">Product identifiers</param>
+        /// <returns>Result</returns>
+        bool HasAnyDownloadableProduct(int[] productIds);
+
+        /// <summary>
+        /// Gets the value whether the sequence contains gift card products
+        /// </summary>
+        /// <param name="productIds">Product identifiers</param>
+        /// <returns>Result</returns>
+        bool HasAnyGiftCardProduct(int[] productIds);
+
+        /// <summary>
+        /// Gets the value whether the sequence contains recurring products
+        /// </summary>
+        /// <param name="productIds">Product identifiers</param>
+        /// <returns>Result</returns>
+        bool HasAnyRecurringProduct(int[] productIds);
+
         #endregion
 
         #region Inventory management methods
@@ -764,6 +785,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="pwi">ProductWarehouseInventory</param>
         void InsertProductWarehouseInventory(ProductWarehouseInventory pwi);
+
+        /// <summary>
+        /// Updates a record to manage product inventory per warehouse
+        /// </summary>
+        /// <param name="pwi">Record to manage product inventory per warehouse</param>
+        void UpdateProductWarehouseInventory(ProductWarehouseInventory pwi);
 
         #endregion
 

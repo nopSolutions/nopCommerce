@@ -11,6 +11,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -31,6 +32,7 @@ namespace Nop.Services.Shipping
         private readonly ICacheManager _cacheManager;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICountryService _countryService;
+        private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
@@ -55,6 +57,7 @@ namespace Nop.Services.Shipping
             ICacheManager cacheManager,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICountryService countryService,
+            ICustomerService customerService,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
@@ -75,6 +78,7 @@ namespace Nop.Services.Shipping
             _cacheManager = cacheManager;
             _checkoutAttributeParser = checkoutAttributeParser;
             _countryService = countryService;
+            _customerService = customerService;
             _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
@@ -350,7 +354,9 @@ namespace Nop.Services.Shipping
             if (shoppingCartItem == null)
                 throw new ArgumentNullException(nameof(shoppingCartItem));
 
-            return GetShoppingCartItemWeight(shoppingCartItem.Product, shoppingCartItem.AttributesXml, ignoreFreeShippedItems);
+            var product = _productService.GetProductById(shoppingCartItem.ProductId);
+
+            return GetShoppingCartItemWeight(product, shoppingCartItem.AttributesXml, ignoreFreeShippedItems);
         }
 
         /// <summary>
@@ -415,13 +421,13 @@ namespace Nop.Services.Shipping
                 totalWeight += GetShoppingCartItemWeight(packageItem.ShoppingCartItem, ignoreFreeShippedItems) * packageItem.GetQuantity();
 
             //checkout attributes
-            if (request.Customer == null || !includeCheckoutAttributes)
+            if (request.Customer is null || !includeCheckoutAttributes)
                 return totalWeight;
             var checkoutAttributesXml = _genericAttributeService.GetAttribute<string>(request.Customer, NopCustomerDefaults.CheckoutAttributes, _storeContext.CurrentStore.Id);
             if (string.IsNullOrEmpty(checkoutAttributesXml))
                 return totalWeight;
             var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
-            foreach (var attributeValue in attributeValues)
+            foreach (var attributeValue in attributeValues.SelectMany(x => x.values))
                 totalWeight += attributeValue.WeightAdjustment;
 
             return totalWeight;
@@ -475,7 +481,7 @@ namespace Nop.Services.Shipping
         /// <param name="height">Height</param>
         /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
         public virtual void GetDimensions(IList<GetShippingOptionRequest.PackageItem> packageItems,
-            out decimal width, out decimal length, out decimal height, bool ignoreFreeShippedItems = false)
+            out decimal width, out decimal length, out decimal height, bool ignoreFreeShippedItems = false) //TODO: issue-239
         {
             if (packageItems == null)
                 throw new ArgumentNullException(nameof(packageItems));
@@ -484,19 +490,19 @@ namespace Nop.Services.Shipping
             if (_shippingSettings.UseCubeRootMethod && AreMultipleItems(packageItems))
             {
                 //find max dimensions of the shipped items
-                var maxWidth = packageItems.Max(item => !item.ShoppingCartItem.Product.IsFreeShipping || !ignoreFreeShippedItems
-                    ? item.ShoppingCartItem.Product.Width : decimal.Zero);
-                var maxLength = packageItems.Max(item => !item.ShoppingCartItem.Product.IsFreeShipping || !ignoreFreeShippedItems
-                    ? item.ShoppingCartItem.Product.Length : decimal.Zero);
-                var maxHeight = packageItems.Max(item => !item.ShoppingCartItem.Product.IsFreeShipping || !ignoreFreeShippedItems
-                    ? item.ShoppingCartItem.Product.Height : decimal.Zero);
+                var maxWidth = packageItems.Max(item => !item.Product.IsFreeShipping || !ignoreFreeShippedItems
+                    ? item.Product.Width : decimal.Zero);
+                var maxLength = packageItems.Max(item => !item.Product.IsFreeShipping || !ignoreFreeShippedItems
+                    ? item.Product.Length : decimal.Zero);
+                var maxHeight = packageItems.Max(item => !item.Product.IsFreeShipping || !ignoreFreeShippedItems
+                    ? item.Product.Height : decimal.Zero);
 
                 //get total volume of the shipped items
                 var totalVolume = packageItems.Sum(packageItem =>
                 {
                     //product volume
-                    var productVolume = !packageItem.ShoppingCartItem.Product.IsFreeShipping || !ignoreFreeShippedItems ?
-                        packageItem.ShoppingCartItem.Product.Width * packageItem.ShoppingCartItem.Product.Length * packageItem.ShoppingCartItem.Product.Height : decimal.Zero;
+                    var productVolume = !packageItem.Product.IsFreeShipping || !ignoreFreeShippedItems ?
+                        packageItem.Product.Width * packageItem.Product.Length * packageItem.Product.Height : decimal.Zero;
 
                     //associated products volume
                     if (_shippingSettings.ConsiderAssociatedProductsDimensions && !string.IsNullOrEmpty(packageItem.ShoppingCartItem.AttributesXml))
@@ -540,11 +546,11 @@ namespace Nop.Services.Shipping
                     var productWidth = decimal.Zero;
                     var productLength = decimal.Zero;
                     var productHeight = decimal.Zero;
-                    if (!packageItem.ShoppingCartItem.Product.IsFreeShipping || !ignoreFreeShippedItems)
+                    if (!packageItem.Product.IsFreeShipping || !ignoreFreeShippedItems)
                     {
-                        productWidth = packageItem.ShoppingCartItem.Product.Width;
-                        productLength = packageItem.ShoppingCartItem.Product.Length;
-                        productHeight = packageItem.ShoppingCartItem.Product.Height;
+                        productWidth = packageItem.Product.Width;
+                        productLength = packageItem.Product.Length;
+                        productHeight = packageItem.Product.Height;
                     }
 
                     //associated products
@@ -637,7 +643,7 @@ namespace Nop.Services.Shipping
                 if (!IsShipEnabled(sci))
                     continue;
 
-                var product = sci.Product;
+                var product = _productService.GetProductById(sci.ProductId);
 
                 //TODO properly create requests for the associated products
                 if (product == null || !product.IsShipEnabled)
@@ -682,7 +688,7 @@ namespace Nop.Services.Shipping
                 if (requests.ContainsKey(warehouseId) && !product.ShipSeparately)
                 {
                     //add item to existing request
-                    requests[warehouseId].Items.Add(new GetShippingOptionRequest.PackageItem(sci));
+                    requests[warehouseId].Items.Add(new GetShippingOptionRequest.PackageItem(sci, product));
                 }
                 else
                 {
@@ -693,7 +699,8 @@ namespace Nop.Services.Shipping
                         StoreId = storeId
                     };
                     //customer
-                    request.Customer = cart.FirstOrDefault(item => item.Customer != null)?.Customer;
+                    request.Customer = _customerService.GetShoppingCartCustomer(cart);
+
                     //ship to
                     request.ShippingAddress = shippingAddress;
                     //ship from
@@ -728,7 +735,7 @@ namespace Nop.Services.Shipping
                         if (_shippingSettings.ShipSeparatelyOneItemEach)
                         {
                             //add item with overridden quantity 1
-                            request.Items.Add(new GetShippingOptionRequest.PackageItem(sci, 1));
+                            request.Items.Add(new GetShippingOptionRequest.PackageItem(sci, product, 1));
 
                             //create separate requests for all product quantity
                             for (var i = 0; i < sci.Quantity; i++)
@@ -739,14 +746,14 @@ namespace Nop.Services.Shipping
                         else
                         {
                             //all of product items should be shipped in a single box, so create the single separate request 
-                            request.Items.Add(new GetShippingOptionRequest.PackageItem(sci));
+                            request.Items.Add(new GetShippingOptionRequest.PackageItem(sci, product));
                             separateRequests.Add(request);
                         }
                     }
                     else
                     {
                         //usual request
-                        request.Items.Add(new GetShippingOptionRequest.PackageItem(sci));
+                        request.Items.Add(new GetShippingOptionRequest.PackageItem(sci, product));
                         requests.Add(warehouseId, request);
                     }
                 }
@@ -878,7 +885,7 @@ namespace Nop.Services.Shipping
         public virtual GetPickupPointsResponse GetPickupPoints(int addressId, Customer customer = null,
             string providerSystemName = null, int storeId = 0)
         {
-            var result = new GetPickupPointsResponse();            
+            var result = new GetPickupPointsResponse();
 
             var pickupPointsProviders = _pickupPluginManager.LoadActivePlugins(customer, storeId, providerSystemName);
             if (!pickupPointsProviders.Any())
@@ -918,7 +925,7 @@ namespace Nop.Services.Shipping
         public virtual bool IsShipEnabled(ShoppingCartItem shoppingCartItem)
         {
             //whether the product requires shipping
-            if (shoppingCartItem.Product != null && shoppingCartItem.Product.IsShipEnabled)
+            if (shoppingCartItem.ProductId != 0 && _productService.GetProductById(shoppingCartItem.ProductId)?.IsShipEnabled == true)
                 return true;
 
             if (string.IsNullOrEmpty(shoppingCartItem.AttributesXml))
@@ -942,7 +949,7 @@ namespace Nop.Services.Shipping
                 return true;
 
             //then whether the product is free shipping
-            if (shoppingCartItem.Product != null && !shoppingCartItem.Product.IsFreeShipping)
+            if (shoppingCartItem.ProductId != 0 && !_productService.GetProductById(shoppingCartItem.ProductId).IsFreeShipping)
                 return false;
 
             if (string.IsNullOrEmpty(shoppingCartItem.AttributesXml))
@@ -966,7 +973,7 @@ namespace Nop.Services.Shipping
                 return decimal.Zero;
 
             //get additional shipping charge of the product
-            var additionalShippingCharge = (shoppingCartItem.Product?.AdditionalShippingCharge ?? decimal.Zero) * shoppingCartItem.Quantity;
+            var additionalShippingCharge = (_productService.GetProductById(shoppingCartItem.ProductId)?.AdditionalShippingCharge ?? decimal.Zero) * shoppingCartItem.Quantity;
 
             if (string.IsNullOrEmpty(shoppingCartItem.AttributesXml))
                 return additionalShippingCharge;

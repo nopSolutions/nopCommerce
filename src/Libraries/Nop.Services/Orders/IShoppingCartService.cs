@@ -38,6 +38,14 @@ namespace Nop.Services.Orders
         int DeleteExpiredShoppingCartItems(DateTime olderThanUtc);
 
         /// <summary>
+        /// Get products from shopping cart whether requiring specific product
+        /// </summary>
+        /// <param name="cart">Shopping cart </param>
+        /// <param name="product">Product</param>
+        /// <returns>Result</returns>
+        IEnumerable<Product> GetProductsRequiringProduct(IList<ShoppingCartItem> cart, Product product);
+
+        /// <summary>
         /// Validates required products (products which require some other products to be added to the cart)
         /// </summary>
         /// <param name="customer">Customer</param>

@@ -10,6 +10,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Http.Extensions;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -46,6 +47,7 @@ namespace Nop.Web.Controllers
         private readonly IOrderService _orderService;
         private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IPaymentService _paymentService;
+        private readonly IProductService _productService;
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
@@ -74,6 +76,7 @@ namespace Nop.Web.Controllers
             IOrderService orderService,
             IPaymentPluginManager paymentPluginManager,
             IPaymentService paymentService,
+            IProductService productService,
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             IStoreContext storeContext,
@@ -98,6 +101,7 @@ namespace Nop.Web.Controllers
             _orderService = orderService;
             _paymentPluginManager = paymentPluginManager;
             _paymentService = paymentService;
+            _productService = productService;
             _shippingService = shippingService;
             _shoppingCartService = shoppingCartService;
             _storeContext = storeContext;
@@ -176,8 +180,9 @@ namespace Nop.Web.Controllers
             if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
+            var cartProductIds = cart.Select(ci => ci.ProductId).ToArray();
             var downloadableProductsRequireRegistration =
-                _customerSettings.RequireRegistrationForDownloadableProducts && cart.Any(sci => sci.Product.IsDownload);
+                _customerSettings.RequireRegistrationForDownloadableProducts && _productService.HasAnyDownloadableProduct(cartProductIds);
 
             if (_customerService.IsGuest(_workContext.CurrentCustomer) && (!_orderSettings.AnonymousCheckoutAllowed || downloadableProductsRequireRegistration))
                 return Challenge();
@@ -211,9 +216,11 @@ namespace Nop.Web.Controllers
             //validation (each shopping cart item)
             foreach (var sci in cart)
             {
+                var product = _productService.GetProductById(sci.ProductId);
+
                 var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(_workContext.CurrentCustomer,
                     sci.ShoppingCartType,
-                    sci.Product,
+                    product,
                     sci.StoreId,
                     sci.AttributesXml,
                     sci.CustomerEnteredPrice,

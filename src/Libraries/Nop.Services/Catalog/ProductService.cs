@@ -33,39 +33,39 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly CatalogSettings _catalogSettings;
-        private readonly CommonSettings _commonSettings;
-        private readonly IAclService _aclService;
-        private readonly ICacheManager _cacheManager;
-        private readonly ICustomerService _customerService;
-        private readonly IDataProvider _dataProvider;
-        private readonly IDateRangeService _dateRangeService;
-        private readonly IDbContext _dbContext;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductAttributeService _productAttributeService;
-        private readonly IRepository<AclRecord> _aclRepository;
-        private readonly IRepository<CrossSellProduct> _crossSellProductRepository;
-        private readonly IRepository<DiscountProductMapping> _discountProductMappingRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
-        private readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
-        private readonly IRepository<ProductCategory> _productCategoryRepository;
-        private readonly IRepository<ProductPicture> _productPictureRepository;
-        private readonly IRepository<ProductReview> _productReviewRepository;
-        private readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
-        private readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
-        private readonly IRepository<RelatedProduct> _relatedProductRepository;
-        private readonly IRepository<StockQuantityHistory> _stockQuantityHistoryRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly IRepository<TierPrice> _tierPriceRepository;
-        private readonly IRepository<Warehouse> _warehouseRepository;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IStoreService _storeService;
-        private readonly IWorkContext _workContext;
-        private readonly LocalizationSettings _localizationSettings;
+        protected readonly CatalogSettings _catalogSettings;
+        protected readonly CommonSettings _commonSettings;
+        protected readonly IAclService _aclService;
+        protected readonly ICacheManager _cacheManager;
+        protected readonly ICustomerService _customerService;
+        protected readonly IDataProvider _dataProvider;
+        protected readonly IDateRangeService _dateRangeService;
+        protected readonly IDbContext _dbContext;
+        protected readonly IEventPublisher _eventPublisher;
+        protected readonly ILanguageService _languageService;
+        protected readonly ILocalizationService _localizationService;
+        protected readonly IProductAttributeParser _productAttributeParser;
+        protected readonly IProductAttributeService _productAttributeService;
+        protected readonly IRepository<AclRecord> _aclRepository;
+        protected readonly IRepository<CrossSellProduct> _crossSellProductRepository;
+        protected readonly IRepository<DiscountProductMapping> _discountProductMappingRepository;
+        protected readonly IRepository<Product> _productRepository;
+        protected readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
+        protected readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
+        protected readonly IRepository<ProductCategory> _productCategoryRepository;
+        protected readonly IRepository<ProductPicture> _productPictureRepository;
+        protected readonly IRepository<ProductReview> _productReviewRepository;
+        protected readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
+        protected readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
+        protected readonly IRepository<RelatedProduct> _relatedProductRepository;
+        protected readonly IRepository<StockQuantityHistory> _stockQuantityHistoryRepository;
+        protected readonly IRepository<StoreMapping> _storeMappingRepository;
+        protected readonly IRepository<TierPrice> _tierPriceRepository;
+        protected readonly IRepository<Warehouse> _warehouseRepository;
+        protected readonly IStoreMappingService _storeMappingService;
+        protected readonly IStoreService _storeService;
+        protected readonly IWorkContext _workContext;
+        protected readonly LocalizationSettings _localizationSettings;
 
         #endregion
 
@@ -1329,6 +1329,36 @@ namespace Nop.Services.Catalog
             }
         }
 
+        /// <summary>
+        /// Gets the value whether the sequence contains downloadable products
+        /// </summary>
+        /// <param name="productIds">Product identifiers</param>
+        /// <returns>Result</returns>
+        public virtual bool HasAnyDownloadableProduct(int[] productIds)
+        {
+            return _productRepository.Table.Any(p => productIds.Contains(p.Id) && p.IsDownload);
+        }
+
+        /// <summary>
+        /// Gets the value whether the sequence contains gift card products
+        /// </summary>
+        /// <param name="productIds">Product identifiers</param>
+        /// <returns>Result</returns>
+        public virtual bool HasAnyGiftCardProduct(int[] productIds)
+        {
+            return _productRepository.Table.Any(p => productIds.Contains(p.Id) && p.IsGiftCard);
+        }
+
+        /// <summary>
+        /// Gets the value whether the sequence contains recurring products
+        /// </summary>
+        /// <param name="productIds">Product identifiers</param>
+        /// <returns>Result</returns>
+        public virtual bool HasAnyRecurringProduct(int[] productIds)
+        {
+            return _productRepository.Table.Any(p => productIds.Contains(p.Id) && p.IsRecurring);
+        }
+
         #endregion
 
         #region Inventory management methods
@@ -1583,7 +1613,7 @@ namespace Nop.Services.Catalog
                 .ThenByDescending(pwi => pwi.StockQuantity)
                 .ToList();
 
-            if (productInventory.Count <= 0)
+            if (!productInventory.Any())
                 return;
 
             var qty = quantity;
@@ -1604,7 +1634,7 @@ namespace Nop.Services.Catalog
                 pwi.StockQuantity += qty;
             }
 
-            UpdateProduct(product);
+            UpdateProductWarehouseInventory(productInventory);
         }
 
         /// <summary>
@@ -1623,9 +1653,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentException("Value must be negative.", nameof(quantity));
 
             //only products with "use multiple warehouses" are handled this way
-            if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
-                return;
-            if (!product.UseMultipleWarehouses)
+            if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock || !product.UseMultipleWarehouses)
                 return;
 
             var pwi = _productWarehouseInventoryRepository.Table.FirstOrDefault(wi => wi.ProductId == product.Id && wi.WarehouseId == warehouseId);
@@ -1634,7 +1662,8 @@ namespace Nop.Services.Catalog
 
             pwi.ReservedQuantity = Math.Max(pwi.ReservedQuantity + quantity, 0);
             pwi.StockQuantity += quantity;
-            UpdateProduct(product);
+
+            UpdateProductWarehouseInventory(pwi);
 
             //quantity change history
             AddStockQuantityHistoryEntry(product, quantity, pwi.StockQuantity, warehouseId, message);
@@ -1658,9 +1687,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(shipmentItem));
 
             //only products with "use multiple warehouses" are handled this way
-            if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
-                return 0;
-            if (!product.UseMultipleWarehouses)
+            if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock || !product.UseMultipleWarehouses)
                 return 0;
 
             var pwi = _productWarehouseInventoryRepository.Table.FirstOrDefault(wi => wi.ProductId == product.Id && wi.WarehouseId == shipmentItem.WarehouseId);
@@ -1677,7 +1704,8 @@ namespace Nop.Services.Catalog
 
             pwi.StockQuantity += qty;
             pwi.ReservedQuantity += qty;
-            UpdateProduct(product);
+
+            UpdateProductWarehouseInventory(pwi);
 
             //quantity change history
             AddStockQuantityHistoryEntry(product, qty, pwi.StockQuantity, shipmentItem.WarehouseId, message);
@@ -2489,9 +2517,9 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Deletes a ProductWarehouseInventory
+        /// Deletes a record to manage product inventory per warehouse
         /// </summary>
-        /// <param name="pwi">ProductWarehouseInventory</param>
+        /// <param name="pwi">Record to manage product inventory per warehouse</param>
         public virtual void DeleteProductWarehouseInventory(ProductWarehouseInventory pwi)
         {
             if (pwi == null)
@@ -2505,9 +2533,9 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Inserts a ProductWarehouseInventory
+        /// Inserts a record to manage product inventory per warehouse
         /// </summary>
-        /// <param name="pwi">ProductWarehouseInventory</param>
+        /// <param name="pwi">Record to manage product inventory per warehouse</param>
         public virtual void InsertProductWarehouseInventory(ProductWarehouseInventory pwi)
         {
             if (pwi == null)
@@ -2518,6 +2546,45 @@ namespace Nop.Services.Catalog
             _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
 
             _eventPublisher.EntityInserted(pwi);
+        }
+
+        /// <summary>
+        /// Updates a record to manage product inventory per warehouse
+        /// </summary>
+        /// <param name="pwi">Record to manage product inventory per warehouse</param>
+        public virtual void UpdateProductWarehouseInventory(ProductWarehouseInventory pwi)
+        {
+            if (pwi == null)
+                throw new ArgumentNullException(nameof(pwi));
+
+            _productWarehouseInventoryRepository.Update(pwi);
+
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
+
+            _eventPublisher.EntityUpdated(pwi);
+        }
+
+        /// <summary>
+        /// Updates a records to manage product inventory per warehouse
+        /// </summary>
+        /// <param name="pwis">Records to manage product inventory per warehouse</param>
+        public virtual void UpdateProductWarehouseInventory(IEnumerable<ProductWarehouseInventory> pwis)
+        {
+            if (pwis == null)
+                throw new ArgumentNullException(nameof(pwis));
+
+            if (!pwis.Any())
+                return;
+
+            _productWarehouseInventoryRepository.Update(pwis);
+
+            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
+
+            foreach (var pwi in pwis)
+            {
+                _eventPublisher.EntityUpdated(pwi);
+            }
+            
         }
 
         #endregion

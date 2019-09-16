@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
@@ -24,11 +24,6 @@ namespace Nop.Data.Mapping.Orders
             builder.Property(value => value.ColorSquaresRgb).HasMaxLength(100);
             builder.Property(value => value.PriceAdjustment).HasColumnType("decimal(18, 4)");
             builder.Property(value => value.WeightAdjustment).HasColumnType("decimal(18, 4)");
-
-            builder.HasOne(value => value.CheckoutAttribute)
-                .WithMany(attribute => attribute.CheckoutAttributeValues)
-                .HasForeignKey(value => value.CheckoutAttributeId)
-                .IsRequired();
 
             base.Configure(builder);
         }

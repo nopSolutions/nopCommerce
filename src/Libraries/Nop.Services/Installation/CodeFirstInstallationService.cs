@@ -4633,7 +4633,7 @@ namespace Nop.Services.Installation
             {
                 StoreId = defaultStore.Id,
                 OrderGuid = Guid.NewGuid(),
-                Customer = firstCustomer,
+                CustomerId = firstCustomer.Id,
                 CustomerLanguageId = _languageRepository.Table.First().Id,
                 CustomerIp = "127.0.0.1",
                 OrderSubtotalInclTax = 1855M,
@@ -4691,7 +4691,7 @@ namespace Nop.Services.Installation
             var firstOrderItem1 = new OrderItem
             {
                 OrderItemGuid = Guid.NewGuid(),
-                Order = firstOrder,
+                OrderId = firstOrder.Id,
                 ProductId = _productRepository.Table.First(p => p.Name.Equals("Apple iCam")).Id,
                 UnitPriceInclTax = 1300M,
                 UnitPriceExclTax = 1300M,
@@ -4716,7 +4716,7 @@ namespace Nop.Services.Installation
             var fierstOrderItem2 = new OrderItem
             {
                 OrderItemGuid = Guid.NewGuid(),
-                Order = firstOrder,
+                OrderId = firstOrder.Id,
                 ProductId = _productRepository.Table.First(p => p.Name.Equals("Leica T Mirrorless Digital Camera")).Id,
                 UnitPriceInclTax = 530M,
                 UnitPriceExclTax = 530M,
@@ -4741,7 +4741,7 @@ namespace Nop.Services.Installation
             var firstOrderItem3 = new OrderItem
             {
                 OrderItemGuid = Guid.NewGuid(),
-                Order = firstOrder,
+                OrderId = firstOrder.Id,
                 ProductId = _productRepository.Table.First(p => p.Name.Equals("$25 Virtual Gift Card")).Id,
                 UnitPriceInclTax = 25M,
                 UnitPriceExclTax = 25M,
@@ -4765,7 +4765,7 @@ namespace Nop.Services.Installation
             var firstOrderGiftcard = new GiftCard
             {
                 GiftCardType = GiftCardType.Virtual,
-                PurchasedWithOrderItem = firstOrderItem3,
+                PurchasedWithOrderItemId = firstOrderItem3.Id,
                 Amount = 25M,
                 IsGiftCardActivated = false,
                 GiftCardCouponCode = string.Empty,
@@ -4784,13 +4784,13 @@ namespace Nop.Services.Installation
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
-                Order = firstOrder
+                OrderId = firstOrder.Id
             });
             _orderNoteRepository.Insert(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order paid",
-                Order = firstOrder
+                OrderId = firstOrder.Id
             });
 
             //second order
@@ -4803,7 +4803,7 @@ namespace Nop.Services.Installation
             {
                 StoreId = defaultStore.Id,
                 OrderGuid = Guid.NewGuid(),
-                Customer = secondCustomer,
+                CustomerId = secondCustomer.Id,
                 CustomerLanguageId = _languageRepository.Table.First().Id,
                 CustomerIp = "127.0.0.1",
                 OrderSubtotalInclTax = 2460M,
@@ -4862,14 +4862,14 @@ namespace Nop.Services.Installation
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
-                Order = secondOrder
+                OrderId = secondOrder.Id
             });
 
             //item Vintage Style Engagement Ring
             var secondOrderItem1 = new OrderItem
             {
                 OrderItemGuid = Guid.NewGuid(),
-                Order = secondOrder,
+                OrderId = secondOrder.Id,
                 ProductId = _productRepository.Table.First(p => p.Name.Equals("Vintage Style Engagement Ring")).Id,
                 UnitPriceInclTax = 2100M,
                 UnitPriceExclTax = 2100M,
@@ -4894,7 +4894,7 @@ namespace Nop.Services.Installation
             var secondOrderItem2 = new OrderItem
             {
                 OrderItemGuid = Guid.NewGuid(),
-                Order = secondOrder,
+                OrderId = secondOrder.Id,
                 ProductId = _productRepository.Table.First(p => p.Name.Equals("Flower Girl Bracelet")).Id,
                 UnitPriceInclTax = 360M,
                 UnitPriceExclTax = 360M,
@@ -4924,7 +4924,7 @@ namespace Nop.Services.Installation
             {
                 StoreId = defaultStore.Id,
                 OrderGuid = Guid.NewGuid(),
-                Customer = thirdCustomer,
+                CustomerId = thirdCustomer.Id,
                 CustomerLanguageId = _languageRepository.Table.First().Id,
                 CustomerIp = "127.0.0.1",
                 OrderSubtotalInclTax = 8.80M,
@@ -4982,14 +4982,14 @@ namespace Nop.Services.Installation
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
-                Order = thirdOrder
+                OrderId = thirdOrder.Id
             });
 
             //item If You Wait
             var thirdOrderItem1 = new OrderItem
             {
                 OrderItemGuid = Guid.NewGuid(),
-                Order = thirdOrder,
+                OrderId = thirdOrder.Id,
                 ProductId = _productRepository.Table.First(p => p.Name.Equals("If You Wait (donation)")).Id,
                 UnitPriceInclTax = 3M,
                 UnitPriceExclTax = 3M,
@@ -5014,7 +5014,7 @@ namespace Nop.Services.Installation
             var thirdOrderItem2 = new OrderItem
             {
                 OrderItemGuid = Guid.NewGuid(),
-                Order = thirdOrder,
+                OrderId = thirdOrder.Id,
                 ProductId = _productRepository.Table.First(p => p.Name.Equals("Night Visions")).Id,
                 UnitPriceInclTax = 2.8M,
                 UnitPriceExclTax = 2.8M,
@@ -5039,7 +5039,7 @@ namespace Nop.Services.Installation
             var thirdOrderItem3 = new OrderItem
             {
                 OrderItemGuid = Guid.NewGuid(),
-                Order = thirdOrder,
+                OrderId = thirdOrder.Id,
                 ProductId = _productRepository.Table.First(p => p.Name.Equals("Science & Faith")).Id,
                 UnitPriceInclTax = 3M,
                 UnitPriceExclTax = 3M,
@@ -5072,7 +5072,7 @@ namespace Nop.Services.Installation
             {
                 StoreId = defaultStore.Id,
                 OrderGuid = Guid.NewGuid(),
-                Customer = fourthCustomer,
+                CustomerId = fourthCustomer.Id,
                 CustomerLanguageId = _languageRepository.Table.First().Id,
                 CustomerIp = "127.0.0.1",
                 OrderSubtotalInclTax = 102M,
@@ -5132,26 +5132,26 @@ namespace Nop.Services.Installation
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
-                Order = fourthOrder
+                OrderId = fourthOrder.Id
             });
             _orderNoteRepository.Insert(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order paid",
-                Order = fourthOrder
+                OrderId = fourthOrder.Id
             });
             _orderNoteRepository.Insert(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order shipped",
-                Order = fourthOrder
+                OrderId = fourthOrder.Id
             });
 
             //item Pride and Prejudice
             var fourthOrderItem1 = new OrderItem
             {
                 OrderItemGuid = Guid.NewGuid(),
-                Order = fourthOrder,
+                OrderId = fourthOrder.Id,
                 ProductId = _productRepository.Table.First(p => p.Name.Equals("Pride and Prejudice")).Id,
                 UnitPriceInclTax = 24M,
                 UnitPriceExclTax = 24M,
@@ -5176,7 +5176,7 @@ namespace Nop.Services.Installation
             var fourthOrderItem2 = new OrderItem
             {
                 OrderItemGuid = Guid.NewGuid(),
-                Order = fourthOrder,
+                OrderId = fourthOrder.Id,
                 ProductId = _productRepository.Table.First(p => p.Name.Equals("First Prize Pies")).Id,
                 UnitPriceInclTax = 51M,
                 UnitPriceExclTax = 51M,
@@ -5201,7 +5201,7 @@ namespace Nop.Services.Installation
             var fourthOrderItem3 = new OrderItem
             {
                 OrderItemGuid = Guid.NewGuid(),
-                Order = fourthOrder,
+                OrderId = fourthOrder.Id,
                 ProductId = _productRepository.Table.First(p => p.Name.Equals("Fahrenheit 451 by Ray Bradbury")).Id,
                 UnitPriceInclTax = 27M,
                 UnitPriceExclTax = 27M,
@@ -5286,7 +5286,7 @@ namespace Nop.Services.Installation
             {
                 StoreId = defaultStore.Id,
                 OrderGuid = Guid.NewGuid(),
-                Customer = fifthCustomer,
+                CustomerId = fifthCustomer.Id,
                 CustomerLanguageId = _languageRepository.Table.First().Id,
                 CustomerIp = "127.0.0.1",
                 OrderSubtotalInclTax = 43.50M,
@@ -5345,32 +5345,32 @@ namespace Nop.Services.Installation
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order placed",
-                Order = fifthOrder
+                OrderId = fifthOrder.Id
             });
             _orderNoteRepository.Insert(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order paid",
-                Order = fifthOrder
+                OrderId = fifthOrder.Id
             });
             _orderNoteRepository.Insert(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order shipped",
-                Order = fifthOrder
+                OrderId = fifthOrder.Id
             });
             _orderNoteRepository.Insert(new OrderNote
             {
                 CreatedOnUtc = DateTime.UtcNow,
                 Note = "Order delivered",
-                Order = fifthOrder
+                OrderId = fifthOrder.Id
             });
 
             //item Levi's 511 Jeans
             var fifthOrderItem1 = new OrderItem
             {
                 OrderItemGuid = Guid.NewGuid(),
-                Order = fifthOrder,
+                OrderId = fifthOrder.Id,
                 ProductId = _productRepository.Table.First(p => p.Name.Equals("Levi's 511 Jeans")).Id,
                 UnitPriceInclTax = 43.50M,
                 UnitPriceExclTax = 43.50M,
@@ -6819,32 +6819,32 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallCheckoutAttributes()
         {
-            var ca1 = new CheckoutAttribute
+            var ca1 = InsertInstallationData(new CheckoutAttribute
             {
                 Name = "Gift wrapping",
                 IsRequired = true,
                 ShippableProductRequired = true,
                 AttributeControlType = AttributeControlType.DropdownList,
                 DisplayOrder = 1
-            };
-            ca1.CheckoutAttributeValues.Add(new CheckoutAttributeValue
-            {
-                Name = "No",
-                PriceAdjustment = 0,
-                DisplayOrder = 1,
-                IsPreSelected = true
             });
-            ca1.CheckoutAttributeValues.Add(new CheckoutAttributeValue
-            {
-                Name = "Yes",
-                PriceAdjustment = 10,
-                DisplayOrder = 2
-            });
-            var checkoutAttributes = new List<CheckoutAttribute>
-            {
-                ca1
-            };
-            _checkoutAttributeRepository.Insert(checkoutAttributes);
+
+            InsertInstallationData(
+                new CheckoutAttributeValue
+                {
+                    Name = "No",
+                    PriceAdjustment = 0,
+                    DisplayOrder = 1,
+                    IsPreSelected = true,
+                    CheckoutAttributeId = ca1.Id
+                },
+                new CheckoutAttributeValue
+                {
+                    Name = "Yes",
+                    PriceAdjustment = 10,
+                    DisplayOrder = 2,
+                    CheckoutAttributeId = ca1.Id
+                });
+
         }
 
         protected virtual void InstallSpecificationAttributes()

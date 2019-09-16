@@ -15,6 +15,7 @@ using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Orders;
 using Nop.Services.Plugins;
 using Nop.Tests;
 using NUnit.Framework;
@@ -24,26 +25,27 @@ namespace Nop.Services.Tests.Discounts
     [TestFixture]
     public class DiscountServiceTests : ServiceTest
     {
-        private Mock<IRepository<Discount>> _discountRepo;
-        private Mock<IRepository<DiscountRequirement>> _discountRequirementRepo;
-        private Mock<IRepository<DiscountUsageHistory>> _discountUsageHistoryRepo;
-        private Mock<IEventPublisher> _eventPublisher;
-        private Mock<ILocalizationService> _localizationService;
-        private Mock<IDbContext> _dbContext;
+
+        private Mock<IEventPublisher> _eventPublisher = new Mock<IEventPublisher>();
+        private Mock<ILocalizationService> _localizationService = new Mock<ILocalizationService>();
+        private Mock<IDbContext> _dbContext = new Mock<IDbContext>();
         private IDiscountPluginManager _discountPluginManager;
         private IDiscountService _discountService;
-        private Mock<IStoreContext> _storeContext;
-        private Mock<ICustomerService> _customerService;
-        private Mock<IRepository<Category>> _categoryRepo;
-        private Mock<IRepository<Manufacturer>> _manufacturerRepo;
-        private Mock<IRepository<Order>> _orderRepo;
-        private Mock<IRepository<Product>> _productRepo;        
-        private CatalogSettings _catalogSettings;
+        private Mock<IStoreContext> _storeContext = new Mock<IStoreContext>();
+        private Mock<ICustomerService> _customerService = new Mock<ICustomerService>();
+        private Mock<IProductService> _productService = new Mock<IProductService>();
+        private Mock<IRepository<Category>> _categoryRepo = new Mock<IRepository<Category>>();
+        private Mock<IRepository<Discount>> _discountRepo = new Mock<IRepository<Discount>>();
+        private Mock<IRepository<DiscountRequirement>> _discountRequirementRepo = new Mock<IRepository<DiscountRequirement>>();
+        private Mock<IRepository<DiscountUsageHistory>> _discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>();
+        private Mock<IRepository<Manufacturer>> _manufacturerRepo = new Mock<IRepository<Manufacturer>>();
+        private Mock<IRepository<Order>> _orderRepo = new Mock<IRepository<Order>>();
+        private Mock<IRepository<Product>> _productRepo = new Mock<IRepository<Product>>();        
+        private CatalogSettings _catalogSettings = new CatalogSettings();
 
         [SetUp]
         public new void SetUp()
         {
-            _discountRepo = new Mock<IRepository<Discount>>();
             var discount1 = new Discount
             {
                 Id = 1,
@@ -71,35 +73,19 @@ namespace Nop.Services.Tests.Discounts
 
             _discountRepo.Setup(x => x.Table).Returns(new List<Discount> { discount1, discount2 }.AsQueryable());
 
-            _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
-
-            _storeContext = new Mock<IStoreContext>();
-            _customerService = new Mock<ICustomerService>();
-
-            _categoryRepo = new Mock<IRepository<Category>>();
             _categoryRepo.Setup(x => x.Table).Returns(new List<Category>().AsQueryable());
-            _manufacturerRepo = new Mock<IRepository<Manufacturer>>();
             _manufacturerRepo.Setup(x => x.Table).Returns(new List<Manufacturer>().AsQueryable());
-            _productRepo = new Mock<IRepository<Product>>();
             _productRepo.Setup(x => x.Table).Returns(new List<Product>().AsQueryable());
 
             var cacheManager = new TestCacheManager();
-            _discountRequirementRepo = new Mock<IRepository<DiscountRequirement>>();
             _discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());
 
-            _discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>();
 
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
 
-            _catalogSettings = new CatalogSettings();
             var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
-
-            _localizationService = new Mock<ILocalizationService>();
-
-            _dbContext = new Mock<IDbContext>();
-            _orderRepo = new Mock<IRepository<Order>>();
 
             _discountPluginManager = new DiscountPluginManager(pluginService);
             _discountService = new DiscountService(
@@ -108,6 +94,7 @@ namespace Nop.Services.Tests.Discounts
                 _discountPluginManager,
                 _eventPublisher.Object,
                 _localizationService.Object,
+                _productService.Object,
                 _discountRepo.Object,
                 _discountRequirementRepo.Object,
                 _discountUsageHistoryRepo.Object,
@@ -291,7 +278,7 @@ namespace Nop.Services.Tests.Discounts
         static DiscountExtensions()
         {
             _discountService = new DiscountService(null, null, null, null,
-                null, null, null, null, null, null, null);
+                null, null, null, null, null, null, null, null);
         }
 
         public static decimal GetDiscountAmount(this Discount discount, decimal amount)

@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
@@ -21,16 +21,6 @@ namespace Nop.Data.Mapping.Orders
             builder.HasKey(historyEntry => historyEntry.Id);
 
             builder.Property(historyEntry => historyEntry.UsedValue).HasColumnType("decimal(18, 4)");
-
-            builder.HasOne(historyEntry => historyEntry.GiftCard)
-                .WithMany(giftCard => giftCard.GiftCardUsageHistory)
-                .HasForeignKey(historyEntry => historyEntry.GiftCardId)
-                .IsRequired();
-
-            builder.HasOne(historyEntry => historyEntry.UsedWithOrder)
-                .WithMany(order => order.GiftCardUsageHistory)
-                .HasForeignKey(historyEntry => historyEntry.UsedWithOrderId)
-                .IsRequired();
 
             base.Configure(builder);
         }

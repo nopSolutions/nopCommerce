@@ -11,20 +11,24 @@ using Nop.Core.Http;
 using Nop.Plugin.Widgets.GoogleAnalytics.Api;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Logging;
+using Nop.Services.Orders;
 using Nop.Services.Stores;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics
 {
     public class EventConsumer : IConsumer<OrderCancelledEvent>, IConsumer<OrderPaidEvent>, IConsumer<EntityDeletedEvent<Order>>
     {
+        private readonly IAddressService _addressService;
         private readonly ICategoryService _categoryService;
         private readonly ICountryService _countryService;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger _logger;
+        private readonly IOrderService _orderService;
         private readonly IProductService _productService;
         private readonly ISettingService _settingService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -33,10 +37,12 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         private readonly IWebHelper _webHelper;
         private readonly IWidgetPluginManager _widgetPluginManager;
 
-        public EventConsumer(ICategoryService categoryService,
+        public EventConsumer(IAddressService addressService,
+            ICategoryService categoryService,
             ICountryService countryService,
             IHttpClientFactory httpClientFactory,
             ILogger logger,
+            IOrderService orderService,
             IProductService productService,
             ISettingService settingService,
             IStateProvinceService stateProvinceService,
@@ -45,10 +51,12 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
             IWebHelper webHelper,
             IWidgetPluginManager widgetPluginManager)
         {
+            _addressService = addressService;
             _categoryService = categoryService;
             _countryService = countryService;
             _httpClientFactory = httpClientFactory;
             _logger = logger;
+            _orderService = orderService;
             _productService = productService;
             _settingService = settingService;
             _stateProvinceService = stateProvinceService;
@@ -99,35 +107,40 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                     orderTax = -orderTax;
                     orderTotal = -orderTotal;
                 }
+
+                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+
                 var trans = new Transaction(FixIllegalJavaScriptChars(orderId),
-                    order.BillingAddress == null ? "" : FixIllegalJavaScriptChars(order.BillingAddress.City),
-                    _countryService.GetCountryByAddress(order.BillingAddress) is Country country ? FixIllegalJavaScriptChars(country.Name) : string.Empty,
-                    _stateProvinceService.GetStateProvinceByAddress(order.BillingAddress) is StateProvince stateProvince ? FixIllegalJavaScriptChars(stateProvince.Name) : string.Empty,
+                    FixIllegalJavaScriptChars(billingAddress.City),
+                    _countryService.GetCountryByAddress(billingAddress) is Country country ? FixIllegalJavaScriptChars(country.Name) : string.Empty,
+                    _stateProvinceService.GetStateProvinceByAddress(billingAddress) is StateProvince stateProvince ? FixIllegalJavaScriptChars(stateProvince.Name) : string.Empty,
                     store.Name,
                     orderShipping,
                     orderTax,
                     orderTotal);
 
-                foreach (var item in order.OrderItems)
+                foreach (var item in _orderService.GetOrderItems(order.Id))
                 {
+                    var product = _productService.GetProductById(item.ProductId);
                     //get category
-                    var category = _categoryService.GetCategoryById(_categoryService.GetProductCategoriesByProductId(item.ProductId).FirstOrDefault()?.CategoryId ?? 0)?.Name;
+                    var category = _categoryService.GetCategoryById(_categoryService.GetProductCategoriesByProductId(product.Id).FirstOrDefault()?.CategoryId ?? 0)?.Name;
                     var unitPrice = googleAnalyticsSettings.IncludingTax ? item.UnitPriceInclTax : item.UnitPriceExclTax;
                     var qty = item.Quantity;
                     if (!add)
                         qty = -qty;
 
-                    var sku = _productService.FormatSku(item.Product, item.AttributesXml);
+                    var sku = _productService.FormatSku(product, item.AttributesXml);
                     if (string.IsNullOrEmpty(sku))
-                        sku = item.Product.Id.ToString();
-                    var product = new TransactionItem(FixIllegalJavaScriptChars(orderId),
+                        sku = product.Id.ToString();
+
+                    var productItem = new TransactionItem(FixIllegalJavaScriptChars(orderId),
                       FixIllegalJavaScriptChars(sku),
-                      FixIllegalJavaScriptChars(item.Product.Name),
+                      FixIllegalJavaScriptChars(product.Name),
                       unitPrice,
                       qty,
                       FixIllegalJavaScriptChars(category));
 
-                    trans.Items.Add(product);
+                    trans.Items.Add(productItem);
                 }
 
                 request.SendRequest(trans, _httpClientFactory.CreateClient(NopHttpDefaults.DefaultHttpClient));

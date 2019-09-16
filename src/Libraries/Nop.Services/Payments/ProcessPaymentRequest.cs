@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.Payments
 {
@@ -85,7 +86,7 @@ namespace Nop.Services.Payments
         /// <summary>
         /// Gets or sets an initial (parent) order identifier if order is recurring
         /// </summary>
-        public int InitialOrderId { get; set; }
+        public Order InitialOrder { get; set; }
 
         /// <summary>
         /// Gets or sets the cycle length

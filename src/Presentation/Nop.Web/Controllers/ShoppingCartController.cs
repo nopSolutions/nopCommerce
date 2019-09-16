@@ -1078,11 +1078,6 @@ namespace Nop.Web.Controllers
         {
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
 
-            //performance optimization workaround (for Entity Framework)
-            //load all products at once (one SQL command)
-            //if not loaded right now, then anyway the code below will load each product separately (multiple SQL commands)
-            _productService.GetProductsByIds(cart.Select(sci => sci.ProductId).ToArray());
-
             //save selected attributes
             ParseAndSaveCheckoutAttributes(cart, form);
             var attributeXml = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
@@ -1304,26 +1299,29 @@ namespace Nop.Web.Controllers
             //get identifiers of items to remove
             var itemIdsToRemove = form["removefromcart"]
                 .SelectMany(value => value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                .Select(idString => int.TryParse(idString, out int id) ? id : 0)
+                .Select(idString => int.TryParse(idString, out var id) ? id : 0)
                 .Distinct().ToList();
 
+            //TODO: issue-239
             //get order items with changed quantity
             var itemsWithNewQuantity = cart.Select(item => new
             {
                 //try to get a new quantity for the item, set 0 for items to remove
-                NewQuantity = itemIdsToRemove.Contains(item.Id) ? 0 : int.TryParse(form[$"itemquantity{item.Id}"], out int quantity) ? quantity : item.Quantity,
-                Item = item
+                NewQuantity = itemIdsToRemove.Contains(item.Id) ? 0 : int.TryParse(form[$"itemquantity{item.Id}"], out var quantity) ? quantity : item.Quantity,
+                Item = item,
+                Product = _productService.GetProductById(item.ProductId)
             }).Where(item => item.NewQuantity != item.Item.Quantity);
 
             //order cart items
             //first should be items with a reduced quantity and that require other products; or items with an increased quantity and are required for other products
             var orderedCart = itemsWithNewQuantity
                 .OrderByDescending(cartItem =>
-                    (cartItem.NewQuantity < cartItem.Item.Quantity && (cartItem.Item.Product?.RequireOtherProducts ?? false)) ||
+                    (cartItem.NewQuantity < cartItem.Item.Quantity && (cartItem.Product?.RequireOtherProducts ?? false)) ||
                     (cartItem.NewQuantity > cartItem.Item.Quantity &&
-                        cart.Any(item => item.Product != null && item.Product.RequireOtherProducts && _productService.ParseRequiredProductIds(item.Product).Contains(cartItem.Item.ProductId))))
+                    (cartItem.Product != null && _shoppingCartService.GetProductsRequiringProduct(cart, cartItem.Product).Any()) //TODO: issue-239
+                        ))
                 .ToList();
-
+            
             //try to update cart items with new quantities and get warnings
             var warnings = orderedCart.Select(cartItem => new
             {
@@ -1393,9 +1391,10 @@ namespace Nop.Web.Controllers
 
             if (anonymousPermissed || !_customerService.IsGuest(_workContext.CurrentCustomer))
                 return RedirectToRoute("Checkout");
-            
+
+            var cartProductIds = cart.Select(ci => ci.ProductId).ToArray();
             var downloadableProductsRequireRegistration =
-                _customerSettings.RequireRegistrationForDownloadableProducts && cart.Any(sci => sci.Product.IsDownload);
+                _customerSettings.RequireRegistrationForDownloadableProducts && _productService.HasAnyDownloadableProduct(cartProductIds);
 
             if (!_orderSettings.AnonymousCheckoutAllowed || downloadableProductsRequireRegistration)
             {
@@ -1703,8 +1702,10 @@ namespace Nop.Web.Controllers
             {
                 if (allIdsToAdd.Contains(sci.Id))
                 {
+                    var product = _productService.GetProductById(sci.ProductId);
+
                     var warnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
-                        sci.Product, ShoppingCartType.ShoppingCart,
+                        product, ShoppingCartType.ShoppingCart,
                         _storeContext.CurrentStore.Id,
                         sci.AttributesXml, sci.CustomerEnteredPrice,
                         sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, true);

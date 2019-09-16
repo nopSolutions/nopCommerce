@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
@@ -21,11 +21,6 @@ namespace Nop.Data.Mapping.Orders
             builder.HasKey(note => note.Id);
 
             builder.Property(note => note.Note).IsRequired();
-
-            builder.HasOne(note => note.Order)
-                .WithMany(order => order.OrderNotes)
-                .HasForeignKey(note => note.OrderId)
-                .IsRequired();
 
             base.Configure(builder);
         }

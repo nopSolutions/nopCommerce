@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
@@ -20,14 +20,6 @@ namespace Nop.Data.Mapping.Orders
             builder.ToTable(nameof(RecurringPayment));
             builder.HasKey(recurringPayment => recurringPayment.Id);
 
-            builder.HasOne(recurringPayment => recurringPayment.InitialOrder)
-                .WithMany()
-                .HasForeignKey(recurringPayment => recurringPayment.InitialOrderId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Ignore(recurringPayment => recurringPayment.NextPaymentDate);
-            builder.Ignore(recurringPayment => recurringPayment.CyclesRemaining);
             builder.Ignore(recurringPayment => recurringPayment.CyclePeriod);
 
             base.Configure(builder);

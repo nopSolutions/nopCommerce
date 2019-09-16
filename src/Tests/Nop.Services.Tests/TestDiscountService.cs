@@ -33,6 +33,7 @@ namespace Nop.Services.Tests
             IDiscountPluginManager discountPluginManager,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
+            IProductService productService,
             IRepository<Discount> discountRepository,
             IRepository<DiscountRequirement> discountRequirementRepository,
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
@@ -44,6 +45,7 @@ namespace Nop.Services.Tests
             discountPluginManager,
             eventPublisher,
             localizationService,
+            productService,
             discountRepository,
             discountRequirementRepository,
             discountUsageHistoryRepository,
@@ -111,6 +113,8 @@ namespace Nop.Services.Tests
 
             var customerService = new Mock<ICustomerService>();
             var localizationService = new Mock<ILocalizationService>();
+            var productService = new Mock<IProductService>();
+
             var eventPublisher = new Mock<IEventPublisher>();
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
@@ -138,6 +142,7 @@ namespace Nop.Services.Tests
                 discountPluginManager,
                 eventPublisher.Object,
                 localizationService.Object,
+                productService.Object,
                 discountRepo.Object,
                 discountRequirementRepo.Object,
                 discountUsageHistoryRepo.Object,

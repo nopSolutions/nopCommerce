@@ -29,11 +29,6 @@ namespace Nop.Services.Orders
         #endregion
 
         /// <summary>
-        /// Gets customer of order
-        /// </summary>
-        public Customer OrderCustomer => UpdatedOrder?.Customer;
-
-        /// <summary>
         /// The updated order
         /// </summary>
         public Order UpdatedOrder { get; protected set; }

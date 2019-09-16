@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Moq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -77,7 +78,11 @@ namespace Nop.Services.Tests.Orders
         private TaxService _taxService;
         private Mock<IRewardPointService> _rewardPointService;
         private OrderTotalCalculationService _orderTotalCalcService;
-        private Mock<IOrderService> _orderService;
+
+        private IOrderService _orderService;
+        private Mock<IRepository<RecurringPayment>> _recurringPaymentRepository;
+        private Mock<IRepository<RecurringPaymentHistory>> _recurringPaymentHistoryRepository;
+
         private Mock<IWebHelper> _webHelper;
         private Mock<ILanguageService> _languageService;
         private Mock<IPriceFormatter> _priceFormatter;
@@ -104,7 +109,7 @@ namespace Nop.Services.Tests.Orders
         public new void SetUp()
         {
             _productService = new Mock<IProductService>();
-            _storeContext = new Mock<IStoreContext>();
+            
             _discountService = new Mock<IDiscountService>();
             _categoryService = new Mock<ICategoryService>();
             _manufacturerService = new Mock<IManufacturerService>();
@@ -124,7 +129,6 @@ namespace Nop.Services.Tests.Orders
             _eventPublisher = new Mock<IEventPublisher>();
             _addressService = new Mock<IAddressService>();
             _rewardPointService = new Mock<IRewardPointService>();
-            _orderService = new Mock<IOrderService>();
             _webHelper = new Mock<IWebHelper>();
             _languageService = new Mock<ILanguageService>();
             _priceFormatter = new Mock<IPriceFormatter>();
@@ -143,17 +147,18 @@ namespace Nop.Services.Tests.Orders
             _customNumberFormatter = new Mock<ICustomNumberFormatter>();
             _rewardPointService = new Mock<IRewardPointService>();
 
+
             _workContext = null;
 
-            _store = new Store { Id = 1 };
+            //setup
 
+            _storeContext = new Mock<IStoreContext>();
+            _store = new Store { Id = 1 };
             _storeContext.Setup(x => x.CurrentStore).Returns(_store);
 
-            _shoppingCartSettings = new ShoppingCartSettings();
+            
             _catalogSettings = new CatalogSettings();
-
             var cacheManager = new TestCacheManager();
-
             _currencySettings = new CurrencySettings();
 
             //price calculation service
@@ -171,6 +176,7 @@ namespace Nop.Services.Tests.Orders
             _shippingPluginManager = new ShippingPluginManager(pluginService, _shippingSettings);
             _taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
 
+            _shoppingCartSettings = new ShoppingCartSettings();
             //shipping
             _shippingSettings = new ShippingSettings
             {
@@ -186,6 +192,7 @@ namespace Nop.Services.Tests.Orders
                 cacheManager,
                 _checkoutAttributeParser.Object,
                 _countryService.Object,
+                _customerService.Object,
                 _eventPublisher.Object,
                 _genericAttributeService.Object,
                 _localizationService.Object,
@@ -231,14 +238,30 @@ namespace Nop.Services.Tests.Orders
 
             _rewardPointsSettings = new RewardPointsSettings();
 
+            _recurringPaymentRepository = new Mock<IRepository<RecurringPayment>>();
+            var recurringPayments = new List<RecurringPayment>();
+            _recurringPaymentRepository.Setup(r => r.Insert(It.IsAny<RecurringPayment>())).Callback((RecurringPayment rph) => recurringPayments.Add(rph));
+            _recurringPaymentRepository.Setup(r => r.Table).Returns(recurringPayments.AsQueryable());
+
+            _recurringPaymentHistoryRepository = new Mock<IRepository<RecurringPaymentHistory>>();
+            var recurringPaymentHistory = new List<RecurringPaymentHistory>();
+            _recurringPaymentHistoryRepository.Setup(r => r.Insert(It.IsAny<RecurringPaymentHistory>())).Callback((RecurringPaymentHistory rph) => recurringPaymentHistory.Add(rph));
+            _recurringPaymentHistoryRepository.Setup(r => r.Table).Returns(recurringPaymentHistory.AsQueryable());
+
+            _orderService = new OrderService(_eventPublisher.Object, null, null, null, null,null, null, null, _recurringPaymentRepository.Object, _recurringPaymentHistoryRepository.Object, _shipmentService.Object);
+            
+
             _orderTotalCalcService = new OrderTotalCalculationService(_catalogSettings,
+                _addressService.Object,
                 _checkoutAttributeParser.Object,
                 _customerService.Object,
                 _discountService.Object,
                 _genericAttributeService.Object,
                 _giftCardService.Object,
+                _orderService,
                 _paymentService.Object,
                 _priceCalcService,
+                _productService.Object,
                 _rewardPointService.Object,
                 _shippingPluginManager,
                 _shippingService,
@@ -265,6 +288,7 @@ namespace Nop.Services.Tests.Orders
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
             _orderProcessingService = new OrderProcessingService(_currencySettings,
+                _addressService.Object,
                 _affiliateService.Object,
                 _checkoutAttributeFormatter.Object,
                 _countryService.Object,
@@ -280,7 +304,7 @@ namespace Nop.Services.Tests.Orders
                 _languageService.Object,
                 _localizationService.Object,
                 _logger,
-                _orderService.Object,
+                _orderService,
                 _orderTotalCalcService,
                 _paymentPluginManager,
                 _paymentService.Object,
@@ -714,6 +738,184 @@ namespace Nop.Services.Tests.Orders
 
                         _orderProcessingService.CanPartiallyRefundOffline(order, 80).ShouldBeFalse();
                     }
+        }
+
+        //RecurringPaymentHistory
+        [Test]
+        public void Can_calculate_nextPaymentDate_with_days_as_cycle_period()
+        {
+            var rp = new RecurringPayment
+            {
+                Id = 1,
+                CycleLength = 7,
+                CyclePeriod = RecurringProductCyclePeriod.Days,
+                TotalCycles = 3,
+                StartDateUtc = new DateTime(2010, 3, 1),
+                CreatedOnUtc = new DateTime(2010, 1, 1),
+                IsActive = true,
+            };
+
+            _orderService.InsertRecurringPayment(rp);
+
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 3, 1));
+
+            //add one history record
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 3, 8));
+
+            //add one more history record
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 3, 15));
+
+            //add one more history record
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldBeNull();
+        }
+
+        [Test]
+        public void Can_calculate_nextPaymentDate_with_weeks_as_cycle_period()
+        {
+            var rp = new RecurringPayment
+            {
+                Id = 2,
+                CycleLength = 2,
+                CyclePeriod = RecurringProductCyclePeriod.Weeks,
+                TotalCycles = 3,
+                StartDateUtc = new DateTime(2010, 3, 1),
+                CreatedOnUtc = new DateTime(2010, 1, 1),
+                IsActive = true,
+            };
+
+            _orderService.InsertRecurringPayment(rp);
+
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 3, 1));
+
+            //add one history record
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 3, 15));
+            //add one more history record
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 3, 29));
+            //add one more history record
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldBeNull();
+        }
+
+        [Test]
+        public void Can_calculate_nextPaymentDate_with_months_as_cycle_period()
+        {
+            var rp = new RecurringPayment
+            {
+                Id = 3,
+                CycleLength = 2,
+                CyclePeriod = RecurringProductCyclePeriod.Months,
+                TotalCycles = 3,
+                StartDateUtc = new DateTime(2010, 3, 1),
+                CreatedOnUtc = new DateTime(2010, 1, 1),
+                IsActive = true,
+            };
+
+            _orderService.InsertRecurringPayment(rp);
+
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 3, 1));
+
+            //add one history record
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 5, 1));
+            //add one more history record
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 7, 1));
+            //add one more history record
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldBeNull();
+        }
+
+        [Test]
+        public void Can_calculate_nextPaymentDate_with_years_as_cycle_period()
+        {
+            var rp = new RecurringPayment
+            {
+                Id = 4,
+                CycleLength = 2,
+                CyclePeriod = RecurringProductCyclePeriod.Years,
+                TotalCycles = 3,
+                StartDateUtc = new DateTime(2010, 3, 1),
+                CreatedOnUtc = new DateTime(2010, 1, 1),
+                IsActive = true,
+            };
+
+            _orderService.InsertRecurringPayment(rp);
+
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 3, 1));
+
+            //add one history record
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2012, 3, 1));
+            //add one more history record
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2014, 3, 1));
+            //add one more history record
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldBeNull();
+        }
+
+        [Test]
+        public void Next_payment_date_is_null_when_recurring_payment_is_not_active()
+        {
+            var rp = new RecurringPayment
+            {
+                Id = 5,
+                CycleLength = 7,
+                CyclePeriod = RecurringProductCyclePeriod.Days,
+                TotalCycles = 3,
+                StartDateUtc = new DateTime(2010, 3, 1),
+                CreatedOnUtc = new DateTime(2010, 1, 1),
+                IsActive = false,
+            };
+
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldBeNull();
+
+            //add one history record
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldBeNull();
+            //add one more history record
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldBeNull();
+            //add one more history record
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
+            _orderProcessingService.GetNextPaymentDate(rp).ShouldBeNull();
+        }
+
+        [Test]
+        public void Can_calculate_number_of_remaining_cycle()
+        {
+            var rp = new RecurringPayment
+            {
+                Id = 6,
+                CycleLength = 2,
+                CyclePeriod = RecurringProductCyclePeriod.Days,
+                TotalCycles = 3,
+                StartDateUtc = new DateTime(2010, 3, 1),
+                CreatedOnUtc = new DateTime(2010, 1, 1),
+                IsActive = true,
+            };
+
+            _orderService.InsertRecurringPayment(rp);
+
+            _orderProcessingService.GetCyclesRemaining(rp).ShouldEqual(3);
+
+            //add one history record
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
+            _orderProcessingService.GetCyclesRemaining(rp).ShouldEqual(2);
+            //add one more history record
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
+            _orderProcessingService.GetCyclesRemaining(rp).ShouldEqual(1);
+            //add one more history record
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
+            _orderProcessingService.GetCyclesRemaining(rp).ShouldEqual(0);
+            //add one more history record
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
+            _orderProcessingService.GetCyclesRemaining(rp).ShouldEqual(0);
         }
 
         //TODO write unit tests for the following methods:

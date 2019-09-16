@@ -767,7 +767,9 @@ namespace Nop.Web.Factories
                         //display price if allowed
                         if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                         {
-                            var attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue, updatecartitem?.Customer ?? _workContext.CurrentCustomer);
+                            var customer = updatecartitem?.CustomerId is null ? _workContext.CurrentCustomer : _customerService.GetCustomerById(updatecartitem.CustomerId);
+
+                            var attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue, customer);
                             var priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, out var _);
                             var priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
 

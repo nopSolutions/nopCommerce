@@ -17,6 +17,20 @@ namespace Nop.Services.Vendors
         Vendor GetVendorById(int vendorId);
 
         /// <summary>
+        /// Gets a vendors by product identifiers
+        /// </summary>
+        /// <param name="productIds">Array of product identifiers</param>
+        /// <returns>Vendors</returns>
+        IList<Vendor> GetVendorsByProductIds(int[] productIds);
+
+        /// <summary>
+        /// Gets a vendor by product identifier
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <returns>Vendor</returns>
+        Vendor GetVendorByProductId(int productId);
+
+        /// <summary>
         /// Delete a vendor
         /// </summary>
         /// <param name="vendor">Vendor</param>

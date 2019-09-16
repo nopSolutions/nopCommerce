@@ -330,6 +330,21 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
+        /// Gets customer for shopping cart
+        /// </summary>
+        /// <param name="shoppingCart">Shopping cart</param>
+        /// <returns>Result</returns>
+        public virtual Customer GetShoppingCartCustomer(IList<ShoppingCartItem> shoppingCart)
+        {
+            var customerId = shoppingCart.FirstOrDefault()?.CustomerId;
+
+            if ((customerId ?? 0) == 0)
+                return null;
+
+            return GetCustomerById(customerId.Value);
+        }
+
+        /// <summary>
         /// Delete a customer
         /// </summary>
         /// <param name="customer">Customer</param>
@@ -1060,8 +1075,9 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException(nameof(customer));
 
             var query = from cr in _customerRoleRepository.Table
-                        join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerId
-                        where showHidden || cr.Active
+                        join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerRoleId
+                        where crm.CustomerId == customer.Id && 
+                        (showHidden || cr.Active)
                         select cr.Id;
 
             return query.ToArray();
@@ -1079,8 +1095,9 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException(nameof(customer));
 
             var query = from cr in _customerRoleRepository.Table
-                        join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerId
-                        where showHidden || cr.Active
+                        join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerRoleId
+                        where crm.CustomerId == customer.Id && 
+                        (showHidden || cr.Active)
                         select cr;
 
             return query.ToList();

@@ -148,7 +148,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 returnRequest = model.ToEntity(returnRequest);
                 returnRequest.UpdatedOnUtc = DateTime.UtcNow;
-                _customerService.UpdateCustomer(returnRequest.Customer);
+                //TODO: issue-239 _customerService.UpdateCustomer(returnRequest.Customer);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditReturnRequest",
@@ -179,13 +179,15 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
-            if (orderItem == null)
+            if (orderItem is null)
             {
                 _notificationService.ErrorNotification(_localizationService.GetResource("Admin.ReturnRequests.OrderItemDeleted"));
                 return RedirectToAction("Edit", new { id = returnRequest.Id });
             }
 
-            var queuedEmailIds = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, orderItem.Order.CustomerLanguageId);
+            var order = _orderService.GetOrderById(orderItem.OrderId);
+
+            var queuedEmailIds = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, order);
             if (queuedEmailIds.Any())
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Notified"));
 

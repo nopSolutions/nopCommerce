@@ -14,6 +14,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
@@ -44,6 +45,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
+        private readonly IAddressService _addressService;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICategoryService _categoryService;
         private readonly ICurrencyService _currencyService;
@@ -84,6 +86,7 @@ namespace Nop.Web.Areas.Admin.Factories
         public ProductModelFactory(CatalogSettings catalogSettings,
             CurrencySettings currencySettings,
             IAclSupportedModelFactory aclSupportedModelFactory,
+            IAddressService addressService,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICategoryService categoryService,
             ICurrencyService currencyService,
@@ -120,6 +123,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _catalogSettings = catalogSettings;
             _currencySettings = currencySettings;
             _aclSupportedModelFactory = aclSupportedModelFactory;
+            _addressService = addressService;
             _baseAdminModelFactory = baseAdminModelFactory;
             _cacheManager = cacheManager;
             _categoryService = categoryService;
@@ -1622,11 +1626,13 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 return orders.Select(order =>
                 {
+                    var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+
                     //fill in model values from the entity
                     var orderModel = new OrderModel
                     {
                         Id = order.Id,
-                        CustomerEmail = order.BillingAddress.Email,
+                        CustomerEmail = billingAddress.Email,
                         CustomOrderNumber = order.CustomOrderNumber
                     };
 

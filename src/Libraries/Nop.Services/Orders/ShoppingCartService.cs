@@ -152,7 +152,7 @@ namespace Nop.Services.Orders
                 return false;
 
             //gift cards
-            if (shoppingCartItem.Product.IsGiftCard)
+            if (product.IsGiftCard)
             {
                 _productAttributeParser.GetGiftCardAttribute(attributesXml, out var giftCardRecipientName1, out var _, out var giftCardSenderName1, out var _, out var _);
 
@@ -165,7 +165,7 @@ namespace Nop.Services.Orders
             }
 
             //price is the same (for products which require customers to enter a price)
-            if (shoppingCartItem.Product.CustomerEntersPrice)
+            if (product.CustomerEntersPrice)
             {
                 //TODO should we use PriceCalculationService.RoundPrice here?
                 var customerEnteredPricesEqual = Math.Round(shoppingCartItem.CustomerEnteredPrice, 2) == Math.Round(customerEnteredPrice, 2);
@@ -173,7 +173,7 @@ namespace Nop.Services.Orders
                     return false;
             }
             
-            if (!shoppingCartItem.Product.IsRental) 
+            if (!product.IsRental) 
                 return true;
 
             //rental products
@@ -208,20 +208,20 @@ namespace Nop.Services.Orders
             if (shoppingCartItem == null)
                 throw new ArgumentNullException(nameof(shoppingCartItem));
 
-            var customer = shoppingCartItem.Customer;
+            var customer = _customerService.GetCustomerById(shoppingCartItem.CustomerId);
             var storeId = shoppingCartItem.StoreId;
 
             //reset checkout data
             if (resetCheckoutData)
             {
-                _customerService.ResetCheckoutData(shoppingCartItem.Customer, shoppingCartItem.StoreId);
+                _customerService.ResetCheckoutData(customer, shoppingCartItem.StoreId);
             }
 
             //delete item
             _sciRepository.Delete(shoppingCartItem);
 
             //reset "HasShoppingCartItems" property used for performance optimization
-            customer.HasShoppingCartItems = IsCustomerShoppingCartEmpty(customer);
+            customer.HasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
             _customerService.UpdateCustomer(customer);
 
             //validate checkout attributes
@@ -294,6 +294,34 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Get products from shopping cart whether requiring specific product
+        /// </summary>
+        /// <param name="cart">Shopping cart </param>
+        /// <param name="product">Product</param>
+        /// <returns>Result</returns>
+        public virtual IEnumerable<Product> GetProductsRequiringProduct(IList<ShoppingCartItem> cart, Product product)
+        {
+            if (cart is null)
+                throw new ArgumentNullException(nameof(cart));
+
+            if (product is null)
+                throw new ArgumentNullException(nameof(product));
+
+            if (cart.Count == 0)
+                yield break;
+
+            var productIds = cart.Select(ci => ci.ProductId).ToArray();
+
+            var cartProducts = _productService.GetProductsByIds(productIds);
+
+            foreach (var cartProduct in cartProducts)
+            {
+                if (!cartProduct.RequireOtherProducts && _productService.ParseRequiredProductIds(cartProduct).Contains(product.Id))
+                    yield return cartProduct;
+            }
+        }
+
+        /// <summary>
         /// Validates required products (products which require some other products to be added to the cart)
         /// </summary>
         /// <param name="customer">Customer</param>
@@ -321,10 +349,12 @@ namespace Nop.Services.Orders
             //get customer shopping cart
             var cart = GetShoppingCart(customer, shoppingCartType, storeId);
 
+            var productsRequiringProduct = GetProductsRequiringProduct(cart, product); //TODO: issue-239
+
             //whether other cart items require the passed product
-            var passedProductRequiredQuantity = cart
-                .Where(item => item.Product.RequireOtherProducts && _productService.ParseRequiredProductIds(item.Product).Contains(product.Id))
+            var passedProductRequiredQuantity = cart.Where(ci => productsRequiringProduct.Any(p => p.Id == ci.ProductId))
                 .Sum(item => item.Quantity * requiredProductQuantity);
+
             if (passedProductRequiredQuantity > quantity)
                 warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.RequiredProductUpdateWarning"), passedProductRequiredQuantity));
 
@@ -342,11 +372,14 @@ namespace Nop.Services.Orders
             var warningLocale = _localizationService.GetResource("ShoppingCart.RequiredProductWarning");
             foreach (var requiredProduct in requiredProducts)
             {
+                var productsRequiringRequiredProduct = GetProductsRequiringProduct(cart, requiredProduct);
+                
                 //get the required quantity of the required product
-                var requiredProductRequiredQuantity = quantity * requiredProductQuantity + cart
-                    .Where(item => item.Product.RequireOtherProducts && _productService.ParseRequiredProductIds(item.Product).Contains(requiredProduct.Id))
-                    .Where(item => item.Id != shoppingCartItemId)
-                    .Sum(item => item.Quantity * requiredProductQuantity);
+                var requiredProductRequiredQuantity = quantity * requiredProductQuantity +
+
+                    cart.Where(ci => productsRequiringRequiredProduct.Any(p => p.Id == ci.ProductId))
+                        .Where(item => item.Id != shoppingCartItemId)
+                        .Sum(item => item.Quantity * requiredProductQuantity);
 
                 //whether required product is already in the cart in the required quantity
                 var quantityToAdd = requiredProductRequiredQuantity - (cart.FirstOrDefault(item => item.ProductId == requiredProduct.Id)?.Quantity ?? 0);
@@ -999,7 +1032,7 @@ namespace Nop.Services.Orders
 
             foreach (var sci in shoppingCart)
             {
-                var product = sci.Product;
+                var product = _productService.GetProductById(sci.ProductId);
                 if (product == null)
                 {
                     warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.CannotLoadProduct"), sci.ProductId));
@@ -1223,8 +1256,12 @@ namespace Nop.Services.Orders
             if (shoppingCartItem == null)
                 throw new ArgumentNullException(nameof(shoppingCartItem));
 
-            return GetUnitPrice(shoppingCartItem.Product,
-                shoppingCartItem.Customer,
+            //TODO: issue-239
+            var customer = _customerService.GetCustomerById(shoppingCartItem.CustomerId);
+            var product = _productService.GetProductById(shoppingCartItem.ProductId);
+
+            return GetUnitPrice(product,
+                customer,
                 shoppingCartItem.ShoppingCartType,
                 shoppingCartItem.Quantity,
                 shoppingCartItem.AttributesXml,
@@ -1490,7 +1527,7 @@ namespace Nop.Services.Orders
                 {
                     ShoppingCartType = shoppingCartType,
                     StoreId = storeId,
-                    Product = product,
+                    ProductId = product.Id,
                     AttributesXml = attributesXml,
                     CustomerEnteredPrice = customerEnteredPrice,
                     Quantity = quantity,
@@ -1549,11 +1586,13 @@ namespace Nop.Services.Orders
                 _customerService.ResetCheckoutData(customer, shoppingCartItem.StoreId);
             }
 
+            var product = _productService.GetProductById(shoppingCartItem.ProductId);
+
             if (quantity > 0)
             {
                 //check warnings
                 warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartItem.ShoppingCartType,
-                    shoppingCartItem.Product, shoppingCartItem.StoreId,
+                    product, shoppingCartItem.StoreId,
                     attributesXml, customerEnteredPrice,
                     rentalStartDate, rentalEndDate, quantity, false, shoppingCartItemId));
                 if (warnings.Any())
@@ -1575,7 +1614,7 @@ namespace Nop.Services.Orders
             {
                 //check warnings for required products
                 warnings.AddRange(GetRequiredProductWarnings(customer, shoppingCartItem.ShoppingCartType,
-                    shoppingCartItem.Product, shoppingCartItem.StoreId, quantity, false, shoppingCartItemId));
+                    product, shoppingCartItem.StoreId, quantity, false, shoppingCartItemId));
                 if (warnings.Any())
                     return warnings;
 
@@ -1608,7 +1647,9 @@ namespace Nop.Services.Orders
             for (var i = 0; i < fromCart.Count; i++)
             {
                 var sci = fromCart[i];
-                AddToCart(toCustomer, sci.Product, sci.ShoppingCartType, sci.StoreId,
+                var product = _productService.GetProductById(sci.ProductId);
+
+                AddToCart(toCustomer, product, sci.ShoppingCartType, sci.StoreId,
                     sci.AttributesXml, sci.CustomerEnteredPrice,
                     sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false);
             }
@@ -1656,7 +1697,13 @@ namespace Nop.Services.Orders
         /// <returns>Result</returns>
         public virtual bool ShoppingCartIsRecurring(IList<ShoppingCartItem> shoppingCart)
         {
-            return shoppingCart.Any(item => item.Product?.IsRecurring ?? false);
+            if (shoppingCart is null)
+                throw new ArgumentNullException(nameof(shoppingCart));
+
+            if (!shoppingCart.Any())
+                return false;
+
+            return _productService.HasAnyRecurringProduct(shoppingCart.Select(sci => sci.ProductId).ToArray());
         }
 
         /// <summary>
@@ -1680,7 +1727,7 @@ namespace Nop.Services.Orders
 
             foreach (var sci in shoppingCart)
             {
-                var product = sci.Product;
+                var product = _productService.GetProductById(sci.ProductId);
                 if (product == null)
                 {
                     throw new NopException($"Product (Id={sci.ProductId}) cannot be loaded");

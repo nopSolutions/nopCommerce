@@ -1001,15 +1001,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 //fill in model values from the entity
                 var shoppingCartItemModel = item.ToModel<ShoppingCartItemModel>();
 
+                var product = _productService.GetProductById(item.ProductId);
+
                 //fill in additional values (not existing in the entity)
-                shoppingCartItemModel.ProductName = item.Product.Name;
+                shoppingCartItemModel.ProductName = product.Name;
                 shoppingCartItemModel.Store = _storeService.GetStoreById(item.StoreId)?.Name ?? "Unknown";
                 shoppingCartItemModel.AttributeInfo =
-                    _productAttributeFormatter.FormatAttributes(item.Product, item.AttributesXml);
+                    _productAttributeFormatter.FormatAttributes(product, item.AttributesXml);
                 shoppingCartItemModel.UnitPrice = _priceFormatter.FormatPrice(
-                    _taxService.GetProductPrice(item.Product, _shoppingCartService.GetUnitPrice(item), out var _));
+                    _taxService.GetProductPrice(product, _shoppingCartService.GetUnitPrice(item), out var _));
                 shoppingCartItemModel.Total = _priceFormatter.FormatPrice(
-                    _taxService.GetProductPrice(item.Product, _shoppingCartService.GetSubTotal(item), out _));
+                    _taxService.GetProductPrice(product, _shoppingCartService.GetSubTotal(item), out _));
                 //convert dates to the user time
                 shoppingCartItemModel.UpdatedOn =
                     _dateTimeHelper.ConvertToUserTime(item.UpdatedOnUtc, DateTimeKind.Utc);

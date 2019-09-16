@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
@@ -19,11 +19,6 @@ namespace Nop.Data.Mapping.Orders
         {
             builder.ToTable(nameof(RecurringPaymentHistory));
             builder.HasKey(historyEntry => historyEntry.Id);
-
-            builder.HasOne(historyEntry => historyEntry.RecurringPayment)
-                .WithMany(recurringPayment => recurringPayment.RecurringPaymentHistory)
-                .HasForeignKey(historyEntry => historyEntry.RecurringPaymentId)
-                .IsRequired();
 
             base.Configure(builder);
         }

@@ -107,7 +107,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     logModel.LogLevel = _localizationService.GetLocalizedEnum(logItem.LogLevel);
                     logModel.ShortMessage = HtmlHelper.FormatText(logItem.ShortMessage, false, true, false, false, false, false);
                     logModel.FullMessage = string.Empty;
-                    logModel.CustomerEmail = _customerService.GetCustomerById(logItem.CustomerId.Value)?.Email ?? string.Empty;
+                    logModel.CustomerEmail = _customerService.GetCustomerById(logItem.CustomerId ?? 0)?.Email ?? string.Empty;
 
                     return logModel;
                 });

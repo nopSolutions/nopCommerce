@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Shipping.Tracking;
 
@@ -29,6 +30,7 @@ namespace Nop.Services.Shipping
         /// <param name="shippingCity">Shipping city; null to load all records</param>
         /// <param name="trackingNumber">Search by tracking number</param>
         /// <param name="loadNotShipped">A value indicating whether we should load only not shipped shipments</param>
+        /// <param name="orderId">Order identifier; 0 to load all records</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="pageIndex">Page index</param>
@@ -41,6 +43,7 @@ namespace Nop.Services.Shipping
             string shippingCity = null,
             string trackingNumber = null,
             bool loadNotShipped = false,
+            int orderId = 0,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
@@ -57,6 +60,15 @@ namespace Nop.Services.Shipping
         /// <param name="shipmentId">Shipment identifier</param>
         /// <returns>Shipment</returns>
         Shipment GetShipmentById(int shipmentId);
+
+        /// <summary>
+        /// Gets a list of order shipments
+        /// </summary>
+        /// <param name="orderId">Order identifier</param>
+        /// <param name="shipped">A value indicating whether to count only shipped or not shipped shipments; pass null to ignore</param>
+        /// <param name="vendorId">Vendor identifier; pass 0 to ignore</param>
+        /// <returns>Result</returns>
+        IList<Shipment> GetShipmentsByOrderId(int orderId, bool? shipped = null, int vendorId = 0);
 
         /// <summary>
         /// Inserts a shipment

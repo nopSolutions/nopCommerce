@@ -22,11 +22,6 @@ namespace Nop.Data.Mapping.Orders
 
             builder.Property(item => item.CustomerEnteredPrice).HasColumnType("decimal(18, 4)");
 
-            builder.HasOne(item => item.Product)
-                .WithMany()
-                .HasForeignKey(item => item.ProductId)
-                .IsRequired();
-
             builder.Ignore(item => item.ShoppingCartType);
 
             base.Configure(builder);

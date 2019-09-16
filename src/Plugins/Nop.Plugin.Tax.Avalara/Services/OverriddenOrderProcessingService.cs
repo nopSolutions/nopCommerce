@@ -54,6 +54,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IPaymentService _paymentService;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IProductService _productService;
         private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -69,6 +70,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         #region Ctor
 
         public OverriddenOrderProcessingService(CurrencySettings currencySettings,
+            IAddressService addressService,
             IAffiliateService affiliateService,
             ICheckoutAttributeFormatter checkoutAttributeFormatter,
             ICountryService countryService,
@@ -113,6 +115,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
             TaxSettings taxSettings) : base(currencySettings,
+                addressService,
                 affiliateService,
                 checkoutAttributeFormatter,
                 countryService,
@@ -171,6 +174,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             _orderTotalCalculationService = orderTotalCalculationService;
             _paymentService = paymentService;
             _priceFormatter = priceFormatter;
+            _productService = productService;
             _shippingPluginManager = shippingPluginManager;
             _shoppingCartService = shoppingCartService;
             _stateProvinceService = stateProvinceService;
@@ -255,8 +259,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
             //validate individual cart items
             foreach (var sci in details.Cart)
             {
+                var product = _productService.GetProductById(sci.ProductId);
+
                 var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(details.Customer,
-                    sci.ShoppingCartType, sci.Product, processPaymentRequest.StoreId, sci.AttributesXml,
+                    sci.ShoppingCartType, product, processPaymentRequest.StoreId, sci.AttributesXml,
                     sci.CustomerEnteredPrice, sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false, sci.Id);
                 if (sciWarnings.Any())
                     throw new NopException(sciWarnings.Aggregate(string.Empty, (current, next) => $"{current}{next};"));

@@ -34,6 +34,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILocalizationService _localizationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
+        private readonly IProductService _productService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreService _storeService;
         private readonly ITaxService _taxService;
@@ -50,6 +51,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizationService localizationService,
             IPriceFormatter priceFormatter,
             IProductAttributeFormatter productAttributeFormatter,
+            IProductService productService,
             IShoppingCartService shoppingCartService,
             IStoreService storeService,
             ITaxService taxService)
@@ -62,6 +64,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _localizationService = localizationService;
             _priceFormatter = priceFormatter;
             _productAttributeFormatter = productAttributeFormatter;
+            _productService = productService;
             _shoppingCartService = shoppingCartService;
             _storeService = storeService;
             _taxService = taxService;
@@ -186,6 +189,15 @@ namespace Nop.Web.Areas.Admin.Factories
             //get shopping cart items
             var items = _shoppingCartService.GetShoppingCart(customer, searchModel.ShoppingCartType,
                 searchModel.StoreId, searchModel.ProductId, searchModel.StartDate, searchModel.EndDate).ToPagedList(searchModel);
+            
+            var isSearchProduct = searchModel.ProductId > 0;
+
+            Product product = null;
+
+            if (isSearchProduct)
+            {
+                product = _productService.GetProductById(searchModel.ProductId) ?? throw new Exception("Product is not found");
+            }
 
             //prepare list model
             var model = new ShoppingCartItemListModel().PrepareToGrid(searchModel, items, () =>
@@ -195,19 +207,22 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in model values from the entity
                     var itemModel = item.ToModel<ShoppingCartItemModel>();
 
+                    if (!isSearchProduct)
+                        product = _productService.GetProductById(item.ProductId);
+
                     //convert dates to the user time
                     itemModel.UpdatedOn = _dateTimeHelper.ConvertToUserTime(item.UpdatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
                     itemModel.Store = _storeService.GetStoreById(item.StoreId)?.Name ?? "Deleted";
-                    itemModel.AttributeInfo = _productAttributeFormatter.FormatAttributes(item.Product, item.AttributesXml, item.Customer);
+                    itemModel.AttributeInfo = _productAttributeFormatter.FormatAttributes(product, item.AttributesXml, customer);
                     var unitPrice = _shoppingCartService.GetUnitPrice(item);
-                    itemModel.UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, unitPrice, out var _));
+                    itemModel.UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(product, unitPrice, out var _));
                     var subTotal = _shoppingCartService.GetSubTotal(item);
-                    itemModel.Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, subTotal, out _));
+                    itemModel.Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(product, subTotal, out _));
 
                     //set product name since it does not survive mapping
-                    itemModel.ProductName = item?.Product?.Name;
+                    itemModel.ProductName = product.Name;
 
                     return itemModel;
                 });

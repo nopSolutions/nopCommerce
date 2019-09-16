@@ -318,14 +318,16 @@ namespace Nop.Plugin.Payments.Qualpay.Services
             }
 
             //create transaction items from shopping cart items
-            items.AddRange(shoppingCart.Where(shoppingCartItem => shoppingCartItem.Product != null).Select(shoppingCartItem =>
+            items.AddRange(shoppingCart.Where(shoppingCartItem => shoppingCartItem.ProductId != 0).Select(shoppingCartItem =>
             {
-                //item price
-                var price = _taxService.GetProductPrice(shoppingCartItem.Product,
-                    _shoppingCartService.GetUnitPrice(shoppingCartItem), false, shoppingCartItem.Customer, out _);
+                var product = _productService.GetProductById(shoppingCartItem.ProductId);
 
-                return createItem(price, shoppingCartItem.Product.Name,
-                    _productService.FormatSku(shoppingCartItem.Product, shoppingCartItem.AttributesXml),
+                //item price
+                var price = _taxService.GetProductPrice(product,
+                    _shoppingCartService.GetUnitPrice(shoppingCartItem), false, customer, out _);
+
+                return createItem(price, product.Name,
+                    _productService.FormatSku(product, shoppingCartItem.AttributesXml),
                     shoppingCartItem.Quantity);
             }));
 
@@ -336,11 +338,17 @@ namespace Nop.Plugin.Payments.Qualpay.Services
             if (!string.IsNullOrEmpty(checkoutAttributesXml))
             {
                 var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
-                items.AddRange(attributeValues.Where(attributeValue => attributeValue.CheckoutAttribute != null).Select(attributeValue =>
-                {
-                    return createItem(_taxService.GetCheckoutAttributePrice(attributeValue, false, customer),
-                        $"{attributeValue.CheckoutAttribute.Name} ({attributeValue.Name})", "checkout");
-                }));
+
+                items.AddRange(
+                    attributeValues
+                    .Where(ta => ta.attribute != null)
+                    .SelectMany(ta => 
+                        ta.values
+                            .Select(attributeValue => 
+                                createItem(
+                                    _taxService.GetCheckoutAttributePrice(ta.attribute, attributeValue, false, customer), 
+                                    $"{ta.attribute.Name} ({attributeValue.Name})", 
+                                    "checkout"))));
             }
 
             //create transaction item for payment method additional fee

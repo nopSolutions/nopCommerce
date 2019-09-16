@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
@@ -23,10 +23,6 @@ namespace Nop.Data.Mapping.Orders
             builder.Property(giftCard => giftCard.Amount).HasColumnType("decimal(18, 4)");
 
             builder.Ignore(giftCard => giftCard.GiftCardType);
-
-            builder.HasOne(giftCard => giftCard.PurchasedWithOrderItem)
-                .WithMany(orderItem => orderItem.AssociatedGiftCards)
-                .HasForeignKey(giftCard => giftCard.PurchasedWithOrderItemId);
 
             base.Configure(builder);
         }

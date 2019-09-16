@@ -9,6 +9,7 @@ using Nop.Services.Tests.Discounts;
 using Nop.Services.Tests.Payments;
 using Nop.Services.Tests.Shipping;
 using Nop.Services.Tests.Tax;
+using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests
@@ -16,8 +17,15 @@ namespace Nop.Services.Tests
     [TestFixture]
     public abstract class ServiceTest
     {
+        protected readonly FakeDataStore _fakeDataStore = new FakeDataStore();
+
         [SetUp]
-        public void SetUp()
+        public virtual void SetUp()
+        {
+
+        }
+
+        public ServiceTest()
         {
             //init plugins
             InitPlugins();

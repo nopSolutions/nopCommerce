@@ -18,6 +18,7 @@ using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
 using Nop.Services.Authentication;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
@@ -30,6 +31,7 @@ using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Seo;
+using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
@@ -69,6 +71,7 @@ namespace Nop.Services.Tests.ExportImport
         private Mock<ICustomerAttributeFormatter> _customerAttributeFormatter;
         private Mock<IOrderService> _orderService;
         private Mock<ICountryService> _countryService;
+        private Mock<IShipmentService> _shipmentService;
         private Mock<IStateProvinceService> _stateProvinceService;
         private Mock<IPriceFormatter> _priceFormatter;
         private Mock<IProductService> _productService;
@@ -78,6 +81,7 @@ namespace Nop.Services.Tests.ExportImport
         private CustomerSettings _customerSettings;
         private Mock<IDateTimeHelper> _dateTimeHelper;
         private AddressSettings _addressSettings;
+        private Mock<IAddressService> _addressService;
         private Mock<ICurrencyService> _currencyService;
         private Mock<IUrlRecordService> _urlRecordService;
 
@@ -112,6 +116,7 @@ namespace Nop.Services.Tests.ExportImport
 
             _orderService = new Mock<IOrderService>();
             _countryService = new Mock<ICountryService>();
+            _shipmentService = new Mock<IShipmentService>();
             _stateProvinceService = new Mock<IStateProvinceService>();
             _priceFormatter = new Mock<IPriceFormatter>();
             _productService = new Mock<IProductService>();
@@ -122,6 +127,11 @@ namespace Nop.Services.Tests.ExportImport
             _customerSettings = new CustomerSettings();
             _dateTimeHelper = new Mock<IDateTimeHelper>();
             _addressSettings = new AddressSettings();
+            _addressService = new Mock<IAddressService>();
+
+            _addressService.Setup(s => s.GetAddressById(It.Is<int>(id => id == TestBillingAddress.Id))).Returns(TestBillingAddress);
+            _addressService.Setup(s => s.GetAddressById(It.Is<int>(id => id == TestShippingAddress.Id))).Returns(TestShippingAddress);
+
             _currencyService = new Mock<ICurrencyService>();
             _urlRecordService = new Mock<IUrlRecordService>();
 
@@ -158,6 +168,7 @@ namespace Nop.Services.Tests.ExportImport
                 _catalogSettings,
                 _customerSettings,
                 _forumSettings,
+                _addressService.Object,
                 _categoryService.Object,
                 _countryService.Object,
                 _currencyService.Object,
@@ -180,6 +191,7 @@ namespace Nop.Services.Tests.ExportImport
                 _productService.Object,
                 _productTagService.Object,
                 _productTemplateService.Object,
+                _shipmentService.Object,
                 _specificationAttributeService.Object,
                 _stateProvinceService.Object,
                 _storeMappingService.Object,
@@ -381,8 +393,7 @@ namespace Nop.Services.Tests.ExportImport
                 {
                     Id = 1,
                     OrderGuid = orderGuid,
-                    CustomerId = 1,
-                    Customer = GetTestCustomer(),
+                    CustomerId = GetTestCustomer().Id,
                     StoreId = 1,
                     OrderStatus = OrderStatus.Complete,
                     ShippingStatus = ShippingStatus.Shipped,
@@ -426,8 +437,8 @@ namespace Nop.Services.Tests.ExportImport
                     SubscriptionTransactionId = "SubscriptionTransactionId1",
                     PaidDateUtc = new DateTime(2010, 01, 01),
                     CustomValuesXml = "<test>test</test>",
-                    BillingAddress = TestBillingAddress,
-                    ShippingAddress = TestShippingAddress,
+                    BillingAddressId = TestBillingAddress.Id,
+                    ShippingAddressId = TestShippingAddress.Id,
                     ShippingMethod = "ShippingMethod1",
                     ShippingRateComputationMethodSystemName = "ShippingRateComputationMethodSystemName1",
                     Deleted = false,
@@ -463,7 +474,7 @@ namespace Nop.Services.Tests.ExportImport
                 "CardNumber", "MaskedCreditCardNumber", "CardCvv2", "CardExpirationMonth", "CardExpirationYear",
                 "AuthorizationTransactionId", "AuthorizationTransactionCode", "AuthorizationTransactionResult",
                 "CaptureTransactionId", "CaptureTransactionResult", "SubscriptionTransactionId", "PaidDateUtc",
-                "Deleted", "PickupAddress", "RedeemedRewardPointsEntry", "DiscountUsageHistory", "GiftCardUsageHistory",
+                "Deleted", "PickupAddress", "RedeemedRewardPointsEntryId", "DiscountUsageHistory", "GiftCardUsageHistory",
                 "OrderNotes", "OrderItems", "Shipments", "OrderStatus", "PaymentStatus", "ShippingStatus ",
                 "CustomerTaxDisplayType", "CustomOrderNumber"
             });
@@ -471,7 +482,7 @@ namespace Nop.Services.Tests.ExportImport
             //fields tested individually
             ignore.AddRange(new[]
             {
-               "Customer", "BillingAddress", "ShippingAddress"
+               "Customer", "BillingAddressId", "ShippingAddressId"
             });
 
             AreAllObjectPropertiesPresent(order, manager, ignore.ToArray());

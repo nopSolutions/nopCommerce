@@ -32,6 +32,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         private readonly IPaymentService _paymentService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IShippingPluginManager _shippingPluginManager;
+        private readonly ICustomerService _customerService;
         private readonly IStoreContext _storeContext;
         private readonly ITaxService _taxService;
         private readonly IWorkContext _workContext;
@@ -42,14 +43,17 @@ namespace Nop.Plugin.Tax.Avalara.Services
         #region Ctor
 
         public OverriddenOrderTotalCalculationService(CatalogSettings catalogSettings,
+            IAddressService addressService,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICustomerService customerSercice,
             IDiscountService discountService,
             IGenericAttributeService genericAttributeService,
             IGiftCardService giftCardService,
+            IOrderService orderService,
             IHttpContextAccessor httpContextAccessor,
             IPaymentService paymentService,
             IPriceCalculationService priceCalculationService,
+            IProductService productService,
             IRewardPointService rewardPointService,
             IShippingPluginManager shippingPluginManager,
             IShippingService shippingService,
@@ -61,13 +65,16 @@ namespace Nop.Plugin.Tax.Avalara.Services
             ShippingSettings shippingSettings,
             ShoppingCartSettings shoppingCartSettings,
             TaxSettings taxSettings) : base(catalogSettings,
+                addressService,
                 checkoutAttributeParser,
                 customerSercice,
                 discountService,
                 genericAttributeService,
                 giftCardService,
+                orderService,
                 paymentService,
                 priceCalculationService,
+                productService,
                 rewardPointService,
                 shippingPluginManager,
                 shippingService,
@@ -85,6 +92,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             _paymentService = paymentService;
             _priceCalculationService = priceCalculationService;
             _shippingPluginManager = shippingPluginManager;
+            _customerService = customerSercice;
             _storeContext = storeContext;
             _taxService = taxService;
             _workContext = workContext;
@@ -116,7 +124,8 @@ namespace Nop.Plugin.Tax.Avalara.Services
             redeemedRewardPoints = 0;
             redeemedRewardPointsAmount = decimal.Zero;
 
-            var customer = cart.FirstOrDefault(item => item.Customer != null)?.Customer;
+            var customer = _customerService.GetShoppingCartCustomer(cart);
+
             var paymentMethodSystemName = string.Empty;
             if (customer != null)
             {

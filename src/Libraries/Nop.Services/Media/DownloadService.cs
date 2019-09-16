@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
@@ -7,7 +7,9 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Services.Catalog;
 using Nop.Services.Events;
+using Nop.Services.Orders;
 
 namespace Nop.Services.Media
 {
@@ -20,16 +22,21 @@ namespace Nop.Services.Media
 
         private readonly IEventPublisher _eventPubisher;
         private readonly IRepository<Download> _downloadRepository;
-
+        private readonly IProductService _productService;
+        private readonly IOrderService _orderService;
         #endregion
 
         #region Ctor
 
         public DownloadService(IEventPublisher eventPubisher,
-            IRepository<Download> downloadRepository)
+            IRepository<Download> downloadRepository,
+            IOrderService orderService,
+            IProductService productService)
         {
             _eventPubisher = eventPubisher;
             _downloadRepository = downloadRepository;
+            _orderService = orderService;
+            _productService = productService;
         }
 
         #endregion
@@ -115,7 +122,10 @@ namespace Nop.Services.Media
         /// <returns>True if download is allowed; otherwise, false.</returns>
         public virtual bool IsDownloadAllowed(OrderItem orderItem)
         {
-            var order = orderItem?.Order;
+            if (orderItem is null)
+                return false;
+
+            var order = _orderService.GetOrderById(orderItem.OrderId);
             if (order == null || order.Deleted)
                 return false;
 
@@ -123,7 +133,8 @@ namespace Nop.Services.Media
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
 
-            var product = orderItem.Product;
+            var product = _productService.GetProductById(orderItem.ProductId);
+
             if (product == null || !product.IsDownload)
                 return false;
 

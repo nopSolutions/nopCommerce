@@ -58,6 +58,7 @@ namespace Nop.Services.Messages
         private readonly CurrencySettings _currencySettings;
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+        private readonly IAddressService _addressService;
         private readonly IBlogService _blogService;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
@@ -67,6 +68,7 @@ namespace Nop.Services.Messages
         private readonly IDownloadService _downloadService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IGiftCardService _giftCardService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly INewsService _newsService;
@@ -75,6 +77,7 @@ namespace Nop.Services.Messages
         private readonly IPaymentService _paymentService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductService _productService;
+        private readonly IRewardPointService _rewardPointService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
@@ -97,6 +100,7 @@ namespace Nop.Services.Messages
             CurrencySettings currencySettings,
             IActionContextAccessor actionContextAccessor,
             IAddressAttributeFormatter addressAttributeFormatter,
+            IAddressService addressService,
             IBlogService blogService,
             ICountryService countryService,
             ICurrencyService currencyService,
@@ -106,6 +110,7 @@ namespace Nop.Services.Messages
             IDownloadService downloadService,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
+            IGiftCardService giftCardService,
             ILanguageService languageService,
             ILocalizationService localizationService,
             INewsService newsService,
@@ -114,6 +119,7 @@ namespace Nop.Services.Messages
             IPaymentService paymentService,
             IPriceFormatter priceFormatter,
             IProductService productService,
+            IRewardPointService rewardPointService,
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IStoreService storeService,
@@ -130,6 +136,7 @@ namespace Nop.Services.Messages
             _currencySettings = currencySettings;
             _actionContextAccessor = actionContextAccessor;
             _addressAttributeFormatter = addressAttributeFormatter;
+            _addressService = addressService;
             _blogService = blogService;
             _countryService = countryService;
             _currencyService = currencyService;
@@ -139,6 +146,7 @@ namespace Nop.Services.Messages
             _downloadService = downloadService;
             _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
+            _giftCardService = giftCardService;
             _languageService = languageService;
             _localizationService = localizationService;
             _newsService = newsService;
@@ -147,6 +155,7 @@ namespace Nop.Services.Messages
             _paymentService = paymentService;
             _priceFormatter = priceFormatter;
             _productService = productService;
+            _rewardPointService = rewardPointService;
             _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
             _storeService = storeService;
@@ -469,15 +478,14 @@ namespace Nop.Services.Messages
             sb.AppendLine($"<th>{_localizationService.GetResource("Messages.Order.Product(s).Total", languageId)}</th>");
             sb.AppendLine("</tr>");
 
-            var table = order.OrderItems.ToList();
+            var table = _orderService.GetOrderItems(order.Id, vendorId: vendorId);
             for (var i = 0; i <= table.Count - 1; i++)
             {
                 var orderItem = table[i];
-                var product = orderItem.Product;
-                if (product == null)
-                    continue;
 
-                if (vendorId > 0 && product.VendorId != vendorId)
+                var product = _productService.GetProductById(orderItem.ProductId);
+
+                if (product == null)
                     continue;
 
                 sb.AppendLine($"<tr style=\"background-color: {_templatesSettings.Color2};text-align: center;\">");
@@ -509,12 +517,12 @@ namespace Nop.Services.Messages
                     sb.AppendLine(orderItem.AttributeDescription);
                 }
                 //rental info
-                if (orderItem.Product.IsRental)
+                if (product.IsRental)
                 {
                     var rentalStartDate = orderItem.RentalStartDateUtc.HasValue
-                        ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalStartDateUtc.Value) : string.Empty;
+                        ? _productService.FormatRentalDate(product, orderItem.RentalStartDateUtc.Value) : string.Empty;
                     var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
-                        ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalEndDateUtc.Value) : string.Empty;
+                        ? _productService.FormatRentalDate(product, orderItem.RentalEndDateUtc.Value) : string.Empty;
                     var rentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
                         rentalStartDate, rentalEndDate);
                     sb.AppendLine("<br />");
@@ -760,22 +768,21 @@ namespace Nop.Services.Messages
             }
 
             //gift cards
-            var gcuhC = order.GiftCardUsageHistory;
-            foreach (var gcuh in gcuhC)
+            foreach (var gcuh in _giftCardService.GetGiftCardUsageHistory(order))
             {
                 var giftCardText = string.Format(_localizationService.GetResource("Messages.Order.GiftCardInfo", languageId),
-                    WebUtility.HtmlEncode(gcuh.GiftCard.GiftCardCouponCode));
+                    WebUtility.HtmlEncode(_giftCardService.GetGiftCardById(gcuh.GiftCardId)?.GiftCardCouponCode));
                 var giftCardAmount = _priceFormatter.FormatPrice(-_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate), true, order.CustomerCurrencyCode,
                     false, language);
                 sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{giftCardText}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{giftCardAmount}</strong></td></tr>");
             }
 
             //reward points
-            if (order.RedeemedRewardPointsEntry != null)
+            if (order.RedeemedRewardPointsEntryId.HasValue && _rewardPointService.GetRewardPointsHistoryEntryById(order.RedeemedRewardPointsEntryId.Value) is RewardPointsHistory redeemedRewardPointsEntry)
             {
                 var rpTitle = string.Format(_localizationService.GetResource("Messages.Order.RewardPoints", languageId),
-                    -order.RedeemedRewardPointsEntry.Points);
-                var rpAmount = _priceFormatter.FormatPrice(-_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmount, order.CurrencyRate), true,
+                    -redeemedRewardPointsEntry.Points);
+                var rpAmount = _priceFormatter.FormatPrice(-_currencyService.ConvertCurrency(redeemedRewardPointsEntry.UsedAmount, order.CurrencyRate), true,
                     order.CustomerCurrencyCode, false, language);
                 sb.AppendLine($"<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{rpTitle}</strong></td> <td style=\"background-color: {_templatesSettings.Color3};padding:0.6em 0.4 em;\"><strong>{rpAmount}</strong></td></tr>");
             }
@@ -806,7 +813,8 @@ namespace Nop.Services.Messages
                 var si = table[i];
                 var orderItem = _orderService.GetOrderItemById(si.OrderItemId);
 
-                var product = orderItem?.Product;
+                var product = _productService.GetProductById(orderItem?.ProductId ?? 0);
+
                 if (product == null)
                     continue;
 
@@ -824,12 +832,12 @@ namespace Nop.Services.Messages
                 }
 
                 //rental info
-                if (orderItem.Product.IsRental)
+                if (product.IsRental)
                 {
                     var rentalStartDate = orderItem.RentalStartDateUtc.HasValue
-                        ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalStartDateUtc.Value) : string.Empty;
+                        ? _productService.FormatRentalDate(product, orderItem.RentalStartDateUtc.Value) : string.Empty;
                     var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
-                        ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalEndDateUtc.Value) : string.Empty;
+                        ? _productService.FormatRentalDate(product, orderItem.RentalEndDateUtc.Value) : string.Empty;
                     var rentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
                         rentalStartDate, rentalEndDate);
                     sb.AppendLine("<br />");
@@ -929,28 +937,30 @@ namespace Nop.Services.Messages
         public virtual void AddOrderTokens(IList<Token> tokens, Order order, int languageId, int vendorId = 0)
         {
             //lambda expression for choosing correct order address
-            Address orderAddress(Order o) => o.PickupInStore ? o.PickupAddress : o.ShippingAddress;
+            Address orderAddress(Order o) => _addressService.GetAddressById((o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) ?? 0);
+
+            var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
 
             tokens.Add(new Token("Order.OrderId", order.Id));
             tokens.Add(new Token("Order.OrderNumber", order.CustomOrderNumber));
 
-            tokens.Add(new Token("Order.CustomerFullName", $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}"));
-            tokens.Add(new Token("Order.CustomerEmail", order.BillingAddress.Email));
+            tokens.Add(new Token("Order.CustomerFullName", $"{billingAddress.FirstName} {billingAddress.LastName}"));
+            tokens.Add(new Token("Order.CustomerEmail", billingAddress.Email));
 
-            tokens.Add(new Token("Order.BillingFirstName", order.BillingAddress.FirstName));
-            tokens.Add(new Token("Order.BillingLastName", order.BillingAddress.LastName));
-            tokens.Add(new Token("Order.BillingPhoneNumber", order.BillingAddress.PhoneNumber));
-            tokens.Add(new Token("Order.BillingEmail", order.BillingAddress.Email));
-            tokens.Add(new Token("Order.BillingFaxNumber", order.BillingAddress.FaxNumber));
-            tokens.Add(new Token("Order.BillingCompany", order.BillingAddress.Company));
-            tokens.Add(new Token("Order.BillingAddress1", order.BillingAddress.Address1));
-            tokens.Add(new Token("Order.BillingAddress2", order.BillingAddress.Address2));
-            tokens.Add(new Token("Order.BillingCity", order.BillingAddress.City));
-            tokens.Add(new Token("Order.BillingCounty", order.BillingAddress.County));
-            tokens.Add(new Token("Order.BillingStateProvince", _stateProvinceService.GetStateProvinceByAddress(order.BillingAddress) is StateProvince billingStateProvince ? _localizationService.GetLocalized(billingStateProvince, x => x.Name) : string.Empty));
-            tokens.Add(new Token("Order.BillingZipPostalCode", order.BillingAddress.ZipPostalCode));
-            tokens.Add(new Token("Order.BillingCountry", _countryService.GetCountryByAddress(order?.BillingAddress) is Country billingCountry ? _localizationService.GetLocalized(billingCountry, x => x.Name) : string.Empty));
-            tokens.Add(new Token("Order.BillingCustomAttributes", _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes), true));
+            tokens.Add(new Token("Order.BillingFirstName", billingAddress.FirstName));
+            tokens.Add(new Token("Order.BillingLastName", billingAddress.LastName));
+            tokens.Add(new Token("Order.BillingPhoneNumber", billingAddress.PhoneNumber));
+            tokens.Add(new Token("Order.BillingEmail", billingAddress.Email));
+            tokens.Add(new Token("Order.BillingFaxNumber", billingAddress.FaxNumber));
+            tokens.Add(new Token("Order.BillingCompany", billingAddress.Company));
+            tokens.Add(new Token("Order.BillingAddress1", billingAddress.Address1));
+            tokens.Add(new Token("Order.BillingAddress2", billingAddress.Address2));
+            tokens.Add(new Token("Order.BillingCity", billingAddress.City));
+            tokens.Add(new Token("Order.BillingCounty", billingAddress.County));
+            tokens.Add(new Token("Order.BillingStateProvince", _stateProvinceService.GetStateProvinceByAddress(billingAddress) is StateProvince billingStateProvince ? _localizationService.GetLocalized(billingStateProvince, x => x.Name) : string.Empty));
+            tokens.Add(new Token("Order.BillingZipPostalCode", billingAddress.ZipPostalCode));
+            tokens.Add(new Token("Order.BillingCountry", _countryService.GetCountryByAddress(billingAddress) is Country billingCountry ? _localizationService.GetLocalized(billingCountry, x => x.Name) : string.Empty));
+            tokens.Add(new Token("Order.BillingCustomAttributes", _addressAttributeFormatter.FormatAttributes(billingAddress.CustomAttributes), true));
 
             tokens.Add(new Token("Order.Shippable", !string.IsNullOrEmpty(order.ShippingMethod)));
             tokens.Add(new Token("Order.ShippingMethod", order.ShippingMethod));
@@ -992,7 +1002,8 @@ namespace Nop.Services.Messages
             var language = _languageService.GetLanguageById(languageId);
             if (language != null && !string.IsNullOrEmpty(language.LanguageCulture))
             {
-                var createdOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, TimeZoneInfo.Utc, _dateTimeHelper.GetCustomerTimeZone(order.Customer));
+                var customer = _customerService.GetCustomerById(order.CustomerId);
+                var createdOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, TimeZoneInfo.Utc, _dateTimeHelper.GetCustomerTimeZone(customer));
                 tokens.Add(new Token("Order.CreatedOn", createdOn.ToString("D", new CultureInfo(language.LanguageCulture))));
             }
             else
@@ -1064,8 +1075,10 @@ namespace Nop.Services.Messages
         /// <param name="orderNote">Order note</param>
         public virtual void AddOrderNoteTokens(IList<Token> tokens, OrderNote orderNote)
         {
+            var order = _orderService.GetOrderById(orderNote.OrderId);
+
             tokens.Add(new Token("Order.NewNoteText", _orderService.FormatOrderNoteText(orderNote), true));
-            var orderNoteAttachmentUrl = RouteUrl(orderNote.Order.StoreId, "GetOrderNoteFile", new { ordernoteid = orderNote.Id });
+            var orderNoteAttachmentUrl = RouteUrl(order.StoreId, "GetOrderNoteFile", new { ordernoteid = orderNote.Id });
             tokens.Add(new Token("Order.OrderNoteAttachmentUrl", orderNoteAttachmentUrl, true));
 
             //event notification
@@ -1082,8 +1095,8 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("RecurringPayment.ID", recurringPayment.Id));
             tokens.Add(new Token("RecurringPayment.CancelAfterFailedPayment",
                 recurringPayment.LastPaymentFailed && _paymentSettings.CancelRecurringPaymentsAfterFailedPayment));
-            if (recurringPayment.InitialOrder != null)
-                tokens.Add(new Token("RecurringPayment.RecurringPaymentType", _paymentService.GetRecurringPaymentType(recurringPayment.InitialOrder.PaymentMethodSystemName).ToString()));
+            if (_orderService.GetOrderById(recurringPayment.InitialOrderId) is Order order)
+                tokens.Add(new Token("RecurringPayment.RecurringPaymentType", _paymentService.GetRecurringPaymentType(order.PaymentMethodSystemName).ToString()));
 
             //event notification
             _eventPublisher.EntityTokensAdded(recurringPayment, tokens);
@@ -1097,10 +1110,12 @@ namespace Nop.Services.Messages
         /// <param name="orderItem">Order item</param>
         public virtual void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, OrderItem orderItem)
         {
+            var product = _productService.GetProductById(orderItem.ProductId);
+
             tokens.Add(new Token("ReturnRequest.CustomNumber", returnRequest.CustomNumber));
             tokens.Add(new Token("ReturnRequest.OrderId", orderItem.OrderId));
             tokens.Add(new Token("ReturnRequest.Product.Quantity", returnRequest.Quantity));
-            tokens.Add(new Token("ReturnRequest.Product.Name", orderItem.Product.Name));
+            tokens.Add(new Token("ReturnRequest.Product.Name", product.Name));
             tokens.Add(new Token("ReturnRequest.Reason", returnRequest.ReasonForReturn));
             tokens.Add(new Token("ReturnRequest.RequestedAction", returnRequest.RequestedAction));
             tokens.Add(new Token("ReturnRequest.CustomerComment", HtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false), true));
@@ -1138,7 +1153,22 @@ namespace Nop.Services.Messages
         /// Add customer tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
-        /// <param name="customer">Customer identifier</param>
+        /// <param name="customerId">Customer identifier</param>
+        public virtual void AddCustomerTokens(IList<Token> tokens, int customerId)
+        {
+            if (customerId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(customerId));
+
+            var customer = _customerService.GetCustomerById(customerId);
+
+            AddCustomerTokens(tokens, customer);
+        }
+
+        /// <summary>
+        /// Add customer tokens
+        /// </summary>
+        /// <param name="tokens">List of already added tokens</param>
+        /// <param name="customer">Customer</param>
         public virtual void AddCustomerTokens(IList<Token> tokens, Customer customer)
         {
             tokens.Add(new Token("Customer.Email", customer.Email));

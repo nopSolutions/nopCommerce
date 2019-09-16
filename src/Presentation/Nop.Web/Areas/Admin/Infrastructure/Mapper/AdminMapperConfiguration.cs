@@ -1157,15 +1157,13 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ConditionModel, options => options.Ignore());
             CreateMap<CheckoutAttributeModel, CheckoutAttribute>()
                 .ForMember(entity => entity.AttributeControlType, options => options.Ignore())
-                .ForMember(entity => entity.CheckoutAttributeValues, options => options.Ignore())
                 .ForMember(entity => entity.ConditionAttributeXml, options => options.Ignore());
 
             CreateMap<CheckoutAttributeValue, CheckoutAttributeValueModel>()
                 .ForMember(model => model.BaseWeightIn, options => options.Ignore())
                 .ForMember(model => model.DisplayColorSquaresRgb, options => options.Ignore())
                 .ForMember(model => model.PrimaryStoreCurrencyCode, options => options.Ignore());
-            CreateMap<CheckoutAttributeValueModel, CheckoutAttributeValue>()
-                .ForMember(entity => entity.CheckoutAttribute, options => options.Ignore());
+            CreateMap<CheckoutAttributeValueModel, CheckoutAttributeValue>();
 
             CreateMap<GiftCard, GiftCardModel>()
                 .ForMember(model => model.AmountStr, options => options.Ignore())
@@ -1178,9 +1176,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<GiftCardModel, GiftCard>()
                 .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
                 .ForMember(entity => entity.GiftCardType, options => options.Ignore())
-                .ForMember(entity => entity.GiftCardUsageHistory, options => options.Ignore())
                 .ForMember(entity => entity.IsRecipientNotified, options => options.Ignore())
-                .ForMember(entity => entity.PurchasedWithOrderItem, options => options.Ignore())
                 .ForMember(entity => entity.PurchasedWithOrderItemId, options => options.Ignore());
 
             CreateMap<GiftCardUsageHistory, GiftCardUsageHistoryModel>()
@@ -1248,7 +1244,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                  .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
                  .ForMember(entity => entity.ReturnRequestStatus, options => options.Ignore())
                  .ForMember(entity => entity.CustomerId, options => options.Ignore())
-                 .ForMember(entity => entity.Customer, options => options.Ignore())
                  .ForMember(entity => entity.UpdatedOnUtc, options => options.Ignore());
 
             CreateMap<ShoppingCartSettings, ShoppingCartSettingsModel>()
@@ -1301,15 +1296,15 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.PaymentType, options => options.Ignore())
                 .ForMember(model => model.CanCancelRecurringPayment, options => options.Ignore())
                 .ForMember(model => model.CustomerEmail, options => options.Ignore())
-                .ForMember(model => model.RecurringPaymentHistorySearchModel, options => options.Ignore());
+                .ForMember(model => model.RecurringPaymentHistorySearchModel, options => options.Ignore())
+                .ForMember(model => model.CyclesRemaining, options => options.Ignore());
+
             CreateMap<RecurringPaymentModel, RecurringPayment>()
                 .ForMember(entity => entity.StartDateUtc, options => options.Ignore())
                 .ForMember(entity => entity.Deleted, options => options.Ignore())
                 .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
                 .ForMember(entity => entity.CyclePeriod, options => options.Ignore())
-                .ForMember(entity => entity.RecurringPaymentHistory, options => options.Ignore())
-                .ForMember(entity => entity.InitialOrderId, options => options.Ignore())
-                .ForMember(entity => entity.InitialOrder, options => options.Ignore());
+                .ForMember(entity => entity.InitialOrderId, options => options.Ignore());
 
             CreateMap<RecurringPaymentHistory, RecurringPaymentHistoryModel>()
                 .ForMember(model => model.CreatedOn, options => options.Ignore())

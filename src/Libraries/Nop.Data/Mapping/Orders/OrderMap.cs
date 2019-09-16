@@ -35,15 +35,6 @@ namespace Nop.Data.Mapping.Orders
             builder.Property(order => order.RefundedAmount).HasColumnType("decimal(18, 4)");
             builder.Property(order => order.CustomOrderNumber).IsRequired();
 
-            builder.HasOne(order => order.Customer)
-                .WithMany()
-                .HasForeignKey(order => order.CustomerId)
-                .IsRequired();
-
-            builder.HasOne(order => order.PickupAddress)
-                .WithMany()
-                .HasForeignKey(order => order.PickupAddressId);
-
             builder.Ignore(order => order.OrderStatus);
             builder.Ignore(order => order.PaymentStatus);
             builder.Ignore(order => order.ShippingStatus);

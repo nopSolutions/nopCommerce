@@ -40,6 +40,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IOrderService _orderService;
         private readonly IPermissionService _permissionService;
         private readonly IProductService _productService;
         private readonly ISettingService _settingService;
@@ -56,6 +57,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             IHttpContextAccessor httpContextAccessor,
+            IOrderService orderService,
             IPermissionService permissionService,
             IProductService productService,
             ISettingService settingService,
@@ -68,6 +70,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             _customerService = customerService;
             _genericAttributeService = genericAttributeService;
             _httpContextAccessor = httpContextAccessor;
+            _orderService = orderService;
             _permissionService = permissionService;
             _productService = productService;
             _settingService = settingService;
@@ -209,8 +212,11 @@ namespace Nop.Plugin.Tax.Avalara.Services
             if (!_taxPluginManager.IsPluginActive(taxProvider))
                 return;
 
+            //TODO: issue-239
+            var orderItems = _orderService.GetOrderItems(eventMessage.Order.Id);
+
             //create tax transaction
-            taxProvider.CreateOrderTaxTransaction(eventMessage.Order, true);
+            taxProvider.CreateOrderTaxTransaction(eventMessage.Order, orderItems, true);
         }
 
         /// <summary>
