@@ -50,11 +50,8 @@ namespace Nop.Plugin.Payments.Square.Services
         private Configuration CreateApiConfiguration()
         {
             //validate access token
-            if (_squarePaymentSettings.UseSandbox &&
-                string.IsNullOrEmpty(_squarePaymentSettings.AccessToken))
-            {
+            if (_squarePaymentSettings.UseSandbox && string.IsNullOrEmpty(_squarePaymentSettings.AccessToken))
                 throw new NopException("Sandbox access token should not be empty");
-            }
 
             return new Configuration
             {

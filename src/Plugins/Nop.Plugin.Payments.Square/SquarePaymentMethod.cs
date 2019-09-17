@@ -256,13 +256,18 @@ namespace Nop.Plugin.Payments.Square
                 return chargeRequest;
             }
 
-            //or try to get the card nonce
+            //or try to get the card nonce and verification token if exists
+            var tokenKey = _localizationService.GetResource("Plugins.Payments.Square.Fields.Token.Key");
+            if ((!paymentRequest.CustomValues.TryGetValue(tokenKey, out var token) || string.IsNullOrEmpty(token?.ToString())) && _squarePaymentSettings.Use3ds)
+                throw new NopException("Failed to get the verification token");
+
             var cardNonceKey = _localizationService.GetResource("Plugins.Payments.Square.Fields.CardNonce.Key");
             if (!paymentRequest.CustomValues.TryGetValue(cardNonceKey, out var cardNonce) || string.IsNullOrEmpty(cardNonce?.ToString()))
                 throw new NopException("Failed to get the card nonce");
 
-            //remove the card nonce from payment custom values, since it is no longer needed
+            //remove the card nonce and verification token from payment custom values, since they are no longer needed
             paymentRequest.CustomValues.Remove(cardNonceKey);
+            paymentRequest.CustomValues.Remove(tokenKey);
 
             //whether to save card details for the future purchasing
             var saveCardKey = _localizationService.GetResource("Plugins.Payments.Square.Fields.SaveCard.Key");
@@ -305,6 +310,13 @@ namespace Nop.Plugin.Payments.Square
                         CardNonce: cardNonce.ToString()
                     );
 
+                    //set verification token if exists
+                    if (_squarePaymentSettings.Use3ds)
+                    {
+                        cardRequest.VerificationToken = token.ToString();
+                        chargeRequest.VerificationToken = token.ToString();
+                    }
+
                     //set postal code
                     var postalCodeKey = _localizationService.GetResource("Plugins.Payments.Square.Fields.PostalCode.Key");
                     if (paymentRequest.CustomValues.TryGetValue(postalCodeKey, out var postalCode) && !string.IsNullOrEmpty(postalCode.ToString()))
@@ -339,6 +351,10 @@ namespace Nop.Plugin.Payments.Square
             }
             else if (isRecurringPayment)
                 throw new NopException("For recurring payments you need to save the card details");
+
+            //set verification token if exists
+            if (_squarePaymentSettings.Use3ds)
+                chargeRequest.VerificationToken = token.ToString();
 
             //set 'card nonce' to charge
             chargeRequest.CardNonce = cardNonce.ToString();
@@ -571,6 +587,9 @@ namespace Nop.Plugin.Payments.Square
             var paymentRequest = new ProcessPaymentRequest();
 
             //pass custom values to payment processor
+            if (form.TryGetValue(nameof(PaymentInfoModel.Token), out var token) && !StringValues.IsNullOrEmpty(token))
+                paymentRequest.CustomValues.Add(_localizationService.GetResource("Plugins.Payments.Square.Fields.Token.Key"), token.ToString());
+
             if (form.TryGetValue(nameof(PaymentInfoModel.CardNonce), out var cardNonce) && !StringValues.IsNullOrEmpty(cardNonce))
                 paymentRequest.CustomValues.Add(_localizationService.GetResource("Plugins.Payments.Square.Fields.CardNonce.Key"), cardNonce.ToString());
 
@@ -659,8 +678,11 @@ namespace Nop.Plugin.Payments.Square
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard.Key", "Pay using stored card token");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard.Mask", "*{0}");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard.SelectCard", "Select a card");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Token.Key", "Verification token");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.TransactionMode", "Transaction mode");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.TransactionMode.Hint", "Choose the transaction mode.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Use3ds", "Use 3D-Secure");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Use3ds.Hint", "Determine whether to use 3D-Secure feature. Used for Strong customer authentication (SCA). SCA is generally friction-free for the buyer, but a card-issuing bank may require additional authentication for some payments. In those cases, the buyer must verify their identiy with the bank using an additional secure dialog.");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.UseSandbox", "Use sandbox");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.UseSandbox.Hint", "Determine whether to use sandbox credentials.");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Instructions", @"
@@ -737,8 +759,11 @@ namespace Nop.Plugin.Payments.Square
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard.Key");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard.Mask");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard.SelectCard");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Token.Key");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.TransactionMode");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.TransactionMode.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Use3ds");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Use3ds.Hint");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.UseSandbox");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.UseSandbox.Hint");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Instructions");

@@ -74,6 +74,15 @@ set @resources='
   <LocaleResource Name="MainMenu.AjaxFailure">
     <Value>Failed to open menu. Please refresh the page and try one more time.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.Token.Key">
+    <Value>Verification token</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.Use3ds">
+    <Value>Use 3D-Secure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Fields.Use3ds.Hint">
+    <Value>Determine whether to use 3D-Secure feature. Used for Strong customer authentication (SCA). SCA is generally friction-free for the buyer, but a card-issuing bank may require additional authentication for some payments. In those cases, the buyer must verify their identiy with the bank using an additional secure dialog.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -161,5 +170,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'captchasettings.recaptch
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'captchasettings.recaptcharequesttimeout', 20, 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'squarepaymentsettings.use3ds')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'squarepaymentsettings.use3ds', 'false', 0)
 END
 GO
