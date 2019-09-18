@@ -1,0 +1,222 @@
+﻿/**
+ * 2017 LiveChat
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License
+ * This work is licensed under a Creative Commons Attribution 4.0 International License.
+ *	@author LiveChat Inc. <support@livechatinc.com>
+ *	@copyright 2017 LiveChat Inc.
+ *	@license	 http://creativecommons.org/licenses/by/4.0/	 Creative Commons Attribution 4.0 International License. 
+ */
+
+ #reset_settings {
+  border: none;
+  font-size: 85%;
+  color: #999;
+  text-shadow: none;
+  outline-style: none;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+input[type=submit][name=delete_settings] {
+  background-color: white;
+  text-decoration: underline;
+  border: none;
+  box-shadow: none;
+  border-shadow: none;
+  color: #999;
+  text-shadow: none;
+  outline-style: none;
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+div#cart_radios .cart_switch {
+  width: 216px;
+}
+
+
+iframe#login-with-livechat,
+#login_form {
+  margin-left: 1rem;
+  width: 204px;
+  height: 43px;
+  border: none;
+  margin: 0 auto;
+}
+
+.progress-button {
+  width: 204px;
+  height: 43px;
+  border: none;
+  color: rgb(90, 105, 118, 0.5);
+  opacity: 0.5;
+  display: block;
+  font-size: 16px;
+  line-height: 1.5;
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 8px 24px 9px;
+  text-align: center;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+.livechat_logo2 {
+  display:block;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.livechat_screenshot {
+  height: auto;
+  max-width: 650px;
+  display: block;
+  width:100%;
+  margin: 0 auto 25px auto;
+}
+
+#upper-panel {
+  margin-top: 60px;
+}
+
+#livechat-text-status {
+  font-size: medium;
+  line-height: 1.6em;
+}
+
+#reset_settings {
+  margin-top: 15vw;
+}
+
+#login_email{
+  font-weight: 700;
+}
+
+#reset_settings_label {
+  text-align: left; 
+  font-weight:normal;
+  font-size:13.5px;
+}
+
+#livechat-text-status-container {
+  margin-top: 5.5vw;
+}
+
+#controls-container {
+  padding-left: 8vw;
+}
+
+#main-itegration-container {
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.form-horizontal .label-wrapper {
+  float: left;
+  padding: 0; 
+}
+
+.form-group select {
+  width: auto;
+  margin-left: 30px;
+  display: inline-block;
+}
+
+.padding-5 {
+  padding: 5px;
+}
+
+.second-screen {
+  margin-top: 2vw;
+}
+
+
+/* Responsive settings */
+@media only screen and (max-width: 980px) {
+
+  .livechat_screenshot_container {
+    display: none;
+  }  
+
+}
+
+@media only screen and (min-width: 921px) and (max-width: 1400px) {
+
+  .second-screen {
+    margin-top: 5.5vw;
+  }
+
+}
+
+
+.form-horizontal .label-wrapper .control-label {
+  vertical-align: bottom;
+  display: initial;
+}
+
+
+#livechat_link {
+    line-height: 8px;
+}
+
+.fa {
+  font-size: 11px;
+  color: #808080;
+}
+
+.form-group input[type=checkbox] {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 90px;
+    margin-right: 54px;
+    vertical-align: bottom;
+}
+
+.form-horizontal .label-wrapper i.fa:before {
+    position: relative;
+    top: -5px;
+}
+
+/* Override nopCommerce style */
+@media (max-width: 992px) {
+  .form-horizontal .label-wrapper {
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+}
+
+
+@media only screen and (min-width: 767px) and (max-width: 920px) {
+ .form-group input[type=checkbox] {
+  margin-left: 80px;
+ }
+
+ .form-group select {
+   margin-left: 30px;
+ }
+}
+
+.form-group {
+  margin-bottom: 30px;
+}
+
+/* Override ico hidding */
+@media (max-width: 1200px){
+  .form-horizontal .label-wrapper .ico-help {
+    display: initial;
+  }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1000px) {
+  #controls-container {
+    width: 100%;
+  }
+}

@@ -1,0 +1,11 @@
+﻿{
+  "Group": "NopAdvance",
+  "FriendlyName": "Minimum Cart SubTotal should be x.xx amount",
+  "SystemName": "NopAdvance.Plugin.DiscountRules.CartSubTotal",
+  "Version": "1.0.0",
+  "SupportedVersions": [ "4.20" ],
+  "Author": "NopAdvance team",
+  "DisplayOrder": 1,
+  "FileName": "NopAdvance.Plugin.DiscountRules.CartSubTotal.dll",
+  "Description": "This plugin allows you to configure discounts for customers whose cart subtotal more than the certain amount."
+}

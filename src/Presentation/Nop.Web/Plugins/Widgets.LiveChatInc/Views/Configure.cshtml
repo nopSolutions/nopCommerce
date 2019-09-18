@@ -1,0 +1,226 @@
+﻿@{
+    Layout = "_ConfigurePlugin";
+    Html.AddCssFileParts("~/Plugins/Widgets.LiveChatInc/Content/css/admin.css");
+}
+@model Nop.Plugin.Widgets.LiveChatInc.Models.ConfigurationModel
+
+
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
+
+<script type="text/javascript">
+    function showAlert(text_to_put_in_the_box, alert) {
+        var alertBox = $('<div class="alert ' + (alert || false ? '  alert-danger' : ' alert-success') + ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span></span></div>');
+
+        alertBox.find('span').text(text_to_put_in_the_box);
+        alertBox.prependTo('.wrapper>.content-wrapper');
+
+		setTimeout(function () {
+            alertBox.addClass("fadeout");
+		},5000);
+
+		setTimeout(function () {
+            alertBox.remove();
+		},5000);
+	}
+
+	function addHandlerToRadioCart(radios, i) {
+		radios[i].addEventListener("click", function() {
+			if(radios[i].value==="0"){
+				document.getElementById("cart_radios").style.display = "none";
+			}else if(radios[i].value === "on") {
+				document.getElementById("cart_radios").style.display = "block";
+			}
+		});
+	}
+
+    $(document).ready(function () {
+		var login_with_livechat = document.getElementById('login-with-livechat');
+
+		var sendMessage = function(msg) {
+			login_with_livechat.contentWindow.postMessage(msg, '*');
+		};
+
+		var logoutLiveChat = function() {
+			sendMessage('logout');
+		};
+
+        function receiveMessage(event) {
+            if (!event.data)
+                return;
+
+			var livechatMessage = JSON.parse(event.data);
+
+			if (livechatMessage.type === 'logged-in' && livechatMessage.eventTrigger === 'click') {
+				$('iframe#login-with-livechat').addClass('hidden');
+                $('.progress-button').removeClass('hidden');
+                setTimeout(function () {
+                    $('#@Html.IdFor(model => model.License.Login)').val(livechatMessage.email);
+                    $('#@Html.IdFor(model => model.License.License)').val(livechatMessage.license);
+
+                    var form = $('#licenseInformationForm').serialize();
+
+					$.ajax({
+						type: 'POST',
+						url: '@Url.Action("SetLicenseInformation","WidgetsLiveChatInc")',
+                        data: form,
+					})
+                    .done(function(data) {
+                        showAlert('@T("Plugins.Widgets.LiveChatInc.SuccessfullyAdded")');
+
+						$('#after_login_bar').removeClass("hidden");
+						$('#before_login_bar').addClass("hidden");
+						$('iframe#login-with-livechat').removeClass('hidden');
+						$('.progress-button').addClass('hidden');
+						$('#login_email').text(livechatMessage.email);
+					})
+					.fail(function(data) {
+						document.getElementsByClassName('alert-success')[0].style.display = "block";
+					});
+				},1500);
+			}
+		}
+
+		window.addEventListener("message", receiveMessage, false);
+
+		var livechatLogin = "@Model.License.Login";
+
+		if(livechatLogin === "" || livechatLogin === null) {
+			document.getElementById('login-with-livechat').classList.remove("hidden");
+			document.getElementById("login_form").classList.remove("hidden");
+			document.getElementById("after_login_bar").classList.add("hidden");
+			document.getElementById("before_login_bar").classList.remove("hidden");
+			} else {
+			document.getElementById('login-with-livechat').classList.add("hidden");
+			document.getElementById("login_form").classList.add("hidden");
+			document.getElementById("after_login_bar").classList.remove("hidden");
+			document.getElementById("before_login_bar").classList.add("hidden");
+        }
+
+        $("input[name='delete_settings']").on('click', function (e) {
+            e.preventDefault();
+
+            $('#@Html.IdFor(model => model.License.Login)').val('');
+            $('#@Html.IdFor(model => model.License.License)').val('');
+            $('#@Html.IdFor(model => model.CartUpdateInterval)').val("0");
+            $('#@Html.IdFor(model => model.HideOnMobile)').prop("checked",false);
+
+            var formEl = $(this).parents('form');
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ResetSettings","WidgetsLiveChatInc")',
+                data: formEl.serialize(),
+            }).done(function (data) {
+                    if (data.success === true) {
+                        $('#before_login_bar').removeClass("hidden");
+                        $('#login-with-livechat').removeClass("hidden");
+                        $('#radios').removeClass("hidden");
+                        $('#login_form').removeClass("hidden");
+                        $('#after_login_bar').addClass("hidden");
+                        showAlert('@T("Plugins.Widgets.LiveChatInc.SettingsReset")');
+                        logoutLiveChat();
+
+
+                    }
+                });
+        });
+	});
+</script>
+
+
+<form asp-controller="WidgetsLiveChatInc" asp-action="SetLicenseInformation" method="post" id="licenseInformationForm">
+    @Html.HiddenFor(model => model.License.Login)
+    @Html.HiddenFor(model => model.License.License)
+    @Html.HiddenFor(model => model.License.Version)
+
+    <div class="panel-group @Html.Raw(!string.IsNullOrEmpty(Model.License.Login)?"hidden":string.Empty)" id="before_login_bar">
+        <div class="panel panel-default">
+            <div class="panel-body" id="main-itegration-container">
+                <div id="login-container" class="col-md-6">
+                     <img class="livechat_logo2" alt="LiveChat logo" src="@Url.Content("~/Plugins/Widgets.LiveChatInc/Content/img/livechat-nopcommerce.png")"/>
+                    <div id="login_form">
+                        <div class="progress-button hidden">
+                            @T("Plugins.Widgets.LiveChatInc.Saving")
+                        </div>
+                        <div>
+                            <iframe id="login-with-livechat" src="https://addons.livechatinc.com/sign-in-with-livechat" scrolling="no"> </iframe>
+                        </div>
+                    </div>
+                    <div class="text-center padding-5">@T("Plugins.Widgets.LiveChatInc.Or")</div>
+                    <div id="livechat_link" class="text-center">
+                        <a href="https://my.livechatinc.com/signup?utm_source=nopcommerce.com&utm_medium=integration&utm_campaign=nopcommerce_integration" target="_blank">@T("Plugins.Widgets.LiveChatInc.CreateAccount")</a>
+                    </div>
+                </div>
+                <div class="livechat_screenshot_container col-md-6">
+                    <img class="livechat_screenshot" src="@Url.Content("~/Plugins/Widgets.LiveChatInc/Content/img/livechat-app.png")" alt="livechat app" />
+                    <p class="text-center">
+                        <a href="https://my.livechatinc.com?utm_source=nopcommerce.com&utm_medium=integration&utm_campaign=nopcommerce_integration" target="_blank">
+                            @T("Plugins.Widgets.LiveChatInc.UseOurWebApp")
+                        </a> @T("Plugins.Widgets.LiveChatInc.OrCheckOutApps") <a href="https://www.livechatinc.com/applications/?utm_source=nopcommerce.com&utm_medium=integration&utm_campaign=nopcommerce_integration" target="_blank">@T("Plugins.Widgets.LiveChatInc.DesktopOrMobile")</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form asp-controller="WidgetsLiveChatInc" asp-action="Configure" method="post">
+    <div class="panel-group @Html.Raw(string.IsNullOrEmpty(Model.License.Login)?"hidden":string.Empty)" id="after_login_bar">
+        <div class="panel panel-default">
+            <div class="panel-body" id="main-itegration-container">
+                <div id="controls-container" class="col-sm-6">
+                    <div class="form-group" id="livechat-text-status-container">
+                        <span id="livechat-text-status">@T("Plugins.Widgets.LiveChatInc.CurrentlyUsedAccount") <span id="login_email">@Model.License.Login</span> @T("Plugins.Widgets.LiveChatInc.LiveChatAccount")</span>
+                    </div>
+                   
+                    <div id="cart-interval-form" class="form-group">
+                        <nop-override-store-checkbox asp-for="CartUpdateInterval_OverrideForStore" asp-input="CartUpdateInterval" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="CartUpdateInterval" />
+                        <nop-select asp-for="CartUpdateInterval" asp-items="Model.TrackingCartOptions" />
+                        <span asp-validation-for="CartUpdateInterval"></span>
+                    </div>
+            
+                    <div class="form-group">
+                        <nop-override-store-checkbox asp-for="HideOnMobile_OverrideForStore" asp-input="HideOnMobile" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="HideOnMobile" />
+                        <nop-editor asp-for="HideOnMobile" />
+                        <span asp-validation-for="HideOnMobile"></span>
+                    </div>
+                    
+                    
+                    <div id="reset_settings">
+                        <div class="form-group">
+                            <label id="reset_settings_label">
+                                @T("Plugins.Widgets.LiveChatInc.ChangeAccount") <span>
+                                <input type="submit" name="delete_settings" value="@T("Plugins.Widgets.LiveChatInc.ResetSettings")" />
+                            </span>
+                            </label>
+                        </div>
+                    </div> 
+                </div>
+                <div class="livechat_screenshot_container col-sm-6">
+                    <div class="form-wrapper">
+                        <img class="livechat_screenshot second-screen" src="@Url.Content("~/Plugins/Widgets.LiveChatInc/Content/img/livechat-app.png")" alt="livechat app" />
+                        <p class="text-center">
+                            <a href="https://my.livechatinc.com?utm_source=nopcommerce.com&utm_medium=integration&utm_campaign=nopcommerce_integration" target="_blank">
+                                @T("Plugins.Widgets.LiveChatInc.UseOurWebApp")
+                            </a> @T("Plugins.Widgets.LiveChatInc.OrCheckOutApps") <a href="https://www.livechatinc.com/applications/?utm_source=nopcommerce.com&utm_medium=integration&utm_campaign=nopcommerce_integration" target="_blank">@T("Plugins.Widgets.LiveChatInc.DesktopOrMobile")</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,11 @@
+﻿<Language Name="English" IsDefault="true" IsRightToLeft="false">
+  <LocaleResource Name="Plugin.DiscountRules.CartSubTotal.Fields.CartSubTotal">
+    <Value>Required cart subtotal</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugin.DiscountRules.CartSubTotal.Fields.CartSubTotal.Hint">
+    <Value>Discount will be applied if customer cart subtotal x.xx amount.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugin.DiscountRules.CartSubTotal.NotEnough">
+    <Value>Sorry, this offer requires more cart subtotal</Value>
+  </LocaleResource>
+</Language>
