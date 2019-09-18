@@ -2033,6 +2033,7 @@ INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (611, N'proxysettings
 INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (612, N'proxysettings.password', N'', 0)
 INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (613, N'proxysettings.bypassonlocal', N'True', 0)
 INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (614, N'proxysettings.preauthenticate', N'True', 0)
+INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (615, N'catalogsettings.productsearchenabled', N'True', 0)
 SET IDENTITY_INSERT [Setting]  OFF
 GO
 SET IDENTITY_INSERT [ScheduleTask] ON 

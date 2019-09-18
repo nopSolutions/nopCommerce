@@ -179,6 +179,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool ProductSearchAutoCompleteEnabled { get; set; }
         public bool ProductSearchAutoCompleteEnabled_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductSearchEnabled")]
+        public bool ProductSearchEnabled { get; set; }
+        public bool ProductSearchEnabled_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteNumberOfProducts")]
         public int ProductSearchAutoCompleteNumberOfProducts { get; set; }
         public bool ProductSearchAutoCompleteNumberOfProducts_OverrideForStore { get; set; }
