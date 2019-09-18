@@ -47,6 +47,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Plugins\NopAdvance.DiscountRules.CartSubTotal\Views\Configure.cshtml" />
+    <None Include="Plugins\NopAdvance.DiscountRules.CartSubTotal\Views\_ViewImports.cshtml" />
     <None Include="Plugins\SevenSpikes.Core\Areas\Admin\Views\CategoryMappingsAdmin\CategoryAddPopup.cshtml" />
     <None Include="Plugins\SevenSpikes.Core\Areas\Admin\Views\Components\AdminNavigation\AdminNavigation.cshtml" />
     <None Include="Plugins\SevenSpikes.Core\Areas\Admin\Views\Components\CategoryMappingsAdmin\List.cshtml" />
@@ -99,6 +101,15 @@
     <None Include="Plugins\SevenSpikes.Nop.Plugins.AjaxCart\Themes\Avenue\Views\NopAjaxCartShoppingCart\ProductAddedToWishlistPopupDialog.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.AjaxCart\Themes\Avenue\Views\NopAjaxCart\AddProductToCartAjaxButton.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.AjaxCart\Themes\Avenue\Views\_ViewImports.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.AjaxCart\Themes\Element\Views\Components\NopAjaxCartMiniProductDetailsViewAddToCartButton\Default.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.AjaxCart\Themes\Element\Views\NopAjaxCartCatalog\MiniProductDetailsViewProductAddToCart.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.AjaxCart\Themes\Element\Views\NopAjaxCartCatalog\MiniProductDetailsViewProductAddToWishlist.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.AjaxCart\Themes\Element\Views\NopAjaxCartCatalog\_AjaxCartRentalInfo.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.AjaxCart\Themes\Element\Views\NopAjaxCartCatalog\_ProductVariantOverview.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.AjaxCart\Themes\Element\Views\NopAjaxCartShoppingCart\ProductAddedToCartPopupDialog.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.AjaxCart\Themes\Element\Views\NopAjaxCartShoppingCart\ProductAddedToWishlistPopupDialog.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.AjaxCart\Themes\Element\Views\NopAjaxCart\AddProductToCartAjaxButton.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.AjaxCart\Themes\Element\Views\_ViewImports.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.AjaxCart\Views\Components\NopAjaxCartAdditionalPanelsToUpdate\AdditionalPanelsToUpdate.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.AjaxCart\Views\Components\NopAjaxCartMiniProductDetailsViewAddToCartButton\Default.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.AjaxCart\Views\Components\NopAjaxCartPopupCrossSellProducts\PopupCrossSellProducts.cshtml" />
@@ -160,6 +171,8 @@
     <None Include="Plugins\SevenSpikes.Nop.Plugins.CloudZoom\Areas\Admin\Views\CloudZoomAdmin\_Settings.General.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.CloudZoom\Areas\Admin\Views\CloudZoomAdmin\_Settings.Selectors.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.CloudZoom\Areas\Admin\Views\_ViewImports.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.CloudZoom\Themes\Element\Views\Components\CloudZoom\CloudZoom.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.CloudZoom\Themes\Element\Views\_ViewImports.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.CloudZoom\Views\Components\CloudZoom\CloudZoom.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.CloudZoom\Views\_ViewImports.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.FacebookShop\Areas\Admin\Views\FacebookShopAdmin\ProductAddPopup.cshtml" />
@@ -233,6 +246,10 @@
     <None Include="Plugins\SevenSpikes.Nop.Plugins.MegaMenu\Themes\Avenue\Views\Components\MegaMenuTopic\TopicTemplate.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.MegaMenu\Themes\Avenue\Views\Components\MegaMenuVendor\VendorMenuTemplate.List.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.MegaMenu\Themes\Avenue\Views\_ViewImports.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.MegaMenu\Themes\Element\Views\Components\MegaMenuCategory\CategoryMenuTemplate.WithPictures.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.MegaMenu\Themes\Element\Views\Components\MegaMenuManufacturer\ManufacturerMenuTemplate.WithPictures.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.MegaMenu\Themes\Element\Views\Components\MegaMenuVendor\VendorMenuTemplate.WithPictures.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.MegaMenu\Themes\Element\Views\_ViewImports.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.MegaMenu\Views\Components\MegaMenuCategory\CategoryMenuTemplate.List.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.MegaMenu\Views\Components\MegaMenuCategory\CategoryMenuTemplate.WithPictures.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.MegaMenu\Views\Components\MegaMenuListSubCategories\CategoryMenuTemplate.List.SubCategories.cshtml" />
@@ -262,6 +279,8 @@
     <None Include="Plugins\SevenSpikes.Nop.Plugins.NopQuickTabs\Themes\Avenue\Views\Components\ProductContactUsTab\ProductContactUsTab.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.NopQuickTabs\Themes\Avenue\Views\Components\ProductReviewsTab\ProductReviewsTab.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.NopQuickTabs\Themes\Avenue\Views\_ViewImports.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.NopQuickTabs\Themes\Element\Views\Components\ProductReviewsTab\ProductReviewsTab.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.NopQuickTabs\Themes\Element\Views\_ViewImports.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.NopQuickTabs\Views\Components\ProductAttachmentsTab\ProductAttachmentsTab.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.NopQuickTabs\Views\Components\ProductContactUsTab\ProductContactUsTab.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.NopQuickTabs\Views\Components\ProductCustomTab\ProductCustomTab.cshtml" />
@@ -308,6 +327,8 @@
     <None Include="Plugins\SevenSpikes.Nop.Plugins.QuickView\Themes\Avenue\Views\QuickViewCatalog\_Single.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.QuickView\Themes\Avenue\Views\QuickView\QuickViewButton.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.QuickView\Themes\Avenue\Views\_ViewImports.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.QuickView\Themes\Element\Views\QuickViewCatalog\_QuickViewRentalInfo.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.QuickView\Themes\Element\Views\_ViewImports.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.QuickView\Views\Components\NopQuickViewProductPictures\ProductPictures.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.QuickView\Views\Components\NopQuickView\QuickView.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.QuickView\Views\QuickViewCatalog\ProductTemplate.Grouped.cshtml" />
@@ -349,6 +370,8 @@
     <None Include="Plugins\SevenSpikes.Nop.Plugins.RichBlog\Themes\Avenue\Views\Components\RichBlogHomePage\Default.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.RichBlog\Themes\Avenue\Views\Components\RichBlogPostFooter\Default.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.RichBlog\Themes\Avenue\Views\_ViewImports.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.RichBlog\Themes\Element\Views\Components\RichBlogHomePage\Default.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.RichBlog\Themes\Element\Views\_ViewImports.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.RichBlog\Views\Components\RichBlogCategoryNavigation\Default.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.RichBlog\Views\Components\RichBlogHomePage\Default.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.RichBlog\Views\Components\RichBlogPostFooter\Default.cshtml" />
@@ -369,6 +392,8 @@
     <None Include="Plugins\SevenSpikes.Nop.Plugins.SaleOfTheDay\Areas\Admin\Views\_ViewImports.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.SaleOfTheDay\Themes\Avenue\Views\Components\SaleOfTheDay\SaleOfTheDay.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.SaleOfTheDay\Themes\Avenue\Views\_ViewImports.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.SaleOfTheDay\Themes\Element\Views\Components\SaleOfTheDay\SaleOfTheDay.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.SaleOfTheDay\Themes\Element\Views\_ViewImports.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.SaleOfTheDay\Views\Components\SaleOfTheDay\SaleOfTheDay.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.SaleOfTheDay\Views\_ViewImports.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.SmartProductCollections\Areas\Admin\Views\CategoriesProductCollectionsAdmin\CategorySettings.cshtml" />
@@ -392,6 +417,14 @@
     <None Include="Plugins\SevenSpikes.Nop.Plugins.SmartProductCollections\Themes\Avenue\Views\SmartProductCollections\_CategoryGroup.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.SmartProductCollections\Themes\Avenue\Views\SmartProductCollections\_Grid.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.SmartProductCollections\Themes\Avenue\Views\_ViewImports.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.SmartProductCollections\Themes\Element\Views\Components\CategoryProductCollections\CategoryProductCollections.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.SmartProductCollections\Themes\Element\Views\Components\CustomProductCollections\CustomProductCollections.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.SmartProductCollections\Themes\Element\Views\SmartProductCollections\CategoryGroupVariants\_AirVariant1.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.SmartProductCollections\Themes\Element\Views\SmartProductCollections\CategoryGroupVariants\_AirVariant2.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.SmartProductCollections\Themes\Element\Views\SmartProductCollections\CategoryGroupVariants\_EarthVariant1.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.SmartProductCollections\Themes\Element\Views\SmartProductCollections\CategoryGroupVariants\_EarthVariant2.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.SmartProductCollections\Themes\Element\Views\SmartProductCollections\_CategoryGroup.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.SmartProductCollections\Themes\Element\Views\_ViewImports.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.SmartProductCollections\Views\Components\CategoryProductCollections\CategoryProductCollections.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.SmartProductCollections\Views\Components\CustomProductCollections\CustomProductCollections.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.SmartProductCollections\Views\Components\SmartProductCollections\SmartProductCollections.cshtml" />
@@ -419,6 +452,10 @@
     <None Include="Plugins\SevenSpikes.Nop.Plugins.SocialFeed\Themes\Avenue\Views\SocialFeedPublic\SocialFeedPage.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.SocialFeed\Themes\Avenue\Views\_SocialFeedPanel.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.SocialFeed\Themes\Avenue\Views\_ViewImports.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.SocialFeed\Themes\Element\Views\SocialFeedPublic\Shared\_Scripts.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.SocialFeed\Themes\Element\Views\SocialFeedPublic\_Facebook.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.SocialFeed\Themes\Element\Views\_SocialFeedPanel.cshtml" />
+    <None Include="Plugins\SevenSpikes.Nop.Plugins.SocialFeed\Themes\Element\Views\_ViewImports.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.SocialFeed\Views\Components\SocialFeed\SocialFeed.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.SocialFeed\Views\SocialFeedPublic\Shared\_Scripts.cshtml" />
     <None Include="Plugins\SevenSpikes.Nop.Plugins.SocialFeed\Views\SocialFeedPublic\SocialFeedPage.cshtml" />
@@ -472,6 +509,9 @@
     <None Include="Plugins\SevenSpikes.Theme.Element\Areas\Admin\Views\ElementThemeAdmin\_Settings.General.cshtml" />
     <None Include="Plugins\SevenSpikes.Theme.Element\Areas\Admin\Views\_ViewImports.cshtml" />
     <None Include="Plugins\SevenSpikes.Theme.Element\Views\Components\ElementTheme\ThemeLogo.cshtml" />
+    <None Include="Plugins\Widgets.LiveChatInc\Views\Configure.cshtml" />
+    <None Include="Plugins\Widgets.LiveChatInc\Views\PublicInfo.cshtml" />
+    <None Include="Plugins\Widgets.LiveChatInc\Views\_ViewImports.cshtml" />
     <None Include="Themes\Avenue\Views\BackInStockSubscription\CustomerSubscriptions.cshtml" />
     <None Include="Themes\Avenue\Views\Blog\BlogPost.cshtml" />
     <None Include="Themes\Avenue\Views\Blog\Components\BlogMonths\Default.cshtml" />

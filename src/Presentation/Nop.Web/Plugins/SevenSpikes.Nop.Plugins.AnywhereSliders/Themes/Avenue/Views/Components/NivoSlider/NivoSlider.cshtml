@@ -28,10 +28,11 @@
     string showCaptionsClass = Model.Settings.ShowCaption ? string.Empty : "no-captions";
 
     var imagesString = string.Empty;
+    var initialOnePixelImage = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
 
     foreach (var sliderImage1 in Model.SliderImages)
     {
-        imagesString += RenderSliderLine(sliderImage1.PicturePath, sliderImage1.DisplayText, sliderImage1.Alt, Model.Settings.Links, sliderImage1.Url);
+        imagesString += RenderSliderLine(sliderImage1.PicturePath, sliderImage1.MobilePicturePath, sliderImage1.DisplayText, sliderImage1.Alt, Model.Settings.Links, sliderImage1.Url, initialOnePixelImage);
     }
 
     imagesString = imagesString.Replace(Environment.NewLine, string.Empty).Trim();
@@ -40,7 +41,7 @@
 @functions
 {
     //Used for nivo slider images in the case when we have more than one image
-    public string RenderSliderLine(string pictureUrl, string text, string alt, bool haveLink, string link)
+    public string RenderSliderLine(string pictureUrl, string mobilePictureUrl, string text, string alt, bool haveLink, string link, string initialOnePixelImage)
     {
         string sliderLine = string.Empty;
 
@@ -55,7 +56,12 @@
             {
                 if (Model.Settings.ShowCaption)
                 {
-                    sliderLine += $"<a href=\"{link}\"><img src=\"{pictureUrl}\" data-thumb=\"{pictureUrl}\" alt=\"{alt}\" title=\"{text}\" /></a>";
+                    sliderLine += $"<a href=\"{link}\"><img src=\"{initialOnePixelImage}\" data-thumb=\"{initialOnePixelImage}\"" +
+                        $"data-desktopImage=\"{pictureUrl}\"" +
+                        $"data-desktopThumb=\"{pictureUrl}\"" +
+                        $"data-mobileImage=\"{mobilePictureUrl}\"" +
+                        $"data-mobileThumb=\"{mobilePictureUrl}\"" +
+                        $"alt=\"{alt}\" title=\"{text}\" /></a>";
                 }
                 else
                 {
@@ -64,12 +70,22 @@
                         text = Regex.Replace(text, @"<[^>]*(>|$)", String.Empty);
                     }
 
-                    sliderLine += $"<a href=\"{link}\" title=\"{text}\"><img src=\"{pictureUrl}\" data-thumb=\"{pictureUrl}\" alt=\"{alt}\" /></a>";
+                    sliderLine += $"<a href=\"{link}\" title=\"{text}\"><img src=\"{initialOnePixelImage}\" data-thumb=\"{initialOnePixelImage}\"" +
+                        $"data-desktopImage=\"{pictureUrl}\"" +
+                        $"data-desktopThumb=\"{pictureUrl}\"" +
+                        $"data-mobileImage=\"{mobilePictureUrl}\"" +
+                        $"data-mobileThumb=\"{mobilePictureUrl}\"" +
+                        $"alt=\"{alt}\" /></a>";
                 }
             }
             else
             {
-                sliderLine += $"<img src=\"{pictureUrl}\" data-thumb=\"{pictureUrl}\" alt=\"{alt}\" title=\"{text}\" />";
+                sliderLine += $"<img src=\"{initialOnePixelImage}\" data-thumb=\"{initialOnePixelImage}\"" +
+                    $"data-desktopImage=\"{pictureUrl}\"" +
+                    $"data-desktopThumb=\"{pictureUrl}\"" +
+                    $"data-mobileImage=\"{mobilePictureUrl}\"" +
+                    $"data-mobileThumb=\"{mobilePictureUrl}\"" +
+                    $"alt=\"{alt}\" title=\"{text}\" />";
             }
         }
 
@@ -83,6 +99,8 @@
     {
         string singleSliderImageLine = string.Empty;
 
+        var desktopImageSize = Model.MobileBreakpoint + 1;
+
         var alt = String.IsNullOrEmpty(sliderImage.Alt) ? "banner" : sliderImage.Alt;
         var strippedDisplayText = sliderImage.DisplayText;
 
@@ -95,16 +113,47 @@
         {
             if (Model.Settings.ShowCaption)
             {
-                singleSliderImageLine += $"<a href=\"{sliderImage.Url}\"><img class=\"nivo-main-image\" src=\"{sliderImage.PicturePath}\" alt=\"{alt}\" /></a>";
+                singleSliderImageLine += $"<a href=\"{sliderImage.Url}\">" +
+                    $"<picture>" +
+                    $"<source media=\"(min-width: {desktopImageSize}px)\" srcset=\"{sliderImage.PicturePath}\">" +
+                    $"<source media=\"(max-width: {Model.MobileBreakpoint}px)\" srcset=\"{sliderImage.MobilePicturePath}\">" +
+                    $"<img class=\"nivo-main-image\" src=\"{sliderImage.PicturePath}\"" +
+                    $"data-desktopImage=\"{sliderImage.PicturePath}\"" +
+                    $"data-desktopThumb=\"{sliderImage.PicturePath}\"" +
+                    $"data-mobileImage=\"{sliderImage.MobilePicturePath}\"" +
+                    $"data-mobileThumb=\"{sliderImage.MobilePicturePath}\"" +
+                    $"alt=\"{alt}\" title=\"{strippedDisplayText}\"/>" +
+                    $"</picture>"
+                    + $"</a>";
             }
             else
             {
-                singleSliderImageLine += $"<a href=\"{sliderImage.Url}\" title=\"{strippedDisplayText}\"><img class=\"nivo-main-image\" src=\"{sliderImage.PicturePath}\" alt=\"{alt}\" /></a>";
+                singleSliderImageLine += $"<a href=\"{sliderImage.Url}\" title=\"{strippedDisplayText}\">" +
+                    $"<picture>" +
+                    $"<source media=\"(min-width: {desktopImageSize}px)\" srcset=\"{sliderImage.PicturePath}\">" +
+                    $"<source media=\"(max-width: {Model.MobileBreakpoint}px)\" srcset=\"{sliderImage.MobilePicturePath}\">" +
+                    $"<img class=\"nivo-main-image\" src=\"{sliderImage.PicturePath}\"" +
+                    $"data-desktopImage=\"{sliderImage.PicturePath}\"" +
+                    $"data-desktopThumb=\"{sliderImage.PicturePath}\"" +
+                    $"data-mobileImage=\"{sliderImage.MobilePicturePath}\"" +
+                    $"data-mobileThumb=\"{sliderImage.MobilePicturePath}\"" +
+                    $"alt=\"{alt}\" title=\"{strippedDisplayText}\"/>" +
+                    $"</picture>"
+                    + $"</a>";
             }
         }
         else
         {
-            singleSliderImageLine += $"<img class=\"nivo-main-image\" src=\"{sliderImage.PicturePath}\" alt=\"{alt}\" title=\"{strippedDisplayText}\" />";
+            singleSliderImageLine += $"<picture>" +
+                $"<source media=\"(min-width: {desktopImageSize}px)\" srcset=\"{sliderImage.PicturePath}\">" +
+                $"<source media=\"(max-width: {Model.MobileBreakpoint}px)\" srcset=\"{sliderImage.MobilePicturePath}\">" +
+                $"<img class=\"nivo-main-image\" src=\"{sliderImage.PicturePath}\"" +
+                $"data-desktopImage=\"{sliderImage.PicturePath}\"" +
+                $"data-desktopThumb=\"{sliderImage.PicturePath}\"" +
+                $"data-mobileImage=\"{sliderImage.MobilePicturePath}\"" +
+                $"data-mobileThumb=\"{sliderImage.MobilePicturePath}\"" +
+                $"alt=\"{alt}\" title=\"{strippedDisplayText}\"/>" +
+                $"</picture>";
         }
 
         singleSliderImageLine += $"<div class=\"nivo-caption\" style=\"display: block;\">{Html.Raw(sliderImage.DisplayText)}</div>";
@@ -128,35 +177,36 @@
      data-controlNavThumbs="@Model.Settings.EnableControlNavigationThumbs.ToString().ToLowerInvariant()"
      data-pauseOnHover="@Model.Settings.PauseOnHover.ToString().ToLowerInvariant()"
      data-prevText="@T("SevenSpikes.Themes.Avenue.AnywhereSliders.PrevText")"
-     data-nextText="@T("SevenSpikes.Themes.Avenue.AnywhereSliders.NextText")">
+     data-nextText="@T("SevenSpikes.Themes.Avenue.AnywhereSliders.NextText")"
+     data-mobileBreakpoint="@Model.MobileBreakpoint">
 
     @if (Model.SliderImages.Count == 1)
     {
         @Html.Raw(RenderSingleSliderImageLine(Model.SliderImages[0]));
-     }
-     else
-     {
-         // add javascript
-         Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/swipeEvents.min.js");
-         Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Scripts/nivo/jquery.nivo.slider.min.js");
+    }
+    else
+    {
+        // add javascript
+        Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/swipeEvents.min.js");
+        Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Nop.Plugins.AnywhereSliders/Scripts/nivo/jquery.nivo.slider.min.js");
 
-         if (Model.Settings.RandomStart)
-         {
-             Random r = new Random();
-             int randomIndex = r.Next(0, Model.SliderImages.Count - 1);
+        if (Model.Settings.RandomStart)
+        {
+            Random r = new Random();
+            int randomIndex = r.Next(0, Model.SliderImages.Count - 1);
 
-             // the idea is to reorganize the slider images so that the random becomes the first
-             var randomStartSlideModels = new List<SliderImageModel>();
-             // take the random start image and all after it
-             randomStartSlideModels.AddRange(Model.SliderImages.Skip(randomIndex));
-             // take all other images form the beginning to the random start
-             randomStartSlideModels.AddRange(Model.SliderImages.Take(randomIndex));
+            // the idea is to reorganize the slider images so that the random becomes the first
+            var randomStartSlideModels = new List<SliderImageModel>();
+            // take the random start image and all after it
+            randomStartSlideModels.AddRange(Model.SliderImages.Skip(randomIndex));
+            // take all other images form the beginning to the random start
+            randomStartSlideModels.AddRange(Model.SliderImages.Take(randomIndex));
 
-             Model.SliderImages = randomStartSlideModels;
-         }
+            Model.SliderImages = randomStartSlideModels;
+        }
 
-         <div id="@Model.SliderHtmlElementId" class="nivoSlider">
-             @Html.Raw(RenderSingleSliderImageLine(Model.SliderImages[0]))
-         </div>
-     }
+        <div id="@Model.SliderHtmlElementId" class="nivoSlider">
+            @Html.Raw(RenderSingleSliderImageLine(Model.SliderImages[0]))
+        </div>
+    }
 </div>
