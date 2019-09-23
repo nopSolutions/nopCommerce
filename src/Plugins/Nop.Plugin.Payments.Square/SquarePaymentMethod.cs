@@ -234,7 +234,9 @@ namespace Nop.Plugin.Payments.Square
                 buyerEmailAddress: email,
                 delayCapture: _squarePaymentSettings.TransactionMode == TransactionMode.Authorize,
                 idempotencyKey: Guid.NewGuid().ToString(),
-                integrationId: !string.IsNullOrEmpty(SquarePaymentDefaults.IntegrationId) ? SquarePaymentDefaults.IntegrationId : null,
+                integrationId: !_squarePaymentSettings.UseSandbox && !string.IsNullOrEmpty(SquarePaymentDefaults.IntegrationId)
+                    ? SquarePaymentDefaults.IntegrationId
+                    : null,
                 note: string.Format(SquarePaymentDefaults.PaymentNote, paymentRequest.OrderGuid),
                 referenceId: paymentRequest.OrderGuid.ToString(),
                 shippingAddress: shippingAddress
