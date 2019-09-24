@@ -78,6 +78,9 @@ namespace Nop.Core.Infrastructure
 
             //register type finder
             containerBuilder.RegisterInstance(typeFinder).As<ITypeFinder>().SingleInstance();
+            
+            //register automapper
+            containerBuilder.RegisterInstance(AutoMapperConfiguration.Mapper).As<IMapper>().SingleInstance();
 
             //populate Autofac container builder with the set of registered service descriptors
             containerBuilder.Populate(services);
