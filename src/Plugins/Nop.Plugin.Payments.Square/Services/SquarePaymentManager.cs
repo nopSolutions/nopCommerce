@@ -53,11 +53,15 @@ namespace Nop.Plugin.Payments.Square.Services
             if (_squarePaymentSettings.UseSandbox && string.IsNullOrEmpty(_squarePaymentSettings.AccessToken))
                 throw new NopException("Sandbox access token should not be empty");
 
-            return new Configuration
+            var config = new Configuration
             {
                 AccessToken = _squarePaymentSettings.AccessToken,
                 UserAgent = SquarePaymentDefaults.UserAgent
             };
+            if (_squarePaymentSettings.UseSandbox)
+                config.setApiClientUsingDefault(new ApiClient(SquarePaymentDefaults.SandboxBaseUrl));
+
+            return config;
         }
 
         #endregion

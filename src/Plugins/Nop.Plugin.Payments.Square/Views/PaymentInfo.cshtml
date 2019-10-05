@@ -7,7 +7,9 @@
 
 @{
     Layout = "";
-    Html.AddScriptParts(ResourceLocation.Footer, SquarePaymentDefaults.PaymentFormScriptPath, excludeFromBundle: true);
+    Html.AddScriptParts(ResourceLocation.Footer, 
+        squarePaymentSettings.UseSandbox ? SquarePaymentDefaults.SandboxPaymentFormScriptPath : SquarePaymentDefaults.SandboxPaymentFormScriptPath, 
+        excludeFromBundle: true);
 }
 
 <style type="text/css">

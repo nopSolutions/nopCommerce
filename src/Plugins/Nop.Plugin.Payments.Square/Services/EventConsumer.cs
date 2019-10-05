@@ -22,6 +22,7 @@ namespace Nop.Plugin.Payments.Square.Services
         private readonly ILocalizationService _localizationService;
         private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IScheduleTaskService _scheduleTaskService;
+        private readonly SquarePaymentSettings _squarePaymentSettings;
 
         #endregion
 
@@ -29,11 +30,13 @@ namespace Nop.Plugin.Payments.Square.Services
 
         public EventConsumer(ILocalizationService localizationService,
             IPaymentPluginManager paymentPluginManager,
-            IScheduleTaskService scheduleTaskService)
+            IScheduleTaskService scheduleTaskService,
+            SquarePaymentSettings squarePaymentSettings)
         {
             _localizationService = localizationService;
             _paymentPluginManager = paymentPluginManager;
             _scheduleTaskService = scheduleTaskService;
+            _squarePaymentSettings = squarePaymentSettings;
         }
 
         #endregion
@@ -52,7 +55,11 @@ namespace Nop.Plugin.Payments.Square.Services
 
             //add js script to one page checkout
             if (eventMessage.GetRouteNames().Any(routeName => routeName.Equals(SquarePaymentDefaults.OnePageCheckoutRouteName)))
-                eventMessage.Helper?.AddScriptParts(ResourceLocation.Footer, SquarePaymentDefaults.PaymentFormScriptPath, excludeFromBundle: true);
+            {
+                eventMessage.Helper?.AddScriptParts(ResourceLocation.Footer,
+                    _squarePaymentSettings.UseSandbox ? SquarePaymentDefaults.SandboxPaymentFormScriptPath : SquarePaymentDefaults.PaymentFormScriptPath,
+                    excludeFromBundle: true);
+            }
         }
 
         /// <summary>
