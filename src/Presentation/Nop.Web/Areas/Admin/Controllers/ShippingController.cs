@@ -825,7 +825,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         if (shippingMethod.ShippingMethodCountryMappings.FirstOrDefault(mapping => mapping.CountryId == country.Id) != null)
                             continue;
 
-                        shippingMethod.ShippingMethodCountryMappings.Add(new ShippingMethodCountryMapping { Country = country });
+                        shippingMethod.ShippingMethodCountryMappings.Add(new ShippingMethodCountryMapping { CountryId = country.Id });
                         _shippingService.UpdateShippingMethod(shippingMethod);
                     }
                     else

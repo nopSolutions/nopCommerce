@@ -1,6 +1,4 @@
-using Nop.Core.Domain.Directory;
-
-namespace Nop.Core.Domain.Shipping
+﻿namespace Nop.Core.Domain.Shipping
 {
     /// <summary>
     /// Represents a shipping method-country mapping class
@@ -16,15 +14,5 @@ namespace Nop.Core.Domain.Shipping
         /// Gets or sets the country identifier
         /// </summary>
         public int CountryId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the shipping method
-        /// </summary>
-        public virtual ShippingMethod ShippingMethod { get; set; }
-
-        /// <summary>
-        /// Gets or sets the country
-        /// </summary>
-        public virtual Country Country { get; set; }
     }
 }

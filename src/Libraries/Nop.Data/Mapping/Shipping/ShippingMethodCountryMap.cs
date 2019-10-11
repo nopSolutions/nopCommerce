@@ -22,12 +22,7 @@ namespace Nop.Data.Mapping.Shipping
 
             builder.Property(mapping => mapping.ShippingMethodId).HasColumnName("ShippingMethod_Id");
             builder.Property(mapping => mapping.CountryId).HasColumnName("Country_Id");
-
-            builder.HasOne(mapping => mapping.ShippingMethod)
-                .WithMany(method => method.ShippingMethodCountryMappings)
-                .HasForeignKey(mapping => mapping.ShippingMethodId)
-                .IsRequired();
-
+            
             builder.Ignore(mapping => mapping.Id);
 
             base.Configure(builder);
