@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Messages;
 
@@ -29,11 +29,6 @@ namespace Nop.Data.Mapping.Messages
             builder.Property(email => email.CC).HasMaxLength(500);
             builder.Property(email => email.Bcc).HasMaxLength(500);
             builder.Property(email => email.Subject).HasMaxLength(1000);
-
-            builder.HasOne(email => email.EmailAccount)
-                .WithMany()
-                .HasForeignKey(email => email.EmailAccountId)
-                .IsRequired();
 
             builder.Ignore(email => email.Priority);
 

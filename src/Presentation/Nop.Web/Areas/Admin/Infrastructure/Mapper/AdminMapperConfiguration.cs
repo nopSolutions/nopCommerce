@@ -1083,7 +1083,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(entity => entity.AttachmentFilePath, options => options.Ignore())
                 .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
                 .ForMember(entity => entity.DontSendBeforeDateUtc, options => options.Ignore())
-                .ForMember(entity => entity.EmailAccount, options => options.Ignore())
                 .ForMember(entity => entity.EmailAccountId, options => options.Ignore())
                 .ForMember(entity => entity.Priority, options => options.Ignore())
                 .ForMember(entity => entity.PriorityId, options => options.Ignore())

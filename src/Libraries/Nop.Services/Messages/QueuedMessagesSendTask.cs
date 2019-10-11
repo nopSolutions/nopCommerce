@@ -11,6 +11,7 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
+        private readonly IEmailAccountService _emailAccountService;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
         private readonly IQueuedEmailService _queuedEmailService;
@@ -19,10 +20,12 @@ namespace Nop.Services.Messages
 
         #region Ctor
 
-        public QueuedMessagesSendTask(IEmailSender emailSender,
+        public QueuedMessagesSendTask(IEmailAccountService emailAccountService,
+            IEmailSender emailSender,
             ILogger logger,
             IQueuedEmailService queuedEmailService)
         {
+            _emailAccountService = emailAccountService;
             _emailSender = emailSender;
             _logger = logger;
             _queuedEmailService = queuedEmailService;
@@ -51,7 +54,7 @@ namespace Nop.Services.Messages
 
                 try
                 {
-                    _emailSender.SendEmail(queuedEmail.EmailAccount,
+                    _emailSender.SendEmail(_emailAccountService.GetEmailAccountById(queuedEmail.EmailAccountId),
                         queuedEmail.Subject,
                         queuedEmail.Body,
                        queuedEmail.From,
