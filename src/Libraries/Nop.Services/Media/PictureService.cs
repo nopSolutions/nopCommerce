@@ -292,7 +292,7 @@ namespace Nop.Services.Media
                 throw new ArgumentNullException(nameof(picture));
 
             var result = fromDb
-                ? picture.PictureBinary?.BinaryData ?? new byte[0]
+                ? GetPictureBinaryByPictureId(picture.Id)?.BinaryData ?? new byte[0]
                 : LoadPictureFromFile(picture.Id, picture.MimeType);
 
             return result;
@@ -337,7 +337,7 @@ namespace Nop.Services.Media
             if (picture == null)
                 throw new ArgumentNullException(nameof(picture));
 
-            var pictureBinary = picture.PictureBinary;
+            var pictureBinary = GetPictureBinaryByPictureId(picture.Id);
 
             var isNew = pictureBinary == null;
 
@@ -934,15 +934,25 @@ namespace Nop.Services.Media
             picture.SeoFilename = seoFilename;
 
             _pictureRepository.Update(picture);
-            UpdatePictureBinary(picture, StoreInDb ? picture.PictureBinary.BinaryData : new byte[0]);
+            UpdatePictureBinary(picture, StoreInDb ? GetPictureBinaryByPictureId(picture.Id).BinaryData : new byte[0]);
 
             if (!StoreInDb)
-                SavePictureInFile(picture.Id, picture.PictureBinary.BinaryData, picture.MimeType);
+                SavePictureInFile(picture.Id, GetPictureBinaryByPictureId(picture.Id).BinaryData, picture.MimeType);
 
             //event notification
             _eventPublisher.EntityUpdated(picture);
 
             return picture;
+        }
+
+        /// <summary>
+        /// Get product picture binary by picture identifier
+        /// </summary>
+        /// <param name="pictureId">The picture identifier</param>
+        /// <returns>Picture binary</returns>
+        public virtual PictureBinary GetPictureBinaryByPictureId(int pictureId)
+        {
+            return _pictureBinaryRepository.Table.FirstOrDefault(pb => pb.PictureId == pictureId);
         }
 
         /// <summary>

@@ -194,5 +194,12 @@ namespace Nop.Services.Media
         /// <param name="attributesXml">Attributes (in XML format)</param>
         /// <returns>Picture</returns>
         Picture GetProductPicture(Product product, string attributesXml);
+
+        /// <summary>
+        /// Get product picture binary by picture identifier
+        /// </summary>
+        /// <param name="pictureId">The picture identifier</param>
+        /// <returns>Picture binary</returns>
+        PictureBinary GetPictureBinaryByPictureId(int pictureId);
     }
 }
