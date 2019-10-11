@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Media;
 
@@ -20,11 +20,6 @@ namespace Nop.Data.Mapping.Media
             builder.ToTable(nameof(PictureBinary));
             builder.HasKey(pictureBinary => pictureBinary.Id);
             
-            builder.HasOne(pictureBinary => pictureBinary.Picture)
-                .WithOne(picture => picture.PictureBinary)
-                .HasForeignKey<PictureBinary>(pictureBinary => pictureBinary.PictureId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             base.Configure(builder);
         }
 
