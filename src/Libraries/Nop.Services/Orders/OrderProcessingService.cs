@@ -1777,7 +1777,7 @@ namespace Nop.Services.Orders
                 //only products with "use multiple warehouses"
                 foreach (var shipment in _shipmentService.GetShipmentsByOrderId(order.Id))
                 {
-                    foreach (var shipmentItem in shipment.ShipmentItems)
+                    foreach (var shipmentItem in _shipmentService.GetShipmentItemsByShipmentId(shipment.Id))
                     {
                         var product = _orderService.GetProductByOrderItemId(shipmentItem.OrderItemId);
                         if (product == null)
@@ -2175,7 +2175,7 @@ namespace Nop.Services.Orders
             _shipmentService.UpdateShipment(shipment);
 
             //process products with "Multiple warehouse" support enabled
-            foreach (var item in shipment.ShipmentItems)
+            foreach (var item in _shipmentService.GetShipmentItemsByShipmentId(shipment.Id))
             {
                 var product = _orderService.GetProductByOrderItemId(item.OrderItemId);
 
@@ -2221,7 +2221,7 @@ namespace Nop.Services.Orders
             if (shipment == null)
                 throw new ArgumentNullException(nameof(shipment));
 
-            var order = shipment.Order;
+            var order = _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
@@ -2311,7 +2311,7 @@ namespace Nop.Services.Orders
             //only products with "use multiple warehouses"
             foreach (var shipment in _shipmentService.GetShipmentsByOrderId(order.Id))
             {
-                foreach (var shipmentItem in shipment.ShipmentItems)
+                foreach (var shipmentItem in _shipmentService.GetShipmentItemsByShipmentId(shipment.Id))
                 {
                     var product = _orderService.GetProductByOrderItemId(shipmentItem.OrderItemId);
 

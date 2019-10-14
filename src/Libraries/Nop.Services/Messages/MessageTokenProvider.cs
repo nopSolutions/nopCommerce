@@ -78,6 +78,7 @@ namespace Nop.Services.Messages
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductService _productService;
         private readonly IRewardPointService _rewardPointService;
+        private readonly IShipmentService _shipmentService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
@@ -120,6 +121,7 @@ namespace Nop.Services.Messages
             IPriceFormatter priceFormatter,
             IProductService productService,
             IRewardPointService rewardPointService,
+            IShipmentService shipmentService,
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IStoreService storeService,
@@ -156,6 +158,7 @@ namespace Nop.Services.Messages
             _priceFormatter = priceFormatter;
             _productService = productService;
             _rewardPointService = rewardPointService;
+            _shipmentService = shipmentService;
             _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
             _storeService = storeService;
@@ -807,7 +810,7 @@ namespace Nop.Services.Messages
             sb.AppendLine($"<th>{_localizationService.GetResource("Messages.Order.Product(s).Quantity", languageId)}</th>");
             sb.AppendLine("</tr>");
 
-            var table = shipment.ShipmentItems.ToList();
+            var table = _shipmentService.GetShipmentItemsByShipmentId(shipment.Id);
             for (var i = 0; i <= table.Count - 1; i++)
             {
                 var si = table[i];
@@ -1061,7 +1064,8 @@ namespace Nop.Services.Messages
 
             tokens.Add(new Token("Shipment.TrackingNumberURL", trackingNumberUrl, true));
             tokens.Add(new Token("Shipment.Product(s)", ProductListToHtmlTable(shipment, languageId), true));
-            var shipmentUrl = RouteUrl(shipment.Order.StoreId, "ShipmentDetails", new { shipmentId = shipment.Id });
+
+            var shipmentUrl = RouteUrl(_orderService.GetOrderById(shipment.OrderId).StoreId, "ShipmentDetails", new { shipmentId = shipment.Id });
             tokens.Add(new Token("Shipment.URLForCustomer", shipmentUrl, true));
 
             //event notification

@@ -5226,7 +5226,7 @@ namespace Nop.Services.Installation
             //shipment 1
             var fourthOrderShipment1 = new Shipment
             {
-                Order = fourthOrder,
+                OrderId = fourthOrder.Id,
                 TrackingNumber = string.Empty,
                 TotalWeight = 4M,
                 ShippedDateUtc = DateTime.UtcNow,
@@ -5257,7 +5257,7 @@ namespace Nop.Services.Installation
             //shipment 2
             var fourthOrderShipment2 = new Shipment
             {
-                Order = fourthOrder,
+                OrderId = fourthOrder.Id,
                 TrackingNumber = string.Empty,
                 TotalWeight = 2M,
                 ShippedDateUtc = DateTime.UtcNow,
@@ -5394,7 +5394,7 @@ namespace Nop.Services.Installation
             //shipment 1
             var fifthOrderShipment1 = new Shipment
             {
-                Order = fifthOrder,
+                OrderId = fifthOrder.Id,
                 TrackingNumber = string.Empty,
                 TotalWeight = 2M,
                 ShippedDateUtc = DateTime.UtcNow,

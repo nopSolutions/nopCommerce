@@ -248,7 +248,8 @@ namespace Nop.Web.Controllers
             if (shipment == null)
                 return Challenge();
 
-            var order = shipment.Order;
+            var order = _orderService.GetOrderById(shipment.OrderId);
+            
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 

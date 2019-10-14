@@ -479,7 +479,8 @@ namespace Nop.Web.Factories
             if (shipment == null)
                 throw new ArgumentNullException(nameof(shipment));
 
-            var order = shipment.Order;
+            var order = _orderService.GetOrderById(shipment.OrderId);
+
             if (order == null)
                 throw new Exception("order cannot be loaded");
             var model = new ShipmentDetailsModel
@@ -520,7 +521,7 @@ namespace Nop.Web.Factories
 
             //products in this shipment
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
-            foreach (var shipmentItem in shipment.ShipmentItems)
+            foreach (var shipmentItem in _shipmentService.GetShipmentItemsByShipmentId(shipment.Id))
             {
                 var orderItem = _orderService.GetOrderItemById(shipmentItem.OrderItemId);
                 if (orderItem == null)

@@ -1392,7 +1392,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     shipmentModel.CanShip = !shipment.ShippedDateUtc.HasValue;
                     shipmentModel.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
-                    shipmentModel.CustomOrderNumber = shipment.Order.CustomOrderNumber;
+
+                    var order = _orderService.GetOrderById(shipment.OrderId);
+
+                    shipmentModel.CustomOrderNumber = order.CustomOrderNumber;
 
                     if (shipment.TotalWeight.HasValue)
                         shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{_measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name}]";
@@ -1422,7 +1425,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 model.CanShip = !shipment.ShippedDateUtc.HasValue;
                 model.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
-                model.CustomOrderNumber = shipment.Order.CustomOrderNumber;
+
+                var shipmentOrder = _orderService.GetOrderById(shipment.OrderId);
+
+                model.CustomOrderNumber = shipmentOrder.CustomOrderNumber;
 
                 model.ShippedDate = shipment.ShippedDateUtc.HasValue
                     ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc).ToString()
@@ -1436,7 +1442,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         $"{shipment.TotalWeight:F2} [{_measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name}]";
 
                 //prepare shipment items
-                foreach (var item in shipment.ShipmentItems)
+                foreach (var item in _shipmentService.GetShipmentItemsByShipmentId(shipment.Id))
                 {
                     var orderItem = _orderService.GetOrderItemById(item.OrderItemId);
                     if (orderItem == null)
@@ -1577,7 +1583,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     shipmentModel.CanShip = !shipment.ShippedDateUtc.HasValue;
                     shipmentModel.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
-                    shipmentModel.CustomOrderNumber = shipment.Order.CustomOrderNumber;
+
+                    var shipmentOrder = _orderService.GetOrderById(shipment.OrderId);
+
+                    shipmentModel.CustomOrderNumber = shipmentOrder.CustomOrderNumber;
 
                     var baseWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name;
                     if (shipment.TotalWeight.HasValue)
@@ -1605,7 +1614,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(shipment));
 
             //get shipments
-            var shipmentItems = shipment.ShipmentItems.ToList().ToPagedList(searchModel);
+            var shipmentItems = _shipmentService.GetShipmentItemsByShipmentId(shipment.Id).ToPagedList(searchModel);
 
             //prepare list model
             var model = new ShipmentItemListModel().PrepareToGrid(searchModel, shipmentItems, () =>

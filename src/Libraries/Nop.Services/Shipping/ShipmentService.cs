@@ -130,8 +130,13 @@ namespace Nop.Services.Shipping
             if (createdToUtc.HasValue)
                 query = query.Where(s => createdToUtc.Value >= s.CreatedOnUtc);
 
-            query = query.Where(s => s.Order != null && !s.Order.Deleted);
+            query = from s in query
+                join o in _orderRepository.Table on s.OrderId equals o.Id
+                where !o.Deleted
+                select s;
 
+            query = query.Distinct();
+            
             if (vendorId > 0)
             {
                 var queryVendorOrderItems = from orderItem in _orderItemRepository.Table
@@ -140,15 +145,21 @@ namespace Nop.Services.Shipping
                                             select orderItem.Id;
 
                 query = from s in query
-                        where queryVendorOrderItems.Intersect(s.ShipmentItems.Select(si => si.OrderItemId)).Any()
+                    join si in _siRepository.Table on s.Id equals si.ShipmentId
+                        where queryVendorOrderItems.Contains(si.OrderItemId)
                         select s;
+
+                query = query.Distinct();
             }
 
             if (warehouseId > 0)
             {
                 query = from s in query
-                        where s.ShipmentItems.Any(si => si.WarehouseId == warehouseId)
+                    join si in _siRepository.Table on s.Id equals si.ShipmentId 
+                        where si.WarehouseId == warehouseId
                         select s;
+
+                query = query.Distinct();
             }
 
             query = query.OrderByDescending(s => s.CreatedOnUtc);
@@ -264,6 +275,20 @@ namespace Nop.Services.Shipping
         }
 
         /// <summary>
+        /// Gets a shipment items of shipment
+        /// </summary>
+        /// <param name="shipmentId">Shipment identifier</param>
+        /// <returns>Shipment items</returns>
+        public virtual IList<ShipmentItem> GetShipmentItemsByShipmentId(int shipmentId)
+        {
+            if (shipmentId == 0)
+                return null;
+
+            return _siRepository.Table.Where(si => si.ShipmentId == shipmentId).ToList();
+        }
+
+
+        /// <summary>
         /// Gets a shipment item
         /// </summary>
         /// <param name="shipmentItemId">Shipment item identifier</param>
@@ -329,8 +354,15 @@ namespace Nop.Services.Shipping
             const int cancelledOrderStatusId = (int)OrderStatus.Cancelled;
 
             var query = _siRepository.Table;
-            query = query.Where(si => !si.Shipment.Order.Deleted);
-            query = query.Where(si => si.Shipment.Order.OrderStatusId != cancelledOrderStatusId);
+
+            query = from si in query
+                join s in _shipmentRepository.Table on si.ShipmentId equals s.Id
+                join o in _orderRepository.Table on s.OrderId equals o.Id
+                where !o.Deleted && o.OrderStatusId != cancelledOrderStatusId
+                    select si;
+
+            query = query.Distinct();
+
             if (warehouseId > 0)
                 query = query.Where(si => si.WarehouseId == warehouseId);
             if (ignoreShipped)
@@ -357,18 +389,19 @@ namespace Nop.Services.Shipping
         /// <returns>Shipment tracker</returns>
         public virtual IShipmentTracker GetShipmentTracker(Shipment shipment)
         {
-            if (!shipment.Order.PickupInStore)
+            var order = _orderRepository.GetById(shipment.OrderId);
+
+            if (!order.PickupInStore)
             {
                 var shippingRateComputationMethod = _shippingPluginManager
-                    .LoadPluginBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
+                    .LoadPluginBySystemName(order.ShippingRateComputationMethodSystemName);
+
                 return shippingRateComputationMethod?.ShipmentTracker;
             }
-            else
-            {
-                var pickupPointProvider = _pickupPluginManager
-                    .LoadPluginBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
-                return pickupPointProvider?.ShipmentTracker;
-            }
+
+            var pickupPointProvider = _pickupPluginManager
+                .LoadPluginBySystemName(order.ShippingRateComputationMethodSystemName);
+            return pickupPointProvider?.ShipmentTracker;
         }
 
         #endregion

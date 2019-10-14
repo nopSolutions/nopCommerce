@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Shipping;
 
@@ -19,12 +19,7 @@ namespace Nop.Data.Mapping.Shipping
         {
             builder.ToTable(nameof(ShipmentItem));
             builder.HasKey(item => item.Id);
-
-            builder.HasOne(item => item.Shipment)
-                .WithMany(shipment => shipment.ShipmentItems)
-                .HasForeignKey(item => item.ShipmentId)
-                .IsRequired();
-
+            
             base.Configure(builder);
         }
 

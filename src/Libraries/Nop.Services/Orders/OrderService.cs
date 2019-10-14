@@ -572,7 +572,7 @@ namespace Nop.Services.Orders
             for (var i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
-                var si = shipment.ShipmentItems
+                var si = _shipmentService.GetShipmentItemsByShipmentId(shipment.Id)
                     .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
                 if (si != null)
                 {
@@ -622,7 +622,7 @@ namespace Nop.Services.Orders
                     //already shipped
                     continue;
 
-                var si = shipment.ShipmentItems
+                var si = _shipmentService.GetShipmentItemsByShipmentId(shipment.Id)
                     .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
                 if (si != null)
                 {
@@ -652,7 +652,7 @@ namespace Nop.Services.Orders
                     //not shipped yet
                     continue;
 
-                var si = shipment.ShipmentItems
+                var si = _shipmentService.GetShipmentItemsByShipmentId(shipment.Id)
                     .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
                 if (si != null)
                 {
@@ -683,7 +683,7 @@ namespace Nop.Services.Orders
                     //not delivered yet
                     continue;
 
-                var si = shipment.ShipmentItems
+                var si = _shipmentService.GetShipmentItemsByShipmentId(shipment.Id)
                     .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
                 if (si != null)
                 {

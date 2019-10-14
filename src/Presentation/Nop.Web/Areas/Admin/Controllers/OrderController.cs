@@ -2213,6 +2213,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 CreatedOnUtc = DateTime.UtcNow
             };
 
+            var shipmentItems = new List<ShipmentItem>();
+
             decimal? totalWeight = null;
 
             foreach (var orderItem in orderItems)
@@ -2275,7 +2277,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 }
 
                 //create a shipment item
-                shipment.ShipmentItems.Add(new ShipmentItem
+                shipmentItems.Add(new ShipmentItem
                 {
                     OrderItemId = orderItem.Id,
                     Quantity = qtyToAdd,
@@ -2295,10 +2297,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //if we have at least one item in the shipment, then save it
-            if (shipment.ShipmentItems.Any())
+            if (shipmentItems.Any())
             {
                 shipment.TotalWeight = totalWeight;
                 _shipmentService.InsertShipment(shipment);
+
+                foreach (var shipmentItem in shipmentItems)
+                {
+                    shipmentItem.ShipmentId = shipment.Id;
+                    _shipmentService.InsertShipmentItem(shipmentItem);
+                }
 
                 //add a note
                 _orderService.InsertOrderNote(new OrderNote
@@ -2356,8 +2364,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
                 return RedirectToAction("List");
-
-            foreach (var shipmentItem in shipment.ShipmentItems)
+            
+            foreach (var shipmentItem in _shipmentService.GetShipmentItemsByShipmentId(shipment.Id))
             {
                 var orderItem = _orderService.GetOrderItemById(shipmentItem.OrderItemId);
                 if (orderItem == null)

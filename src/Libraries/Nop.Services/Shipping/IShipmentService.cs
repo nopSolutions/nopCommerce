@@ -89,6 +89,13 @@ namespace Nop.Services.Shipping
         void DeleteShipmentItem(ShipmentItem shipmentItem);
 
         /// <summary>
+        /// Gets a shipment items of shipment
+        /// </summary>
+        /// <param name="shipmentId">Shipment identifier</param>
+        /// <returns>Shipment items</returns>
+        IList<ShipmentItem> GetShipmentItemsByShipmentId(int shipmentId);
+
+        /// <summary>
         /// Gets a shipment item
         /// </summary>
         /// <param name="shipmentItemId">Shipment item identifier</param>

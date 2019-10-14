@@ -27,6 +27,7 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using Nop.Services.Vendors;
 
@@ -60,6 +61,7 @@ namespace Nop.Services.Common
         private readonly IProductService _productService;
         private readonly IRewardPointService _rewardPointService;
         private readonly ISettingService _settingService;
+        private readonly IShipmentService _shipmentService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
@@ -95,6 +97,7 @@ namespace Nop.Services.Common
             IProductService productService,
             IRewardPointService rewardPointService,
             ISettingService settingService,
+            IShipmentService shipmentService,
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IStoreService storeService,
@@ -126,6 +129,7 @@ namespace Nop.Services.Common
             _productService = productService;
             _rewardPointService = rewardPointService;
             _settingService = settingService;
+            _shipmentService = shipmentService;
             _storeContext = storeContext;
             _stateProvinceService = stateProvinceService;
             _storeService = storeService;
@@ -1435,7 +1439,7 @@ namespace Nop.Services.Common
                 cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 productsTable.AddCell(cell);
 
-                foreach (var si in shipment.ShipmentItems)
+                foreach (var si in _shipmentService.GetShipmentItemsByShipmentId(shipment.Id))
                 {
                     var productAttribTable = new PdfPTable(1);
                     if (lang.Rtl)
