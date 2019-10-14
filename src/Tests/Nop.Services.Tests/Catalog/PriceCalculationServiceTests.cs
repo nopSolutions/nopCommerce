@@ -11,6 +11,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
@@ -89,8 +90,13 @@ namespace Nop.Services.Tests.Catalog
             _discountProductMappingRepository = new Mock<IRepository<DiscountProductMapping>>();
             _discountProductMappingRepository.Setup(r => r.Table).Returns(GetMockDiscountProductMapping);
 
-            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new TestCacheManager(), _customerService,
-                null, null, null, null, null, null, null, null, null, null, _discountProductMappingRepository.Object, _productRepository.Object, null, null, null, null, null, null, null, null, null, null, _tierPriceRepository.Object, null,
+            var shipmentRepository = new Mock<IRepository<Shipment>>();
+
+            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null,
+                new TestCacheManager(), _customerService,
+                null, null, null, null, null, null, null, null, null, null, _discountProductMappingRepository.Object,
+                _productRepository.Object, null, null, null, null, null, null, null, null, shipmentRepository.Object,
+                null, null, _tierPriceRepository.Object, null,
                 null, null, null, new LocalizationSettings());
 
             _productAttributeParser = new Mock<IProductAttributeParser>();

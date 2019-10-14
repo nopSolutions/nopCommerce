@@ -188,6 +188,8 @@ namespace Nop.Services.Tests.Orders
             _customerSettings = new CustomerSettings();
             _addressSettings = new AddressSettings();
 
+            var shippingMethodCountryMappingRepository = new Mock<IRepository<ShippingMethodCountryMapping>>();
+
             _shippingService = new ShippingService(_addressService.Object,
                 cacheManager,
                 _checkoutAttributeParser.Object,
@@ -202,6 +204,7 @@ namespace Nop.Services.Tests.Orders
                 _productAttributeParser.Object,
                 _productService.Object,
                 _shippingMethodRepository.Object,
+                shippingMethodCountryMappingRepository.Object,
                 _warehouseRepository.Object,
                 _shippingPluginManager,
                 _stateProvinceService.Object,
