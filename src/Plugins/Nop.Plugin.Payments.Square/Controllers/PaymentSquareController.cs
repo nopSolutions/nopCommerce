@@ -62,6 +62,7 @@ namespace Nop.Plugin.Payments.Square.Controllers
             {
                 ApplicationSecret = _squarePaymentSettings.ApplicationSecret,
                 UseSandbox = _squarePaymentSettings.UseSandbox,
+                Use3ds = _squarePaymentSettings.Use3ds,
                 TransactionModeId = (int)_squarePaymentSettings.TransactionMode,
                 LocationId = _squarePaymentSettings.LocationId,
                 AdditionalFee = _squarePaymentSettings.AdditionalFee,
@@ -147,6 +148,7 @@ namespace Nop.Plugin.Payments.Square.Controllers
             }
             _squarePaymentSettings.LocationId = model.UseSandbox == _squarePaymentSettings.UseSandbox ? model.LocationId : string.Empty;
             _squarePaymentSettings.UseSandbox = model.UseSandbox;
+            _squarePaymentSettings.Use3ds = model.Use3ds;
             _squarePaymentSettings.TransactionMode = (TransactionMode)model.TransactionModeId;
             _squarePaymentSettings.AdditionalFee = model.AdditionalFee;
             _squarePaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;

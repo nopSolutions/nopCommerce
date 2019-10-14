@@ -46,6 +46,9 @@ namespace Nop.Plugin.Payments.Square.Models
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.UseSandbox")]
         public bool UseSandbox { get; set; }
 
+        [NopResourceDisplayName("Plugins.Payments.Square.Fields.Use3ds")]
+        public bool Use3ds { get; set; }
+
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.TransactionMode")]
         public int TransactionModeId { get; set; }
 

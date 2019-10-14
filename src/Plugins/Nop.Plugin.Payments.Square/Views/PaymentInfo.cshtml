@@ -7,7 +7,9 @@
 
 @{
     Layout = "";
-    Html.AddScriptParts(ResourceLocation.Footer, SquarePaymentDefaults.PaymentFormScriptPath, excludeFromBundle: true);
+    Html.AddScriptParts(ResourceLocation.Footer, 
+        squarePaymentSettings.UseSandbox ? SquarePaymentDefaults.SandboxPaymentFormScriptPath : SquarePaymentDefaults.SandboxPaymentFormScriptPath, 
+        excludeFromBundle: true);
 }
 
 <style type="text/css">
@@ -40,17 +42,18 @@
 
         var submitForm = false;
         var onePageCheckout = @orderSettings.OnePageCheckoutEnabled.ToString().ToLower();
+        var use3ds = @squarePaymentSettings.Use3ds.ToString().ToLower();
         $('.payment-info-next-step-button').attr('onclick', null);
         $('.payment-info-next-step-button').prop('disabled', true);
         $('.payment-info-next-step-button').css("opacity", .3);
 
         var paymentForm = new SqPaymentForm({
             applicationId: '@squarePaymentSettings.ApplicationId',
+            locationId: '@squarePaymentSettings.LocationId',
             inputClass: 'square-input',
             inputStyles: [{
                 fontSize: '15px'
-            }
-            ],
+            }],
             cardNumber: {
                 elementId: 'square-card-number',
                 placeholder: '•••• •••• •••• ••••'
@@ -75,13 +78,46 @@
                         });
                         paymentForm.destroy();
                         paymentForm = null;
+                        submitForm = true;
+                        $('input.payment-info-next-step-button').trigger("click");
+                    }
+                    else if (use3ds) {
+                        const verificationDetails = {
+                            intent: 'CHARGE',
+                            amount: '@Model.OrderTotal',
+                            currencyCode: '@Model.Currency',
+                            billingContact: {
+                              givenName: '@Model.BillingFirstName',
+                              familyName: '@Model.BillingLastName',
+                              email: '@Model.BillingEmail',
+                              country: '@Model.BillingCountry',
+                              region: '@Model.BillingState',
+                              city: '@Model.BillingCity',
+                              postalCode: '@Model.BillingPostalCode'
+                            }
+                          };
+
+                        paymentForm.verifyBuyer(nonce, verificationDetails,
+                            function(err, verificationResult) {
+                                if (err) {
+                                    $('#@Html.IdFor(model => model.Errors)').val($('#@Html.IdFor(model => model.Errors)').val() + '|' + err.message);
+                                    paymentForm.destroy();
+                                    paymentForm = null;
+                                }
+                                else {
+                                    $('#@Html.IdFor(model => model.CardNonce)').val(nonce);
+                                    $('#@Html.IdFor(model => model.Token)').val(verificationResult.token);
+                                }
+                                submitForm = true;
+                                $('input.payment-info-next-step-button').trigger("click");
+                            }
+                        );
                     }
                     else {
                         $('#@Html.IdFor(model => model.CardNonce)').val(nonce);
+                        submitForm = true;
+                        $('input.payment-info-next-step-button').trigger("click");
                     }
-
-                    submitForm = true;
-                    $('input.payment-info-next-step-button').trigger("click");
                 },
 
                 unsupportedBrowserDetected: function () {
@@ -141,6 +177,7 @@
 
 <input type="hidden" asp-for="CardNonce">
 <input type="hidden" asp-for="Errors">
+<input type="hidden" asp-for="Token">
 
 @if (!Model.IsGuest && Model.StoredCards.Any())
 {
@@ -203,4 +240,7 @@
     }
 </table>
 
-@Html.NopInlineScripts(ResourceLocation.Footer)
+@if (orderSettings.OnePageCheckoutEnabled)
+{
+    @Html.NopInlineScripts(ResourceLocation.Footer)
+}

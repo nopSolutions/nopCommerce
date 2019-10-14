@@ -78,6 +78,16 @@ namespace Nop.Plugin.Payments.Square
         public static string PaymentFormScriptPath => "https://js.squareup.com/v2/paymentform";
 
         /// <summary>
+        /// Path to the Square payment form js script
+        /// </summary>
+        public static string SandboxPaymentFormScriptPath => "https://js.squareupsandbox.com/v2/paymentform";
+
+        /// <summary>
+        /// Sandbox v2 BETA URL path
+        /// </summary>
+        public static string SandboxBaseUrl => "https://connect.squareupsandbox.com";
+
+        /// <summary>
         /// Key of the attribute to store Square customer identifier
         /// </summary>
         public static string CustomerIdAttribute => "SquareCustomerId";
@@ -118,6 +128,6 @@ namespace Nop.Plugin.Payments.Square
         /// <remarks>
         /// {0} : Order Guid
         /// </remarks>
-        public static string PaymentNote => "nopCommerce: {0}";        
+        public static string PaymentNote => "nopCommerce: {0}";
     }
 }
