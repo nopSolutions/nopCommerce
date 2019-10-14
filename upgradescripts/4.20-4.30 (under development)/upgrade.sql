@@ -137,3 +137,11 @@ BEGIN
     VALUES (N'captchasettings.showonforum', N'False', 0)
 END
 GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='RedeemedRewardPointsEntryId')
+BEGIN
+	ALTER TABLE [Order] ADD	RedeemedRewardPointsEntryId int NULL
+END
+GO
+
