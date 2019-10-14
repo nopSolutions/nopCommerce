@@ -339,7 +339,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(settings => settings.ProductSortingEnumDisplayOrder, options => options.Ignore())
                 .ForMember(settings => settings.PublishBackProductWhenCancellingOrders, options => options.Ignore())
                 .ForMember(settings => settings.UseAjaxLoadMenu, options => options.Ignore())
-                .ForMember(settings => settings.UseLinksInRequiredProductWarnings, options => options.Ignore());
+                .ForMember(settings => settings.UseLinksInRequiredProductWarnings, options => options.Ignore())
+                .ForMember(settings => settings.UsePermanentGroupedProductRedirect, options => options.Ignore());
 
             CreateMap<ProductCategory, CategoryProductModel>()
                 .ForMember(model => model.ProductName, options => options.Ignore());

@@ -6217,7 +6217,8 @@ namespace Nop.Services.Installation
                 ExportImportSplitProductsFile = false,
                 ExportImportRelatedEntitiesByName = true,
                 CountDisplayedYearsDatePicker = 1,
-                UseAjaxLoadMenu = false
+                UseAjaxLoadMenu = false,
+                UsePermanentGroupedProductRedirect = true
             });
 
             settingService.SaveSetting(new LocalizationSettings
