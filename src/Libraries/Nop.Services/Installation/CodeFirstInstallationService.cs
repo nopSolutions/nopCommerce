@@ -5241,7 +5241,7 @@ namespace Nop.Services.Installation
                 OrderItemId = fourthOrderItem1.Id,
                 Quantity = 1,
                 WarehouseId = 0,
-                Shipment = fourthOrderShipment1
+                ShipmentId = fourthOrderShipment1.Id
             };
             _shipmentItemRepository.Insert(fourthOrderShipment1Item1);
 
@@ -5250,7 +5250,7 @@ namespace Nop.Services.Installation
                 OrderItemId = fourthOrderItem2.Id,
                 Quantity = 1,
                 WarehouseId = 0,
-                Shipment = fourthOrderShipment1
+                ShipmentId = fourthOrderShipment1.Id
             };
             _shipmentItemRepository.Insert(fourthOrderShipment1Item2);
 
@@ -5272,7 +5272,7 @@ namespace Nop.Services.Installation
                 OrderItemId = fourthOrderItem3.Id,
                 Quantity = 1,
                 WarehouseId = 0,
-                Shipment = fourthOrderShipment2
+                ShipmentId = fourthOrderShipment2.Id
             };
             _shipmentItemRepository.Insert(fourthOrderShipment2Item1);
 
@@ -5409,7 +5409,7 @@ namespace Nop.Services.Installation
                 OrderItemId = fifthOrderItem1.Id,
                 Quantity = 1,
                 WarehouseId = 0,
-                Shipment = fifthOrderShipment1
+                ShipmentId = fifthOrderShipment1.Id
             };
             _shipmentItemRepository.Insert(fifthOrderShipment1Item1);
         }

@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Shipping
+﻿namespace Nop.Core.Domain.Shipping
 {
     /// <summary>
     /// Represents a shipment item
@@ -24,10 +24,5 @@ namespace Nop.Core.Domain.Shipping
         /// Gets or sets the warehouse identifier
         /// </summary>
         public int WarehouseId { get; set; }
-
-        /// <summary>
-        /// Gets the shipment
-        /// </summary>
-        public virtual Shipment Shipment { get; set; }
     }
 }
