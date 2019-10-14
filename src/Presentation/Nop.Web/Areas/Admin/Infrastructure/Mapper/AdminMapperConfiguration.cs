@@ -1393,9 +1393,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<ProductAvailabilityRangeModel, ProductAvailabilityRange>();
 
             CreateMap<ShippingMethod, ShippingMethodModel>();
-            CreateMap<ShippingMethodModel, ShippingMethod>()
-                .ForMember(entity => entity.ShippingMethodCountryMappings, options => options.Ignore());
-
+            
             CreateMap<IShippingRateComputationMethod, ShippingProviderModel>();
 
             CreateMap<Shipment, ShipmentModel>()

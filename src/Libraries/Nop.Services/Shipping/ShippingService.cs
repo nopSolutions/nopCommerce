@@ -42,6 +42,7 @@ namespace Nop.Services.Shipping
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
+        private readonly IRepository<ShippingMethodCountryMapping> _shippingMethodCountryMappingRepository;
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IStateProvinceService _stateProvinceService;
@@ -67,6 +68,7 @@ namespace Nop.Services.Shipping
             IProductAttributeParser productAttributeParser,
             IProductService productService,
             IRepository<ShippingMethod> shippingMethodRepository,
+            IRepository<ShippingMethodCountryMapping> shippingMethodCountryMappingRepository,
             IRepository<Warehouse> warehouseRepository,
             IShippingPluginManager shippingPluginManager,
             IStateProvinceService stateProvinceService,
@@ -88,6 +90,7 @@ namespace Nop.Services.Shipping
             _productAttributeParser = productAttributeParser;
             _productService = productService;
             _shippingMethodRepository = shippingMethodRepository;
+            _shippingMethodCountryMappingRepository = shippingMethodCountryMappingRepository;
             _warehouseRepository = warehouseRepository;
             _shippingPluginManager = shippingPluginManager;
             _stateProvinceService = stateProvinceService;
@@ -185,8 +188,11 @@ namespace Nop.Services.Shipping
                 if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
                 {
                     var query1 = from sm in _shippingMethodRepository.Table
-                                 where sm.ShippingMethodCountryMappings.Select(mapping => mapping.CountryId).Contains(filterByCountryId.Value)
+                        join smcm in _shippingMethodCountryMappingRepository.Table on sm.Id equals smcm.ShippingMethodId
+                                 where smcm.CountryId == filterByCountryId.Value
                                  select sm.Id;
+
+                    query1 = query1.Distinct();
 
                     var query2 = from sm in _shippingMethodRepository.Table
                                  where !query1.Contains(sm.Id)
@@ -195,13 +201,12 @@ namespace Nop.Services.Shipping
 
                     return query2.ToList();
                 }
-                else
-                {
-                    var query = from sm in _shippingMethodRepository.Table
-                                orderby sm.DisplayOrder, sm.Id
-                                select sm;
-                    return query.ToList();
-                }
+
+                var query = from sm in _shippingMethodRepository.Table
+                    orderby sm.DisplayOrder, sm.Id
+                    select sm;
+
+                return query.ToList();
             });
         }
 
@@ -250,8 +255,49 @@ namespace Nop.Services.Shipping
             if (shippingMethod == null)
                 throw new ArgumentNullException(nameof(shippingMethod));
 
-            var result = shippingMethod.ShippingMethodCountryMappings.Any(c => c.CountryId == countryId);
+            var result = _shippingMethodCountryMappingRepository.Table.Any(smcm =>
+                smcm.ShippingMethodId == shippingMethod.Id && smcm.CountryId == countryId);
+            
             return result;
+        }
+
+        /// <summary>
+        /// Gets shipping country mappings
+        /// </summary>
+        /// <param name="shippingMethodId">The shipping method identifier</param>
+        /// <param name="countryId">Country identifier</param>
+        /// <returns>Shipping country mappings</returns>
+        public virtual IList<ShippingMethodCountryMapping> GetShippingMethodCountryMapping(int shippingMethodId,
+            int countryId)
+        {
+            var query = _shippingMethodCountryMappingRepository.Table.Where(smcm =>
+                smcm.ShippingMethodId == shippingMethodId && smcm.CountryId == countryId);
+
+            return query.ToList();
+        }
+
+        /// <summary>
+        /// Inserts a shipping country mapping
+        /// </summary>
+        /// <param name="shippingMethodCountryMapping">Shipping country mapping</param>
+        public virtual void InsertShippingMethodCountryMapping(ShippingMethodCountryMapping shippingMethodCountryMapping)
+        {
+            if (shippingMethodCountryMapping == null)
+                throw new ArgumentNullException(nameof(shippingMethodCountryMapping));
+
+            _shippingMethodCountryMappingRepository.Insert(shippingMethodCountryMapping);
+        }
+
+        /// <summary>
+        /// Delete the shipping country mapping
+        /// </summary>
+        /// <param name="shippingMethodCountryMapping">Shipping country mapping</param>
+        public virtual void DeleteShippingMethodCountryMapping(ShippingMethodCountryMapping shippingMethodCountryMapping)
+        {
+            if (shippingMethodCountryMapping == null)
+                throw new ArgumentNullException(nameof(shippingMethodCountryMapping));
+
+            _shippingMethodCountryMappingRepository.Delete(shippingMethodCountryMapping);
         }
 
         #endregion

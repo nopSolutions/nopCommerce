@@ -55,6 +55,26 @@ namespace Nop.Services.Shipping
         /// <returns>Result</returns>
         bool CountryRestrictionExists(ShippingMethod shippingMethod, int countryId);
 
+        /// <summary>
+        /// Gets shipping country mappings
+        /// </summary>
+        /// <param name="shippingMethodId">The shipping method identifier</param>
+        /// <param name="countryId">Country identifier</param>
+        /// <returns>Shipping country mappings</returns>
+        IList<ShippingMethodCountryMapping> GetShippingMethodCountryMapping(int shippingMethodId, int countryId);
+
+        /// <summary>
+        /// Inserts a shipping country mapping
+        /// </summary>
+        /// <param name="shippingMethodCountryMapping">Shipping country mapping</param>
+        void InsertShippingMethodCountryMapping(ShippingMethodCountryMapping shippingMethodCountryMapping);
+
+        /// <summary>
+        /// Delete the shipping country mapping
+        /// </summary>
+        /// <param name="shippingMethodCountryMapping">Shipping country mapping</param>
+        void DeleteShippingMethodCountryMapping(ShippingMethodCountryMapping shippingMethodCountryMapping);
+
         #endregion
 
         #region Warehouses
