@@ -164,7 +164,10 @@ namespace Nop.Core.Infrastructure
                         continue;
 
                     var isMatch = genericTypeDefinition.IsAssignableFrom(implementedInterface.GetGenericTypeDefinition());
-                    return isMatch;
+                    if (isMatch)
+                    {
+                        return true;
+                    }
                 }
 
                 return false;
