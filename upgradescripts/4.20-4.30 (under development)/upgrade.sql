@@ -56,6 +56,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.CanShip.Hint">
     <Value>Check to apply current date to shipment.</Value>
   </LocaleResource>
+   <LocaleResource Name="Admin.Orders.Shipments.List.LoadNotDelivered">
+    <Value>Load not delivered</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.LoadNotDelivered.Hint">
+    <Value>Load only undelivered shipments</Value>
+  </LocaleResource>
 </Language>
 '
 
