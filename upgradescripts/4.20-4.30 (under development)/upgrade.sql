@@ -92,6 +92,12 @@ set @resources='
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.Empty">
     <Value>The coupon code is empty</Value>
   </LocaleResource>
+  <LocaleResource Name="PrivateMessages.Inbox.NoItems">
+    <Value>No inbox messages</Value>
+  </LocaleResource>
+  <LocaleResource Name="PrivateMessages.Sent.NoItems">
+    <Value>No sent messages</Value>
+  </LocaleResource>
 </Language>
 '
 
