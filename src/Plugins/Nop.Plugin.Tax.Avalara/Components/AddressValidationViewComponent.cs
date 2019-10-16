@@ -168,7 +168,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
             var validatedAddressInfo = validationResult.validatedAddresses.FirstOrDefault();
 
             //create new address as a copy of address to validate and with details of the validated one
-            var validatedAddress = address.Clone() as Address;
+            var validatedAddress = _addressService.CloneAddress(address);
             validatedAddress.City = validatedAddressInfo.city;
             validatedAddress.CountryId = _countryService.GetCountryByTwoLetterIsoCode(validatedAddressInfo.country)?.Id;
             validatedAddress.Address1 = validatedAddressInfo.line1;

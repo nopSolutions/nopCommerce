@@ -41,6 +41,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         #region Fields
 
         private readonly CurrencySettings _currencySettings;
+        private readonly IAddressService _addressService;
         private readonly IAffiliateService _affiliateService;
         private readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
         private readonly ICountryService _countryService;
@@ -161,6 +162,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 taxSettings)
         {
             _currencySettings = currencySettings;
+            _addressService = addressService;
             _affiliateService = affiliateService;
             _checkoutAttributeFormatter = checkoutAttributeFormatter;
             _countryService = countryService;
@@ -237,7 +239,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             if (!CommonHelper.IsValidEmail(customerBillingAddress?.Email))
                 throw new NopException("Email is not valid");
 
-            details.BillingAddress = (Address)customerBillingAddress.Clone();
+            details.BillingAddress = _addressService.CloneAddress(customerBillingAddress);
             if (_countryService.GetCountryByAddress(details.BillingAddress) is Country countryBilling && !countryBilling.AllowsBilling)
                 throw new NopException($"Country '{countryBilling.Name}' is not allowed for billing");
 
@@ -338,7 +340,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                         throw new NopException("Email is not valid");
 
                     //clone shipping address
-                    details.ShippingAddress = (Address)customerShippingAddress.Clone();
+                    details.ShippingAddress = _addressService.CloneAddress(customerShippingAddress);
                     if (_countryService.GetCountryByAddress(details.ShippingAddress) is Country countryShipping && !countryShipping.AllowsShipping)
                         throw new NopException($"Country '{countryShipping.Name}' is not allowed for shipping");
                 }
