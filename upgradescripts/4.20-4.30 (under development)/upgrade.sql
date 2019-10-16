@@ -83,6 +83,9 @@ set @resources='
   <LocaleResource Name="Plugins.Payments.Square.Fields.Use3ds.Hint">
     <Value>Determine whether to use 3D-Secure feature. Used for Strong customer authentication (SCA). SCA is generally friction-free for the buyer, but a card-issuing bank may require additional authentication for some payments. In those cases, the buyer must verify their identiy with the bank using an additional secure dialog.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AclCustomerRoles.Hint">
+    <Value>Choose one or several customer roles i.e. administrators, vendors, guests, who will be able to see this product in catalog. If you don''t need this option just leave this field empty. In order to use this functionality, you have to disable the following setting: Configuration &gt; Settings &gt; Catalog &gt; Ignore ACL rules (sitewide).</Value>
+  </LocaleResource>
 </Language>
 '
 
