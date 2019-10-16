@@ -1106,8 +1106,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore())
                 .ForMember(entity => entity.NewsItemId, options => options.Ignore())
                 .ForMember(entity => entity.CustomerId, options => options.Ignore())
-                .ForMember(entity => entity.StoreId, options => options.Ignore())
-                .ForMember(entity => entity.Store, options => options.Ignore());
+                .ForMember(entity => entity.StoreId, options => options.Ignore());
 
             CreateMap<NewsItem, NewsItemModel>()
                 .ForMember(model => model.ApprovedComments, options => options.Ignore())

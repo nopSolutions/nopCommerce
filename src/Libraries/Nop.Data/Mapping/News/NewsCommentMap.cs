@@ -19,12 +19,7 @@ namespace Nop.Data.Mapping.News
         {
             builder.ToTable(nameof(NewsComment));
             builder.HasKey(comment => comment.Id);
-
-            builder.HasOne(comment => comment.Store)
-                .WithMany()
-                .HasForeignKey(comment => comment.StoreId)
-                .IsRequired();
-
+            
             base.Configure(builder);
         }
 

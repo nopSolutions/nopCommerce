@@ -1,5 +1,4 @@
 ﻿using System;
-using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.News
 {
@@ -42,10 +41,5 @@ namespace Nop.Core.Domain.News
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-
-        /// <summary>
-        /// Gets or sets the store
-        /// </summary>
-        public virtual Store Store { get; set; }
     }
 }
