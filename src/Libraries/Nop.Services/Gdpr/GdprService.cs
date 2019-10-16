@@ -333,7 +333,7 @@ namespace Nop.Services.Gdpr
                 _backInStockSubscriptionService.DeleteSubscription(backInStockSubscription);
 
             //product review
-            var productReviews = _productService.GetAllProductReviews(customerId: customer.Id, approved: null);
+            var productReviews = _productService.GetAllProductReviews(customer.Id);
             var reviewedProducts = _productService.GetProductsByIds(productReviews.Select(p => p.ProductId).Distinct().ToArray());
             _productService.DeleteProductReviews(productReviews);
             //update product totals

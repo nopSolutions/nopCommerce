@@ -156,7 +156,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //check ACL permission to manage customer roles
             var rolesToAdd = customerRoles.Except(existingCustomerRoles);
             var rolesToDelete = existingCustomerRoles.Except(customerRoles);
-            if (rolesToAdd.Where(role => role.SystemName != NopCustomerDefaults.RegisteredRoleName).Any() || rolesToDelete.Any())
+            if (rolesToAdd.Any(role => role.SystemName != NopCustomerDefaults.RegisteredRoleName) || rolesToDelete.Any())
             {
                 if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                     return _localizationService.GetResource("Admin.Customers.Customers.CustomerRolesManagingError");
@@ -703,8 +703,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                                 continue;
                             }
 
-                            
-
                             //remove role
                             if (_customerService.IsInCustomerRole(customer, customerRole.SystemName))
                             {
@@ -728,7 +726,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //otherwise, he will have access to ALL products
                     if (_customerService.IsVendor(customer) && customer.VendorId == 0)
                     {
-
                         var vendorRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.VendorsRoleName);
                         _customerService.RemoveCustomerRoleMapping(customer, vendorRole);
 

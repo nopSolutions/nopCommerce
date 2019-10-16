@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Nop.Tests;
 
 namespace Nop.Services.Tests.FakeServices.Providers
@@ -27,8 +26,8 @@ namespace Nop.Services.Tests.FakeServices.Providers
 
             if (service is null)
                 return _services.FirstOrDefault(t => serviceType.IsAssignableFrom(t.type)).service;
-            else
-                return service;
+
+            return service;
         }
     }
 }

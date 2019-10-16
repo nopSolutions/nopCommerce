@@ -186,7 +186,7 @@ namespace Nop.Services.Security
                         EnableWishlist,
                         PublicStoreAllowNavigation,
                         AccessClosedStore
-                        }
+                    }
                 ),
                 (
                     NopCustomerDefaults.ForumModeratorsRoleName,
@@ -207,7 +207,7 @@ namespace Nop.Services.Security
                         EnableWishlist,
                         PublicStoreAllowNavigation
                     }
-                 ),
+                ),
                 (
                     NopCustomerDefaults.RegisteredRoleName,
                     new[]

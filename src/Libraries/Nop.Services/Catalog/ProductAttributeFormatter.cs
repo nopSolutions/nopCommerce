@@ -102,7 +102,6 @@ namespace Nop.Services.Catalog
             {
                 foreach (var attribute in _productAttributeParser.ParseProductAttributeMappings(attributesXml))
                 {
-
                     var productAttrubute = _productAttributeService.GetProductAttributeById(attribute.ProductAttributeId);
                     var attributeName = _localizationService.GetLocalized(productAttrubute, a => a.Name, _workContext.WorkingLanguage.Id);
 

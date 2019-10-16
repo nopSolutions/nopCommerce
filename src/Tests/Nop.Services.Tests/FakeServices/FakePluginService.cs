@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Moq;
+﻿using Moq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Infrastructure;
@@ -25,7 +22,6 @@ namespace Nop.Services.Tests.FakeServices
                 fileProvider ?? new Mock<INopFileProvider>().Object,
                 webHelper ?? new Mock<IWebHelper>().Object)
         {
-
         }
     }
 }

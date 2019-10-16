@@ -70,8 +70,8 @@ namespace Nop.Services.Polls
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Polls</returns>
-        public virtual IPagedList<Poll> GetPolls(int storeId, int languageId = 0, bool
-            showHidden = false, bool loadShownOnHomepageOnly = false, string systemKeyword = null,
+        public virtual IPagedList<Poll> GetPolls(int storeId, int languageId = 0, bool showHidden = false,
+            bool loadShownOnHomepageOnly = false, string systemKeyword = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _pollRepository.Table;
@@ -101,12 +101,21 @@ namespace Nop.Services.Polls
             if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
             {
                 query = from poll in query
-                        join storeMapping in _storeMappingRepository.Table
-                            on new { poll.Id, Name = nameof(Poll) }
-                            equals new { Id = storeMapping.EntityId, Name = storeMapping.EntityName } into storeMappingsWithNulls
-                        from storeMapping in storeMappingsWithNulls.DefaultIfEmpty()
-                        where !poll.LimitedToStores || storeMapping.StoreId == storeId
-                        select poll;
+                    join storeMapping in _storeMappingRepository.Table
+                        on new
+                        {
+                            poll.Id,
+                            Name = nameof(Poll)
+                        }
+                        equals new
+                        {
+                            Id = storeMapping.EntityId,
+                            Name = storeMapping.EntityName
+                        } 
+                        into storeMappingsWithNulls
+                    from storeMapping in storeMappingsWithNulls.DefaultIfEmpty()
+                    where !poll.LimitedToStores || storeMapping.StoreId == storeId
+                    select poll;
             }
 
             //order records by display order

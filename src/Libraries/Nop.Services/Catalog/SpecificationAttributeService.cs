@@ -391,11 +391,11 @@ namespace Nop.Services.Catalog
         /// <returns>Products</returns>
         public virtual IPagedList<Product> GetProductsBySpecificationAttributeId(int specificationAttributeId, int pageIndex, int pageSize)
         {
-            var query = (from product in _productRepository.Table
-                         join psa in _productSpecificationAttributeRepository.Table on product.Id equals psa.ProductId
-                         where psa.Id == specificationAttributeId
-                         orderby product.Name
-                         select product);
+            var query = from product in _productRepository.Table
+                join psa in _productSpecificationAttributeRepository.Table on product.Id equals psa.ProductId
+                where psa.Id == specificationAttributeId
+                orderby product.Name
+                select product;
 
             return new PagedList<Product>(query, pageIndex, pageSize);
         }

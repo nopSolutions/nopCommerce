@@ -564,19 +564,18 @@ namespace Nop.Services.ExportImport
                                 PictureId = pav.PictureId
                             });
                     }
-                    else
+
+                    return new List<ExportProductAttribute>
                     {
-                        return new List<ExportProductAttribute> {
-                            new ExportProductAttribute
-                            {
-                                AttributeId = productAttribute.Id,
-                                AttributeName = productAttribute.Name,
-                                AttributeTextPrompt = pam.TextPrompt,
-                                AttributeIsRequired = pam.IsRequired,
-                                AttributeControlTypeId = pam.AttributeControlTypeId
-                            }
-                        };
-                    }
+                        new ExportProductAttribute
+                        {
+                            AttributeId = productAttribute.Id,
+                            AttributeName = productAttribute.Name,
+                            AttributeTextPrompt = pam.TextPrompt,
+                            AttributeIsRequired = pam.IsRequired,
+                            AttributeControlTypeId = pam.AttributeControlTypeId
+                        }
+                    };
                 }).ToList();
 
             //attributes.AddRange(item.ProductAttributeMappings.Where(pam => !pam.ProductAttributeValues.Any()).Select(
@@ -1358,7 +1357,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("Categories", GetCategories),
                 new PropertyByName<Product>("Manufacturers", GetManufacturers, IgnoreExportPoductProperty(p => p.Manufacturers)),
                 new PropertyByName<Product>("ProductTags", GetProductTags, IgnoreExportPoductProperty(p => p.ProductTags)),
-                new PropertyByName<Product>("IsLimitedToStores", p=>p.LimitedToStores, IgnoreExportLimitedToStore()),
+                new PropertyByName<Product>("IsLimitedToStores", p => p.LimitedToStores, IgnoreExportLimitedToStore()),
                 new PropertyByName<Product>("LimitedToStores", GetLimitedToStores, IgnoreExportLimitedToStore()),
                 new PropertyByName<Product>("Picture1", p => GetPictures(p)[0]),
                 new PropertyByName<Product>("Picture2", p => GetPictures(p)[1]),
@@ -1574,8 +1573,8 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Order>("BillingZipPostalCode", p => orderBillingAddress(p)?.ZipPostalCode ?? string.Empty),
                 new PropertyByName<Order>("BillingPhoneNumber", p => orderBillingAddress(p)?.PhoneNumber ?? string.Empty),
                 new PropertyByName<Order>("BillingFaxNumber", p => orderBillingAddress(p)?.FaxNumber ?? string.Empty),
-                new PropertyByName<Order>("ShippingFirstName", p => orderAddress(p)?.FirstName?? string.Empty),
-                new PropertyByName<Order>("ShippingLastName", p =>orderAddress(p)?.LastName ?? string.Empty),
+                new PropertyByName<Order>("ShippingFirstName", p => orderAddress(p)?.FirstName ?? string.Empty),
+                new PropertyByName<Order>("ShippingLastName", p => orderAddress(p)?.LastName ?? string.Empty),
                 new PropertyByName<Order>("ShippingEmail", p => orderAddress(p)?.Email ?? string.Empty),
                 new PropertyByName<Order>("ShippingCompany", p => orderAddress(p)?.Company ?? string.Empty),
                 new PropertyByName<Order>("ShippingCountry", p => _countryService.GetCountryByAddress(orderAddress(p))?.Name ?? string.Empty),

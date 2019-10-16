@@ -247,6 +247,7 @@ namespace Nop.Services.Catalog
                         .Any(pam => pam.IsRequired) ? _localizationService.GetResource("Products.Availability.InStock") : _localizationService.GetResource("Products.Availability.SelectRequiredAttributes");
                 }
             }
+
             return stockMessage;
         }
 
@@ -295,6 +296,7 @@ namespace Nop.Services.Catalog
                         break;
                 }
             }
+
             return stockMessage;
         }
 
@@ -781,13 +783,13 @@ namespace Nop.Services.Catalog
         public virtual IPagedList<Product> GetProductsByProductAtributeId(int productAttributeId,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = (from p in _productRepository.Table
-                         join pam in _productAttributeMappingRepository.Table on p.Id equals pam.ProductId
-                         where
-                             pam.ProductAttributeId == productAttributeId &&
-                             !p.Deleted
-                         orderby p.Name
-                         select p);
+            var query = from p in _productRepository.Table
+                join pam in _productAttributeMappingRepository.Table on p.Id equals pam.ProductId
+                where
+                    pam.ProductAttributeId == productAttributeId &&
+                    !p.Deleted
+                orderby p.Name
+                select p;
 
             var products = new PagedList<Product>(query, pageIndex, pageSize);
             return products;
@@ -931,23 +933,23 @@ namespace Nop.Services.Catalog
         public virtual IPagedList<ProductAttributeCombination> GetLowStockProductCombinations(int? vendorId = null, bool? loadPublishedOnly = true,
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
-            var combinations = (from pac in _productAttributeCombinationRepository.Table
-                                join p in _productRepository.Table on pac.ProductId equals p.Id
-                                where
-                                    //filter by combinations with stock quantity less than the minimum
-                                    pac.StockQuantity <= 0 &&
-                                    //filter by products with tracking inventory by attributes
-                                    p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
-                                    //ignore deleted products
-                                    !p.Deleted &&
-                                    //ignore grouped products
-                                    p.ProductTypeId != (int)ProductType.GroupedProduct &&
-                                    //filter by vendor
-                                    ((vendorId ?? 0) == 0) || p.VendorId == vendorId &&
-                                    //whether to load published products only
-                                    (loadPublishedOnly == null) || p.Published == loadPublishedOnly
-                                orderby pac.ProductId, pac.Id
-                                select pac);
+            var combinations = from pac in _productAttributeCombinationRepository.Table
+                join p in _productRepository.Table on pac.ProductId equals p.Id
+                where
+                    //filter by combinations with stock quantity less than the minimum
+                    pac.StockQuantity <= 0 &&
+                    //filter by products with tracking inventory by attributes
+                    p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
+                    //ignore deleted products
+                    !p.Deleted &&
+                    //ignore grouped products
+                    p.ProductTypeId != (int)ProductType.GroupedProduct &&
+                    //filter by vendor
+                    (vendorId ?? 0) == 0 || p.VendorId == vendorId &&
+                    //whether to load published products only
+                    loadPublishedOnly == null || p.Published == loadPublishedOnly
+                orderby pac.ProductId, pac.Id
+                select pac;
 
             return new PagedList<ProductAttributeCombination>(combinations, pageIndex, pageSize, getOnlyTotalCount);
         }
@@ -1177,6 +1179,7 @@ namespace Nop.Services.Catalog
                         var configuredPeriodDays = product.RentalPriceLength;
                         totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent / configuredPeriodDays));
                     }
+
                     break;
                 case RentalPricePeriod.Weeks:
                     {
@@ -1184,19 +1187,20 @@ namespace Nop.Services.Catalog
                         var configuredPeriodDays = 7 * product.RentalPriceLength;
                         totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent / configuredPeriodDays));
                     }
+
                     break;
                 case RentalPricePeriod.Months:
                     {
                         //Source: http://stackoverflow.com/questions/4638993/difference-in-months-between-two-dates
                         var totalMonthsToRent = (endDate.Year - startDate.Year) * 12 + endDate.Month - startDate.Month;
                         if (startDate.AddMonths(totalMonthsToRent) < endDate)
-                        {
                             //several days added (not full month)
                             totalMonthsToRent++;
-                        }
+
                         var configuredPeriodMonths = product.RentalPriceLength;
                         totalPeriods = Convert.ToInt32(Math.Ceiling((double)totalMonthsToRent / configuredPeriodMonths));
                     }
+
                     break;
                 case RentalPricePeriod.Years:
                     {
@@ -1204,6 +1208,7 @@ namespace Nop.Services.Catalog
                         var configuredPeriodDays = 365 * product.RentalPriceLength;
                         totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent / configuredPeriodDays));
                     }
+
                     break;
                 default:
                     throw new Exception("Not supported rental period");
@@ -2211,10 +2216,10 @@ namespace Nop.Services.Catalog
             var products = _productRepository.Table.Where(product => product.HasDiscountsApplied);
 
             if (discountId.HasValue)
-                products = (from product in products
-                            join dpm in _discountProductMappingRepository.Table on product.Id equals dpm.ProductId
-                            where dpm.DiscountId == discountId.Value
-                            select product);
+                products = from product in products
+                    join dpm in _discountProductMappingRepository.Table on product.Id equals dpm.ProductId
+                    where dpm.DiscountId == discountId.Value
+                    select product;
 
             if (!showHidden)
                 products = products.Where(product => !product.Deleted);
@@ -2250,19 +2255,19 @@ namespace Nop.Services.Catalog
         {
             var query = _productReviewRepository.Table;
 
-            query = (from productReview in query
-                     join product in _productRepository.Table on productReview.ProductId equals product.Id
-                     where
-                        (approved == null) || productReview.IsApproved == approved &&
-                        (customerId == 0) || productReview.CustomerId == customerId &&
-                        (fromUtc == null) || fromUtc.Value <= productReview.CreatedOnUtc &&
-                        (toUtc == null) || toUtc.Value >= productReview.CreatedOnUtc &&
-                        string.IsNullOrEmpty(message) || (productReview.Title.Contains(message) || productReview.ReviewText.Contains(message)) &&
-                        (storeId == 0 && !(showHidden || _catalogSettings.ShowProductReviewsPerStore)) || productReview.StoreId == storeId &&
-                        (productId == 0) || productReview.ProductId == productId &&
-                        (vendorId == 0) || product.VendorId == vendorId &&
-                        !product.Deleted
-                     select productReview);
+            query = from productReview in query
+                join product in _productRepository.Table on productReview.ProductId equals product.Id
+                where
+                    approved == null || productReview.IsApproved == approved &&
+                    customerId == 0 || productReview.CustomerId == customerId &&
+                    fromUtc == null || fromUtc.Value <= productReview.CreatedOnUtc &&
+                    toUtc == null || toUtc.Value >= productReview.CreatedOnUtc &&
+                    string.IsNullOrEmpty(message) || (productReview.Title.Contains(message) || productReview.ReviewText.Contains(message)) &&
+                    (storeId == 0 && !(showHidden || _catalogSettings.ShowProductReviewsPerStore)) || productReview.StoreId == storeId &&
+                    productId == 0 || productReview.ProductId == productId &&
+                    (vendorId == 0) || product.VendorId == vendorId &&
+                    !product.Deleted
+                select productReview;
 
             //filter by limited to store products
             if (storeId > 0 && !showHidden && !_catalogSettings.IgnoreStoreLimitations)
@@ -2587,7 +2592,6 @@ namespace Nop.Services.Catalog
             {
                 _eventPublisher.EntityUpdated(pwi);
             }
-            
         }
 
         #endregion
@@ -2671,10 +2675,11 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(discount));
 
             var mappingsWithProducts =
-                (from dcm in _discountProductMappingRepository.Table
-                 join p in _productRepository.Table on dcm.ProductId equals p.Id
-                 where dcm.DiscountId == discount.Id
-                 select new { product = p, dcm });
+                from dcm in _discountProductMappingRepository.Table
+                join p in _productRepository.Table on dcm.ProductId equals p.Id
+                where dcm.DiscountId == discount.Id
+                select new { product = p, dcm };
+
                 _discountProductMappingRepository.Table.Where(dcm => dcm.DiscountId == discount.Id);
 
             if (!mappingsWithProducts.Any())

@@ -107,19 +107,19 @@ namespace Nop.Services.Shipping
                 query = query.Where(s => s.TrackingNumber.Contains(trackingNumber));
 
             //TODO: issue-239
-            query = (from s in query
-                     join o in _orderRepository.Table on s.OrderId equals o.Id
-                     join pa in _addressRepository.Table on o.PickupAddressId equals pa.Id into pao
-                     join sa in _addressRepository.Table on o.PickupAddressId equals sa.Id into sao
-                     from pa in pao.DefaultIfEmpty()
-                     from sa in sao.DefaultIfEmpty()
-                     where
-                        (shippingCountryId <= 0 || (o.PickupInStore ? pa.CountryId == shippingCountryId : sa.CountryId == shippingCountryId)) &&
-                        (shippingStateId <= 0 || (o.PickupInStore ? pa.StateProvinceId == shippingStateId : sa.StateProvinceId == shippingStateId)) &&
-                        (orderId <= 0 || (o.Id == orderId)) &&
-                        (string.IsNullOrWhiteSpace(shippingCounty) || (o.PickupInStore ? pa.County.Contains(shippingCounty) : sa.County.Contains(shippingCounty))) &&
-                        (string.IsNullOrWhiteSpace(shippingCity) || (o.PickupInStore ? pa.City.Contains(shippingCity) : sa.City.Contains(shippingCity)))
-                     select s);
+            query = from s in query
+                join o in _orderRepository.Table on s.OrderId equals o.Id
+                join pa in _addressRepository.Table on o.PickupAddressId equals pa.Id into pao
+                join sa in _addressRepository.Table on o.PickupAddressId equals sa.Id into sao
+                from pa in pao.DefaultIfEmpty()
+                from sa in sao.DefaultIfEmpty()
+                where
+                    (shippingCountryId <= 0 || (o.PickupInStore ? pa.CountryId == shippingCountryId : sa.CountryId == shippingCountryId)) &&
+                    (shippingStateId <= 0 || (o.PickupInStore ? pa.StateProvinceId == shippingStateId : sa.StateProvinceId == shippingStateId)) &&
+                    (orderId <= 0 || (o.Id == orderId)) &&
+                    (string.IsNullOrWhiteSpace(shippingCounty) || (o.PickupInStore ? pa.County.Contains(shippingCounty) : sa.County.Contains(shippingCounty))) &&
+                    (string.IsNullOrWhiteSpace(shippingCity) || (o.PickupInStore ? pa.City.Contains(shippingCity) : sa.City.Contains(shippingCity)))
+                select s;
 
             if (loadNotShipped)
                 query = query.Where(s => !s.ShippedDateUtc.HasValue);
@@ -226,7 +226,7 @@ namespace Nop.Services.Shipping
                 shipments = shipments.Where(s => s.ShippedDateUtc.HasValue == shipped);
             }
 
-            return _shipmentRepository.Table.Where(shipment => shipment.OrderId == orderId).ToList();
+            return shipments.Where(shipment => shipment.OrderId == orderId).ToList();
         }
 
         /// <summary>
@@ -286,7 +286,6 @@ namespace Nop.Services.Shipping
 
             return _siRepository.Table.Where(si => si.ShipmentId == shipmentId).ToList();
         }
-
 
         /// <summary>
         /// Gets a shipment item

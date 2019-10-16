@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Moq;
 using Nop.Core;
 using Nop.Core.Data;
 
@@ -36,7 +35,7 @@ namespace Nop.Tests
             return repositoryWizard.GetRepository();
         }
 
-        public virtual IRepository<T> RegRepository<T>(IEnumerable<T> initData = null) where T : BaseEntity
+        public virtual IRepository<T> RegRepository<T>(IList<T> initData = null) where T : BaseEntity
         {
             return RegRepository(new FakeRepository<T>(initData));
         }

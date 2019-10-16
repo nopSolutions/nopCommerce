@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Nop.Tests
+﻿namespace Nop.Tests
 {
     public interface IFakeStoreRepositoryContainer
     {

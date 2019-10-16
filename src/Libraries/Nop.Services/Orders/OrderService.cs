@@ -9,7 +9,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Html;
-using Nop.Services.Catalog;
 using Nop.Services.Events;
 using Nop.Services.Shipping;
 
@@ -209,37 +208,37 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.StoreId == storeId);
 
             if (vendorId > 0)
-                query = (from o in query
-                         join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                         join p in _productRepository.Table on oi.ProductId equals p.Id
-                         where p.VendorId == vendorId
-                         select o);
+                query = from o in query
+                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                    join p in _productRepository.Table on oi.ProductId equals p.Id
+                    where p.VendorId == vendorId
+                    select o;
 
             if (customerId > 0)
                 query = query.Where(o => o.CustomerId == customerId);
 
             if (productId > 0)
-                query = (from o in query
-                         join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                         where oi.ProductId == productId
-                         select o);
+                query = from o in query
+                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                    where oi.ProductId == productId
+                    select o;
 
             if (warehouseId > 0)
             {
                 var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
 
-                query = (from o in query
-                         join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                         join p in _productRepository.Table on oi.ProductId equals p.Id
-                         join pwi in _productWarehouseInventoryRepository.Table on p.Id equals pwi.ProductId
-                         where
-                            //"Use multiple warehouses" enabled
-                            //we search in each warehouse
-                            (p.ManageInventoryMethodId == manageStockInventoryMethodId && p.UseMultipleWarehouses && pwi.WarehouseId == warehouseId) ||
-                            //"Use multiple warehouses" disabled
-                            //we use standard "warehouse" property
-                            ((p.ManageInventoryMethodId != manageStockInventoryMethodId || !p.UseMultipleWarehouses) && p.WarehouseId == warehouseId)
-                         select o);
+                query = from o in query
+                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                    join p in _productRepository.Table on oi.ProductId equals p.Id
+                    join pwi in _productWarehouseInventoryRepository.Table on p.Id equals pwi.ProductId
+                    where
+                        //"Use multiple warehouses" enabled
+                        //we search in each warehouse
+                        (p.ManageInventoryMethodId == manageStockInventoryMethodId && p.UseMultipleWarehouses && pwi.WarehouseId == warehouseId) ||
+                        //"Use multiple warehouses" disabled
+                        //we use standard "warehouse" property
+                        ((p.ManageInventoryMethodId != manageStockInventoryMethodId || !p.UseMultipleWarehouses) && p.WarehouseId == warehouseId)
+                    select o;
             }
 
             if (!string.IsNullOrEmpty(paymentMethodSystemName))
@@ -266,14 +265,14 @@ namespace Nop.Services.Orders
             if (!string.IsNullOrEmpty(orderNotes))
                 query = query.Where(o => _orderNoteRepository.Table.Any(oNote => oNote.OrderId == o.Id && oNote.Note.Contains(orderNotes)));
 
-            query = (from o in query
-                     join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
-                     where
-                         (billingCountryId <= 0 || (oba.CountryId == billingCountryId)) &&
-                         (string.IsNullOrEmpty(billingPhone) || (!string.IsNullOrEmpty(oba.PhoneNumber) && oba.PhoneNumber.Contains(billingPhone))) &&
-                         (string.IsNullOrEmpty(billingEmail) || (!string.IsNullOrEmpty(oba.Email) && oba.Email.Contains(billingEmail))) &&
-                         (string.IsNullOrEmpty(billingLastName) || (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName)))
-                     select o);
+            query = from o in query
+                join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
+                where
+                    (billingCountryId <= 0 || (oba.CountryId == billingCountryId)) &&
+                    (string.IsNullOrEmpty(billingPhone) || (!string.IsNullOrEmpty(oba.PhoneNumber) && oba.PhoneNumber.Contains(billingPhone))) &&
+                    (string.IsNullOrEmpty(billingEmail) || (!string.IsNullOrEmpty(oba.Email) && oba.Email.Contains(billingEmail))) &&
+                    (string.IsNullOrEmpty(billingLastName) || (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName)))
+                select o;
 
             query = query.Where(o => !o.Deleted);
             query = query.OrderByDescending(o => o.CreatedOnUtc);
@@ -465,7 +464,7 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Gets a product of specify order item
         /// </summary>
-        /// <param name="orderItem">Order item</param>
+        /// <param name="orderItemId">Order item identifier</param>
         /// <returns>Product</returns>
         public virtual Product GetProductByOrderItemId(int orderItemId)
         {

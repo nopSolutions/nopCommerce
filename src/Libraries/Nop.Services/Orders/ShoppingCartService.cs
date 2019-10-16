@@ -842,7 +842,6 @@ namespace Nop.Services.Orders
 
                     foreach (var associatedProductWarning in associatedProductWarnings)
                     {
-                        
                         var attributeName = _localizationService.GetLocalized(productAttribute, a => a.Name);
                         var attributeValueName = _localizationService.GetLocalized(attributeValue, a => a.Name);
                         warnings.Add(string.Format(

@@ -70,13 +70,16 @@ namespace Nop.Web.Factories
                     {
                         inboxPage = page.Value;
                     }
+
                     break;
                 case "sent":
                     if (page.HasValue)
                     {
                         sentItemsPage = page.Value;
                     }
+
                     sentItemsTabSelected = true;
+
                     break;
                 default:
                     break;
@@ -219,10 +222,6 @@ namespace Nop.Web.Factories
 
             var fromCustomer = _customerService.GetCustomerById(pm.FromCustomerId);
             var toCustomer = _customerService.GetCustomerById(pm.ToCustomerId);
-
-            var customerIsGuest = _customerService.IsInCustomerRole(pm.FromCustomerId, NopCustomerDefaults.GuestsRoleName);
-
-
 
             var model = new PrivateMessageModel
             {

@@ -83,10 +83,10 @@ namespace Nop.Services.Catalog
                 query = query.Where(biss => biss.StoreId == storeId);
 
             //product
-            query = (from q in query
-                     join p in _productRepository.Table on q.ProductId equals p.Id
-                     where !p.Deleted
-                     select q);
+            query = from q in query
+                join p in _productRepository.Table on q.ProductId equals p.Id
+                where !p.Deleted
+                select q;
 
             query = query.OrderByDescending(biss => biss.CreatedOnUtc);
 
@@ -111,10 +111,10 @@ namespace Nop.Services.Catalog
             if (storeId > 0)
                 query = query.Where(biss => biss.StoreId == storeId);
             //customer
-            query = (from biss in query
-                     join c in _customerRepository.Table on biss.CustomerId equals c.Id
-                     where c.Active && !c.Deleted
-                     select biss);
+            query = from biss in query
+                join c in _customerRepository.Table on biss.CustomerId equals c.Id
+                where c.Active && !c.Deleted
+                select biss;
 
             query = query.OrderByDescending(biss => biss.CreatedOnUtc);
             return new PagedList<BackInStockSubscription>(query, pageIndex, pageSize);
@@ -200,7 +200,7 @@ namespace Nop.Services.Catalog
             {
                 var customerLanguageId = _genericAttributeService.GetAttribute<Customer, int>(subscription.CustomerId, NopCustomerDefaults.LanguageIdAttribute, subscription.StoreId);
 
-                result += _workflowMessageService.SendBackInStockNotification(subscription, customerLanguageId).Count();
+                result += _workflowMessageService.SendBackInStockNotification(subscription, customerLanguageId).Count;
             }
 
             for (var i = 0; i <= subscriptions.Count - 1; i++)

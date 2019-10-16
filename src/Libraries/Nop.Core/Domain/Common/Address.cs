@@ -5,7 +5,7 @@ namespace Nop.Core.Domain.Common
     /// <summary>
     /// Address
     /// </summary>
-    public partial class Address : BaseEntity, ICloneable
+    public partial class Address : BaseEntity
     {
         /// <summary>
         /// Gets or sets the first name
@@ -81,43 +81,5 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-
-        /// <summary>
-        /// Gets address fullname
-        /// </summary>
-        /// <returns></returns>
-        public string GetFullName() //TODO: issue-239 - mb as property [NotMapped]
-        {
-            return $"{FirstName} {LastName}".Trim();
-        }
-
-        /// <summary>
-        /// Clone
-        /// </summary>
-        /// <returns></returns>
-        //TODO: issue-239 Why returning not Address type?
-        public object Clone()
-        {
-            var addr = new Address
-            {
-                FirstName = FirstName,
-                LastName = LastName,
-                Email = Email,
-                Company = Company,
-                CountryId = CountryId,
-                StateProvinceId = StateProvinceId,
-                County = County,
-                City = City,
-                Address1 = Address1,
-                Address2 = Address2,
-                ZipPostalCode = ZipPostalCode,
-                PhoneNumber = PhoneNumber,
-                FaxNumber = FaxNumber,
-                CustomAttributes = CustomAttributes,
-                CreatedOnUtc = CreatedOnUtc
-            };
-
-            return addr;
-        }
     }
 }

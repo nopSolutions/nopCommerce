@@ -486,7 +486,7 @@ namespace Nop.Services.Discounts
             {
                 foreach (var child in children)
                 {
-                    DeleteDiscountRequirement(child, recursive);
+                    DeleteDiscountRequirement(child, true);
                 }
             }
 
@@ -680,10 +680,7 @@ namespace Nop.Services.Discounts
 
             //discount requirements
             var key = string.Format(NopDiscountDefaults.DiscountRequirementModelCacheKey, discount.Id);
-            var requirements = _cacheManager.Get(key, () =>
-            {
-                return GetAllDiscountRequirements(discount.Id, true);
-            });
+            var requirements = _cacheManager.Get(key, () => GetAllDiscountRequirements(discount.Id, true));
 
             //get top-level group
             var topLevelGroup = requirements.FirstOrDefault();
@@ -742,20 +739,20 @@ namespace Nop.Services.Discounts
 
             //filter by customer
             if (customerId.HasValue && customerId.Value > 0)
-                discountUsageHistory = (from duh in discountUsageHistory
-                                        join order in _orderRepository.Table on duh.OrderId equals order.Id
-                                        where order.CustomerId == customerId
-                                        select duh);
+                discountUsageHistory = from duh in discountUsageHistory
+                    join order in _orderRepository.Table on duh.OrderId equals order.Id
+                    where order.CustomerId == customerId
+                    select duh;
 
             //filter by order
             if (orderId.HasValue && orderId.Value > 0)
                 discountUsageHistory = discountUsageHistory.Where(historyRecord => historyRecord.OrderId == orderId.Value);
 
             //ignore deleted orders
-            discountUsageHistory = (from duh in discountUsageHistory
-                                    join order in _orderRepository.Table on duh.OrderId equals order.Id
-                                    where !order.Deleted
-                                    select duh);
+            discountUsageHistory = from duh in discountUsageHistory
+                join order in _orderRepository.Table on duh.OrderId equals order.Id
+                where !order.Deleted
+                select duh;
 
             //order
             discountUsageHistory = discountUsageHistory.OrderByDescending(historyRecord => historyRecord.CreatedOnUtc).ThenBy(historyRecord => historyRecord.Id);

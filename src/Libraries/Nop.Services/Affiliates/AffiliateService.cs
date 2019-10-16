@@ -128,16 +128,16 @@ namespace Nop.Services.Affiliates
                 query = query.Where(a => a.FriendlyUrlName.Contains(friendlyUrlName));
 
             if (!string.IsNullOrWhiteSpace(firstName))
-                query = (from aff in query
+                query = from aff in query
                          join addr in _addressRepository.Table on aff.AddressId equals addr.Id
                          where addr.FirstName.Contains(firstName)
-                         select aff);
+                         select aff;
 
             if (!string.IsNullOrWhiteSpace(lastName))
-                query = (from aff in query
+                query = from aff in query
                          join addr in _addressRepository.Table on aff.AddressId equals addr.Id
                          where addr.LastName.Contains(lastName)
-                         select aff);
+                         select aff;
 
             if (!showHidden)
                 query = query.Where(a => a.Active);
@@ -204,7 +204,14 @@ namespace Nop.Services.Affiliates
             if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
 
-            return _addressService.GetAddressById(affiliate.AddressId)?.GetFullName();
+            var affiliateAddress = _addressService.GetAddressById(affiliate.AddressId);
+
+            if (affiliateAddress == null)
+                return string.Empty;
+
+            var fullName = $"{affiliateAddress.FirstName} {affiliateAddress.LastName}";
+
+            return fullName;
         }
 
         /// <summary>

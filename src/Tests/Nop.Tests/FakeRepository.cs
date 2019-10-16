@@ -9,18 +9,17 @@ namespace Nop.Tests
 {
     public class FakeRepository<T> : Mock<IRepository<T>>, IFakeRepository<T> where T : BaseEntity
     {
-        private int[] _initIds = new int[] { };
+        private readonly int[] _initIds = { };
 
-        public HashSet<T> Table = new HashSet<T>(new BaseEntityEqualityComparer<T>());
+        private readonly HashSet<T> _table = new HashSet<T>(new BaseEntityEqualityComparer<T>());
 
-        public FakeRepository(IEnumerable<T> initData = null)
+        public FakeRepository(IList<T> initData = null)
         {
             if (initData != null)
             {
                 Insert(initData);
-                _initIds = initData.Select(e=>e.Id).ToArray();
+                _initIds = initData.Select(e => e.Id).ToArray();
             }
-            
 
             SetupGRUD();
         }
@@ -30,26 +29,26 @@ namespace Nop.Tests
             if (entity.Id != 0)
                 return;
 
-            if (Table.Count == 0)
+            if (_table.Count == 0)
             {
                 entity.Id = 1;
                 return;
             }
 
-            entity.Id = Table.Max(e => e.Id) + 1;
+            entity.Id = _table.Max(e => e.Id) + 1;
         }
 
         protected T Insert(T entity)
         {
             SetNewId(entity);
 
-            if (!Table.Add(entity))
+            if (!_table.Add(entity))
                 throw new ArgumentException($"Entity with id#{entity.Id} already exist");
 
             return entity;
         }
 
-        protected IEnumerable<T> Insert(IEnumerable<T> entities)
+        protected IEnumerable<T> Insert(IList<T> entities)
         {
             if (entities is null)
                 throw new ArgumentException(nameof(entities));
@@ -64,7 +63,7 @@ namespace Nop.Tests
 
         protected void Delete(T entity)
         {
-            Table.Remove(entity);
+            _table.Remove(entity);
         }
 
         protected void Delete(IEnumerable<T> entities)
@@ -74,21 +73,21 @@ namespace Nop.Tests
 
             foreach (var item in entities)
             {
-                Table.Remove(item);
+                _table.Remove(item);
             }
         }
 
         protected T GetById(int id)
         {
-            return Table.FirstOrDefault(x => x.Id == id);
+            return _table.FirstOrDefault(x => x.Id == id);
         }
 
         protected void SetupGRUD()
         {
-            Setup(r => r.Table).Returns(Table.AsQueryable());
+            Setup(r => r.Table).Returns(_table.AsQueryable());
 
             Setup(r => r.Insert(It.IsAny<T>())).Callback((T value) => Insert(value));
-            Setup(r => r.Insert(It.IsAny<IEnumerable<T>>())).Callback((IEnumerable<T> values) => Insert(values));
+            Setup(r => r.Insert(It.IsAny<IEnumerable<T>>())).Callback((IEnumerable<T> values) => Insert(values.ToList()));
 
             Setup(r => r.Delete(It.IsAny<T>())).Callback((T value) => Delete(value));
             Setup(r => r.Delete(It.IsAny<IEnumerable<T>>())).Callback((IEnumerable<T> values) => Delete(values));
@@ -98,7 +97,7 @@ namespace Nop.Tests
 
         public void ResetRepository()
         {
-            Table.RemoveWhere(e => !_initIds.Contains(e.Id));
+            _table.RemoveWhere(e => !_initIds.Contains(e.Id));
         }
 
         public IRepository<T> GetRepository()

@@ -35,7 +35,7 @@ namespace Nop.Services.Tests.FakeServices
             IProductAttributeParser productAttributeParser = null,
             IProductService productService = null,
             IRepository<ShippingMethod> shippingMethodRepository = null,
-            IRepository<ShippingMethodCountryMapping> shippingMethodCountryMappingRepository=null,
+            IRepository<ShippingMethodCountryMapping> shippingMethodCountryMappingRepository = null,
             IRepository<Warehouse> warehouseRepository = null,
             IShippingPluginManager shippingPluginManager = null,
             IStateProvinceService stateProvinceService = null,

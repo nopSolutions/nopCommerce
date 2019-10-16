@@ -55,6 +55,7 @@ namespace Nop.Services.Installation
     {
         #region Fields
 
+        private readonly IAddressService _addressService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly INopFileProvider _fileProvider;
         private readonly IRepository<ActivityLog> _activityLogRepository;
@@ -64,7 +65,6 @@ namespace Nop.Services.Installation
         private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
-        private readonly IRepository<CheckoutAttribute> _checkoutAttributeRepository;
         private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<Currency> _currencyRepository;
         private readonly IRepository<Customer> _customerRepository;
@@ -103,7 +103,6 @@ namespace Nop.Services.Installation
         private readonly IRepository<Shipment> _shipmentRepository;
         private readonly IRepository<ShipmentItem> _shipmentItemRepository;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
-        private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<StateProvince> _stateProvinceRepository;
         private readonly IRepository<StockQuantityHistory> _stockQuantityHistoryRepository;
         private readonly IRepository<Store> _storeRepository;
@@ -123,6 +122,7 @@ namespace Nop.Services.Installation
         #region Ctor
 
         public CodeFirstInstallationService(IDbContext dbContext,
+            IAddressService addressService,
             IGenericAttributeService genericAttributeService,
             INopFileProvider fileProvider,
             IRepository<ActivityLog> activityLogRepository,
@@ -132,7 +132,6 @@ namespace Nop.Services.Installation
             IRepository<BlogPost> blogPostRepository,
             IRepository<Category> categoryRepository,
             IRepository<CategoryTemplate> categoryTemplateRepository,
-            IRepository<CheckoutAttribute> checkoutAttributeRepository,
             IRepository<Country> countryRepository,
             IRepository<Currency> currencyRepository,
             IRepository<Customer> customerRepository,
@@ -171,7 +170,6 @@ namespace Nop.Services.Installation
             IRepository<Shipment> shipmentRepository,
             IRepository<ShipmentItem> shipmentItemRepository,
             IRepository<ShippingMethod> shippingMethodRepository,
-            IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<StateProvince> stateProvinceRepository,
             IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
             IRepository<Store> storeRepository,
@@ -185,6 +183,7 @@ namespace Nop.Services.Installation
             IWebHelper webHelper)
         {
             _dbContext = dbContext;
+            _addressService = addressService;
             _genericAttributeService = genericAttributeService;
             _fileProvider = fileProvider;
             _activityLogRepository = activityLogRepository;
@@ -194,7 +193,6 @@ namespace Nop.Services.Installation
             _blogPostRepository = blogPostRepository;
             _categoryRepository = categoryRepository;
             _categoryTemplateRepository = categoryTemplateRepository;
-            _checkoutAttributeRepository = checkoutAttributeRepository;
             _countryRepository = countryRepository;
             _currencyRepository = currencyRepository;
             _customerPasswordRepository = customerPasswordRepository;
@@ -233,7 +231,6 @@ namespace Nop.Services.Installation
             _shipmentItemRepository = shipmentItemRepository;
             _shipmentRepository = shipmentRepository;
             _shippingMethodRepository = shippingMethodRepository;
-            _specificationAttributeRepository = specificationAttributeRepository;
             _stateProvinceRepository = stateProvinceRepository;
             _stockQuantityHistoryRepository = stockQuantityHistoryRepository;
             _storeRepository = storeRepository;
@@ -336,7 +333,7 @@ namespace Nop.Services.Installation
                 //check whether such slug already exists (and that is not the current entity)
 
                 var query = from ur in _urlRecordRepository.Table
-                            where ur.Slug == tempSeName
+                            where tempSeName != null && ur.Slug == tempSeName
                             select ur;
                 var urlRecord = query.FirstOrDefault();
 
@@ -595,7 +592,7 @@ namespace Nop.Services.Installation
                     Rate = 0.86M,
                     DisplayLocale = string.Empty,
                     //CustomFormatting = "€0.00",
-                    CustomFormatting = string.Format("{0}0.00", "\u20ac"), //euro symbol
+                    CustomFormatting = $"{"\u20ac"}0.00", //euro symbol
                     Published = true,
                     DisplayOrder = 6,
                     CreatedOnUtc = DateTime.UtcNow,
@@ -3575,7 +3572,8 @@ namespace Nop.Services.Installation
             };
             _countryRepository.Insert(countries);
 
-            var statesUsa = new List<StateProvince> {
+            var statesUsa = new List<StateProvince>
+            {
                 new StateProvince
                 {
                     Name = "AA (Armed Forces Americas)",
@@ -3585,448 +3583,446 @@ namespace Nop.Services.Installation
                     CountryId = cUsa.Id
                 },
                 new StateProvince
-            {
-                Name = "AE (Armed Forces Europe)",
-                Abbreviation = "AE",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "AE (Armed Forces Europe)",
+                    Abbreviation = "AE",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Alabama",
-                Abbreviation = "AL",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Alabama",
+                    Abbreviation = "AL",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Alaska",
-                Abbreviation = "AK",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Alaska",
+                    Abbreviation = "AK",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "American Samoa",
-                Abbreviation = "AS",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "American Samoa",
+                    Abbreviation = "AS",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "AP (Armed Forces Pacific)",
-                Abbreviation = "AP",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "AP (Armed Forces Pacific)",
+                    Abbreviation = "AP",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Arizona",
-                Abbreviation = "AZ",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Arizona",
+                    Abbreviation = "AZ",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Arkansas",
-                Abbreviation = "AR",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Arkansas",
+                    Abbreviation = "AR",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "California",
-                Abbreviation = "CA",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "California",
+                    Abbreviation = "CA",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Colorado",
-                Abbreviation = "CO",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Colorado",
+                    Abbreviation = "CO",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Connecticut",
-                Abbreviation = "CT",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Connecticut",
+                    Abbreviation = "CT",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Delaware",
-                Abbreviation = "DE",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Delaware",
+                    Abbreviation = "DE",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "District of Columbia",
-                Abbreviation = "DC",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "District of Columbia",
+                    Abbreviation = "DC",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Federated States of Micronesia",
-                Abbreviation = "FM",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Federated States of Micronesia",
+                    Abbreviation = "FM",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Florida",
-                Abbreviation = "FL",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Florida",
+                    Abbreviation = "FL",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Georgia",
-                Abbreviation = "GA",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Georgia",
+                    Abbreviation = "GA",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Guam",
-                Abbreviation = "GU",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Guam",
+                    Abbreviation = "GU",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Hawaii",
-                Abbreviation = "HI",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Hawaii",
+                    Abbreviation = "HI",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Idaho",
-                Abbreviation = "ID",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Idaho",
+                    Abbreviation = "ID",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Illinois",
-                Abbreviation = "IL",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Illinois",
+                    Abbreviation = "IL",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Indiana",
-                Abbreviation = "IN",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Indiana",
+                    Abbreviation = "IN",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Iowa",
-                Abbreviation = "IA",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Iowa",
+                    Abbreviation = "IA",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Kansas",
-                Abbreviation = "KS",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Kansas",
+                    Abbreviation = "KS",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Kentucky",
-                Abbreviation = "KY",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Kentucky",
+                    Abbreviation = "KY",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Louisiana",
-                Abbreviation = "LA",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Louisiana",
+                    Abbreviation = "LA",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Maine",
-                Abbreviation = "ME",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Maine",
+                    Abbreviation = "ME",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Marshall Islands",
-                Abbreviation = "MH",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Marshall Islands",
+                    Abbreviation = "MH",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Maryland",
-                Abbreviation = "MD",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Maryland",
+                    Abbreviation = "MD",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Massachusetts",
-                Abbreviation = "MA",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Massachusetts",
+                    Abbreviation = "MA",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Michigan",
-                Abbreviation = "MI",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Michigan",
+                    Abbreviation = "MI",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Minnesota",
-                Abbreviation = "MN",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Minnesota",
+                    Abbreviation = "MN",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Mississippi",
-                Abbreviation = "MS",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Mississippi",
+                    Abbreviation = "MS",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Missouri",
-                Abbreviation = "MO",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Missouri",
+                    Abbreviation = "MO",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Montana",
-                Abbreviation = "MT",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Montana",
+                    Abbreviation = "MT",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Nebraska",
-                Abbreviation = "NE",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Nebraska",
+                    Abbreviation = "NE",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Nevada",
-                Abbreviation = "NV",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Nevada",
+                    Abbreviation = "NV",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "New Hampshire",
-                Abbreviation = "NH",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "New Hampshire",
+                    Abbreviation = "NH",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "New Jersey",
-                Abbreviation = "NJ",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "New Jersey",
+                    Abbreviation = "NJ",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "New Mexico",
-                Abbreviation = "NM",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "New Mexico",
+                    Abbreviation = "NM",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "New York",
-                Abbreviation = "NY",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "New York",
+                    Abbreviation = "NY",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "North Carolina",
-                Abbreviation = "NC",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "North Carolina",
+                    Abbreviation = "NC",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "North Dakota",
-                Abbreviation = "ND",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "North Dakota",
+                    Abbreviation = "ND",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Northern Mariana Islands",
-                Abbreviation = "MP",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Northern Mariana Islands",
+                    Abbreviation = "MP",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Ohio",
-                Abbreviation = "OH",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Ohio",
+                    Abbreviation = "OH",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Oklahoma",
-                Abbreviation = "OK",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Oklahoma",
+                    Abbreviation = "OK",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Oregon",
-                Abbreviation = "OR",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Oregon",
+                    Abbreviation = "OR",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Palau",
-                Abbreviation = "PW",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Palau",
+                    Abbreviation = "PW",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Pennsylvania",
-                Abbreviation = "PA",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Pennsylvania",
+                    Abbreviation = "PA",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Puerto Rico",
-                Abbreviation = "PR",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Puerto Rico",
+                    Abbreviation = "PR",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Rhode Island",
-                Abbreviation = "RI",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Rhode Island",
+                    Abbreviation = "RI",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "South Carolina",
-                Abbreviation = "SC",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "South Carolina",
+                    Abbreviation = "SC",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "South Dakota",
-                Abbreviation = "SD",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "South Dakota",
+                    Abbreviation = "SD",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Tennessee",
-                Abbreviation = "TN",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Tennessee",
+                    Abbreviation = "TN",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Texas",
-                Abbreviation = "TX",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Texas",
+                    Abbreviation = "TX",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Utah",
-                Abbreviation = "UT",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Utah",
+                    Abbreviation = "UT",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Vermont",
-                Abbreviation = "VT",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Vermont",
+                    Abbreviation = "VT",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Virgin Islands",
-                Abbreviation = "VI",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Virgin Islands",
+                    Abbreviation = "VI",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Virginia",
-                Abbreviation = "VA",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Virginia",
+                    Abbreviation = "VA",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Washington",
-                Abbreviation = "WA",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Washington",
+                    Abbreviation = "WA",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "West Virginia",
-                Abbreviation = "WV",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "West Virginia",
+                    Abbreviation = "WV",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Wisconsin",
-                Abbreviation = "WI",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Wisconsin",
+                    Abbreviation = "WI",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
-            {
-                Name = "Wyoming",
-                Abbreviation = "WY",
-                Published = true,
-                DisplayOrder = 1
-            }
-
-        };
+                {
+                    Name = "Wyoming",
+                    Abbreviation = "WY",
+                    Published = true,
+                    DisplayOrder = 1
+                }
+            };
 
             statesUsa.ForEach(x => x.CountryId = cUsa.Id);
             _stateProvinceRepository.Insert(statesUsa);
 
             var statesCanada = new List<StateProvince>
             {
-
                 new StateProvince
-            {
-                Name = "Alberta",
-                Abbreviation = "AB",
-                Published = true,
-                DisplayOrder = 1
-            },
+                {
+                    Name = "Alberta",
+                    Abbreviation = "AB",
+                    Published = true,
+                    DisplayOrder = 1
+                },
                 new StateProvince
                 {
                     Name = "British Columbia",
@@ -4111,7 +4107,6 @@ namespace Nop.Services.Installation
                     Published = true,
                     DisplayOrder = 1
                 }
-
             };
 
             statesCanada.ForEach(x => x.CountryId = cCanada.Id);
@@ -4560,7 +4555,6 @@ namespace Nop.Services.Installation
             adminUser.BillingAddressId = defaultAdminUserAddress.Id;
             adminUser.ShippingAddressId = defaultAdminUserAddress.Id;
 
-
             _customerRepository.Insert(adminUser);
 
             InsertInstallationData(new CustomerAddressMapping { CustomerId = adminUser.Id, AddressId = defaultAdminUserAddress.Id });
@@ -4626,8 +4620,8 @@ namespace Nop.Services.Installation
             //first order
             var firstCustomer = _customerRepository.Table.First(c => c.Email.Equals("steve_gates@nopCommerce.com"));
 
-            var firstCustomerBillingAddress = InsertInstallationData((Address)_addressRepository.GetById(firstCustomer.BillingAddressId).Clone());
-            var firstCustomerShippingAddress = InsertInstallationData((Address)_addressRepository.GetById(firstCustomer.ShippingAddressId).Clone());
+            var firstCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(firstCustomer.BillingAddressId)));
+            var firstCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(firstCustomer.ShippingAddressId)));
 
             var firstOrder = new Order
             {
@@ -4796,8 +4790,8 @@ namespace Nop.Services.Installation
             //second order
             var secondCustomer = _customerRepository.Table.First(c => c.Email.Equals("arthur_holmes@nopCommerce.com"));
 
-            var secondCustomerBillingAddress = InsertInstallationData((Address)_addressRepository.GetById(secondCustomer.BillingAddressId).Clone());
-            var secondCustomerShippingAddress = InsertInstallationData((Address)_addressRepository.GetById(secondCustomer.ShippingAddressId).Clone());
+            var secondCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(secondCustomer.BillingAddressId)));
+            var secondCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(secondCustomer.ShippingAddressId)));
 
             var secondOrder = new Order
             {
@@ -4918,7 +4912,7 @@ namespace Nop.Services.Installation
             //third order
             var thirdCustomer = _customerRepository.Table.First(c => c.Email.Equals("james_pan@nopCommerce.com"));
 
-            var thirdCustomerBillingAddress = InsertInstallationData((Address)_addressRepository.GetById(thirdCustomer.BillingAddressId).Clone());
+            var thirdCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(thirdCustomer.BillingAddressId)));
 
             var thirdOrder = new Order
             {
@@ -5063,11 +5057,10 @@ namespace Nop.Services.Installation
             //fourth order
             var fourthCustomer = _customerRepository.Table.First(c => c.Email.Equals("brenda_lindgren@nopCommerce.com"));
 
-            var fourthCustomerBillingAddress = InsertInstallationData((Address)_addressRepository.GetById(fourthCustomer.BillingAddressId).Clone());
-            var fourthCustomerShippingAddress = InsertInstallationData((Address)_addressRepository.GetById(fourthCustomer.ShippingAddressId).Clone());
-            var fourthCustomerPickupAddress = InsertInstallationData((Address)_addressRepository.GetById(fourthCustomer.ShippingAddressId).Clone());
-
-
+            var fourthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fourthCustomer.BillingAddressId)));
+            var fourthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fourthCustomer.ShippingAddressId)));
+            var fourthCustomerPickupAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fourthCustomer.ShippingAddressId)));
+            
             var fourthOrder = new Order
             {
                 StoreId = defaultStore.Id,
@@ -5279,8 +5272,8 @@ namespace Nop.Services.Installation
             //fifth order
             var fifthCustomer = _customerRepository.Table.First(c => c.Email.Equals("victoria_victoria@nopCommerce.com"));
 
-            var fifthCustomerBillingAddress = InsertInstallationData((Address)_addressRepository.GetById(fifthCustomer.BillingAddressId).Clone());
-            var fifthCustomerShippingAddress = InsertInstallationData((Address)_addressRepository.GetById(fifthCustomer.ShippingAddressId).Clone());
+            var fifthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fifthCustomer.BillingAddressId)));
+            var fifthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fifthCustomer.ShippingAddressId)));
 
             var fifthOrder = new Order
             {
@@ -5416,7 +5409,6 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallActivityLog(string defaultUserEmail)
         {
-            var customerActivityService = EngineContext.Current.Resolve<ICustomerActivityService>();
             //default customer/user
             var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
             if (defaultCustomer == null)
@@ -6844,7 +6836,6 @@ namespace Nop.Services.Installation
                     DisplayOrder = 2,
                     CheckoutAttributeId = ca1.Id
                 });
-
         }
 
         protected virtual void InstallSpecificationAttributes()
@@ -7880,8 +7871,8 @@ namespace Nop.Services.Installation
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
-
             };
+
             allProducts.Add(productAsusN551JK);
 
             _productRepository.Insert(productAsusN551JK);
@@ -8657,7 +8648,7 @@ namespace Nop.Services.Installation
                 DisplayOrder = 1
             });
 
-            InsertProductPicture(productNikonD5500DSLR, "product_NikonCamera_1.jpeg", 1);
+            InsertProductPicture(productNikonD5500DSLR, "product_NikonCamera_1.jpeg");
             InsertProductPicture(productNikonD5500DSLR, "product_NikonCamera_2.jpeg", 2);
 
             AddProductTag(productNikonD5500DSLR, "cool");
@@ -9029,27 +9020,29 @@ namespace Nop.Services.Installation
             InsertProductPicture(productBeatsPill, "product_PillBeats_1.jpeg");
             InsertProductPicture(productBeatsPill, "product_PillBeats_2.jpeg", 2);
 
-            _tierPriceRepository.Insert(new List<TierPrice> {
+            _tierPriceRepository.Insert(new List<TierPrice>
+            {
                 new TierPrice
-                    {
-                        Quantity = 2,
-                        Price = 19,
-                        ProductId = productBeatsPill.Id
-                    },
-                    new TierPrice
-                    {
-                        Quantity = 5,
-                        Price = 17,
-                        ProductId = productBeatsPill.Id
-                    },
-                    new TierPrice
-                    {
-                        Quantity = 10,
-                        Price = 15,
-                        StartDateTimeUtc = DateTime.UtcNow.AddDays(-7),
-                        EndDateTimeUtc = DateTime.UtcNow.AddDays(7),
-                        ProductId = productBeatsPill.Id
-                    }});
+                {
+                    Quantity = 2,
+                    Price = 19,
+                    ProductId = productBeatsPill.Id
+                },
+                new TierPrice
+                {
+                    Quantity = 5,
+                    Price = 17,
+                    ProductId = productBeatsPill.Id
+                },
+                new TierPrice
+                {
+                    Quantity = 10,
+                    Price = 15,
+                    StartDateTimeUtc = DateTime.UtcNow.AddDays(-7),
+                    EndDateTimeUtc = DateTime.UtcNow.AddDays(7),
+                    ProductId = productBeatsPill.Id
+                }
+            });
 
             AddProductTag(productBeatsPill, "computer");
             AddProductTag(productBeatsPill, "cool");
@@ -9291,7 +9284,6 @@ namespace Nop.Services.Installation
                 ShowOnProductPage = false,
                 DisplayOrder = 1,
                 SpecificationAttributeOptionId = GetSpecificationAttributeOption("Color", "Grey").Id
-
             });
 
             var pamSize = InsertInstallationData(
@@ -9387,7 +9379,6 @@ namespace Nop.Services.Installation
                     ImageSquaresPictureId = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "p_attribute_print_1.jpg")), MimeTypes.ImagePJpeg, pictureService.GetPictureSeName("Fresh Print")).Id
                 });
 
-
             AddProductTag(productNikeFloral, "cool");
             AddProductTag(productNikeFloral, "shoes");
             AddProductTag(productNikeFloral, "apparel");
@@ -9437,7 +9428,7 @@ namespace Nop.Services.Installation
                 DisplayOrder = 1
             });
 
-            var pic_product_adidasId = InsertProductPicture(productAdidas, "product_adidas.jpg", 1);
+            var pic_product_adidasId = InsertProductPicture(productAdidas, "product_adidas.jpg");
             var pic_product_adidas_2Id = InsertProductPicture(productAdidas, "product_adidas_2.jpg", 2);
             var pic_product_adidas_3Id = InsertProductPicture(productAdidas, "product_adidas_3.jpg", 3);
 
@@ -9770,25 +9761,26 @@ namespace Nop.Services.Installation
 
             InsertProductPicture(productOversizedWomenTShirt, "product_WomenTShirt.jpg");
 
-            _tierPriceRepository.Insert(new List<TierPrice> {
+            _tierPriceRepository.Insert(new List<TierPrice>
+            {
                 new TierPrice
-                    {
-                        Quantity = 3,
-                        Price = 21,
-                        ProductId = productOversizedWomenTShirt.Id
-                    },
-                    new TierPrice
-                    {
-                        Quantity = 7,
-                        Price = 19,
-                        ProductId = productOversizedWomenTShirt.Id
-                    },
-                    new TierPrice
-                    {
-                        Quantity = 10,
-                        Price = 16,
-                        ProductId = productOversizedWomenTShirt.Id
-                    }
+                {
+                    Quantity = 3,
+                    Price = 21,
+                    ProductId = productOversizedWomenTShirt.Id
+                },
+                new TierPrice
+                {
+                    Quantity = 7,
+                    Price = 19,
+                    ProductId = productOversizedWomenTShirt.Id
+                },
+                new TierPrice
+                {
+                    Quantity = 10,
+                    Price = 16,
+                    ProductId = productOversizedWomenTShirt.Id
+                }
             });
 
             AddProductTag(productOversizedWomenTShirt, "cool");
@@ -11108,6 +11100,10 @@ namespace Nop.Services.Installation
         protected virtual void InstallBlogPosts(string defaultUserEmail)
         {
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
+
+            if (defaultLanguage == null)
+                throw new Exception("Default language could not be loaded");
+
             var blogService = EngineContext.Current.Resolve<IBlogService>();
 
             var blogPosts = new List<BlogPost>
@@ -11178,6 +11174,10 @@ namespace Nop.Services.Installation
         protected virtual void InstallNews(string defaultUserEmail)
         {
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
+
+            if (defaultLanguage == null)
+                throw new Exception("Default language could not be loaded");
+
             var newsService = EngineContext.Current.Resolve<INewsService>();
 
             var news = new List<NewsItem>
@@ -11258,6 +11258,10 @@ namespace Nop.Services.Installation
         protected virtual void InstallPolls()
         {
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
+
+            if (defaultLanguage == null)
+                throw new Exception("Default language could not be loaded");
+
             var poll1 = new Poll
             {
                 LanguageId = defaultLanguage.Id,
@@ -11267,7 +11271,6 @@ namespace Nop.Services.Installation
                 ShowOnHomepage = true,
                 DisplayOrder = 1
             };
-
 
             _pollRepository.Insert(poll1);
 

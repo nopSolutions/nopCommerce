@@ -209,7 +209,7 @@ namespace Nop.Services.Security
                         _customerService.InsertCustomerRole(customerRole);
                     }
                     //TODO: issue - 239 redundant code?
-                    var defaultMappingProvided = defaultPermission.permissions.Any(p=> p.SystemName == permission1.SystemName);
+                    var defaultMappingProvided = defaultPermission.permissions.Any(p => p.SystemName == permission1.SystemName);
                                         
                     var mappingExists = (from mapping in _permissionRecordCustomerRoleMappingRepository.Table.Where(prcm => prcm.CustomerRoleId == customerRole.Id)
                                          join pr in _permissionRecordRepository.Table on mapping.PermissionRecordId equals pr.Id
@@ -360,7 +360,7 @@ namespace Nop.Services.Security
             var mapping = _permissionRecordCustomerRoleMappingRepository.Table.FirstOrDefault(prcm => prcm.CustomerRoleId == customerRoleId && prcm.PermissionRecordId == permissionId);
 
             if (mapping is null)
-                throw new Exception("");
+                throw new Exception(string.Empty);
 
             _permissionRecordCustomerRoleMappingRepository.Delete(mapping);
         }

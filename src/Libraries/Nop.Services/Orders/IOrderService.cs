@@ -150,7 +150,7 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Gets a product of specify order item
         /// </summary>
-        /// <param name="orderItem">Order item</param>
+        /// <param name="orderItemId">Order item identifier</param>
         /// <returns>Product</returns>
         Product GetProductByOrderItemId(int orderItemId);
 

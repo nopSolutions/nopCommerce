@@ -512,10 +512,10 @@ namespace Nop.Services.Catalog
                         //TODO issue-239
                         if (!productPrice.HasValue)
                         {
-
                             var product = _productService.GetProductById(_productAttributeService.GetProductAttributeMappingById(value.ProductAttributeMappingId).ProductId);
                             productPrice = GetFinalPrice(product, customer);
                         }
+
                         adjustment = (decimal)((float)productPrice * (float)value.PriceAdjustment / 100f);
                     }
                     else

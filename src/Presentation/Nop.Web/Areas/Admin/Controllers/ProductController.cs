@@ -1748,29 +1748,25 @@ namespace Nop.Web.Areas.Admin.Controllers
             switch (psa.AttributeType)
             {
                 case SpecificationAttributeType.CustomText:
+                    foreach (var localized in model.Locales)
                     {
-                        foreach (var localized in model.Locales)
-                        {
-                            _localizedEntityService.SaveLocalizedValue(psa,
-                                x => x.CustomValue,
-                                localized.Value,
-                                localized.LanguageId);
-                        }
-
-                        break;
+                        _localizedEntityService.SaveLocalizedValue(psa,
+                            x => x.CustomValue,
+                            localized.Value,
+                            localized.LanguageId);
                     }
+
+                    break;
                 case SpecificationAttributeType.CustomHtmlText:
+                    foreach (var localized in model.Locales)
                     {
-                        foreach (var localized in model.Locales)
-                        {
-                            _localizedEntityService.SaveLocalizedValue(psa,
-                                x => x.CustomValue,
-                                localized.ValueRaw,
-                                localized.LanguageId);
-                        }
-
-                        break;
+                        _localizedEntityService.SaveLocalizedValue(psa,
+                            x => x.CustomValue,
+                            localized.ValueRaw,
+                            localized.LanguageId);
                     }
+
+                    break;
                 case SpecificationAttributeType.Option:
                     break;
                 case SpecificationAttributeType.Hyperlink:
@@ -1821,8 +1817,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //select an appropriate panel
                 SaveSelectedPanelName("product-specification-attributes");
                 _notificationService.ErrorNotification("No product specification attribute found with the specified id");
-                return RedirectToAction("Edit", new { id = model.ProductId });
 
+                return RedirectToAction("Edit", new { id = model.ProductId });
             }
 
             //a vendor should have access only to his products
@@ -1830,6 +1826,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 && _productService.GetProductById(psa.ProductId).VendorId != _workContext.CurrentVendor.Id)
             {
                 _notificationService.ErrorNotification("This is not your product");
+
                 return RedirectToAction("List");
             }
 
@@ -1840,6 +1837,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 case (int)SpecificationAttributeType.Option:
                     psa.AllowFiltering = model.AllowFiltering;
                     psa.SpecificationAttributeOptionId = model.SpecificationAttributeOptionId;
+
                     break;
                 case (int)SpecificationAttributeType.CustomHtmlText:
                     psa.CustomValue = model.ValueRaw;
@@ -1850,6 +1848,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                             localized.ValueRaw,
                             localized.LanguageId);
                     }
+
                     break;
                 case (int)SpecificationAttributeType.CustomText:
                     psa.CustomValue = model.Value;
@@ -1860,9 +1859,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                             localized.ValueRaw,
                             localized.LanguageId);
                     }
+
                     break;
                 default:
                     psa.CustomValue = model.Value;
+
                     break;
             }
 
@@ -1878,6 +1879,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //select an appropriate panel
             SaveSelectedPanelName("product-specification-attributes");
+
             return RedirectToAction("Edit", new { id = psa.ProductId });
         }
 
@@ -1935,6 +1937,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //select an appropriate panel
             SaveSelectedPanelName("product-specification-attributes");
+
             return RedirectToAction("Edit", new { id = psa.ProductId });
         }
 

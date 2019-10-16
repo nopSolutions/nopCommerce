@@ -11,10 +11,9 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Logging;
-using Nop.Services.Catalog;
-using Nop.Services.Customers;
 
 namespace Nop.Services.Tax
 {
@@ -291,13 +290,9 @@ namespace Nop.Services.Tax
 
             decimal result;
             if (increase)
-            {
                 result = price * (1 + percent / 100);
-            }
             else
-            {
                 result = price - price / (100 + percent) * percent;
-            }
 
             return result;
         }
@@ -604,6 +599,7 @@ namespace Nop.Services.Tax
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="customer">Customer</param>
         /// <returns>Price</returns>
@@ -616,6 +612,7 @@ namespace Nop.Services.Tax
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
@@ -625,10 +622,11 @@ namespace Nop.Services.Tax
         {
             return GetCheckoutAttributePrice(ca, cav, includingTax, customer, out var _);
         }
-
+        
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
+        /// <param name="ca">Checkout attribute</param>
         /// <param name="cav">Checkout attribute value</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
@@ -641,7 +639,6 @@ namespace Nop.Services.Tax
                 throw new ArgumentNullException(nameof(cav));
 
             taxRate = decimal.Zero;
-
 
             var price = cav.PriceAdjustment;
             if (ca.IsTaxExempt)

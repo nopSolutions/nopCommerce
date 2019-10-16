@@ -282,6 +282,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         }
                         catch
                         {
+                            // ignored
                         }
 
                         if (selectedDate.HasValue)
@@ -340,6 +341,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch
             {
+                // ignored
             }
         }
 

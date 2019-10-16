@@ -44,10 +44,10 @@ namespace Nop.Data.Extensions
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            Type type = null;
+            Type type;
             //cachable entity (get the base entity type)
-            if (entity is IEntityForCaching)
-                type = ((IEntityForCaching)entity).GetType().BaseType;
+            if (entity is IEntityForCaching caching)
+                type = caching.GetType().BaseType;
             //EF proxy
             else if (entity.IsProxy())
                 type = entity.GetType().BaseType;

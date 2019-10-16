@@ -648,8 +648,6 @@ namespace Nop.Services.Common
             //reward points
             if (order.RedeemedRewardPointsEntryId.HasValue && _rewardPointService.GetRewardPointsHistoryEntryById(order.RedeemedRewardPointsEntryId.Value) is RewardPointsHistory redeemedRewardPointsEntry)
             {
-                
-
                 var rpTitle = string.Format(_localizationService.GetResource("PDFInvoice.RewardPoints", lang.Id),
                     -redeemedRewardPointsEntry.Points);
                 var rpAmount = _priceFormatter.FormatPrice(
@@ -979,7 +977,7 @@ namespace Nop.Services.Common
                     if (_addressSettings.CountryEnabled && _countryService.GetCountryByAddress(shippingAddress) is Country country)
                     {
                         shippingAddressPdf.AddCell(
-                            new Paragraph(indent + _localizationService.GetLocalized(country, x => x.Name, lang.Id, true), font));
+                            new Paragraph(indent + _localizationService.GetLocalized(country, x => x.Name, lang.Id), font));
                     }
                     //custom attributes
                     var customShippingAddressAttributes =

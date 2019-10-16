@@ -330,7 +330,6 @@ namespace Nop.Web.Areas.Admin.Factories
                             case AttributeControlType.Checkboxes:
                             case AttributeControlType.ColorSquares:
                             case AttributeControlType.ImageSquares:
-                            {
                                 if (!string.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml))
                                 {
                                     //clear default selection
@@ -338,14 +337,16 @@ namespace Nop.Web.Areas.Admin.Factories
                                         item.IsPreSelected = false;
 
                                     //select new values
-                                    var selectedValues = _productAttributeParser.ParseProductAttributeValues(productAttributeMapping.ConditionAttributeXml);
+                                    var selectedValues =
+                                        _productAttributeParser.ParseProductAttributeValues(productAttributeMapping
+                                            .ConditionAttributeXml);
                                     foreach (var attributeValue in selectedValues)
-                                        foreach (var item in attributeModel.Values)
-                                            if (attributeValue.Id == item.Id)
-                                                item.IsPreSelected = true;
+                                    foreach (var item in attributeModel.Values)
+                                        if (attributeValue.Id == item.Id)
+                                            item.IsPreSelected = true;
                                 }
-                            }
-                            break;
+
+                                break;
                             case AttributeControlType.ReadonlyCheckboxes:
                             case AttributeControlType.TextBox:
                             case AttributeControlType.MultilineTextbox:
@@ -1426,8 +1427,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Product specification attribute model</returns>
         public virtual AddSpecificationAttributeModel PrepareAddSpecificationAttributeModel(int productId, int? specificationId)
         {
-            Action<AddSpecificationAttributeLocalizedModel, int> localizedModelConfiguration = null;
-
             if (!specificationId.HasValue)
             {
                 return new AddSpecificationAttributeModel
@@ -1439,9 +1438,8 @@ namespace Nop.Web.Areas.Admin.Factories
                             .ToList();
                     }),
                     ProductId = productId,
-                    Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration)
+                    Locales = _localizedModelFactory.PrepareLocalizedModels<AddSpecificationAttributeLocalizedModel>()
                 };
-
             }
 
             var attribute = _specificationAttributeService.GetProductSpecificationAttributeById(specificationId.Value);
@@ -1494,6 +1492,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 default:
                     throw new ArgumentOutOfRangeException(nameof(attribute.AttributeType));
             }
+
+            Action<AddSpecificationAttributeLocalizedModel, int> localizedModelConfiguration;
 
             localizedModelConfiguration = (locale, languageId) =>
             {

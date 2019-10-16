@@ -167,44 +167,44 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.Id == orderId);
 
             if (vendorId > 0)
-                query = (from o in query
-                         join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                         join p in _productRepository.Table on oi.ProductId equals p.Id
-                         where p.VendorId == vendorId
-                         select o);
+                query = from o in query
+                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                    join p in _productRepository.Table on oi.ProductId equals p.Id
+                    where p.VendorId == vendorId
+                    select o;
 
             if (productId > 0)
-                query = (from o in query
-                         join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                         where oi.ProductId == productId
-                         select o);
+                query = from o in query
+                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                    where oi.ProductId == productId
+                    select o;
 
             if (warehouseId > 0)
             {
                 var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
 
-                query = (from o in query
-                         join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
-                         join p in _productRepository.Table on oi.ProductId equals p.Id
-                         join pwi in _productWarehouseInventoryRepository.Table on p.Id equals pwi.ProductId
-                         where
-                            //"Use multiple warehouses" enabled
-                            //we search in each warehouse
-                            (p.ManageInventoryMethodId == manageStockInventoryMethodId && p.UseMultipleWarehouses && pwi.WarehouseId == warehouseId) ||
-                            //"Use multiple warehouses" disabled
-                            //we use standard "warehouse" property
-                            ((p.ManageInventoryMethodId != manageStockInventoryMethodId || !p.UseMultipleWarehouses) && p.WarehouseId == warehouseId)
-                         select o);
+                query = from o in query
+                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                    join p in _productRepository.Table on oi.ProductId equals p.Id
+                    join pwi in _productWarehouseInventoryRepository.Table on p.Id equals pwi.ProductId
+                    where
+                        //"Use multiple warehouses" enabled
+                        //we search in each warehouse
+                        (p.ManageInventoryMethodId == manageStockInventoryMethodId && p.UseMultipleWarehouses && pwi.WarehouseId == warehouseId) ||
+                        //"Use multiple warehouses" disabled
+                        //we use standard "warehouse" property
+                        ((p.ManageInventoryMethodId != manageStockInventoryMethodId || !p.UseMultipleWarehouses) && p.WarehouseId == warehouseId)
+                    select o;
             }
 
-            query = (from o in query
-                        join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
-                        where 
-                            (billingCountryId <= 0 || (oba.CountryId == billingCountryId)) &&
-                            (string.IsNullOrEmpty(billingPhone) || (!string.IsNullOrEmpty(oba.PhoneNumber) && oba.PhoneNumber.Contains(billingPhone))) &&
-                            (string.IsNullOrEmpty(billingEmail) || (!string.IsNullOrEmpty(oba.Email) && oba.Email.Contains(billingEmail))) &&
-                            (string.IsNullOrEmpty(billingLastName) || (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName)))                            
-                        select o);
+            query = from o in query
+                join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
+                where 
+                    (billingCountryId <= 0 || (oba.CountryId == billingCountryId)) &&
+                    (string.IsNullOrEmpty(billingPhone) || (!string.IsNullOrEmpty(oba.PhoneNumber) && oba.PhoneNumber.Contains(billingPhone))) &&
+                    (string.IsNullOrEmpty(billingEmail) || (!string.IsNullOrEmpty(oba.Email) && oba.Email.Contains(billingEmail))) &&
+                    (string.IsNullOrEmpty(billingLastName) || (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName)))                            
+                select o;
 
             if (!string.IsNullOrEmpty(paymentMethodSystemName))
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
@@ -225,10 +225,10 @@ namespace Nop.Services.Orders
                 query = query.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
 
             if (!string.IsNullOrEmpty(orderNotes))
-                query = (from o in query
-                         join n in _orderNoteRepository.Table on o.Id equals n.OrderId
-                         where n.Note.Contains(orderNotes)
-                         select o);
+                query = from o in query
+                    join n in _orderNoteRepository.Table on o.Id equals n.OrderId
+                    where n.Note.Contains(orderNotes)
+                    select o;
 
             var item = (from oq in query
                 group oq by 1
@@ -409,7 +409,7 @@ namespace Nop.Services.Orders
                     query2 = query2.OrderByDescending(x => x.TotalAmount);
                     break;
                 default:
-                    throw new ArgumentException("Wrong orderBy parameter", "orderBy");
+                    throw new ArgumentException("Wrong orderBy parameter", nameof(orderBy));
             }
 
             var result = new PagedList<BestsellersReportLine>(query2, pageIndex, pageSize);
@@ -571,40 +571,44 @@ namespace Nop.Services.Orders
             var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
 
             var query = from orderItem in _orderItemRepository.Table
-                        join o in orders on orderItem.OrderId equals o.Id
-                        join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                        join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
-                        where (storeId == 0 || storeId == o.StoreId) &&
-                              (orderId == 0 || orderId == o.Id) &&
-                              (billingCountryId == 0 || (oba.CountryId == billingCountryId)) &&
-                              (dontSearchPaymentMethods || paymentMethodSystemName == o.PaymentMethodSystemName) &&
-                              (!startTimeUtc.HasValue || startTimeUtc.Value <= o.CreatedOnUtc) &&
-                              (!endTimeUtc.HasValue || endTimeUtc.Value >= o.CreatedOnUtc) &&
-                              !o.Deleted &&
-                              (vendorId == 0 || p.VendorId == vendorId) &&
-                              (productId == 0 || orderItem.ProductId == productId) &&
-                              (
-                                warehouseId == 0
-                                ||
-                                //"Use multiple warehouses" enabled
-                                //we search in each warehouse
-                                p.ManageInventoryMethodId == manageStockInventoryMethodId &&
-                                p.UseMultipleWarehouses &&
-                                _productService.GetAllProductWarehouseInventoryRecords(orderItem.ProductId).Any(pwi => pwi.WarehouseId == warehouseId)
-                                ||
-                                //"Use multiple warehouses" disabled
-                                //we use standard "warehouse" property
-                                (p.ManageInventoryMethodId != manageStockInventoryMethodId ||
-                                !p.UseMultipleWarehouses) &&
-                                p.WarehouseId == warehouseId
-                              ) &&
-                              //we do not ignore deleted products when calculating order reports
-                              //(!p.Deleted)
-                              (dontSearchPhone || (!string.IsNullOrEmpty(oba.PhoneNumber) && oba.PhoneNumber.Contains(billingPhone))) &&
-                              (dontSearchEmail || (!string.IsNullOrEmpty(oba.Email) && oba.Email.Contains(billingEmail))) &&
-                              (dontSearchLastName || (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName))) &&
-                              (dontSearchOrderNotes || _orderNoteRepository.Table.Any(oNote => oNote.OrderId == o.Id && oNote.Note.Contains(orderNotes)))
-                        select orderItem;
+                join o in orders on orderItem.OrderId equals o.Id
+                join p in _productRepository.Table on orderItem.ProductId equals p.Id
+                join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
+                where (storeId == 0 || storeId == o.StoreId) &&
+                      (orderId == 0 || orderId == o.Id) &&
+                      (billingCountryId == 0 || (oba.CountryId == billingCountryId)) &&
+                      (dontSearchPaymentMethods || paymentMethodSystemName == o.PaymentMethodSystemName) &&
+                      (!startTimeUtc.HasValue || startTimeUtc.Value <= o.CreatedOnUtc) &&
+                      (!endTimeUtc.HasValue || endTimeUtc.Value >= o.CreatedOnUtc) &&
+                      !o.Deleted &&
+                      (vendorId == 0 || p.VendorId == vendorId) &&
+                      (productId == 0 || orderItem.ProductId == productId) &&
+                      (
+                          warehouseId == 0
+                          ||
+                          //"Use multiple warehouses" enabled
+                          //we search in each warehouse
+                          p.ManageInventoryMethodId == manageStockInventoryMethodId &&
+                          p.UseMultipleWarehouses &&
+                          _productService.GetAllProductWarehouseInventoryRecords(orderItem.ProductId)
+                              .Any(pwi => pwi.WarehouseId == warehouseId)
+                          ||
+                          //"Use multiple warehouses" disabled
+                          //we use standard "warehouse" property
+                          (p.ManageInventoryMethodId != manageStockInventoryMethodId ||
+                           !p.UseMultipleWarehouses) &&
+                          p.WarehouseId == warehouseId
+                      ) &&
+                      //we do not ignore deleted products when calculating order reports
+                      //(!p.Deleted)
+                      (dontSearchPhone || (!string.IsNullOrEmpty(oba.PhoneNumber) &&
+                                           oba.PhoneNumber.Contains(billingPhone))) &&
+                      (dontSearchEmail || (!string.IsNullOrEmpty(oba.Email) && oba.Email.Contains(billingEmail))) &&
+                      (dontSearchLastName ||
+                       (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName))) &&
+                      (dontSearchOrderNotes || _orderNoteRepository.Table.Any(oNote =>
+                           oNote.OrderId == o.Id && oNote.Note.Contains(orderNotes)))
+                select orderItem;
 
             var productCost = Convert.ToDecimal(query.Sum(orderItem => (decimal?)orderItem.OriginalProductCost * orderItem.Quantity));
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Nop.Core;
 
 namespace Nop.Tests
@@ -9,8 +7,9 @@ namespace Nop.Tests
     {
         public bool Equals(T x, T y)
         {
-            return x.Id == y.Id;
+            return x?.Id == y?.Id;
         }
+
         public int GetHashCode(T obj)
         {
             return obj.Id;

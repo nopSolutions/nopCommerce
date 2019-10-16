@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Moq;
+﻿using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -95,7 +92,6 @@ namespace Nop.Services.Tests
                 workContext ?? new Mock<IWorkContext>().Object,
                 localizationSettings ?? new LocalizationSettings())
         {
-            
         }
     }
 }

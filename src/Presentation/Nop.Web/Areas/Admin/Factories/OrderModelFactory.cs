@@ -595,7 +595,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.ShippingAddress.CountryName = shippingCountry?.Name;
                 model.ShippingAddress.StateProvinceName = _stateProvinceService.GetStateProvinceByAddress(shippingAddress)?.Name;
                 PrepareAddressModel(model.ShippingAddress, shippingAddress);
-                model.ShippingAddressGoogleMapsUrl = $"https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q=" +
+                model.ShippingAddressGoogleMapsUrl = "https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q=" +
                     $"{WebUtility.UrlEncode(shippingAddress.Address1 + " " + shippingAddress.ZipPostalCode + " " + shippingAddress.City + " " + (shippingCountry?.Name ?? string.Empty))}";
             }
             else
@@ -698,12 +698,13 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Shipment item model</param>
         /// <param name="orderItem">Order item</param>
+        /// <param name="product">Product item</param>
         protected virtual void PrepareShipmentItemModel(ShipmentItemModel model, OrderItem orderItem, Product product)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            if(orderItem is null)
+            if (orderItem is null)
                 throw new ArgumentNullException(nameof(orderItem));
 
             if (product is null)

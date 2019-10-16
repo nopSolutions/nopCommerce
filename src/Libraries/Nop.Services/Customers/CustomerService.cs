@@ -313,10 +313,10 @@ namespace Nop.Services.Customers
 
             //filter customers by billing country
             if (countryId > 0)
-                customers = (from c in customers
-                             join a in _customerAddressRepository.Table on c.BillingAddressId equals a.Id
-                             where a.CountryId == countryId
-                             select c);
+                customers = from c in customers
+                    join a in _customerAddressRepository.Table on c.BillingAddressId equals a.Id
+                    where a.CountryId == countryId
+                    select c;
 
             //get customers with shopping carts
             var customersWithCarts = items.GroupBy(item => item.CustomerId)
@@ -980,7 +980,6 @@ namespace Nop.Services.Customers
             //TODO: issue-239  and reset customer roles cache...
 
             _eventPublisher.EntityInserted(roleMapping);
-
         }
 
         /// <summary>
@@ -1155,13 +1154,13 @@ namespace Nop.Services.Customers
             if (string.IsNullOrEmpty(customerRoleSystemName))
                 throw new ArgumentNullException(nameof(customerRoleSystemName));
 
-            var query = (from cr in _customerRoleRepository.Table
-                         join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerRoleId
-                         where
-                            crm.CustomerId == customer.Id &&
-                            cr.SystemName == customerRoleSystemName &&
-                            (!onlyActiveCustomerRoles || cr.Active)
-                         select cr);
+            var query = from cr in _customerRoleRepository.Table
+                join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerRoleId
+                where
+                    crm.CustomerId == customer.Id &&
+                    cr.SystemName == customerRoleSystemName &&
+                    (!onlyActiveCustomerRoles || cr.Active)
+                select cr;
 
             return query.Any();
         }
@@ -1333,8 +1332,7 @@ namespace Nop.Services.Customers
 
             return (from cr in _customerRoleRepository.Table
                     join ccrm in _customerCustomerRoleMappingRepository.Table on cr.Id equals ccrm.CustomerRoleId
-                    where
-                       ccrm.CustomerId == customerId &&
+                    where ccrm.CustomerId == customerId &&
                        !onlyActiveCustomerRoles || cr.Active &&
                        cr.SystemName == customerRoleSystemName
                     select cr).Any();
@@ -1485,10 +1483,10 @@ namespace Nop.Services.Customers
         /// <returns>Result</returns>
         public virtual IList<Address> GetAddressesByCustomerId(int customerId)
         {
-            var query = (from address in _customerAddressRepository.Table
-                         join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
-                         where cam.CustomerId == customerId
-                         select address);
+            var query = from address in _customerAddressRepository.Table
+                join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
+                where cam.CustomerId == customerId
+                select address;
 
             return query.ToList();
         }
@@ -1504,10 +1502,10 @@ namespace Nop.Services.Customers
             if (customerId == 0 || addressId == 0)
                 return null;
 
-            var query = (from address in _customerAddressRepository.Table
-                         join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
-                         where cam.CustomerId == customerId
-                         select address);
+            var query = from address in _customerAddressRepository.Table
+                join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
+                where cam.CustomerId == customerId
+                select address;
 
             return query.Single();
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace Nop.Core.Domain.Customers
 {
@@ -22,6 +21,7 @@ namespace Nop.Core.Domain.Customers
                 return false;
 
             var result = customer.SystemName.Equals(NopCustomerDefaults.SearchEngineCustomerName, StringComparison.InvariantCultureIgnoreCase);
+
             return result;
         }
 
@@ -39,6 +39,7 @@ namespace Nop.Core.Domain.Customers
                 return false;
 
             var result = customer.SystemName.Equals(NopCustomerDefaults.BackgroundTaskCustomerName, StringComparison.InvariantCultureIgnoreCase);
+
             return result;
         }
     }

@@ -91,19 +91,20 @@ namespace Nop.Services.Orders
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _giftCardRepository.Table;
+
             if (purchasedWithOrderId.HasValue)
             {
-                query = (from gc in query
-                         join oi in _orderItemRepository.Table on gc.PurchasedWithOrderItemId equals oi.Id
-                         where oi.OrderId == purchasedWithOrderId.Value
-                         select gc);
+                query = from gc in query
+                    join oi in _orderItemRepository.Table on gc.PurchasedWithOrderItemId equals oi.Id
+                    where oi.OrderId == purchasedWithOrderId.Value
+                    select gc;
             }
-            if (usedWithOrderId.HasValue)
-                query = (from gc in query
-                         join gcuh in _giftCardUsageHistoryRepository.Table on gc.Id equals gcuh.GiftCardId
-                         where gcuh.UsedWithOrderId == usedWithOrderId
-                         select gc);
 
+            if (usedWithOrderId.HasValue)
+                query = from gc in query
+                    join gcuh in _giftCardUsageHistoryRepository.Table on gc.Id equals gcuh.GiftCardId
+                    where gcuh.UsedWithOrderId == usedWithOrderId
+                    select gc;
 
             if (createdFromUtc.HasValue)
                 query = query.Where(gc => createdFromUtc.Value <= gc.CreatedOnUtc);
@@ -118,6 +119,7 @@ namespace Nop.Services.Orders
             query = query.OrderByDescending(gc => gc.CreatedOnUtc);
 
             var giftCards = new PagedList<GiftCard>(query, pageIndex, pageSize);
+
             return giftCards;
         }
 
@@ -272,7 +274,7 @@ namespace Nop.Services.Orders
         /// <param name="giftCardUsageHistory">Gift card usage history entry</param>
         public virtual void InsertGiftCardUsageHistory(GiftCardUsageHistory giftCardUsageHistory)
         {
-            if(giftCardUsageHistory is null)
+            if (giftCardUsageHistory is null)
                 throw new ArgumentNullException(nameof(giftCardUsageHistory));
 
             _giftCardUsageHistoryRepository.Insert(giftCardUsageHistory);

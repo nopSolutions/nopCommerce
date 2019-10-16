@@ -442,7 +442,7 @@ namespace Nop.Services.Orders
             if (!CommonHelper.IsValidEmail(billingAddress?.Email))
                 throw new NopException("Email is not valid");
 
-            details.BillingAddress = (Address)billingAddress.Clone();
+            details.BillingAddress = _addressService.CloneAddress(billingAddress);
 
             if (_countryService.GetCountryByAddress(details.BillingAddress) is Country billingCountry && !billingCountry.AllowsBilling)
                 throw new NopException($"Country '{billingCountry.Name}' is not allowed for billing");
@@ -544,7 +544,7 @@ namespace Nop.Services.Orders
                         throw new NopException("Email is not valid");
 
                     //clone shipping address
-                    details.ShippingAddress = (Address)shippingAddress.Clone();
+                    details.ShippingAddress = _addressService.CloneAddress(shippingAddress);
 
                     if (_countryService.GetCountryByAddress(details.ShippingAddress) is Country shippingCountry && !shippingCountry.AllowsShipping)
                         throw new NopException($"Country '{shippingCountry.Name}' is not allowed for shipping");
@@ -679,7 +679,7 @@ namespace Nop.Services.Orders
 
             var billingAddress = _addressService.GetAddressById(details.InitialOrder.BillingAddressId);
 
-            details.BillingAddress = (Address)billingAddress.Clone();
+            details.BillingAddress = _addressService.CloneAddress(billingAddress);
             if (_countryService.GetCountryByAddress(billingAddress) is Country billingCountry && !billingCountry.AllowsBilling)
                 throw new NopException($"Country '{billingCountry.Name}' is not allowed for billing");
 
@@ -706,13 +706,13 @@ namespace Nop.Services.Orders
                         throw new NopException("Shipping address is not available");
 
                     //clone shipping address
-                    details.ShippingAddress = (Address)shippingAddress.Clone();
+                    details.ShippingAddress = _addressService.CloneAddress(shippingAddress);
                     if (_countryService.GetCountryByAddress(details.ShippingAddress) is Country shippingCountry && !shippingCountry.AllowsShipping)
                         throw new NopException($"Country '{shippingCountry.Name}' is not allowed for shipping");
                 }
                 else if (details.InitialOrder.PickupAddressId.HasValue && _addressService.GetAddressById(details.InitialOrder.PickupAddressId.Value) is Address pickupAddress)
                 {
-                    details.PickupAddress = (Address)pickupAddress.Clone();
+                    details.PickupAddress = _addressService.CloneAddress(pickupAddress);
                 }
 
                 details.ShippingMethodName = details.InitialOrder.ShippingMethod;
@@ -902,7 +902,6 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         protected virtual void AwardRewardPoints(Order order)
         {
-
             if (order is null)
                 throw new ArgumentNullException(nameof(order));
 
@@ -1228,8 +1227,6 @@ namespace Nop.Services.Orders
         /// <returns>Vendors</returns>
         protected virtual IList<Vendor> GetVendorsInOrder(Order order)
         {
-            var vendors = new List<Vendor>();
-
             var pIds = _orderService.GetOrderItems(order.Id).Select(x => x.ProductId).ToArray();
 
             return _vendorService.GetVendorsByProductIds(pIds);
@@ -1343,8 +1340,7 @@ namespace Nop.Services.Orders
 
                 //inventory
                 _productService.AdjustInventory(product, -sc.Quantity, sc.AttributesXml,
-                    string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.PlaceOrder"),
-                        order.Id));
+                    string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.PlaceOrder"), order.Id));
             }
 
             //clear shopping cart
@@ -1674,6 +1670,7 @@ namespace Nop.Services.Orders
                 //gift cards
                 AddGiftCards(product, updatedShoppingCartItem.AttributesXml, updatedShoppingCartItem.Quantity, updatedOrderItem, updatedOrderItem.UnitPriceExclTax);
             }
+
             _orderTotalCalculationService.UpdateOrderTotals(updateOrderParameters, restoredCart);
 
             if (updateOrderParameters.PickupPoint != null)
@@ -1722,7 +1719,6 @@ namespace Nop.Services.Orders
 
             (List<ShoppingCartItem> restoredCart, ShoppingCartItem updatedShoppingCartItem) restoreShoppingCart(Order order, int updatedOrderItemId)
             {
-
                 if (order is null)
                     throw new ArgumentNullException(nameof(order));
 
@@ -2138,10 +2134,7 @@ namespace Nop.Services.Orders
                 return false;
 
             var orderCustomer = _customerService.GetCustomerById(order.CustomerId);
-
-            if (customer is null)
-                return false;
-
+            
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
 

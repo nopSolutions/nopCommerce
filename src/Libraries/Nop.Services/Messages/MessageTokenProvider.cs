@@ -816,6 +816,9 @@ namespace Nop.Services.Messages
                 var si = table[i];
                 var orderItem = _orderService.GetOrderItemById(si.OrderItemId);
 
+                if (orderItem == null)
+                    continue;
+
                 var product = _productService.GetProductById(orderItem?.ProductId ?? 0);
 
                 if (product == null)

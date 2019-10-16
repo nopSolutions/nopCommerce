@@ -15,16 +15,12 @@ namespace Nop.Services.Tests.Customers
     {
         private readonly FakeDataStore _fakeDataStore = new FakeDataStore();
 
-        private ICustomerService _customerService;
-        private IRepository<Customer> _customerRepo;
-        private IRepository<CustomerRole> _customerRoleRepo;
-        private IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMapping;
-        private IRepository<Address> _customerAddressRepo;
-        private IRepository<CustomerAddressMapping> _customerAddressMappingRepo;
-        private IRepository<GenericAttribute> _genericAttributeRepo;
-        private IRepository<ShoppingCartItem> _shoppingCartRepo;
+        private readonly ICustomerService _customerService;
+        private readonly IRepository<Customer> _customerRepo;
+        private readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMapping;
+        private readonly IRepository<Address> _customerAddressRepo;
 
-        private CustomerRole _customerRoleAdmin = new CustomerRole
+        private readonly CustomerRole _customerRoleAdmin = new CustomerRole
         {
             Id = 1,
             Active = true,
@@ -32,7 +28,7 @@ namespace Nop.Services.Tests.Customers
             SystemName = NopCustomerDefaults.AdministratorsRoleName
         };
 
-        private CustomerRole _customerRoleGuests = new CustomerRole
+        private readonly CustomerRole _customerRoleGuests = new CustomerRole
         {
             Id = 2,
             Active = true,
@@ -40,7 +36,7 @@ namespace Nop.Services.Tests.Customers
             SystemName = NopCustomerDefaults.GuestsRoleName
         };
 
-        private CustomerRole _customerRoleRegistered = new CustomerRole
+        private readonly CustomerRole _customerRoleRegistered = new CustomerRole
         {
             Id = 3,
             Active = true,
@@ -48,7 +44,7 @@ namespace Nop.Services.Tests.Customers
             SystemName = NopCustomerDefaults.RegisteredRoleName
         };
 
-        private CustomerRole _customerRoleForumModerators = new CustomerRole
+        private readonly CustomerRole _customerRoleForumModerators = new CustomerRole
         {
             Id = 4,
             Active = true,
@@ -56,7 +52,7 @@ namespace Nop.Services.Tests.Customers
             SystemName = NopCustomerDefaults.ForumModeratorsRoleName
         };
 
-        private CustomerRole _customerRole1 = new CustomerRole
+        private readonly CustomerRole _customerRole1 = new CustomerRole
         {
             Id = 5,
             Active = true,
@@ -64,7 +60,7 @@ namespace Nop.Services.Tests.Customers
             SystemName = "Test system name 1"
         };
 
-        private CustomerRole _customerRole2 = new CustomerRole
+        private readonly CustomerRole _customerRole2 = new CustomerRole
         {
             Id = 6,
             Active = false,
@@ -83,28 +79,23 @@ namespace Nop.Services.Tests.Customers
             _customerRepo = _fakeDataStore.RegRepository(
                 new List<Customer>
                 {
-                    new Customer() { Id = 1 }
+                    new Customer { Id = 1 }
                 });
+            
+            var customerAddressMappingRepo = _fakeDataStore.RegRepository<CustomerAddressMapping>();
 
+            var genericAttributeRepo = _fakeDataStore.RegRepository<GenericAttribute>();
 
-
-        _customerAddressMappingRepo = _fakeDataStore.RegRepository<CustomerAddressMapping>();
-        
-        _genericAttributeRepo = _fakeDataStore.RegRepository<GenericAttribute>();
-        _shoppingCartRepo = _fakeDataStore.RegRepository<ShoppingCartItem>();
-
-        _customerRoleRepo = _fakeDataStore.RegRepository(new FakeRepository<CustomerRole>(Roles()));
+            var customerRoleRepo = _fakeDataStore.RegRepository(new FakeRepository<CustomerRole>(Roles()));
             _customerCustomerRoleMapping = _fakeDataStore.RegRepository<CustomerCustomerRoleMapping>();
-
 
             _customerService = new FakeCustomerService(
                 customerRepository: _customerRepo,
                 customerAddressRepository: _customerAddressRepo,
-                customerAddressMappingRepository: _customerAddressMappingRepo,
-                customerRoleRepository: _customerRoleRepo,
+                customerAddressMappingRepository: customerAddressMappingRepo,
+                customerRoleRepository: customerRoleRepo,
                 customerCustomerRoleMappingRepository: _customerCustomerRoleMapping,
-                gaRepository: _genericAttributeRepo
-                );
+                gaRepository: genericAttributeRepo);
         }
 
         [SetUp]
@@ -113,9 +104,10 @@ namespace Nop.Services.Tests.Customers
             //TODO: here we can cleaning repos after each test
         }
 
-        private IEnumerable<CustomerRole> Roles()
+        private IList<CustomerRole> Roles()
         {
-            return new List<CustomerRole> {
+            return new List<CustomerRole>
+            {
                 _customerRoleAdmin,
                 _customerRoleGuests,
                 _customerRoleRegistered,
@@ -130,13 +122,13 @@ namespace Nop.Services.Tests.Customers
         {
             var customer = new Customer() { Id = 1 };
 
-            var rm = new List<CustomerCustomerRoleMapping> {
+            var rm = new List<CustomerCustomerRoleMapping>
+            {
                 new CustomerCustomerRoleMapping { CustomerRoleId = _customerRole1.Id, CustomerId = customer.Id },
                 new CustomerCustomerRoleMapping { CustomerRoleId = _customerRole2.Id, CustomerId = customer.Id }
             };
 
             _customerCustomerRoleMapping.Insert(rm);
-
 
             _customerService.IsInCustomerRole(customer, "Test system name 1", false).ShouldBeTrue();
             _customerService.IsInCustomerRole(customer, "Test system name 1").ShouldBeTrue();
@@ -149,12 +141,14 @@ namespace Nop.Services.Tests.Customers
 
             _customerCustomerRoleMapping.Delete(rm);
         }
+
         [Test]
         public void Can_check_whether_customer_is_admin()
         {
-            var customer = new Customer() { Id = 1 };
+            var customer = new Customer { Id = 1 };
 
-            var rm = new List<CustomerCustomerRoleMapping> {
+            var rm = new List<CustomerCustomerRoleMapping>
+            {
                 new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleRegistered.Id, CustomerId = customer.Id },
                 new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleGuests.Id, CustomerId = customer.Id },
                 new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleAdmin.Id, CustomerId = customer.Id }
@@ -170,9 +164,10 @@ namespace Nop.Services.Tests.Customers
         [Test]
         public void Can_check_whether_customer_is_forum_moderator()
         {
-            var customer = new Customer() { Id = 1 };
+            var customer = new Customer { Id = 1 };
 
-            var rm = new List<CustomerCustomerRoleMapping> {
+            var rm = new List<CustomerCustomerRoleMapping>
+            {
                 new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleRegistered.Id, CustomerId = customer.Id },
                 new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleGuests.Id, CustomerId = customer.Id }
             };
@@ -194,9 +189,10 @@ namespace Nop.Services.Tests.Customers
         [Test]
         public void Can_check_whether_customer_is_guest()
         {
-            var customer = new Customer() { Id = 1 };
+            var customer = new Customer { Id = 1 };
 
-            var rm = new List<CustomerCustomerRoleMapping> {
+            var rm = new List<CustomerCustomerRoleMapping>
+            {
                 new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleRegistered.Id, CustomerId = customer.Id },
                 new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleAdmin.Id, CustomerId = customer.Id }
             };
@@ -214,12 +210,14 @@ namespace Nop.Services.Tests.Customers
             _customerCustomerRoleMapping.Delete(rm);
             _customerCustomerRoleMapping.Delete(rmRoleGuest);
         }
+
         [Test]
         public void Can_check_whether_customer_is_registered()
         {
             var customer = new Customer();
 
-            var rm = new List<CustomerCustomerRoleMapping> {
+            var rm = new List<CustomerCustomerRoleMapping>
+            {
                 new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleGuests.Id, CustomerId = customer.Id },
                 new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleAdmin.Id, CustomerId = customer.Id }
             };
@@ -243,8 +241,7 @@ namespace Nop.Services.Tests.Customers
         {
             var customer = _customerRepo.GetById(1);
             var address = _customerAddressRepo.GetById(1);
-
-
+            
             _customerService.InsertCustomerAddress(customer, address);
 
             _customerService.GetAddressesByCustomerId(customer.Id).Count().ShouldEqual(1);

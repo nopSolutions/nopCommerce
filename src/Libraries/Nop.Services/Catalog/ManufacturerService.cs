@@ -209,10 +209,10 @@ namespace Nop.Services.Catalog
             var manufacturers = _manufacturerRepository.Table;
 
             if (discountId.HasValue)
-                manufacturers = (from manufacturer in manufacturers
-                                 join dmm in _discountManufacturerMappingRepository.Table on manufacturer.Id equals dmm.ManufacturerId
-                                 where dmm.DiscountId == discountId.Value
-                                 select manufacturer);
+                manufacturers = from manufacturer in manufacturers
+                    join dmm in _discountManufacturerMappingRepository.Table on manufacturer.Id equals dmm.ManufacturerId
+                    where dmm.DiscountId == discountId.Value
+                    select manufacturer;
 
             if (!showHidden)
                 manufacturers = manufacturers.Where(manufacturer => !manufacturer.Deleted);
@@ -507,10 +507,21 @@ namespace Nop.Services.Catalog
             return null;
         }
 
-        public DiscountManufacturerMapping GetDiscountAppliedToManufacturer(int categoryId, int discountId)
+        /// <summary>
+        /// Get a discount-manufacturer mapping record
+        /// </summary>
+        /// <param name="manufacturerId">Manufacturer identifier</param>
+        /// <param name="discountId">Discount identifier</param>
+        /// <returns>Result</returns>
+        public DiscountManufacturerMapping GetDiscountAppliedToManufacturer(int manufacturerId, int discountId)
         {
-            return _discountManufacturerMappingRepository.Table.FirstOrDefault(dcm => dcm.ManufacturerId == categoryId && dcm.DiscountId == discountId);
+            return _discountManufacturerMappingRepository.Table.FirstOrDefault(dcm => dcm.ManufacturerId == manufacturerId && dcm.DiscountId == discountId);
         }
+
+        /// <summary>
+        /// Inserts a discount-manufacturer mapping record
+        /// </summary>
+        /// <param name="discountManufacturerMapping">Discount-manufacturer mapping</param>
         public void InsertDiscountManufacturerMapping(DiscountManufacturerMapping discountManufacturerMapping)
         {
             if (discountManufacturerMapping is null)
@@ -522,6 +533,10 @@ namespace Nop.Services.Catalog
             _eventPublisher.EntityInserted(discountManufacturerMapping);
         }
 
+        /// <summary>
+        /// Deletes a discount-manufacturer mapping record
+        /// </summary>
+        /// <param name="discountManufacturerMapping">Discount-manufacturer mapping</param>
         public void DeleteDiscountManufacturerMapping(DiscountManufacturerMapping discountManufacturerMapping)
         {
             if (discountManufacturerMapping is null)
@@ -532,6 +547,7 @@ namespace Nop.Services.Catalog
             //event notification
             _eventPublisher.EntityDeleted(discountManufacturerMapping);
         }
+
         #endregion
     }
 }

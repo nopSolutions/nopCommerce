@@ -79,7 +79,6 @@ namespace Nop.Services.Tests
                 orderSettings ?? new OrderSettings(),
                 shoppingCartSettings ?? new ShoppingCartSettings())
         {
-
         }
     }
 }

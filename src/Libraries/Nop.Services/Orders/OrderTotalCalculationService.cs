@@ -217,13 +217,10 @@ namespace Nop.Services.Orders
         /// <param name="subTotalExclTax">Subtotal (excl tax)</param>
         /// <param name="discountAmountExclTax">Discount amount (excl tax)</param>
         /// <param name="shippingTotalExclTax">Shipping (excl tax)</param>
-        /// <param name="updatedOrder">Order</param>
         /// <param name="taxTotal">Tax</param>
-        /// <param name="customer">Customer</param>
         protected virtual void UpdateTotal(UpdateOrderParameters updateOrderParameters, decimal subTotalExclTax,
             decimal discountAmountExclTax, decimal shippingTotalExclTax, decimal taxTotal)
         {
-
             var updatedOrder = updateOrderParameters.UpdatedOrder;
             var customer = _customerService.GetCustomerById(updatedOrder.CustomerId);
 
@@ -382,8 +379,6 @@ namespace Nop.Services.Orders
         /// <param name="restoredCart">Cart</param>
         /// <param name="subTotalInclTax">Subtotal (incl tax)</param>
         /// <param name="subTotalExclTax">Subtotal (excl tax)</param>
-        /// <param name="updatedOrder">Order</param>
-        /// <param name="customer">Customer</param>
         /// <param name="shippingTotalInclTax">Shipping (incl tax)</param>
         /// <param name="shippingTaxRate">Shipping tax rate</param>
         /// <returns>Shipping total</returns>
@@ -484,7 +479,7 @@ namespace Nop.Services.Orders
                                         shippingOption.ShippingRateComputationMethodSystemName;
                                     updatedOrder.ShippingMethod = shippingOption.Name;
 
-                                    var updatedShippingAddress = (Address)customerShippingAddress.Clone();
+                                    var updatedShippingAddress = _addressService.CloneAddress(customerShippingAddress);
                                     _addressService.InsertAddress(updatedShippingAddress);
                                     updatedOrder.ShippingAddressId = updatedShippingAddress.Id;
 
@@ -573,7 +568,7 @@ namespace Nop.Services.Orders
                     updatedOrderItem.PriceInclTax = itemSubTotalInclTax = updateOrderParameters.SubTotalInclTax;
                     updatedOrderItem.Quantity = shoppingCartItem.Quantity;
 
-                    taxRate = itemSubTotalExclTax > 0 ? Math.Round(100 * (itemSubTotalInclTax - itemSubTotalExclTax) / itemSubTotalExclTax, 3) : taxRate = 0M;
+                    taxRate = itemSubTotalExclTax > 0 ? Math.Round(100 * (itemSubTotalInclTax - itemSubTotalExclTax) / itemSubTotalExclTax, 3) : 0M;
                 }
                 else
                 {
@@ -582,7 +577,7 @@ namespace Nop.Services.Orders
                     itemSubTotalExclTax = _orderService.GetOrderItemById(shoppingCartItem.Id).PriceExclTax;
                     itemSubTotalInclTax = _orderService.GetOrderItemById(shoppingCartItem.Id).PriceInclTax;
 
-                    taxRate = itemSubTotalExclTax > 0 ? Math.Round(100 * (itemSubTotalInclTax - itemSubTotalExclTax) / itemSubTotalExclTax, 3) : taxRate = 0M;
+                    taxRate = itemSubTotalExclTax > 0 ? Math.Round(100 * (itemSubTotalInclTax - itemSubTotalExclTax) / itemSubTotalExclTax, 3) : 0M;
                 }
 
                 subTotalExclTax += itemSubTotalExclTax;
@@ -836,7 +831,6 @@ namespace Nop.Services.Orders
                             }
                         }
                     }
-                    
                 }
             }
 
@@ -914,7 +908,6 @@ namespace Nop.Services.Orders
         /// <param name="restoredCart">Shopping cart</param>
         public virtual void UpdateOrderTotals(UpdateOrderParameters updateOrderParameters, IList<ShoppingCartItem> restoredCart)
         {
-
             //sub total
             var subTotalExclTax = UpdateSubTotal(updateOrderParameters, restoredCart, out var subTotalInclTax, out var subTotalTaxRates, out var discountAmountExclTax);
 

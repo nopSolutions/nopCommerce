@@ -441,10 +441,10 @@ namespace Nop.Services.Catalog
             var categories = _categoryRepository.Table;
 
             if (discountId.HasValue)
-                categories = (from category in categories
-                              join dcm in _discountCategoryMappingRepository.Table on category.Id equals dcm.CategoryId
-                              where dcm.DiscountId == discountId.Value
-                              select category);
+                categories = from category in categories
+                    join dcm in _discountCategoryMappingRepository.Table on category.Id equals dcm.CategoryId
+                    where dcm.DiscountId == discountId.Value
+                    select category;
 
             if (!showHidden)
                 categories = categories.Where(category => !category.Deleted);

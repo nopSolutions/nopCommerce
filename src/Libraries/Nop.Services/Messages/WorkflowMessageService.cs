@@ -500,7 +500,7 @@ namespace Nop.Services.Messages
 
                 var affiliateAddress = _addressService.GetAddressById(affiliate.AddressId);
                 var toEmail = affiliateAddress.Email;
-                var toName = affiliateAddress.GetFullName();
+                var toName = $"{affiliateAddress.FirstName} {affiliateAddress.LastName}";
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -588,7 +588,7 @@ namespace Nop.Services.Messages
 
                 var affiliateAddress = _addressService.GetAddressById(affiliate.AddressId);
                 var toEmail = affiliateAddress.Email;
-                var toName = affiliateAddress.GetFullName();
+                var toName = $"{affiliateAddress.FirstName} {affiliateAddress.LastName}";
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -1384,7 +1384,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="returnRequest">Return request</param>
         /// <param name="orderItem">Order item</param>
-        /// <param name="languageId">Message language identifier</param>
+        /// <param name="order">Order</param>
         /// <returns>Queued email identifier</returns>
         public virtual IList<int> SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, OrderItem orderItem, Order order)
         {
@@ -2112,8 +2112,11 @@ namespace Nop.Services.Messages
 
             var customer = _customerService.GetCustomerById(subscription.CustomerId);
 
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
             //ensure that customer is registered (simple and fast way)
-            if (!CommonHelper.IsValidEmail(customer?.Email))
+            if (!CommonHelper.IsValidEmail(customer.Email))
                 return new List<int>();
 
             var store = _storeService.GetStoreById(subscription.StoreId) ?? _storeContext.CurrentStore;

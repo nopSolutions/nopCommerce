@@ -300,6 +300,34 @@ namespace Nop.Services.Common
             ((string.IsNullOrEmpty(a.CustomAttributes) && string.IsNullOrEmpty(customAttributes)) || a.CustomAttributes == customAttributes));
         }
 
+        /// <summary>
+        /// Clone address
+        /// </summary>
+        /// <returns>A deep copy of address</returns>
+        public virtual Address CloneAddress(Address address)
+        {
+            var addr = new Address
+            {
+                FirstName = address.FirstName,
+                LastName = address.LastName,
+                Email = address.Email,
+                Company = address.Company,
+                CountryId = address.CountryId,
+                StateProvinceId = address.StateProvinceId,
+                County = address.County,
+                City = address.City,
+                Address1 = address.Address1,
+                Address2 = address.Address2,
+                ZipPostalCode = address.ZipPostalCode,
+                PhoneNumber = address.PhoneNumber,
+                FaxNumber = address.FaxNumber,
+                CustomAttributes = address.CustomAttributes,
+                CreatedOnUtc = address.CreatedOnUtc
+            };
+
+            return addr;
+        }
+
         #endregion
     }
 }

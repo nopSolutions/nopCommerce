@@ -352,7 +352,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
 
             //get available groups
-            var requirementGroups = _discountService.GetAllDiscountRequirements(discount.Id, false).Where(requirement => requirement.IsGroup);
+            var requirementGroups = _discountService.GetAllDiscountRequirements(discount.Id).Where(requirement => requirement.IsGroup);
 
             var availableRequirementGroups = requirementGroups.Select(requirement =>
                 new SelectListItem { Value = requirement.Id.ToString(), Text = requirement.DiscountRequirementRuleSystemName }).ToList();

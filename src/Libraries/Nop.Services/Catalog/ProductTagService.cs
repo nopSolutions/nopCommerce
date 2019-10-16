@@ -6,7 +6,6 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Data.Extensions;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
 using Nop.Data;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -67,6 +66,24 @@ namespace Nop.Services.Catalog
         #region Utilities
 
         /// <summary>
+        /// Delete a product-product tag mapping
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <param name="productTagId">Product tag identifier</param>
+        public virtual void DeleteProductProductTagMapping(int productId, int productTagId)
+        {
+            var mappitngRecord = _productProductTagMappingRepository.Table.FirstOrDefault(pptm => pptm.ProductId == productId && pptm.ProductTagId == productTagId);
+
+            if (mappitngRecord is null)
+                throw new Exception("Mppaing record not found");
+
+            _productProductTagMappingRepository.Delete(mappitngRecord);
+
+            //event notification
+            _eventPublisher.EntityDeleted(mappitngRecord);
+        }
+
+        /// <summary>
         /// Get product count for each of existing product tag
         /// </summary>
         /// <param name="storeId">Store identifier</param>
@@ -74,7 +91,7 @@ namespace Nop.Services.Catalog
         /// <returns>Dictionary of "product tag ID : product count"</returns>
         private Dictionary<int, int> GetProductCount(int storeId, bool showHidden)
         {
-            var allowedCustomerRolesIds = "";
+            var allowedCustomerRolesIds = string.Empty;
             if (!showHidden && !_catalogSettings.IgnoreAcl)
             {
                 //Access control list. Allowed customer roles
@@ -100,25 +117,7 @@ namespace Nop.Services.Catalog
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Delete a product-product tag mapping
-        /// </summary>
-        /// <param name="tagMapping">Product-product tag mapping</param>
-        public virtual void DeleteProductProductTagMapping(int productId, int productTagId)
-        {
-            var mappitngRecord = _productProductTagMappingRepository.Table.FirstOrDefault(pptm => pptm.ProductId == productId && pptm.ProductTagId == productTagId);
-
-            if (mappitngRecord is null)
-                throw new Exception("Mppaing record not found");
-
-            _productProductTagMappingRepository.Delete(mappitngRecord);
-
-            //event notification
-            _eventPublisher.EntityDeleted(mappitngRecord);
-
-        }
-
+        
         /// <summary>
         /// Delete a product tag
         /// </summary>
@@ -210,7 +209,6 @@ namespace Nop.Services.Catalog
             _productProductTagMappingRepository.Insert(tagMapping);
 
             _eventPublisher.EntityInserted(tagMapping);
-
         }
 
         /// <summary>
