@@ -509,7 +509,7 @@ namespace Nop.Services.Catalog
                     //simple attribute
                     if (value.PriceAdjustmentUsePercentage)
                     {
-                        //TODO issue-239
+                        //TODO issue-239: #1
                         if (!productPrice.HasValue)
                         {
                             var product = _productService.GetProductById(_productAttributeService.GetProductAttributeMappingById(value.ProductAttributeMappingId).ProductId);

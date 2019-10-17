@@ -1302,7 +1302,7 @@ namespace Nop.Web.Controllers
                 .Select(idString => int.TryParse(idString, out var id) ? id : 0)
                 .Distinct().ToList();
 
-            //TODO: issue-239
+            //TODO: issue-239 #24
             //get order items with changed quantity
             var itemsWithNewQuantity = cart.Select(item => new
             {
@@ -1318,7 +1318,7 @@ namespace Nop.Web.Controllers
                 .OrderByDescending(cartItem =>
                     (cartItem.NewQuantity < cartItem.Item.Quantity && (cartItem.Product?.RequireOtherProducts ?? false)) ||
                     (cartItem.NewQuantity > cartItem.Item.Quantity &&
-                    (cartItem.Product != null && _shoppingCartService.GetProductsRequiringProduct(cart, cartItem.Product).Any()) //TODO: issue-239
+                    (cartItem.Product != null && _shoppingCartService.GetProductsRequiringProduct(cart, cartItem.Product).Any()) //TODO: issue-239 #24
                         ))
                 .ToList();
             

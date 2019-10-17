@@ -219,7 +219,7 @@ namespace Nop.Services.Orders
 
             _giftCardUsageHistoryRepository.Delete(giftCardUsageHistory);
 
-            //TODO: issue-239
+            //TODO: issue-239 #10
         }
 
         /// <summary>

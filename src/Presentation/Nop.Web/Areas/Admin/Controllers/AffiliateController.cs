@@ -167,7 +167,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                //TODO: issue-239
+                //TODO: issue-239 #18
                 var address = _addressService.GetAddressById(model.Address.Id);
                 address = model.Address.ToEntity(address);
 

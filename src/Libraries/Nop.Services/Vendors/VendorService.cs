@@ -66,7 +66,7 @@ namespace Nop.Services.Vendors
 
             return (from v in _vendorRepository.Table
                     join p in _productRepository.Table on v.Id equals p.VendorId
-                    //TODO: issue-239 !v.Deleted && v.Active
+                    //TODO: issue-239 #17
                     select v).FirstOrDefault();
         }
 

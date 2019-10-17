@@ -896,7 +896,7 @@ namespace Nop.Services.Catalog
             //filter by products with tracking inventory
             query = query.Where(product => product.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock);
 
-            //TODO issue-239 need better way - _productWarehouseInventoryRepository.Table.Where(pwi => pwi.ProductId == product.Id)
+            //TODO: issue-239 #2
             //filter by products with stock quantity less than the minimum
             query = query.Where(product =>
                 (product.UseMultipleWarehouses ? _productWarehouseInventoryRepository.Table.Where(pwi => pwi.ProductId == product.Id).Sum(pwi => pwi.StockQuantity - pwi.ReservedQuantity)
@@ -2459,7 +2459,7 @@ namespace Nop.Services.Catalog
             //update
             _productReviewRepository.Update(productReview);
 
-            //TODO: issue-239
+            //TODO: issue-239 #3
             //cache
             _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
 

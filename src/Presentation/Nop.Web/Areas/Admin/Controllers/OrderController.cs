@@ -576,7 +576,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
-                orders.AddRange(_orderService.GetOrdersByIds(ids).Where(oId => HasAccessToOrder(oId.Id))); //TODO: issue-239 ...
+                orders.AddRange(_orderService.GetOrdersByIds(ids).Where(oId => HasAccessToOrder(oId.Id))); //TODO: issue-239 #20
             }
 
             var xml = _exportManager.ExportOrdersToXml(orders);

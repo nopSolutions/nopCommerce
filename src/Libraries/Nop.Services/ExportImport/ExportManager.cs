@@ -307,7 +307,7 @@ namespace Nop.Services.ExportImport
             string limitedToStores = null;
             foreach (var storeMapping in _storeMappingService.GetStoreMappings(product))
             {
-                //TODO: issue-239 - bool loadCacheableCopy = ?
+                //TODO: issue-239 #6
                 var store = _storeService.GetStoreById(storeMapping.StoreId);
 
                 limitedToStores += _catalogSettings.ExportImportRelatedEntitiesByName ? store.Name : store.Id.ToString();
@@ -1794,7 +1794,7 @@ namespace Nop.Services.ExportImport
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            //TODO: issue-239
+            //TODO: issue-239 #7
             Order getOrder(OrderItem orderItem) => _orderService.GetOrderById(orderItem.OrderId);
 
             //lambda expressions for choosing correct order address

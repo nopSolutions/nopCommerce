@@ -1367,7 +1367,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.City,
                 searchModel.TrackingNumber,
                 searchModel.LoadNotShipped,
-                0, //TODO: issue-239
+                0, //TODO: issue-239 #22
                 startDateValue,
                 endDateValue,
                 searchModel.Page - 1,
@@ -1553,7 +1553,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            //TODO: issue-239
+            //TODO: issue-239 #23
             //get shipments
             var shipments = _shipmentService.GetAllShipments(
                 orderId: order.Id,

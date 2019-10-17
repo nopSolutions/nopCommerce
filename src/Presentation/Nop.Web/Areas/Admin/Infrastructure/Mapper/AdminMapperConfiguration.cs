@@ -140,9 +140,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 }
 
                 //exclude some properties from mapping discount supported entities and models
-                //TODO: issue-239 remove after before close
-                 /* if (typeof(IDiscountSupported).IsAssignableFrom(mapConfiguration.DestinationType))
-                    map.ForMember(nameof(IDiscountSupported.AppliedDiscounts), options => options.Ignore());*/
                 if (typeof(IDiscountSupportedModel).IsAssignableFrom(mapConfiguration.DestinationType))
                 {
                     map.ForMember(nameof(IDiscountSupportedModel.AvailableDiscounts), options => options.Ignore());

@@ -403,8 +403,7 @@ namespace Nop.Web.Factories
                     ShowCustomersPostCount = _forumSettings.ShowCustomersPostCount,
                     ForumPostCount = _genericAttributeService.GetAttribute<Customer, int>(post.CustomerId, NopCustomerDefaults.ForumPostCountAttribute),
                     ShowCustomersJoinDate = _customerSettings.ShowCustomersJoinDate && !customerIsGuest,
-                    //TODO: issue-239
-                    CustomerJoinDate = _customerService.GetCustomerById(post.CustomerId)?.CreatedOnUtc ?? DateTime.Now,
+                    CustomerJoinDate = customer?.CreatedOnUtc ?? DateTime.Now,
                     AllowPrivateMessages = _forumSettings.AllowPrivateMessages && !customerIsGuest,
                     SignaturesEnabled = _forumSettings.SignaturesEnabled,
                     FormattedSignature = _forumService.FormatForumSignatureText(_genericAttributeService.GetAttribute<Customer, string>(post.CustomerId, NopCustomerDefaults.SignatureAttribute)),

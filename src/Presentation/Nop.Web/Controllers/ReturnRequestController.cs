@@ -36,7 +36,6 @@ namespace Nop.Web.Controllers
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly LocalizationSettings _localizationSettings;
         private readonly OrderSettings _orderSettings;
 
         #endregion
@@ -55,7 +54,6 @@ namespace Nop.Web.Controllers
             IStoreContext storeContext,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
-            LocalizationSettings localizationSettings,
             OrderSettings orderSettings)
         {
             _customerService = customerService;
@@ -70,7 +68,6 @@ namespace Nop.Web.Controllers
             _storeContext = storeContext;
             _workContext = workContext;
             _workflowMessageService = workflowMessageService;
-            _localizationSettings = localizationSettings;
             _orderSettings = orderSettings;
         }
 

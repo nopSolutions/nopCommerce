@@ -289,7 +289,7 @@ namespace Nop.Services.Messages
                         Customer = c
                     });
 
-                //TODO: issue-239
+                //TODO: issue-239 #4
                 query = query.Where(x => _customerCustomerRoleMappingRepository.Table.Any(ccrm => ccrm.CustomerId == x.Customer.Id && ccrm.CustomerRoleId == customerRoleId));
 
                 if (!string.IsNullOrEmpty(email))

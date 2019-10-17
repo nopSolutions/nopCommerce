@@ -178,7 +178,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _discountService.UpdateDiscount(discount);
 
                 //clean up old references (if changed) 
-                //TODO: issue-239
+                //TODO: issue-239 #19
                 if (prevDiscountType != discount.DiscountType)
                 {
                     switch (prevDiscountType)
@@ -286,7 +286,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //delete
                 if (deleteRequirement)
                 {
-                    //TODO: issue-239
+                    //TODO: issue-239 #19
                     _discountService.DeleteDiscountRequirement(discountRequirement, true);
 
                     var discountRequirements = _discountService.GetAllDiscountRequirements(discount.Id);

@@ -148,7 +148,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 returnRequest = model.ToEntity(returnRequest);
                 returnRequest.UpdatedOnUtc = DateTime.UtcNow;
-                //TODO: issue-239 _customerService.UpdateCustomer(returnRequest.Customer);
+                //TODO: issue-239 #21
 
                 //activity log
                 _customerActivityService.InsertActivity("EditReturnRequest",

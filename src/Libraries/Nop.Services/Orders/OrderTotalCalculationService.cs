@@ -573,7 +573,7 @@ namespace Nop.Services.Orders
                 else
                 {
                     //get the already calculated subtotal from the order item
-                    //TODO: issue-239
+                    //TODO: issue-239 #11
                     itemSubTotalExclTax = _orderService.GetOrderItemById(shoppingCartItem.Id).PriceExclTax;
                     itemSubTotalInclTax = _orderService.GetOrderItemById(shoppingCartItem.Id).PriceInclTax;
 

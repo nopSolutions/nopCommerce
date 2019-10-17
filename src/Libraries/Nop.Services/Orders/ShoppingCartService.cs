@@ -349,7 +349,7 @@ namespace Nop.Services.Orders
             //get customer shopping cart
             var cart = GetShoppingCart(customer, shoppingCartType, storeId);
 
-            var productsRequiringProduct = GetProductsRequiringProduct(cart, product); //TODO: issue-239
+            var productsRequiringProduct = GetProductsRequiringProduct(cart, product); //TODO: issue-239 #12
 
             //whether other cart items require the passed product
             var passedProductRequiredQuantity = cart.Where(ci => productsRequiringProduct.Any(p => p.Id == ci.ProductId))
@@ -1255,7 +1255,7 @@ namespace Nop.Services.Orders
             if (shoppingCartItem == null)
                 throw new ArgumentNullException(nameof(shoppingCartItem));
 
-            //TODO: issue-239
+            //TODO: issue-239 #13
             var customer = _customerService.GetCustomerById(shoppingCartItem.CustomerId);
             var product = _productService.GetProductById(shoppingCartItem.ProductId);
 

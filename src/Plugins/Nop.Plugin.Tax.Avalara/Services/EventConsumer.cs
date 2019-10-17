@@ -212,7 +212,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             if (!_taxPluginManager.IsPluginActive(taxProvider))
                 return;
 
-            //TODO: issue-239
+            //TODO: issue-239 #25
             var orderItems = _orderService.GetOrderItems(eventMessage.Order.Id);
 
             //create tax transaction
