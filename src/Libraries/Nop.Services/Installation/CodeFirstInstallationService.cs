@@ -266,7 +266,7 @@ namespace Nop.Services.Installation
         {
             return (from sao in _dbContext.Set<SpecificationAttributeOption>()
                     join sa in _dbContext.Set<SpecificationAttribute>() on sao.SpecificationAttributeId equals sa.Id
-                    where sao.Name == "specAttributeOptionName" && sa.Name == "specAttributeName"
+                    where sao.Name == specAttributeOptionName && sa.Name == specAttributeName
                     select sao).Single();
         }
 
@@ -4447,8 +4447,6 @@ namespace Nop.Services.Installation
 
             _customerRepository.Insert(sixthUser);
 
-            InsertInstallationData(new CustomerCustomerRoleMapping { CustomerRoleId = crRegistered.Id, CustomerId = sixthUser.Id });
-
             InsertInstallationData(new CustomerAddressMapping { CustomerId = sixthUser.Id, AddressId = defaultSixthUserAddress.Id });
             InsertInstallationData(new CustomerCustomerRoleMapping { CustomerId = sixthUser.Id, CustomerRoleId = crRegistered.Id });
 
@@ -7724,14 +7722,14 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productLenovoIdeaCentre);
 
+            _productRepository.Insert(productLenovoIdeaCentre);
+
             InsertInstallationData(new ProductCategory
             {
                 ProductId = productLenovoIdeaCentre.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
                 DisplayOrder = 1
             });
-
-            _productRepository.Insert(productLenovoIdeaCentre);
 
             var pic_product_LenovoIdeaCentre = pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "product_LenovoIdeaCentre.jpeg")), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productLenovoIdeaCentre.Name));
 
@@ -7780,14 +7778,14 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productAppleMacBookPro);
 
+            _productRepository.Insert(productAppleMacBookPro);
+
             InsertInstallationData(new ProductCategory
             {
                 ProductId = productAppleMacBookPro.Id,
                 CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
                 DisplayOrder = 1
             });
-
-            _productRepository.Insert(productAppleMacBookPro);
 
             InsertInstallationData(new ProductManufacturer
             {

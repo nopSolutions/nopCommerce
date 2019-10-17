@@ -11,6 +11,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Redis;
@@ -327,7 +328,22 @@ namespace Nop.Web.Framework.Infrastructure
             return RegistrationBuilder
                 .ForDelegate((c, p) =>
                 {
-                    var currentStoreId = c.Resolve<IStoreContext>().CurrentStore.Id;
+                    Store store;
+
+                    try
+                    {
+                        store = c.Resolve<IStoreContext>().CurrentStore;
+                    }
+                    catch
+                    {
+                        if (!DataSettingsManager.DatabaseIsInstalled)
+                            store = null;
+                        else
+                            throw;
+                    }
+
+                    var currentStoreId = store?.Id ?? 0;
+
                     //uncomment the code below if you want load settings per store only when you have two stores installed.
                     //var currentStoreId = c.Resolve<IStoreService>().GetAllStores().Count > 1
                     //    c.Resolve<IStoreContext>().CurrentStore.Id : 0;
