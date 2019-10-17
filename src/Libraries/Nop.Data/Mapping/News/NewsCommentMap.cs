@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.News;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Data.Mapping.News
 {
@@ -25,7 +26,9 @@ namespace Nop.Data.Mapping.News
 
             builder.HasOne<Customer>().WithMany().HasForeignKey(comment => comment.CustomerId).IsRequired();
 
-            base.Configure(builder);
+            builder.HasOne<Store>().WithMany().HasForeignKey(comment => comment.StoreId).IsRequired();
+
+            base.Configure(builder); 
         }
 
         #endregion
