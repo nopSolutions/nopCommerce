@@ -892,12 +892,12 @@ namespace Nop.Web.Controllers
         }
 
         public virtual IActionResult Search(string searchterms, bool? adv, string forumId,
-            string within, string limitDays, int page = 1)
+            string within, string limitDays, int pageNumber = 1)
         {
             if (!_forumSettings.ForumsEnabled)
                 return RedirectToRoute("Homepage");
 
-            var model = _forumModelFactory.PrepareSearchModel(searchterms, adv, forumId, within, limitDays, page);
+            var model = _forumModelFactory.PrepareSearchModel(searchterms, adv, forumId, within, limitDays, pageNumber);
             return View(model);
         }
 
