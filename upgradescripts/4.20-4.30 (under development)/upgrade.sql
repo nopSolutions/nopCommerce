@@ -86,6 +86,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.AclCustomerRoles.Hint">
     <Value>Choose one or several customer roles i.e. administrators, vendors, guests, who will be able to see this product in catalog. If you don''t need this option just leave this field empty. In order to use this functionality, you have to disable the following setting: Configuration &gt; Settings &gt; Catalog &gt; Ignore ACL rules (sitewide).</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.CannotBeFound">
+    <Value>The coupon code cannot be found</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.Empty">
+    <Value>The coupon code is empty</Value>
+  </LocaleResource>
 </Language>
 '
 

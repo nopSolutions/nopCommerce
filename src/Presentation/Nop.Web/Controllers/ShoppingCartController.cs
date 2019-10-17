@@ -1461,11 +1461,11 @@ namespace Nop.Web.Controllers
                 }
                 else
                     //discount cannot be found
-                    model.DiscountBox.Messages.Add(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount"));
+                    model.DiscountBox.Messages.Add(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.CannotBeFound"));
             }
             else
                 //empty coupon code
-                model.DiscountBox.Messages.Add(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount"));
+                model.DiscountBox.Messages.Add(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.Empty"));
 
             model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
 

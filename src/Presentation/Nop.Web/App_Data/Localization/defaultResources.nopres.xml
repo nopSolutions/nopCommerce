@@ -17658,9 +17658,15 @@
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.Button">
     <Value>Apply coupon</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.CannotBeFound">
+    <Value>The coupon code cannot be found</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.CurrentCode">
     <Value>Entered coupon code - {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.Empty">
+    <Value>The coupon code is empty</Value>
+ </LocaleResource>
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.Invalid">
     <Value>This coupon code ({0}) is invalid or no longer available.</Value>
   </LocaleResource>
