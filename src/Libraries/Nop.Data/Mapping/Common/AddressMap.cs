@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Directory;
 
 namespace Nop.Data.Mapping.Common
 {
@@ -19,6 +20,10 @@ namespace Nop.Data.Mapping.Common
         {
             builder.ToTable(nameof(Address));
             builder.HasKey(address => address.Id);
+
+            builder.HasOne<Country>().WithMany().HasForeignKey(address => address.CountryId);
+
+            builder.HasOne<StateProvince>().WithMany().HasForeignKey(address => address.StateProvinceId);
 
             base.Configure(builder);
         }

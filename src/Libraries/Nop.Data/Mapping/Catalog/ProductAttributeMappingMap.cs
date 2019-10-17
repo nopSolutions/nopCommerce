@@ -20,6 +20,12 @@ namespace Nop.Data.Mapping.Catalog
             builder.ToTable(NopMappingDefaults.ProductProductAttributeTable);
             builder.HasKey(productAttributeMapping => productAttributeMapping.Id);
 
+            builder.HasOne<Product>().WithMany()
+                .HasForeignKey(productAttributeMapping => productAttributeMapping.ProductId).IsRequired();
+
+            builder.HasOne<ProductAttribute>().WithMany()
+                .HasForeignKey(productAttributeMapping => productAttributeMapping.ProductAttributeId).IsRequired();
+
             builder.Ignore(pam => pam.AttributeControlType);
 
             base.Configure(builder);

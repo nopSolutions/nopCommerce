@@ -20,6 +20,8 @@ namespace Nop.Data.Mapping.Orders
             builder.ToTable(nameof(OrderNote));
             builder.HasKey(note => note.Id);
 
+            builder.HasOne<Order>().WithMany().HasForeignKey(note => note.OrderId).IsRequired();
+
             builder.Property(note => note.Note).IsRequired();
 
             base.Configure(builder);

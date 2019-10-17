@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Polls;
 
 namespace Nop.Data.Mapping.Polls
@@ -19,6 +20,8 @@ namespace Nop.Data.Mapping.Polls
         {
             builder.ToTable(nameof(Poll));
             builder.HasKey(poll => poll.Id);
+
+            builder.HasOne<Language>().WithMany().HasForeignKey(poll => poll.LanguageId).IsRequired();
 
             builder.Property(poll => poll.Name).IsRequired();
 

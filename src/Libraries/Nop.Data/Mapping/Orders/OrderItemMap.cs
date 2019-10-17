@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
@@ -28,6 +29,10 @@ namespace Nop.Data.Mapping.Orders
             builder.Property(orderItem => orderItem.DiscountAmountExclTax).HasColumnType("decimal(18, 4)");
             builder.Property(orderItem => orderItem.OriginalProductCost).HasColumnType("decimal(18, 4)");
             builder.Property(orderItem => orderItem.ItemWeight).HasColumnType("decimal(18, 4)");
+
+            builder.HasOne<Order>().WithMany().HasForeignKey(orderItem => orderItem.OrderId).IsRequired();
+
+            builder.HasOne<Product>().WithMany().HasForeignKey(orderItem => orderItem.ProductId).IsRequired();
 
             base.Configure(builder);
         }

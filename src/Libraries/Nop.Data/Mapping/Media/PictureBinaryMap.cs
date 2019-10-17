@@ -19,7 +19,10 @@ namespace Nop.Data.Mapping.Media
         {
             builder.ToTable(nameof(PictureBinary));
             builder.HasKey(pictureBinary => pictureBinary.Id);
-            
+
+            builder.HasOne<Picture>().WithOne().HasForeignKey<PictureBinary>(pictureBinary => pictureBinary.PictureId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             base.Configure(builder);
         }
 

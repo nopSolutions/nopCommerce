@@ -20,6 +20,10 @@ namespace Nop.Data.Mapping.Catalog
             builder.ToTable(NopMappingDefaults.ProductCategoryTable);
             builder.HasKey(productCategory => productCategory.Id);
 
+            builder.HasOne<Category>().WithMany().HasForeignKey(productCategory => productCategory.CategoryId).IsRequired();
+
+            builder.HasOne<Product>().WithMany().HasForeignKey(productCategory => productCategory.ProductId).IsRequired();
+
             base.Configure(builder);
         }
 

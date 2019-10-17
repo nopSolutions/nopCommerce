@@ -20,6 +20,8 @@ namespace Nop.Data.Mapping.Vendors
             builder.ToTable(nameof(VendorAttributeValue));
             builder.HasKey(value => value.Id);
 
+            builder.HasOne<VendorAttribute>().WithMany().HasForeignKey(value => value.VendorAttributeId).IsRequired();
+
             builder.Property(value => value.Name).HasMaxLength(400).IsRequired();
 
             base.Configure(builder);

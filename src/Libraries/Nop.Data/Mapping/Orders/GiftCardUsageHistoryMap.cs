@@ -22,6 +22,10 @@ namespace Nop.Data.Mapping.Orders
 
             builder.Property(historyEntry => historyEntry.UsedValue).HasColumnType("decimal(18, 4)");
 
+            builder.HasOne<GiftCard>().WithMany().HasForeignKey(historyEntry => historyEntry.GiftCardId).IsRequired();
+
+            builder.HasOne<Order>().WithMany().HasForeignKey(historyEntry => historyEntry.UsedWithOrderId).IsRequired();
+
             base.Configure(builder);
         }
 

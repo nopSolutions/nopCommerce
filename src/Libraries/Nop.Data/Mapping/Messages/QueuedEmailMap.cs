@@ -30,6 +30,8 @@ namespace Nop.Data.Mapping.Messages
             builder.Property(email => email.Bcc).HasMaxLength(500);
             builder.Property(email => email.Subject).HasMaxLength(1000);
 
+            builder.HasOne<EmailAccount>().WithMany().HasForeignKey(email => email.EmailAccountId).IsRequired();
+
             builder.Ignore(email => email.Priority);
 
             base.Configure(builder);

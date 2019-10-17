@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Blogs;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Data.Mapping.Blogs
 {
@@ -19,6 +21,12 @@ namespace Nop.Data.Mapping.Blogs
         {
             builder.ToTable(nameof(BlogComment));
             builder.HasKey(comment => comment.Id);
+
+            builder.HasOne<BlogPost>().WithMany().HasForeignKey(comment => comment.BlogPostId).IsRequired();
+
+            builder.HasOne<Customer>().WithMany().HasForeignKey(comment => comment.CustomerId).IsRequired();
+
+            builder.HasOne<Store>().WithMany().HasForeignKey(comment => comment.StoreId).IsRequired();
 
             base.Configure(builder);
         }

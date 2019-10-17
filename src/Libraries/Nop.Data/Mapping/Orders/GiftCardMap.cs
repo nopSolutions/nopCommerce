@@ -22,6 +22,8 @@ namespace Nop.Data.Mapping.Orders
 
             builder.Property(giftCard => giftCard.Amount).HasColumnType("decimal(18, 4)");
 
+            builder.HasOne<OrderItem>().WithMany().HasForeignKey(giftCard => giftCard.PurchasedWithOrderItemId);
+
             builder.Ignore(giftCard => giftCard.GiftCardType);
 
             base.Configure(builder);

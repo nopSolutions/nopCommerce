@@ -22,6 +22,8 @@ namespace Nop.Data.Mapping.Polls
 
             builder.Property(pollAnswer => pollAnswer.Name).IsRequired();
 
+            builder.HasOne<Poll>().WithMany().HasForeignKey(pollAnswer => pollAnswer.PollId).IsRequired();
+
             base.Configure(builder);
         }
 

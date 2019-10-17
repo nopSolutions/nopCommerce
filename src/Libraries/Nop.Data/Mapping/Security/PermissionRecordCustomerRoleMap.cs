@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 
 namespace Nop.Data.Mapping.Security
@@ -22,6 +23,10 @@ namespace Nop.Data.Mapping.Security
 
             builder.Property(mapping => mapping.PermissionRecordId).HasColumnName("PermissionRecord_Id");
             builder.Property(mapping => mapping.CustomerRoleId).HasColumnName("CustomerRole_Id");
+
+            builder.HasOne<CustomerRole>().WithMany().HasForeignKey(mapping => mapping.CustomerRoleId).IsRequired();
+
+            builder.HasOne<PermissionRecord>().WithMany().HasForeignKey(mapping => mapping.PermissionRecordId).IsRequired();
 
             builder.Ignore(mapping => mapping.Id);
 

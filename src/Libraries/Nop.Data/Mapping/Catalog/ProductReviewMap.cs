@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Data.Mapping.Catalog
 {
@@ -19,6 +21,12 @@ namespace Nop.Data.Mapping.Catalog
         {
             builder.ToTable(nameof(ProductReview));
             builder.HasKey(productReview => productReview.Id);
+
+            builder.HasOne<Product>().WithMany().HasForeignKey(productReview => productReview.ProductId).IsRequired();
+
+            builder.HasOne<Customer>().WithMany().HasForeignKey(productReview => productReview.CustomerId).IsRequired();
+
+            builder.HasOne<Store>().WithMany().HasForeignKey(productReview => productReview.StoreId).IsRequired();
 
             base.Configure(builder);
         }

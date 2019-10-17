@@ -19,7 +19,9 @@ namespace Nop.Data.Mapping.Shipping
         {
             builder.ToTable(nameof(ShipmentItem));
             builder.HasKey(item => item.Id);
-            
+
+            builder.HasOne<Shipment>().WithMany().HasForeignKey(item => item.ShipmentId).IsRequired();
+
             base.Configure(builder);
         }
 

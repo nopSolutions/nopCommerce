@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Common;
 
-
 namespace Nop.Data.Mapping.Common
 {
     /// <summary>
@@ -22,6 +21,8 @@ namespace Nop.Data.Mapping.Common
             builder.HasKey(value => value.Id);
 
             builder.Property(value => value.Name).HasMaxLength(400).IsRequired();
+
+            builder.HasOne<AddressAttribute>().WithMany().HasForeignKey(value => value.AddressAttributeId).IsRequired();
 
             base.Configure(builder);
         }

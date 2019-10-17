@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Data.Mapping.Catalog
 {
@@ -19,6 +20,10 @@ namespace Nop.Data.Mapping.Catalog
         {
             builder.ToTable(nameof(BackInStockSubscription));
             builder.HasKey(subscription => subscription.Id);
+
+            builder.HasOne<Product>().WithMany().HasForeignKey(subscription => subscription.ProductId).IsRequired();
+
+            builder.HasOne<Customer>().WithMany().HasForeignKey(subscription => subscription.CustomerId).IsRequired();
 
             base.Configure(builder);
         }

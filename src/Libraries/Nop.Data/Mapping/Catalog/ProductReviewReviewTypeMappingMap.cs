@@ -20,6 +20,12 @@ namespace Nop.Data.Mapping.Catalog
             builder.ToTable(NopMappingDefaults.ProductReview_ReviewTypeTable);
             builder.HasKey(prrt => prrt.Id);
 
+            builder.HasOne<ProductReview>().WithMany().HasForeignKey(prrt => prrt.ProductReviewId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne<ReviewType>().WithMany().HasForeignKey(prrt => prrt.ReviewTypeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             base.Configure(builder);
         }
 

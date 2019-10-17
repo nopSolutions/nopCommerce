@@ -20,6 +20,12 @@ namespace Nop.Data.Mapping.Orders
             builder.ToTable(nameof(RecurringPayment));
             builder.HasKey(recurringPayment => recurringPayment.Id);
 
+            builder.HasOne<Order>()
+                .WithMany()
+                .HasForeignKey(recurringPayment => recurringPayment.InitialOrderId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Ignore(recurringPayment => recurringPayment.CyclePeriod);
 
             base.Configure(builder);

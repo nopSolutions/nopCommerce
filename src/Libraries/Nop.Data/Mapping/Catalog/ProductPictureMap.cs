@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Media;
 
 namespace Nop.Data.Mapping.Catalog
 {
@@ -19,6 +20,10 @@ namespace Nop.Data.Mapping.Catalog
         {
             builder.ToTable(NopMappingDefaults.ProductPictureTable);
             builder.HasKey(productPicture => productPicture.Id);
+
+            builder.HasOne<Picture>().WithMany().HasForeignKey(productPicture => productPicture.PictureId).IsRequired();
+
+            builder.HasOne<Product>().WithMany().HasForeignKey(productPicture => productPicture.ProductId).IsRequired();
 
             base.Configure(builder);
         }

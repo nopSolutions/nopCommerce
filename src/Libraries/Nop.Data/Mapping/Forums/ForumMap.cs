@@ -22,6 +22,8 @@ namespace Nop.Data.Mapping.Forums
 
             builder.Property(forum => forum.Name).HasMaxLength(200).IsRequired();
 
+            builder.HasOne<ForumGroup>().WithMany().HasForeignKey(forum => forum.ForumGroupId).IsRequired();
+
             base.Configure(builder);
         }
 

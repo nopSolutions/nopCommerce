@@ -24,6 +24,8 @@ namespace Nop.Data.Mapping.Localization
             builder.Property(property => property.LocaleKey).HasMaxLength(400).IsRequired();
             builder.Property(property => property.LocaleValue).IsRequired();
 
+            builder.HasOne<Language>().WithMany().HasForeignKey(property => property.LanguageId).IsRequired();
+
             base.Configure(builder);
         }
 

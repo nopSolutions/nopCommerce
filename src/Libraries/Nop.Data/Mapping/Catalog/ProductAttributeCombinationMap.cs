@@ -25,6 +25,8 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(combination => combination.Gtin).HasMaxLength(400);
             builder.Property(combination => combination.OverriddenPrice).HasColumnType("decimal(18, 4)");
 
+            builder.HasOne<Product>().WithMany().HasForeignKey(combination => combination.ProductId).IsRequired();
+
             base.Configure(builder);
         }
 

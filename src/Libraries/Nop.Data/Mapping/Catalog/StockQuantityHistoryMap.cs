@@ -20,6 +20,8 @@ namespace Nop.Data.Mapping.Catalog
             builder.ToTable(nameof(StockQuantityHistory));
             builder.HasKey(historyEntry => historyEntry.Id);
 
+            builder.HasOne<Product>().WithMany().HasForeignKey(historyEntry => historyEntry.ProductId).IsRequired();
+
             base.Configure(builder);
         }
 

@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
@@ -34,6 +36,15 @@ namespace Nop.Data.Mapping.Orders
             builder.Property(order => order.OrderTotal).HasColumnType("decimal(18, 4)");
             builder.Property(order => order.RefundedAmount).HasColumnType("decimal(18, 4)");
             builder.Property(order => order.CustomOrderNumber).IsRequired();
+
+            builder.HasOne<Customer>().WithMany().HasForeignKey(order => order.CustomerId).IsRequired();
+
+            builder.HasOne<Address>().WithMany().HasForeignKey(order => order.BillingAddressId).IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne<Address>().WithMany().HasForeignKey(order => order.ShippingAddressId);
+
+            builder.HasOne<Address>().WithMany().HasForeignKey(order => order.PickupAddressId);
 
             builder.Ignore(order => order.OrderStatus);
             builder.Ignore(order => order.PaymentStatus);

@@ -23,6 +23,10 @@ namespace Nop.Data.Mapping.Customers
             builder.Property(mapping => mapping.CustomerId).HasColumnName("Customer_Id");
             builder.Property(mapping => mapping.CustomerRoleId).HasColumnName("CustomerRole_Id");
 
+            builder.HasOne<Customer>().WithMany().HasForeignKey(mapping => mapping.CustomerId).IsRequired();
+
+            builder.HasOne<CustomerRole>().WithMany().HasForeignKey(mapping => mapping.CustomerRoleId).IsRequired();
+
             builder.Ignore(mapping => mapping.Id);
 
             base.Configure(builder);

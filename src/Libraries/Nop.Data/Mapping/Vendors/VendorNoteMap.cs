@@ -20,6 +20,8 @@ namespace Nop.Data.Mapping.Vendors
             builder.ToTable(nameof(VendorNote));
             builder.HasKey(note => note.Id);
 
+            builder.HasOne<Vendor>().WithMany().HasForeignKey(note => note.VendorId).IsRequired();
+
             builder.Property(note => note.Note).IsRequired();
 
             base.Configure(builder);

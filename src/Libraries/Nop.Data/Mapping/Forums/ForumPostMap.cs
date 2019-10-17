@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 
 namespace Nop.Data.Mapping.Forums
@@ -22,6 +23,11 @@ namespace Nop.Data.Mapping.Forums
 
             builder.Property(post => post.Text).IsRequired();
             builder.Property(post => post.IPAddress).HasMaxLength(100);
+
+            builder.HasOne<ForumTopic>().WithMany().HasForeignKey(post => post.TopicId).IsRequired();
+
+            builder.HasOne<Customer>().WithMany().HasForeignKey(post => post.CustomerId).IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.Configure(builder);
         }

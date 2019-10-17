@@ -23,6 +23,8 @@ namespace Nop.Data.Mapping.Directory
             builder.Property(state => state.Name).HasMaxLength(100).IsRequired();
             builder.Property(state => state.Abbreviation).HasMaxLength(100);
 
+            builder.HasOne<Country>().WithMany().HasForeignKey(state => state.CountryId).IsRequired();
+
             base.Configure(builder);
         }
 

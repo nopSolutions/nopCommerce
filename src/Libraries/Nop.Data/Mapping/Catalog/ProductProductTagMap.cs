@@ -23,6 +23,10 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(mapping => mapping.ProductId).HasColumnName("Product_Id");
             builder.Property(mapping => mapping.ProductTagId).HasColumnName("ProductTag_Id");
 
+            builder.HasOne<Product>().WithMany().HasForeignKey(mapping => mapping.ProductId).IsRequired();
+
+            builder.HasOne<ProductTag>().WithMany().HasForeignKey(mapping => mapping.ProductTagId).IsRequired();
+
             builder.Ignore(mapping => mapping.Id);
 
             base.Configure(builder);

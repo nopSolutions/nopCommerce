@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
 
 namespace Nop.Data.Mapping.News
@@ -25,6 +26,8 @@ namespace Nop.Data.Mapping.News
             builder.Property(newsItem => newsItem.Full).IsRequired();
             builder.Property(newsItem => newsItem.MetaKeywords).HasMaxLength(400);
             builder.Property(newsItem => newsItem.MetaTitle).HasMaxLength(400);
+
+            builder.HasOne<Language>().WithMany().HasForeignKey(newsItem => newsItem.LanguageId).IsRequired();
 
             base.Configure(builder);
         }

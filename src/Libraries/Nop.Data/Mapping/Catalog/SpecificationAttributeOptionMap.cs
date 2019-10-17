@@ -23,6 +23,8 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(option => option.Name).IsRequired();
             builder.Property(option => option.ColorSquaresRgb).HasMaxLength(100);
 
+            builder.HasOne<SpecificationAttribute>().WithMany().HasForeignKey(option => option.SpecificationAttributeId).IsRequired();
+
             base.Configure(builder);
         }
 

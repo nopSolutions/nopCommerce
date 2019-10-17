@@ -20,6 +20,8 @@ namespace Nop.Data.Mapping.Orders
             builder.ToTable(nameof(RecurringPaymentHistory));
             builder.HasKey(historyEntry => historyEntry.Id);
 
+            builder.HasOne<RecurringPayment>().WithMany().HasForeignKey(historyEntry => historyEntry.RecurringPaymentId).IsRequired();
+
             base.Configure(builder);
         }
 

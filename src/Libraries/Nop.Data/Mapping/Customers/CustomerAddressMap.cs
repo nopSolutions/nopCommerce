@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Data.Mapping.Customers
@@ -22,6 +23,10 @@ namespace Nop.Data.Mapping.Customers
 
             builder.Property(mapping => mapping.CustomerId).HasColumnName("Customer_Id");
             builder.Property(mapping => mapping.AddressId).HasColumnName("Address_Id");
+
+            builder.HasOne<Customer>().WithMany().HasForeignKey(mapping => mapping.CustomerId).IsRequired();
+
+            builder.HasOne<Address>().WithMany().HasForeignKey(mapping => mapping.AddressId).IsRequired();
 
             builder.Ignore(mapping => mapping.Id);
 

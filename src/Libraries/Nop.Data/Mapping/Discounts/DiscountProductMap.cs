@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 
 namespace Nop.Data.Mapping.Discounts
@@ -22,6 +23,10 @@ namespace Nop.Data.Mapping.Discounts
 
             builder.Property(mapping => mapping.DiscountId).HasColumnName("Discount_Id");
             builder.Property(mapping => mapping.ProductId).HasColumnName("Product_Id");
+
+            builder.HasOne<Discount>().WithMany().HasForeignKey(mapping => mapping.DiscountId).IsRequired();
+
+            builder.HasOne<Product>().WithMany().HasForeignKey(mapping => mapping.ProductId).IsRequired();
 
             builder.Ignore(mapping => mapping.Id);
 

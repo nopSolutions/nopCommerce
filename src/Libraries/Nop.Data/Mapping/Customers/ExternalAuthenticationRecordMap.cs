@@ -20,6 +20,8 @@ namespace Nop.Data.Mapping.Customers
             builder.ToTable(nameof(ExternalAuthenticationRecord));
             builder.HasKey(record => record.Id);
 
+            builder.HasOne<Customer>().WithMany().HasForeignKey(record => record.CustomerId).IsRequired();
+
             base.Configure(builder);
         }
 

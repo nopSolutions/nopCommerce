@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 
 namespace Nop.Data.Mapping.Forums
@@ -19,6 +20,9 @@ namespace Nop.Data.Mapping.Forums
         {
             builder.ToTable(NopMappingDefaults.ForumsSubscriptionTable);
             builder.HasKey(subscription => subscription.Id);
+
+            builder.HasOne<Customer>().WithMany().HasForeignKey(subscription => subscription.CustomerId).IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.Configure(builder);
         }

@@ -22,6 +22,8 @@ namespace Nop.Data.Mapping.Customers
 
             builder.Property(value => value.Name).HasMaxLength(400).IsRequired();
 
+            builder.HasOne<CustomerAttribute>().WithMany().HasForeignKey(value => value.CustomerAttributeId).IsRequired();
+
             base.Configure(builder);
         }
 

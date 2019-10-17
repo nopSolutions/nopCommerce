@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 
 namespace Nop.Data.Mapping.Security
@@ -19,6 +20,8 @@ namespace Nop.Data.Mapping.Security
         {
             builder.ToTable(nameof(AclRecord));
             builder.HasKey(record => record.Id);
+
+            builder.HasOne<CustomerRole>().WithMany().HasForeignKey(record => record.CustomerRoleId).IsRequired();
 
             builder.Property(record => record.EntityName).HasMaxLength(400).IsRequired();
 

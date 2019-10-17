@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Affiliates;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Data.Mapping.Affiliates
 {
@@ -19,6 +20,8 @@ namespace Nop.Data.Mapping.Affiliates
         {
             builder.ToTable(nameof(Affiliate));
             builder.HasKey(affiliate => affiliate.Id);
+
+            builder.HasOne<Address>().WithMany().HasForeignKey(affiliate => affiliate.AddressId);
 
             base.Configure(builder);
         }

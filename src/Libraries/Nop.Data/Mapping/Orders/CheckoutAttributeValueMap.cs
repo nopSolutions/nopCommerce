@@ -25,6 +25,8 @@ namespace Nop.Data.Mapping.Orders
             builder.Property(value => value.PriceAdjustment).HasColumnType("decimal(18, 4)");
             builder.Property(value => value.WeightAdjustment).HasColumnType("decimal(18, 4)");
 
+            builder.HasOne<CheckoutAttribute>().WithMany().HasForeignKey(value => value.CheckoutAttributeId).IsRequired();
+
             base.Configure(builder);
         }
 

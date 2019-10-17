@@ -20,6 +20,8 @@ namespace Nop.Data.Mapping.Stores
             builder.ToTable(nameof(StoreMapping));
             builder.HasKey(storeMapping => storeMapping.Id);
 
+            builder.HasOne<Store>().WithMany().HasForeignKey(storeMapping => storeMapping.StoreId).IsRequired();
+
             builder.Property(storeMapping => storeMapping.EntityName).HasMaxLength(400).IsRequired();
 
             base.Configure(builder);

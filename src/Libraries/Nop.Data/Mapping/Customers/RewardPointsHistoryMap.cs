@@ -23,6 +23,11 @@ namespace Nop.Data.Mapping.Customers
 
             builder.Property(historyEntry => historyEntry.UsedAmount).HasColumnType("decimal(18, 4)");
 
+            builder.HasOne<Customer>().WithMany().HasForeignKey(historyEntry => historyEntry.CustomerId).IsRequired();
+
+            builder.HasOne<Order>().WithOne().HasForeignKey<Order>(order => order.RewardPointsHistoryEntryId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
             base.Configure(builder);
         }
 

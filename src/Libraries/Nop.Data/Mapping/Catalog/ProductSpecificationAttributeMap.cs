@@ -20,7 +20,14 @@ namespace Nop.Data.Mapping.Catalog
             builder.ToTable(NopMappingDefaults.ProductSpecificationAttributeTable);
             builder.HasKey(productSpecificationAttribute => productSpecificationAttribute.Id);
 
-            builder.Property(productSpecificationAttribute => productSpecificationAttribute.CustomValue).HasMaxLength(4000);
+            builder.Property(productSpecificationAttribute => productSpecificationAttribute.CustomValue)
+                .HasMaxLength(4000);
+
+            builder.HasOne<SpecificationAttributeOption>().WithMany().HasForeignKey(productSpecificationAttribute =>
+                productSpecificationAttribute.SpecificationAttributeOptionId).IsRequired();
+
+            builder.HasOne<Product>().WithMany()
+                .HasForeignKey(productSpecificationAttribute => productSpecificationAttribute.ProductId).IsRequired();
 
             builder.Ignore(productSpecificationAttribute => productSpecificationAttribute.AttributeType);
 

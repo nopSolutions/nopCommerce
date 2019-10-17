@@ -26,6 +26,9 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(value => value.WeightAdjustment).HasColumnType("decimal(18, 4)");
             builder.Property(value => value.Cost).HasColumnType("decimal(18, 4)");
 
+            builder.HasOne<ProductAttributeMapping>().WithMany().HasForeignKey(value => value.ProductAttributeMappingId)
+                .IsRequired();
+
             builder.Ignore(value => value.AttributeValueType);
 
             base.Configure(builder);

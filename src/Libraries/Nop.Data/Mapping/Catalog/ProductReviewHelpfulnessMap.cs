@@ -20,6 +20,9 @@ namespace Nop.Data.Mapping.Catalog
             builder.ToTable(nameof(ProductReviewHelpfulness));
             builder.HasKey(productReviewHelpfulness => productReviewHelpfulness.Id);
 
+            builder.HasOne<ProductReview>().WithMany()
+                .HasForeignKey(productReviewHelpfulness => productReviewHelpfulness.ProductReviewId).IsRequired();
+
             base.Configure(builder);
         }
 

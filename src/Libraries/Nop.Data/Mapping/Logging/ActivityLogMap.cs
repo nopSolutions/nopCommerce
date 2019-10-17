@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 
 namespace Nop.Data.Mapping.Logging
@@ -23,6 +24,10 @@ namespace Nop.Data.Mapping.Logging
             builder.Property(logItem => logItem.Comment).IsRequired();
             builder.Property(logItem => logItem.IpAddress).HasMaxLength(200);
             builder.Property(logItem => logItem.EntityName).HasMaxLength(400);
+
+            builder.HasOne<ActivityLogType>().WithMany().HasForeignKey(logItem => logItem.ActivityLogTypeId).IsRequired();
+
+            builder.HasOne<Customer>().WithMany().HasForeignKey(logItem => logItem.CustomerId).IsRequired();
 
             base.Configure(builder);
         }

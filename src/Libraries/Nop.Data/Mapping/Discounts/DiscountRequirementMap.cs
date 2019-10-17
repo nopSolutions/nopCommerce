@@ -20,6 +20,8 @@ namespace Nop.Data.Mapping.Discounts
             builder.ToTable(nameof(DiscountRequirement));
             builder.HasKey(requirement => requirement.Id);
 
+            builder.HasMany<DiscountRequirement>().WithOne().HasForeignKey(requirement => requirement.ParentId);
+
             builder.Ignore(requirement => requirement.InteractionType);
 
             base.Configure(builder);

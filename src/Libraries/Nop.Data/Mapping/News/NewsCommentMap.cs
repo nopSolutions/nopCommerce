@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.News;
 
 namespace Nop.Data.Mapping.News
@@ -19,7 +20,11 @@ namespace Nop.Data.Mapping.News
         {
             builder.ToTable(nameof(NewsComment));
             builder.HasKey(comment => comment.Id);
-            
+
+            builder.HasOne<NewsItem>().WithMany().HasForeignKey(comment => comment.NewsItemId).IsRequired();
+
+            builder.HasOne<Customer>().WithMany().HasForeignKey(comment => comment.CustomerId).IsRequired();
+
             base.Configure(builder);
         }
 

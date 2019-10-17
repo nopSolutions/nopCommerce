@@ -20,6 +20,8 @@ namespace Nop.Data.Mapping.Customers
             builder.ToTable(nameof(CustomerPassword));
             builder.HasKey(password => password.Id);
 
+            builder.HasOne<Customer>().WithMany().HasForeignKey(password => password.CustomerId).IsRequired();
+
             builder.Ignore(password => password.PasswordFormat);
 
             base.Configure(builder);
