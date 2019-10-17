@@ -4,42 +4,26 @@
 @inject IWorkContext workContext
 
 @{
-    var supportRtl = workContext.WorkingLanguage.Rtl;
 
     Html.AppendCssFileParts("~/Plugins/SevenSpikes.Core/Styles/perfect-scrollbar.min.css");
 
-    if (supportRtl)
+
+    Html.AppendCssFileParts("~/Themes/Avenue/Content/css/msie.css");
+    @if (forumSettings.ForumsEnabled)
     {
-        Html.AppendCssFileParts("~/Themes/Avenue/Content/css/msie.rtl.css");
-        @if (forumSettings.ForumsEnabled)
-        {
-            Html.AppendCssFileParts("~/Themes/Avenue/Content/css/forum.rtl.css");
-        }
-        Html.AppendCssFileParts("~/Themes/Avenue/Content/css/1500.rtl.css");
-        Html.AppendCssFileParts("~/Themes/Avenue/Content/css/1200.rtl.css");
-        Html.AppendCssFileParts("~/Themes/Avenue/Content/css/1024.rtl.css");
-        Html.AppendCssFileParts("~/Themes/Avenue/Content/css/768.rtl.css");
-        Html.AppendCssFileParts("~/Themes/Avenue/Content/css/480.rtl.css");
-        Html.AppendCssFileParts("~/Themes/Avenue/Content/css/mobile.rtl.css");
-        Html.AppendCssFileParts("~/Themes/Avenue/Content/css/footable.rtl.css");
-        Html.AppendCssFileParts("~/Themes/Avenue/Content/css/styles.rtl.css");
+        Html.AppendCssFileParts("~/Themes/Avenue/Content/css/forum.css");
     }
-    else
-    {
-        Html.AppendCssFileParts("~/Themes/Avenue/Content/css/msie.css");
-        @if (forumSettings.ForumsEnabled)
-        {
-            Html.AppendCssFileParts("~/Themes/Avenue/Content/css/forum.css");
-        }
-        Html.AppendCssFileParts("~/Themes/Avenue/Content/css/1500.css");
-        Html.AppendCssFileParts("~/Themes/Avenue/Content/css/1200.css");
-        Html.AppendCssFileParts("~/Themes/Avenue/Content/css/1024.css");
-        Html.AppendCssFileParts("~/Themes/Avenue/Content/css/768.css");
-        Html.AppendCssFileParts("~/Themes/Avenue/Content/css/480.css");
-        Html.AppendCssFileParts("~/Themes/Avenue/Content/css/mobile.css");
-        Html.AppendCssFileParts("~/Themes/Avenue/Content/css/footable.css");
-        Html.AppendCssFileParts("~/Themes/Avenue/Content/css/styles.css");
-    }
+    Html.AppendCssFileParts("~/Themes/Avenue/Content/css/1500.css");
+    Html.AppendCssFileParts("~/Themes/Avenue/Content/css/1200.css");
+    Html.AppendCssFileParts("~/Themes/Avenue/Content/css/1024.css");
+    Html.AppendCssFileParts("~/Themes/Avenue/Content/css/768.css");
+    Html.AppendCssFileParts("~/Themes/Avenue/Content/css/480.css");
+    Html.AppendCssFileParts("~/Themes/Avenue/Content/css/mobile.css");
+    Html.AppendCssFileParts("~/Themes/Avenue/Content/css/footable.css");
+    Html.AppendCssFileParts("~/Themes/Avenue/Content/css/styles.css");
+    Html.AppendCssFileParts("~/Themes/Avenue/Content/css/optic-one.css");
+    Html.AppendCssFileParts("~/Themes/Avenue/Content/css/optic-one-logo.css");
+
 
     Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/footable.min.js");
     Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/perfect-scrollbar.min.js");
@@ -47,4 +31,6 @@
     Html.AddScriptParts(ResourceLocation.Footer, "~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.theme.min.js");
 
     Html.AddScriptParts(ResourceLocation.Footer, "~/Themes/Avenue/Content/scripts/avenue.js");
+
+    Html.AddScriptParts(ResourceLocation.Footer, "~/Themes/Avenue/Content/scripts/eyes.js");
 }

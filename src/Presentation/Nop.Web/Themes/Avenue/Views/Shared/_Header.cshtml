@@ -11,13 +11,13 @@
 @{
     var wishlistEnabled = permissionService.Authorize(StandardPermissionProvider.EnableWishlist);
     var shoppingCartEnabled = permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart);
-    
+
     var shoppingCartItems = shoppingCartService.GetShoppingCart(workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, storeContext.CurrentStore.Id);
     var shoppingCartItemsCount = shoppingCartItems.Sum(item => item.Quantity);
 
     var wishlistItems = shoppingCartService.GetShoppingCart(workContext.CurrentCustomer, ShoppingCartType.Wishlist, storeContext.CurrentStore.Id);
     var wishlistItemsCount = wishlistItems.Sum(item => item.Quantity);
-    
+
     ViewBag.WishlistEnabled = wishlistEnabled;
     ViewBag.WishlistItems = wishlistItemsCount;
     ViewBag.ShoppingCartEnabled = shoppingCartEnabled;
@@ -28,9 +28,6 @@
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderBefore })
     @await Component.InvokeAsync("AdminHeaderLinks")
     <div class="header-upper">
-        <div class="header-text">
-            <span>@T("SevenSpikes.Themes.Avenue.HeaderText")</span>
-        </div>
         <div class="profile-links responsive-nav-content">
             <div class="responsive-nav-head">
                 <span class="text">@T("SevenSpikes.Themes.Avenue.Profile")</span>

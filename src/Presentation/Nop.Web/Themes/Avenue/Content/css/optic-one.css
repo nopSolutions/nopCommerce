@@ -476,3 +476,10 @@ body .variant-additional .compare-products
 .add-to-compare-list-button:hover {
 	color: #18073a;
 }
+
+/** checkout fix **/
+
+body .order-summary-content .cart-wrapper, body .order-summary-content .cart-footer {
+	float: none;
+	width: 100%;
+}
