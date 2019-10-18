@@ -1367,7 +1367,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.City,
                 searchModel.TrackingNumber,
                 searchModel.LoadNotShipped,
-                0, //TODO: issue-239 #22
+                0,
                 startDateValue,
                 endDateValue,
                 searchModel.Page - 1,

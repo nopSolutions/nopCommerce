@@ -146,7 +146,6 @@ namespace Nop.Services.Security
 
             _permissionRecordRepository.Insert(permission);
 
-            //TODO: issue-239 - #14
             _cacheManager.RemoveByPrefix(NopSecurityDefaults.PermissionsPrefixCacheKey);
             _staticCacheManager.RemoveByPrefix(NopSecurityDefaults.PermissionsPrefixCacheKey);
         }

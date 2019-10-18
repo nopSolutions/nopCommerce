@@ -1398,7 +1398,7 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException(nameof(order));
 
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            //TODO: issue-239 #9
+            //TODO: issue-239 #9 
             var languageId = EnsureLanguageIsActive(_localizationSettings.DefaultAdminLanguageId, store.Id);
 
             var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.NewReturnRequestStoreOwnerNotification, store.Id);

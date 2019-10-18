@@ -1395,7 +1395,6 @@ namespace Nop.Services.Messages
         /// <param name="forumPost">Forum post</param>
         public virtual void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost)
         {
-            //TODO: issue-239 #8
             //attributes
             //we cannot inject IForumService into constructor because it'll cause circular references.
             //that's why we resolve it here this way

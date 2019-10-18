@@ -1255,7 +1255,6 @@ namespace Nop.Services.Orders
             if (shoppingCartItem == null)
                 throw new ArgumentNullException(nameof(shoppingCartItem));
 
-            //TODO: issue-239 #13
             var customer = _customerService.GetCustomerById(shoppingCartItem.CustomerId);
             var product = _productService.GetProductById(shoppingCartItem.ProductId);
 

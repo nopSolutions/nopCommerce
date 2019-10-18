@@ -573,9 +573,9 @@ namespace Nop.Services.Orders
                 else
                 {
                     //get the already calculated subtotal from the order item
-                    //TODO: issue-239 #11
-                    itemSubTotalExclTax = _orderService.GetOrderItemById(shoppingCartItem.Id).PriceExclTax;
-                    itemSubTotalInclTax = _orderService.GetOrderItemById(shoppingCartItem.Id).PriceInclTax;
+                    var order = _orderService.GetOrderItemById(shoppingCartItem.Id);
+                    itemSubTotalExclTax = order.PriceExclTax;
+                    itemSubTotalInclTax = order.PriceInclTax;
 
                     taxRate = itemSubTotalExclTax > 0 ? Math.Round(100 * (itemSubTotalInclTax - itemSubTotalExclTax) / itemSubTotalExclTax, 3) : 0M;
                 }

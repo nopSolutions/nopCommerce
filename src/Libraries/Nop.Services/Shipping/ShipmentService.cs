@@ -116,7 +116,7 @@ namespace Nop.Services.Shipping
                 where
                     (shippingCountryId <= 0 || (o.PickupInStore ? pa.CountryId == shippingCountryId : sa.CountryId == shippingCountryId)) &&
                     (shippingStateId <= 0 || (o.PickupInStore ? pa.StateProvinceId == shippingStateId : sa.StateProvinceId == shippingStateId)) &&
-                    (orderId <= 0 || (o.Id == orderId)) &&
+                    (orderId <= 0 || o.Id == orderId) &&
                     (string.IsNullOrWhiteSpace(shippingCounty) || (o.PickupInStore ? pa.County.Contains(shippingCounty) : sa.County.Contains(shippingCounty))) &&
                     (string.IsNullOrWhiteSpace(shippingCity) || (o.PickupInStore ? pa.City.Contains(shippingCity) : sa.City.Contains(shippingCity)))
                 select s;

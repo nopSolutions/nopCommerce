@@ -1794,9 +1794,6 @@ namespace Nop.Services.ExportImport
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            //TODO: issue-239 #7
-            Order getOrder(OrderItem orderItem) => _orderService.GetOrderById(orderItem.OrderId);
-
             //lambda expressions for choosing correct order address
             Address orderAddress(Order o) => _addressService.GetAddressById((o.PickupInStore ? o.PickupAddressId : o.ShippingAddressId) ?? 0);
             Address orderBillingAddress(Order o) => _addressService.GetAddressById(o.BillingAddressId);
@@ -1865,9 +1862,9 @@ namespace Nop.Services.ExportImport
             { //TODO: _productService.GetProductById(oi.ProductId) - variant add as local func with cache
                 new PropertyByName<OrderItem>("SKU", oi => _productService.GetProductById(oi.ProductId).Sku),
                 new PropertyByName<OrderItem>("Name", oi => _localizationService.GetLocalized(_productService.GetProductById(oi.ProductId), p => p.Name)),
-                new PropertyByName<OrderItem>("Price", oi => _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(getOrder(oi).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.UnitPriceInclTax : oi.UnitPriceExclTax, getOrder(oi).CurrencyRate), true, getOrder(oi).CustomerCurrencyCode, false, _workContext.WorkingLanguage)),
+                new PropertyByName<OrderItem>("Price", oi => _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(_orderService.GetOrderById(oi.OrderId).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.UnitPriceInclTax : oi.UnitPriceExclTax, _orderService.GetOrderById(oi.OrderId).CurrencyRate), true, _orderService.GetOrderById(oi.OrderId).CustomerCurrencyCode, false, _workContext.WorkingLanguage)),
                 new PropertyByName<OrderItem>("Quantity", oi => oi.Quantity),
-                new PropertyByName<OrderItem>("Total", oi => _priceFormatter.FormatPrice(getOrder(oi).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.PriceInclTax : oi.PriceExclTax))
+                new PropertyByName<OrderItem>("Total", oi => _priceFormatter.FormatPrice(_orderService.GetOrderById(oi.OrderId).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.PriceInclTax : oi.PriceExclTax))
             }, _catalogSettings);
 
             var orders = _orderService.SearchOrders(customerId: customer.Id);
