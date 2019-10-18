@@ -2310,6 +2310,8 @@ namespace Nop.Services.Orders
 
             //check order status
             CheckOrderStatus(order);
+        
+            _eventPublisher.Publish(new OrderAuthorizedEvent(order)); 
         }
 
         /// <summary>
