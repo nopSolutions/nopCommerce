@@ -1,0 +1,11 @@
+﻿{
+  "Group": "NopMSoft reports",
+  "FriendlyName": "Critical Stocked Products Report",
+  "SystemName": "Reports.CriticalStockedProducts",
+  "Version": "1.24",
+  "SupportedVersions": [ "4.30" ],
+  "Author": "NopMSoft team",
+  "DisplayOrder": 1,
+  "FileName": "NopMSoft.Plugin.Reports.CriticalStockedProducts.dll",
+  "Description": "This plugin report and show critical stocked products"
+}

@@ -1,0 +1,11 @@
+﻿{
+  "Group": "NopMSoft reports",
+  "FriendlyName": "Low Stock Products Report",
+  "SystemName": "Reports.LowStockProducts",
+  "Version": "1.24",
+  "SupportedVersions": [ "4.30" ],
+  "Author": "NopMSoft team",
+  "DisplayOrder": 1,
+  "FileName": "NopMSoft.Plugin.Reports.LowStockProducts.dll",
+  "Description": "This plugin report and show low stock products"
+}

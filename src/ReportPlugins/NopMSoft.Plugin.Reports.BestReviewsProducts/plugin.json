@@ -1,0 +1,11 @@
+﻿{
+  "Group": "NopMSoft reports",
+  "FriendlyName": "Best Reviews Products Report",
+  "SystemName": "Reports.BestReviewsProducts",
+  "Version": "1.24",
+  "SupportedVersions": [ "4.30" ],
+  "Author": "NopMSoft team",
+  "DisplayOrder": 1,
+  "FileName": "NopMSoft.Plugin.Reports.BestReviewsProducts.dll",
+  "Description": "This plugin report and show best reviews products"
+}

@@ -1,0 +1,11 @@
+﻿{
+  "Group": "NopMSoft reports",
+  "FriendlyName": "Categories Without Pictures Report",
+  "SystemName": "Reports.CategoriesWithoutPictures",
+  "Version": "1.24",
+  "SupportedVersions": [ "4.30" ],
+  "Author": "NopMSoft team",
+  "DisplayOrder": 1,
+  "FileName": "NopMSoft.Plugin.Reports.CategoriesWithoutPictures.dll",
+  "Description": "This plugin report and show categories without pictures"
+}

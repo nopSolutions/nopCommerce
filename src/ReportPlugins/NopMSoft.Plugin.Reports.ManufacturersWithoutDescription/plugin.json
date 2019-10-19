@@ -1,0 +1,11 @@
+﻿{
+  "Group": "NopMSoft reports",
+  "FriendlyName": "Manufacturers Without Description Report",
+  "SystemName": "Reports.Reports.ManufacturersWithoutDescription",
+  "Version": "1.24",
+  "SupportedVersions": [ "4.30" ],
+  "Author": "NopMSoft team",
+  "DisplayOrder": 1,
+  "FileName": "NopMSoft.Plugin.Reports.Reports.ManufacturersWithoutDescription.dll",
+  "Description": "This plugin report and show manufacturers without description"
+}

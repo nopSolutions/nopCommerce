@@ -1,0 +1,11 @@
+﻿{
+  "Group": "NopMSoft reports",
+  "FriendlyName": "Most Ordering Customers Report",
+  "SystemName": "Reports.MostOrderingCustomers",
+  "Version": "1.24",
+  "SupportedVersions": [ "4.30" ],
+  "Author": "NopMSoft team",
+  "DisplayOrder": 1,
+  "FileName": "NopMSoft.Plugin.Reports.MostOrderingCustomers.dll",
+  "Description": "This plugin report and show most ordering customers"
+}

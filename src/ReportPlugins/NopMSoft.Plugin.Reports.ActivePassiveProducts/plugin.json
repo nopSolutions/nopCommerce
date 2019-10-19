@@ -1,0 +1,11 @@
+﻿{
+  "Group": "NopMSoft reports",
+  "FriendlyName": "Active-Passive Products Report",
+  "SystemName": "Reports.ActivePassiveProducts",
+  "Version": "1.24",
+  "SupportedVersions": [ "4.30" ],
+  "Author": "NopMSoft team",
+  "DisplayOrder": 1,
+  "FileName": "NopMSoft.Plugin.Reports.ActivePassiveProducts.dll",
+  "Description": "This plugin report and show active-passive products"
+}

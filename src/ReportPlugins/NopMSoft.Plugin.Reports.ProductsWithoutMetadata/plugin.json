@@ -1,0 +1,11 @@
+﻿{
+  "Group": "NopMSoft reports",
+  "FriendlyName": "Products Without Metadata Report",
+  "SystemName": "Reports.Reports.ProductsWithoutMetadata",
+  "Version": "1.24",
+  "SupportedVersions": [ "4.30" ],
+  "Author": "NopMSoft team",
+  "DisplayOrder": 1,
+  "FileName": "NopMSoft.Plugin.Reports.Reports.ProductsWithoutMetadata.dll",
+  "Description": "This plugin report and show products without metadata"
+}

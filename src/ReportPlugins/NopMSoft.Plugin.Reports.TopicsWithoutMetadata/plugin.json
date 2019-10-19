@@ -1,0 +1,11 @@
+﻿{
+  "Group": "NopMSoft reports",
+  "FriendlyName": "Topics Without Metadata Report",
+  "SystemName": "Reports.TopicsWithoutMetadata",
+  "Version": "1.24",
+  "SupportedVersions": [ "4.30" ],
+  "Author": "NopMSoft team",
+  "DisplayOrder": 1,
+  "FileName": "NopMSoft.Plugin.Reports.TopicsWithoutMetadata.dll",
+  "Description": "This plugin report and show topics without metadata"
+}

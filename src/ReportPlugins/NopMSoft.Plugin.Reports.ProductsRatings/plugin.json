@@ -1,0 +1,11 @@
+﻿{
+  "Group": "NopMSoft reports",
+  "FriendlyName": "Products Ratings Report",
+  "SystemName": "Reports.ProductsRatings",
+  "Version": "1.24",
+  "SupportedVersions": [ "4.30" ],
+  "Author": "NopMSoft team",
+  "DisplayOrder": 1,
+  "FileName": "NopMSoft.Plugin.Reports.ProductsRatings.dll",
+  "Description": "This plugin report and show products ratings"
+}

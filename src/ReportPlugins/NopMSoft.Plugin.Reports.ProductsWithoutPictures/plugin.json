@@ -1,0 +1,11 @@
+﻿{
+  "Group": "NopMSoft reports",
+  "FriendlyName": "Products Without Pictures Report",
+  "SystemName": "Reports.ProductsWithoutPictures",
+  "Version": "1.24",
+  "SupportedVersions": [ "4.30" ],
+  "Author": "NopMSoft team",
+  "DisplayOrder": 1,
+  "FileName": "NopMSoft.Plugin.Reports.ProductsWithoutPictures.dll",
+  "Description": "This plugin report and show products without pictures"
+}
