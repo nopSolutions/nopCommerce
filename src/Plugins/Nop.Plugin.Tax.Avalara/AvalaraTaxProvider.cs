@@ -134,6 +134,7 @@ namespace Nop.Plugin.Tax.Avalara
         /// Prepare request parameters to get a tax for the order
         /// </summary>
         /// <param name="order">Order</param>
+        /// <param name="orderItems">Order items</param>
         /// <param name="save">Whether to save tax transaction</param>
         /// <returns>Request parameters to create tax transaction</returns>
         private CreateTransactionModel PrepareOrderTaxModel(Order order, IList<OrderItem> orderItems, bool save)
@@ -156,7 +157,6 @@ namespace Nop.Plugin.Tax.Avalara
 
             //set purchased item lines
             transactionModel.lines = GetItemLines(order, orderItems);
-
 
             //set whole request tax exemption
             var exemptedCustomerRole = _customerService.GetCustomerRoles(customer).FirstOrDefault(role => role.TaxExempt);
@@ -288,6 +288,7 @@ namespace Nop.Plugin.Tax.Avalara
         /// Get item lines to create tax transaction
         /// </summary>
         /// <param name="order">Order</param>
+        /// <param name="orderItems">Order items</param>
         /// <returns>List of item lines</returns>
         private List<LineItemModel> GetItemLines(Order order, IList<OrderItem> orderItems)
         {
@@ -313,11 +314,15 @@ namespace Nop.Plugin.Tax.Avalara
         /// Create item lines for purchased order items
         /// </summary>
         /// <param name="order">Order</param>
+        /// <param name="orderItems">Order items</param>
         /// <returns>Collection of item lines</returns>
         private IEnumerable<LineItemModel> CreateLinesForOrderItems(Order order, IList<OrderItem> orderItems)
         {
             if (orderItems is null)
                 throw new ArgumentNullException(nameof(orderItems));
+
+            var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+            var customer = _customerService.GetCustomerById(order.CustomerId);
 
             return orderItems.Select(orderItem =>
             {
@@ -344,9 +349,6 @@ namespace Nop.Plugin.Tax.Avalara
                     quantity = orderItem.Quantity
                 };
 
-                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
-                var customer = _customerService.GetCustomerById(order.CustomerId);
-
                 //force to use billing address as the destination one in the accordance with EU VAT rules (if enabled)
                 var useEuVatRules = _taxSettings.EuVatEnabled
                     && (product?.IsTelecommunicationsOrBroadcastingOrElectronicServices ?? false)
@@ -355,6 +357,7 @@ namespace Nop.Plugin.Tax.Avalara
                         ?? _countryService.GetCountryByTwoLetterIsoCode(_geoLookupService.LookupCountryIsoCode(customer.LastIpAddress)))
                         ?.SubjectToVat ?? false)
                     && _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute) != (int)VatNumberStatus.Valid;
+
                 if (useEuVatRules)
                 {
                     var destinationAddress = MapAddress(billingAddress);
@@ -558,11 +561,12 @@ namespace Nop.Plugin.Tax.Avalara
         /// Create tax transaction to get tax for the order
         /// </summary>
         /// <param name="order">Order</param>
+        /// <param name="orderItems">Order items</param>
         /// <param name="save">Whether to save tax transaction</param>
         /// <returns>Transaction</returns>
         public TransactionModel CreateOrderTaxTransaction(Order order, IList<OrderItem> orderItems, bool save)
         {
-            var transactionModel = PrepareOrderTaxModel(order, orderItems, save);
+            var transactionModel = PrepareOrderTaxModel(order, orderItems, save); 
             return _avalaraTaxManager.CreateTaxTransaction(transactionModel, save);
         }
 
