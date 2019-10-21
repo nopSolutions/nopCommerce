@@ -106,11 +106,12 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Get a price adjustment of a product attribute value
         /// </summary>
+        /// <param name="product">Product</param>
         /// <param name="value">Product attribute value</param>
         /// <param name="customer">Customer</param>
         /// <param name="productPrice">Product price (null for using the base product price)</param>
         /// <returns>Price adjustment</returns>
-        decimal GetProductAttributeValuePriceAdjustment(ProductAttributeValue value, Customer customer, decimal? productPrice = null);
+        decimal GetProductAttributeValuePriceAdjustment(Product product, ProductAttributeValue value, Customer customer, decimal? productPrice = null);
 
         /// <summary>
         /// Round a product or order total for the currency

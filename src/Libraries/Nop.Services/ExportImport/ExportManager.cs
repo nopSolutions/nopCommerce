@@ -307,7 +307,6 @@ namespace Nop.Services.ExportImport
             string limitedToStores = null;
             foreach (var storeMapping in _storeMappingService.GetStoreMappings(product))
             {
-                //TODO: issue-239 #6
                 var store = _storeService.GetStoreById(storeMapping.StoreId);
 
                 limitedToStores += _catalogSettings.ExportImportRelatedEntitiesByName ? store.Name : store.Id.ToString();

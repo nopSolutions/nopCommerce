@@ -497,7 +497,15 @@ namespace Nop.Services.Catalog
             return cost;
         }
 
-        public virtual decimal GetProductAttributeValuePriceAdjustment(ProductAttributeValue value, Customer customer, decimal? productPrice = null)
+        /// <summary>
+        /// Get a price adjustment of a product attribute value
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="value">Product attribute value</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="productPrice">Product price (null for using the base product price)</param>
+        /// <returns>Price adjustment</returns>
+        public virtual decimal GetProductAttributeValuePriceAdjustment(Product product, ProductAttributeValue value, Customer customer, decimal? productPrice = null)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
@@ -509,12 +517,8 @@ namespace Nop.Services.Catalog
                     //simple attribute
                     if (value.PriceAdjustmentUsePercentage)
                     {
-                        //TODO issue-239: #1
                         if (!productPrice.HasValue)
-                        {
-                            var product = _productService.GetProductById(_productAttributeService.GetProductAttributeMappingById(value.ProductAttributeMappingId).ProductId);
                             productPrice = GetFinalPrice(product, customer);
-                        }
 
                         adjustment = (decimal)((float)productPrice * (float)value.PriceAdjustment / 100f);
                     }

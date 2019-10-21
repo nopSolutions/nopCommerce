@@ -660,7 +660,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     {
                         //price adjustment
                         var priceAdjustment = _taxService.GetProductPrice(product,
-                            _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue, customer), out _);
+                            _priceCalculationService.GetProductAttributeValuePriceAdjustment(product, attributeValue, customer), out _);
 
                         var priceAdjustmentStr = string.Empty;
                         if (priceAdjustment != 0)
