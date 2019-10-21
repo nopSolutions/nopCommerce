@@ -1553,12 +1553,11 @@ namespace Nop.Web.Areas.Admin.Factories
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            //TODO: issue-239 #23
             //get shipments
             var shipments = _shipmentService.GetAllShipments(
                 orderId: order.Id,
-                vendorId: _workContext.CurrentVendor?.Id ?? 0 //a vendor should have access only to his products
-                )
+                //a vendor should have access only to his products
+                vendorId: _workContext.CurrentVendor?.Id ?? 0)
                 .OrderBy(shipment => shipment.CreatedOnUtc)
                 .ToList();
 
@@ -1585,11 +1584,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     shipmentModel.CanShip = !shipment.ShippedDateUtc.HasValue;
                     shipmentModel.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
 
-                    var shipmentOrder = _orderService.GetOrderById(shipment.OrderId);
-
-                    shipmentModel.CustomOrderNumber = shipmentOrder.CustomOrderNumber;
+                    shipmentModel.CustomOrderNumber = order.CustomOrderNumber;
 
                     var baseWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name;
+
                     if (shipment.TotalWeight.HasValue)
                         shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{baseWeight}]";
 
