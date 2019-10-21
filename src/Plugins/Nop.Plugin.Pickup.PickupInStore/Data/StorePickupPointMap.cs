@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Data.Mapping;
 using Nop.Plugin.Pickup.PickupInStore.Domain;
@@ -22,6 +22,8 @@ namespace Nop.Plugin.Pickup.PickupInStore.Data
             builder.HasKey(point => point.Id);
 
             builder.Property(point => point.PickupFee).HasColumnType("decimal(18, 4)");
+            builder.Property(point => point.Latitude).HasColumnType("decimal(18, 8)");
+            builder.Property(point => point.Longitude).HasColumnType("decimal(18, 8)");
         }
 
         #endregion

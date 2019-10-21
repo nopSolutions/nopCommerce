@@ -165,6 +165,24 @@
                     <span asp-validation-for="StoreId"></span>
                 </div>
             </div>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    <nop-label asp-for="Latitude" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="Latitude" asp-render-form-control-class="true"/>
+                    <span asp-validation-for="Latitude"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    <nop-label asp-for="Longitude" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="Longitude" asp-render-form-control-class="true"/>
+                    <span asp-validation-for="Longitude"></span>
+                </div>
+            </div>
         </div>
     </div>
 </div>
