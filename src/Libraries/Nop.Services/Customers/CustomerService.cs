@@ -262,7 +262,8 @@ namespace Nop.Services.Customers
             var query = _customerRepository.Table;
             query = query.Where(c => lastActivityFromUtc <= c.LastActivityDateUtc);
             query = query.Where(c => !c.Deleted);
-            if (customerRoleIds != null && customerRoleIds.Length > 0) //TODO: issue-239 #4
+
+            if (customerRoleIds != null && customerRoleIds.Length > 0)
                 query = query.Where(c => _customerCustomerRoleMappingRepository.Table.Any(ccrm => ccrm.CustomerId == c.Id && customerRoleIds.Contains(ccrm.CustomerRoleId)));
 
             query = query.OrderByDescending(c => c.LastActivityDateUtc);

@@ -527,7 +527,7 @@ namespace Nop.Services.Shipping
         /// <param name="height">Height</param>
         /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
         public virtual void GetDimensions(IList<GetShippingOptionRequest.PackageItem> packageItems,
-            out decimal width, out decimal length, out decimal height, bool ignoreFreeShippedItems = false) //TODO: issue-239 #16
+            out decimal width, out decimal length, out decimal height, bool ignoreFreeShippedItems = false)
         {
             if (packageItems == null)
                 throw new ArgumentNullException(nameof(packageItems));

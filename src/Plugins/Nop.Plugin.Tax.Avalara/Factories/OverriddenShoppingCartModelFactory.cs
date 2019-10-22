@@ -201,7 +201,6 @@ namespace Nop.Plugin.Tax.Avalara.Factories
             var order = new Order { CustomerId = _workContext.CurrentCustomer.Id };
 
             //addresses
-            //TODO: issue-239 order.BillingAddressId - int, _workContext.CurrentCustomer.BillingAddressId nullable int
             order.BillingAddressId = _workContext.CurrentCustomer.BillingAddressId ?? 0;
             order.ShippingAddressId = _workContext.CurrentCustomer.ShippingAddressId;
 

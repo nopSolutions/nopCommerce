@@ -81,10 +81,10 @@ namespace Nop.Services.Catalog
 
             var mappings = _discountManufacturerMappingRepository.Table.Where(dcm => dcm.DiscountId == discount.Id);
 
-            if (mappings.Any())
-            {
-                _discountManufacturerMappingRepository.Delete(mappings);
-            }
+            if (!mappings.Any())
+                return;
+
+            _discountManufacturerMappingRepository.Delete(mappings);
         }
 
         /// <summary>

@@ -1302,24 +1302,26 @@ namespace Nop.Web.Controllers
                 .Select(idString => int.TryParse(idString, out var id) ? id : 0)
                 .Distinct().ToList();
 
-            //TODO: issue-239 #24
+            var products = _productService.GetProductsByIds(cart.Select(item => item.ProductId).ToArray())
+                .ToDictionary(item => item.Id, item => item);
+
             //get order items with changed quantity
             var itemsWithNewQuantity = cart.Select(item => new
             {
                 //try to get a new quantity for the item, set 0 for items to remove
                 NewQuantity = itemIdsToRemove.Contains(item.Id) ? 0 : int.TryParse(form[$"itemquantity{item.Id}"], out var quantity) ? quantity : item.Quantity,
                 Item = item,
-                Product = _productService.GetProductById(item.ProductId)
+                Product = products[item.ProductId]
             }).Where(item => item.NewQuantity != item.Item.Quantity);
 
             //order cart items
             //first should be items with a reduced quantity and that require other products; or items with an increased quantity and are required for other products
             var orderedCart = itemsWithNewQuantity
                 .OrderByDescending(cartItem =>
-                    (cartItem.NewQuantity < cartItem.Item.Quantity && (cartItem.Product?.RequireOtherProducts ?? false)) ||
-                    (cartItem.NewQuantity > cartItem.Item.Quantity &&
-                    (cartItem.Product != null && _shoppingCartService.GetProductsRequiringProduct(cart, cartItem.Product).Any()) //TODO: issue-239 #24
-                        ))
+                    (cartItem.NewQuantity < cartItem.Item.Quantity &&
+                     (cartItem.Product?.RequireOtherProducts ?? false)) ||
+                    (cartItem.NewQuantity > cartItem.Item.Quantity && cartItem.Product != null && _shoppingCartService
+                         .GetProductsRequiringProduct(cart, cartItem.Product).Any()))
                 .ToList();
             
             //try to update cart items with new quantities and get warnings

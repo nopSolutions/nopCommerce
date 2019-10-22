@@ -136,6 +136,7 @@ namespace Nop.Services.Discounts
         /// Delete discount requirement
         /// </summary>
         /// <param name="discountRequirement">Discount requirement</param>
+        /// <param name="recursively">A value indicating whether to recursively delete child requirements</param>
         void DeleteDiscountRequirement(DiscountRequirement discountRequirement, bool recursively);
 
         /// <summary>

@@ -210,7 +210,6 @@ namespace Nop.Services.Catalog
 
                     if (!string.IsNullOrEmpty(attributeValue.Item2) && int.TryParse(attributeValue.Item2, out var quantity) && quantity != value.Quantity)
                     {
-                        //issue-239
                         //if customer enters quantity, use new entity with new quantity
                         var oldValue = _context.LoadOriginalCopy(value);
                         oldValue.ProductAttributeMappingId = attribute.Id;

@@ -349,7 +349,7 @@ namespace Nop.Services.Orders
             //get customer shopping cart
             var cart = GetShoppingCart(customer, shoppingCartType, storeId);
 
-            var productsRequiringProduct = GetProductsRequiringProduct(cart, product); //TODO: issue-239 #12
+            var productsRequiringProduct = GetProductsRequiringProduct(cart, product);
 
             //whether other cart items require the passed product
             var passedProductRequiredQuantity = cart.Where(ci => productsRequiringProduct.Any(p => p.Id == ci.ProductId))
@@ -682,7 +682,6 @@ namespace Nop.Services.Orders
                 attributes1 = attributes1.Where(x => !x.IsNonCombinable()).ToList();
             }
 
-            //issue-239
             foreach (var attribute in attributes1)
             {
                 if (attribute.ProductId == 0)

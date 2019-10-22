@@ -134,6 +134,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
+        protected virtual bool HasAccessToOrder(Order order)
+        {
+            return order != null && HasAccessToOrder(order.Id);
+        }
+
         protected virtual bool HasAccessToOrder(int orderId)
         {
             if (orderId == 0)
@@ -145,12 +150,13 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             var vendorId = _workContext.CurrentVendor.Id;
             var hasVendorProducts = _orderService.GetOrderItems(orderId, vendorId: vendorId).Any();
+
             return hasVendorProducts;
         }
-
-        protected virtual bool HasAccessToProduct(int productId)
+        
+        protected virtual bool HasAccessToProduct(OrderItem orderItem)
         {
-            if (productId == 0)
+            if (orderItem == null || orderItem.ProductId == 0)
                 return false;
 
             if (_workContext.CurrentVendor == null)
@@ -158,9 +164,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return true;
 
             var vendorId = _workContext.CurrentVendor.Id;
-            return _productService.GetProductById(productId)?.VendorId == vendorId;
-        }
 
+            return _productService.GetProductById(orderItem.ProductId)?.VendorId == vendorId;
+        }
+        
         protected virtual bool HasAccessToShipment(Shipment shipment)
         {
             if (shipment == null)
@@ -576,7 +583,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
-                orders.AddRange(_orderService.GetOrdersByIds(ids).Where(oId => HasAccessToOrder(oId.Id))); //TODO: issue-239 #20
+                orders.AddRange(_orderService.GetOrdersByIds(ids).Where(HasAccessToOrder));
             }
 
             var xml = _exportManager.ExportOrdersToXml(orders);
@@ -660,7 +667,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
-                orders.AddRange(_orderService.GetOrdersByIds(ids).Where(oId => HasAccessToOrder(oId.Id)));
+                orders.AddRange(_orderService.GetOrdersByIds(ids).Where(HasAccessToOrder));
             }
 
             try
@@ -1087,7 +1094,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor does not have access to this functionality
-            if (_workContext.CurrentVendor != null && !HasAccessToOrder(order.Id))
+            if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
                 return RedirectToAction("List");
 
             //prepare model
@@ -1229,7 +1236,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var vendorId = 0;
             if (_workContext.CurrentVendor != null)
             {
-                orders = orders.Where(oId => HasAccessToOrder(oId.Id)).ToList();
+                orders = orders.Where(HasAccessToOrder).ToList();
                 vendorId = _workContext.CurrentVendor.Id;
             }
 
@@ -1635,7 +1642,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No order item found with the specified id");
 
             //ensure a vendor has access only to his products 
-            if (_workContext.CurrentVendor != null && !HasAccessToProduct(orderItem.ProductId))
+            if (_workContext.CurrentVendor != null && !HasAccessToProduct(orderItem))
                 return RedirectToAction("List");
 
             orderItem.DownloadCount = 0;
@@ -1673,7 +1680,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No order item found with the specified id");
 
             //ensure a vendor has access only to his products 
-            if (_workContext.CurrentVendor != null && !HasAccessToProduct(orderItem.ProductId))
+            if (_workContext.CurrentVendor != null && !HasAccessToProduct(orderItem))
                 return RedirectToAction("List");
 
             orderItem.IsDownloadActivated = !orderItem.IsDownloadActivated;
@@ -1710,7 +1717,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 throw new ArgumentException("Product is not downloadable");
 
             //ensure a vendor has access only to his products 
-            if (_workContext.CurrentVendor != null && !HasAccessToProduct(orderItem.ProductId))
+            if (_workContext.CurrentVendor != null && !HasAccessToProduct(orderItem))
                 return RedirectToAction("List");
 
             //prepare model
@@ -1735,7 +1742,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No order item found with the specified id");
 
             //ensure a vendor has access only to his products 
-            if (_workContext.CurrentVendor != null && !HasAccessToProduct(orderItem.ProductId))
+            if (_workContext.CurrentVendor != null && !HasAccessToProduct(orderItem))
                 return RedirectToAction("List");
 
             //attach license
@@ -1770,7 +1777,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No order item found with the specified id");
 
             //ensure a vendor has access only to his products 
-            if (_workContext.CurrentVendor != null && !HasAccessToProduct(orderItem.ProductId))
+            if (_workContext.CurrentVendor != null && !HasAccessToProduct(orderItem))
                 return RedirectToAction("List");
 
             //attach license
@@ -2123,7 +2130,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No order found with the specified id");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && !HasAccessToOrder(order.Id))
+            if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
                 return Content(string.Empty);
 
             //prepare model
@@ -2151,7 +2158,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No order found with the specified id");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && !HasAccessToOrder(order.Id))
+            if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
                 return Content(string.Empty);
 
             //prepare model
@@ -2172,7 +2179,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && !HasAccessToOrder(order.Id))
+            if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
                 return RedirectToAction("List");
 
             //prepare model
@@ -2194,14 +2201,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && !HasAccessToOrder(order.Id))
+            if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
                 return RedirectToAction("List");
 
             var orderItems = _orderService.GetOrderItems(order.Id, isShipEnabled: true);
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                orderItems = orderItems.Where(oi => HasAccessToProduct(oi.ProductId)).ToList();
+                orderItems = orderItems.Where(HasAccessToProduct).ToList();
             }
 
             var shipment = new Shipment

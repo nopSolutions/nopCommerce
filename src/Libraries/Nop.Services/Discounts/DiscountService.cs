@@ -485,9 +485,7 @@ namespace Nop.Services.Discounts
             if (recursive && GetDiscountRequirementsByParent(discountRequirement) is IList<DiscountRequirement> children && children.Any())
             {
                 foreach (var child in children)
-                {
                     DeleteDiscountRequirement(child, true);
-                }
             }
 
             _discountRequirementRepository.Delete(discountRequirement);

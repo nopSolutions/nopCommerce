@@ -275,6 +275,7 @@ namespace Nop.Services.Messages
                 query = query.OrderBy(nls => nls.Email);
 
                 var subscriptions = new PagedList<NewsLetterSubscription>(query, pageIndex, pageSize);
+
                 return subscriptions;
             }
             else
@@ -289,7 +290,6 @@ namespace Nop.Services.Messages
                         Customer = c
                     });
 
-                //TODO: issue-239 #4
                 query = query.Where(x => _customerCustomerRoleMappingRepository.Table.Any(ccrm => ccrm.CustomerId == x.Customer.Id && ccrm.CustomerRoleId == customerRoleId));
 
                 if (!string.IsNullOrEmpty(email))
@@ -302,9 +302,11 @@ namespace Nop.Services.Messages
                     query = query.Where(x => x.NewsletterSubscribers.StoreId == storeId);
                 if (isActive.HasValue)
                     query = query.Where(x => x.NewsletterSubscribers.Active == isActive.Value);
+
                 query = query.OrderBy(x => x.NewsletterSubscribers.Email);
 
                 var subscriptions = new PagedList<NewsLetterSubscription>(query.Select(x => x.NewsletterSubscribers), pageIndex, pageSize);
+
                 return subscriptions;
             }
         }

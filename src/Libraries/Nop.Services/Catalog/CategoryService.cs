@@ -108,10 +108,10 @@ namespace Nop.Services.Catalog
 
             var mappings = _discountCategoryMappingRepository.Table.Where(dcm => dcm.DiscountId == discount.Id);
 
-            if (mappings.Any())
-            {
-                _discountCategoryMappingRepository.Delete(mappings);
-            }
+            if (!mappings.Any())
+                return;
+
+            _discountCategoryMappingRepository.Delete(mappings);
         }
 
         /// <summary>

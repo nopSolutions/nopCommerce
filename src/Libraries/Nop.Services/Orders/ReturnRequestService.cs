@@ -184,7 +184,22 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Updates the  return request action
+        /// Updates the return request
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        public virtual void UpdateReturnRequest(ReturnRequest returnRequest)
+        {
+            if (returnRequest == null)
+                throw new ArgumentNullException(nameof(returnRequest));
+
+            _returnRequestRepository.Update(returnRequest);
+
+            //event notification
+            _eventPublisher.EntityUpdated(returnRequest);
+        }
+
+        /// <summary>
+        /// Updates the return request action
         /// </summary>
         /// <param name="returnRequestAction">Return request action</param>
         public virtual void UpdateReturnRequestAction(ReturnRequestAction returnRequestAction)
