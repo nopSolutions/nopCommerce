@@ -1503,7 +1503,7 @@ namespace Nop.Web.Factories
 
                 IncludeInTopMenu = Convert.ToBoolean(elem.Element("IncludeInTopMenu").Value),
                 HaveSubCategories = Convert.ToBoolean(elem.Element("HaveSubCategories").Value),
-                Route = urlHelper.RouteUrl("Category", new { SeName = elem.Element("SeName").Value })
+                Route = urlHelper.RouteUrl("GenericUrl", new { SeName = elem.Element("SeName").Value })
             };
         }
 

@@ -250,7 +250,7 @@ namespace Nop.Services.Seo
         protected virtual IEnumerable<SitemapUrl> GetNewsItemUrls()
         {
             return _newsService.GetAllNews(storeId: _storeContext.CurrentStore.Id)
-                .Select(news => GetLocalizedSitemapUrl("NewsItem", GetSeoRouteParams(news), news.CreatedOnUtc));
+                .Select(news => GetLocalizedSitemapUrl("GenericUrl", GetSeoRouteParams(news), news.CreatedOnUtc));
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace Nop.Services.Seo
         protected virtual IEnumerable<SitemapUrl> GetCategoryUrls()
         {
             return _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id)
-                .Select(category => GetLocalizedSitemapUrl("Category", GetSeoRouteParams(category), category.UpdatedOnUtc));
+                .Select(category => GetLocalizedSitemapUrl("GenericUrl", GetSeoRouteParams(category), category.UpdatedOnUtc));
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace Nop.Services.Seo
         protected virtual IEnumerable<SitemapUrl> GetManufacturerUrls()
         {
             return _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id)
-                .Select(manufacturer => GetLocalizedSitemapUrl("Manufacturer", GetSeoRouteParams(manufacturer), manufacturer.UpdatedOnUtc));
+                .Select(manufacturer => GetLocalizedSitemapUrl("GenericUrl", GetSeoRouteParams(manufacturer), manufacturer.UpdatedOnUtc));
         }
 
         /// <summary>
@@ -281,7 +281,7 @@ namespace Nop.Services.Seo
         {
             return _productService.SearchProducts(storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true, orderBy: ProductSortingEnum.CreatedOn)
-                    .Select(product => GetLocalizedSitemapUrl("Product", GetSeoRouteParams(product), product.UpdatedOnUtc));
+                    .Select(product => GetLocalizedSitemapUrl("GenericUrl", GetSeoRouteParams(product), product.UpdatedOnUtc));
         }
 
         /// <summary>
@@ -291,7 +291,7 @@ namespace Nop.Services.Seo
         protected virtual IEnumerable<SitemapUrl> GetProductTagUrls()
         {
             return _productTagService.GetAllProductTags()
-                .Select(productTag => GetLocalizedSitemapUrl("ProductsByTag", GetSeoRouteParams(productTag)));
+                .Select(productTag => GetLocalizedSitemapUrl("GenericUrl", GetSeoRouteParams(productTag)));
         }
 
         /// <summary>
@@ -301,7 +301,7 @@ namespace Nop.Services.Seo
         protected virtual IEnumerable<SitemapUrl> GetTopicUrls()
         {
             return _topicService.GetAllTopics(_storeContext.CurrentStore.Id).Where(t => t.IncludeInSitemap)
-                .Select(topic => GetLocalizedSitemapUrl("Topic", GetSeoRouteParams(topic)));
+                .Select(topic => GetLocalizedSitemapUrl("GenericUrl", GetSeoRouteParams(topic)));
         }
 
         /// <summary>
@@ -312,7 +312,7 @@ namespace Nop.Services.Seo
         {
             return _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id)
                 .Where(p => p.IncludeInSitemap)
-                .Select(post => GetLocalizedSitemapUrl("BlogPost", GetSeoRouteParams(post)));
+                .Select(post => GetLocalizedSitemapUrl("GenericUrl", GetSeoRouteParams(post)));
         }
 
         /// <summary>

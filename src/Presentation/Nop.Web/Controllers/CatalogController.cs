@@ -307,7 +307,7 @@ namespace Nop.Web.Controllers
                     select new
                     {
                         label = p.Name,
-                        producturl = Url.RouteUrl("Product", new {SeName = p.SeName}),
+                        producturl = Url.RouteUrl("GenericUrl", new { SeName = p.SeName }),
                         productpictureurl = p.DefaultPictureModel.ImageUrl,
                         showlinktoresultsearch = showLinkToResultSearch
                     })

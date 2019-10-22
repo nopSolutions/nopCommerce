@@ -168,7 +168,7 @@ namespace Nop.Web.Controllers
             if (product == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("Product", new { SeName = _urlRecordService.GetSeName(product) });
+            return RedirectToRoutePermanent("GenericUrl", new { SeName = _urlRecordService.GetSeName(product) });
         }
 
         public virtual IActionResult RedirectCategory(string id, bool idIncludesSename = true)
@@ -179,7 +179,7 @@ namespace Nop.Web.Controllers
             if (category == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("Category", new { SeName = _urlRecordService.GetSeName(category) });
+            return RedirectToRoutePermanent("GenericUrl", new { SeName = _urlRecordService.GetSeName(category) });
         }
 
         public virtual IActionResult RedirectManufacturer(string id, bool idIncludesSename = true)
@@ -190,7 +190,7 @@ namespace Nop.Web.Controllers
             if (manufacturer == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("Manufacturer", new { SeName = _urlRecordService.GetSeName(manufacturer) });
+            return RedirectToRoutePermanent("GenericUrl", new { SeName = _urlRecordService.GetSeName(manufacturer) });
         }
 
         public virtual IActionResult RedirectProductTag(string id, bool idIncludesSename = true)
@@ -212,7 +212,7 @@ namespace Nop.Web.Controllers
             if (newsItem == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("NewsItem", new { newsItemId = newsItem.Id, SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
+            return RedirectToRoutePermanent("GenericUrl", new { newsItemId = newsItem.Id, SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
         }
 
         public virtual IActionResult RedirectBlogPost(string id, bool idIncludesSename = true)
@@ -223,7 +223,7 @@ namespace Nop.Web.Controllers
             if (blogPost == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("BlogPost", new { blogPostId = blogPost.Id, SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
+            return RedirectToRoutePermanent("GenericUrl", new { blogPostId = blogPost.Id, SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
         }
 
         public virtual IActionResult RedirectTopic(string id, bool idIncludesSename = true)
@@ -234,7 +234,7 @@ namespace Nop.Web.Controllers
             if (topic == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("Topic", new { SeName = _urlRecordService.GetSeName(topic) });
+            return RedirectToRoutePermanent("GenericUrl", new { SeName = _urlRecordService.GetSeName(topic) });
         }
 
         public virtual IActionResult RedirectForumGroup(string id, bool idIncludesSename = true)

@@ -631,7 +631,7 @@ namespace Nop.Web.Factories
                     {
                         GroupTitle = commonGroupTitle,
                         Name = _localizationService.GetLocalized(topic, x => x.Title),
-                        Url = urlHelper.RouteUrl("Topic", new { SeName = _urlRecordService.GetSeName(topic) })
+                        Url = urlHelper.RouteUrl("GenericUrl", new { SeName = _urlRecordService.GetSeName(topic) })
                     }));
                 }
 
@@ -646,7 +646,7 @@ namespace Nop.Web.Factories
                     {
                         GroupTitle = blogPostsGroupTitle,
                         Name = post.Title,
-                        Url = urlHelper.RouteUrl("BlogPost", new { SeName = _urlRecordService.GetSeName(post) })
+                        Url = urlHelper.RouteUrl("GenericUrl", new { SeName = _urlRecordService.GetSeName(post) })
                     }));
                 }
 
@@ -659,7 +659,7 @@ namespace Nop.Web.Factories
                     {
                         GroupTitle = newsGroupTitle,
                         Name = newsItem.Title,
-                        Url = urlHelper.RouteUrl("NewsItem", new { SeName = _urlRecordService.GetSeName(newsItem) })
+                        Url = urlHelper.RouteUrl("GenericUrl", new { SeName = _urlRecordService.GetSeName(newsItem) })
                     }));
                 }
 
@@ -672,7 +672,7 @@ namespace Nop.Web.Factories
                     {
                         GroupTitle = categoriesGroupTitle,
                         Name = _localizationService.GetLocalized(category, x => x.Name),
-                        Url = urlHelper.RouteUrl("Category", new { SeName = _urlRecordService.GetSeName(category) })
+                        Url = urlHelper.RouteUrl("GenericUrl", new { SeName = _urlRecordService.GetSeName(category) })
                     }));
                 }
 
@@ -685,7 +685,7 @@ namespace Nop.Web.Factories
                     {
                         GroupTitle = manufacturersGroupTitle,
                         Name = _localizationService.GetLocalized(manufacturer, x => x.Name),
-                        Url = urlHelper.RouteUrl("Manufacturer", new { SeName = _urlRecordService.GetSeName(manufacturer) })
+                        Url = urlHelper.RouteUrl("GenericUrl", new { SeName = _urlRecordService.GetSeName(manufacturer) })
                     }));
                 }
 
@@ -698,7 +698,7 @@ namespace Nop.Web.Factories
                     {
                         GroupTitle = productsGroupTitle,
                         Name = _localizationService.GetLocalized(product, x => x.Name),
-                        Url = urlHelper.RouteUrl("Product", new { SeName = _urlRecordService.GetSeName(product) })
+                        Url = urlHelper.RouteUrl("GenericUrl", new { SeName = _urlRecordService.GetSeName(product) })
                     }));
                 }
 
@@ -711,7 +711,7 @@ namespace Nop.Web.Factories
                     {
                         GroupTitle = productTagsGroupTitle,
                         Name = _localizationService.GetLocalized(productTag, x => x.Name),
-                        Url = urlHelper.RouteUrl("ProductsByTag", new { SeName = _urlRecordService.GetSeName(productTag) })
+                        Url = urlHelper.RouteUrl("GenericUrl", new { SeName = _urlRecordService.GetSeName(productTag) })
                     }));
                 }
 

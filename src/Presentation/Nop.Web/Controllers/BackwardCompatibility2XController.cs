@@ -58,7 +58,7 @@ namespace Nop.Web.Controllers
             if (product == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("Product", new { SeName = _urlRecordService.GetSeName(product) });
+            return RedirectToRoutePermanent("GenericUrl", new { SeName = _urlRecordService.GetSeName(product) });
         }
 
         //in versions 2.00-2.65 we had ID in category URLs
@@ -68,7 +68,7 @@ namespace Nop.Web.Controllers
             if (category == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("Category", new { SeName = _urlRecordService.GetSeName(category) });
+            return RedirectToRoutePermanent("GenericUrl", new { SeName = _urlRecordService.GetSeName(category) });
         }
 
         //in versions 2.00-2.65 we had ID in manufacturer URLs
@@ -78,7 +78,7 @@ namespace Nop.Web.Controllers
             if (manufacturer == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("Manufacturer", new { SeName = _urlRecordService.GetSeName(manufacturer) });
+            return RedirectToRoutePermanent("GenericUrl", new { SeName = _urlRecordService.GetSeName(manufacturer) });
         }
 
         //in versions 2.00-2.70 we had ID in news URLs
@@ -88,7 +88,7 @@ namespace Nop.Web.Controllers
             if (newsItem == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("NewsItem", new { SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
+            return RedirectToRoutePermanent("GenericUrl", new { SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
         }
 
         //in versions 2.00-2.70 we had ID in blog URLs
@@ -98,7 +98,7 @@ namespace Nop.Web.Controllers
             if (blogPost == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("BlogPost", new { SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
+            return RedirectToRoutePermanent("GenericUrl", new { SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
         }
 
         //in versions 2.00-3.20 we had SystemName in topic URLs
@@ -108,7 +108,7 @@ namespace Nop.Web.Controllers
             if (topic == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("Topic", new { SeName = _urlRecordService.GetSeName(topic) });
+            return RedirectToRoutePermanent("GenericUrl", new { SeName = _urlRecordService.GetSeName(topic) });
         }
 
         //in versions 3.00-3.20 we had ID in vendor URLs
@@ -118,7 +118,7 @@ namespace Nop.Web.Controllers
             if (vendor == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("Vendor", new { SeName = _urlRecordService.GetSeName(vendor) });
+            return RedirectToRoutePermanent("GenericUrl", new { SeName = _urlRecordService.GetSeName(vendor) });
         }
 
         //in versions 3.00-4.00 we had ID in product tag URLs
@@ -128,7 +128,7 @@ namespace Nop.Web.Controllers
             if (productTag == null)
                 return RedirectToRoutePermanent("Homepage");
 
-            return RedirectToRoutePermanent("ProductsByTag", new { SeName = _urlRecordService.GetSeName(productTag) });
+            return RedirectToRoutePermanent("GenericUrl", new { SeName = _urlRecordService.GetSeName(productTag) });
         }
 
         #endregion
