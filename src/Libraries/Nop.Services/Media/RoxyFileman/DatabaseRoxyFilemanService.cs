@@ -33,7 +33,6 @@ namespace Nop.Services.Media.RoxyFileman
 
         private readonly IPictureService _pictureService;
         private readonly IRepository<Picture> _pictureRepository;
-        private readonly MediaSettings _mediaSettings;
 
         #endregion
 
@@ -46,11 +45,10 @@ namespace Nop.Services.Media.RoxyFileman
             INopFileProvider fileProvider,
             IWebHelper webHelper,
             IWorkContext workContext,
-            MediaSettings mediaSettings) : base(hostingEnvironment, httpContextAccessor, fileProvider, webHelper, workContext)
+            MediaSettings mediaSettings) : base(hostingEnvironment, httpContextAccessor, fileProvider, webHelper, workContext, mediaSettings)
         {
             _pictureService = pictureService;
             _pictureRepository = pictureRepository;
-            _mediaSettings = mediaSettings;
         }
 
         #endregion
