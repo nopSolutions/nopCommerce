@@ -464,5 +464,10 @@ namespace Nop.Core.Domain.Catalog
         /// Get or set a value indicating whether use standart menu in public store or use Ajax to load menu
         /// </summary>
         public bool UseAjaxLoadMenu { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to return a permanent (301) or temporary (302) redirect from an associated product's page to its parent's page
+        /// </summary>
+        public bool UsePermanentGroupedProductRedirect { get; set; }
     }
 }
