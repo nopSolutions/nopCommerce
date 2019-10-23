@@ -85,7 +85,8 @@ namespace Nop.Services.Plugins
             using (var archive = ZipFile.OpenRead(archivePath))
             {
                 //the archive should contain only one root directory (the plugin one or the theme one)
-                var rootDirectories = archive.Entries.Where(entry => entry.FullName.Count(ch => ch == '/') == 1 && entry.FullName.EndsWith("/")).ToList();
+                var rootDirectories = archive.Entries.Select(p => p.FullName.Split('/')[0]).Distinct().ToList();
+
                 if (rootDirectories.Count != 1)
                 {
                     throw new Exception("The archive should contain only one root plugin or theme directory. " +
@@ -94,7 +95,7 @@ namespace Nop.Services.Plugins
                 }
 
                 //get directory name (remove the ending /)
-                uploadedItemDirectoryName = rootDirectories.First().FullName.TrimEnd('/');
+                uploadedItemDirectoryName = rootDirectories.First();
 
                 //try to get descriptor of the uploaded item
                 foreach (var entry in archive.Entries)
