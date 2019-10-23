@@ -415,7 +415,7 @@ namespace Nop.Services.Customers
                 return null;
 
             var query = from c in _customerRepository.Table
-                        orderby c.Id
+                        orderby c.Deleted == true
                         where c.Email == email
                         select c;
             var customer = query.FirstOrDefault();
@@ -433,7 +433,7 @@ namespace Nop.Services.Customers
                 return null;
 
             var query = from c in _customerRepository.Table
-                        orderby c.Id
+                        orderby c.Deleted == true
                         where c.SystemName == systemName
                         select c;
             var customer = query.FirstOrDefault();
@@ -451,7 +451,7 @@ namespace Nop.Services.Customers
                 return null;
 
             var query = from c in _customerRepository.Table
-                        orderby c.Id
+                        orderby c.Deleted == true
                         where c.Username == username
                         select c;
             var customer = query.FirstOrDefault();
