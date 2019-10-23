@@ -47,6 +47,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- This setting fixes the problem caused by this update in the websdk in vs2019
+    https://github.com/aspnet/websdk/commit/7e6b193ddcf1eec5c0a88a9748c626775555273e#diff-edf5a48ed0d4aa5a4289cb857bf46a04
+    Therefore, we restore the standard configuration behavior (there was no copy to the output directory) 
+    in order to avoid the "Duplicate dll" error during publication. 
+    We can also use “ExcludeConfigFilesFromBuildOutput” according to https://github.com/aspnet/AspNetCore/issues/14017 --> 
+    <Content Update="**\*.config;**\*.json" CopyToOutputDirectory="Never" CopyToPublishDirectory="PreserveNewest"/>
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Plugins\" />
   </ItemGroup>
 
