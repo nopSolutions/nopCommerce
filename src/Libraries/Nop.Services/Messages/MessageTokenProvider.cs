@@ -1275,23 +1275,7 @@ namespace Nop.Services.Messages
         /// Add news comment tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
-        /// <param name="newsItemId">News item identifier</param>
-        public virtual void AddNewsCommentTokens(IList<Token> tokens, int newsItemId)
-        {
-            var newsItem = _newsService.GetNewsById(newsItemId);
-
-            tokens.Add(new Token("NewsComment.NewsTitle", newsItem.Title));
-
-            //event notification
-            _eventPublisher.EntityTokensAdded(newsItem, tokens);
-        }
-
-        /// <summary>
-        /// Add news comment tokens
-        /// </summary>
-        /// <param name="tokens">List of already added tokens</param>
         /// <param name="newsComment">News comment</param>
-        [Obsolete("Will be removed after branch merge issue-239-ef-performance")]
         public virtual void AddNewsCommentTokens(IList<Token> tokens, NewsComment newsComment)
         {
             var newsItem = _newsService.GetNewsById(newsComment.NewsItemId);
@@ -1302,20 +1286,12 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(newsComment, tokens);
         }
 
-        public virtual void AddProductTokens(IList<Token> tokens, int productId, int languageId)
-        {
-            var product = _productService.GetProductById(productId);
-
-            AddProductTokens(tokens, product, languageId);
-        }
-
         /// <summary>
         /// Add product tokens
         /// </summary>
         /// <param name="tokens">List of already added tokens</param>
         /// <param name="product">Product</param>
         /// <param name="languageId">Language identifier</param>
-        [Obsolete("Will be removed after branch merge issue-239-ef-performance. The recommended alternative is AddProductTokens(IList<Token> tokens, int productId, int languageId)")]
         public virtual void AddProductTokens(IList<Token> tokens, Product product, int languageId)
         {
             tokens.Add(new Token("Product.ID", product.Id));

@@ -244,6 +244,7 @@ namespace Nop.Services.Common
         /// Get an attribute of an entity
         /// </summary>
         /// <typeparam name="TPropType">Property type</typeparam>
+        /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="entityId">Entity identifier</param>
         /// <param name="key">Key</param>
         /// <param name="storeId">Load a value specific for a certain store; pass 0 to load a value shared for all stores</param>
@@ -252,26 +253,10 @@ namespace Nop.Services.Common
         public virtual TPropType GetAttribute<TEntity, TPropType>(int entityId, string key, int storeId = 0, TPropType defaultValue = default(TPropType))
             where TEntity : BaseEntity
         {
+            var entity = (TEntity)Activator.CreateInstance(typeof(TEntity));
+            entity.Id = entityId;
 
-            var keyGroup = typeof(TEntity).GetUnproxiedEntityType().Name;
-
-            var props = GetAttributesForEntity(entityId, keyGroup);
-
-            //TODO: little hack here (only for unit testing). we should write expect-return rules in unit tests for such cases
-            if (props == null)
-                return defaultValue;
-
-            props = props.Where(x => x.StoreId == storeId).ToList();
-            if (!props.Any())
-                return defaultValue;
-
-            var prop = props.FirstOrDefault(ga =>
-                ga.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase)); //should be culture invariant
-
-            if (prop == null || string.IsNullOrEmpty(prop.Value))
-                return defaultValue;
-
-            return CommonHelper.To<TPropType>(prop.Value);
+            return GetAttribute(entity, key, storeId, defaultValue);
         }
 
         #endregion

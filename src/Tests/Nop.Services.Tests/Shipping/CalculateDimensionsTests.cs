@@ -60,12 +60,6 @@ namespace Nop.Services.Tests.Shipping
                 shippingSettings: _shippingSettings);
         }
 
-        [SetUp]
-        public void SetUp()
-        {
-
-        }
-
         [Test]
         public void Should_return_zero_with_all_zero_dimensions()
         {

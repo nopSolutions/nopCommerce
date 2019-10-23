@@ -15,6 +15,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Affiliates;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -42,8 +43,9 @@ namespace Nop.Services.Messages
         private readonly ILocalizationService _localizationService;
         private readonly IMessageTemplateService _messageTemplateService;
         private readonly IMessageTokenProvider _messageTokenProvider;
-        private readonly IQueuedEmailService _queuedEmailService;
         private readonly IOrderService _orderService;
+        private readonly IProductService _productService;
+        private readonly IQueuedEmailService _queuedEmailService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly ITokenizer _tokenizer;
@@ -65,6 +67,7 @@ namespace Nop.Services.Messages
             IMessageTemplateService messageTemplateService,
             IMessageTokenProvider messageTokenProvider,
             IOrderService orderService,
+            IProductService productService,
             IQueuedEmailService queuedEmailService,
             IStoreContext storeContext,
             IStoreService storeService,
@@ -83,6 +86,7 @@ namespace Nop.Services.Messages
             _messageTemplateService = messageTemplateService;
             _messageTokenProvider = messageTokenProvider;
             _orderService = orderService;
+            _productService = productService;
             _queuedEmailService = queuedEmailService;
             _storeContext = storeContext;
             _storeService = storeService;
@@ -1385,8 +1389,9 @@ namespace Nop.Services.Messages
         /// <param name="returnRequest">Return request</param>
         /// <param name="orderItem">Order item</param>
         /// <param name="order">Order</param>
+        /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, OrderItem orderItem, Order order)
+        public virtual IList<int> SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, OrderItem orderItem, Order order, int languageId)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException(nameof(returnRequest));
@@ -1398,8 +1403,7 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException(nameof(order));
 
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-            //TODO: issue-239 #9 
-            var languageId = EnsureLanguageIsActive(_localizationSettings.DefaultAdminLanguageId, store.Id);
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
 
             var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.NewReturnRequestStoreOwnerNotification, store.Id);
             if (!messageTemplates.Any())
@@ -1952,7 +1956,9 @@ namespace Nop.Services.Messages
                 return new List<int>();
 
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddProductTokens(commonTokens, combination.ProductId, languageId);
+            var product = _productService.GetProductById(combination.ProductId);
+
+            _messageTokenProvider.AddProductTokens(commonTokens, product, languageId);
             _messageTokenProvider.AddAttributeCombinationTokens(commonTokens, combination, languageId);
 
             return messageTemplates.Select(messageTemplate =>

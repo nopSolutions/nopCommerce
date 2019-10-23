@@ -3,7 +3,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
@@ -36,6 +35,7 @@ namespace Nop.Web.Controllers
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly LocalizationSettings _localizationSettings;
         private readonly OrderSettings _orderSettings;
 
         #endregion
@@ -54,6 +54,7 @@ namespace Nop.Web.Controllers
             IStoreContext storeContext,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
+            LocalizationSettings localizationSettings,
             OrderSettings orderSettings)
         {
             _customerService = customerService;
@@ -68,6 +69,7 @@ namespace Nop.Web.Controllers
             _storeContext = storeContext;
             _workContext = workContext;
             _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
             _orderSettings = orderSettings;
         }
 
@@ -160,7 +162,7 @@ namespace Nop.Web.Controllers
                     rr.CustomNumber = _customNumberFormatter.GenerateReturnRequestCustomNumber(rr);
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                     //notify store owner
-                    _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, orderItem, order);
+                    _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, orderItem, order, _localizationSettings.DefaultAdminLanguageId);
                     //notify customer
                     _workflowMessageService.SendNewReturnRequestCustomerNotification(rr, orderItem, order);
 

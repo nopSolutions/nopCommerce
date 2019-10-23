@@ -978,8 +978,6 @@ namespace Nop.Services.Customers
 
             _customerCustomerRoleMappingRepository.Insert(roleMapping);
 
-            //TODO: issue-239 #5
-
             _eventPublisher.EntityInserted(roleMapping);
         }
 
@@ -1001,8 +999,6 @@ namespace Nop.Services.Customers
             if (mapping != null)
             {
                 _customerCustomerRoleMappingRepository.Delete(mapping);
-
-                //TODO: issue-239 #5
 
                 _eventPublisher.EntityDeleted(mapping);
             }

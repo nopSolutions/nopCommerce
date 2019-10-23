@@ -7,6 +7,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Affiliates;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -49,6 +50,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             IMessageTemplateService messageTemplateService,
             IMessageTokenProvider messageTokenProvider,
             IOrderService orderService,
+            IProductService productService,
             ISettingService settingService,
             IStoreContext storeContext,
             IStoreService storeService,
@@ -68,6 +70,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 messageTemplateService,
                 messageTokenProvider,
                 orderService,
+                productService,
                 queuedEmailService,
                 storeContext,
                 storeService,

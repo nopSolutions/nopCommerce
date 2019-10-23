@@ -106,7 +106,6 @@ namespace Nop.Services.Shipping
             if (!string.IsNullOrEmpty(trackingNumber))
                 query = query.Where(s => s.TrackingNumber.Contains(trackingNumber));
 
-            //TODO: issue-239 #15
             query = from s in query
                 join o in _orderRepository.Table on s.OrderId equals o.Id
                 join pa in _addressRepository.Table on o.PickupAddressId equals pa.Id into pao

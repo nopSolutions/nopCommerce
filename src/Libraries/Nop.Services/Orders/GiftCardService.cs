@@ -219,7 +219,16 @@ namespace Nop.Services.Orders
 
             _giftCardUsageHistoryRepository.Delete(giftCardUsageHistory);
 
-            //TODO: issue-239 #10 
+            var query = _giftCardRepository.Table;
+
+            var giftCardIds = giftCardUsageHistory.Select(gcuh => gcuh.GiftCardId).ToArray();
+            var giftCards = query.Where(bp => giftCardIds.Contains(bp.Id)).ToList();
+
+            //event notification
+            foreach (var giftCard in giftCards)
+            {
+                _eventPublisher.EntityUpdated(giftCard);
+            }
         }
 
         /// <summary>
