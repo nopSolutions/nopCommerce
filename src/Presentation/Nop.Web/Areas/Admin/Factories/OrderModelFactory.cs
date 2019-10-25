@@ -1321,6 +1321,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.City,
                 searchModel.TrackingNumber,
                 searchModel.LoadNotShipped,
+                searchModel.LoadNotDelivered,
                 startDateValue,
                 endDateValue,
                 searchModel.Page - 1,
