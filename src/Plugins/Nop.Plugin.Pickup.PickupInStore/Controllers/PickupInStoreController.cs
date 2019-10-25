@@ -144,7 +144,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
                 CountryId = model.Address.CountryId,
                 StateProvinceId = model.Address.StateProvinceId,
                 ZipPostalCode = model.Address.ZipPostalCode,
-                CreatedOnUtc = DateTime.UtcNow                
+                CreatedOnUtc = DateTime.UtcNow
             };
             _addressService.InsertAddress(address);
 
@@ -182,7 +182,9 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
                 OpeningHours = pickupPoint.OpeningHours,
                 PickupFee = pickupPoint.PickupFee,
                 DisplayOrder = pickupPoint.DisplayOrder,
-                StoreId = pickupPoint.StoreId
+                StoreId = pickupPoint.StoreId,
+                Latitude = pickupPoint.Latitude,
+                Longitude = pickupPoint.Longitude
             };
 
             var address = _addressService.GetAddressById(pickupPoint.AddressId);
@@ -200,7 +202,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
                     StateProvinceEnabled = _addressSettings.StateProvinceEnabled,
                     ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled,
                     CityEnabled = _addressSettings.CityEnabled,
-                    CountyEnabled = _addressSettings.CountyEnabled                    
+                    CountyEnabled = _addressSettings.CountyEnabled
                 };
             }
 
@@ -233,6 +235,9 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
+            if (!ModelState.IsValid)
+                return Edit(model.Id);
+
             var pickupPoint = _storePickupPointService.GetStorePickupPointById(model.Id);
             if (pickupPoint == null)
                 return RedirectToAction("Configure");
@@ -256,6 +261,8 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             pickupPoint.PickupFee = model.PickupFee;
             pickupPoint.DisplayOrder = model.DisplayOrder;
             pickupPoint.StoreId = model.StoreId;
+            pickupPoint.Latitude = model.Latitude;
+            pickupPoint.Longitude = model.Longitude;
             _storePickupPointService.UpdateStorePickupPoint(pickupPoint);
 
             ViewBag.RefreshPage = true;

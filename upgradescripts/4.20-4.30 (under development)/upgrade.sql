@@ -98,6 +98,36 @@ set @resources='
   <LocaleResource Name="PrivateMessages.Sent.NoItems">
     <Value>No sent messages</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Pickup.PickupInStore.Fields.Latitude">
+    <Value>Latitude</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Pickup.PickupInStore.Fields.Latitude.Hint">
+    <Value>Specify a latitude (DD.dddddddd°).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Pickup.PickupInStore.Fields.Latitude.InvalidRange">
+    <Value>Latitude should be in range -90 to 90</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Pickup.PickupInStore.Fields.Latitude.InvalidPrecision">
+    <Value>Precision should be less then 8</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Pickup.PickupInStore.Fields.Latitude.IsNullWhenLongitudeHasValue">
+    <Value>Latitude and Longitude should be specify together</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Pickup.PickupInStore.Fields.Longitude">
+    <Value>Longitude</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Pickup.PickupInStore.Fields.Longitude.Hint">
+    <Value>Specify a longitude (DD.dddddddd°).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Pickup.PickupInStore.Fields.Longitude.InvalidRange">
+    <Value>Longitude should be in range -180 to 180</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Pickup.PickupInStore.Fields.Longitude.InvalidPrecision">
+    <Value>Precision should be less then 8</Value>
+  </LocaleResource>
+    <LocaleResource Name="Plugins.Pickup.PickupInStore.Fields.Longitude.IsNullWhenLatitudeHasValue">
+    <Value>Latitude and Longitude should be specify together</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -193,5 +223,21 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'squarepaymentsettings.us
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'squarepaymentsettings.use3ds', 'false', 0)
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[StorePickupPoint]') and NAME='Latitude')
+BEGIN
+	ALTER TABLE [StorePickupPoint] ADD
+	Latitude decimal(18, 8) NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[StorePickupPoint]') and NAME='Longitude')
+BEGIN
+	ALTER TABLE [StorePickupPoint] ADD
+	Longitude decimal(18, 8) NULL
 END
 GO
