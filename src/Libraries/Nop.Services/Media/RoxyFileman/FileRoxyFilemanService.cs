@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Nop.Core;
+using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Media.RoxyFileman
@@ -33,7 +34,8 @@ namespace Nop.Services.Media.RoxyFileman
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
             IWebHelper webHelper,
-            IWorkContext workContext) : base(hostingEnvironment, httpContextAccessor, fileProvider, webHelper, workContext)
+            IWorkContext workContext,
+            MediaSettings mediaSettings) : base(hostingEnvironment, httpContextAccessor, fileProvider, webHelper, workContext, mediaSettings)
         {
             _fileRootPath = null;
         }
@@ -77,7 +79,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>List of paths to the files</returns>
         protected virtual List<string> GetFiles(string directoryPath, string type)
         {
-            if(!IsPathAllowed(directoryPath))
+            if (!IsPathAllowed(directoryPath))
                 return new List<string>();
 
             if (type == "#")
@@ -180,9 +182,9 @@ namespace Nop.Services.Media.RoxyFileman
         {
             var absp = _fileProvider.GetAbsolutePath(path);
 
-            if(string.IsNullOrEmpty(_fileRootPath))
+            if (string.IsNullOrEmpty(_fileRootPath))
                 Configure();
-            
+
             return new DirectoryInfo(absp).FullName.StartsWith(_fileRootPath);
         }
 
@@ -198,7 +200,7 @@ namespace Nop.Services.Media.RoxyFileman
         public virtual void Configure()
         {
             CreateConfiguration();
-           
+
             var existingText = _fileProvider.ReadAllText(GetConfigurationFilePath(), Encoding.UTF8);
             var config = JsonConvert.DeserializeObject<Dictionary<string, string>>(existingText);
             _fileRootPath = _fileProvider.GetAbsolutePath(config["FILES_ROOT"]);
