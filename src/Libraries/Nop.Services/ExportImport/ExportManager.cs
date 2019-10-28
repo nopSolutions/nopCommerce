@@ -1757,7 +1757,7 @@ namespace Nop.Services.ExportImport
             //customer info and customer attributes
             var customerManager = new PropertyManager<Customer>(new[]
             {
-                new PropertyByName<Customer>("Email", p => p.Email, _customerSettings.UsernamesEnabled),
+                new PropertyByName<Customer>("Email", p => p.Email),
                 new PropertyByName<Customer>("Username", p => p.Username, !_customerSettings.UsernamesEnabled), 
                 //attributes
                 new PropertyByName<Customer>("First name", p => _genericAttributeService.GetAttribute<string>(p, NopCustomerDefaults.FirstNameAttribute)),
