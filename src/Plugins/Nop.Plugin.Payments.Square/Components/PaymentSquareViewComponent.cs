@@ -83,10 +83,11 @@ namespace Nop.Plugin.Payments.Square.Components
                     ?? _workContext.CurrentCustomer.ShippingAddress?.ZipPostalCode
             };
 
-            //whether customer already has stored cards
+            //whether customer already has stored cards in current store
+            var storeId = _storeContext.CurrentStore.Id;
             var customerId = _genericAttributeService
                 .GetAttribute<string>(_workContext.CurrentCustomer, SquarePaymentDefaults.CustomerIdAttribute) ?? string.Empty;
-            var customer = _squarePaymentManager.GetCustomer(customerId);
+            var customer = _squarePaymentManager.GetCustomer(customerId, storeId);
             if (customer?.Cards != null)
             {
                 var cardNumberMask = _localizationService.GetResource("Plugins.Payments.Square.Fields.StoredCard.Mask");
