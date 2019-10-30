@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Catalog;
+﻿using LinqToDB.Mapping;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Customers
@@ -31,6 +32,7 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets the attribute control type
         /// </summary>
+        [NotColumn]
         public AttributeControlType AttributeControlType
         {
             get => (AttributeControlType)AttributeControlTypeId;

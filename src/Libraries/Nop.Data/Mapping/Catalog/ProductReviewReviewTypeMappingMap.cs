@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
@@ -17,7 +18,7 @@ namespace Nop.Data.Mapping.Catalog
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityTypeBuilder<ProductReviewReviewTypeMapping> builder)
         {
-            builder.ToTable(NopMappingDefaults.ProductReview_ReviewTypeTable);
+            builder.ToTable(NopMappingDefaults.ProductReviewReviewTypeTable);
             builder.HasKey(prrt => prrt.Id);
 
             builder.HasOne<ProductReview>().WithMany().HasForeignKey(prrt => prrt.ProductReviewId)

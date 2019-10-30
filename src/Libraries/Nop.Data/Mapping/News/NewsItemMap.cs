@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
 

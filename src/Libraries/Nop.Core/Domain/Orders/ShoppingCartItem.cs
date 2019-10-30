@@ -1,5 +1,5 @@
 ﻿using System;
-using Nop.Core.Domain.Catalog;
+using LinqToDB.Mapping;
 
 namespace Nop.Core.Domain.Orders
 {
@@ -66,6 +66,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets the log type
         /// </summary>
+        [NotColumn]
         public ShoppingCartType ShoppingCartType
         {
             get => (ShoppingCartType)ShoppingCartTypeId;

@@ -632,7 +632,7 @@ namespace Nop.Services.Orders
 
             //filter by type
             if (shoppingCartType.HasValue)
-                items = items.Where(item => item.ShoppingCartType == shoppingCartType.Value);
+                items = items.Where(item => item.ShoppingCartTypeId == (int)shoppingCartType.Value);
 
             //filter shopping cart items by store
             if (storeId > 0 && !_shoppingCartSettings.CartsSharedBetweenStores)

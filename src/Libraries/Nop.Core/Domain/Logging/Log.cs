@@ -1,4 +1,5 @@
 ﻿using System;
+using LinqToDB.Mapping;
 
 namespace Nop.Core.Domain.Logging
 {
@@ -50,6 +51,7 @@ namespace Nop.Core.Domain.Logging
         /// <summary>
         /// Gets or sets the log level
         /// </summary>
+        [NotColumn]
         public LogLevel LogLevel
         {
             get => (LogLevel)LogLevelId;

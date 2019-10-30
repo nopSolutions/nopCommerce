@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using EasyCaching.Core;
 using EasyCaching.InMemory;
 using FluentValidation.AspNetCore;
+using LinqToDB.Data;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +15,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
@@ -27,6 +31,7 @@ using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Core.Redis;
 using Nop.Data;
+using Nop.Data.Mapping;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Common;
@@ -85,6 +90,21 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //further actions are performed only when the database is installed
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return serviceProvider;
+
+            //dynamically load all entity and query type configurations
+            var typeConfigurations = Assembly.GetExecutingAssembly().GetTypes().Where(type =>
+                (type.BaseType?.IsGenericType ?? false)
+                && (type.BaseType.GetGenericTypeDefinition() == typeof(NopEntityTypeConfiguration<>)
+                    || type.BaseType.GetGenericTypeDefinition() == typeof(NopQueryTypeConfiguration<>)));
+
+            foreach (var typeConfiguration in typeConfigurations)
+            {
+                var conf = (IMappingConfiguration)Activator.CreateInstance(typeConfiguration);
+                conf.ApplyConfiguration(new ModelBuilder(new ConventionSet()));
+            }
+
+            var connSettings = new Linq2DbSettingsProvider(DataSettingsManager.LoadSettings());
+            DataConnection.DefaultSettings = connSettings;
 
             //initialize and start schedule tasks
             TaskManager.Instance.Initialize();

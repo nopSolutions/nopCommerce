@@ -1,4 +1,5 @@
 ﻿using System;
+using LinqToDB.Mapping;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
@@ -543,6 +544,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the product type
         /// </summary>
+        [NotColumn]
         public ProductType ProductType
         {
             get => (ProductType)ProductTypeId;
@@ -552,6 +554,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the backorder mode
         /// </summary>
+        [NotColumn]
         public BackorderMode BackorderMode
         {
             get => (BackorderMode)BackorderModeId;
@@ -561,6 +564,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the download activation type
         /// </summary>
+        [NotColumn]
         public DownloadActivationType DownloadActivationType
         {
             get => (DownloadActivationType)DownloadActivationTypeId;
@@ -570,6 +574,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the gift card type
         /// </summary>
+        [NotColumn]
         public GiftCardType GiftCardType
         {
             get => (GiftCardType)GiftCardTypeId;
@@ -579,6 +584,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the low stock activity
         /// </summary>
+        [NotColumn]
         public LowStockActivity LowStockActivity
         {
             get => (LowStockActivity)LowStockActivityId;
@@ -588,6 +594,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the value indicating how to manage inventory
         /// </summary>
+        [NotColumn]
         public ManageInventoryMethod ManageInventoryMethod
         {
             get => (ManageInventoryMethod)ManageInventoryMethodId;
@@ -597,6 +604,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the cycle period for recurring products
         /// </summary>
+        [NotColumn]
         public RecurringProductCyclePeriod RecurringCyclePeriod
         {
             get => (RecurringProductCyclePeriod)RecurringCyclePeriodId;
@@ -606,6 +614,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the period for rental products
         /// </summary>
+        [NotColumn]
         public RentalPricePeriod RentalPricePeriod
         {
             get => (RentalPricePeriod)RentalPricePeriodId;

@@ -1,4 +1,5 @@
 ﻿using System;
+using LinqToDB.Mapping;
 
 namespace Nop.Core.Domain.Discounts
 {
@@ -87,6 +88,7 @@ namespace Nop.Core.Domain.Discounts
         /// <summary>
         /// Gets or sets the discount type
         /// </summary>
+        [NotColumn]
         public DiscountType DiscountType
         {
             get => (DiscountType)DiscountTypeId;
@@ -96,6 +98,7 @@ namespace Nop.Core.Domain.Discounts
         /// <summary>
         /// Gets or sets the discount limitation
         /// </summary>
+        [NotColumn]
         public DiscountLimitationType DiscountLimitation
         {
             get => (DiscountLimitationType)DiscountLimitationId;
