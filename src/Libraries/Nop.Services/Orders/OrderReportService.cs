@@ -12,6 +12,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Catalog;
 using Nop.Services.Helpers;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 
 namespace Nop.Services.Orders
 {
@@ -590,8 +591,8 @@ namespace Nop.Services.Orders
                           //we search in each warehouse
                           p.ManageInventoryMethodId == manageStockInventoryMethodId &&
                           p.UseMultipleWarehouses &&
-                          _productService.GetAllProductWarehouseInventoryRecords(orderItem.ProductId)
-                              .Any(pwi => pwi.WarehouseId == warehouseId)
+                          _productWarehouseInventoryRepository.Table.Any(pwi =>
+                              pwi.ProductId == orderItem.ProductId && pwi.WarehouseId == warehouseId)
                           ||
                           //"Use multiple warehouses" disabled
                           //we use standard "warehouse" property
