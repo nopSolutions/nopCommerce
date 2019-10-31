@@ -134,6 +134,9 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.List.LoadNotDelivered.Hint">
     <Value>Load only undelivered shipments</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Newsletter.Hint">
+    <Value>Choose stores to subscribe to newsletter.</Value>
+  </LocaleResource>
 </Language>
 '
 

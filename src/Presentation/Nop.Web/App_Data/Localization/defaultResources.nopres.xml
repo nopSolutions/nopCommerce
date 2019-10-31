@@ -10519,7 +10519,7 @@
     <Value>Newsletter</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.Newsletter.Hint">
-    <Value>Check to subscribe to newsletter.</Value>
+    <Value>Choose stores to subscribe to newsletter.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.Password">
     <Value>Password</Value>

@@ -306,15 +306,19 @@
                 <nop-label asp-for="SelectedNewsletterSubscriptionStoreIds" />
             </div>
             <div class="col-md-9">
-                @foreach (var store in Model.AvailableNewsletterSubscriptionStores)
-                {
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" name="SelectedNewsletterSubscriptionStoreIds" value="@store.Value" checked="@store.Selected" />
-                            (@(store.Text))
-                        </label>
-                    </div>
-                }
+                <div class="input-group input-group-required">
+                    <nop-select asp-for="SelectedNewsletterSubscriptionStoreIds" asp-items="Model.AvailableNewsletterSubscriptionStores" asp-multiple="true" />
+                    <div class="input-group-btn"></div>
+                </div>
+                <script>
+                $(document).ready(function() {
+                    var newsletterSubscriptionStoreIdsInput = $('#@Html.IdFor(model => model.SelectedNewsletterSubscriptionStoreIds)').data("kendoMultiSelect");
+                    newsletterSubscriptionStoreIdsInput.setOptions({
+                        newsletterSubscriptionStoreIdsInput: false,
+                        filter: "contains"
+                    });
+                });
+                </script>
             </div>
         </div>
     }
@@ -385,7 +389,7 @@
             <span asp-validation-for="Active"></span>
         </div>
     </div>
-    
+
     @if (Model.Id > 0 && Model.CustomerAssociatedExternalAuthRecordsSearchModel.AssociatedExternalAuthRecords.Count > 0)
     {
         <div class="form-group">
