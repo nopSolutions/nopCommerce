@@ -12,7 +12,7 @@ namespace Nop.Core.Domain.Discounts
         /// <summary>
         /// Gets or sets the category identifier
         /// </summary>
-        [Column]
+        [Column("Category_Id")]
         public int CategoryId { get; set; }
     }
 }

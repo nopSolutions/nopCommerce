@@ -1,4 +1,6 @@
-﻿namespace Nop.Core.Domain.Discounts
+﻿using LinqToDB.Mapping;
+
+namespace Nop.Core.Domain.Discounts
 {
     /// <summary>
     /// Represents a discount requirement
@@ -33,6 +35,7 @@
         /// <summary>
         /// Gets or sets an interaction type
         /// </summary>
+        [NotColumn]
         public RequirementGroupInteractionType? InteractionType
         {
             get => (RequirementGroupInteractionType?)InteractionTypeId;
