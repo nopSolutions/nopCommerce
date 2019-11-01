@@ -106,7 +106,43 @@ namespace Nop.Services.Shipping
             if (!string.IsNullOrEmpty(trackingNumber))
                 query = query.Where(s => s.TrackingNumber.Contains(trackingNumber));
 
-            query = from s in query
+            if (shippingCountryId > 0)
+                query = from s in query
+                    join o in _orderRepository.Table on s.OrderId equals o.Id
+                    where o.PickupInStore && _addressRepository.Table.Any(a =>
+                              a.Id == o.PickupAddressId && a.CountryId == shippingCountryId) ||
+                          !o.PickupInStore && _addressRepository.Table.Any(a =>
+                              a.Id == o.ShippingAddressId && a.CountryId == shippingCountryId)
+                    select s;
+
+            if (shippingStateId > 0)
+                query = from s in query
+                    join o in _orderRepository.Table on s.OrderId equals o.Id
+                    where o.PickupInStore && _addressRepository.Table.Any(a =>
+                              a.Id == o.PickupAddressId && a.StateProvinceId == shippingStateId) ||
+                          !o.PickupInStore && _addressRepository.Table.Any(a =>
+                              a.Id == o.ShippingAddressId && a.StateProvinceId == shippingStateId)
+                    select s;
+
+            if (!string.IsNullOrWhiteSpace(shippingCounty))
+                query = from s in query
+                    join o in _orderRepository.Table on s.OrderId equals o.Id
+                    where o.PickupInStore && _addressRepository.Table.Any(a =>
+                              a.Id == o.PickupAddressId && a.County.Contains(shippingCounty)) ||
+                          !o.PickupInStore && _addressRepository.Table.Any(a =>
+                              a.Id == o.ShippingAddressId && a.County.Contains(shippingCounty))
+                    select s;
+
+            if (!string.IsNullOrWhiteSpace(shippingCity))
+                query = from s in query
+                    join o in _orderRepository.Table on s.OrderId equals o.Id
+                    where o.PickupInStore && _addressRepository.Table.Any(a =>
+                              a.Id == o.PickupAddressId && a.City.Contains(shippingCity)) ||
+                          !o.PickupInStore && _addressRepository.Table.Any(a =>
+                              a.Id == o.ShippingAddressId && a.City.Contains(shippingCity))
+                    select s;
+
+            /*query = from s in query
                 join o in _orderRepository.Table on s.OrderId equals o.Id
                 join pa in _addressRepository.Table on o.PickupAddressId equals pa.Id into pao
                 join sa in _addressRepository.Table on o.PickupAddressId equals sa.Id into sao
@@ -118,7 +154,7 @@ namespace Nop.Services.Shipping
                     (orderId <= 0 || o.Id == orderId) &&
                     (string.IsNullOrWhiteSpace(shippingCounty) || (o.PickupInStore ? pa.County.Contains(shippingCounty) : sa.County.Contains(shippingCounty))) &&
                     (string.IsNullOrWhiteSpace(shippingCity) || (o.PickupInStore ? pa.City.Contains(shippingCity) : sa.City.Contains(shippingCity)))
-                select s;
+                select s;*/
 
             if (loadNotShipped)
                 query = query.Where(s => !s.ShippedDateUtc.HasValue);
