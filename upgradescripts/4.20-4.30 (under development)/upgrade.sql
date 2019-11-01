@@ -145,3 +145,10 @@ BEGIN
 END
 GO
 
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[RewardPointsHistory]') and NAME='OrderId')
+BEGIN
+	ALTER TABLE [RewardPointsHistory] ADD OrderId int NULL
+END
+GO
+
