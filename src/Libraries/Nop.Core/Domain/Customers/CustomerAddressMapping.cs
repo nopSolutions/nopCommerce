@@ -10,6 +10,12 @@ namespace Nop.Core.Domain.Customers
     public partial class CustomerAddressMapping : BaseEntity
     {
         /// <summary>
+        /// Gets or sets the entity identifier
+        /// </summary>
+        [NotColumn]
+        public int Id { get; set; }
+
+        /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
         [Column("Customer_Id")]

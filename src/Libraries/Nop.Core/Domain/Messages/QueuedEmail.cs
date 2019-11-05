@@ -1,4 +1,5 @@
 ﻿using System;
+using LinqToDB.Mapping;
 
 namespace Nop.Core.Domain.Messages
 {
@@ -105,6 +106,7 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the priority
         /// </summary>
+        [NotColumn]
         public QueuedEmailPriority Priority
         {
             get => (QueuedEmailPriority)PriorityId;

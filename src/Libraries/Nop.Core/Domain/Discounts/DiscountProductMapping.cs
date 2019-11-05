@@ -10,6 +10,12 @@ namespace Nop.Core.Domain.Discounts
     public partial class DiscountProductMapping : DiscountMapping
     {
         /// <summary>
+        /// Gets or sets the entity identifier
+        /// </summary>
+        [NotColumn]
+        public int Id { get; set; }
+
+        /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
         [Column("Product_Id")]

@@ -10,6 +10,12 @@ namespace Nop.Core.Domain.Shipping
     public partial class ShippingMethodCountryMapping : BaseEntity
     {
         /// <summary>
+        /// Gets or sets the entity identifier
+        /// </summary>
+        [NotColumn]
+        public int Id { get; set; }
+
+        /// <summary>
         /// Gets or sets the shipping method identifier
         /// </summary>
         [Column("ShippingMethod_Id")]

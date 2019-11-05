@@ -10,6 +10,12 @@ namespace Nop.Core.Domain.Catalog
     public partial class ProductProductTagMapping : BaseEntity
     {
         /// <summary>
+        /// Gets or sets the entity identifier
+        /// </summary>
+        [NotColumn]
+        public int Id { get; set; }
+
+        /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
         [Column("Product_Id")]
