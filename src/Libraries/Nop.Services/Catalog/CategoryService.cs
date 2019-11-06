@@ -34,7 +34,6 @@ namespace Nop.Services.Catalog
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerService _customerService;
         private readonly IDataProvider _dataProvider;
-        private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<AclRecord> _aclRepository;
@@ -58,7 +57,6 @@ namespace Nop.Services.Catalog
             ICacheManager cacheManager,
             ICustomerService customerService,
             IDataProvider dataProvider,
-            IDbContext dbContext,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             IRepository<AclRecord> aclRepository,
@@ -78,7 +76,6 @@ namespace Nop.Services.Catalog
             _cacheManager = cacheManager;
             _customerService = customerService;
             _dataProvider = dataProvider;
-            _dbContext = dbContext;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
             _aclRepository = aclRepository;
@@ -205,9 +202,10 @@ namespace Nop.Services.Catalog
                 var totalRecordsParameter = _dataProvider.GetOutputInt32Parameter("TotalRecords");
 
                 //invoke stored procedure
-                var categories = _dbContext.EntityFromSql<Category>("CategoryLoadAllPaged",
+                var categories = _categoryRepository.EntityFromSql("CategoryLoadAllPaged",
                     showHiddenParameter, nameParameter, storeIdParameter, customerRoleIdsParameter,
                     pageIndexParameter, pageSizeParameter, totalRecordsParameter).ToList();
+
                 var totalRecords = totalRecordsParameter.Value != DBNull.Value ? Convert.ToInt32(totalRecordsParameter.Value) : 0;
 
                 //paging

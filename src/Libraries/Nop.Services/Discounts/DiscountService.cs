@@ -25,7 +25,6 @@ namespace Nop.Services.Discounts
         #region Fields
 
         private readonly ICustomerService _customerService;
-        private readonly IDbContext _dbContext;
         private readonly IDiscountPluginManager _discountPluginManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
@@ -42,7 +41,6 @@ namespace Nop.Services.Discounts
         #region Ctor
 
         public DiscountService(ICustomerService customerService,
-            IDbContext dbContext,
             IDiscountPluginManager discountPluginManager,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
@@ -55,7 +53,6 @@ namespace Nop.Services.Discounts
             IStoreContext storeContext)
         {
             _customerService = customerService;
-            _dbContext = dbContext;
             _discountPluginManager = discountPluginManager;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
@@ -221,8 +218,10 @@ namespace Nop.Services.Discounts
         /// <returns>List of discounts</returns>
         public virtual IList<Discount> GetAppliedDiscounts<T>(IDiscountSupported<T> entity) where T : DiscountMapping
         {
+            var discountMapping = new DbNopCommerce().GetTable<T>();
+
             return (from d in _discountRepository.Table
-                    join ad in _dbContext.Set<T>() on d.Id equals ad.DiscountId
+                    join ad in discountMapping on d.Id equals ad.DiscountId
                     select d).ToList();
         }
 

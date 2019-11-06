@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
-using Nop.Data.Extensions;
+
 
 namespace Nop.Services.Logging
 {
@@ -18,7 +19,7 @@ namespace Nop.Services.Logging
     {
         #region Fields
 
-        private readonly IDbContext _dbContext;
+        
         private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
         private readonly IStaticCacheManager _cacheManager;
@@ -29,14 +30,12 @@ namespace Nop.Services.Logging
 
         #region Ctor
 
-        public CustomerActivityService(IDbContext dbContext,
-            IRepository<ActivityLog> activityLogRepository,
+        public CustomerActivityService(IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IStaticCacheManager cacheManager,
             IWebHelper webHelper,
             IWorkContext workContext)
         {
-            _dbContext = dbContext;
             _activityLogRepository = activityLogRepository;
             _activityLogTypeRepository = activityLogTypeRepository;
             _cacheManager = cacheManager;
@@ -210,7 +209,7 @@ namespace Nop.Services.Logging
             {
                 ActivityLogTypeId = activityLogType.Id,
                 EntityId = entity?.Id,
-                EntityName = entity?.GetUnproxiedEntityType().Name,
+                EntityName = entity?.GetType().Name,
                 CustomerId = customer.Id,
                 Comment = CommonHelper.EnsureMaximumLength(comment ?? string.Empty, 4000),
                 CreatedOnUtc = DateTime.UtcNow,
@@ -300,12 +299,14 @@ namespace Nop.Services.Logging
         public virtual void ClearAllActivities()
         {
             //do all databases support "Truncate command"?
-            var activityLogTableName = _dbContext.GetTableName<ActivityLog>();
-            _dbContext.ExecuteSqlCommand($"TRUNCATE TABLE [{activityLogTableName}]");
+            var dbNopCommerce = new DbNopCommerce();
 
-            //var activityLog = _activityLogRepository.Table.ToList();
-            //foreach (var activityLogItem in activityLog)
-            //    _activityLogRepository.Delete(activityLogItem);
+            var activityLogTableName = dbNopCommerce.GetTable<ActivityLog>();
+            dbNopCommerce.Execute($"TRUNCATE TABLE [{activityLogTableName}]");
+
+            var activityLog = _activityLogRepository.Table.ToList();
+            foreach (var activityLogItem in activityLog)
+                _activityLogRepository.Delete(activityLogItem);
         }
 
         #endregion

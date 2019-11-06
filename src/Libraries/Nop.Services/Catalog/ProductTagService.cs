@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -24,7 +25,7 @@ namespace Nop.Services.Catalog
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerService _customerService;
         private readonly IDataProvider _dataProvider;
-        private readonly IDbContext _dbContext;
+        
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
@@ -39,8 +40,6 @@ namespace Nop.Services.Catalog
         public ProductTagService(CatalogSettings catalogSettings,
             ICacheManager cacheManager,
             ICustomerService customerService,
-            IDataProvider dataProvider,
-            IDbContext dbContext,
             IEventPublisher eventPublisher,
             IRepository<ProductProductTagMapping> productProductTagMappingRepository,
             IRepository<ProductTag> productTagRepository,
@@ -51,8 +50,6 @@ namespace Nop.Services.Catalog
             _catalogSettings = catalogSettings;
             _cacheManager = cacheManager;
             _customerService = customerService;
-            _dataProvider = dataProvider;
-            _dbContext = dbContext;
             _eventPublisher = eventPublisher;
             _productProductTagMappingRepository = productProductTagMappingRepository;
             _productTagRepository = productTagRepository;
@@ -100,6 +97,8 @@ namespace Nop.Services.Catalog
             }
 
             var key = string.Format(NopCatalogDefaults.ProductTagCountCacheKey, storeId, allowedCustomerRolesIds, showHidden);
+            var dbNopCommerce = new DbNopCommerce();
+
             return _staticCacheManager.Get(key, () =>
             {
                 //prepare input parameters
@@ -107,7 +106,7 @@ namespace Nop.Services.Catalog
                 var pAllowedCustomerRoleIds = _dataProvider.GetStringParameter("AllowedCustomerRoleIds", allowedCustomerRolesIds);
 
                 //invoke stored procedure
-                return _dbContext.QueryFromSql<ProductTagWithCount>("ProductTagCountLoadAll",
+                return dbNopCommerce.QueryProc<ProductTagWithCount>("ProductTagCountLoadAll",
                         pStoreId,
                         pAllowedCustomerRoleIds)
                     .ToDictionary(item => item.ProductTagId, item => item.ProductCount);

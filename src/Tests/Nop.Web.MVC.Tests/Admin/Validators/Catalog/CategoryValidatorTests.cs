@@ -14,7 +14,7 @@ namespace Nop.Web.MVC.Tests.Admin.Validators.Catalog
         [SetUp]
         public new void Setup()
         {
-            _validator = new CategoryValidator(_localizationService, null);
+            _validator = new CategoryValidator(_localizationService);
         }
 
         [Test]

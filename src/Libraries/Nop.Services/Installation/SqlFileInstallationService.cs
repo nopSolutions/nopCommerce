@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
@@ -22,7 +23,7 @@ namespace Nop.Services.Installation
     {
         #region Fields
 
-        private readonly IDbContext _dbContext;
+        
         private readonly INopFileProvider _fileProvider;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Language> _languageRepository;
@@ -33,15 +34,13 @@ namespace Nop.Services.Installation
 
         #region Ctor
 
-        public SqlFileInstallationService(IDbContext dbContext,
-            INopFileProvider fileProvider,
+        public SqlFileInstallationService(INopFileProvider fileProvider,
             IRepository<Customer> customerRepository,
             IRepository<Language> languageRepository,
             IRepository<Store> storeRepository,
             IWebHelper webHelper)
         {
-            _dbContext = dbContext;
-            _fileProvider = fileProvider;
+           _fileProvider = fileProvider;
             _customerRepository = customerRepository;
             _languageRepository = languageRepository;
             _storeRepository = storeRepository;
@@ -123,7 +122,7 @@ namespace Nop.Services.Installation
             }
 
             foreach (var stmt in statements)
-                _dbContext.ExecuteSqlCommand(stmt);
+                new DbNopCommerce().Execute(stmt);
         }
 
         /// <summary>

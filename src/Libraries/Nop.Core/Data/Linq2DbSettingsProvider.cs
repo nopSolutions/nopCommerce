@@ -42,7 +42,7 @@ namespace Nop.Core.Data
                     new ConnectionStringConfigurationProvider
                     {
                         Name = "nopCommerce",
-                        ProviderName = _dataSettings.DataProvider.ToString(),
+                        ProviderType = _dataSettings.DataProvider,
                         ConnectionString = _dataSettings.DataConnectionString
                     };
             }

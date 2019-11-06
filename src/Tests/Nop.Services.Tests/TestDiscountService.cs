@@ -29,7 +29,6 @@ namespace Nop.Services.Tests
 
         public TestDiscountService(
             ICustomerService customerService,
-            IDbContext dbContext,
             IDiscountPluginManager discountPluginManager,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
@@ -41,7 +40,6 @@ namespace Nop.Services.Tests
             IStaticCacheManager cacheManager,
             IStoreContext storeContext) : base(
             customerService,
-            dbContext,
             discountPluginManager,
             eventPublisher,
             localizationService,

@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
-using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Web.Framework.Infrastructure
 {
@@ -18,12 +17,6 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            //add object context
-            services.AddNopObjectContext();
-
-            //add EF services
-            services.AddEntityFrameworkSqlServer();
-            services.AddEntityFrameworkProxies();
         }
 
         /// <summary>

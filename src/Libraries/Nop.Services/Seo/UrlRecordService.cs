@@ -7,7 +7,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
-using Nop.Data.Extensions;
+
 using Nop.Services.Localization;
 
 namespace Nop.Services.Seo
@@ -1415,7 +1415,7 @@ namespace Nop.Services.Seo
                 throw new ArgumentNullException(nameof(entity));
 
             var entityId = entity.Id;
-            var entityName = entity.GetUnproxiedEntityType().Name;
+            var entityName = entity.GetType().Name;
 
             var query = from ur in _urlRecordRepository.Table
                         where ur.EntityId == entityId &&
@@ -1521,7 +1521,10 @@ namespace Nop.Services.Seo
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            var entityName = entity.GetUnproxiedEntityType().Name;
+            var entityName = entity is IEntityForCaching
+                ? entity.GetType().BaseType?.Name ?? entity.GetType().Name
+                : entity.GetType().Name;
+
             return GetSeName(entity.Id, entityName, languageId ?? _workContext.WorkingLanguage.Id, returnDefaultValue, ensureTwoPublishedLanguages);
         }
 
@@ -1539,9 +1542,7 @@ namespace Nop.Services.Seo
         {
             languageId = languageId ?? _workContext.WorkingLanguage.Id;
             var result = string.Empty;
-
-            languageId = languageId ?? _workContext.WorkingLanguage.Id;
-
+            
             if (languageId > 0)
             {
                 //ensure that we have at least two published languages
@@ -1625,7 +1626,7 @@ namespace Nop.Services.Seo
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            var entityName = entity.GetUnproxiedEntityType().Name;
+            var entityName = entity.GetType().Name;
             return ValidateSeName(entity.Id, entityName, seName, name, ensureNotEmpty);
         }
 

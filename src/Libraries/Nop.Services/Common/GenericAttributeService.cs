@@ -5,7 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
-using Nop.Data.Extensions;
+
 using Nop.Services.Events;
 
 namespace Nop.Services.Common
@@ -162,7 +162,7 @@ namespace Nop.Services.Common
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
 
-            var keyGroup = entity.GetUnproxiedEntityType().Name;
+            var keyGroup = entity.GetType().Name;
 
             var props = GetAttributesForEntity(entity.Id, keyGroup)
                 .Where(x => x.StoreId == storeId)
@@ -219,7 +219,7 @@ namespace Nop.Services.Common
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            var keyGroup = entity.GetUnproxiedEntityType().Name;
+            var keyGroup = entity.GetType().Name;
 
             var props = GetAttributesForEntity(entity.Id, keyGroup);
 

@@ -14,7 +14,7 @@ namespace Nop.Web.MVC.Tests.Admin.Validators.Vendors
         [SetUp]
         public new void Setup()
         {
-            _validator = new VendorValidator(_localizationService, null);
+            _validator = new VendorValidator(_localizationService);
         }
 
         [Test]

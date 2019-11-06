@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -15,8 +13,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
@@ -31,7 +27,6 @@ using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Core.Redis;
 using Nop.Data;
-using Nop.Data.Mapping;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Common;
@@ -94,13 +89,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //dynamically load all entity and query type configurations
             var typeConfigurations = Assembly.GetExecutingAssembly().GetTypes().Where(type =>
                 (type.BaseType?.IsGenericType ?? false)
-                && (type.BaseType.GetGenericTypeDefinition() == typeof(NopEntityTypeConfiguration<>)
-                    || type.BaseType.GetGenericTypeDefinition() == typeof(NopQueryTypeConfiguration<>)));
+                && type.BaseType.GetGenericTypeDefinition() == typeof(NopEntityTypeConfiguration<>));
 
             foreach (var typeConfiguration in typeConfigurations)
             {
                 var conf = (IMappingConfiguration)Activator.CreateInstance(typeConfiguration);
-                conf.ApplyConfiguration(new ModelBuilder(new ConventionSet()));
+                conf.ApplyConfiguration();
             }
 
             var connSettings = new Linq2DbSettingsProvider(DataSettingsManager.LoadSettings());
@@ -357,18 +351,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
-        /// Register base object context
-        /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        public static void AddNopObjectContext(this IServiceCollection services)
-        {
-            services.AddDbContextPool<NopObjectContext>(optionsBuilder =>
-            {
-                optionsBuilder.UseSqlServerWithLazyLoading(services);
-            });
-        }
-
-        /// <summary>
         /// Add and configure MiniProfiler service
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
@@ -391,7 +373,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 miniProfilerOptions.ResultsAuthorize = request =>
                     !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerForAdminOnly ||
                     EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel);
-            }).AddEntityFramework();
+            });
         }
 
         /// <summary>
@@ -415,8 +397,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 })
                 .AddHtmlMinification(options =>
                 {
-                    var settings = options.MinificationSettings;
-
                     options.CssMinifierFactory = new NUglifyCssMinifierFactory();
                     options.JsMinifierFactory = new NUglifyJsMinifierFactory();
                 })

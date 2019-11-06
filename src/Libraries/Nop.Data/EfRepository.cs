@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using LinqToDB;
+using LinqToDB.Data;
 using Microsoft.EntityFrameworkCore;
 using Nop.Core;
 using Nop.Core.Data;
-using Nop.Data.Mapping;
 
 namespace Nop.Data
 {
@@ -140,6 +140,11 @@ namespace Nop.Data
             {
                 Delete(entity);
             }
+        }
+
+        public IEnumerable<TEntity> EntityFromSql(string storeProcedureName, params DataParameter[] dataParameters)
+        {
+            return _dataConnection.QueryProc<TEntity>(storeProcedureName, dataParameters);
         }
 
         #endregion

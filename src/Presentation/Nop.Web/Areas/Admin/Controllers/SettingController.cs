@@ -25,6 +25,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -64,7 +65,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IGdprService _gdprService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILocalizationService _localizationService;
-        private readonly IMaintenanceService _maintenanceService;
         private readonly INopFileProvider _fileProvider;
         private readonly INotificationService _notificationService;
         private readonly IOrderService _orderService;
@@ -93,7 +93,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             IGdprService gdprService,
             ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService,
-            IMaintenanceService maintenanceService,
             INopFileProvider fileProvider,
             INotificationService notificationService,
             IOrderService orderService,
@@ -118,7 +117,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             _gdprService = gdprService;
             _localizedEntityService = localizedEntityService;
             _localizationService = localizationService;
-            _maintenanceService = maintenanceService;
             _fileProvider = fileProvider;
             _notificationService = notificationService;
             _orderService = orderService;
@@ -801,7 +799,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     try
                     {
-                        _maintenanceService.SetTableIdent<Order>(model.OrderIdent.Value);
+                        new DbNopCommerce().SetTableIdent<Order>(model.OrderIdent.Value);
                     }
                     catch (Exception exc)
                     {
@@ -1646,7 +1644,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     commonSettings.FaviconAndAppIconsHeadCode = sr.ReadToEnd();
                 }
 
-                _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.FaviconAndAppIconsHeadCode, true, storeScope, true);
+                _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.FaviconAndAppIconsHeadCode, true, storeScope);
 
                 //delete old favicon icon if exist
                 var oldFaviconIconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.OldFaviconIconName, _storeContext.ActiveStoreScopeConfiguration));

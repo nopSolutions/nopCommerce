@@ -40,7 +40,6 @@ namespace Nop.Services.Catalog
         protected readonly ICustomerService _customerService;
         protected readonly IDataProvider _dataProvider;
         protected readonly IDateRangeService _dateRangeService;
-        protected readonly IDbContext _dbContext;
         protected readonly IEventPublisher _eventPublisher;
         protected readonly ILanguageService _languageService;
         protected readonly ILocalizationService _localizationService;
@@ -79,7 +78,6 @@ namespace Nop.Services.Catalog
             ICustomerService customerService,
             IDataProvider dataProvider,
             IDateRangeService dateRangeService,
-            IDbContext dbContext,
             IEventPublisher eventPublisher,
             ILanguageService languageService,
             ILocalizationService localizationService,
@@ -114,7 +112,6 @@ namespace Nop.Services.Catalog
             _customerService = customerService;
             _dataProvider = dataProvider;
             _dateRangeService = dateRangeService;
-            _dbContext = dbContext;
             _eventPublisher = eventPublisher;
             _languageService = languageService;
             _localizationService = localizationService;
@@ -723,7 +720,7 @@ namespace Nop.Services.Catalog
             var pTotalRecords = _dataProvider.GetOutputInt32Parameter("TotalRecords");
 
             //invoke stored procedure
-            var products = _dbContext.EntityFromSql<Product>("ProductLoadAllPaged",
+            var products = _productRepository.EntityFromSql("ProductLoadAllPaged",
                 pCategoryIds,
                 pManufacturerId,
                 pStoreId,

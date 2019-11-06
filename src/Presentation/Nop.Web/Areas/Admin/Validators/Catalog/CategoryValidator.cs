@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
 {
     public partial class CategoryValidator : BaseNopValidator<CategoryModel>
     {
-        public CategoryValidator(ILocalizationService localizationService, IDbContext dbContext)
+        public CategoryValidator(ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.Categories.Fields.Name.Required"));
             RuleFor(x => x.PageSizeOptions).Must(ValidatorUtilities.PageSizeOptionsValidator).WithMessage(localizationService.GetResource("Admin.Catalog.Categories.Fields.PageSizeOptions.ShouldHaveUniqueItems"));
@@ -24,7 +24,7 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
             RuleFor(x => x.SeName).Length(0, NopSeoDefaults.SearchEngineNameLength)
                 .WithMessage(string.Format(localizationService.GetResource("Admin.SEO.SeName.MaxLengthValidation"), NopSeoDefaults.SearchEngineNameLength));
 
-            SetDatabaseValidationRules<Category>(dbContext);
+            SetDatabaseValidationRules<Category>();
         }
     }
 }

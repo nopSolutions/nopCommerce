@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Xml;
+using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -30,7 +31,7 @@ namespace Nop.Services.Customers
         private readonly CustomerSettings _customerSettings;
         private readonly ICacheManager _cacheManager;
         private readonly IDataProvider _dataProvider;
-        private readonly IDbContext _dbContext;
+        
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IRepository<Address> _customerAddressRepository;
@@ -51,7 +52,6 @@ namespace Nop.Services.Customers
         public CustomerService(CustomerSettings customerSettings,
             ICacheManager cacheManager,
             IDataProvider dataProvider,
-            IDbContext dbContext,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             IRepository<Address> customerAddressRepository,
@@ -68,7 +68,7 @@ namespace Nop.Services.Customers
             _customerSettings = customerSettings;
             _cacheManager = cacheManager;
             _dataProvider = dataProvider;
-            _dbContext = dbContext;
+
             _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _customerAddressRepository = customerAddressRepository;
@@ -610,9 +610,7 @@ namespace Nop.Services.Customers
             var pTotalRecordsDeleted = _dataProvider.GetOutputInt32Parameter("TotalRecordsDeleted");
 
             //invoke stored procedure
-            _dbContext.ExecuteSqlCommand(
-                "EXEC [DeleteGuests] @OnlyWithoutShoppingCart, @CreatedFromUtc, @CreatedToUtc, @TotalRecordsDeleted OUTPUT",
-                false, null,
+            new DbNopCommerce().Execute("EXEC [DeleteGuests] @OnlyWithoutShoppingCart, @CreatedFromUtc, @CreatedToUtc, @TotalRecordsDeleted OUTPUT",
                 pOnlyWithoutShoppingCart,
                 pCreatedFromUtc,
                 pCreatedToUtc,

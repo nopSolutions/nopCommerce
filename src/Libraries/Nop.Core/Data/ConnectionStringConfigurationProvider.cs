@@ -20,7 +20,12 @@ namespace Nop.Core.Data
         /// <summary>
         /// Gets or sets data provider configuration name
         /// </summary>
-        public string ProviderName { get; set; }
+        public string ProviderName => ProviderType.ToString();
+
+        /// <summary>
+        /// Gets or sets data provider configuration name
+        /// </summary>
+        public DataProviderType ProviderType { get; set; }
 
         /// <summary>
         /// Is this connection configuration defined on global level (machine.config) or on application level.

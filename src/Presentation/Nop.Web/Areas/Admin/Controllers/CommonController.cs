@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
@@ -210,7 +211,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                _maintenanceService.BackupDatabase();
+                new DbNopCommerce().BackupDatabase(_maintenanceService.GetNewBackupFilePath());
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.BackupCreated"));
             }
             catch (Exception exc)
@@ -233,7 +234,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                _maintenanceService.ReIndexTables();
+                new DbNopCommerce().ReIndexTables();
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.ReIndexTables.Complete"));
             }
             catch (Exception exc)
@@ -268,7 +269,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         break;
                     case "restore-backup":
                         {
-                            _maintenanceService.RestoreDatabase(backupPath);
+                            new DbNopCommerce().RestoreDatabase(backupPath);
                             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.DatabaseRestored"));
                         }
                         break;

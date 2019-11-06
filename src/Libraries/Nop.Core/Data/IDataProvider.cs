@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+﻿using LinqToDB.Data;
 
 namespace Nop.Core.Data
 {
@@ -18,7 +18,7 @@ namespace Nop.Core.Data
         /// Get a support database parameter object (used by stored procedures)
         /// </summary>
         /// <returns>Parameter</returns>
-        DbParameter GetParameter();
+        DataParameter GetParameter();
 
         #endregion
 

@@ -42,7 +42,6 @@ namespace Nop.Services.Media
         #region Ctor
 
         public AzurePictureService(IDataProvider dataProvider,
-            IDbContext dbContext,
             IDownloadService downloadService,
             IEventPublisher eventPublisher,
             IHttpContextAccessor httpContextAccessor,
@@ -58,7 +57,6 @@ namespace Nop.Services.Media
             MediaSettings mediaSettings,
             NopConfig config)
             : base(dataProvider,
-                  dbContext,
                   downloadService,
                   eventPublisher,
                   httpContextAccessor,

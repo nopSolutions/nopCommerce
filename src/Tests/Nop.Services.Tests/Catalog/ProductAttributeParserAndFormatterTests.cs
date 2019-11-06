@@ -29,7 +29,6 @@ namespace Nop.Services.Tests.Catalog
         private Mock<IRepository<PredefinedProductAttributeValue>> _predefinedProductAttributeValueRepo;
         private IProductAttributeService _productAttributeService;
         private IProductAttributeParser _productAttributeParser;
-        private Mock<IDbContext> _context;
         private Mock<IEventPublisher> _eventPublisher;
 
         private Mock<IWorkContext> _workContext;

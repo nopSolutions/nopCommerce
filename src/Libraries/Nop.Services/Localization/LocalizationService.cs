@@ -8,14 +8,16 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Xml;
+using LinqToDB;
+using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
+using Nop.Core.Data.Extensions;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Data;
-using Nop.Data.Extensions;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
 using Nop.Services.Logging;
@@ -31,7 +33,6 @@ namespace Nop.Services.Localization
         #region Fields
 
         private readonly IDataProvider _dataProvider;
-        private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
@@ -47,7 +48,6 @@ namespace Nop.Services.Localization
         #region Ctor
 
         public LocalizationService(IDataProvider dataProvider,
-            IDbContext dbContext,
             IEventPublisher eventPublisher,
             ILanguageService languageService,
             ILocalizedEntityService localizedEntityService,
@@ -59,7 +59,6 @@ namespace Nop.Services.Localization
             LocalizationSettings localizationSettings)
         {
             _dataProvider = dataProvider;
-            _dbContext = dbContext;
             _eventPublisher = eventPublisher;
             _languageService = languageService;
             _localizedEntityService = localizedEntityService;
@@ -424,25 +423,21 @@ namespace Nop.Services.Localization
             if (xmlStreamReader.EndOfStream)
                 return;
 
-            //stored procedures are enabled and supported by the database.
-            var pLanguageId = _dataProvider.GetParameter();
-            pLanguageId.ParameterName = "LanguageId";
-            pLanguageId.Value = language.Id;
-            pLanguageId.DbType = DbType.Int32;
+            ////stored procedures are enabled and supported by the database.
+            var pLanguageId = _dataProvider.GetInt32Parameter("LanguageId", language.Id);
 
-            var pXmlPackage = _dataProvider.GetParameter();
-            pXmlPackage.ParameterName = "XmlPackage";
-            pXmlPackage.Value = new SqlXml(XmlReader.Create(xmlStreamReader));
-            pXmlPackage.DbType = DbType.Xml;
+            var pXmlPackage = new DataParameter
+            {
+                Name = "XmlPackage",
+                Value = new SqlXml(XmlReader.Create(xmlStreamReader)),
+                DataType = DataType.Xml
+            };
 
-            var pUpdateExistingResources = _dataProvider.GetParameter();
-            pUpdateExistingResources.ParameterName = "UpdateExistingResources";
-            pUpdateExistingResources.Value = updateExistingResources;
-            pUpdateExistingResources.DbType = DbType.Boolean;
-
+            var pUpdateExistingResources = _dataProvider.GetBooleanParameter("UpdateExistingResources", updateExistingResources);
+            
             //long-running query. specify timeout (600 seconds)
-            _dbContext.ExecuteSqlCommand("EXEC [LanguagePackImport] @LanguageId, @XmlPackage, @UpdateExistingResources",
-                false, 600, pLanguageId, pXmlPackage, pUpdateExistingResources);
+            new DbNopCommerce().Execute("EXEC [LanguagePackImport] @LanguageId, @XmlPackage, @UpdateExistingResources",
+                pLanguageId, pXmlPackage, pUpdateExistingResources);
 
             //clear cache
             _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
@@ -475,7 +470,7 @@ namespace Nop.Services.Localization
             var result = default(TPropType);
             var resultStr = string.Empty;
 
-            var localeKeyGroup = entity.GetUnproxiedEntityType().Name;
+            var localeKeyGroup = entity.GetType().Name;
             var localeKey = propInfo.Name;
 
             if (!languageId.HasValue)

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using LinqToDB.Data;
 
 namespace Nop.Core.Data
 {
@@ -53,6 +54,8 @@ namespace Nop.Core.Data
         /// </summary>
         /// <param name="entities">Entities</param>
         void Delete(IEnumerable<TEntity> entities);
+
+        IEnumerable<TEntity> EntityFromSql(string storeProcedureName, params DataParameter[] dataParameters);
 
         #endregion
 

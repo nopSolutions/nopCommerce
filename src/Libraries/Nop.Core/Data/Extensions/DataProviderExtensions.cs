@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
-using System.Data.Common;
+using LinqToDB;
+using LinqToDB.Data;
 
 namespace Nop.Core.Data.Extensions
 {
@@ -19,12 +20,14 @@ namespace Nop.Core.Data.Extensions
         /// <param name="parameterName">Parameter name</param>
         /// <param name="parameterValue">Parameter value</param>
         /// <returns>Parameter</returns>
-        private static DbParameter GetParameter(this IDataProvider dataProvider, DbType dbType, string parameterName, object parameterValue)
+        private static DataParameter GetParameter(this IDataProvider dataProvider, DataType dbType, string parameterName, object parameterValue)
         {
-            var parameter = dataProvider.GetParameter();
-            parameter.ParameterName = parameterName;
-            parameter.Value = parameterValue;
-            parameter.DbType = dbType;
+            var parameter = new DataParameter
+            {
+                Name = parameterName,
+                Value = parameterValue,
+                DataType = dbType
+            };
 
             return parameter;
         }
@@ -36,12 +39,14 @@ namespace Nop.Core.Data.Extensions
         /// <param name="dbType">Data type</param>
         /// <param name="parameterName">Parameter name</param>
         /// <returns>Parameter</returns>
-        private static DbParameter GetOutputParameter(this IDataProvider dataProvider, DbType dbType, string parameterName)
+        private static DataParameter GetOutputParameter(this IDataProvider dataProvider, DataType dbType, string parameterName)
         {
-            var parameter = dataProvider.GetParameter();
-            parameter.ParameterName = parameterName;
-            parameter.DbType = dbType;
-            parameter.Direction = ParameterDirection.Output;
+            var parameter = new DataParameter
+            {
+                Name = parameterName,
+                DataType = dbType,
+                Direction = ParameterDirection.Output
+            };
 
             return parameter;
         }
@@ -57,9 +62,9 @@ namespace Nop.Core.Data.Extensions
         /// <param name="parameterName">Parameter name</param>
         /// <param name="parameterValue">Parameter value</param>
         /// <returns>Parameter</returns>
-        public static DbParameter GetStringParameter(this IDataProvider dataProvider, string parameterName, string parameterValue)
+        public static DataParameter GetStringParameter(this IDataProvider dataProvider, string parameterName, string parameterValue)
         {
-            return dataProvider.GetParameter(DbType.String, parameterName, (object)parameterValue ?? DBNull.Value);
+            return dataProvider.GetParameter(DataType.NVarChar, parameterName, (object)parameterValue ?? DBNull.Value);
         }
 
         /// <summary>
@@ -68,9 +73,9 @@ namespace Nop.Core.Data.Extensions
         /// <param name="dataProvider">Data provider</param>
         /// <param name="parameterName">Parameter name</param>
         /// <returns>Parameter</returns>
-        public static DbParameter GetOutputStringParameter(this IDataProvider dataProvider, string parameterName)
+        public static DataParameter GetOutputStringParameter(this IDataProvider dataProvider, string parameterName)
         {
-            return dataProvider.GetOutputParameter(DbType.String, parameterName);
+            return dataProvider.GetOutputParameter(DataType.NVarChar, parameterName);
         }
 
         /// <summary>
@@ -80,9 +85,9 @@ namespace Nop.Core.Data.Extensions
         /// <param name="parameterName">Parameter name</param>
         /// <param name="parameterValue">Parameter value</param>
         /// <returns>Parameter</returns>
-        public static DbParameter GetInt32Parameter(this IDataProvider dataProvider, string parameterName, int? parameterValue)
+        public static DataParameter GetInt32Parameter(this IDataProvider dataProvider, string parameterName, int? parameterValue)
         {
-            return dataProvider.GetParameter(DbType.Int32, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
+            return dataProvider.GetParameter(DataType.Int32, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
         }
         
         /// <summary>
@@ -91,9 +96,9 @@ namespace Nop.Core.Data.Extensions
         /// <param name="dataProvider">Data provider</param>
         /// <param name="parameterName">Parameter name</param>
         /// <returns>Parameter</returns>
-        public static DbParameter GetOutputInt32Parameter(this IDataProvider dataProvider, string parameterName)
+        public static DataParameter GetOutputInt32Parameter(this IDataProvider dataProvider, string parameterName)
         {
-            return dataProvider.GetOutputParameter(DbType.Int32, parameterName);
+            return dataProvider.GetOutputParameter(DataType.Int32, parameterName);
         }
 
         /// <summary>
@@ -103,9 +108,9 @@ namespace Nop.Core.Data.Extensions
         /// <param name="parameterName">Parameter name</param>
         /// <param name="parameterValue">Parameter value</param>
         /// <returns>Parameter</returns>
-        public static DbParameter GetBooleanParameter(this IDataProvider dataProvider, string parameterName, bool? parameterValue)
+        public static DataParameter GetBooleanParameter(this IDataProvider dataProvider, string parameterName, bool? parameterValue)
         {
-            return dataProvider.GetParameter(DbType.Boolean, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
+            return dataProvider.GetParameter(DataType.Boolean, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
         }
         
         /// <summary>
@@ -115,9 +120,9 @@ namespace Nop.Core.Data.Extensions
         /// <param name="parameterName">Parameter name</param>
         /// <param name="parameterValue">Parameter value</param>
         /// <returns>Parameter</returns>
-        public static DbParameter GetDecimalParameter(this IDataProvider dataProvider, string parameterName, decimal? parameterValue)
+        public static DataParameter GetDecimalParameter(this IDataProvider dataProvider, string parameterName, decimal? parameterValue)
         {
-            return dataProvider.GetParameter(DbType.Decimal, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
+            return dataProvider.GetParameter(DataType.Decimal, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
         }
 
         /// <summary>
@@ -127,9 +132,9 @@ namespace Nop.Core.Data.Extensions
         /// <param name="parameterName">Parameter name</param>
         /// <param name="parameterValue">Parameter value</param>
         /// <returns>Parameter</returns>
-        public static DbParameter GetDateTimeParameter(this IDataProvider dataProvider, string parameterName, DateTime? parameterValue)
+        public static DataParameter GetDateTimeParameter(this IDataProvider dataProvider, string parameterName, DateTime? parameterValue)
         {
-            return dataProvider.GetParameter(DbType.DateTime, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
+            return dataProvider.GetParameter(DataType.DateTime, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
         }
 
         #endregion

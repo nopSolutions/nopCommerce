@@ -34,7 +34,6 @@ using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Data.Extensions;
 using Nop.Services.Blogs;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -115,14 +114,11 @@ namespace Nop.Services.Installation
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IWebHelper _webHelper;
 
-        private readonly IDbContext _dbContext;
-
         #endregion
 
         #region Ctor
 
-        public CodeFirstInstallationService(IDbContext dbContext,
-            IAddressService addressService,
+        public CodeFirstInstallationService(IAddressService addressService,
             IGenericAttributeService genericAttributeService,
             INopFileProvider fileProvider,
             IRepository<ActivityLog> activityLogRepository,
@@ -182,7 +178,6 @@ namespace Nop.Services.Installation
             IRepository<Warehouse> warehouseRepository,
             IWebHelper webHelper)
         {
-            _dbContext = dbContext;
             _addressService = addressService;
             _genericAttributeService = genericAttributeService;
             _fileProvider = fileProvider;
@@ -250,24 +245,17 @@ namespace Nop.Services.Installation
 
         protected virtual T InsertInstallationData<T>(T entity) where T : BaseEntity
         {
-            _dbContext.Set<T>().Add(entity);
-            _dbContext.SaveChanges();
-
+            
             return entity;
         }
 
         protected virtual void InsertInstallationData<T>(params T[] entities) where T : BaseEntity
         {
-            _dbContext.Set<T>().AddRange(entities);
-            _dbContext.SaveChanges();
         }
 
         protected virtual SpecificationAttributeOption GetSpecificationAttributeOption(string specAttributeName, string specAttributeOptionName)
         {
-            return (from sao in _dbContext.Set<SpecificationAttributeOption>()
-                    join sa in _dbContext.Set<SpecificationAttribute>() on sao.SpecificationAttributeId equals sa.Id
-                    where sao.Name == specAttributeOptionName && sa.Name == specAttributeName
-                    select sao).Single();
+            return null;
         }
 
         /// <summary>
@@ -337,7 +325,7 @@ namespace Nop.Services.Installation
                             select ur;
                 var urlRecord = query.FirstOrDefault();
 
-                var entityName = entity.GetUnproxiedEntityType().Name;
+                var entityName = entity.GetType().Name;
                 var reserved = urlRecord != null && !(urlRecord.EntityId == entity.Id && urlRecord.EntityName.Equals(entityName, StringComparison.InvariantCultureIgnoreCase));
                 if (!reserved)
                     break;
@@ -10987,7 +10975,7 @@ namespace Nop.Services.Installation
                 });
 
                 product.ApprovedRatingSum = rating;
-                product.ApprovedTotalReviews = _dbContext.Set<ProductReview>().Count(r => r.ProductId == product.Id);
+                //product.ApprovedTotalReviews = _dbContext.Set<ProductReview>().Count(r => r.ProductId == product.Id);
             }
 
             _productRepository.Update(allProducts);

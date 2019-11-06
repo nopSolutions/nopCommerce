@@ -16,11 +16,10 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <typeparam name="TContext">DB Context type</typeparam>
         /// <param name="builder">Builder</param>
         /// <param name="contextName">Context name</param>
-        public static void RegisterPluginDataContext<TContext>(this ContainerBuilder builder, string contextName) where TContext : DbContext, IDbContext
+        public static void RegisterPluginDataContext<TContext>(this ContainerBuilder builder, string contextName) where TContext : DbContext
         {
             //register named context
-            builder.Register(context => (IDbContext)Activator.CreateInstance(typeof(TContext), new[] { context.Resolve<DbContextOptions<TContext>>() }))
-                .Named<IDbContext>(contextName).InstancePerLifetimeScope();
+            //TODO: 239 try to implement or delete
         }
     }
 }

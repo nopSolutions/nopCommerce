@@ -13,14 +13,13 @@ namespace Nop.Services.Tests
 {
     public class TestLocalizationService : LocalizationService
     {
-        public TestLocalizationService(IDataProvider dataProvider, IDbContext dbContext, IEventPublisher eventPublisher, ILanguageService languageService, ILocalizedEntityService localizedEntityService, ILogger logger, IRepository<LocaleStringResource> lsrRepository, ISettingService settingService, IStaticCacheManager cacheManager, IWorkContext workContext, LocalizationSettings localizationSettings) : base(dataProvider, dbContext, eventPublisher, languageService, localizedEntityService, logger, lsrRepository, settingService, cacheManager, workContext, localizationSettings)
+        public TestLocalizationService(IDataProvider dataProvider, IEventPublisher eventPublisher, ILanguageService languageService, ILocalizedEntityService localizedEntityService, ILogger logger, IRepository<LocaleStringResource> lsrRepository, ISettingService settingService, IStaticCacheManager cacheManager, IWorkContext workContext, LocalizationSettings localizationSettings) : base(dataProvider, eventPublisher, languageService, localizedEntityService, logger, lsrRepository, settingService, cacheManager, workContext, localizationSettings)
         {
         }
 
         public static TestLocalizationService Init()
         {
             return new TestLocalizationService(new  Mock<IDataProvider>().Object,
-                new  Mock<IDbContext>().Object,
                 new  Mock<IEventPublisher>().Object,
                 new  Mock<ILanguageService>().Object,
                 new  Mock<ILocalizedEntityService>().Object,

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using LinqToDB.Data;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Data;
@@ -35,7 +36,6 @@ namespace Nop.Services.Media
         #region Fields
 
         private readonly IDataProvider _dataProvider;
-        private readonly IDbContext _dbContext;
         private readonly IDownloadService _downloadService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -54,7 +54,6 @@ namespace Nop.Services.Media
         #region Ctor
 
         public PictureService(IDataProvider dataProvider,
-            IDbContext dbContext,
             IDownloadService downloadService,
             IEventPublisher eventPublisher,
             IHttpContextAccessor httpContextAccessor,
@@ -69,7 +68,6 @@ namespace Nop.Services.Media
             MediaSettings mediaSettings)
         {
             _dataProvider = dataProvider;
-            _dbContext = dbContext;
             _downloadService = downloadService;
             _eventPublisher = eventPublisher;
             _httpContextAccessor = httpContextAccessor;
@@ -1016,12 +1014,14 @@ namespace Nop.Services.Media
         public IDictionary<int, string> GetPicturesHash(int[] picturesIds)
         {
             var supportedLengthOfBinaryHash = _dataProvider.SupportedLengthOfBinaryHash;
+
             if (supportedLengthOfBinaryHash == 0 || !picturesIds.Any())
                 return new Dictionary<int, string>();
 
             const string strCommand = "SELECT [PictureId], HASHBYTES('sha1', substring([BinaryData], 0, {0})) as [Hash] FROM [PictureBinary] where [PictureId] in ({1})";
-            return _dbContext
-                .QueryFromSql<PictureHashItem>(string.Format(strCommand, supportedLengthOfBinaryHash, picturesIds.Select(p => p.ToString()).Aggregate((all, current) => all + ", " + current))).Distinct()
+            
+            return new DbNopCommerce()
+                .Query<PictureHashItem>(string.Format(strCommand, supportedLengthOfBinaryHash, picturesIds.Select(p => p.ToString()).Aggregate((all, current) => all + ", " + current))).Distinct()
                 .ToDictionary(p => p.PictureId, p => BitConverter.ToString(p.Hash).Replace("-", string.Empty));
         }
 
@@ -1126,11 +1126,6 @@ namespace Nop.Services.Media
 
                         //save all at once
                         _pictureRepository.Update(pictures);
-                        //detach them in order to release memory
-                        foreach (var picture in pictures)
-                        {
-                            _dbContext.Detach(picture);
-                        }
                     }
                 }
                 catch

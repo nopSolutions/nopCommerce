@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
-using Nop.Data.Extensions;
+
 
 namespace Nop.Services.Logging
 {
@@ -19,7 +20,7 @@ namespace Nop.Services.Logging
         #region Fields
 
         private readonly CommonSettings _commonSettings;
-        private readonly IDbContext _dbContext;
+        
         private readonly IRepository<Log> _logRepository;
         private readonly IWebHelper _webHelper;
 
@@ -28,12 +29,10 @@ namespace Nop.Services.Logging
         #region Ctor
 
         public DefaultLogger(CommonSettings commonSettings,
-            IDbContext dbContext,
             IRepository<Log> logRepository,
             IWebHelper webHelper)
         {
             _commonSettings = commonSettings;
-            _dbContext = dbContext;
             _logRepository = logRepository;
             _webHelper = webHelper;
         }
@@ -110,12 +109,14 @@ namespace Nop.Services.Logging
         public virtual void ClearLog()
         {
             //do all databases support "Truncate command"?
-            var logTableName = _dbContext.GetTableName<Log>();
-            _dbContext.ExecuteSqlCommand($"TRUNCATE TABLE [{logTableName}]");
+            var dbNopCommerce = new DbNopCommerce();
 
-            //var log = _logRepository.Table.ToList();
-            //foreach (var logItem in log)
-            //    _logRepository.Delete(logItem);
+            var logTableName = dbNopCommerce.GetTable<Log>();
+            dbNopCommerce.Execute($"TRUNCATE TABLE [{logTableName}]");
+
+            var log = _logRepository.Table.ToList();
+            foreach (var logItem in log)
+                _logRepository.Delete(logItem);
         }
 
         /// <summary>

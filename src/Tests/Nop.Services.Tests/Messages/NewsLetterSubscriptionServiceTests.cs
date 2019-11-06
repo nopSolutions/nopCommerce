@@ -19,7 +19,6 @@ namespace Nop.Services.Tests.Messages
         private Mock<IRepository<Customer>> _customerRepository;
         private Mock<IRepository<CustomerCustomerRoleMapping>> _customerCustomerRoleMappingRepository;
         private Mock<ICustomerService> _customerService;
-        private Mock<IDbContext> _dbContext;
 
         [SetUp]
         public new void SetUp()
@@ -29,7 +28,6 @@ namespace Nop.Services.Tests.Messages
             _customerRepository = new Mock<IRepository<Customer>>();
             _customerCustomerRoleMappingRepository = new Mock<IRepository<CustomerCustomerRoleMapping>>();
             _customerService = new Mock<ICustomerService>();
-            _dbContext = new Mock<IDbContext>();
         }
 
         /// <summary>
@@ -38,7 +36,7 @@ namespace Nop.Services.Tests.Messages
         [Test]
         public void VerifyActiveInsertTriggersSubscribeEvent()
         {
-            var service = new NewsLetterSubscriptionService(_customerService.Object, _dbContext.Object, _eventPublisher.Object,
+            var service = new NewsLetterSubscriptionService(_customerService.Object, _eventPublisher.Object,
                 _customerRepository.Object, _customerCustomerRoleMappingRepository.Object, _newsLetterSubscriptionRepository.Object);
 
             var subscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };
@@ -53,7 +51,7 @@ namespace Nop.Services.Tests.Messages
         [Test]
         public void VerifyDeleteTriggersUnsubscribeEvent()
         {
-            var service = new NewsLetterSubscriptionService(_customerService.Object, _dbContext.Object, _eventPublisher.Object,
+            var service = new NewsLetterSubscriptionService(_customerService.Object, _eventPublisher.Object,
                 _customerRepository.Object, _customerCustomerRoleMappingRepository.Object, _newsLetterSubscriptionRepository.Object);
 
             var subscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };
@@ -68,7 +66,7 @@ namespace Nop.Services.Tests.Messages
         [Test]
         public void VerifyInsertEventIsFired()
         {
-            var service = new NewsLetterSubscriptionService(_customerService.Object, _dbContext.Object, _eventPublisher.Object,
+            var service = new NewsLetterSubscriptionService(_customerService.Object, _eventPublisher.Object,
                 _customerRepository.Object, _customerCustomerRoleMappingRepository.Object, _newsLetterSubscriptionRepository.Object);
 
             var subscription = new NewsLetterSubscription {Email = "test@test.com"};
