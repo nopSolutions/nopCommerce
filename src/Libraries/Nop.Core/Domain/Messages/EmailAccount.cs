@@ -1,6 +1,4 @@
-﻿using LinqToDB.Mapping;
-
-namespace Nop.Core.Domain.Messages
+﻿namespace Nop.Core.Domain.Messages
 {
     /// <summary>
     /// Represents an email account
@@ -50,7 +48,6 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets a friendly email account name
         /// </summary>
-        [NotColumn]
         public string FriendlyName
         {
             get

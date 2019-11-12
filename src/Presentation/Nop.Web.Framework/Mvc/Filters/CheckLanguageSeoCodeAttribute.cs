@@ -4,8 +4,8 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
+using Nop.Data;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Localization;
 

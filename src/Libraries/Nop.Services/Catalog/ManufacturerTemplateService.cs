@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Data;
 using Nop.Services.Events;
 
 namespace Nop.Services.Catalog

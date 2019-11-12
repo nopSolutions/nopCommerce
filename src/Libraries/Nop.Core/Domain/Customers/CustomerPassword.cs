@@ -1,5 +1,4 @@
 ﻿using System;
-using LinqToDB.Mapping;
 
 namespace Nop.Core.Domain.Customers
 {
@@ -41,7 +40,6 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the password format
         /// </summary>
-        [NotColumn]
         public PasswordFormat PasswordFormat
         {
             get => (PasswordFormat)PasswordFormatId;

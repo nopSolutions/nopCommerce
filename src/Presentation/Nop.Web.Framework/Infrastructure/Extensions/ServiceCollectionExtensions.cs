@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using EasyCaching.Core;
 using EasyCaching.InMemory;
 using FluentValidation.AspNetCore;
@@ -19,7 +18,6 @@ using Newtonsoft.Json.Serialization;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
-using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Security;
@@ -27,6 +25,7 @@ using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Core.Redis;
 using Nop.Data;
+using Nop.Data.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Common;
@@ -86,20 +85,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return serviceProvider;
 
-            //dynamically load all entity and query type configurations
-            var typeConfigurations = Assembly.GetExecutingAssembly().GetTypes().Where(type =>
-                (type.BaseType?.IsGenericType ?? false)
-                && type.BaseType.GetGenericTypeDefinition() == typeof(NopEntityTypeConfiguration<>));
-
-            foreach (var typeConfiguration in typeConfigurations)
-            {
-                var conf = (IMappingConfiguration)Activator.CreateInstance(typeConfiguration);
-                conf.ApplyConfiguration();
-            }
-
             var connSettings = new Linq2DbSettingsProvider(DataSettingsManager.LoadSettings());
             DataConnection.DefaultSettings = connSettings;
-
+            
             //initialize and start schedule tasks
             TaskManager.Instance.Initialize();
             TaskManager.Instance.Start();

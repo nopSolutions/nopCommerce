@@ -6,8 +6,7 @@ using System.Xml;
 using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Data;
-using Nop.Core.Data.Extensions;
+
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -15,6 +14,8 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -610,7 +611,7 @@ namespace Nop.Services.Customers
             var pTotalRecordsDeleted = _dataProvider.GetOutputInt32Parameter("TotalRecordsDeleted");
 
             //invoke stored procedure
-            new DbNopCommerce().Execute("EXEC [DeleteGuests] @OnlyWithoutShoppingCart, @CreatedFromUtc, @CreatedToUtc, @TotalRecordsDeleted OUTPUT",
+            new NopDataConnection().Execute("EXEC [DeleteGuests] @OnlyWithoutShoppingCart, @CreatedFromUtc, @CreatedToUtc, @TotalRecordsDeleted OUTPUT",
                 pOnlyWithoutShoppingCart,
                 pCreatedFromUtc,
                 pCreatedToUtc,

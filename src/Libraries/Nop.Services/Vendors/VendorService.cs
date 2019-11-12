@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Html;
+using Nop.Data;
+using Nop.Data.Data;
 using Nop.Services.Events;
 
 namespace Nop.Services.Vendors

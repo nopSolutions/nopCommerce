@@ -1,4 +1,4 @@
-﻿using LinqToDB.Mapping;
+﻿
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Catalog
@@ -86,7 +86,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the attribute value type
         /// </summary>
-        [NotColumn]
+        
         public AttributeValueType AttributeValueType
         {
             get => (AttributeValueType)AttributeValueTypeId;

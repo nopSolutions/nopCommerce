@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Stores;
+using Nop.Data;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Stores;

@@ -1,5 +1,4 @@
 ﻿using System;
-using LinqToDB.Mapping;
 
 namespace Nop.Core.Domain.Customers
 {
@@ -126,13 +125,11 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the billing address identifier
         /// </summary>
-        [Column("BillingAddress_Id")]
         public int? BillingAddressId { get; set; }
 
         /// <summary>
         /// Gets or sets the shipping address identifier
         /// </summary>
-        [Column("ShippingAddress_Id")]
         public int? ShippingAddressId { get; set; }
     }
 }

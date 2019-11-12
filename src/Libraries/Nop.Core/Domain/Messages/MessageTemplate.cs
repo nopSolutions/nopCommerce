@@ -1,4 +1,4 @@
-﻿using LinqToDB.Mapping;
+﻿
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Stores;
 
@@ -62,7 +62,7 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the period of message delay
         /// </summary>
-        [NotColumn]
+        
         public MessageDelayPeriod DelayPeriod
         {
             get => (MessageDelayPeriod)DelayPeriodId;

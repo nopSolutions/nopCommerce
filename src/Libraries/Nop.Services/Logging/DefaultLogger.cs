@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using LinqToDB.Data;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
-
+using Nop.Data.Data;
 
 namespace Nop.Services.Logging
 {
@@ -109,7 +108,7 @@ namespace Nop.Services.Logging
         public virtual void ClearLog()
         {
             //do all databases support "Truncate command"?
-            var dbNopCommerce = new DbNopCommerce();
+            var dbNopCommerce = new NopDataConnection();
 
             var logTableName = dbNopCommerce.GetTable<Log>();
             dbNopCommerce.Execute($"TRUNCATE TABLE [{logTableName}]");

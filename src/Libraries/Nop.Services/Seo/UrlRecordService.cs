@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
-
+using Nop.Data;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Seo
@@ -85,7 +84,7 @@ namespace Nop.Services.Seo
             {
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
-                var query = from ur in _urlRecordRepository.TableNoTracking
+                var query = from ur in _urlRecordRepository.Table
                             select ur;
                 var urlRecords = query.ToList();
                 var list = new List<UrlRecordForCaching>();

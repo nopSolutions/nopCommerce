@@ -1,4 +1,6 @@
-﻿namespace Nop.Data
+﻿using LinqToDB.Mapping;
+
+namespace Nop.Data
 {
     /// <summary>
     /// Represents database context model mapping configuration
@@ -8,6 +10,7 @@
         /// <summary>
         /// Apply this mapping configuration
         /// </summary>
-        void ApplyConfiguration();
+        /// <param name="modelBuilder">The builder being used to construct the model for the database context</param>
+        void ApplyConfiguration(FluentMappingBuilder modelBuilder);
     }
 }

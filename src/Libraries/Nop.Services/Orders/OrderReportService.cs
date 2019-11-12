@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
-using Nop.Services.Catalog;
+using Nop.Data;
 using Nop.Services.Helpers;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 
 namespace Nop.Services.Orders
 {
@@ -25,7 +23,6 @@ namespace Nop.Services.Orders
 
         private readonly CatalogSettings _catalogSettings;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IProductService _productService;
         private readonly IRepository<Address> _addressRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderItem> _orderItemRepository;
@@ -42,7 +39,6 @@ namespace Nop.Services.Orders
 
         public OrderReportService(CatalogSettings catalogSettings,
             IDateTimeHelper dateTimeHelper,
-            IProductService productService,
             IRepository<Address> addressRepository,
             IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
@@ -55,7 +51,6 @@ namespace Nop.Services.Orders
         {
             _catalogSettings = catalogSettings;
             _dateTimeHelper = dateTimeHelper;
-            _productService = productService;
             _addressRepository = addressRepository;
             _orderRepository = orderRepository;
             _orderItemRepository = orderItemRepository;

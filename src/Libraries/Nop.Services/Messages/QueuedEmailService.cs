@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using LinqToDB.Data;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
-
+using Nop.Data.Data;
 using Nop.Services.Events;
 
 namespace Nop.Services.Messages
@@ -195,7 +194,7 @@ namespace Nop.Services.Messages
         public virtual void DeleteAllEmails()
         {
             //do all databases support "Truncate command"?
-            var dbNopCommerce = new DbNopCommerce();
+            var dbNopCommerce = new NopDataConnection();
 
             var queuedEmailTableName = dbNopCommerce.GetTable<QueuedEmail>();
             dbNopCommerce.Execute($"TRUNCATE TABLE [{queuedEmailTableName}]");

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
@@ -13,11 +12,11 @@ using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
-using Nop.Core.Data;
-using Nop.Core.Data.Extensions;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Data;
+using Nop.Data.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
 using Nop.Services.Logging;
@@ -269,7 +268,7 @@ namespace Nop.Services.Localization
                 {
                     //we use no tracking here for performance optimization
                     //anyway records are loaded only for read-only operations
-                    var query = from l in _lsrRepository.TableNoTracking
+                    var query = from l in _lsrRepository.Table
                                 orderby l.ResourceName
                                 where l.LanguageId == languageId
                                 select l;
@@ -291,7 +290,7 @@ namespace Nop.Services.Localization
             {
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
-                var query = from l in _lsrRepository.TableNoTracking
+                var query = from l in _lsrRepository.Table
                             orderby l.ResourceName
                             where l.LanguageId == languageId
                             select l;
@@ -436,7 +435,7 @@ namespace Nop.Services.Localization
             var pUpdateExistingResources = _dataProvider.GetBooleanParameter("UpdateExistingResources", updateExistingResources);
             
             //long-running query. specify timeout (600 seconds)
-            new DbNopCommerce().Execute("EXEC [LanguagePackImport] @LanguageId, @XmlPackage, @UpdateExistingResources",
+            new NopDataConnection().Execute("EXEC [LanguagePackImport] @LanguageId, @XmlPackage, @UpdateExistingResources",
                 pLanguageId, pXmlPackage, pUpdateExistingResources);
 
             //clear cache

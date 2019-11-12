@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Common;
+using Nop.Data;
 using Nop.Services.Events;
 
 namespace Nop.Services.Common

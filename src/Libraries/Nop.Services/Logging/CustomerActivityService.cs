@@ -4,10 +4,10 @@ using System.Linq;
 using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
+using Nop.Data.Data;
 
 
 namespace Nop.Services.Logging
@@ -299,7 +299,7 @@ namespace Nop.Services.Logging
         public virtual void ClearAllActivities()
         {
             //do all databases support "Truncate command"?
-            var dbNopCommerce = new DbNopCommerce();
+            var dbNopCommerce = new NopDataConnection();
 
             var activityLogTableName = dbNopCommerce.GetTable<ActivityLog>();
             dbNopCommerce.Execute($"TRUNCATE TABLE [{activityLogTableName}]");

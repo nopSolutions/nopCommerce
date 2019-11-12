@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -7,8 +7,8 @@ using System.Reflection;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
-using Nop.Core.Data;
 using Nop.Core.Domain.Configuration;
+using Nop.Data;
 using Nop.Services.Events;
 
 namespace Nop.Services.Configuration
@@ -71,7 +71,7 @@ namespace Nop.Services.Configuration
             {
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
-                var query = from s in _settingRepository.TableNoTracking
+                var query = from s in _settingRepository.Table
                             orderby s.Name, s.StoreId
                             select s;
                 var settings = query.ToList();

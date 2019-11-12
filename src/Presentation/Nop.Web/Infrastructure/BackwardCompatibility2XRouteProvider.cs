@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Routing;
-using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc.Routing;
 

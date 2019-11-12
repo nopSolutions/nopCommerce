@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Data;
 using Nop.Services.Events;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Shipping.Tracking;

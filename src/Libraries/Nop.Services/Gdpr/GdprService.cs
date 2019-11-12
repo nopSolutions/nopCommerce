@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Gdpr;
-
+using Nop.Data;
 using Nop.Services.Authentication.External;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;

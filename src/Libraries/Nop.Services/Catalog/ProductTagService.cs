@@ -4,10 +4,11 @@ using System.Linq;
 using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Data;
-using Nop.Core.Data.Extensions;
+
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
+using Nop.Data.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Seo;
@@ -97,7 +98,7 @@ namespace Nop.Services.Catalog
             }
 
             var key = string.Format(NopCatalogDefaults.ProductTagCountCacheKey, storeId, allowedCustomerRolesIds, showHidden);
-            var dbNopCommerce = new DbNopCommerce();
+            var dbNopCommerce = new NopDataConnection();
 
             return _staticCacheManager.Get(key, () =>
             {

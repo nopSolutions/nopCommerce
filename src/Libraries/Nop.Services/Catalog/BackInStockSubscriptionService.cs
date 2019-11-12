@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Events;
 using Nop.Services.Messages;

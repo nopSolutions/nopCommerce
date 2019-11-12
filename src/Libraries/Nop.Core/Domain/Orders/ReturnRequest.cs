@@ -1,5 +1,5 @@
 ﻿using System;
-using LinqToDB.Mapping;
+
 
 namespace Nop.Core.Domain.Orders
 {
@@ -76,7 +76,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the return status
         /// </summary>
-        [NotColumn]
+        
         public ReturnRequestStatus ReturnRequestStatus
         {
             get => (ReturnRequestStatus)ReturnRequestStatusId;

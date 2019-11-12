@@ -1,5 +1,5 @@
 ﻿using System;
-using LinqToDB.Mapping;
+
 
 namespace Nop.Core.Domain.Gdpr
 {
@@ -41,7 +41,7 @@ namespace Nop.Core.Domain.Gdpr
         /// <summary>
         /// Gets or sets the request type
         /// </summary>
-        [NotColumn]
+        
         public GdprRequestType RequestType
         {
             get => (GdprRequestType)RequestTypeId;

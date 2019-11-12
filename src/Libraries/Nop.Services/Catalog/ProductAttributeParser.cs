@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 using Nop.Core.Domain.Catalog;
-using Nop.Data;
+using IDataProvider = Nop.Data.IDataProvider;
 
 namespace Nop.Services.Catalog
 {
@@ -15,14 +15,16 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
+        private readonly IDataProvider _dataProvider;
         private readonly IProductAttributeService _productAttributeService;
 
         #endregion
 
         #region Ctor
 
-        public ProductAttributeParser(IProductAttributeService productAttributeService)
+        public ProductAttributeParser(IDataProvider dataProvider, IProductAttributeService productAttributeService)
         {
+            _dataProvider = dataProvider;
             _productAttributeService = productAttributeService;
         }
 
@@ -207,7 +209,7 @@ namespace Nop.Services.Catalog
                     if (!string.IsNullOrEmpty(attributeValue.Item2) && int.TryParse(attributeValue.Item2, out var quantity) && quantity != value.Quantity)
                     {
                         //if customer enters quantity, use new entity with new quantity
-                        var oldValue = new DbNopCommerce().LoadOriginalCopy(value);
+                        var oldValue = _dataProvider.LoadOriginalCopy(value);
 
                         oldValue.ProductAttributeMappingId = attribute.Id;
                         oldValue.Quantity = quantity;

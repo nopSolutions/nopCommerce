@@ -1,13 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
-
+using Nop.Data;
 
 namespace Nop.Services.Localization
 {
@@ -68,7 +67,7 @@ namespace Nop.Services.Localization
             //cache
             return _cacheManager.Get(NopLocalizationDefaults.LocalizedPropertyAllCacheKey, () =>
             {
-                var query = from lp in _localizedPropertyRepository.TableNoTracking
+                var query = from lp in _localizedPropertyRepository.Table
                             select lp;
                 var localizedProperties = query.ToList();
                 var list = new List<LocalizedPropertyForCaching>();
@@ -181,7 +180,7 @@ namespace Nop.Services.Localization
                 var key = string.Format(NopLocalizationDefaults.LocalizedPropertyCacheKey, languageId, entityId, localeKeyGroup, localeKey);
                 return _cacheManager.Get(key, () =>
                 {
-                    var source = _localizedPropertyRepository.TableNoTracking;
+                    var source = _localizedPropertyRepository.Table;
                     var query = from lp in source
                                 where lp.LanguageId == languageId &&
                                 lp.EntityId == entityId &&

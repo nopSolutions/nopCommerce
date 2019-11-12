@@ -1,39 +1,31 @@
-﻿namespace Nop.Data
+﻿using LinqToDB.Mapping;
+using Nop.Core;
+
+namespace Nop.Data
 {
     /// <summary>
     /// Represents base entity mapping configuration
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
-    public partial class NopEntityTypeConfiguration<TEntity> : IMappingConfiguration
+    public abstract class NopEntityTypeConfiguration<TEntity> : IMappingConfiguration where TEntity : BaseEntity
     {
-        #region Utilities
-
-        /// <summary>
-        /// Developers can override this method in custom partial classes in order to add some custom configuration code
-        /// </summary>
-        protected virtual void PostConfigure()
-        {
-        }
-
-        #endregion
-
         #region Methods
 
         /// <summary>
         /// Configures the entity
         /// </summary>
-        public virtual void Configure()
-        {
-            //add custom configuration
-            PostConfigure();
-        }
+        public abstract void Configure(EntityMappingBuilder<TEntity> builder);
 
         /// <summary>
         /// Apply this mapping configuration
         /// </summary>
-        public virtual void ApplyConfiguration()
+        /// <param name="modelBuilder">The builder being used to construct the model for the database context</param>
+        public void ApplyConfiguration(FluentMappingBuilder modelBuilder)
         {
-            
+            var builder = modelBuilder.Entity<TEntity>();
+            builder.HasPrimaryKey(entity => entity.Id).HasIdentity(entity => entity.Id);
+
+            Configure(builder);
         }
 
         #endregion

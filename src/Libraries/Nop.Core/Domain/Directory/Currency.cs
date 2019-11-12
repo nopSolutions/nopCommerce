@@ -1,5 +1,5 @@
 ﻿using System;
-using LinqToDB.Mapping;
+
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Stores;
 
@@ -68,7 +68,7 @@ namespace Nop.Core.Domain.Directory
         /// <summary>
         /// Gets or sets the rounding type
         /// </summary>
-        [NotColumn]
+        
         public RoundingType RoundingType
         {
             get => (RoundingType)RoundingTypeId;

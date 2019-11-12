@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LinqToDB;
 using LinqToDB.Data;
-using Microsoft.EntityFrameworkCore;
 using Nop.Core;
-using Nop.Core.Data;
 
 namespace Nop.Data
 {
@@ -19,7 +17,7 @@ namespace Nop.Data
 
         private ITable<TEntity> _entities;
 
-        private readonly DbNopCommerce _dataConnection;
+        private readonly NopDataConnection _dataConnection;
 
         #endregion
 
@@ -27,7 +25,7 @@ namespace Nop.Data
 
         public EfRepository()
         {
-            _dataConnection = new DbNopCommerce();
+            _dataConnection = new NopDataConnection();
         }
 
         public void Dispose()
@@ -142,9 +140,9 @@ namespace Nop.Data
             }
         }
 
-        public IEnumerable<TEntity> EntityFromSql(string storeProcedureName, params DataParameter[] dataParameters)
+        public IEnumerable<TEntity> EntityFromSql(string storeProcedureName, params object[] dataParameters)
         {
-            return _dataConnection.QueryProc<TEntity>(storeProcedureName, dataParameters);
+            return _dataConnection.QueryProc<TEntity>(storeProcedureName, dataParameters?.Select(param=>param as DataParameter).ToArray());
         }
 
         #endregion
@@ -155,11 +153,6 @@ namespace Nop.Data
         /// Gets a table
         /// </summary>
         public virtual IQueryable<TEntity> Table => Entities;
-
-        /// <summary>
-        /// Gets a table with "no tracking" enabled (EF feature) Use it only when you load record(s) only for read-only operations
-        /// </summary>
-        public virtual IQueryable<TEntity> TableNoTracking => Entities.AsNoTracking();
 
         /// <summary>
         /// Gets an entity set

@@ -33,6 +33,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         private readonly ICommonModelFactory _commonModelFactory;
         private readonly ICustomerService _customerService;
+        private readonly IDataProvider _dataProvider;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -52,6 +53,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public CommonController(ICommonModelFactory commonModelFactory,
             ICustomerService customerService,
+            IDataProvider dataProvider,
             IDateTimeHelper dateTimeHelper,
             ILanguageService languageService,
             ILocalizationService localizationService,
@@ -67,6 +69,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         {
             _commonModelFactory = commonModelFactory;
             _customerService = customerService;
+            _dataProvider = dataProvider;
             _dateTimeHelper = dateTimeHelper;
             _languageService = languageService;
             _localizationService = localizationService;
@@ -211,7 +214,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                new DbNopCommerce().BackupDatabase(_maintenanceService.GetNewBackupFilePath());
+                _dataProvider.BackupDatabase(_maintenanceService.GetNewBackupFilePath());
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.BackupCreated"));
             }
             catch (Exception exc)
@@ -234,7 +237,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                new DbNopCommerce().ReIndexTables();
+                _dataProvider.ReIndexTables();
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.ReIndexTables.Complete"));
             }
             catch (Exception exc)
@@ -269,7 +272,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         break;
                     case "restore-backup":
                         {
-                            new DbNopCommerce().RestoreDatabase(backupPath);
+                            _dataProvider.RestoreDatabase(backupPath);
                             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.DatabaseRestored"));
                         }
                         break;

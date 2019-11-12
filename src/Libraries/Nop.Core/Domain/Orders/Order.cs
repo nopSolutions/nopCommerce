@@ -1,5 +1,5 @@
 ﻿using System;
-using LinqToDB.Mapping;
+
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -300,7 +300,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the order status
         /// </summary>
-        [NotColumn]
+        
         public OrderStatus OrderStatus
         {
             get => (OrderStatus)OrderStatusId;
@@ -310,7 +310,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the payment status
         /// </summary>
-        [NotColumn]
+        
         public PaymentStatus PaymentStatus
         {
             get => (PaymentStatus)PaymentStatusId;
@@ -320,7 +320,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the shipping status
         /// </summary>
-        [NotColumn]
+        
         public ShippingStatus ShippingStatus
         {
             get => (ShippingStatus)ShippingStatusId;
@@ -330,7 +330,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the customer tax display type
         /// </summary>
-        [NotColumn]
+        
         public TaxDisplayType CustomerTaxDisplayType
         {
             get => (TaxDisplayType)CustomerTaxDisplayTypeId;

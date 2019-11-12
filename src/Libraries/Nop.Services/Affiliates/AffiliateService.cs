@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Seo;
+using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Events;
 using Nop.Services.Seo;

@@ -1,6 +1,4 @@
-﻿using LinqToDB.Mapping;
-
-namespace Nop.Core
+﻿namespace Nop.Core
 {
     /// <summary>
     /// Base class for entities
@@ -10,7 +8,6 @@ namespace Nop.Core
         /// <summary>
         /// Gets or sets the entity identifier
         /// </summary>
-        [Column("Id", CanBeNull = false, IsPrimaryKey = true, IsIdentity = true)]
         public int Id { get; set; }
     }
 }

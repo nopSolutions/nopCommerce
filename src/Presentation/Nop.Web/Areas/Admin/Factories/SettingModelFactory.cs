@@ -21,6 +21,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Data;
+using Nop.Data.Data;
 using Nop.Services;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -53,6 +54,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerAttributeModelFactory _customerAttributeModelFactory;
+        private readonly IDataProvider _dataProvider;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IFulltextService _fulltextService;
         private readonly IGdprService _gdprService;
@@ -79,6 +81,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IBaseAdminModelFactory baseAdminModelFactory,
             ICurrencyService currencyService,
             ICustomerAttributeModelFactory customerAttributeModelFactory,
+            IDataProvider dataProvider,
             IDateTimeHelper dateTimeHelper,
             IFulltextService fulltextService,
             IGdprService gdprService,
@@ -101,6 +104,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory = baseAdminModelFactory;
             _currencyService = currencyService;
             _customerAttributeModelFactory = customerAttributeModelFactory;
+            _dataProvider = dataProvider;
             _dateTimeHelper = dateTimeHelper;
             _fulltextService = fulltextService;
             _gdprService = gdprService;
@@ -1171,7 +1175,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)?.CurrencyCode;
-            model.OrderIdent = new DbNopCommerce().GetTableIdent<Order>();
+            model.OrderIdent = _dataProvider.GetTableIdent<Order>();
 
             //fill in overridden values
             if (storeId > 0)

@@ -5,18 +5,19 @@ using System.Reflection;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
+using LinqToDB;
 using LinqToDB.Data;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
-using Nop.Core.Data;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Redis;
 using Nop.Data;
+using Nop.Data.Data;
 using Nop.Services.Affiliates;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
@@ -85,7 +86,8 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerLifetimeScope();
 
             //data layer
-            builder.RegisterType<NopDataProvider>().As<IDataProvider>().InstancePerDependency();
+            builder.RegisterType<DataProviderManager>().As<IDataProviderManager>().InstancePerDependency();
+            builder.Register(context => context.Resolve<IDataProviderManager>().DataProvider).As<IDataProvider>().InstancePerDependency();
 
             //repositories
             builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();

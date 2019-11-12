@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
+using Nop.Data.Data;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 
@@ -18,6 +18,7 @@ namespace Nop.Services.Messages
         #region Fields
 
         private readonly ICustomerService _customerService;
+        private readonly IDataProvider _dataProvider;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
@@ -28,12 +29,14 @@ namespace Nop.Services.Messages
         #region Ctor
 
         public NewsLetterSubscriptionService(ICustomerService customerService,
+            IDataProvider dataProvider,
             IEventPublisher eventPublisher,
             IRepository<Customer> customerRepository,
             IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository,
             IRepository<NewsLetterSubscription> subscriptionRepository)
         {
             _customerService = customerService;
+            _dataProvider = dataProvider;
             _eventPublisher = eventPublisher;
             _customerRepository = customerRepository;
             _customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
@@ -113,7 +116,7 @@ namespace Nop.Services.Messages
             newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
 
             //Get original subscription record
-            var originalSubscription = new DbNopCommerce().LoadOriginalCopy(newsLetterSubscription);
+            var originalSubscription = _dataProvider.LoadOriginalCopy(newsLetterSubscription);
 
             //Persist
             _subscriptionRepository.Update(newsLetterSubscription);

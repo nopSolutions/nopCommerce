@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -218,7 +218,7 @@ namespace Nop.Services.Discounts
         /// <returns>List of discounts</returns>
         public virtual IList<Discount> GetAppliedDiscounts<T>(IDiscountSupported<T> entity) where T : DiscountMapping
         {
-            var discountMapping = new DbNopCommerce().GetTable<T>();
+            var discountMapping = new NopDataConnection().GetTable<T>();
 
             return (from d in _discountRepository.Table
                     join ad in discountMapping on d.Id equals ad.DiscountId

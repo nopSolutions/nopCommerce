@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain;
+using Nop.Data;
 using Nop.Services.Security;
 using Nop.Services.Topics;
 

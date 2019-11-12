@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using LinqToDB.Data;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.Data;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 
@@ -122,7 +122,7 @@ namespace Nop.Services.Installation
             }
 
             foreach (var stmt in statements)
-                new DbNopCommerce().Execute(stmt);
+                new NopDataConnection().Execute(stmt);
         }
 
         /// <summary>

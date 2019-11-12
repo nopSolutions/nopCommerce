@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Data;
 using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
