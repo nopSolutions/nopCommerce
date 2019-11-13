@@ -28,7 +28,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         private readonly IShippingService _shippingService;
         private readonly IStoreContext _storeContext;
         private readonly IWebHelper _webHelper;
-        private readonly ShippingByWeightByTotalObjectContext _objectContext;
 
         #endregion
 
@@ -41,8 +40,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
             IShippingByWeightByTotalService shippingByWeightByTotalService,
             IShippingService shippingService,
             IStoreContext storeContext,
-            IWebHelper webHelper,
-            ShippingByWeightByTotalObjectContext objectContext)
+            IWebHelper webHelper)
         {
             _fixedByWeightByTotalSettings = fixedByWeightByTotalSettings;
             _localizationService = localizationService;
@@ -52,7 +50,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
             _shippingService = shippingService;
             _storeContext = storeContext;
             _webHelper = webHelper;
-            _objectContext = objectContext;
         }
 
         #endregion
@@ -235,9 +232,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
             //settings
             _settingService.SaveSetting(new FixedByWeightByTotalSettings());
 
-            //database objects
-            _objectContext.Install();
-
             //locales
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.AddRecord", "Add record");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.Fields.AdditionalFixedCost", "Additional fixed cost");
@@ -294,9 +288,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
                     string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, shippingMethod.Id)))
                 .Where(setting => setting != null).ToList();
             _settingService.DeleteSettings(fixedRates);
-
-            //database objects
-            _objectContext.Uninstall();
 
             //locales
             _localizationService.DeletePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.AddRecord");

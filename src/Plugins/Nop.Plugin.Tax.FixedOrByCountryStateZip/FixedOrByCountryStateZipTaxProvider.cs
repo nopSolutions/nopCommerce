@@ -2,7 +2,6 @@
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Plugin.Tax.FixedOrByCountryStateZip.Data;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Services;
 using Nop.Services.Configuration;
@@ -19,7 +18,6 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
     {
         #region Fields
 
-        private readonly CountryStateZipObjectContext _objectContext;
         private readonly FixedOrByCountryStateZipTaxSettings _countryStateZipSettings;
         private readonly ICountryStateZipService _taxRateService;
         private readonly ILocalizationService _localizationService;
@@ -32,8 +30,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
 
         #region Ctor
 
-        public FixedOrByCountryStateZipTaxProvider(CountryStateZipObjectContext objectContext,
-            FixedOrByCountryStateZipTaxSettings countryStateZipSettings,
+        public FixedOrByCountryStateZipTaxProvider(FixedOrByCountryStateZipTaxSettings countryStateZipSettings,
             ICountryStateZipService taxRateService,
             ILocalizationService localizationService,
             ISettingService settingService,
@@ -41,7 +38,6 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             ITaxCategoryService taxCategoryService,
             IWebHelper webHelper)
         {
-            _objectContext = objectContext;
             _countryStateZipSettings = countryStateZipSettings;
             _taxRateService = taxRateService;
             _localizationService = localizationService;
@@ -132,9 +128,6 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         /// </summary>
         public override void Install()
         {
-            //database objects
-            _objectContext.Install();
-
             //settings
             _settingService.SaveSetting(new FixedOrByCountryStateZipTaxSettings());
 
@@ -174,9 +167,6 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
                 .Select(taxCategory => _settingService.GetSetting(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id)))
                 .Where(setting => setting != null).ToList();
             _settingService.DeleteSettings(fixedRates);
-
-            //database objects
-            _objectContext.Uninstall();
 
             //locales
             _localizationService.DeletePluginLocaleResource("Plugins.Tax.FixedOrByCountryStateZip.Fixed");

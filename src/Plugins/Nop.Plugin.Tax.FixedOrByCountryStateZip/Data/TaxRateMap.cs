@@ -1,6 +1,5 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Nop.Data.Mapping;
+﻿using LinqToDB.Mapping;
+using Nop.Data;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Data
@@ -15,13 +14,15 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Data
         /// <summary>
         /// Configures the entity
         /// </summary>
-        /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<TaxRate> builder)
+        public override void Configure(EntityMappingBuilder<TaxRate> builder)
         {
-            builder.ToTable(nameof(TaxRate));
-            builder.HasKey(rate => rate.Id);
-
-            builder.Property(rate => rate.Percentage).HasColumnType("decimal(18, 4)");
+            builder.HasTableName(nameof(TaxRate));
+            builder.Property(rate => rate.StoreId);
+            builder.Property(rate => rate.TaxCategoryId);
+            builder.Property(rate => rate.CountryId);
+            builder.Property(rate => rate.StateProvinceId);
+            builder.Property(rate => rate.Zip);
+            builder.Property(rate => rate.Percentage).HasDbType("decimal(18, 4)");
         }
 
         #endregion

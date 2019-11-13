@@ -1,6 +1,5 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Nop.Data.Mapping;
+﻿using LinqToDB.Mapping;
+using Nop.Data;
 using Nop.Plugin.Pickup.PickupInStore.Domain;
 
 namespace Nop.Plugin.Pickup.PickupInStore.Data
@@ -15,13 +14,16 @@ namespace Nop.Plugin.Pickup.PickupInStore.Data
         /// <summary>
         /// Configures the entity
         /// </summary>
-        /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<StorePickupPoint> builder)
+        public override void Configure(EntityMappingBuilder<StorePickupPoint> builder)
         {
-            builder.ToTable(nameof(StorePickupPoint));
-            builder.HasKey(point => point.Id);
-
-            builder.Property(point => point.PickupFee).HasColumnType("decimal(18, 4)");
+            builder.HasTableName(nameof(StorePickupPoint));
+            builder.Property(storePickupPoint => storePickupPoint.Name);
+            builder.Property(storePickupPoint => storePickupPoint.Description);
+            builder.Property(storePickupPoint => storePickupPoint.AddressId);
+            builder.Property(point => point.PickupFee).HasDbType("decimal(18, 4)");
+            builder.Property(storePickupPoint => storePickupPoint.OpeningHours);
+            builder.Property(storePickupPoint => storePickupPoint.DisplayOrder);
+            builder.Property(storePickupPoint => storePickupPoint.StoreId);
         }
 
         #endregion

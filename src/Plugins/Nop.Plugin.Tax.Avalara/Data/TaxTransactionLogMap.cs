@@ -1,6 +1,5 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Nop.Data.Mapping;
+﻿using LinqToDB.Mapping;
+using Nop.Data;
 using Nop.Plugin.Tax.Avalara.Domain;
 
 namespace Nop.Plugin.Tax.Avalara.Data
@@ -16,10 +15,15 @@ namespace Nop.Plugin.Tax.Avalara.Data
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<TaxTransactionLog> builder)
+        public override void Configure(EntityMappingBuilder<TaxTransactionLog> builder)
         {
-            builder.ToTable(nameof(TaxTransactionLog));
-            builder.HasKey(logItem => logItem.Id);
+            builder.HasTableName(nameof(TaxTransactionLog));
+            builder.Property(taxTransactionLog => taxTransactionLog.StatusCode);
+            builder.Property(taxTransactionLog => taxTransactionLog.Url);
+            builder.Property(taxTransactionLog => taxTransactionLog.RequestMessage);
+            builder.Property(taxTransactionLog => taxTransactionLog.ResponseMessage);
+            builder.Property(taxTransactionLog => taxTransactionLog.CustomerId);
+            builder.Property(taxTransactionLog => taxTransactionLog.CreatedDateUtc);
         }
 
         #endregion

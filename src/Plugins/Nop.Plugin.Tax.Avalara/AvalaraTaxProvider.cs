@@ -53,7 +53,6 @@ namespace Nop.Plugin.Tax.Avalara
         private readonly IWebHelper _webHelper;
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
-        private readonly TaxTransactionLogObjectContext _objectContext;
         private readonly WidgetSettings _widgetSettings;
 
         #endregion
@@ -79,7 +78,6 @@ namespace Nop.Plugin.Tax.Avalara
             IWebHelper webHelper,
             ShippingSettings shippingSettings,
             TaxSettings taxSettings,
-            TaxTransactionLogObjectContext objectContext,
             WidgetSettings widgetSettings)
         {
             _avalaraTaxManager = avalaraTaxManager;
@@ -101,7 +99,6 @@ namespace Nop.Plugin.Tax.Avalara
             _webHelper = webHelper;
             _shippingSettings = shippingSettings;
             _taxSettings = taxSettings;
-            _objectContext = objectContext;
             _widgetSettings = widgetSettings;
         }
 
@@ -685,9 +682,6 @@ namespace Nop.Plugin.Tax.Avalara
         /// </summary>
         public override void Install()
         {
-            //database objects
-            _objectContext.Install();
-
             //settings
             _settingService.SaveSetting(new AvalaraTaxSettings
             {
@@ -789,9 +783,6 @@ namespace Nop.Plugin.Tax.Avalara
         /// </summary>
         public override void Uninstall()
         {
-            //database objects
-            _objectContext.Uninstall();
-
             //generic attributes
             foreach (var taxCategory in _taxCategoryService.GetAllTaxCategories())
             {
