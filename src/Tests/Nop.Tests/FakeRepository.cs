@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Data;
 
 namespace Nop.Tests
 {

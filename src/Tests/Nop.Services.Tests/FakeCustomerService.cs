@@ -1,9 +1,8 @@
 ﻿using Moq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
-using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -15,7 +14,6 @@ namespace Nop.Services.Tests
     {
         public FakeCustomerService(CustomerSettings customerSettings = null,
                 IDataProvider dataProvider = null,
-                IDbContext dbContext = null,
                 IEventPublisher eventPublisher = null,
                 IGenericAttributeService genericAttributeService = null,
                 IRepository<Address> customerAddressRepository = null,
@@ -30,7 +28,6 @@ namespace Nop.Services.Tests
                     customerSettings ?? new CustomerSettings(),
                     new TestCacheManager(),
                     dataProvider ?? new Mock<IDataProvider>().Object,
-                    dbContext ?? new Mock<IDbContext>().Object,
                     eventPublisher ?? new Mock<IEventPublisher>().Object,
                     genericAttributeService ?? new Mock<IGenericAttributeService>().Object,
                     customerAddressRepository.FakeRepoNullPropagation(),

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -504,7 +504,7 @@ namespace Nop.Services.Tests.Orders
 
             //The comparison test failed before, because of a very tiny number difference.
             //discountAmount.ShouldEqual(3.3);
-            (System.Math.Round(discountAmount, 10) == 3.3M).ShouldBeTrue();
+            (Math.Round(discountAmount, 10) == 3.3M).ShouldBeTrue();
             appliedDiscounts.Count.ShouldEqual(1);
             appliedDiscounts.First().Name.ShouldEqual("Discount 1");
             subTotalWithoutDiscount.ShouldEqual(98.329);

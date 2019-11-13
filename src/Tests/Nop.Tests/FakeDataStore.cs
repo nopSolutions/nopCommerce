@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Data;
 
 namespace Nop.Tests
 {

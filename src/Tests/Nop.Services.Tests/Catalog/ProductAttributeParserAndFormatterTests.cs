@@ -2,12 +2,11 @@
 using System.Linq;
 using Moq;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
-using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Events;
@@ -31,6 +30,7 @@ namespace Nop.Services.Tests.Catalog
         private IProductAttributeParser _productAttributeParser;
         private Mock<IEventPublisher> _eventPublisher;
 
+        private Mock<IDataProvider> _dataProvider;
         private Mock<IWorkContext> _workContext;
         private Mock<ICurrencyService> _currencyService;
         private ILocalizationService _localizationService;
@@ -197,9 +197,9 @@ namespace Nop.Services.Tests.Catalog
                 _productAttributeValueRepo.Object,
                 new TestCacheManager());
 
-            _context = new Mock<IDbContext>();
+            _dataProvider = new Mock<IDataProvider>();
 
-            _productAttributeParser = new ProductAttributeParser(_context.Object, _productAttributeService);
+            _productAttributeParser = new ProductAttributeParser(_dataProvider.Object,_productAttributeService);
 
             _priceCalculationService = new Mock<IPriceCalculationService>();
 
@@ -365,3 +365,4 @@ namespace Nop.Services.Tests.Catalog
         }
     }
 }
+

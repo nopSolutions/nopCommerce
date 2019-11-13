@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
-using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
@@ -26,6 +23,7 @@ namespace Nop.Services.Tests
     public class TestDiscountService : DiscountService
     {
         private readonly List<DiscountForCaching> _discountForCaching;
+        private readonly IRepository<Discount> _discountRepository;
 
         public TestDiscountService(
             ICustomerService customerService,
@@ -34,6 +32,7 @@ namespace Nop.Services.Tests
             ILocalizationService localizationService,
             IProductService productService,
             IRepository<Discount> discountRepository,
+            IRepository<DiscountMapping> discountMappingRepository,
             IRepository<DiscountRequirement> discountRequirementRepository,
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
             IRepository<Order> orderRepository,
@@ -45,6 +44,7 @@ namespace Nop.Services.Tests
             localizationService,
             productService,
             discountRepository,
+            discountMappingRepository,
             discountRequirementRepository,
             discountUsageHistoryRepository,
             orderRepository,
@@ -52,13 +52,14 @@ namespace Nop.Services.Tests
             storeContext)
         {
             _discountForCaching = new List<DiscountForCaching>();
+            _discountRepository = discountRepository;
         }
 
         public override DiscountValidationResult ValidateDiscount(Discount discount, Customer customer)
         {
             return new DiscountValidationResult { IsValid = true };
         }
-
+        
         public override DiscountValidationResult ValidateDiscount(DiscountForCaching discount, Customer customer)
         {
             return new DiscountValidationResult { IsValid = true };
@@ -68,7 +69,6 @@ namespace Nop.Services.Tests
             string couponCode = null, string discountName = null,
             bool showHidden = false)
         {
-
             return _discountForCaching
                 .Where(x => !discountType.HasValue || x.DiscountType == discountType.Value)
                 .Where(x => string.IsNullOrEmpty(couponCode) || x.CouponCode == couponCode)
@@ -109,6 +109,10 @@ namespace Nop.Services.Tests
             discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());
             var discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>();
 
+            var discountMappingRepo = new Mock<IRepository<DiscountMapping>>();
+
+            discountMappingRepo.Setup(x => x.Table).Returns(productDiscountMapping);
+
             var customerService = new Mock<ICustomerService>();
             var localizationService = new Mock<ILocalizationService>();
             var productService = new Mock<IProductService>();
@@ -124,24 +128,16 @@ namespace Nop.Services.Tests
             var storeContext = new Mock<IStoreContext>();
             storeContext.Setup(x => x.CurrentStore).Returns(store);
 
-            var dbContext = new Mock<IDbContext>();
             var orderRepo = new Mock<IRepository<Order>>();
-
-            void setupDbSet<T>(IQueryable<T> result) where T : DiscountMapping
-            {
-                dbContext.Setup(c => c.Set<T>()).Returns(GetDbSetMock<T>(result).Object);
-            }
-
-            setupDbSet(productDiscountMapping);
 
             var discountService = new TestDiscountService(
                 customerService.Object,
-                dbContext.Object,
                 discountPluginManager,
                 eventPublisher.Object,
                 localizationService.Object,
                 productService.Object,
                 discountRepo.Object,
+                discountMappingRepo.Object,
                 discountRequirementRepo.Object,
                 discountUsageHistoryRepo.Object,
                 orderRepo.Object,
@@ -150,23 +146,5 @@ namespace Nop.Services.Tests
 
             return discountService;
         }
-
-        private static Mock<DbSet<T>> GetDbSetMock<T>(IQueryable<T> items = null) where T : class
-        {
-            if (items == null)
-            {
-                items = Enumerable.Empty<T>().AsQueryable();;
-            }
-
-            var dbSetMock = new Mock<DbSet<T>>();
-
-            dbSetMock.As<IQueryable<T>>().Setup(m => m.Provider).Returns(items.Provider);
-            dbSetMock.As<IQueryable<T>>().Setup(m => m.Expression).Returns(items.Expression);
-            dbSetMock.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(items.ElementType);
-            dbSetMock.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(items.GetEnumerator());
-
-            return dbSetMock;
-        }
-
     }
 }

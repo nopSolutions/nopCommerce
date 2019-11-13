@@ -3,19 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
-using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.Orders;
 using Nop.Services.Plugins;
 using Nop.Tests;
 using NUnit.Framework;
@@ -25,10 +23,8 @@ namespace Nop.Services.Tests.Discounts
     [TestFixture]
     public class DiscountServiceTests : ServiceTest
     {
-
         private Mock<IEventPublisher> _eventPublisher = new Mock<IEventPublisher>();
         private Mock<ILocalizationService> _localizationService = new Mock<ILocalizationService>();
-        private Mock<IDbContext> _dbContext = new Mock<IDbContext>();
         private IDiscountPluginManager _discountPluginManager;
         private IDiscountService _discountService;
         private Mock<IStoreContext> _storeContext = new Mock<IStoreContext>();
@@ -87,15 +83,17 @@ namespace Nop.Services.Tests.Discounts
 
             var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
 
+            var discountMappingRepo = new Mock<IRepository<DiscountMapping>>();
+
             _discountPluginManager = new DiscountPluginManager(pluginService);
             _discountService = new DiscountService(
                 _customerService.Object,
-                _dbContext.Object,
                 _discountPluginManager,
                 _eventPublisher.Object,
                 _localizationService.Object,
                 _productService.Object,
                 _discountRepo.Object,
+                discountMappingRepo.Object,
                 _discountRequirementRepo.Object,
                 _discountUsageHistoryRepo.Object,
                 _orderRepo.Object,

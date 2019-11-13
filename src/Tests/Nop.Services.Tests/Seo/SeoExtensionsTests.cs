@@ -1,7 +1,7 @@
 ﻿using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
 using Nop.Services.Localization;

@@ -1,6 +1,6 @@
 ﻿using Moq;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Data;
 
 namespace Nop.Tests
 {

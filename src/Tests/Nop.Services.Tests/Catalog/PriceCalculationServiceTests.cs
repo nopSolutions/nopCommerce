@@ -4,7 +4,7 @@ using System.Linq;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -76,7 +76,7 @@ namespace Nop.Services.Tests.Catalog
                 .Callback(
                     (CustomerCustomerRoleMapping ccrm) => { customerCustomerRoleMapping.Add(ccrm); });
 
-            _customerService = new CustomerService(null, null, null, null, null, null, null, null, null, _customerCustomerRoleMappingRepository.Object, null, _customerRoleRepository.Object, null, null, null, null);
+            _customerService = new CustomerService(null, null, null, null, null, null, null, null, _customerCustomerRoleMappingRepository.Object, null, _customerRoleRepository.Object, null, null, null, null);
 
             _manufacturerService = new Mock<IManufacturerService>();
 
@@ -94,7 +94,7 @@ namespace Nop.Services.Tests.Catalog
 
             _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null,
                 new TestCacheManager(), _customerService,
-                null, null, null, null, null, null, null, null, null, null, _discountProductMappingRepository.Object,
+                null, null, null, null, null, null, null, null, null, _discountProductMappingRepository.Object,
                 _productRepository.Object, null, null, null, null, null, null, null, null, shipmentRepository.Object,
                 null, null, _tierPriceRepository.Object, null,
                 null, null, null, new LocalizationSettings());
