@@ -14,6 +14,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentMigrator" Version="3.2.1" />
+    <PackageReference Include="FluentMigrator.Runner" Version="3.2.1" />
     <PackageReference Include="linq2db" Version="2.9.3" />
   </ItemGroup>
 

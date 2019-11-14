@@ -80,13 +80,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //create engine and configure service provider
             var engine = EngineContext.Create();
             var serviceProvider = engine.ConfigureServices(services, configuration, nopConfig);
-
-            //further actions are performed only when the database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
-                return serviceProvider;
-
-            var connSettings = new Linq2DbSettingsProvider(DataSettingsManager.LoadSettings());
-            DataConnection.DefaultSettings = connSettings;
             
             //initialize and start schedule tasks
             TaskManager.Instance.Initialize();

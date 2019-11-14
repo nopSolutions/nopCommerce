@@ -2,7 +2,6 @@
 using System.Data;
 using LinqToDB;
 using LinqToDB.Data;
-using Nop.Data.Data;
 
 namespace Nop.Data.Extensions
 {

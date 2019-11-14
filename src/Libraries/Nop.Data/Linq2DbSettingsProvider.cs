@@ -42,7 +42,7 @@ namespace Nop.Data
                 yield return
                     new ConnectionStringSettings
                     {
-                        Name = "nopCommerce",
+                        Name = DefaultConfiguration,
                         ProviderType = _dataSettings.DataProvider,
                         ConnectionString = _dataSettings.DataConnectionString
                     };
