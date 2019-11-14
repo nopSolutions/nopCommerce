@@ -18,10 +18,10 @@ namespace Nop.Data.Mapping.Discounts
         public override void Configure(EntityMappingBuilder<DiscountManufacturerMapping> builder)
         {
             builder.HasTableName(NopMappingDefaults.DiscountAppliedToManufacturersTable);
-            builder.HasPrimaryKey(mapping => new { mapping.DiscountId, mapping.ManufacturerId });
+            builder.HasPrimaryKey(mapping => new { mapping.DiscountId, mapping.EntityId });
 
             builder.Property(mapping => mapping.DiscountId).HasColumnName("Discount_Id");
-            builder.Property(mapping => mapping.ManufacturerId).HasColumnName("Manufacturer_Id");
+            builder.Property(mapping => mapping.EntityId).HasColumnName("Manufacturer_Id");
 
             builder.Ignore(mapping => mapping.Id);
 

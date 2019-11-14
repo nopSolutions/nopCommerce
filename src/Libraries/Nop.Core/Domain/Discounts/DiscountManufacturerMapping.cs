@@ -8,6 +8,6 @@
         /// <summary>
         /// Gets or sets the manufacturer identifier
         /// </summary>
-        public int ManufacturerId { get; set; }
+        public override int EntityId { get; set; }
     }
 }

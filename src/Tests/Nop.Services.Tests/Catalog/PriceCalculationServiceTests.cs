@@ -37,7 +37,6 @@ namespace Nop.Services.Tests.Catalog
 
         private Mock<IManufacturerService> _manufacturerService;
         private Mock<IProductAttributeParser> _productAttributeParser;
-        private Mock<IProductAttributeService> _productAttributeService;
         private Mock<IRepository<DiscountProductMapping>> _discountProductMappingRepository;
         private Mock<IRepository<Product>> _productRepository;
         private Mock<IRepository<TierPrice>> _tierPriceRepository;
@@ -101,8 +100,6 @@ namespace Nop.Services.Tests.Catalog
 
             _productAttributeParser = new Mock<IProductAttributeParser>();
 
-            _productAttributeService = new Mock<IProductAttributeService>();
-
             _catalogSettings = new CatalogSettings();
 
             _cacheManager = new TestCacheManager();
@@ -112,11 +109,11 @@ namespace Nop.Services.Tests.Catalog
                 new List<Discount> { _mockDiscount }.AsQueryable(), 
                 new List<DiscountProductMapping>
                 {
-                    new DiscountProductMapping { DiscountId = 1, ProductId = 3 }
+                    new DiscountProductMapping { DiscountId = 1, EntityId = 3 }
                 }.AsQueryable());
 
             _priceCalcService = new PriceCalculationService(_catalogSettings, new CurrencySettings { PrimaryStoreCurrencyId = 1 }, _categoryService.Object,
-                _serviceProvider.CurrencyService.Object, _customerService, _discountService, _manufacturerService.Object, _productAttributeParser.Object, _productAttributeService.Object,
+                _serviceProvider.CurrencyService.Object, _customerService, _discountService, _manufacturerService.Object, _productAttributeParser.Object,
                 _productService, _cacheManager, _storeContext.Object, _workContext.Object);
 
             var nopEngine = new Mock<NopEngine>();
@@ -263,7 +260,7 @@ namespace Nop.Services.Tests.Catalog
             {
                 new DiscountProductMapping
                 {
-                    ProductId = 1,
+                    EntityId = 1,
                     DiscountId = _mockDiscount.Id
             }
             }.AsQueryable();
@@ -312,11 +309,13 @@ namespace Nop.Services.Tests.Catalog
             var product = _productService.GetProductById(1);
 
             //customer
-            var customer = new Customer() { Id = 1 };
+            var customer = new Customer { Id = 1 };
 
             var customerRole = GetMockCustomerRoles().FirstOrDefault(cr => cr.Id == 1);
+            
+            customerRole.ShouldNotBeNull();
 
-            _customerCustomerRoleMappingRepository.Object.Insert(new CustomerCustomerRoleMapping { CustomerRoleId = customerRole.Id, CustomerId = customer.Id });
+            _customerCustomerRoleMappingRepository.Object.Insert(new CustomerCustomerRoleMapping { CustomerRoleId = customerRole?.Id ?? 0, CustomerId = customer.Id });
 
             _priceCalcService.GetFinalPrice(product, customer, 0, false).ShouldEqual(12.34M);
             _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).ShouldEqual(10);

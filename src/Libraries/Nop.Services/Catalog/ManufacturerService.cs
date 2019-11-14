@@ -175,7 +175,7 @@ namespace Nop.Services.Catalog
                 _storeContext.CurrentStore.Id);
             var result = _cacheManager.Get(cacheKey, () =>
             {
-                return _discountManufacturerMappingRepository.Table.Where(dmm => dmm.DiscountId == discountId).Select(dmm => dmm.ManufacturerId).ToList();
+                return _discountManufacturerMappingRepository.Table.Where(dmm => dmm.DiscountId == discountId).Select(dmm => dmm.EntityId).ToList();
             });
 
             return result;
@@ -210,7 +210,7 @@ namespace Nop.Services.Catalog
 
             if (discountId.HasValue)
                 manufacturers = from manufacturer in manufacturers
-                    join dmm in _discountManufacturerMappingRepository.Table on manufacturer.Id equals dmm.ManufacturerId
+                    join dmm in _discountManufacturerMappingRepository.Table on manufacturer.Id equals dmm.EntityId
                     where dmm.DiscountId == discountId.Value
                     select manufacturer;
 
@@ -515,7 +515,7 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         public DiscountManufacturerMapping GetDiscountAppliedToManufacturer(int manufacturerId, int discountId)
         {
-            return _discountManufacturerMappingRepository.Table.FirstOrDefault(dcm => dcm.ManufacturerId == manufacturerId && dcm.DiscountId == discountId);
+            return _discountManufacturerMappingRepository.Table.FirstOrDefault(dcm => dcm.EntityId == manufacturerId && dcm.DiscountId == discountId);
         }
 
         /// <summary>

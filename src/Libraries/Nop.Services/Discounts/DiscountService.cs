@@ -220,9 +220,9 @@ namespace Nop.Services.Discounts
         /// <returns>List of discounts</returns>
         public virtual IList<Discount> GetAppliedDiscounts<T>(IDiscountSupported<T> entity) where T : DiscountMapping
         {
-            //TODO: 239 use entity
             return (from d in _discountRepository.Table
                     join ad in _discountMappingRepository.Table on d.Id equals ad.DiscountId
+                    where ad.EntityId == entity.Id
                     select d).ToList();
         }
 

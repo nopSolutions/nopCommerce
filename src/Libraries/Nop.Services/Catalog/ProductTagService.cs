@@ -26,7 +26,6 @@ namespace Nop.Services.Catalog
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerService _customerService;
         private readonly IDataProvider _dataProvider;
-        
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
@@ -41,6 +40,7 @@ namespace Nop.Services.Catalog
         public ProductTagService(CatalogSettings catalogSettings,
             ICacheManager cacheManager,
             ICustomerService customerService,
+            IDataProvider dataProvider,
             IEventPublisher eventPublisher,
             IRepository<ProductProductTagMapping> productProductTagMappingRepository,
             IRepository<ProductTag> productTagRepository,
@@ -51,6 +51,7 @@ namespace Nop.Services.Catalog
             _catalogSettings = catalogSettings;
             _cacheManager = cacheManager;
             _customerService = customerService;
+            _dataProvider = dataProvider;
             _eventPublisher = eventPublisher;
             _productProductTagMappingRepository = productProductTagMappingRepository;
             _productTagRepository = productTagRepository;

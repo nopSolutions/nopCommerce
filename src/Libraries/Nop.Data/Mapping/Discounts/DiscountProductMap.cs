@@ -1,6 +1,5 @@
 ﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Discounts;
-using Nop.Data.Data;
 
 namespace Nop.Data.Mapping.Discounts
 {
@@ -21,11 +20,11 @@ namespace Nop.Data.Mapping.Discounts
             builder.HasPrimaryKey(mapping => new
             {
                 mapping.DiscountId,
-                mapping.ProductId
+                mapping.EntityId
             });
 
             builder.Property(mapping => mapping.DiscountId).HasColumnName("Discount_Id");
-            builder.Property(mapping => mapping.ProductId).HasColumnName("Product_Id");
+            builder.Property(mapping => mapping.EntityId).HasColumnName("Product_Id");
 
             builder.Ignore(mapping => mapping.Id);
 

@@ -1015,7 +1015,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            product.HasDiscountsApplied = _discountProductMappingRepository.Table.Any(dpm => dpm.ProductId == product.Id);
+            product.HasDiscountsApplied = _discountProductMappingRepository.Table.Any(dpm => dpm.EntityId == product.Id);
             UpdateProduct(product);
         }
 
@@ -2214,8 +2214,8 @@ namespace Nop.Services.Catalog
 
             if (discountId.HasValue)
                 products = from product in products
-                    join dpm in _discountProductMappingRepository.Table on product.Id equals dpm.ProductId
-                    where dpm.DiscountId == discountId.Value
+                    join dpm in _discountProductMappingRepository.Table on product.Id equals dpm.EntityId
+                           where dpm.DiscountId == discountId.Value
                     select product;
 
             if (!showHidden)
@@ -2672,7 +2672,7 @@ namespace Nop.Services.Catalog
 
             var mappingsWithProducts =
                 from dcm in _discountProductMappingRepository.Table
-                join p in _productRepository.Table on dcm.ProductId equals p.Id
+                join p in _productRepository.Table on dcm.EntityId equals p.Id
                 where dcm.DiscountId == discount.Id
                 select new { product = p, dcm };
 
@@ -2693,7 +2693,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         public virtual IList<DiscountProductMapping> GetAllDiscountsAppliedToProduct(int productId)
         {
-            return _discountProductMappingRepository.Table.Where(dcm => dcm.ProductId == productId).ToList();
+            return _discountProductMappingRepository.Table.Where(dcm => dcm.EntityId == productId).ToList();
         }
 
         /// <summary>
@@ -2704,7 +2704,7 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         public virtual DiscountProductMapping GetDiscountAppliedToProduct(int productId, int discountId)
         {
-            return _discountProductMappingRepository.Table.FirstOrDefault(dcm => dcm.ProductId == productId && dcm.DiscountId == discountId);
+            return _discountProductMappingRepository.Table.FirstOrDefault(dcm => dcm.EntityId == productId && dcm.DiscountId == discountId);
         }
 
         /// <summary>

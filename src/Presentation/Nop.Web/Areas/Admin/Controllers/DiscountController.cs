@@ -483,7 +483,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var product in selectedProducts)
                 {
                     if (_productService.GetDiscountAppliedToProduct(product.Id, discount.Id) is null)
-                        _productService.DeleteDiscountProductMapping(new DiscountProductMapping { ProductId = product.Id, DiscountId = discount.Id });
+                        _productService.DeleteDiscountProductMapping(new DiscountProductMapping { EntityId = product.Id, DiscountId = discount.Id });
 
                     _productService.UpdateProduct(product);
                     _productService.UpdateHasDiscountsApplied(product);
@@ -578,7 +578,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     continue;
 
                 if (_categoryService.GetDiscountAppliedToCategory(category.Id, discount.Id) is null)
-                    _categoryService.InsertDiscountCategoryMapping(new DiscountCategoryMapping { DiscountId = discount.Id, CategoryId = category.Id });
+                    _categoryService.InsertDiscountCategoryMapping(new DiscountCategoryMapping { DiscountId = discount.Id, EntityId = category.Id });
 
                 _categoryService.UpdateCategory(category);
             }
@@ -671,7 +671,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     continue;
 
                 if (_manufacturerService.GetDiscountAppliedToManufacturer(manufacturer.Id, discount.Id) is null)
-                    _manufacturerService.InsertDiscountManufacturerMapping(new DiscountManufacturerMapping { ManufacturerId = manufacturer.Id, DiscountId = discount.Id });
+                    _manufacturerService.InsertDiscountManufacturerMapping(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
 
                 _manufacturerService.UpdateManufacturer(manufacturer);
             }

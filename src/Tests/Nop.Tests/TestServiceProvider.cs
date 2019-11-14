@@ -23,10 +23,10 @@ namespace Nop.Tests
             LocalizationService = new Mock<ILocalizationService>();
             GenericAttributeService = new Mock<IGenericAttributeService>();
             WorkContext = new Mock<IWorkContext>();
-            
+
             PriceCalculationService = new PriceCalculationService(new CatalogSettings(), new CurrencySettings(), 
                 new Mock<ICategoryService>().Object, new Mock<ICurrencyService>().Object, new Mock<ICustomerService>().Object, new Mock<IDiscountService>().Object,
-                new Mock<IManufacturerService>().Object, new Mock<IProductAttributeParser>().Object, new Mock<IProductAttributeService>().Object,
+                new Mock<IManufacturerService>().Object, new Mock<IProductAttributeParser>().Object,
                 new Mock<IProductService>().Object, new TestCacheManager(), new Mock<IStoreContext>().Object, WorkContext.Object);
 
             LocalizationService.Setup(l => l.GetResource(It.IsAny<string>())).Returns("Invalid");
@@ -36,13 +36,13 @@ namespace Nop.Tests
             CurrencyService = new Mock<ICurrencyService>();
             CurrencyService.Setup(x => x.GetCurrencyById(1, true)).Returns(new Currency {Id = 1, RoundingTypeId = 0});
 
-            GenericAttributeService.Setup(p => p.GetAttribute<bool>(It.IsAny<Customer>(), "product-advanced-mode", It.IsAny<int>(), false))
+            GenericAttributeService.Setup(p => p.GetAttribute(It.IsAny<Customer>(), "product-advanced-mode", It.IsAny<int>(), false))
                 .Returns(true);
 
-            GenericAttributeService.Setup(p => p.GetAttribute<bool>(It.IsAny<Customer>(), "manufacturer-advanced-mode", It.IsAny<int>(), false))
+            GenericAttributeService.Setup(p => p.GetAttribute(It.IsAny<Customer>(), "manufacturer-advanced-mode", It.IsAny<int>(), false))
                 .Returns(true);
 
-            GenericAttributeService.Setup(p => p.GetAttribute<bool>(It.IsAny<Customer>(), "category-advanced-mode", It.IsAny<int>(), false))
+            GenericAttributeService.Setup(p => p.GetAttribute(It.IsAny<Customer>(), "category-advanced-mode", It.IsAny<int>(), false))
                 .Returns(true);
         }
 

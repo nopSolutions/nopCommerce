@@ -259,7 +259,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                         //manufacturer.AppliedDiscounts.Add(discount);
-                        _manufacturerService.InsertDiscountManufacturerMapping(new DiscountManufacturerMapping { ManufacturerId = manufacturer.Id, DiscountId = discount.Id });
+                        _manufacturerService.InsertDiscountManufacturerMapping(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
 
                 }
 
@@ -342,7 +342,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     {
                         //new discount
                         if (_manufacturerService.GetDiscountAppliedToManufacturer(manufacturer.Id, discount.Id) is null)
-                            _manufacturerService.InsertDiscountManufacturerMapping(new DiscountManufacturerMapping { ManufacturerId = manufacturer.Id, DiscountId = discount.Id });
+                            _manufacturerService.InsertDiscountManufacturerMapping(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
                     }
                     else
                     {

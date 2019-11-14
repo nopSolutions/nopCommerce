@@ -8,6 +8,6 @@
         /// <summary>
         /// Gets or sets the category identifier
         /// </summary>
-        public int CategoryId { get; set; }
+        public override int EntityId { get; set; }
     }
 }

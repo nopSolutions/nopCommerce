@@ -9,7 +9,6 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
-using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Events;

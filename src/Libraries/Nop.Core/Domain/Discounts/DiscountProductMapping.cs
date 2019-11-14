@@ -8,6 +8,6 @@
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        public int ProductId { get; set; }
+        public override int EntityId { get; set; }
     }
 }

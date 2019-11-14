@@ -81,7 +81,7 @@ namespace Nop.Services.Catalog
         {
             foreach (var discountMapping in _productService.GetAllDiscountsAppliedToProduct(product.Id))
             {
-                _productService.InsertDiscountProductMapping(new DiscountProductMapping { ProductId = productCopy.Id, DiscountId = discountMapping.DiscountId });
+                _productService.InsertDiscountProductMapping(new DiscountProductMapping { EntityId = productCopy.Id, DiscountId = discountMapping.DiscountId });
                 _productService.UpdateProduct(productCopy);
             }
         }

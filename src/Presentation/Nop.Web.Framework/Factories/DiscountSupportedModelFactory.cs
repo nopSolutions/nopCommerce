@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Discounts;
 using Nop.Web.Framework.Models;
@@ -56,7 +55,7 @@ namespace Nop.Web.Framework.Factories
         /// Prepare selected and all available discounts for the passed model by entity applied discounts
         /// </summary>
         /// <typeparam name="TModel">Discount supported model type</typeparam>
-        /// <typeparam name="TEntity">Discount supported entity type</typeparam>
+        /// <typeparam name="TMapping">Discount supported entity type</typeparam>
         /// <param name="model">Model</param>
         /// <param name="entity">Entity</param>
         /// <param name="availableDiscounts">List of all available discounts</param>

@@ -356,7 +356,7 @@ namespace Nop.Services.Catalog
             var result = _cacheManager.Get(cacheKey, () =>
             {
                 var ids = new List<int>();
-                var rootCategoryIds = _discountCategoryMappingRepository.Table.Where(dmm => dmm.DiscountId == discountId).Select(dmm => dmm.CategoryId);
+                var rootCategoryIds = _discountCategoryMappingRepository.Table.Where(dmm => dmm.DiscountId == discountId).Select(dmm => dmm.EntityId);
 
                 foreach (var categoryId in rootCategoryIds)
                 {
@@ -441,7 +441,7 @@ namespace Nop.Services.Catalog
 
             if (discountId.HasValue)
                 categories = from category in categories
-                    join dcm in _discountCategoryMappingRepository.Table on category.Id equals dcm.CategoryId
+                    join dcm in _discountCategoryMappingRepository.Table on category.Id equals dcm.EntityId
                     where dcm.DiscountId == discountId.Value
                     select category;
 
@@ -484,7 +484,7 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         public virtual DiscountCategoryMapping GetDiscountAppliedToCategory(int categoryId, int discountId)
         {
-            return _discountCategoryMappingRepository.Table.FirstOrDefault(dcm => dcm.CategoryId == categoryId && dcm.DiscountId == discountId);
+            return _discountCategoryMappingRepository.Table.FirstOrDefault(dcm => dcm.EntityId == categoryId && dcm.DiscountId == discountId);
         }
 
         /// <summary>

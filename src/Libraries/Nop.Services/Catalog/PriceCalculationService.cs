@@ -29,7 +29,6 @@ namespace Nop.Services.Catalog
         private readonly IDiscountService _discountService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductAttributeService _productAttributeService;
         private readonly IProductService _productService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
@@ -47,7 +46,6 @@ namespace Nop.Services.Catalog
             IDiscountService discountService,
             IManufacturerService manufacturerService,
             IProductAttributeParser productAttributeParser,
-            IProductAttributeService productAttributeService,
             IProductService productService,
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
@@ -61,7 +59,6 @@ namespace Nop.Services.Catalog
             _discountService = discountService;
             _manufacturerService = manufacturerService;
             _productAttributeParser = productAttributeParser;
-            _productAttributeService = productAttributeService;
             _productService = productService;
             _cacheManager = cacheManager;
             _storeContext = storeContext;

@@ -3,7 +3,6 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Data;
 using Nop.Core.Domain.Localization;
-using Nop.Data;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
 using Nop.Services.Localization;
