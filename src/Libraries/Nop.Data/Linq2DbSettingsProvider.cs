@@ -25,7 +25,7 @@ namespace Nop.Data
         /// <summary>
         /// Gets name of default connection configuration
         /// </summary>
-        public string DefaultConfiguration => "SqlServer";
+        public string DefaultConfiguration => "nopCommerce";
 
         /// <summary>
         /// Gets name of default data provider configuration

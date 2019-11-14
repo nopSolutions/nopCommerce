@@ -39,7 +39,7 @@ namespace Nop.Data
     /// </summary>
     public class NopDataConnection : DataConnection
     {
-        public NopDataConnection() : base("nopCommerce")
+        public NopDataConnection()
         {
             if (Singleton<MappingSchema>.Instance != null)
                 AddMappingSchema(Singleton<MappingSchema>.Instance);
