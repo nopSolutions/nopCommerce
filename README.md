@@ -19,7 +19,7 @@ nopCommerce official site: [https://www.nopcommerce.com](https://www.nopcommerce
 
 nopCommerce demo store: [https://www.nopcommerce.com/demo](https://www.nopcommerce.com/demo)
 
-Feature list: [https://www.nopcommerce.com/features](https://www.nopcommerce.com/featuresx)
+Feature list: [https://www.nopcommerce.com/features](https://www.nopcommerce.com/features)
 
 Technology & system Requirements: [https://docs.nopcommerce.com/user-guide/installing/technology-system-requirements.html](https://docs.nopcommerce.com/user-guide/installing/technology-system-requirements.html)
 
