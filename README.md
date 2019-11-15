@@ -17,26 +17,15 @@ nopCommerce offers unprecedented flexibility and control. Since it is open-sourc
 
 nopCommerce official site: [https://www.nopcommerce.com](https://www.nopcommerce.com)
 
-nopCommerce demo store: [https://www.nopCommerce.com/demo.aspx](https://www.nopCommerce.com/demo.aspx)
+nopCommerce demo store: [https://www.nopcommerce.com/demo](https://www.nopcommerce.com/demo)
 
-Feature list: [https://www.nopcommerce.com/featurelist.aspx](https://www.nopcommerce.com/featurelist.aspx)
+Feature list: [https://www.nopcommerce.com/features](https://www.nopcommerce.com/featuresx)
 
 Technology & system Requirements: [https://docs.nopcommerce.com/user-guide/installing/technology-system-requirements.html](https://docs.nopcommerce.com/user-guide/installing/technology-system-requirements.html)
 
 Documentation: [https://docs.nopcommerce.com/](https://docs.nopcommerce.com/)
 
 Forums: [https://www.nopcommerce.com/boards/](https://www.nopcommerce.com/boards/)
-
-Gitter.im chat room: [https://gitter.im/nopCommerce-official/Lobby](https://gitter.im/nopCommerce-official/Lobby)
-
-
-## nopCommerce Days 2019: ##
-
-Our annual conference will be held in Mumbai, India, on October 10-11, 2019. Come and let's get acquainted in person!
-
-The conference will bring together developers, heads of web agencies, representatives of leading tech companies and online stores.
-
-Conference official site: [https://days19.nopcommerce.com/](https://days19.nopcommerce.com/)
 
 
 ## Store demo: ##
