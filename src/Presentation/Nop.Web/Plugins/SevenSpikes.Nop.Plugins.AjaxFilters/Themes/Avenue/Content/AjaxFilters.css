@@ -398,12 +398,18 @@
 .filters-button {
 	display: block;
 }
+.search-results .filters-button {
+	display: inline-block;
+}
 .nopAjaxFilters7Spikes {
 	max-height: calc(100% - 60px);
 	background-color: #fff;
 }
 .clearFilterOptionsAll {
 	display: none !important;
+}
+.filtersPanel {
+	overflow-y: scroll; /*PS replacement, delete if PS is reactivated*/
 }
 
 }

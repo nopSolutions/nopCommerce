@@ -27,6 +27,30 @@
     <div class="form-horizontal">
         <div class="panel-group">
             <div class="panel panel-default">
+                <div class="panel-heading">
+                    Search
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                <div class="label-wrapper">
+                                    <label class="control-label">System Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="k-textbox" type="text" id="slidersSearch" placeholder="Enter search text" style="width: 100%!important;" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-8 col-md-offset-4">
+                                <button class="btn btn-primary btn-search" id="slidersSearchButton">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
                 <div class="panel-body">
                     <div id="sliders-grid"></div>
                 </div>
@@ -36,85 +60,135 @@
 </div>
 
 <script>
-            $(document).ready(function () {
-                $("#sliders-grid").kendoGrid({
-                    dataSource: {
-                        type: "json",
-                        transport: {
-                            read: {
-                                url: "@Html.Raw(Url.Action("List", "AnywhereSlidersAdmin"))",
-                                type: "POST",
-                                dataType: "json",
-                                data: addAntiForgeryToken
-                            },
-                            destroy: {
-                                url: "@Html.Raw(Url.Action("SliderDelete", "AnywhereSlidersAdmin"))",
-                                type: "POST",
-                                dataType: "json",
-                                data: addAntiForgeryToken
-                            }
-                        },
-                        schema: {
-                            data: "Data",
-                            total: "Total",
-                            errors: "Errors",
-                            model: {
-                                id: "Id",
-                                fields: {
-                                    Id: { editable: false, type: "number" },
-                                    SystemName: { editable: false, type: "string" },
-                                    SliderType: { editable: false, type: "string" },
-                                    IsActive: { editable: true, type: "boolean" }
-                                }
-                            }
-                        },
-                        requestEnd: function (e) {
-                            if (e.type == "update") {
-                                this.read();
-                            }
-                        },
-                        error: function (e) {
-                            display_kendoui_grid_error(e);
-                            // Cancel the changes
-                            this.cancelChanges();
-                        },
-                        pageSize: @defaultGridPageSize
-                        },
-                    pageable: {
-                        refresh: true,
-                        pageSizes: [@(gridPageSizes)]
-                    },
-                    editable: {
-                        confirmation: true,
-                        mode: "inline"
-                    },
-                    filterable: false,
-                    sortable: true,
-                    scrollable: false,
-                    columns: [{
-                        field: "SystemName",
-                        title: "@T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.SystemName")"
-                    }, {
-                        field: "SliderType",
-                        title: "@T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.SliderType")"
-                    }, {
-                        field: "IsActive",
-                        title: "@T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.IsActive")",
-                        template: '# if(IsActive) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #',
-                        editable: true
-                    }, {
-                        template: kendo.template($("#commands-template").html()),
-                        filterable: false,
-                        sortable: false
-                    }, {
-                        command: [{
-                            name: "destroy",
-                            text: "@T("Admin.Common.Delete")"
-                        }],
-                        width: 200
-                    }]
-                });
-            });
+	$(document).ready(function () {
+		$("#sliders-grid").kendoGrid({
+			dataSource: {
+				type: "json",
+				transport: {
+					read: {
+						url: "@Html.Raw(Url.Action("List", "AnywhereSlidersAdmin"))",
+						type: "POST",
+						dataType: "json",
+						data: addAntiForgeryToken
+					},
+					destroy: {
+						url: "@Html.Raw(Url.Action("SliderDelete", "AnywhereSlidersAdmin"))",
+						type: "POST",
+						dataType: "json",
+						data: addAntiForgeryToken
+					}
+				},
+				schema: {
+					data: "Data",
+					total: "Total",
+					errors: "Errors",
+					model: {
+						id: "Id",
+						fields: {
+							Id: { editable: false, type: "number" },
+							SystemName: { editable: false, type: "string" },
+							SliderType: { editable: false, type: "string" },
+							IsActive: { editable: true, type: "boolean" }
+						}
+					}
+				},
+				requestEnd: function (e) {
+					if (e.type == "update") {
+						this.read();
+					}
+				},
+				error: function (e) {
+					display_kendoui_grid_error(e);
+					// Cancel the changes
+					this.cancelChanges();
+				},
+				pageSize: @defaultGridPageSize
+				},
+			pageable: {
+				refresh: true,
+				pageSizes: [@(gridPageSizes)]
+			},
+			editable: {
+				confirmation: true,
+				mode: "inline"
+			},
+			filterable: false,
+			sortable: true,
+			scrollable: false,
+			columns: [{
+				field: "SystemName",
+				title: "@T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.SystemName")"
+			}, {
+				field: "SliderType",
+				title: "@T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.SliderType")"
+			}, {
+				field: "IsActive",
+				title: "@T("SevenSpikes.Plugins.AnywhereSliders.Admin.Slider.IsActive")",
+				template: '# if(IsActive) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #',
+				editable: true
+			}, {
+				template: kendo.template($("#commands-template").html()),
+				filterable: false,
+				sortable: false
+			}, {
+				command: [{
+					name: "destroy",
+					text: "@T("Admin.Common.Delete")"
+				}],
+				width: 200
+			}]
+		});
+
+		function applySearch(query) {
+
+			var grid = $('#sliders-grid').data('kendoGrid');
+
+			var filter = {};
+
+			if(query.length !== 0) {
+
+				filter ={
+					logic:"or",
+					filters: [
+						{
+						  field: "SystemName",
+						  operator: "contains",
+						  value: query
+						}
+					]
+				}
+			}
+
+			grid.dataSource.query({
+				filter: filter
+			});
+		}
+
+		$('#slidersSearchButton').on('click', function () {
+
+			var searchBox = $('#slidersSearch');
+
+			if (searchBox.length === 0) {
+
+				return;
+			}
+
+			var query = searchBox.val();
+
+			applySearch(query);
+
+		});
+
+		$(document).on('keypress', function (e) {
+
+			var key = e.which;
+
+			if(key == 13) {
+
+				$('#slidersSearchButton').click();
+			}
+		});
+	});
 </script>
 
 <script id="commands-template" type="text/x-kendo-template">
