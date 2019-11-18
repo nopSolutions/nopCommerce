@@ -1,6 +1,6 @@
 ﻿nopCommerce | [![Build Status](https://travis-ci.com/nopSolutions/nopCommerce.svg?branch=develop)](https://travis-ci.com/nopSolutions/nopCommerce)
 ===========
-nopCommerce is the best open-source e-commerce shopping cart solution. nopCommerce is available for free. nopCommerce is free and it is the most popular ASP.NET ecommerce platform. It has been downloaded more than 3 million times!
+nopCommerce is the best open-source e-commerce shopping cart solution. nopCommerce is free and it is the most popular ASP.NET ecommerce platform. It has been downloaded more than 3 million times!
 
 nopCommerce is a fully customizable shopping cart. It's stable and highly usable. nopCommerce is an open source ecommerce solution that is **ASP.NET Core** based with a MS SQL 2012 (or higher) backend database. Our easy-to-use shopping cart solution is uniquely suited for merchants that have outgrown existing systems, and may be hosted with your current web host or our hosting partners. It has everything you need to get started in selling physical and digital goods over the internet.
 
