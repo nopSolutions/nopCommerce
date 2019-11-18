@@ -216,7 +216,7 @@ namespace Nop.Plugin.Payments.Square.Controllers
         public IActionResult AccessTokenCallback()
         {
             //load settings for a current store
-            var storeId = _storeContext.CurrentStore.Id;
+            var storeId = _storeContext.ActiveStoreScopeConfiguration;
             var settings = _settingService.LoadSetting<SquarePaymentSettings>(storeId);
 
             //handle access token callback
@@ -238,7 +238,7 @@ namespace Nop.Plugin.Payments.Square.Controllers
                     throw new NopException("No service response");
 
                 //exchange the authorization code for an access token
-                var (accessToken, refreshToken) = _squarePaymentManager.ObtainAccessToken(authorizationCode);
+                var (accessToken, refreshToken) = _squarePaymentManager.ObtainAccessToken(authorizationCode, storeId);
                 if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken))
                     throw new NopException("No service response");
 
@@ -281,7 +281,7 @@ namespace Nop.Plugin.Payments.Square.Controllers
             try
             {
                 //try to revoke all access tokens
-                var successfullyRevoked = _squarePaymentManager.RevokeAccessTokens();
+                var successfullyRevoked = _squarePaymentManager.RevokeAccessTokens(storeId);
                 if (!successfullyRevoked)
                     throw new NopException("Tokens were not revoked");
 
