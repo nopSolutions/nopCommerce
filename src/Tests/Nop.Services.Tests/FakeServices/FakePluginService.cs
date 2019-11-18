@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using FluentMigrator.Runner;
+using Moq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Infrastructure;
@@ -14,13 +15,15 @@ namespace Nop.Services.Tests.FakeServices
             CatalogSettings catalogSettings = null,
             ICustomerService customerService = null,
             ILogger logger = null,
+            IMigrationRunner migrationRunner = null,
             INopFileProvider fileProvider = null,
             IWebHelper webHelper = null) : base(
-                catalogSettings ?? new CatalogSettings(),
-                customerService ?? new Mock<ICustomerService>().Object,
-                logger ?? new NullLogger(),
-                fileProvider ?? new Mock<INopFileProvider>().Object,
-                webHelper ?? new Mock<IWebHelper>().Object)
+            catalogSettings ?? new CatalogSettings(),
+            customerService ?? new Mock<ICustomerService>().Object,
+            logger ?? new NullLogger(),
+            migrationRunner ?? new Mock<IMigrationRunner>().Object,
+            fileProvider ?? new Mock<INopFileProvider>().Object,
+            webHelper ?? new Mock<IWebHelper>().Object)
         {
         }
     }

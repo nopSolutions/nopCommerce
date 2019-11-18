@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Nop.Data.Data
+namespace Nop.Data
 {
     /// <summary>
     /// Represents data provider type enumeration

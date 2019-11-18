@@ -1,6 +1,5 @@
 ﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Forums;
-using Nop.Data.Data;
 
 namespace Nop.Data.Mapping.Forums
 {

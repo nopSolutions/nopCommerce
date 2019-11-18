@@ -10,7 +10,6 @@ using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Data.Data;
 using Nop.Services.Installation;
 using Nop.Services.Plugins;
 using Nop.Services.Security;

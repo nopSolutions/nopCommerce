@@ -6,15 +6,11 @@ using Nop.Core;
 
 namespace Nop.Data
 {
-    public partial class MsSqlDataProvider: IDataProvider
+    /// <summary>
+    /// Represents the MS SQL Server data provider
+    /// </summary>
+    public partial class MsSqlDataProvider: BaseDataProvider, IDataProvider
     {
-        private readonly DataConnection _dataConnection;
-
-        public MsSqlDataProvider(DataConnection dataConnection)
-        {
-            _dataConnection = dataConnection;
-        }
-
         #region Methods
 
         /// <summary>
@@ -31,15 +27,6 @@ namespace Nop.Data
         /// </summary>
         public void InitializeDatabase()
         {
-        }
-
-        /// <summary>
-        /// Get a support database parameter object (used by stored procedures)
-        /// </summary>
-        /// <returns>Parameter</returns>
-        public DataParameter GetParameter()
-        {
-            return new DataParameter();
         }
 
         /// <summary>
@@ -135,18 +122,6 @@ namespace Nop.Data
                         DEALLOCATE cur_reindex";
 
             _dataConnection.Execute(commandText);
-        }
-
-        /// <summary>
-        /// Loads the original copy of the entity
-        /// </summary>
-        /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <param name="entity">Entity</param>
-        /// <returns>Copy of the passed entity</returns>
-        public TEntity LoadOriginalCopy<TEntity>(TEntity entity) where TEntity : BaseEntity
-        {
-            var entities = _dataConnection.GetTable<TEntity>();
-            return entities.FirstOrDefault(e => e.Id == Convert.ToInt32(entity.Id));
         }
 
         #endregion

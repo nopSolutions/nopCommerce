@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FluentMigrator.Runner;
 using Moq;
 using Nop.Core;
 using Nop.Data;
@@ -101,9 +102,10 @@ namespace Nop.Services.Tests.Tax
 
             var customerService = new Mock<ICustomerService>();
             var loger = new Mock<ILogger>();
+            var migrationRunner = new Mock<IMigrationRunner>();
 
             _catalogSettings = new CatalogSettings();
-            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, _webHelper.Object);
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, _webHelper.Object);
             _taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
 
             var cacheManager = new TestCacheManager();

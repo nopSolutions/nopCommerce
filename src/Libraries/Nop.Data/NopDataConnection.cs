@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using LinqToDB;
+﻿using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
 using Nop.Core.Domain.Affiliates;
@@ -30,7 +27,6 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
-using Nop.Data.Data;
 
 namespace Nop.Data
 {
@@ -43,20 +39,6 @@ namespace Nop.Data
         {
             if (Singleton<MappingSchema>.Instance != null)
                 AddMappingSchema(Singleton<MappingSchema>.Instance);
-        }
-
-        /// <summary>
-        /// Gets or sets data provider configuration name
-        /// </summary>
-        public DataProviderType ProviderType
-        {
-            get
-            {
-                if (!(DefaultSettings.ConnectionStrings.FirstOrDefault(p => p.Name == ConfigurationString) is ConnectionStringSettings connectionStringSettings))
-                    throw new ArgumentNullException(nameof(connectionStringSettings));
-
-                return connectionStringSettings.ProviderType;
-            }
         }
 
         public ITable<PictureBinary> PictureBinary => GetTable<PictureBinary>();

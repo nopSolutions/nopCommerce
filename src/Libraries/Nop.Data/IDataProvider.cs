@@ -1,4 +1,5 @@
-﻿using LinqToDB.Data;
+﻿using System;
+using LinqToDB.Data;
 using Nop.Core;
 
 namespace Nop.Data
@@ -16,10 +17,58 @@ namespace Nop.Data
         void InitializeDatabase();
 
         /// <summary>
-        /// Get a support database parameter object (used by stored procedures)
+        /// Get string parameter
         /// </summary>
+        /// <param name="parameterName">Parameter name</param>
+        /// <param name="parameterValue">Parameter value</param>
         /// <returns>Parameter</returns>
-        DataParameter GetParameter();
+        DataParameter GetStringParameter(string parameterName, string parameterValue);
+
+        /// <summary>
+        /// Get output string parameter
+        /// </summary>
+        /// <param name="parameterName">Parameter name</param>
+        /// <returns>Parameter</returns>
+        DataParameter GetOutputStringParameter(string parameterName);
+
+        /// <summary>
+        /// Get int parameter
+        /// </summary>
+        /// <param name="parameterName">Parameter name</param>
+        /// <param name="parameterValue">Parameter value</param>
+        /// <returns>Parameter</returns>
+        DataParameter GetInt32Parameter(string parameterName, int? parameterValue);
+
+        /// <summary>
+        /// Get output int32 parameter
+        /// </summary>
+        /// <param name="parameterName">Parameter name</param>
+        /// <returns>Parameter</returns>
+        DataParameter GetOutputInt32Parameter(string parameterName);
+
+        /// <summary>
+        /// Get boolean parameter
+        /// </summary>
+        /// <param name="parameterName">Parameter name</param>
+        /// <param name="parameterValue">Parameter value</param>
+        /// <returns>Parameter</returns>
+        DataParameter GetBooleanParameter(string parameterName, bool? parameterValue);
+
+        /// <summary>
+        /// Get decimal parameter
+        /// </summary>
+        /// <param name="parameterName">Parameter name</param>
+        /// <param name="parameterValue">Parameter value</param>
+        /// <returns>Parameter</returns>
+        DataParameter GetDecimalParameter(string parameterName, decimal? parameterValue);
+
+        /// <summary>
+        /// Get datetime parameter
+        /// </summary>
+        /// <param name="parameterName">Parameter name</param>
+        /// <param name="parameterValue">Parameter value</param>
+        /// <returns>Parameter</returns>
+        DataParameter GetDateTimeParameter(string parameterName, DateTime? parameterValue);
 
         /// <summary>
         /// Get the current identity value
@@ -58,7 +107,7 @@ namespace Nop.Data
         /// <param name="entity">Entity</param>
         /// <returns>Copy of the passed entity</returns>
         TEntity LoadOriginalCopy<TEntity>(TEntity entity) where TEntity : BaseEntity;
-
+        
         #endregion
 
         #region Properties

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using LinqToDB.Configuration;
-using Nop.Data.Data;
 
 namespace Nop.Data
 {

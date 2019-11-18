@@ -4,7 +4,6 @@ using System.Text;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Infrastructure;
-using Nop.Data.Data;
 
 namespace Nop.Data
 {

@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using FluentMigrator;
+using FluentMigrator.Runner;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -21,6 +25,7 @@ namespace Nop.Services.Plugins
         private readonly CatalogSettings _catalogSettings;
         private readonly ICustomerService _customerService;
         private readonly ILogger _logger;
+        private readonly IMigrationRunner _migrationRunner;
         private readonly INopFileProvider _fileProvider;
         private readonly IWebHelper _webHelper;
         private readonly IPluginsInfo _pluginsInfo;
@@ -32,12 +37,14 @@ namespace Nop.Services.Plugins
         public PluginService(CatalogSettings catalogSettings,
             ICustomerService customerService,
             ILogger logger,
+            IMigrationRunner migrationRunner,
             INopFileProvider fileProvider,
             IWebHelper webHelper)
         {
             _catalogSettings = catalogSettings;
             _customerService = customerService;
             _logger = logger;
+            _migrationRunner = migrationRunner;
             _fileProvider = fileProvider;
             _webHelper = webHelper;
             _pluginsInfo = Singleton<IPluginsInfo>.Instance;
@@ -463,13 +470,43 @@ namespace Nop.Services.Plugins
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
             var customerActivityService = EngineContext.Current.Resolve<ICustomerActivityService>();
 
+            var typeFinder = new AppDomainTypeFinder();
+
             //uninstall plugins
             foreach (var descriptor in pluginDescriptors.OrderByDescending(pluginDescriptor => pluginDescriptor.DisplayOrder))
             {
                 try
                 {
+                    var plugin = descriptor.Instance<IPlugin>();
                     //try to uninstall an instance
-                    descriptor.Instance<IPlugin>().Uninstall();
+                    plugin.Uninstall();
+
+                    //executes a plugin Down migrations
+                    foreach (var migration in typeFinder.FindClassesOfType<Migration>(new []{ Assembly.GetAssembly(plugin.GetType()) }))
+                    {
+                        try
+                        {
+                            var downMigration = EngineContext.Current.ResolveUnregistered(migration) as IMigration;
+                            _migrationRunner.Down(downMigration);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Warning(ex.Message, ex);
+                        }
+                    }
+
+                    //delete plugin tables
+                    foreach (var mappingConfiguration in typeFinder.FindClassesOfType<IMappingConfiguration>(new[] { Assembly.GetAssembly(plugin.GetType()) }))
+                    {
+                        try
+                        {
+                            (EngineContext.Current.ResolveUnregistered(mappingConfiguration) as IMappingConfiguration)?.DeleteTableIfExists(new NopDataConnection());
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Warning(ex.Message, ex);
+                        }
+                    }
 
                     //remove plugin system name from appropriate lists
                     _pluginsInfo.InstalledPluginNames.Remove(descriptor.SystemName);

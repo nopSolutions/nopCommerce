@@ -1,6 +1,5 @@
 ﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Catalog;
-using Nop.Data.Data;
 
 namespace Nop.Data.Mapping.Catalog
 {

@@ -1,5 +1,5 @@
 ﻿using Nop.Core;
-using Nop.Data.Data;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Data
 {
@@ -17,14 +17,14 @@ namespace Nop.Data
         {
             get
             {
-                var dataConnection = new NopDataConnection();
+                var dataProviderType = Singleton<DataSettings>.Instance.DataProvider;
 
-                switch (dataConnection.ProviderType)
+                switch (dataProviderType)
                 {
                     case DataProviderType.SqlServer:
-                        return new MsSqlDataProvider(dataConnection);
+                        return new MsSqlDataProvider();
                     default:
-                        throw new NopException($"Not supported data provider name: '{dataConnection.DataProvider}'");
+                        throw new NopException($"Not supported data provider name: '{dataProviderType}'");
                 }
             }
         }

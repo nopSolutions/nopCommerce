@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FluentMigrator.Runner;
 using Moq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -42,9 +43,10 @@ namespace Nop.Services.Tests.Payments
             var customerService = new Mock<ICustomerService>();
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
+            var migrationRunner = new Mock<IMigrationRunner>();
 
             _catalogSettings = new CatalogSettings();
-            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _settingService = new Mock<ISettingService>();

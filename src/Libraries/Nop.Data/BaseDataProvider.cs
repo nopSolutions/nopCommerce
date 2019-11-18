@@ -1,26 +1,42 @@
 ﻿using System;
 using System.Data;
+using System.Linq;
 using LinqToDB;
 using LinqToDB.Data;
+using Nop.Core;
 
-namespace Nop.Data.Extensions
+namespace Nop.Data
 {
     /// <summary>
-    /// Represents data provider extensions
+    /// Represents a base data provider
     /// </summary>
-    public static class DataProviderExtensions
+    public abstract partial class BaseDataProvider
     {
+        #region Ctor
+
+        protected readonly DataConnection _dataConnection;
+
+        #endregion
+
+        #region Ctor
+
+        protected BaseDataProvider()
+        {
+            _dataConnection = new NopDataConnection();
+        }
+
+        #endregion
+
         #region Utilities
 
         /// <summary>
         /// Get DB parameter
         /// </summary>
-        /// <param name="dataProvider">Data provider</param>
         /// <param name="dbType">Data type</param>
         /// <param name="parameterName">Parameter name</param>
         /// <param name="parameterValue">Parameter value</param>
         /// <returns>Parameter</returns>
-        private static DataParameter GetParameter(this IDataProvider dataProvider, DataType dbType, string parameterName, object parameterValue)
+        protected virtual DataParameter GetParameter(DataType dbType, string parameterName, object parameterValue)
         {
             var parameter = new DataParameter
             {
@@ -35,11 +51,10 @@ namespace Nop.Data.Extensions
         /// <summary>
         /// Get output DB parameter
         /// </summary>
-        /// <param name="dataProvider">Data provider</param>
         /// <param name="dbType">Data type</param>
         /// <param name="parameterName">Parameter name</param>
         /// <returns>Parameter</returns>
-        private static DataParameter GetOutputParameter(this IDataProvider dataProvider, DataType dbType, string parameterName)
+        protected virtual DataParameter GetOutputParameter(DataType dbType, string parameterName)
         {
             var parameter = new DataParameter
             {
@@ -50,7 +65,7 @@ namespace Nop.Data.Extensions
 
             return parameter;
         }
-
+        
         #endregion
 
         #region Methods
@@ -58,83 +73,88 @@ namespace Nop.Data.Extensions
         /// <summary>
         /// Get string parameter
         /// </summary>
-        /// <param name="dataProvider">Data provider</param>
         /// <param name="parameterName">Parameter name</param>
         /// <param name="parameterValue">Parameter value</param>
         /// <returns>Parameter</returns>
-        public static DataParameter GetStringParameter(this IDataProvider dataProvider, string parameterName, string parameterValue)
+        public virtual DataParameter GetStringParameter(string parameterName, string parameterValue)
         {
-            return dataProvider.GetParameter(DataType.NVarChar, parameterName, (object)parameterValue ?? DBNull.Value);
+            return GetParameter(DataType.NVarChar, parameterName, (object)parameterValue ?? DBNull.Value);
         }
 
         /// <summary>
         /// Get output string parameter
         /// </summary>
-        /// <param name="dataProvider">Data provider</param>
         /// <param name="parameterName">Parameter name</param>
         /// <returns>Parameter</returns>
-        public static DataParameter GetOutputStringParameter(this IDataProvider dataProvider, string parameterName)
+        public virtual DataParameter GetOutputStringParameter(string parameterName)
         {
-            return dataProvider.GetOutputParameter(DataType.NVarChar, parameterName);
+            return GetOutputParameter(DataType.NVarChar, parameterName);
         }
 
         /// <summary>
         /// Get int parameter
         /// </summary>
-        /// <param name="dataProvider">Data provider</param>
         /// <param name="parameterName">Parameter name</param>
         /// <param name="parameterValue">Parameter value</param>
         /// <returns>Parameter</returns>
-        public static DataParameter GetInt32Parameter(this IDataProvider dataProvider, string parameterName, int? parameterValue)
+        public virtual DataParameter GetInt32Parameter(string parameterName, int? parameterValue)
         {
-            return dataProvider.GetParameter(DataType.Int32, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
+            return GetParameter(DataType.Int32, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
         }
-        
+
         /// <summary>
         /// Get output int32 parameter
         /// </summary>
-        /// <param name="dataProvider">Data provider</param>
         /// <param name="parameterName">Parameter name</param>
         /// <returns>Parameter</returns>
-        public static DataParameter GetOutputInt32Parameter(this IDataProvider dataProvider, string parameterName)
+        public virtual DataParameter GetOutputInt32Parameter(string parameterName)
         {
-            return dataProvider.GetOutputParameter(DataType.Int32, parameterName);
+            return GetOutputParameter(DataType.Int32, parameterName);
         }
 
         /// <summary>
         /// Get boolean parameter
         /// </summary>
-        /// <param name="dataProvider">Data provider</param>
         /// <param name="parameterName">Parameter name</param>
         /// <param name="parameterValue">Parameter value</param>
         /// <returns>Parameter</returns>
-        public static DataParameter GetBooleanParameter(this IDataProvider dataProvider, string parameterName, bool? parameterValue)
+        public virtual DataParameter GetBooleanParameter(string parameterName, bool? parameterValue)
         {
-            return dataProvider.GetParameter(DataType.Boolean, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
+            return GetParameter(DataType.Boolean, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
         }
-        
+
         /// <summary>
         /// Get decimal parameter
         /// </summary>
-        /// <param name="dataProvider">Data provider</param>
         /// <param name="parameterName">Parameter name</param>
         /// <param name="parameterValue">Parameter value</param>
         /// <returns>Parameter</returns>
-        public static DataParameter GetDecimalParameter(this IDataProvider dataProvider, string parameterName, decimal? parameterValue)
+        public virtual DataParameter GetDecimalParameter(string parameterName, decimal? parameterValue)
         {
-            return dataProvider.GetParameter(DataType.Decimal, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
+            return GetParameter(DataType.Decimal, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
         }
 
         /// <summary>
         /// Get datetime parameter
         /// </summary>
-        /// <param name="dataProvider">Data provider</param>
         /// <param name="parameterName">Parameter name</param>
         /// <param name="parameterValue">Parameter value</param>
         /// <returns>Parameter</returns>
-        public static DataParameter GetDateTimeParameter(this IDataProvider dataProvider, string parameterName, DateTime? parameterValue)
+        public virtual DataParameter GetDateTimeParameter(string parameterName, DateTime? parameterValue)
         {
-            return dataProvider.GetParameter(DataType.DateTime, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
+            return GetParameter(DataType.DateTime, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
+        }
+
+        /// <summary>
+        /// Loads the original copy of the entity
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <returns>Copy of the passed entity</returns>
+        public virtual TEntity LoadOriginalCopy<TEntity>(TEntity entity) where TEntity : BaseEntity
+        {
+            var entities = _dataConnection.GetTable<TEntity>();
+            return entities.FirstOrDefault(e => e.Id == Convert.ToInt32(entity.Id));
         }
 
         #endregion

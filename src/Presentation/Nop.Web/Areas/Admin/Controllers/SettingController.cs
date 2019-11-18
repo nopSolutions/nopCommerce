@@ -26,7 +26,6 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Data.Data;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;

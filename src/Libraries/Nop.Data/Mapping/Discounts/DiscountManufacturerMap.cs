@@ -1,6 +1,5 @@
 ﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Discounts;
-using Nop.Data.Data;
 
 namespace Nop.Data.Mapping.Discounts
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentMigrator.Runner;
 using Moq;
 using Nop.Core;
 using Nop.Data;
@@ -169,8 +170,9 @@ namespace Nop.Services.Tests.Orders
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
             var loger = new Mock<ILogger>();
+            var migrationRunner = new Mock<IMigrationRunner>();
 
-            var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, _webHelper.Object);
+            var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, _webHelper.Object);
             _paymentPluginManager = new PaymentPluginManager(pluginService, null, _paymentSettings);
             _pickupPluginManager = new PickupPluginManager(pluginService, _shippingSettings);
             _shippingPluginManager = new ShippingPluginManager(pluginService, _shippingSettings);

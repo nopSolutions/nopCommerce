@@ -1,4 +1,7 @@
-﻿using LinqToDB.Mapping;
+﻿using System.Linq;
+using LinqToDB;
+using LinqToDB.Data;
+using LinqToDB.Mapping;
 using Nop.Core;
 
 namespace Nop.Data
@@ -26,6 +29,50 @@ namespace Nop.Data
             builder.HasPrimaryKey(entity => entity.Id).HasIdentity(entity => entity.Id);
 
             Configure(builder);
+        }
+
+        /// <summary>
+        /// Creates new table in database for mapping class
+        /// </summary>
+        /// <param name="dataConnection">Data connection</param>
+        public void CreateTableIfNotExists(DataConnection dataConnection)
+        {
+            var sp = dataConnection.DataProvider.GetSchemaProvider();
+            var dbSchema = sp.GetSchema(dataConnection);
+
+            if (dbSchema.Tables.All(t => t.TypeName != typeof(TEntity).Name))
+            {
+                //no required table-create it
+                try
+                {
+                    dataConnection.CreateTable<TEntity>();
+                }
+                catch (System.Data.SqlClient.SqlException)
+                {
+                }
+            }
+        }
+
+        /// <summary>
+        /// Drops table identified by mapping class
+        /// </summary>
+        /// <param name="dataConnection">Data connection</param>
+        public void DeleteTableIfExists(DataConnection dataConnection)
+        {
+            var sp = dataConnection.DataProvider.GetSchemaProvider();
+            var dbSchema = sp.GetSchema(dataConnection);
+
+            if (dbSchema.Tables.Any(t => t.TypeName == typeof(TEntity).Name))
+            {
+                //table exists delete it
+                try
+                {
+                    dataConnection.DropTable<TEntity>();
+                }
+                catch (System.Data.SqlClient.SqlException)
+                {
+                }
+            }
         }
 
         #endregion

@@ -5,7 +5,6 @@ using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
-using Nop.Data.Data;
 using Nop.Services.Events;
 
 namespace Nop.Services.Messages

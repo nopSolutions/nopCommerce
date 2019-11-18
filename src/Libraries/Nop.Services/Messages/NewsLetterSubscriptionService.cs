@@ -4,7 +4,6 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
-using Nop.Data.Data;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 

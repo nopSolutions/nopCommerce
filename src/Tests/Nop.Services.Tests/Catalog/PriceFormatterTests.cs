@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using FluentMigrator.Runner;
 using Moq;
 using Nop.Core;
 using Nop.Data;
@@ -85,9 +86,10 @@ namespace Nop.Services.Tests.Catalog
             var customerService = new Mock<ICustomerService>();
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
+            var migrationRunner = new Mock<IMigrationRunner>();
 
             _catalogSettings = new CatalogSettings();
-            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
             _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, pluginService);
             _currencyService = new CurrencyService(_currencySettings,
                 null,

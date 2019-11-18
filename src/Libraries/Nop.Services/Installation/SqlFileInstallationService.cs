@@ -10,7 +10,6 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Data.Data;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 

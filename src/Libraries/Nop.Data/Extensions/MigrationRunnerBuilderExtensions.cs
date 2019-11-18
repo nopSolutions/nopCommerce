@@ -1,5 +1,4 @@
 ﻿using FluentMigrator.Runner;
-using Nop.Data.Data;
 
 namespace Nop.Data.Extensions
 {

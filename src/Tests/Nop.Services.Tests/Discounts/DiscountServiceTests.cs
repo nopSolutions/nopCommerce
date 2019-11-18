@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentMigrator.Runner;
 using Moq;
 using Nop.Core;
 using Nop.Data;
@@ -80,8 +81,9 @@ namespace Nop.Services.Tests.Discounts
 
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
+            var migrationRunner = new Mock<IMigrationRunner>();
 
-            var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+            var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
 
             var discountMappingRepo = new Mock<IRepository<DiscountMapping>>();
 

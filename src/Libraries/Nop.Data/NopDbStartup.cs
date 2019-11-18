@@ -42,10 +42,16 @@ namespace Nop.Data
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
-            var dataSettings = DataSettingsManager.LoadSettings();
+            var dataSettings = Singleton<DataSettings>.Instance;
 
             var connSettings = new Linq2DbSettingsProvider(dataSettings);
             DataConnection.DefaultSettings = connSettings;
+
+            foreach (var typeConfiguration in typeConfigurations)
+            {
+                var mappingConfiguration = (IMappingConfiguration)Activator.CreateInstance(typeConfiguration);
+                mappingConfiguration.CreateTableIfNotExists(new NopDataConnection());
+            }
 
             services
                 // add common FluentMigrator services

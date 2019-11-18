@@ -7,8 +7,6 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
-using Nop.Data.Data;
-
 
 namespace Nop.Services.Logging
 {

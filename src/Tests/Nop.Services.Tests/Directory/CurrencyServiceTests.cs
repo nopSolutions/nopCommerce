@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentMigrator.Runner;
 using Moq;
 using Nop.Core;
 using Nop.Data;
@@ -28,12 +29,12 @@ namespace Nop.Services.Tests.Directory
         private IExchangeRatePluginManager _exchangeRatePluginManager;
         private CatalogSettings _catalogSettings;
 
-        private Currency currencyUSD, currencyRUR, currencyEUR;
+        private Currency _currencyUSD, _currencyRUR, _currencyEUR;
 
         [SetUp]
         public new void SetUp()
         {
-            currencyUSD = new Currency
+            _currencyUSD = new Currency
             {
                 Id = 1,
                 Name = "US Dollar",
@@ -47,7 +48,7 @@ namespace Nop.Services.Tests.Directory
                 UpdatedOnUtc = DateTime.UtcNow,
                 RoundingType = RoundingType.Rounding001
             };
-            currencyEUR = new Currency
+            _currencyEUR = new Currency
             {
                 Id = 2,
                 Name = "Euro",
@@ -61,7 +62,7 @@ namespace Nop.Services.Tests.Directory
                 UpdatedOnUtc = DateTime.UtcNow,
                 RoundingType = RoundingType.Rounding001
             };
-            currencyRUR = new Currency
+            _currencyRUR = new Currency
             {
                 Id = 3,
                 Name = "Russian Rouble",
@@ -76,10 +77,10 @@ namespace Nop.Services.Tests.Directory
                 RoundingType = RoundingType.Rounding001
             };
             _currencyRepository = new Mock<IRepository<Currency>>();
-            _currencyRepository.Setup(x => x.Table).Returns(new List<Currency> { currencyUSD, currencyEUR, currencyRUR }.AsQueryable());
-            _currencyRepository.Setup(x => x.GetById(currencyUSD.Id)).Returns(currencyUSD);
-            _currencyRepository.Setup(x => x.GetById(currencyEUR.Id)).Returns(currencyEUR);
-            _currencyRepository.Setup(x => x.GetById(currencyRUR.Id)).Returns(currencyRUR);
+            _currencyRepository.Setup(x => x.Table).Returns(new List<Currency> { _currencyUSD, _currencyEUR, _currencyRUR }.AsQueryable());
+            _currencyRepository.Setup(x => x.GetById(_currencyUSD.Id)).Returns(_currencyUSD);
+            _currencyRepository.Setup(x => x.GetById(_currencyEUR.Id)).Returns(_currencyEUR);
+            _currencyRepository.Setup(x => x.GetById(_currencyRUR.Id)).Returns(_currencyRUR);
 
             _storeMappingService = new Mock<IStoreMappingService>();
 
@@ -87,8 +88,8 @@ namespace Nop.Services.Tests.Directory
 
             _currencySettings = new CurrencySettings
             {
-                PrimaryStoreCurrencyId = currencyUSD.Id,
-                PrimaryExchangeRateCurrencyId = currencyEUR.Id
+                PrimaryStoreCurrencyId = _currencyUSD.Id,
+                PrimaryExchangeRateCurrencyId = _currencyEUR.Id
             };
 
             _eventPublisher = new Mock<IEventPublisher>();
@@ -97,9 +98,10 @@ namespace Nop.Services.Tests.Directory
             var customerService = new Mock<ICustomerService>();
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
+            var migrationRunner = new Mock<IMigrationRunner>();
 
             _catalogSettings = new CatalogSettings();
-            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
             _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, pluginService);
             _currencyService = new CurrencyService(_currencySettings,
                 _eventPublisher.Object,
@@ -143,11 +145,11 @@ namespace Nop.Services.Tests.Directory
         [Test]
         public void Can_convert_currency_2()
         {
-            _currencyService.ConvertCurrency(10M, currencyEUR, currencyRUR).ShouldEqual(345M);
-            _currencyService.ConvertCurrency(10.1M, currencyEUR, currencyEUR).ShouldEqual(10.1M);
-            _currencyService.ConvertCurrency(10.1M, currencyRUR, currencyRUR).ShouldEqual(10.1M);
-            _currencyService.ConvertCurrency(12M, currencyUSD, currencyRUR).ShouldEqual(345M);
-            _currencyService.ConvertCurrency(345M, currencyRUR, currencyUSD).ShouldEqual(12M);
+            _currencyService.ConvertCurrency(10M, _currencyEUR, _currencyRUR).ShouldEqual(345M);
+            _currencyService.ConvertCurrency(10.1M, _currencyEUR, _currencyEUR).ShouldEqual(10.1M);
+            _currencyService.ConvertCurrency(10.1M, _currencyRUR, _currencyRUR).ShouldEqual(10.1M);
+            _currencyService.ConvertCurrency(12M, _currencyUSD, _currencyRUR).ShouldEqual(345M);
+            _currencyService.ConvertCurrency(345M, _currencyRUR, _currencyUSD).ShouldEqual(12M);
         }
     }
 }

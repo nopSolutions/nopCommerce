@@ -140,6 +140,13 @@ namespace Nop.Data
             }
         }
 
+        /// <summary>
+        /// Executes command using System.Data.CommandType.StoredProcedure command type
+        /// and returns results as collection of values of specified type
+        /// </summary>
+        /// <param name="storeProcedureName">Store procedure name</param>
+        /// <param name="dataParameters">Command parameters</param>
+        /// <returns>Collection of query result records</returns>
         public IEnumerable<TEntity> EntityFromSql(string storeProcedureName, params object[] dataParameters)
         {
             return _dataConnection.QueryProc<TEntity>(storeProcedureName, dataParameters?.Select(param=>param as DataParameter).ToArray());
