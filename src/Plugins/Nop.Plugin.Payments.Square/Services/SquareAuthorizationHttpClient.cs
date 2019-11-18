@@ -6,6 +6,7 @@ using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Plugin.Payments.Square.Domain;
+using Nop.Services.Configuration;
 
 namespace Nop.Plugin.Payments.Square.Services
 {
@@ -17,24 +18,23 @@ namespace Nop.Plugin.Payments.Square.Services
         #region Fields
 
         private readonly HttpClient _httpClient;
-        private readonly SquarePaymentSettings _squarePaymentSettings;
+        private readonly ISettingService _settingService;
 
         #endregion
 
         #region Ctor
 
         public SquareAuthorizationHttpClient(HttpClient client,
-            SquarePaymentSettings squarePaymentSettings)
+            ISettingService settingService)
         {
             //configure client
             client.BaseAddress = new Uri("https://connect.squareup.com/oauth2/");
             client.Timeout = TimeSpan.FromMilliseconds(5000);
-            client.DefaultRequestHeaders.Add(HeaderNames.Authorization, $"Client {squarePaymentSettings.ApplicationSecret}");
             client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, SquarePaymentDefaults.UserAgent);
             client.DefaultRequestHeaders.Add(HeaderNames.Accept, MimeTypes.ApplicationJson);
 
             _httpClient = client;
-            _squarePaymentSettings = squarePaymentSettings;
+            _settingService = settingService;
         }
 
         #endregion
@@ -51,21 +51,27 @@ namespace Nop.Plugin.Payments.Square.Services
         /// Exchange the authorization code for an access token
         /// </summary>
         /// <param name="authorizationCode">Authorization code</param>
+        /// <param name="storeId">Store identifier for which access token should be obtained</param>
         /// <returns>The asynchronous task whose result contains access and refresh tokens</returns>
-        public async Task<(string AccessToken, string RefreshToken)> ObtainAccessTokenAsync(string authorizationCode)
+        public async Task<(string AccessToken, string RefreshToken)> ObtainAccessTokenAsync(string authorizationCode, int storeId)
         {
             try
             {
+                var settings = _settingService.LoadSetting<SquarePaymentSettings>(storeId);
+
                 //get response
                 var request = new ObtainAccessTokenRequest
                 {
-                    ApplicationId = _squarePaymentSettings.ApplicationId,
-                    ApplicationSecret = _squarePaymentSettings.ApplicationSecret,
+                    ApplicationId = settings.ApplicationId,
+                    ApplicationSecret = settings.ApplicationSecret,
                     GrantType = GrantType.New,
                     AuthorizationCode = authorizationCode
                 };
-                var requestContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, MimeTypes.ApplicationJson);
-                var response = await _httpClient.PostAsync("token", requestContent);
+                var httpRequest = new HttpRequestMessage(HttpMethod.Post, "token");
+                httpRequest.Headers.Add(HeaderNames.Authorization, $"Client {settings.ApplicationSecret}");
+                httpRequest.Content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, MimeTypes.ApplicationJson);
+
+                var response = await _httpClient.SendAsync(httpRequest);
 
                 //return received access token
                 var responseContent = await response.Content.ReadAsStringAsync();
@@ -82,21 +88,27 @@ namespace Nop.Plugin.Payments.Square.Services
         /// <summary>
         /// Renew the expired access token
         /// </summary>
+        /// <param name="storeId">Store identifier for which access token should be updated</param>
         /// <returns>The asynchronous task whose result contains access and refresh tokens</returns>
-        public async Task<(string AccessToken, string RefreshToken)> RenewAccessTokenAsync()
+        public async Task<(string AccessToken, string RefreshToken)> RenewAccessTokenAsync(int storeId)
         {
             try
             {
+                var settings = _settingService.LoadSetting<SquarePaymentSettings>(storeId);
+
                 //get response
                 var request = new ObtainAccessTokenRequest
                 {
-                    ApplicationId = _squarePaymentSettings.ApplicationId,
-                    ApplicationSecret = _squarePaymentSettings.ApplicationSecret,
+                    ApplicationId = settings.ApplicationId,
+                    ApplicationSecret = settings.ApplicationSecret,
                     GrantType = GrantType.Refresh,
-                    RefreshToken = _squarePaymentSettings.RefreshToken
+                    RefreshToken = settings.RefreshToken
                 };
-                var requestContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, MimeTypes.ApplicationJson);
-                var response = await _httpClient.PostAsync("token", requestContent);
+                var httpRequest = new HttpRequestMessage(HttpMethod.Post, "token");
+                httpRequest.Headers.Add(HeaderNames.Authorization, $"Client {settings.ApplicationSecret}");
+                httpRequest.Content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, MimeTypes.ApplicationJson);
+
+                var response = await _httpClient.SendAsync(httpRequest);
 
                 //return received access token
                 var responseContent = await response.Content.ReadAsStringAsync();
@@ -113,19 +125,25 @@ namespace Nop.Plugin.Payments.Square.Services
         /// <summary>
         /// Revoke all access tokens
         /// </summary>
+        /// <param name="storeId">Store identifier for which access token should be revoked</param>
         /// <returns>The asynchronous task whose result determines whether tokens are revoked</returns>
-        public async Task<bool> RevokeAccessTokensAsync()
+        public async Task<bool> RevokeAccessTokensAsync(int storeId)
         {
             try
             {
+                var settings = _settingService.LoadSetting<SquarePaymentSettings>(storeId);
+
                 //get response
                 var request = new RevokeAccessTokenRequest
                 {
-                    ApplicationId = _squarePaymentSettings.ApplicationId,
-                    AccessToken = _squarePaymentSettings.AccessToken
+                    ApplicationId = settings.ApplicationId,
+                    AccessToken = settings.AccessToken
                 };
-                var requestContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, MimeTypes.ApplicationJson);
-                var response = await _httpClient.PostAsync("revoke", requestContent);
+                var httpRequest = new HttpRequestMessage(HttpMethod.Post, "revoke");
+                httpRequest.Headers.Add(HeaderNames.Authorization, $"Client {settings.ApplicationSecret}");
+                httpRequest.Content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, MimeTypes.ApplicationJson);
+
+                var response = await _httpClient.SendAsync(httpRequest);
 
                 //return result
                 var responseContent = await response.Content.ReadAsStringAsync();

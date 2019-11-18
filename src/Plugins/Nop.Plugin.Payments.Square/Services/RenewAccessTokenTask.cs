@@ -63,16 +63,16 @@ namespace Nop.Plugin.Payments.Square.Services
 
             try
             {
+                var storeId = _storeContext.CurrentStore.Id;
+
                 //get the new access token
-                var (newAccessToken, refreshToken) = _squarePaymentManager.RenewAccessToken();
+                var (newAccessToken, refreshToken) = _squarePaymentManager.RenewAccessToken(storeId);
                 if (string.IsNullOrEmpty(newAccessToken) || string.IsNullOrEmpty(refreshToken))
                     throw new NopException("No service response");
 
                 //if access token successfully received, save it for the further usage
                 _squarePaymentSettings.AccessToken = newAccessToken;
                 _squarePaymentSettings.RefreshToken = refreshToken;
-
-                var storeId = _storeContext.CurrentStore.Id;
 
                 _settingService.SaveSetting(_squarePaymentSettings, x => x.AccessToken, storeId, false);
                 _settingService.SaveSetting(_squarePaymentSettings, x => x.RefreshToken, storeId, false);

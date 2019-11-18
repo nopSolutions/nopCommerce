@@ -608,28 +608,31 @@ namespace Nop.Plugin.Payments.Square.Services
         /// Exchange the authorization code for an access token
         /// </summary>
         /// <param name="authorizationCode">Authorization code</param>
+        /// <param name="storeId">Store identifier for which access token should be obtained</param>
         /// <returns>Access and refresh tokens</returns>
-        public (string AccessToken, string RefreshToken) ObtainAccessToken(string authorizationCode)
+        public (string AccessToken, string RefreshToken) ObtainAccessToken(string authorizationCode, int storeId)
         {
-            return _squareAuthorizationHttpClient.ObtainAccessTokenAsync(authorizationCode).Result;
+            return _squareAuthorizationHttpClient.ObtainAccessTokenAsync(authorizationCode, storeId).Result;
         }
 
         /// <summary>
         /// Renew the expired access token
         /// </summary>
+        /// <param name="storeId">Store identifier for which access token should be updated</param>
         /// <returns>Access and refresh tokens</returns>
-        public (string AccessToken, string RefreshToken) RenewAccessToken()
+        public (string AccessToken, string RefreshToken) RenewAccessToken(int storeId)
         {
-            return _squareAuthorizationHttpClient.RenewAccessTokenAsync().Result;
+            return _squareAuthorizationHttpClient.RenewAccessTokenAsync(storeId).Result;
         }
 
         /// <summary>
         /// Revoke all access tokens
         /// </summary>
+        /// <param name="storeId">Store identifier for which access token should be revoked</param>
         /// <returns>True if tokens were successfully revoked; otherwise false</returns>
-        public bool RevokeAccessTokens()
+        public bool RevokeAccessTokens(int storeId)
         {
-            return _squareAuthorizationHttpClient.RevokeAccessTokensAsync().Result;
+            return _squareAuthorizationHttpClient.RevokeAccessTokensAsync(storeId).Result;
         }
 
         #endregion
