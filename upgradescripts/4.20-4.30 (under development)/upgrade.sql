@@ -140,6 +140,39 @@ set @resources='
   <LocaleResource Name="Checkout.RedirectMessage">
     <Value>Redirected</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Square.Instructions">
+    <Value>
+        <![CDATA[
+            <div style="margin: 0 0 10px;">
+                <em><b>Warning: Square sandbox data has been changed. For more information visit our <a href="https://docs.nopcommerce.com/user-guide/configuring/settingup/payments/methods/square.html" target="_blank">documentation</a>.</em></b><br />
+                <br />
+                For plugin configuration, follow these steps:<br />
+                <br />
+                1. You will need a Square Merchant account. If you don''t already have one, you can sign up here: <a href="http://squ.re/nopcommerce" target="_blank">https://squareup.com/signup/</a><br />
+                2. Sign in to ''Square Merchant Dashboard''. Go to ''Account & Settings'' &#8594; ''Locations'' tab and create new location.<br />
+                <em>   Important: Your merchant account must have at least one location with enabled credit card processing. Please refer to the Square customer support if you have any questions about how to set this up.</em><br />
+                3. Sign in to your ''Square Developer Dashboard'' at <a href="http://squ.re/nopcommerce1" target="_blank">https://connect.squareup.com/apps</a>; use the same login credentials as your merchant account.<br />
+                4. Click on ''Create Your First Application'' and fill in the ''Application Name''. This name is for you to recognize the application in the developer portal and is not used by the plugin. Click ''Create Application'' at the bottom of the page.<br />
+                5. Now you are on the details page of the previously created application. On the ''Credentials'' tab click on the ''Change Version'' button and choose ''2019-09-25''.<br />
+                6. Make sure you uncheck ''Use sandbox'' below.<br />
+                7. In the ''Square Developer Dashboard'' go to the details page of the your previously created application:
+                    <ul>
+                        <li>On the ''Credentials'' tab make sure the ''Application mode'' setting value is ''Production''</li>
+                        <li>On the ''Credentials'' tab copy the ''Application ID'' and paste it into ''Application ID'' below</li>
+                        <li>Go to ''OAuth'' tab. Click ''Show'' on the ''Application Secret'' field. Copy the ''Application Secret'' and paste it into ''Application Secret'' below</li>
+                        <li>Copy this URL: <em>{0}</em>. On the ''OAuth'' tab paste this URL into ''Redirect URL''. Click ''Save''</li>
+                    </ul>
+                8. Click ''Save'' below to save the plugin configuration.<br />
+                9. Click ''Obtain access token'' below; the Access token field should populate.<br />
+                <em>Note: If for whatever reason you would like to disable an access to your accounts, simply ''Revoke access tokens'' below.</em><br />
+                10. Choose the previously created location. ''Location'' is a required parameter for payment requests.<br />
+                11. Fill in the remaining fields and click ''Save'' to complete the configuration.<br />
+                <br />
+                <em>Note: The payment form must be generated only on a webpage that uses HTTPS.</em><br />
+            </div>
+        ]]>
+    </Value>
+  </LocaleResource>
 </Language>
 '
 
