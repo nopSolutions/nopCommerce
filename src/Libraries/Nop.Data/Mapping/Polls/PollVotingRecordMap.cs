@@ -21,17 +21,6 @@ namespace Nop.Data.Mapping.Polls
             builder.Property(pollvotingrecord => pollvotingrecord.PollAnswerId);
             builder.Property(pollvotingrecord => pollvotingrecord.CustomerId);
             builder.Property(pollvotingrecord => pollvotingrecord.CreatedOnUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(record => record.PollAnswer)
-            //    .WithMany(pollAnswer => pollAnswer.PollVotingRecords)
-            //    .HasForeignKey(record => record.PollAnswerId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(record => record.Customer)
-            //    .WithMany()
-            //    .HasForeignKey(record => record.CustomerId)
-            //    .IsColumnRequired();
         }
 
         #endregion

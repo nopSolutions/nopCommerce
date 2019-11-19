@@ -34,18 +34,6 @@ namespace Nop.Data.Mapping.Forums
             builder.Property(forumtopic => forumtopic.ForumTopicType);
 
             builder.Ignore(topic => topic.ForumTopicType);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(topic => topic.Forum)
-            //    .WithMany()
-            //    .HasForeignKey(topic => topic.ForumId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(topic => topic.Customer)
-            //   .WithMany()
-            //   .HasForeignKey(topic => topic.CustomerId)
-            //   .IsColumnRequired()
-            //   .OnDelete(DeleteBehavior.Restrict);
         }
 
         #endregion

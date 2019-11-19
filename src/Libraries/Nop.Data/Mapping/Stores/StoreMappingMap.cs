@@ -23,12 +23,6 @@ namespace Nop.Data.Mapping.Stores
 
             builder.Property(storemapping => storemapping.EntityId);
             builder.Property(storemapping => storemapping.StoreId);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(storeMapping => storeMapping.Store)
-            //    .WithMany()
-            //    .HasForeignKey(storeMapping => storeMapping.StoreId)
-            //    .IsColumnRequired();
         }
 
         #endregion

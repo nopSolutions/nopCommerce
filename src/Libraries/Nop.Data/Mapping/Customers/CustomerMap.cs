@@ -43,15 +43,6 @@ namespace Nop.Data.Mapping.Customers
             builder.Property(customer => customer.LastLoginDateUtc);
             builder.Property(customer => customer.LastActivityDateUtc);
             builder.Property(customer => customer.RegisteredInStoreId);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(customer => customer.BillingAddress)
-            //    .WithMany()
-            //    .HasForeignKey(customer => customer.BillingAddressId);
-
-            //builder.HasOne(customer => customer.ShippingAddress)
-            //    .WithMany()
-            //    .HasForeignKey(customer => customer.ShippingAddressId);
         }
 
         #endregion

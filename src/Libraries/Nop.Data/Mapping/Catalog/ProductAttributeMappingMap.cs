@@ -32,17 +32,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(productattributemapping => productattributemapping.ConditionAttributeXml);
 
             builder.Ignore(pam => pam.AttributeControlType);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(productAttributeMapping => productAttributeMapping.Product)
-            //    .WithMany(product => product.ProductAttributeMappings)
-            //    .HasForeignKey(productAttributeMapping => productAttributeMapping.ProductId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(productAttributeMapping => productAttributeMapping.ProductAttribute)
-            //    .WithMany()
-            //    .HasForeignKey(productAttributeMapping => productAttributeMapping.ProductAttributeId)
-            //    .IsColumnRequired();
         }
 
         #endregion

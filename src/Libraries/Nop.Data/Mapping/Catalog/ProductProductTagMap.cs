@@ -27,17 +27,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(mapping => mapping.ProductTagId).HasColumnName("ProductTag_Id");
 
             builder.Ignore(mapping => mapping.Id);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(mapping => mapping.Product)
-            //    .WithMany(product => product.ProductProductTagMappings)
-            //    .HasForeignKey(mapping => mapping.ProductId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(mapping => mapping.ProductTag)
-            //    .WithMany(productTag => productTag.ProductProductTagMappings)
-            //    .HasForeignKey(mapping => mapping.ProductTagId)
-            //    .IsColumnRequired();
         }
 
         #endregion

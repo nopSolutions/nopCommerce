@@ -32,12 +32,6 @@ namespace Nop.Data.Mapping.Forums
             builder.Property(forum => forum.DisplayOrder);
             builder.Property(forum => forum.CreatedOnUtc);
             builder.Property(forum => forum.UpdatedOnUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(forum => forum.ForumGroup)
-            //    .WithMany(forumGroup => forumGroup.Forums)
-            //    .HasForeignKey(forum => forum.ForumGroupId)
-            //    .IsColumnRequired();
         }
 
         #endregion

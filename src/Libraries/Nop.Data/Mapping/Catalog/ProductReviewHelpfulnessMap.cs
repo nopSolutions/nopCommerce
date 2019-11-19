@@ -21,12 +21,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(productReviewHelpfulness => productReviewHelpfulness.ProductReviewId);
             builder.Property(productReviewHelpfulness => productReviewHelpfulness.WasHelpful);
             builder.Property(productReviewHelpfulness => productReviewHelpfulness.CustomerId);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(productReviewHelpfulness => productReviewHelpfulness.ProductReview)
-            //    .WithMany(productReview => productReview.ProductReviewHelpfulnessEntries)
-            //    .HasForeignKey(productReviewHelpfulness => productReviewHelpfulness.ProductReviewId)
-            //    .IsColumnRequired();
         }
 
         #endregion

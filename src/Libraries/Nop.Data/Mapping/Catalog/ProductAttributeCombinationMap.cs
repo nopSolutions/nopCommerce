@@ -29,12 +29,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(productattributecombination => productattributecombination.AllowOutOfStockOrders);
             builder.Property(productattributecombination => productattributecombination.NotifyAdminForQuantityBelow);
             builder.Property(productattributecombination => productattributecombination.PictureId);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(combination => combination.Product)
-            //    .WithMany(product => product.ProductAttributeCombinations)
-            //    .HasForeignKey(combination => combination.ProductId)
-            //    .IsColumnRequired();
         }
 
         #endregion

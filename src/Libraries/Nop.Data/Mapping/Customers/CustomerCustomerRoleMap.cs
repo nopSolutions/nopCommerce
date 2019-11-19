@@ -23,17 +23,6 @@ namespace Nop.Data.Mapping.Customers
             builder.Property(mapping => mapping.CustomerRoleId).HasColumnName("CustomerRole_Id");
 
             builder.Ignore(mapping => mapping.Id);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(mapping => mapping.Customer)
-            //    .WithMany(customer => customer.CustomerCustomerRoleMappings)
-            //    .HasForeignKey(mapping => mapping.CustomerId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(mapping => mapping.CustomerRole)
-            //    .WithMany()
-            //    .HasForeignKey(mapping => mapping.CustomerRoleId)
-            //    .IsColumnRequired();
         }
 
         #endregion

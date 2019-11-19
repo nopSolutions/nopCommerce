@@ -38,12 +38,6 @@ namespace Nop.Data.Mapping.Discounts
 
             builder.Ignore(discount => discount.DiscountType);
             builder.Ignore(discount => discount.DiscountLimitation);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasMany(discount => discount.DiscountRequirements)
-            //    .WithOne(requirement => requirement.Discount)
-            //    .HasForeignKey(requirement => requirement.DiscountId)
-            //    .IsColumnRequired();
         }
 
         #endregion

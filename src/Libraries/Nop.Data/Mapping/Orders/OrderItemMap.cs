@@ -38,17 +38,6 @@ namespace Nop.Data.Mapping.Orders
             builder.Property(orderItem => orderItem.LicenseDownloadId);
             builder.Property(orderItem => orderItem.RentalStartDateUtc);
             builder.Property(orderItem => orderItem.RentalEndDateUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(orderItem => orderItem.Order)
-            //    .WithMany(order => order.OrderItems)
-            //    .HasForeignKey(orderItem => orderItem.OrderId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(orderItem => orderItem.Product)
-            //    .WithMany()
-            //    .HasForeignKey(orderItem => orderItem.ProductId)
-            //    .IsColumnRequired();
         }
 
         #endregion

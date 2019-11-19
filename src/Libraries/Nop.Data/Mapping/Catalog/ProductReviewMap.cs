@@ -30,22 +30,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(productreview => productreview.HelpfulYesTotal);
             builder.Property(productreview => productreview.HelpfulNoTotal);
             builder.Property(productreview => productreview.CreatedOnUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(productReview => productReview.Product)
-            //    .WithMany(product => product.ProductReviews)
-            //    .HasForeignKey(productReview => productReview.ProductId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(productReview => productReview.Customer)
-            //    .WithMany()
-            //    .HasForeignKey(productReview => productReview.CustomerId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(productReview => productReview.Store)
-            //    .WithMany()
-            //    .HasForeignKey(productReview => productReview.StoreId)
-            //    .IsColumnRequired();
         }
 
         #endregion

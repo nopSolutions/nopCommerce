@@ -25,12 +25,6 @@ namespace Nop.Data.Mapping.Customers
             builder.Property(record => record.OAuthToken);
             builder.Property(record => record.OAuthAccessToken);
             builder.Property(record => record.ProviderSystemName);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(record => record.Customer)
-            //    .WithMany(customer => customer.ExternalAuthenticationRecords)
-            //    .HasForeignKey(record => record.CustomerId)
-            //    .IsColumnRequired();
         }
 
         #endregion

@@ -25,12 +25,6 @@ namespace Nop.Data.Mapping.Customers
             builder.Property(password => password.CreatedOnUtc);
 
             builder.Ignore(password => password.PasswordFormat);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(password => password.Customer)
-            //    .WithMany()
-            //    .HasForeignKey(password => password.CustomerId)
-            //    .IsColumnRequired();
         }
 
         #endregion

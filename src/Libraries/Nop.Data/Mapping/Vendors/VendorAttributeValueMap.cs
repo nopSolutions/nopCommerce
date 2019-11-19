@@ -24,12 +24,6 @@ namespace Nop.Data.Mapping.Vendors
             builder.Property(value => value.IsPreSelected);
             builder.Property(value => value.DisplayOrder);
             builder.Property(value => value.VendorAttributeId);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(value => value.VendorAttribute)
-            //    .WithMany(attribute => attribute.VendorAttributeValues)
-            //    .HasForeignKey(value => value.VendorAttributeId)
-            //    .IsColumnRequired();
         }
 
         #endregion

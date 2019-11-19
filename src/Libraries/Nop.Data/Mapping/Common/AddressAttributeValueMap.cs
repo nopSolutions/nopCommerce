@@ -24,12 +24,6 @@ namespace Nop.Data.Mapping.Common
             builder.Property(addressattributevalue => addressattributevalue.AddressAttributeId);
             builder.Property(addressattributevalue => addressattributevalue.IsPreSelected);
             builder.Property(addressattributevalue => addressattributevalue.DisplayOrder);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(value => value.AddressAttribute)
-            //    .WithMany(attribute => attribute.AddressAttributeValues)
-            //    .HasForeignKey(value => value.AddressAttributeId)
-            //    .IsColumnRequired();
         }
 
         #endregion

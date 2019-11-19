@@ -23,17 +23,6 @@ namespace Nop.Data.Mapping.Orders
             builder.Property(historyEntry => historyEntry.GiftCardId);
             builder.Property(historyEntry => historyEntry.UsedWithOrderId);
             builder.Property(historyEntry => historyEntry.CreatedOnUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(historyEntry => historyEntry.GiftCard)
-            //    .WithMany(giftCard => giftCard.GiftCardUsageHistory)
-            //    .HasForeignKey(historyEntry => historyEntry.GiftCardId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(historyEntry => historyEntry.UsedWithOrder)
-            //    .WithMany(order => order.GiftCardUsageHistory)
-            //    .HasForeignKey(historyEntry => historyEntry.UsedWithOrderId)
-            //    .IsColumnRequired();
         }
 
         #endregion

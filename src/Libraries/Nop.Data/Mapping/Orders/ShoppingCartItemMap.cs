@@ -32,17 +32,6 @@ namespace Nop.Data.Mapping.Orders
             builder.Property(item => item.UpdatedOnUtc);
 
             builder.Ignore(item => item.ShoppingCartType);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(item => item.Customer)
-            //    .WithMany(customer => customer.ShoppingCartItems)
-            //    .HasForeignKey(item => item.CustomerId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(item => item.Product)
-            //    .WithMany()
-            //    .HasForeignKey(item => item.ProductId)
-            //    .IsColumnRequired();
         }
 
         #endregion

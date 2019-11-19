@@ -21,17 +21,6 @@ namespace Nop.Data.Mapping.Discounts
             builder.Property(historyEntry => historyEntry.DiscountId);
             builder.Property(historyEntry => historyEntry.OrderId);
             builder.Property(historyEntry => historyEntry.CreatedOnUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(historyEntry => historyEntry.Discount)
-            //    .WithMany()
-            //    .HasForeignKey(historyEntry => historyEntry.DiscountId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(historyEntry => historyEntry.Order)
-            //    .WithMany(order => order.DiscountUsageHistory)
-            //    .HasForeignKey(historyEntry => historyEntry.OrderId)
-            //    .IsColumnRequired();
         }
 
         #endregion

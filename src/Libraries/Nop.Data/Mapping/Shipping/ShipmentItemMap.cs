@@ -22,12 +22,6 @@ namespace Nop.Data.Mapping.Shipping
             builder.Property(item => item.OrderItemId);
             builder.Property(item => item.Quantity);
             builder.Property(item => item.WarehouseId);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(item => item.Shipment)
-            //    .WithMany(shipment => shipment.ShipmentItems)
-            //    .HasForeignKey(item => item.ShipmentId)
-            //    .IsColumnRequired();
         }
 
         #endregion

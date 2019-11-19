@@ -23,17 +23,6 @@ namespace Nop.Data.Mapping.Customers
             builder.Property(mapping => mapping.AddressId).HasColumnName("Address_Id");
 
             builder.Ignore(mapping => mapping.Id);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(mapping => mapping.Customer)
-            //    .WithMany(customer => customer.CustomerAddressMappings)
-            //    .HasForeignKey(mapping => mapping.CustomerId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(mapping => mapping.Address)
-            //    .WithMany()
-            //    .HasForeignKey(mapping => mapping.AddressId)
-            //    .IsColumnRequired();
         }
 
         #endregion

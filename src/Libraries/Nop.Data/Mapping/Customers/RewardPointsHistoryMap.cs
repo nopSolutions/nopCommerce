@@ -29,17 +29,6 @@ namespace Nop.Data.Mapping.Customers
             builder.Property(historyEntry => historyEntry.EndDateUtc);
             builder.Property(historyEntry => historyEntry.ValidPoints);
             builder.Property(historyEntry => historyEntry.OrderId);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(historyEntry => historyEntry.Customer)
-            //    .WithMany()
-            //    .HasForeignKey(historyEntry => historyEntry.CustomerId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(historyEntry => historyEntry.UsedWithOrder)
-            //    .WithOne(order => order.RedeemedRewardPointsEntry)
-            //    .HasForeignKey<Order>(order => order.RewardPointsHistoryEntryId)
-            //    .OnDelete(DeleteBehavior.ClientSetNull);
         }
 
         #endregion

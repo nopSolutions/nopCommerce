@@ -29,12 +29,6 @@ namespace Nop.Data.Mapping.Polls
             builder.Property(poll => poll.LimitedToStores);
             builder.Property(poll => poll.StartDateUtc);
             builder.Property(poll => poll.EndDateUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(poll => poll.Language)
-            //    .WithMany()
-            //    .HasForeignKey(poll => poll.LanguageId)
-            //    .IsColumnRequired();
         }
 
         #endregion

@@ -25,12 +25,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(stockquantityhistory => stockquantityhistory.ProductId);
             builder.Property(stockquantityhistory => stockquantityhistory.CombinationId);
             builder.Property(stockquantityhistory => stockquantityhistory.WarehouseId);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(historyEntry => historyEntry.Product)
-            //    .WithMany()
-            //    .HasForeignKey(historyEntry => historyEntry.ProductId)
-            //    .IsColumnRequired();
         }
 
         #endregion

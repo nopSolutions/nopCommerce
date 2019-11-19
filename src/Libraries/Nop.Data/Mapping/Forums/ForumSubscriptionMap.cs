@@ -23,13 +23,6 @@ namespace Nop.Data.Mapping.Forums
             builder.Property(subscription => subscription.ForumId);
             builder.Property(subscription => subscription.TopicId);
             builder.Property(subscription => subscription.CreatedOnUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(subscription => subscription.Customer)
-            //    .WithMany()
-            //    .HasForeignKey(subscription => subscription.CustomerId)
-            //    .IsColumnRequired()
-            //    .OnDelete(DeleteBehavior.Restrict);
         }
 
         #endregion

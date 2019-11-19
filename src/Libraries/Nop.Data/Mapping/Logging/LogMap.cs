@@ -28,12 +28,6 @@ namespace Nop.Data.Mapping.Logging
             builder.Property(logItem => logItem.CreatedOnUtc);
 
             builder.Ignore(logItem => logItem.LogLevel);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(logItem => logItem.Customer)
-            //    .WithMany()
-            //    .HasForeignKey(logItem => logItem.CustomerId)
-            //    .OnDelete(DeleteBehavior.Cascade);
         }
 
         #endregion

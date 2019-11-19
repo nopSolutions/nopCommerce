@@ -38,12 +38,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(productattributevalue => productattributevalue.AttributeValueType);
 
             builder.Ignore(value => value.AttributeValueType);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(value => value.ProductAttributeMapping)
-            //    .WithMany(productAttributeMapping => productAttributeMapping.ProductAttributeValues)
-            //    .HasForeignKey(value => value.ProductAttributeMappingId)
-            //    .IsColumnRequired();
         }
 
         #endregion

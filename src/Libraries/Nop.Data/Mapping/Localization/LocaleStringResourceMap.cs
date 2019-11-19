@@ -23,12 +23,6 @@ namespace Nop.Data.Mapping.Localization
             builder.HasColumn(locale => locale.ResourceValue).IsColumnRequired();
 
             builder.Property(localestringresource => localestringresource.LanguageId);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(locale => locale.Language)
-            //    .WithMany()
-            //    .HasForeignKey(locale => locale.LanguageId)
-            //    .IsColumnRequired();
         }
 
         #endregion

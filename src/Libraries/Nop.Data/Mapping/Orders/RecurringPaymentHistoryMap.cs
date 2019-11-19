@@ -21,12 +21,6 @@ namespace Nop.Data.Mapping.Orders
             builder.Property(historyEntry => historyEntry.RecurringPaymentId);
             builder.Property(historyEntry => historyEntry.OrderId);
             builder.Property(historyEntry => historyEntry.CreatedOnUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(historyEntry => historyEntry.RecurringPayment)
-            //    .WithMany(recurringPayment => recurringPayment.RecurringPaymentHistory)
-            //    .HasForeignKey(historyEntry => historyEntry.RecurringPaymentId)
-            //    .IsColumnRequired();
         }
 
         #endregion

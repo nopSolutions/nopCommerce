@@ -23,12 +23,6 @@ namespace Nop.Data.Mapping.Catalog
 
             builder.Property(specificationattributeoption => specificationattributeoption.SpecificationAttributeId);
             builder.Property(specificationattributeoption => specificationattributeoption.DisplayOrder);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(option => option.SpecificationAttribute)
-            //    .WithMany(attribute => attribute.SpecificationAttributeOptions)
-            //    .HasForeignKey(option => option.SpecificationAttributeId)
-            //    .IsColumnRequired();
         }
 
         #endregion

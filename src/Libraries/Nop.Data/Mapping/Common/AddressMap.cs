@@ -33,15 +33,6 @@ namespace Nop.Data.Mapping.Common
             builder.Property(address => address.FaxNumber);
             builder.Property(address => address.CustomAttributes);
             builder.Property(address => address.CreatedOnUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(address => address.Country)
-            //    .WithMany()
-            //    .HasForeignKey(address => address.CountryId);
-
-            //builder.HasOne(address => address.StateProvince)
-            //    .WithMany()
-            //    .HasForeignKey(address => address.StateProvinceId);
         }
 
         #endregion

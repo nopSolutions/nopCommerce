@@ -25,17 +25,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(price => price.Quantity);
             builder.Property(price => price.StartDateTimeUtc);
             builder.Property(price => price.EndDateTimeUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(price => price.Product)
-            //    .WithMany(product => product.TierPrices)
-            //    .HasForeignKey(price => price.ProductId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(price => price.CustomerRole)
-            //    .WithMany()
-            //    .HasForeignKey(price => price.CustomerRoleId)
-            //    .OnDelete(DeleteBehavior.Cascade);
         }
 
         #endregion

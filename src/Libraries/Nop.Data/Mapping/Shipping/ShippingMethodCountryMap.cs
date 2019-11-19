@@ -27,17 +27,6 @@ namespace Nop.Data.Mapping.Shipping
             builder.Property(mapping => mapping.CountryId).HasColumnName("Country_Id");
 
             builder.Ignore(mapping => mapping.Id);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(mapping => mapping.Country)
-            //    .WithMany(country => country.ShippingMethodCountryMappings)
-            //    .HasForeignKey(mapping => mapping.CountryId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(mapping => mapping.ShippingMethod)
-            //    .WithMany(method => method.ShippingMethodCountryMappings)
-            //    .HasForeignKey(mapping => mapping.ShippingMethodId)
-            //    .IsColumnRequired();
         }
 
         #endregion

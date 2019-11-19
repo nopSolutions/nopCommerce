@@ -25,11 +25,6 @@ namespace Nop.Data.Mapping.Discounts
             builder.Property(requirement => requirement.IsGroup);
 
             builder.Ignore(requirement => requirement.InteractionType);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasMany(requirement => requirement.ChildRequirements)
-            //    .WithOne()
-            //    .HasForeignKey(requirement => requirement.ParentId);
         }
 
         #endregion

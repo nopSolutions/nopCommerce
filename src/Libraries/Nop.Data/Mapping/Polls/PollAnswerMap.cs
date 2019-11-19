@@ -22,12 +22,6 @@ namespace Nop.Data.Mapping.Polls
             builder.Property(pollAnswer => pollAnswer.PollId);
             builder.Property(pollAnswer => pollAnswer.NumberOfVotes);
             builder.Property(pollAnswer => pollAnswer.DisplayOrder);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(pollAnswer => pollAnswer.Poll)
-            //    .WithMany(poll => poll.PollAnswers)
-            //    .HasForeignKey(pollAnswer => pollAnswer.PollId)
-            //    .IsColumnRequired();
         }
 
         #endregion

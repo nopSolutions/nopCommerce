@@ -22,12 +22,6 @@ namespace Nop.Data.Mapping.Forums
             builder.Property(forumpostvote => forumpostvote.CustomerId);
             builder.Property(forumpostvote => forumpostvote.IsUp);
             builder.Property(forumpostvote => forumpostvote.CreatedOnUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(postVote => postVote.ForumPost)
-            //    .WithMany()
-            //    .HasForeignKey(postVote => postVote.ForumPostId)
-            //    .IsColumnRequired();
         }
 
         #endregion

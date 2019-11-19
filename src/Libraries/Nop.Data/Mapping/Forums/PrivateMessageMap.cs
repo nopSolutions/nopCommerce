@@ -29,19 +29,6 @@ namespace Nop.Data.Mapping.Forums
             builder.Property(message => message.IsDeletedByAuthor);
             builder.Property(message => message.IsDeletedByRecipient);
             builder.Property(message => message.CreatedOnUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(message => message.FromCustomer)
-            //   .WithMany()
-            //   .HasForeignKey(message => message.FromCustomerId)
-            //   .IsColumnRequired()
-            //   .OnDelete(DeleteBehavior.Restrict);
-
-            //builder.HasOne(message => message.ToCustomer)
-            //   .WithMany()
-            //   .HasForeignKey(message => message.ToCustomerId)
-            //   .IsColumnRequired()
-            //   .OnDelete(DeleteBehavior.Restrict);
         }
 
         #endregion

@@ -22,12 +22,6 @@ namespace Nop.Data.Mapping.Security
             builder.HasColumn(record => record.EntityName).IsColumnRequired();
             builder.Property(aclrecord => aclrecord.EntityId);
             builder.Property(aclrecord => aclrecord.CustomerRoleId);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(record => record.CustomerRole)
-            //    .WithMany()
-            //    .HasForeignKey(record => record.CustomerRoleId)
-            //    .IsColumnRequired();
         }
 
         #endregion

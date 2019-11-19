@@ -20,12 +20,6 @@ namespace Nop.Data.Mapping.Media
 
             builder.Property(picturebinary => picturebinary.BinaryData);
             builder.Property(picturebinary => picturebinary.PictureId);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(pictureBinary => pictureBinary.Picture)
-            //    .WithOne(picture => picture.PictureBinary)
-            //    .HasForeignKey<PictureBinary>(pictureBinary => pictureBinary.PictureId)
-            //    .OnDelete(DeleteBehavior.Cascade);
         }
 
         #endregion

@@ -27,12 +27,6 @@ namespace Nop.Data.Mapping.Orders
             builder.Property(value => value.CheckoutAttributeId);
             builder.Property(value => value.IsPreSelected);
             builder.Property(value => value.DisplayOrder);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(value => value.CheckoutAttribute)
-            //    .WithMany(attribute => attribute.CheckoutAttributeValues)
-            //    .HasForeignKey(value => value.CheckoutAttributeId)
-            //    .IsColumnRequired();
         }
 
         #endregion

@@ -21,12 +21,6 @@ namespace Nop.Data.Mapping.Vendors
             builder.HasColumn(note => note.Note).IsColumnRequired();
             builder.Property(note => note.VendorId);
             builder.Property(note => note.CreatedOnUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(note => note.Vendor)
-            //    .WithMany(vendor => vendor.VendorNotes)
-            //    .HasForeignKey(note => note.VendorId)
-            //    .IsColumnRequired();
         }
 
         #endregion

@@ -29,13 +29,6 @@ namespace Nop.Data.Mapping.Orders
             builder.Property(recurringPayment => recurringPayment.CreatedOnUtc);
 
             builder.Ignore(recurringPayment => recurringPayment.CyclePeriod);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(recurringPayment => recurringPayment.InitialOrder)
-            //    .WithMany()
-            //    .HasForeignKey(recurringPayment => recurringPayment.InitialOrderId)
-            //    .IsColumnRequired()
-            //    .OnDelete(DeleteBehavior.Restrict);
         }
 
         #endregion

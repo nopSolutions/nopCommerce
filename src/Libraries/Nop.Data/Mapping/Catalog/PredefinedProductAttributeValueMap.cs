@@ -28,12 +28,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(value => value.PriceAdjustmentUsePercentage);
             builder.Property(value => value.IsPreSelected);
             builder.Property(value => value.DisplayOrder);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(value => value.ProductAttribute)
-            //    .WithMany()
-            //    .HasForeignKey(value => value.ProductAttributeId)
-            //    .IsColumnRequired();
         }
 
         #endregion

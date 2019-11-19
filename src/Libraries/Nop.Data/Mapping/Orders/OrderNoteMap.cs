@@ -24,12 +24,6 @@ namespace Nop.Data.Mapping.Orders
             builder.Property(note => note.DownloadId);
             builder.Property(note => note.DisplayToCustomer);
             builder.Property(note => note.CreatedOnUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(note => note.Order)
-            //    .WithMany(order => order.OrderNotes)
-            //    .HasForeignKey(note => note.OrderId)
-            //    .IsColumnRequired();
         }
 
         #endregion

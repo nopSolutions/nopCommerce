@@ -33,12 +33,6 @@ namespace Nop.Data.Mapping.Blogs
             builder.Property(blogpost => blogpost.MetaDescription);
             builder.Property(blogpost => blogpost.LimitedToStores);
             builder.Property(blogpost => blogpost.CreatedOnUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(blogPost => blogPost.Language)
-            //    .WithMany()
-            //    .HasForeignKey(blogPost => blogPost.LanguageId)
-            //    .IsColumnRequired();
         }
 
         #endregion

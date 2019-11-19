@@ -23,13 +23,6 @@ namespace Nop.Data.Mapping.Affiliates
             builder.Property(affiliate => affiliate.FriendlyUrlName);
             builder.Property(affiliate => affiliate.Deleted);
             builder.Property(affiliate => affiliate.Active);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(affiliate => affiliate.Address)
-            //    .WithMany()
-            //    .HasForeignKey(affiliate => affiliate.AddressId)
-            //    .IsColumnRequired()
-            //    .OnDelete(DeleteBehavior.Restrict);
         }
 
         #endregion

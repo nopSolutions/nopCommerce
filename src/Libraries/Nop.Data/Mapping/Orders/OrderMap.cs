@@ -80,26 +80,6 @@ namespace Nop.Data.Mapping.Orders
             builder.Ignore(order => order.PaymentStatus);
             builder.Ignore(order => order.ShippingStatus);
             builder.Ignore(order => order.CustomerTaxDisplayType);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(order => order.Customer)
-            //    .WithMany()
-            //    .HasForeignKey(order => order.CustomerId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(order => order.BillingAddress)
-            //    .WithMany()
-            //    .HasForeignKey(order => order.BillingAddressId)
-            //    .IsColumnRequired()
-            //    .OnDelete(DeleteBehavior.Restrict);
-
-            //builder.HasOne(order => order.ShippingAddress)
-            //    .WithMany()
-            //    .HasForeignKey(order => order.ShippingAddressId);
-
-            //builder.HasOne(order => order.PickupAddress)
-            //    .WithMany()
-            //    .HasForeignKey(order => order.PickupAddressId);
         }
 
         #endregion

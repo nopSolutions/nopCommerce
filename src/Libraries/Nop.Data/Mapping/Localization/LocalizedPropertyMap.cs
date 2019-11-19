@@ -26,12 +26,6 @@ namespace Nop.Data.Mapping.Localization
 
             builder.Property(localizedproperty => localizedproperty.EntityId);
             builder.Property(localizedproperty => localizedproperty.LanguageId);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(property => property.Language)
-            //    .WithMany()
-            //    .HasForeignKey(property => property.LanguageId)
-            //    .IsColumnRequired();
         }
 
         #endregion

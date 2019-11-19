@@ -27,16 +27,6 @@ namespace Nop.Data.Mapping.Security
             builder.Property(mapping => mapping.CustomerRoleId).HasColumnName("CustomerRole_Id");
 
             builder.Ignore(mapping => mapping.Id);
-
-            //builder.HasOne(mapping => mapping.CustomerRole)
-            //    .WithMany(role => role.PermissionRecordCustomerRoleMappings)
-            //    .HasForeignKey(mapping => mapping.CustomerRoleId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(mapping => mapping.PermissionRecord)
-            //    .WithMany(record => record.PermissionRecordCustomerRoleMappings)
-            //    .HasForeignKey(mapping => mapping.PermissionRecordId)
-            //    .IsColumnRequired();
         }
 
         #endregion

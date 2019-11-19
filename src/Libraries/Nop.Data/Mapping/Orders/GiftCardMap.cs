@@ -34,11 +34,6 @@ namespace Nop.Data.Mapping.Orders
             builder.Property(giftCard => giftCard.GiftCardType);
 
             builder.Ignore(giftCard => giftCard.GiftCardType);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(giftCard => giftCard.PurchasedWithOrderItem)
-            //    .WithMany(orderItem => orderItem.AssociatedGiftCards)
-            //    .HasForeignKey(giftCard => giftCard.PurchasedWithOrderItemId);
         }
 
         #endregion

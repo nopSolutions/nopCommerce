@@ -34,12 +34,6 @@ namespace Nop.Data.Mapping.Orders
             builder.Property(returnrequest => returnrequest.UpdatedOnUtc);
 
             builder.Ignore(returnRequest => returnRequest.ReturnRequestStatus);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(returnRequest => returnRequest.Customer)
-            //    .WithMany(customer => customer.ReturnRequests)
-            //    .HasForeignKey(returnRequest => returnRequest.CustomerId)
-            //    .IsColumnRequired();
         }
 
         #endregion

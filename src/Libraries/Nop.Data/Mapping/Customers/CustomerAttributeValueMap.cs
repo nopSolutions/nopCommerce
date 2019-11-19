@@ -23,12 +23,6 @@ namespace Nop.Data.Mapping.Customers
             builder.Property(customerattributevalue => customerattributevalue.CustomerAttributeId);
             builder.Property(customerattributevalue => customerattributevalue.IsPreSelected);
             builder.Property(customerattributevalue => customerattributevalue.DisplayOrder);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(value => value.CustomerAttribute)
-            //    .WithMany(attribute => attribute.CustomerAttributeValues)
-            //    .HasForeignKey(value => value.CustomerAttributeId)
-            //    .IsColumnRequired();
         }
 
         #endregion

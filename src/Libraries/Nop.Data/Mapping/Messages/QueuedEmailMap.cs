@@ -42,12 +42,6 @@ namespace Nop.Data.Mapping.Messages
             builder.Property(queuedemail => queuedemail.EmailAccountId);
 
             builder.Ignore(email => email.Priority);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(email => email.EmailAccount)
-            //    .WithMany()
-            //    .HasForeignKey(email => email.EmailAccountId)
-            //    .IsColumnRequired();
         }
 
         #endregion

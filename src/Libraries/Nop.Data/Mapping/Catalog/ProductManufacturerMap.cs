@@ -22,17 +22,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(productmanufacturer => productmanufacturer.ManufacturerId);
             builder.Property(productmanufacturer => productmanufacturer.IsFeaturedProduct);
             builder.Property(productmanufacturer => productmanufacturer.DisplayOrder);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(productManufacturer => productManufacturer.Manufacturer)
-            //    .WithMany()
-            //    .HasForeignKey(productManufacturer => productManufacturer.ManufacturerId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(productManufacturer => productManufacturer.Product)
-            //    .WithMany(product => product.ProductManufacturers)
-            //    .HasForeignKey(productManufacturer => productManufacturer.ProductId)
-            //    .IsColumnRequired();
         }
 
         #endregion

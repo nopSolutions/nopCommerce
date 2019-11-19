@@ -22,17 +22,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(productWarehouseInventory => productWarehouseInventory.WarehouseId);
             builder.Property(productWarehouseInventory => productWarehouseInventory.StockQuantity);
             builder.Property(productWarehouseInventory => productWarehouseInventory.ReservedQuantity);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(productWarehouseInventory => productWarehouseInventory.Product)
-            //    .WithMany(product => product.ProductWarehouseInventory)
-            //    .HasForeignKey(productWarehouseInventory => productWarehouseInventory.ProductId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(productWarehouseInventory => productWarehouseInventory.Warehouse)
-            //    .WithMany()
-            //    .HasForeignKey(productWarehouseInventory => productWarehouseInventory.WarehouseId)
-            //    .IsColumnRequired();
         }
 
         #endregion

@@ -27,17 +27,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(productspecificationattribute => productspecificationattribute.DisplayOrder);
           
             builder.Ignore(productSpecificationAttribute => productSpecificationAttribute.AttributeType);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(productSpecificationAttribute => productSpecificationAttribute.SpecificationAttributeOption)
-            //    .WithMany()
-            //    .HasForeignKey(productSpecificationAttribute => productSpecificationAttribute.SpecificationAttributeOptionId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(productSpecificationAttribute => productSpecificationAttribute.Product)
-            //    .WithMany(product => product.ProductSpecificationAttributes)
-            //    .HasForeignKey(productSpecificationAttribute => productSpecificationAttribute.ProductId)
-            //    .IsColumnRequired();
         }
 
         #endregion

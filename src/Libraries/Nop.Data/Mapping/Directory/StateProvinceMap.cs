@@ -24,12 +24,6 @@ namespace Nop.Data.Mapping.Directory
             builder.Property(stateprovince => stateprovince.CountryId);
             builder.Property(stateprovince => stateprovince.Published);
             builder.Property(stateprovince => stateprovince.DisplayOrder);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(state => state.Country)
-            //    .WithMany(country => country.StateProvinces)
-            //    .HasForeignKey(state => state.CountryId)
-            //    .IsColumnRequired();
         }
 
         #endregion

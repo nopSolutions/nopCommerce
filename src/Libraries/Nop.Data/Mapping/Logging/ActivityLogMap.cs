@@ -26,17 +26,6 @@ namespace Nop.Data.Mapping.Logging
             builder.Property(logItem => logItem.EntityId);
             builder.Property(logItem => logItem.CustomerId);
             builder.Property(logItem => logItem.CreatedOnUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(logItem => logItem.ActivityLogType)
-            //    .WithMany()
-            //    .HasForeignKey(logItem => logItem.ActivityLogTypeId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(logItem => logItem.Customer)
-            //    .WithMany()
-            //    .HasForeignKey(logItem => logItem.CustomerId)
-            //    .IsColumnRequired();
         }
 
         #endregion

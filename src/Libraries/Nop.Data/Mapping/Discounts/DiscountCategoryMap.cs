@@ -23,17 +23,6 @@ namespace Nop.Data.Mapping.Discounts
             builder.Property(mapping => mapping.EntityId).HasColumnName("Category_Id");
 
             builder.Ignore(mapping => mapping.Id);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(mapping => mapping.Discount)
-            //    .WithMany(discount => discount.DiscountCategoryMappings)
-            //    .HasForeignKey(mapping => mapping.DiscountId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(mapping => mapping.Category)
-            //    .WithMany(category => category.DiscountCategoryMappings)
-            //    .HasForeignKey(mapping => mapping.CategoryId)
-            //    .IsColumnRequired();
         }
 
         #endregion

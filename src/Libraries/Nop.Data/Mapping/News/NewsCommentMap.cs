@@ -26,22 +26,6 @@ namespace Nop.Data.Mapping.News
             builder.Property(comment => comment.IsApproved);
             builder.Property(comment => comment.StoreId);
             builder.Property(comment => comment.CreatedOnUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(comment => comment.NewsItem)
-            //    .WithMany(news => news.NewsComments)
-            //    .HasForeignKey(comment => comment.NewsItemId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(comment => comment.Customer)
-            //    .WithMany()
-            //    .HasForeignKey(comment => comment.CustomerId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(comment => comment.Store)
-            //    .WithMany()
-            //    .HasForeignKey(comment => comment.StoreId)
-            //    .IsColumnRequired();
         }
 
         #endregion

@@ -26,12 +26,6 @@ namespace Nop.Data.Mapping.Shipping
             builder.Property(shipment => shipment.DeliveryDateUtc);
             builder.Property(shipment => shipment.AdminComment);
             builder.Property(shipment => shipment.CreatedOnUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(shipment => shipment.Order)
-            //    .WithMany(order => order.Shipments)
-            //    .HasForeignKey(shipment => shipment.OrderId)
-            //    .IsColumnRequired();
         }
 
         #endregion

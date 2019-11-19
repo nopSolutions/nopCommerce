@@ -20,18 +20,7 @@ namespace Nop.Data.Mapping.Catalog
 
             builder.Property(prrt => prrt.ProductReviewId);
             builder.Property(prrt => prrt.ReviewTypeId);
-            builder.Property(prrt => prrt.Rating);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(prrt => prrt.ProductReview)
-            //    .WithMany(r => r.ProductReviewReviewTypeMappingEntries)
-            //    .HasForeignKey(prrt => prrt.ProductReviewId)
-            //    .OnDelete(DeleteBehavior.Cascade);
-
-            //builder.HasOne(pam => pam.ReviewType)
-            //    .WithMany()
-            //    .HasForeignKey(prrt => prrt.ReviewTypeId)
-            //    .OnDelete(DeleteBehavior.Cascade);            
+            builder.Property(prrt => prrt.Rating);        
         }
 
         #endregion

@@ -32,12 +32,6 @@ namespace Nop.Data.Mapping.News
             builder.Property(newsitem => newsitem.LimitedToStores);
             builder.Property(newsitem => newsitem.MetaDescription);
             builder.Property(newsitem => newsitem.CreatedOnUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(newsItem => newsItem.Language)
-            //    .WithMany()
-            //    .HasForeignKey(newsItem => newsItem.LanguageId)
-            //    .IsColumnRequired();
         }
 
         #endregion

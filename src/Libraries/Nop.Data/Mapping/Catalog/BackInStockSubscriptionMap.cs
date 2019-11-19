@@ -22,17 +22,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(backinstocksubscription => backinstocksubscription.ProductId);
             builder.Property(backinstocksubscription => backinstocksubscription.CustomerId);
             builder.Property(backinstocksubscription => backinstocksubscription.CreatedOnUtc);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(subscription => subscription.Product)
-            //    .WithMany()
-            //    .HasForeignKey(subscription => subscription.ProductId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(subscription => subscription.Customer)
-            //    .WithMany()
-            //    .HasForeignKey(subscription => subscription.CustomerId)
-            //    .IsColumnRequired();
         }
 
         #endregion

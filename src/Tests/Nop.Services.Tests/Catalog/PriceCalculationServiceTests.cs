@@ -109,7 +109,7 @@ namespace Nop.Services.Tests.Catalog
                 new List<Discount> { _mockDiscount }.AsQueryable(), 
                 new List<DiscountProductMapping>
                 {
-                    new DiscountProductMapping { DiscountId = 1, EntityId = 3 }
+                    new DiscountProductMapping { DiscountId = 1, EntityId = 1 }
                 }.AsQueryable());
 
             _priceCalcService = new PriceCalculationService(_catalogSettings, new CurrencySettings { PrimaryStoreCurrencyId = 1 }, _categoryService.Object,
@@ -245,7 +245,7 @@ namespace Nop.Services.Tests.Catalog
             }.AsQueryable();
         }
 
-        private Discount _mockDiscount = new Discount
+        private readonly Discount _mockDiscount = new Discount
         {
             Id = 1,
             Name = "Discount 1",

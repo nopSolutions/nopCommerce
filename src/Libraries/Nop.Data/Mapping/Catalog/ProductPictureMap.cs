@@ -21,17 +21,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(productpicture => productpicture.ProductId);
             builder.Property(productpicture => productpicture.PictureId);
             builder.Property(productpicture => productpicture.DisplayOrder);
-
-            //TODO: 239 Try to add ForeignKey
-            //builder.HasOne(productPicture => productPicture.Picture)
-            //    .WithMany()
-            //    .HasForeignKey(productPicture => productPicture.PictureId)
-            //    .IsColumnRequired();
-
-            //builder.HasOne(productPicture => productPicture.Product)
-            //    .WithMany(product => product.ProductPictures)
-            //    .HasForeignKey(productPicture => productPicture.ProductId)
-            //    .IsColumnRequired();
         }
 
         #endregion
