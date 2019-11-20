@@ -110,7 +110,6 @@ function displayPopupContentFromUrl(url, title, modal, width) {
 
 function displayBarNotification(message, messagetype, timeout) {
     var notificationTimeout;
-
     var messages = typeof message === 'string' ? [message] : message;
     if (messages.length === 0)
         return;
@@ -127,7 +126,8 @@ function displayBarNotification(message, messagetype, timeout) {
 
     //add new notifications
     var htmlcode = document.createElement('div');
-    htmlcode.classList.add('bar-notification', cssclass);
+    htmlcode.classList.add('bar-notification');
+    htmlcode.classList.add(cssclass);
 
     //add close button for notification
     var close = document.createElement('span');
@@ -139,10 +139,10 @@ function displayBarNotification(message, messagetype, timeout) {
         content.classList.add('content');
         content.innerHTML = messages[i];
 
-        htmlcode.append(content);
+        htmlcode.appendChild(content);
     }
     
-    htmlcode.append(close);
+    htmlcode.appendChild(close);
 
     $('#bar-notification')
         .append(htmlcode);
@@ -154,8 +154,8 @@ function displayBarNotification(message, messagetype, timeout) {
         });
 
     //callback for notification removing
-    var removeNoteItem = function () {
-        htmlcode.remove();
+    var removeNoteItem = function() {
+        htmlcode.parentNode.removeChild(htmlcode);
     };
 
     $(close).on('click', function () {
