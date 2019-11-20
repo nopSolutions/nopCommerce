@@ -80,7 +80,7 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(abbreviation))
                 return null;
 
-            var key = string.Format(NopDirectoryDefaults.StateProvincesByAbbreviationCacheKey, abbreviation, countryId.HasValue ? countryId.Value : 0);
+            var key = string.Format(NopDirectoryDefaults.StateProvincesByAbbreviationCacheKey, abbreviation, countryId ?? 0);
             return _cacheManager.Get(key, () =>
             {
                 var query = _stateProvinceRepository.Table.Where(state => state.Abbreviation == abbreviation);
