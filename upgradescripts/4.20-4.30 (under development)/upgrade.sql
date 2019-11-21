@@ -176,6 +176,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIconsArchive.Hint">
     <Value>Upload archive with favicon and app icons for different operating systems and devices. You can see an example of the favicon and app icons archive in /icons/samples in the root of the site. Your favicon and app icons path is "/icons/icons_{0}"</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Microdata">
+    <Value>Microdata tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Microdata.Hint">
+    <Value>Check to generate Microdata tags on the product details page.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -287,5 +293,13 @@ IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[StorePickup
 BEGIN
 	ALTER TABLE [StorePickupPoint] ADD
 	Longitude decimal(18, 8) NULL
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'seosettings.microdataenabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'seosettings.microdataenabled', 'true', 0)
 END
 GO

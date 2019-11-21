@@ -6048,6 +6048,7 @@ namespace Nop.Services.Installation
                 WwwRequirement = WwwRequirement.NoMatter,
                 TwitterMetaTags = true,
                 OpenGraphMetaTags = true,
+                MicrodataEnabled = true,
                 ReservedUrlRecordSlugs = new List<string>
                 {
                     "admin",

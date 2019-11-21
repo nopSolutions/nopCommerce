@@ -82,5 +82,10 @@ namespace Nop.Core.Domain.Seo
         /// Custom tags in the <![CDATA[<head></head>]]> section
         /// </summary>
         public string CustomHeadTags { get; set; }
+
+        /// <summary>
+        /// A value indicating whether Microdata tags should be generated
+        /// </summary>
+        public bool MicrodataEnabled { get; set; }
     }
 }

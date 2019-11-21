@@ -6972,6 +6972,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Logo.Hint">
     <Value>Upload your store logo. If not uploaded, then the default one will be used.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Microdata">
+    <Value>Microdata tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Microdata.Hint">
+    <Value>Check to generate Microdata tags on the product details page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.OpenGraphMetaTags">
     <Value>Open Graph META tags</Value>
   </LocaleResource>
