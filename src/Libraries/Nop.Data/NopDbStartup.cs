@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Data.SqlClient;
 using System.Linq;
+using FluentMigrator.Runner;
+using FluentMigrator.Runner.Exceptions;
+using LinqToDB.Data;
 using LinqToDB.Mapping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
-using FluentMigrator.Runner;
-using FluentMigrator.Runner.Exceptions;
-using LinqToDB.Data;
 using Nop.Data.Extensions;
 
 namespace Nop.Data
@@ -85,6 +86,11 @@ namespace Nop.Data
             }
             catch (MissingMigrationsException)
             {
+            }
+            catch (Exception ex)
+            {
+                if (!(ex.InnerException is SqlException))
+                    throw;
             }
         }
 
