@@ -12,7 +12,7 @@ namespace Nop.Data.Migrations.Catalog
         {
             Create.ForeignKey().FromTable(nameof(ProductAttributeValue))
                 .ForeignColumn(nameof(ProductAttributeValue.ProductAttributeMappingId))
-                .ToTable(nameof(ProductAttributeMapping))
+                .ToTable(NopMappingDefaults.ProductProductAttributeTable)
                 .PrimaryColumn(nameof(ProductAttributeMapping.Id));
         }
 

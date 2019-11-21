@@ -1,6 +1,4 @@
-﻿
-using System;
-
+﻿using System;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Stores;
 

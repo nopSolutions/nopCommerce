@@ -12,7 +12,7 @@ namespace Nop.Data.Migrations.Forums
         {
             Create.ForeignKey().FromTable(NopMappingDefaults.ForumsPostVoteTable)
                 .ForeignColumn(nameof(ForumPostVote.ForumPostId))
-                .ToTable(nameof(ForumPost))
+                .ToTable(NopMappingDefaults.ForumsPostTable)
                 .PrimaryColumn(nameof(ForumPost.Id));
         }
 

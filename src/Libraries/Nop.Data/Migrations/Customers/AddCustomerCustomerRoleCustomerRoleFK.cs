@@ -11,7 +11,7 @@ namespace Nop.Data.Migrations.Customers
         public override void Up()
         {
             Create.ForeignKey().FromTable(NopMappingDefaults.CustomerCustomerRoleTable)
-                .ForeignColumn(nameof(CustomerCustomerRoleMapping.CustomerRoleId))
+                .ForeignColumn("CustomerRole_Id")
                 .ToTable(nameof(CustomerRole))
                 .PrimaryColumn(nameof(CustomerRole.Id));
         }

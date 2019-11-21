@@ -10,7 +10,7 @@ namespace Nop.Data.Migrations.Catalog
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(nameof(ProductCategory))
+            Create.ForeignKey().FromTable(NopMappingDefaults.ProductCategoryTable)
                 .ForeignColumn(nameof(ProductCategory.CategoryId))
                 .ToTable(nameof(Category))
                 .PrimaryColumn(nameof(Category.Id));

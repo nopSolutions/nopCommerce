@@ -12,7 +12,7 @@ namespace Nop.Data.Migrations.Security
         public override void Up()
         {
             Create.ForeignKey().FromTable(NopMappingDefaults.PermissionRecordRoleTable)
-                .ForeignColumn(nameof(PermissionRecordCustomerRoleMapping.CustomerRoleId))
+                .ForeignColumn("CustomerRole_Id")
                 .ToTable(nameof(CustomerRole))
                 .PrimaryColumn(nameof(CustomerRole.Id));
         }

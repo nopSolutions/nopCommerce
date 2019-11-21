@@ -12,7 +12,7 @@ namespace Nop.Data.Migrations.News
         {
             Create.ForeignKey().FromTable(nameof(NewsComment))
                 .ForeignColumn(nameof(NewsComment.NewsItemId))
-                .ToTable(nameof(NewsItem))
+                .ToTable(NopMappingDefaults.NewsItemTable)
                 .PrimaryColumn(nameof(NewsItem.Id));
         }
 

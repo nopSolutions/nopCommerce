@@ -9,7 +9,7 @@ namespace Nop.Data.Migrations.Affiliates
     public class AddAffiliateAddressFK : AutoReversingMigration
     {
         #region Methods
-        
+
         public override void Up()
         {
             Create.ForeignKey().FromTable(nameof(Affiliate))

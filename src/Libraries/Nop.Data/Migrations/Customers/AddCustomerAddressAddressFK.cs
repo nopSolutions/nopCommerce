@@ -12,7 +12,7 @@ namespace Nop.Data.Migrations.Customers
         public override void Up()
         {
             Create.ForeignKey().FromTable(NopMappingDefaults.CustomerAddressesTable)
-                .ForeignColumn(nameof(CustomerAddressMapping.AddressId))
+                .ForeignColumn("Address_Id")
                 .ToTable(nameof(Address))
                 .PrimaryColumn(nameof(Address.Id));
         }
