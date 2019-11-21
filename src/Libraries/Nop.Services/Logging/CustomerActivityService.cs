@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
@@ -16,7 +15,6 @@ namespace Nop.Services.Logging
     public class CustomerActivityService : ICustomerActivityService
     {
         #region Fields
-
         
         private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
@@ -296,15 +294,7 @@ namespace Nop.Services.Logging
         /// </summary>
         public virtual void ClearAllActivities()
         {
-            //do all databases support "Truncate command"?
-            var dbNopCommerce = new NopDataConnection();
-
-            var activityLogTableName = dbNopCommerce.GetTable<ActivityLog>();
-            dbNopCommerce.Execute($"TRUNCATE TABLE [{activityLogTableName}]");
-
-            var activityLog = _activityLogRepository.Table.ToList();
-            foreach (var activityLogItem in activityLog)
-                _activityLogRepository.Delete(activityLogItem);
+            _activityLogRepository.Truncate();
         }
 
         #endregion

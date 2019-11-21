@@ -431,9 +431,9 @@ namespace Nop.Services.Localization
             };
 
             var pUpdateExistingResources = _dataProvider.GetBooleanParameter("UpdateExistingResources", updateExistingResources);
-            
+
             //long-running query. specify timeout (600 seconds)
-            new NopDataConnection().Execute("EXEC [LanguagePackImport] @LanguageId, @XmlPackage, @UpdateExistingResources",
+            _dataProvider.Execute("EXEC [LanguagePackImport] @LanguageId, @XmlPackage, @UpdateExistingResources",
                 pLanguageId, pXmlPackage, pUpdateExistingResources);
 
             //clear cache

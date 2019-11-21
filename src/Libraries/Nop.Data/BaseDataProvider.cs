@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using LinqToDB;
@@ -155,6 +156,21 @@ namespace Nop.Data
         {
             var entities = _dataConnection.GetTable<TEntity>();
             return entities.FirstOrDefault(e => e.Id == Convert.ToInt32(entity.Id));
+        }
+
+        public virtual IEnumerable<T> QueryProc<T>(string sql, params DataParameter[] parameters)
+        {
+            return _dataConnection.QueryProc<T>(sql, parameters);
+        }
+
+        public virtual IEnumerable<T> Query<T>(string sql)
+        {
+            return _dataConnection.Query<T>(sql);
+        }
+
+        public virtual int Execute(string sql, params DataParameter[] parameters)
+        {
+            return _dataConnection.Execute(sql, parameters);
         }
 
         #endregion

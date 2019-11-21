@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using LinqToDB.Data;
 using Nop.Core;
 
@@ -121,6 +122,32 @@ namespace Nop.Data
         /// Gets a maximum length of the data for HASHBYTES functions, returns 0 if HASHBYTES function is not supported
         /// </summary>
         int SupportedLengthOfBinaryHash { get; }
+
+        /// <summary>
+        /// Executes command using System.Data.CommandType.StoredProcedure command type and
+        /// returns results as collection of values of specified type
+        /// </summary>
+        /// <typeparam name="T">Result record type</typeparam>
+        /// <param name="sql">Command text. This is caller's responsibility to properly escape procedure name</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Returns collection of query result records</returns>
+        IEnumerable<T> QueryProc<T>(string sql, params DataParameter[] parameters);
+
+        /// <summary>
+        /// Executes command and returns results as collection of values of specified type
+        /// </summary>
+        /// <typeparam name="T">Result record type</typeparam>
+        /// <param name="sql">Command text</param>
+        /// <returns>Returns collection of query result records</returns>
+        IEnumerable<T> Query<T>(string sql);
+
+        /// <summary>
+        /// Executes command and returns number of affected records
+        /// </summary>
+        /// <param name="sql">Command text</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Number of records, affected by command execution</returns>
+        int Execute(string sql, params DataParameter[] parameters);
 
         #endregion
     }

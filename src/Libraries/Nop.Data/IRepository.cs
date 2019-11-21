@@ -64,6 +64,12 @@ namespace Nop.Data
         /// <returns>Collection of query result records</returns>
         IEnumerable<TEntity> EntityFromSql(string storeProcedureName, params object[] dataParameters);
 
+        /// <summary>
+        /// Truncates database table
+        /// </summary>
+        /// <param name="resetIdentity">Performs reset identity column</param>
+        void Truncate(bool resetIdentity = false);
+
         #endregion
 
         #region Properties

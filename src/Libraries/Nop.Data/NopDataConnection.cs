@@ -26,19 +26,24 @@ using Nop.Core.Domain.Tasks;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Data
 {
     /// <summary>
     /// Implements database connection abstraction.
     /// </summary>
-    public class NopDataConnection : DataConnection
+    internal class NopDataConnection : DataConnection
     {
+        public static readonly MappingSchema AdditionalSchema;
+
+        static NopDataConnection()
+        {
+            AdditionalSchema = new MappingSchema();
+        }
+
         public NopDataConnection()
         {
-            if (Singleton<MappingSchema>.Instance != null)
-                AddMappingSchema(Singleton<MappingSchema>.Instance);
+            AddMappingSchema(AdditionalSchema);
         }
 
         public ITable<PictureBinary> PictureBinary => GetTable<PictureBinary>();

@@ -500,7 +500,7 @@ namespace Nop.Services.Plugins
                     {
                         try
                         {
-                            (EngineContext.Current.ResolveUnregistered(mappingConfiguration) as IMappingConfiguration)?.DeleteTableIfExists(new NopDataConnection());
+                            (EngineContext.Current.ResolveUnregistered(mappingConfiguration) as IMappingConfiguration)?.DeleteTableIfExists();
                         }
                         catch (Exception ex)
                         {

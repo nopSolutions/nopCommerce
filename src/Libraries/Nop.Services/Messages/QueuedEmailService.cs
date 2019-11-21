@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
@@ -192,15 +191,7 @@ namespace Nop.Services.Messages
         /// </summary>
         public virtual void DeleteAllEmails()
         {
-            //do all databases support "Truncate command"?
-            var dbNopCommerce = new NopDataConnection();
-
-            var queuedEmailTableName = dbNopCommerce.GetTable<QueuedEmail>();
-            dbNopCommerce.Execute($"TRUNCATE TABLE [{queuedEmailTableName}]");
-
-            var queuedEmails = _queuedEmailRepository.Table.ToList();
-            foreach (var qe in queuedEmails)
-                _queuedEmailRepository.Delete(qe);
+            _queuedEmailRepository.Truncate();
         }
 
         #endregion

@@ -25,9 +25,7 @@ namespace Nop.Data
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            Singleton<MappingSchema>.Instance = new MappingSchema();
-
-            var mappingBuilder = new FluentMappingBuilder(Singleton<MappingSchema>.Instance);
+            var mappingBuilder = new FluentMappingBuilder(NopDataConnection.AdditionalSchema);
 
             //find database mapping configuration by other assemblies
             var typeFinder = new AppDomainTypeFinder();
@@ -51,7 +49,7 @@ namespace Nop.Data
             foreach (var typeConfiguration in typeConfigurations)
             {
                 var mappingConfiguration = (IMappingConfiguration)Activator.CreateInstance(typeConfiguration);
-                mappingConfiguration.CreateTableIfNotExists(new NopDataConnection());
+                mappingConfiguration.CreateTableIfNotExists();
             }
 
             services

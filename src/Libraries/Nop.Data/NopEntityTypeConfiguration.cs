@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using LinqToDB;
-using LinqToDB.Data;
 using LinqToDB.Mapping;
 using Nop.Core;
 
@@ -34,44 +33,46 @@ namespace Nop.Data
         /// <summary>
         /// Creates new table in database for mapping class
         /// </summary>
-        /// <param name="dataConnection">Data connection</param>
-        public void CreateTableIfNotExists(DataConnection dataConnection)
+        public virtual void CreateTableIfNotExists()
         {
+            var dataConnection = new NopDataConnection();
+
             var sp = dataConnection.DataProvider.GetSchemaProvider();
             var dbSchema = sp.GetSchema(dataConnection);
 
-            if (dbSchema.Tables.All(t => t.TypeName != typeof(TEntity).Name))
+            if (dbSchema.Tables.Any(t => t.TypeName == typeof(TEntity).Name))
+                return;
+
+            //no required table-create it
+            try
             {
-                //no required table-create it
-                try
-                {
-                    dataConnection.CreateTable<TEntity>();
-                }
-                catch (System.Data.SqlClient.SqlException)
-                {
-                }
+                dataConnection.CreateTable<TEntity>();
+            }
+            catch (System.Data.SqlClient.SqlException)
+            {
             }
         }
 
         /// <summary>
         /// Drops table identified by mapping class
         /// </summary>
-        /// <param name="dataConnection">Data connection</param>
-        public void DeleteTableIfExists(DataConnection dataConnection)
+        public virtual void DeleteTableIfExists()
         {
+            var dataConnection = new NopDataConnection();
+
             var sp = dataConnection.DataProvider.GetSchemaProvider();
             var dbSchema = sp.GetSchema(dataConnection);
 
-            if (dbSchema.Tables.Any(t => t.TypeName == typeof(TEntity).Name))
+            if (dbSchema.Tables.All(t => t.TypeName != typeof(TEntity).Name))
+                return;
+
+            //table exists delete it
+            try
             {
-                //table exists delete it
-                try
-                {
-                    dataConnection.DropTable<TEntity>();
-                }
-                catch (System.Data.SqlClient.SqlException)
-                {
-                }
+                dataConnection.DropTable<TEntity>();
+            }
+            catch (System.Data.SqlClient.SqlException)
+            {
             }
         }
 

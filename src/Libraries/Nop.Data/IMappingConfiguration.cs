@@ -1,5 +1,4 @@
-﻿using LinqToDB.Data;
-using LinqToDB.Mapping;
+﻿using LinqToDB.Mapping;
 
 namespace Nop.Data
 {
@@ -17,13 +16,11 @@ namespace Nop.Data
         /// <summary>
         /// Creates new table in database for mapping class
         /// </summary>
-        /// <param name="dataConnection">Data connection</param>
-        void CreateTableIfNotExists(DataConnection dataConnection);
+        void CreateTableIfNotExists();
 
         /// <summary>
         /// Drops table identified by mapping class
         /// </summary>
-        /// <param name="dataConnection">Data connection</param>
-        void DeleteTableIfExists(DataConnection dataConnection);
+        void DeleteTableIfExists();
     }
 }

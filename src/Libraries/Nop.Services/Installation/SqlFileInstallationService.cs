@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
@@ -120,8 +119,11 @@ namespace Nop.Services.Installation
                     statements.Add(statement);
             }
 
+            //TODO: 239 Should be exist
+            var dataProvider = EngineContext.Current.Resolve<IDataProvider>();
+
             foreach (var stmt in statements)
-                new NopDataConnection().Execute(stmt);
+                dataProvider.Execute(stmt);
         }
 
         /// <summary>

@@ -147,9 +147,18 @@ namespace Nop.Data
         /// <param name="storeProcedureName">Store procedure name</param>
         /// <param name="dataParameters">Command parameters</param>
         /// <returns>Collection of query result records</returns>
-        public IEnumerable<TEntity> EntityFromSql(string storeProcedureName, params object[] dataParameters)
+        public virtual IEnumerable<TEntity> EntityFromSql(string storeProcedureName, params object[] dataParameters)
         {
             return _dataConnection.QueryProc<TEntity>(storeProcedureName, dataParameters?.Select(param=>param as DataParameter).ToArray());
+        }
+
+        /// <summary>
+        /// Truncates database table
+        /// </summary>
+        /// <param name="resetIdentity">Performs reset identity column</param>
+        public virtual void Truncate(bool resetIdentity = false)
+        {
+            _dataConnection.GetTable<TEntity>().Truncate(resetIdentity);
         }
 
         #endregion

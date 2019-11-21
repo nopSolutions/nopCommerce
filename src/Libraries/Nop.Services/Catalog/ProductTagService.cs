@@ -96,8 +96,7 @@ namespace Nop.Services.Catalog
             }
 
             var key = string.Format(NopCatalogDefaults.ProductTagCountCacheKey, storeId, allowedCustomerRolesIds, showHidden);
-            var dbNopCommerce = new NopDataConnection();
-
+           
             return _staticCacheManager.Get(key, () =>
             {
                 //prepare input parameters
@@ -105,7 +104,7 @@ namespace Nop.Services.Catalog
                 var pAllowedCustomerRoleIds = _dataProvider.GetStringParameter("AllowedCustomerRoleIds", allowedCustomerRolesIds);
 
                 //invoke stored procedure
-                return dbNopCommerce.QueryProc<ProductTagWithCount>("ProductTagCountLoadAll",
+                return _dataProvider.QueryProc<ProductTagWithCount>("ProductTagCountLoadAll",
                         pStoreId,
                         pAllowedCustomerRoleIds)
                     .ToDictionary(item => item.ProductTagId, item => item.ProductCount);

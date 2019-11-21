@@ -608,7 +608,7 @@ namespace Nop.Services.Customers
             var pTotalRecordsDeleted = _dataProvider.GetOutputInt32Parameter("TotalRecordsDeleted");
 
             //invoke stored procedure
-            new NopDataConnection().Execute("EXEC [DeleteGuests] @OnlyWithoutShoppingCart, @CreatedFromUtc, @CreatedToUtc, @TotalRecordsDeleted OUTPUT",
+            _dataProvider.Execute("EXEC [DeleteGuests] @OnlyWithoutShoppingCart, @CreatedFromUtc, @CreatedToUtc, @TotalRecordsDeleted OUTPUT",
                 pOnlyWithoutShoppingCart,
                 pCreatedFromUtc,
                 pCreatedToUtc,
