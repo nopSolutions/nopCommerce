@@ -138,8 +138,8 @@
                             LengthMenu = Model.AvailablePageSizes,
                             Filters = new List<FilterParameter>
                             {
-                                new FilterParameter(nameof(Model.SearchStartDate)),
-                                new FilterParameter(nameof(Model.SearchEndDate)),
+                                new FilterParameter(nameof(Model.SearchStartDate), typeof(DateTime?)),
+                                new FilterParameter(nameof(Model.SearchEndDate), typeof(DateTime?)),
                                 new FilterParameter(nameof(Model.SearchFromEmail)),
                                 new FilterParameter(nameof(Model.SearchToEmail)),
                                 new FilterParameter(nameof(Model.SearchLoadNotSent), typeof(bool)),

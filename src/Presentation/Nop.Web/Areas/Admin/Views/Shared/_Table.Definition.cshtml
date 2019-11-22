@@ -133,6 +133,13 @@ else
                         }
                         continue;
                     }
+                    if (filter.Type == typeof(DateTime?))
+                    {
+                        <text>
+                        data.@filter.Name = $('#@filter.Name').val();
+                        </text>
+                        continue;
+                    }
                 }
             }
             addAntiForgeryToken(data);

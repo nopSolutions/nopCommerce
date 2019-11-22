@@ -292,8 +292,8 @@
                                 FooterColumns = !Model.IsLoggedInAsVendor ? 10 : 0,
                                 Filters = new List<FilterParameter>
                                                 {
-                                                    new FilterParameter(nameof(Model.StartDate)),
-                                                    new FilterParameter(nameof(Model.EndDate)),
+                                                    new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
+                                                    new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
                                                     new FilterParameter(nameof(Model.OrderStatusIds)),
                                                     new FilterParameter(nameof(Model.PaymentStatusIds)),
                                                     new FilterParameter(nameof(Model.ShippingStatusIds)),

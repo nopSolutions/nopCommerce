@@ -1,0 +1,250 @@
+/*!
+ * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.k-pager-wrap {
+    padding: .333em .25em;
+    border-width: 1px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    cursor: default;
+    flex: 0 0 auto;
+
+    .k-link,
+    .k-state-selected {
+        width: @pager-button-width;
+        height: @pager-button-height;
+        margin: @pager-button-margin;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        text-align: center;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: @pager-button-border-radius-lg;
+        z-index: 1;
+
+        > .k-icon {
+            vertical-align: middle;
+        }
+
+    }
+    .k-link:hover,
+    .k-state-selected {
+        z-index: 2;
+    }
+    .k-link:focus,
+    .k-state-selected {
+        text-decoration: none;
+        outline: none;
+    }
+    .k-link.k-state-disabled {
+        color: inherit;
+    }
+    > .k-link {
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    .k-pager-numbers-wrap {
+        width: auto;
+        height: auto;
+        position: relative;
+        display: inline-flex;
+    }
+
+    .k-pager-numbers {
+        display: inline-flex;
+        flex-direction: row;
+
+        li {
+            display: inline-block;
+        }
+
+        .k-current-page {
+            display: none;
+        }
+        .k-current-page + li {
+            margin-left: 0;
+        }
+    }
+
+    .k-label {
+        display: flex;
+        align-items: center;
+        margin: 0 1em;
+    }
+    .k-pager-input {
+        .k-textbox {
+            margin: 0 1ex;
+            width: 3em;
+        }
+    }
+    .k-pager-sizes {
+        .k-dropdown,
+        > select {
+            margin: 0 .4em 0 0;
+            width: 5.2em;
+        }
+    }
+    .k-pager-refresh {
+        order: 10;
+        border-width: 0;
+    }
+    .k-pager-info {
+        flex: 1;
+        text-align: right;
+        order: 9;
+        justify-content: flex-end;
+    }
+
+    .k-widget {
+        font-size: inherit;
+    }
+
+    .k-rtl &,
+    &[dir="rtl"],
+    [dir="rtl"] & {
+        .k-i-arrow-end-left,
+        .k-i-arrow-60-left,
+        .k-i-arrow-60-right,
+        .k-i-arrow-end-right {
+            transform: scaleX(-1);
+        }
+
+        .k-pager-sizes {
+            .k-dropdown,
+            > select {
+                margin-right: 0;
+                margin-left: 2em;
+            }
+        }
+    }
+
+    &.k-pager-lg,
+    &.k-pager-md,
+    &.k-pager-sm {
+        position: relative;
+        overflow: visible;
+
+        .k-pager-numbers-wrap {
+            width: calc((@pager-button-width * 2) + 2px);
+            height: calc(@pager-button-height + 2px);
+            box-sizing: border-box;
+            border-color: inherit;
+            margin: 0 .08333em;
+        }
+
+        .k-pager-numbers {
+            position: absolute;
+            overflow: hidden;
+            flex-direction: column-reverse;
+            height: auto;
+            margin: 0;
+            bottom: 0;
+            border-style: solid;
+            border-width: 1px;
+            border-color: inherit;
+            z-index: 3;
+            border-radius: @pager-button-border-radius-lg;
+
+            li:not(.k-current-page) {
+                display: none;
+            }
+
+            .k-current-page {
+                display: inline-flex;
+                cursor: pointer;
+            }
+
+            .k-link,
+            .k-state-selected {
+                margin: 0;
+                border-width: 0;
+                width: (@pager-button-width * 2);
+                height: @pager-button-height;
+            }
+
+            &.k-state-expanded {
+                border-radius: @pager-button-border-radius-sm @pager-button-border-radius-sm @pager-button-border-radius-lg @pager-button-border-radius-lg;
+
+                .k-pager-nav {
+                    border-radius: 0 0 @pager-button-border-radius-lg @pager-button-border-radius-lg;
+                }
+
+                li {
+                    display: inline-flex;
+                }
+
+                .k-current-page {
+                    border-radius: 0 0 @pager-button-border-radius-lg @pager-button-border-radius-lg;
+                    border-style: solid;
+                    border-width: 1px 0 0;
+                    border-color: inherit;
+                }
+
+                .k-link,
+                .k-state-selected {
+                    border-radius: @pager-button-border-radius-sm;
+                }
+
+                .k-pager-nav {
+                    border-radius: 0;
+                }
+            }
+
+        }
+
+        .k-rtl &,
+        &[dir="rtl"],
+        [dir="rtl"] & {
+
+            .k-pager-numbers {
+
+                + .k-link,
+                + .k-pager-input {
+                    margin-left: 0;
+                }
+            }
+        }
+    }
+
+    &.k-pager-md,
+    &.k-pager-sm {
+        .k-pager-info {
+            display: none;
+        }
+        .k-pager-refresh {
+            margin-left: auto;
+        }
+
+        .k-rtl &,
+        &[dir="rtl"],
+        [dir="rtl"] & {
+
+            .k-pager-refresh {
+                margin-left: 0;
+                margin-right: auto;
+            }
+        }
+    }
+
+    &.k-pager-sm {
+        .k-pager-sizes {
+            display: none;
+        }
+    }
+}
