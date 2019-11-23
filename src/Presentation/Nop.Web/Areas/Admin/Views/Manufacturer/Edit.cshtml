@@ -1,0 +1,41 @@
+@model ManufacturerModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.Manufacturers.EditManufacturerDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Manufacturers");
+}
+
+<form asp-controller="Manufacturer" asp-action="Edit" method="post" id="manufacturer-form">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Catalog.Manufacturers.EditManufacturerDetails") - @Model.Name
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Admin.Catalog.Manufacturers.BackToList")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("Manufacturer", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn bg-purple">
+                <i class="fa fa-eye"></i>
+                @T("Admin.Common.Preview")
+            </button>
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="manufacturer-delete" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete")
+            </span>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="manufacturer-delete" />

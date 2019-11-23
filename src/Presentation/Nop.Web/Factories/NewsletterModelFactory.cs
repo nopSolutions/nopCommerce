@@ -4,18 +4,35 @@ using Nop.Web.Models.Newsletter;
 
 namespace Nop.Web.Factories
 {
+    /// <summary>
+    /// Represents the newsletter model factory
+    /// </summary>
     public partial class NewsletterModelFactory : INewsletterModelFactory
     {
-        private readonly ILocalizationService _localizationService;
-        private readonly CustomerSettings _customerSettings;
+        #region Fields
 
-        public NewsletterModelFactory(ILocalizationService localizationService,
-            CustomerSettings customerSettings)
+        private readonly CustomerSettings _customerSettings;
+        private readonly ILocalizationService _localizationService;
+
+        #endregion
+
+        #region Ctor
+
+        public NewsletterModelFactory(CustomerSettings customerSettings,
+            ILocalizationService localizationService)
         {
-            this._localizationService = localizationService;
-            this._customerSettings = customerSettings;
+            _customerSettings = customerSettings;
+            _localizationService = localizationService;
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Prepare the newsletter box model
+        /// </summary>
+        /// <returns>Newsletter box model</returns>
         public virtual NewsletterBoxModel PrepareNewsletterBoxModel()
         {
             var model = new NewsletterBoxModel()
@@ -25,14 +42,23 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare the subscription activation model
+        /// </summary>
+        /// <param name="active">Whether the subscription has been activated</param>
+        /// <returns>Subscription activation model</returns>
         public virtual SubscriptionActivationModel PrepareSubscriptionActivationModel(bool active)
         {
-            var model = new SubscriptionActivationModel();
-            model.Result = active
+            var model = new SubscriptionActivationModel
+            {
+                Result = active
                 ? _localizationService.GetResource("Newsletter.ResultActivated")
-                : _localizationService.GetResource("Newsletter.ResultDeactivated");
+                : _localizationService.GetResource("Newsletter.ResultDeactivated")
+            };
 
             return model;
         }
+
+        #endregion
     }
 }

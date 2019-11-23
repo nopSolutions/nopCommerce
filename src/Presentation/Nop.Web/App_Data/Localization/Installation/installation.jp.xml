@@ -123,7 +123,7 @@
     <Value>SQLServerのユーザ名は必須です</Value>
   </LocaleResource>
   <LocaleResource Name="SqlStandard">
-    <Value>SQLServer (又はSQL Express)データベースを使用</Value>
+    <Value>Microsoft SQL Server (又はSQL Express)データベースを使用</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>ストア情報</Value>

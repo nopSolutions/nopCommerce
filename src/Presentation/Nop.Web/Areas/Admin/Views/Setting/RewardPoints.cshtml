@@ -1,0 +1,49 @@
+﻿@model RewardPointsSettingsModel
+
+@using Nop.Core.Domain.Customers
+@using Nop.Services
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.RewardPoints").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Reward points");
+}
+
+@{
+    const string hideCommonBlockAttributeName = "RewardPointsSettingsPage.HideCommonBlock";
+    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+
+    const string hideEarningRewardPointsBlockAttributeName = "RewardPointsSettingsPage.HideEarningRewardPointsBlock";
+    var hideEarningRewardPointsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideEarningRewardPointsBlockAttributeName);
+}
+
+<form asp-controller="Setting" asp-action="RewardPoints" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.RewardPoints")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.RewardPointsSettingsButtons })
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
+            <div asp-validation-summary="All"></div>
+
+            <nop-panels id="rewardpointssettings-panels">
+                <nop-panel asp-name="rewardpointssettings-common" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.RewardPoints.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_RewardPoints.Common", Model)</nop-panel>
+                <nop-panel asp-name="rewardpointssettings-earning-reward-points" asp-icon="fa fa-usd" asp-title="@T("Admin.Configuration.Settings.RewardPoints.Earning")" asp-hide-block-attribute-name="@hideEarningRewardPointsBlockAttributeName" asp-hide="@hideEarningRewardPointsBlock" asp-advanced="false">@await Html.PartialAsync("_RewardPoints.EarningRewardPoints", Model)</nop-panel>
+
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.RewardPointsSettingsDetailsBlock, additionalData = Model })
+            </nop-panels>
+        </div>
+    </div>
+</form>

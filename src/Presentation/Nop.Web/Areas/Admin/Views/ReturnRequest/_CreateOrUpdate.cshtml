@@ -1,0 +1,139 @@
+﻿@model ReturnRequestModel
+
+@using Nop.Core.Domain.Orders;
+@using Nop.Services
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReturnRequestDetailsTop, additionalData = Model })
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CustomNumber" />
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">@Model.CustomNumber</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CustomOrderNumber" />
+                        </div>
+                        <div class="col-md-9">
+                            @if (Model.OrderId > 0)
+                            {
+                                <a asp-controller="Order" asp-action="Edit" asp-route-id="@Model.OrderId">@Model.CustomOrderNumber</a>
+                            }
+                            else
+                            {
+                                <text>Order item is deleted</text>
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CustomerId" />
+                        </div>
+                        <div class="col-md-9">
+                            <a asp-controller="Customer" asp-action="Edit" asp-route-id="@Model.CustomerId">@Model.CustomerInfo</a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ProductName" />
+                        </div>
+                        <div class="col-md-9">
+                            @if (Model.ProductId > 0)
+                            {
+                                <a asp-controller="Product" asp-action="Edit" asp-route-id="@Model.ProductId">@Model.ProductName</a>
+                            }
+                            else
+                            {
+                                <text>Order item is deleted</text>
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Quantity" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Quantity" />
+                            <span asp-validation-for="Quantity"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ReturnRequestStatusId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="ReturnRequestStatusId" asp-items="@(((ReturnRequestStatus)Model.ReturnRequestStatusId).ToSelectList())" />
+                            <span asp-validation-for="ReturnRequestStatusId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ReasonForReturn" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="ReasonForReturn" asp-required="true" />
+                            <span asp-validation-for="ReasonForReturn"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="RequestedAction" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="RequestedAction" asp-required="true" />
+                            <span asp-validation-for="RequestedAction"></span>
+                        </div>
+                    </div>
+                    @if (Model.UploadedFileGuid != Guid.Empty)
+                    {
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="UploadedFileGuid" />
+                            </div>
+                            <div class="col-md-9">
+                                <a asp-controller="Download" asp-action="DownloadFile" asp-route-downloadGuid="@Model.UploadedFileGuid">@T("Admin.ReturnRequests.Fields.UploadedFile.Download")</a>
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CustomerComments" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-textarea asp-for="CustomerComments" />
+                            <span asp-validation-for="CustomerComments"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="StaffNotes" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-textarea asp-for="StaffNotes" />
+                            <span asp-validation-for="StaffNotes"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CreatedOn" />
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-text-row">@Model.CreatedOn</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReturnRequestDetailsBottom, additionalData = Model })
+        </div>
+    </div>
+</div>

@@ -2,6 +2,9 @@
 
 namespace Nop.Core.Domain.Messages
 {
+    /// <summary>
+    /// Message templates settings
+    /// </summary>
     public class MessageTemplatesSettings : ISettings
     {
         /// <summary>
@@ -23,7 +26,5 @@ namespace Nop.Core.Domain.Messages
         /// Gets or sets a color3 in  hex format ("#hhhhhh") to use in workflow message formatting
         /// </summary>
         public string Color3 { get; set; }
-
     }
-
 }

@@ -1,7 +1,6 @@
 ﻿@model CheckoutConfirmModel
-@using Nop.Web.Models.Checkout;
 <div class="checkout-data">
-    @Html.Widget("op_checkout_confirm_top")
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutConfirmTop })
     @if (!string.IsNullOrEmpty(Model.MinOrderTotalWarning) || Model.Warnings.Count > 0)
     {
         <div class="section confirm-order">
@@ -24,11 +23,11 @@
             }
         </div>
     }
-    @Html.Widget("op_checkout_confirm_bottom")
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutConfirmBottom })
     <div class="section order-summary">
-        @Html.Action("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = true })
+        @await Component.InvokeAsync("OrderSummary", new { prepareAndDisplayOrderReviewData = true })
     </div>
-    @if (String.IsNullOrEmpty(Model.MinOrderTotalWarning) && Model.TermsOfServiceOnOrderConfirmPage)
+    @if (string.IsNullOrEmpty(Model.MinOrderTotalWarning) && Model.TermsOfServiceOnOrderConfirmPage)
     {
         <div id="terms-of-service-warning-box" title="@T("Checkout.TermsOfService")" style="display:none;">
             <p>@T("Checkout.TermsOfService.PleaseAccept")</p>
@@ -36,15 +35,22 @@
         <div class="terms-of-service">
             <input id="termsofservice" type="checkbox" name="termsofservice"/>
             <label for="termsofservice">@T("Checkout.TermsOfService.IAccept")</label>
-            <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
-            <script>
-                $(document).ready(function() {
-                    $('#read-terms').on('click', function(e) {
-                        e.preventDefault();
-                        displayPopupContentFromUrl('@Url.RouteUrl("TopicPopup", new {SystemName = "conditionsofuse"})', '@T("Checkout.TermsOfService")');
+            @if (Model.TermsOfServicePopup)
+            {
+                <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
+                <script>
+                    $(document).ready(function() {
+                        $('#read-terms').on('click', function(e) {
+                            e.preventDefault();
+                            displayPopupContentFromUrl('@Url.RouteUrl("TopicPopup", new {SystemName = "conditionsofuse"})', '@T("Checkout.TermsOfService")');
+                        });
                     });
-                });
-            </script>
+                </script>
+            }
+            else
+            {
+                <a class="read" id="read-terms" href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("conditionsofuse") })">@T("Checkout.TermsOfService.Read")</a>
+            }
         </div>
     }
 </div>

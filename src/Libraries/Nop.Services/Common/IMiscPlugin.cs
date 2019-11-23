@@ -1,5 +1,4 @@
-using System.Web.Routing;
-using Nop.Core.Plugins;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Common
 {
@@ -9,12 +8,6 @@ namespace Nop.Services.Common
     /// </summary>
     public partial interface IMiscPlugin : IPlugin
     {
-        /// <summary>
-        /// Gets a route for plugin configuration
-        /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues);
+
     }
 }

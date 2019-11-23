@@ -1,7 +1,6 @@
 ﻿@model CustomerAddressListModel
-@using Nop.Web.Models.Customer;
 @{
-    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Layout = "_ColumnsTwo";
 
     //title
     Html.AddTitleParts(T("PageTitle.Account").Text);
@@ -11,20 +10,18 @@
 }
 @section left
 {
-    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.Addresses })
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Addresses })
 }
 <div class="page account-page address-list-page">
     <div class="page-title">
         <h1>@T("Account.MyAccount") - @T("Account.CustomerAddresses")</h1>
     </div>
     <div class="page-body">
+        <nop-antiforgery-token />
         @if (Model.Addresses.Count > 0)
         {
-            using (Html.BeginForm())
-            {
-                @Html.AntiForgeryToken()
                 <div class="address-list">
-                    @for (int i = 0; i < Model.Addresses.Count; i++)
+                    @for (var i = 0; i < Model.Addresses.Count; i++)
                     {
                         var address = Model.Addresses[i];
                         <div class="section address-item">
@@ -36,24 +33,24 @@
                                     @address.FirstName @address.LastName
                                 </li>
                                 <li class="email">
-                                    @Html.LabelFor(model => model.Addresses[i].Email, new {}, ":")
+                                    <label>@T("Address.Fields.Email"):</label>
                                     @address.Email
                                 </li>
                                 @if (address.PhoneEnabled)
                                 {
                                     <li class="phone">
-                                        @Html.LabelFor(model => model.Addresses[i].PhoneNumber, new {}, ":")
+                                        <label>@T("Address.Fields.PhoneNumber"):</label>
                                         @address.PhoneNumber
                                     </li>
                                 }
                                 @if (address.FaxEnabled)
                                 {
                                     <li class="fax">
-                                        @Html.LabelFor(model => model.Addresses[i].FaxNumber, new {}, ":")
+                                        <label>@T("Address.Fields.FaxNumber"):</label>
                                         @address.FaxNumber
                                     </li>
                                 }
-                                @if (address.CompanyEnabled && !String.IsNullOrEmpty(address.Company))
+                                @if (address.CompanyEnabled && !string.IsNullOrEmpty(address.Company))
                                 {
                                     <li class="company">@address.Company</li>
                                 }
@@ -63,51 +60,61 @@
                                         @address.Address1
                                     </li>
                                 }
-                                @if (address.StreetAddress2Enabled && !String.IsNullOrEmpty(address.Address2))
+                                @if (address.StreetAddress2Enabled && !string.IsNullOrEmpty(address.Address2))
                                 {
                                     <li class="address2">
                                         @address.Address2
                                     </li>
                                 }
-                                @if (address.CityEnabled || address.StateProvinceEnabled || address.ZipPostalCodeEnabled)
+                                @if (address.CityEnabled && !string.IsNullOrEmpty(address.City)||
+                             address.CountyEnabled && !string.IsNullOrEmpty(address.County) ||
+                             address.StateProvinceEnabled && !string.IsNullOrEmpty(address.StateProvinceName) ||
+                             address.ZipPostalCodeEnabled && !string.IsNullOrEmpty(address.ZipPostalCode))
                                 {
-                                    var cityStateZip = "";
-                                    if (address.CityEnabled)
+                                    var addressLine = string.Empty;
+                                    if (address.CityEnabled && !string.IsNullOrEmpty(address.City))
                                     {
-                                        cityStateZip = address.City;
-                                        if (address.StateProvinceEnabled || address.ZipPostalCodeEnabled)
+                                        addressLine += address.City;
+                                        if (address.CountyEnabled && !string.IsNullOrEmpty(address.County) ||
+                                            address.StateProvinceEnabled && !string.IsNullOrEmpty(address.StateProvinceName) ||
+                                            address.ZipPostalCodeEnabled && !string.IsNullOrEmpty(address.ZipPostalCode))
                                         {
-                                            cityStateZip += ",";
+                                            addressLine += ", ";
                                         }
                                     }
-                                    if (address.StateProvinceEnabled)
+                                    if (address.CountyEnabled && !string.IsNullOrEmpty(address.County))
                                     {
-                                        if (!String.IsNullOrEmpty(cityStateZip))
+                                        addressLine += address.County;
+                                        if (address.StateProvinceEnabled && !string.IsNullOrEmpty(address.StateProvinceName) ||
+                                            address.ZipPostalCodeEnabled && !string.IsNullOrEmpty(address.ZipPostalCode))
                                         {
-                                            cityStateZip += " ";
+                                            addressLine += ", ";
                                         }
-                                        cityStateZip += address.StateProvinceName;
                                     }
-                                    if (address.ZipPostalCodeEnabled)
+                                    if (address.StateProvinceEnabled && !string.IsNullOrEmpty(address.StateProvinceName))
                                     {
-                                        if (!String.IsNullOrEmpty(cityStateZip))
+                                        addressLine += address.StateProvinceName;
+                                        if (address.ZipPostalCodeEnabled && !string.IsNullOrEmpty(address.ZipPostalCode))
                                         {
-                                            cityStateZip += " ";
+                                            addressLine += ", ";
                                         }
-                                        cityStateZip += address.ZipPostalCode;
+                                    }
+                                    if (address.ZipPostalCodeEnabled && !string.IsNullOrEmpty(address.ZipPostalCode))
+                                    {
+                                        addressLine += address.ZipPostalCode;
                                     }
 
                                     <li class="city-state-zip">
-                                        @cityStateZip
+                                        @addressLine
                                     </li>
                                 }
-                                @if (address.CountryEnabled && !String.IsNullOrEmpty(address.CountryName))
+                                @if (address.CountryEnabled && !string.IsNullOrEmpty(address.CountryName))
                                 {
                                     <li class="country">
                                         @address.CountryName
                                     </li>
                                 }
-                                @if (!String.IsNullOrEmpty(address.FormattedCustomAddressAttributes))
+                                @if (!string.IsNullOrEmpty(address.FormattedCustomAddressAttributes))
                                 {
                                     <li class="custom-attributes-view">
                                         @Html.Raw(address.FormattedCustomAddressAttributes)
@@ -121,9 +128,9 @@
                         </div>
                     }
                 </div>
-                <script type="text/javascript">
+                <script asp-location="Footer">
                     function deletecustomeraddress(addressId) {
-                        if (confirm('@T("Admin.Common.AreYouSure")')) {
+                        if (confirm('@T("Common.AreYouSure")')) {
                             var postData = {
                                 addressId: addressId
                             };
@@ -131,21 +138,20 @@
 
                             $.ajax({
                                 cache: false,
-                                type: 'POST',
-                                url: '@Url.Action("AddressDelete", "Customer")',
+                                type: "POST",
+                                url: "@Url.Action("AddressDelete", "Customer")",
                                 data: postData,
-                                dataType: 'json',
-                                success: function(data) {
+                                dataType: "json",
+                                success: function (data, textStatus, jqXHR) {
                                     location.href = data.redirect;
                                 },
-                                error: function(xhr, ajaxOptions, thrownError) {
+                                error: function (jqXHR, textStatus, errorThrown) {
                                     alert('Failed to delete');
                                 }
                             });
                         }
                     }
                 </script>
-            }
         }
         else
         {

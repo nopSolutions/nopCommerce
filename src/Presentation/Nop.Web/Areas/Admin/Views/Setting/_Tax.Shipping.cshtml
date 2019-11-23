@@ -1,0 +1,53 @@
+@model TaxSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShippingIsTaxable_OverrideForStore" asp-input="ShippingIsTaxable" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShippingIsTaxable" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShippingIsTaxable" />
+            <span asp-validation-for="ShippingIsTaxable"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="ShippingIsTaxable">
+        <div class="form-group" id="pnlShippingPriceIncludesTax">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ShippingPriceIncludesTax_OverrideForStore" asp-input="ShippingPriceIncludesTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ShippingPriceIncludesTax" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ShippingPriceIncludesTax" />
+                <span asp-validation-for="ShippingPriceIncludesTax"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlShippingTaxClass">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ShippingTaxClassId_OverrideForStore" asp-input="ShippingTaxClassId" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ShippingTaxClassId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="ShippingTaxClassId" asp-items="Model.TaxCategories" />
+                <span asp-validation-for="ShippingTaxClassId"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.ShippingIsTaxable)").click(toggleShipping);
+
+        toggleShipping();
+    });
+
+    function toggleShipping() {
+        if ($('#@Html.IdFor(model => model.ShippingIsTaxable)').is(':checked')) {
+            $('#pnlShippingPriceIncludesTax').show();
+            $('#pnlShippingTaxClass').show();
+        } else {
+            $('#pnlShippingPriceIncludesTax').hide();
+            $('#pnlShippingTaxClass').hide();
+        }
+    }
+</script>

@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Catalog
 {
@@ -20,7 +21,7 @@ namespace Nop.Services.Catalog
         public static IEnumerable<TierPrice> FilterByStore(this IEnumerable<TierPrice> source, int storeId)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
 
             return source.Where(tierPrice => tierPrice.StoreId == 0 || tierPrice.StoreId == storeId);
         }
@@ -34,13 +35,20 @@ namespace Nop.Services.Catalog
         public static IEnumerable<TierPrice> FilterForCustomer(this IEnumerable<TierPrice> source, Customer customer)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
 
             if (customer == null)
-                return source.Where(tierPrice => tierPrice.CustomerRole == null);
+                throw new ArgumentNullException(nameof(customer));
 
-            return source.Where(tierPrice => tierPrice.CustomerRole == null ||
-                customer.CustomerRoles.Where(role => role.Active).Select(role => role.Id).Contains(tierPrice.CustomerRole.Id));
+            var catalogSettings = EngineContext.Current.Resolve<CatalogSettings>();
+            if (catalogSettings.IgnoreAcl)
+                return source;
+
+            var customerRoleIds = customer.GetCustomerRoleIds();
+            return source.Where(tierPrice =>
+               !tierPrice.CustomerRoleId.HasValue ||
+               tierPrice.CustomerRoleId.Value == 0 ||
+               customerRoleIds.Contains(tierPrice.CustomerRoleId.Value));
         }
 
         /// <summary>
@@ -51,10 +59,12 @@ namespace Nop.Services.Catalog
         public static IEnumerable<TierPrice> RemoveDuplicatedQuantities(this IEnumerable<TierPrice> source)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
+
+            var tierPrices = source.ToList();
 
             //get group of tier prices with the same quantity
-            var tierPricesWithDuplicates = source.GroupBy(tierPrice => tierPrice.Quantity).Where(group => group.Count() > 1);
+            var tierPricesWithDuplicates = tierPrices.GroupBy(tierPrice => tierPrice.Quantity).Where(group => group.Count() > 1);
 
             //get tier prices with higher prices 
             var duplicatedPrices = tierPricesWithDuplicates.SelectMany(group =>
@@ -68,7 +78,7 @@ namespace Nop.Services.Catalog
             });
 
             //return tier prices without duplicates
-            return source.Where(tierPrice => !duplicatedPrices.Any(duplicatedPrice => duplicatedPrice.Id == tierPrice.Id));
+            return tierPrices.Where(tierPrice => duplicatedPrices.All(duplicatedPrice => duplicatedPrice.Id != tierPrice.Id));
         }
 
         /// <summary>
@@ -80,7 +90,7 @@ namespace Nop.Services.Catalog
         public static IEnumerable<TierPrice> FilterByDate(this IEnumerable<TierPrice> source, DateTime? date = null)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
 
             if (!date.HasValue)
                 date = DateTime.UtcNow;

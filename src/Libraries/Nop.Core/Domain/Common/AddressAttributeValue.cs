@@ -32,5 +32,4 @@ namespace Nop.Core.Domain.Common
         /// </summary>
         public virtual AddressAttribute AddressAttribute { get; set; }
     }
-
 }

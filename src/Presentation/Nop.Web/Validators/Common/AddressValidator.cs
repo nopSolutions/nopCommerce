@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using FluentValidation;
-using FluentValidation.Results;
 using Nop.Core.Domain.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -38,7 +37,7 @@ namespace Nop.Web.Validators.Common
             }
             if (addressSettings.CountryEnabled && addressSettings.StateProvinceEnabled)
             {
-                Custom(x =>
+                RuleFor(x => x.StateProvinceId).Must((x, context) =>
                 {
                     //does selected country has states?
                     var countryId = x.CountryId.HasValue ? x.CountryId.Value : 0;
@@ -48,12 +47,11 @@ namespace Nop.Web.Validators.Common
                     {
                         //if yes, then ensure that state is selected
                         if (!x.StateProvinceId.HasValue || x.StateProvinceId.Value == 0)
-                        {
-                            return new ValidationFailure("StateProvinceId", localizationService.GetResource("Address.Fields.StateProvince.Required"));
-                        }
+                           return false;
                     }
-                    return null;
-                });
+
+                    return true;
+                }).WithMessage(localizationService.GetResource("Address.Fields.StateProvince.Required"));
             }
             if (addressSettings.CompanyRequired && addressSettings.CompanyEnabled)
             {
@@ -70,6 +68,10 @@ namespace Nop.Web.Validators.Common
             if (addressSettings.ZipPostalCodeRequired && addressSettings.ZipPostalCodeEnabled)
             {
                 RuleFor(x => x.ZipPostalCode).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.ZipPostalCode.Required"));
+            }
+            if (addressSettings.CountyEnabled && addressSettings.CountyRequired)
+            {
+                RuleFor(x => x.County).NotEmpty().WithMessage(localizationService.GetResource("Address.Fields.County.Required"));
             }
             if (addressSettings.CityRequired && addressSettings.CityEnabled)
             {

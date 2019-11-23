@@ -1,0 +1,51 @@
+@model ShoppingCartSettingsModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.ShoppingCart").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Shopping cart settings");
+}
+
+@{
+    const string hideCommonBlockAttributeName = "ShoppingCartSettingsPage.HideCommonBlock";
+    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+
+    const string hideMiniShoppingCartBlockAttributeName = "ShoppingCartSettingsPage.HideMiniShoppingCartBlock";
+    var hideMiniShoppingCartBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideMiniShoppingCartBlockAttributeName);
+
+    const string hideWishlistBlockAttributeName = "ShoppingCartSettingsPage.HideWishlistBlock";
+    var hideWishlistBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideWishlistBlockAttributeName);
+}
+
+
+<form asp-controller="Setting" asp-action="ShoppingCart" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.ShoppingCart")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShoppingCartSettingsButtons })
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
+            <div asp-validation-summary="All"></div>
+        
+            <nop-panels id="shoppingcartsettings-panels">
+                <nop-panel asp-name="shoppingcartsettings-common" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.ShoppingCart.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_ShoppingCart.Common", Model)</nop-panel>
+                <nop-panel asp-name="shoppingcartsettings-mini-shopping-cart" asp-icon="fa fa-shopping-cart" asp-title="@T("Admin.Configuration.Settings.ShoppingCart.BlockTitle.MiniShoppingCart")" asp-hide-block-attribute-name="@hideMiniShoppingCartBlockAttributeName" asp-hide="@hideMiniShoppingCartBlock" asp-advanced="false">@await Html.PartialAsync("_ShoppingCart.MiniShoppingCart", Model)</nop-panel>
+                <nop-panel asp-name="shoppingcartsettings-wishlist" asp-icon="fa fa-star-o" asp-title="@T("Admin.Configuration.Settings.ShoppingCart.BlockTitle.Wishlist")" asp-hide-block-attribute-name="@hideWishlistBlockAttributeName" asp-hide="@hideWishlistBlock" asp-advanced="true">@await Html.PartialAsync("_ShoppingCart.Wishlist", Model)</nop-panel>
+                
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShoppingCartSettingsDetailsBlock, additionalData = Model })
+            </nop-panels>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,93 @@
+@model ShippingMethodRestrictionModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Shipping.Restrictions").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Shipping providers");
+}
+
+
+<form asp-controller="Shipping" asp-action="Restrictions" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Shipping.Restrictions")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShippingRestrictionListButtons })
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body" style="overflow-x: auto;">
+                        <p>@T("Admin.Configuration.Shipping.Restrictions.Description")</p>
+                        @if (Model.AvailableCountries.Count == 0)
+                        {
+                            <text>No countries defined</text>
+                        }
+                        else if (Model.AvailableShippingMethods.Count == 0)
+                        {
+                            <text>No shipping methods available</text>
+                        }
+                        else
+                        {
+                            <script>
+                                $(document).ready(function () {
+                                    @foreach (var sm in Model.AvailableShippingMethods)
+                                    {
+                                        <text>
+                                            $('#selectall-@(sm.Id)').click(function () {
+                                                $('.restrict_@(sm.Id)').attr('checked', $(this).is(':checked')).change();
+                                            });
+                                        </text>
+                                    }
+                                });
+                            </script>
+
+                            <table class="table table-hover table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">
+                                            <strong>@T("Admin.Configuration.Shipping.Restrictions.Country")</strong>
+                                        </th>
+                                        @foreach (var sm in Model.AvailableShippingMethods)
+                                        {
+                                            <th scope="col">
+                                                <strong>@sm.Name</strong>
+                                                <input type="checkbox" id="selectall-@(sm.Id)" />
+                                            </th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>                                 
+                                    @foreach (var c in Model.AvailableCountries)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <span>@c.Name</span>
+                                            </td>
+                                            @foreach (var sm in Model.AvailableShippingMethods)
+                                            {
+                                                var restricted = Model.Restricted.ContainsKey(c.Id) && Model.Restricted[c.Id][sm.Id];
+                                                <td>
+                                                    <input id="restrict_@(sm.Id)" class="restrict_@(sm.Id)" type="checkbox" value="@(c.Id)" name="restrict_@(sm.Id)" @(restricted ? " checked=checked" : null) />
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

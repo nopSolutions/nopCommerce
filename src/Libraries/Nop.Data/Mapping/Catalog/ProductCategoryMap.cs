@@ -1,22 +1,38 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
+    /// <summary>
+    /// Represents a product category mapping configuration
+    /// </summary>
     public partial class ProductCategoryMap : NopEntityTypeConfiguration<ProductCategory>
     {
-        public ProductCategoryMap()
+        #region Methods
+
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<ProductCategory> builder)
         {
-            this.ToTable("Product_Category_Mapping");
-            this.HasKey(pc => pc.Id);
-            
-            this.HasRequired(pc => pc.Category)
+            builder.ToTable(NopMappingDefaults.ProductCategoryTable);
+            builder.HasKey(productCategory => productCategory.Id);
+
+            builder.HasOne(productCategory => productCategory.Category)
                 .WithMany()
-                .HasForeignKey(pc => pc.CategoryId);
+                .HasForeignKey(productCategory => productCategory.CategoryId)
+                .IsRequired();
 
+            builder.HasOne(productCategory => productCategory.Product)
+                .WithMany(product => product.ProductCategories)
+                .HasForeignKey(productCategory => productCategory.ProductId)
+                .IsRequired();
 
-            this.HasRequired(pc => pc.Product)
-                .WithMany(p => p.ProductCategories)
-                .HasForeignKey(pc => pc.ProductId);
+            base.Configure(builder);
         }
+
+        #endregion
     }
 }

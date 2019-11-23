@@ -1,0 +1,134 @@
+@model ProductAttributeCombinationModel
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script>
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+<script>
+    $(document).ready(function () {
+        $('#@Html.IdFor(model => model.Sku)').on('input change', function () {
+            warningValidation('@Url.Action("SkuReservedWarning")', '@Html.NameFor(model => model.Sku)', { productId: @Model.ProductId, sku: $(this).val() });
+        });
+    });
+</script>
+
+<div class="content">
+    @if (Model.Warnings.Count > 0)
+    {
+        <div class="callout callout-danger">
+            <ul>
+                @foreach (var warning in Model.Warnings)
+                {
+                    <li>@warning</li>
+                }
+            </ul>
+        </div>
+    }
+    
+    <div asp-validation-summary="All"></div>
+    <input asp-for="Id" type="hidden" />
+    <div class="form-horizontal">
+        <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeCombinationDetailsTop, additionalData = Model })
+            <div class="panel panel-default panel-popup">
+                <div class="panel-body">
+                    @await Html.PartialAsync("_ProductAttributes", Model.ProductAttributes)
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            <nop-label asp-for="StockQuantity"/>
+                        </div>
+                        <div class="col-sm-8">
+                            <nop-editor asp-for="StockQuantity"/>
+                            <span asp-validation-for="StockQuantity"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            <nop-label asp-for="AllowOutOfStockOrders"/>
+                        </div>
+                        <div class="col-sm-8">
+                            <nop-editor asp-for="AllowOutOfStockOrders"/>
+                            <span asp-validation-for="AllowOutOfStockOrders"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            <nop-label asp-for="Sku"/>
+                        </div>
+                        <div class="col-sm-8">
+                            <nop-editor asp-for="Sku"/>
+                            <span asp-validation-for="Sku"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            <nop-label asp-for="ManufacturerPartNumber"/>
+                        </div>
+                        <div class="col-sm-8">
+                            <nop-editor asp-for="ManufacturerPartNumber"/>
+                            <span asp-validation-for="ManufacturerPartNumber"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            <nop-label asp-for="Gtin"/>
+                        </div>
+                        <div class="col-sm-8">
+                            <nop-editor asp-for="Gtin"/>
+                            <span asp-validation-for="Gtin"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            <nop-label asp-for="OverriddenPrice"/>
+                        </div>
+                        <div class="col-sm-8">
+                            <nop-editor asp-for="OverriddenPrice"/>
+                            <span asp-validation-for="OverriddenPrice"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            <nop-label asp-for="NotifyAdminForQuantityBelow"/>
+                        </div>
+                        <div class="col-sm-8">
+                            <nop-editor asp-for="NotifyAdminForQuantityBelow"/>
+                            <span asp-validation-for="NotifyAdminForQuantityBelow"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            <nop-label asp-for="PictureId" />
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="attribute-picture-selection-block clearfix">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="radio" name="@Html.NameFor(x => x.PictureId)" value="0" id="id_image_0" @if (Model.PictureId == 0) { <text> checked="checked" </text> }>
+                                        @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Picture.NoPicture")
+                                    </label>
+                                </div>
+                                @foreach (var picture in Model.ProductPictureModels)
+                                {
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="radio" name="@Html.NameFor(x => x.PictureId)" value="@picture.PictureId" id="id_image_@picture.PictureId" @if (picture.PictureId == Model.PictureId) { <text> checked="checked" </text>  }>
+                                            <img src="@picture.PictureUrl" alt="" title="" width="75">
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                            <span asp-validation-for="PictureId"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeCombinationDetailsBottom, additionalData = Model })
+        </div>
+    </div>
+</div>

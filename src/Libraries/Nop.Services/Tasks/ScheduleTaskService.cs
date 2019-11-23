@@ -21,7 +21,7 @@ namespace Nop.Services.Tasks
 
         public ScheduleTaskService(IRepository<ScheduleTask> taskRepository)
         {
-            this._taskRepository = taskRepository;
+            _taskRepository = taskRepository;
         }
 
         #endregion
@@ -35,7 +35,7 @@ namespace Nop.Services.Tasks
         public virtual void DeleteTask(ScheduleTask task)
         {
             if (task == null)
-                throw new ArgumentNullException("task");
+                throw new ArgumentNullException(nameof(task));
 
             _taskRepository.Delete(task);
         }
@@ -60,7 +60,7 @@ namespace Nop.Services.Tasks
         /// <returns>Task</returns>
         public virtual ScheduleTask GetTaskByType(string type)
         {
-            if (String.IsNullOrWhiteSpace(type))
+            if (string.IsNullOrWhiteSpace(type))
                 return null;
 
             var query = _taskRepository.Table;
@@ -83,6 +83,7 @@ namespace Nop.Services.Tasks
             {
                 query = query.Where(t => t.Enabled);
             }
+
             query = query.OrderByDescending(t => t.Seconds);
 
             var tasks = query.ToList();
@@ -96,7 +97,7 @@ namespace Nop.Services.Tasks
         public virtual void InsertTask(ScheduleTask task)
         {
             if (task == null)
-                throw new ArgumentNullException("task");
+                throw new ArgumentNullException(nameof(task));
 
             _taskRepository.Insert(task);
         }
@@ -108,7 +109,7 @@ namespace Nop.Services.Tasks
         public virtual void UpdateTask(ScheduleTask task)
         {
             if (task == null)
-                throw new ArgumentNullException("task");
+                throw new ArgumentNullException(nameof(task));
 
             _taskRepository.Update(task);
         }

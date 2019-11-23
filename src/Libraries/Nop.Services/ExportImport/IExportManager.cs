@@ -13,7 +13,7 @@ namespace Nop.Services.ExportImport
     public partial interface IExportManager
     {
         /// <summary>
-        /// Export manufacturer list to xml
+        /// Export manufacturer list to XML
         /// </summary>
         /// <param name="manufacturers">Manufacturers</param>
         /// <returns>Result in XML format</returns>
@@ -26,7 +26,7 @@ namespace Nop.Services.ExportImport
         byte[] ExportManufacturersToXlsx(IEnumerable<Manufacturer> manufacturers);
 
         /// <summary>
-        /// Export category list to xml
+        /// Export category list to XML
         /// </summary>
         /// <returns>Result in XML format</returns>
         string ExportCategoriesToXml();
@@ -35,10 +35,10 @@ namespace Nop.Services.ExportImport
         /// Export categories to XLSX
         /// </summary>
         /// <param name="categories">Categories</param>
-        byte[] ExportCategoriesToXlsx(IEnumerable<Category> categories);
+        byte[] ExportCategoriesToXlsx(IList<Category> categories);
 
         /// <summary>
-        /// Export product list to xml
+        /// Export product list to XML
         /// </summary>
         /// <param name="products">Products</param>
         /// <returns>Result in XML format</returns>
@@ -51,7 +51,7 @@ namespace Nop.Services.ExportImport
         byte[] ExportProductsToXlsx(IEnumerable<Product> products);
 
         /// <summary>
-        /// Export order list to xml
+        /// Export order list to XML
         /// </summary>
         /// <param name="orders">Orders</param>
         /// <returns>Result in XML format</returns>
@@ -70,7 +70,7 @@ namespace Nop.Services.ExportImport
         byte[] ExportCustomersToXlsx(IList<Customer> customers);
 
         /// <summary>
-        /// Export customer list to xml
+        /// Export customer list to XML
         /// </summary>
         /// <param name="customers">Customers</param>
         /// <returns>Result in XML format</returns>
@@ -89,5 +89,13 @@ namespace Nop.Services.ExportImport
         /// <param name="states">States</param>
         /// <returns>Result in TXT (string) format</returns>
         string ExportStatesToTxt(IList<StateProvince> states);
+
+        /// <summary>
+        /// Export customer info (GDPR request) to XLSX 
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>Customer GDPR info</returns>
+        byte[] ExportCustomerGdprInfoToXlsx(Customer customer, int storeId);
     }
 }

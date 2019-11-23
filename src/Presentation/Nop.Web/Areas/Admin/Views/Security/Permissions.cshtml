@@ -1,0 +1,100 @@
+@model PermissionMappingModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.ACL").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Access control list");
+}
+
+<form asp-controller="Security" asp-action="Permissions" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.ACL")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PermissionListButtons })
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <p>
+                            @T("Admin.Configuration.ACL.Description")
+                        </p>
+                        @if (Model.AvailablePermissions.Count == 0)
+                        {
+                            <text>No permissions defined</text>
+                        }
+                        else if (Model.AvailableCustomerRoles.Count == 0)
+                        {
+                            <text>No customer roles available</text>
+                        }
+                        else
+                        {
+                            <script>
+                                $(document).ready(function () {
+                                    @foreach (var cr in Model.AvailableCustomerRoles)
+                                    {
+                                        <text>
+                                    $('#selectall-@(cr.Id)').click(function () {
+                                        $('.allow_@(cr.Id)').attr('checked', $(this).is(':checked')).change();
+                                    });
+
+                                    </text>
+                                    }
+                                });
+                            </script>
+                            <div class="scroll-wrapper">
+                                <table class="table table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">
+                                                <strong>@T("Admin.Configuration.ACL.Permission")</strong>
+                                            </th>
+                                            @foreach (var cr in Model.AvailableCustomerRoles)
+                                            {
+                                                <th scope="col">
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox" id="selectall-@(cr.Id)" />
+                                                            <strong>@cr.Name</strong>
+                                                        </label>
+                                                    </div>
+                                                </th>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var pr in Model.AvailablePermissions)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <span>@pr.Name</span>
+                                                </td>
+                                                @foreach (var cr in Model.AvailableCustomerRoles)
+                                                {
+                                                    var allowed = Model.Allowed.ContainsKey(pr.SystemName) && Model.Allowed[pr.SystemName][cr.Id];
+                                                    <td>
+                                                        <input class="allow_@(cr.Id)" type="checkbox" value="@(pr.SystemName)" name="allow_@(cr.Id)" @(allowed ? " checked=checked" : null) />
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

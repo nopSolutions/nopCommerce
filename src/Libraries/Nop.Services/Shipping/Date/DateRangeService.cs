@@ -22,23 +22,17 @@ namespace Nop.Services.Shipping.Date
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="eventPublisher">Event published</param>
-        /// <param name="deliveryDateRepository">Delivery date repository</param>
-        /// <param name="productAvailabilityRangeRepository">Product availability range repository</param>
         public DateRangeService(IEventPublisher eventPublisher,
             IRepository<DeliveryDate> deliveryDateRepository,
             IRepository<ProductAvailabilityRange> productAvailabilityRangeRepository)
         {
-            this._eventPublisher = eventPublisher;
-            this._deliveryDateRepository = deliveryDateRepository;
-            this._productAvailabilityRangeRepository = productAvailabilityRangeRepository;
+            _eventPublisher = eventPublisher;
+            _deliveryDateRepository = deliveryDateRepository;
+            _productAvailabilityRangeRepository = productAvailabilityRangeRepository;
         }
 
         #endregion
-        
+
         #region Methods
 
         #region Delivery dates
@@ -76,7 +70,7 @@ namespace Nop.Services.Shipping.Date
         public virtual void InsertDeliveryDate(DeliveryDate deliveryDate)
         {
             if (deliveryDate == null)
-                throw new ArgumentNullException("deliveryDate");
+                throw new ArgumentNullException(nameof(deliveryDate));
 
             _deliveryDateRepository.Insert(deliveryDate);
 
@@ -91,7 +85,7 @@ namespace Nop.Services.Shipping.Date
         public virtual void UpdateDeliveryDate(DeliveryDate deliveryDate)
         {
             if (deliveryDate == null)
-                throw new ArgumentNullException("deliveryDate");
+                throw new ArgumentNullException(nameof(deliveryDate));
 
             _deliveryDateRepository.Update(deliveryDate);
 
@@ -106,7 +100,7 @@ namespace Nop.Services.Shipping.Date
         public virtual void DeleteDeliveryDate(DeliveryDate deliveryDate)
         {
             if (deliveryDate == null)
-                throw new ArgumentNullException("deliveryDate");
+                throw new ArgumentNullException(nameof(deliveryDate));
 
             _deliveryDateRepository.Delete(deliveryDate);
 
@@ -147,7 +141,7 @@ namespace Nop.Services.Shipping.Date
         public virtual void InsertProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange)
         {
             if (productAvailabilityRange == null)
-                throw new ArgumentNullException("productAvailabilityRange");
+                throw new ArgumentNullException(nameof(productAvailabilityRange));
 
             _productAvailabilityRangeRepository.Insert(productAvailabilityRange);
 
@@ -162,7 +156,7 @@ namespace Nop.Services.Shipping.Date
         public virtual void UpdateProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange)
         {
             if (productAvailabilityRange == null)
-                throw new ArgumentNullException("productAvailabilityRange");
+                throw new ArgumentNullException(nameof(productAvailabilityRange));
 
             _productAvailabilityRangeRepository.Update(productAvailabilityRange);
 
@@ -177,7 +171,7 @@ namespace Nop.Services.Shipping.Date
         public virtual void DeleteProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange)
         {
             if (productAvailabilityRange == null)
-                throw new ArgumentNullException("productAvailabilityRange");
+                throw new ArgumentNullException(nameof(productAvailabilityRange));
 
             _productAvailabilityRangeRepository.Delete(productAvailabilityRange);
 

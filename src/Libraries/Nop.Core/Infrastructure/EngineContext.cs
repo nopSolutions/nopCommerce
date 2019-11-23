@@ -1,6 +1,4 @@
-﻿using System.Configuration;
-using System.Runtime.CompilerServices;
-using Nop.Core.Configuration;
+﻿using System.Runtime.CompilerServices;
 
 namespace Nop.Core.Infrastructure
 {
@@ -12,20 +10,13 @@ namespace Nop.Core.Infrastructure
         #region Methods
 
         /// <summary>
-        /// Initializes a static instance of the Nop factory.
+        /// Create a static instance of the Nop engine.
         /// </summary>
-        /// <param name="forceRecreate">Creates a new factory instance even though the factory has been previously initialized.</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static IEngine Initialize(bool forceRecreate)
+        public static IEngine Create()
         {
-            if (Singleton<IEngine>.Instance == null || forceRecreate)
-            {
-                Singleton<IEngine>.Instance = new NopEngine();
-
-                var config = ConfigurationManager.GetSection("NopConfig") as NopConfig;
-                Singleton<IEngine>.Instance.Initialize(config);
-            }
-            return Singleton<IEngine>.Instance;
+            //create NopEngine as engine
+            return Singleton<IEngine>.Instance ?? (Singleton<IEngine>.Instance = new NopEngine());
         }
 
         /// <summary>
@@ -51,8 +42,9 @@ namespace Nop.Core.Infrastructure
             {
                 if (Singleton<IEngine>.Instance == null)
                 {
-                    Initialize(false);
+                    Create();
                 }
+
                 return Singleton<IEngine>.Instance;
             }
         }

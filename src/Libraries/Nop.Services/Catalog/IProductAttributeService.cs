@@ -203,6 +203,5 @@ namespace Nop.Services.Catalog
         void UpdateProductAttributeCombination(ProductAttributeCombination combination);
 
         #endregion
-       
     }
 }

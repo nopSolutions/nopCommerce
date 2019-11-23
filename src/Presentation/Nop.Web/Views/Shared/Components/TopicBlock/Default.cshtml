@@ -1,0 +1,80 @@
+﻿@model TopicModel
+@if (Model.IsPasswordProtected)
+{
+<script asp-location="Footer">
+        $(document).ready(function () {
+            $('#button-password-@Model.Id').on('click', function() {
+                var postData = {
+                    id: $("#topic-@Model.Id").val(),
+                    password: $('#password-@Model.Id').val()
+                };
+                addAntiForgeryToken(postData);
+
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@Url.RouteUrl("TopicAuthenticate")",
+                    data: postData,
+                    dataType: "json",
+                    success: function (data, textStatus, jqXHR) {
+                        if (data.Authenticated) {
+                            $('#ph-topic-@Model.Id #ph-title-@Model.Id h2').html(data.Title);
+                            if ($('#ph-topic-@Model.Id #ph-title-@Model.Id h2').text().length == 0) {
+                                $('#ph-title-@Model.Id').hide();
+                            }
+                            $('#ph-topic-@Model.Id .topic-block-body').html(data.Body);
+                            $('#ph-password-@Model.Id').hide();
+                            $('#ph-topic-@Model.Id').show();
+                            //we need to re-run the validation plugin after the content is loaded after successful authentication
+                            $.validator.unobtrusive.parse('#ph-topic-@Model.Id');
+                        } else {
+                            $('#password-error-@Model.Id').text(data.Error).fadeIn("slow");
+                            $('#ph-password-@Model.Id #password-@Model.Id').select().focus();
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+
+        $(document).ready(function() {
+            $('#ph-topic-@Model.Id').hide();
+            $('#ph-password-@Model.Id #password-@Model.Id').select().focus();
+        });
+</script>
+    <div class="topic-password" id="ph-password-@Model.Id">
+        <form asp-route="TopicAuthenticate" method="post" autocomplete="off">
+            <input asp-for="Id" id="topic-@Model.Id" type="hidden"/>
+            <div class="enter-password-title">
+                @T("Topic.EnterPassword")
+            </div>
+            <div class="enter-password-form">
+                <input name="password" type="password" id="password-@(Model.Id)"/>
+                <input type="submit" id="button-password-@Model.Id" value="@T("Topic.Button")" class="button-1 topic-password-button"/>
+            </div>
+            <div class="password-error" id="password-error-@Model.Id" style="display: none;"></div>
+        </form>
+    </div>
+    <div class="topic-block" id="ph-topic-@Model.Id">
+        <div class="topic-block-title" id="ph-title-@Model.Id">
+            <h2>@Model.Title</h2>
+        </div>
+        <div class="topic-block-body">
+            @Html.Raw(Model.Body)
+        </div>
+    </div>
+}
+else
+{
+    <div class="topic-block">
+        @if (!string.IsNullOrEmpty(Model.Title))
+        {
+            <div class="topic-block-title">
+                <h2>@Model.Title</h2>
+            </div>
+        }
+        <div class="topic-block-body">
+            @Html.Raw(Model.Body)
+        </div>
+    </div>
+}

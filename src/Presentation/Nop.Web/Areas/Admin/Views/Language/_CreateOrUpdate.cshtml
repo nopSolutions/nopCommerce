@@ -1,0 +1,23 @@
+﻿@model LanguageModel
+
+@{
+    const string hideInfoBlockAttributeName = "LanguagePage.HideInfoBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+
+    const string hideResourcesBlockAttributeName = "LanguagePage.HideResourcesBlock";
+    var hideResourcesBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideResourcesBlockAttributeName, defaultValue: true);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-panels id="language-panels">
+            <nop-panel asp-name="language-info" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Languages.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            <nop-panel asp-name="language-resources" asp-icon="fa fa-database" asp-title="@T("Admin.Configuration.Languages.Resources")" asp-hide-block-attribute-name="@hideResourcesBlockAttributeName" asp-hide="@hideResourcesBlock" asp-advanced="false">@await Html.PartialAsync("_CreateOrUpdate.Resources", Model)</nop-panel>
+            
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LanguageDetailsBlock, additionalData = Model })
+        </nop-panels>
+    </div>
+</div>

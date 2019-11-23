@@ -123,7 +123,7 @@
     <Value>SQL Gebruikersnaam is vereist</Value>
   </LocaleResource>
   <LocaleResource Name="SqlStandard">
-    <Value>Gebruik SQL Server (of SQL Express) database</Value>
+    <Value>Gebruik Microsoft SQL Server (of SQL Express) database</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Webshop informatie</Value>

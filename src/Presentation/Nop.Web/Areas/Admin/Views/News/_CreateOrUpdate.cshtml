@@ -1,0 +1,23 @@
+﻿@model NewsItemModel
+
+@{
+    const string hideInfoBlockAttributeName = "NewsItemPage.HideInfoBlock";
+    var hideInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideInfoBlockAttributeName);
+
+    const string hideSeoBlockAttributeName = "NewsItemPage.HideSeoBlock";
+    var hideSeoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSeoBlockAttributeName, defaultValue: true);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-panels id="news-item-panels">
+            <nop-panel asp-name="news-item-info" asp-icon="fa fa-info" asp-title="@T("Admin.ContentManagement.News.NewsItems.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock">@await Html.PartialAsync("_CreateOrUpdate.Info", Model)</nop-panel>
+            <nop-panel asp-name="news-item-seo" asp-icon="fa fa-search-plus" asp-title="@T("Admin.Common.SEO")" asp-hide-block-attribute-name="@hideSeoBlockAttributeName" asp-hide="@hideSeoBlock">@await Html.PartialAsync("_CreateOrUpdate.Seo", Model)</nop-panel>
+                    
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.NewsItemsDetailsBlock, additionalData = Model })
+        </nop-panels>
+    </div>
+</div>

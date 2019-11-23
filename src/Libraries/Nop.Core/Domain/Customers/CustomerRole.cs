@@ -8,7 +8,7 @@ namespace Nop.Core.Domain.Customers
     /// </summary>
     public partial class CustomerRole : BaseEntity
     {
-        private ICollection<PermissionRecord> _permissionRecords;
+        private ICollection<PermissionRecordCustomerRoleMapping> _permissionRecordCustomerRoleMappings;
 
         /// <summary>
         /// Gets or sets the customer role name
@@ -16,7 +16,7 @@ namespace Nop.Core.Domain.Customers
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the customer role is marked as free shiping
+        /// Gets or sets a value indicating whether the customer role is marked as free shipping
         /// </summary>
         public bool FreeShipping { get; set; }
 
@@ -46,19 +46,28 @@ namespace Nop.Core.Domain.Customers
         public bool EnablePasswordLifetime { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the customers of this role have other tax display type chosen instead of the default one
+        /// </summary>
+        public bool OverrideTaxDisplayType { get; set; }
+
+        /// <summary>
+        /// Gets or sets identifier of the default tax display type (used only with "OverrideTaxDisplayType" enabled)
+        /// </summary>
+        public int DefaultTaxDisplayTypeId { get; set; }
+
+        /// <summary>
         /// Gets or sets a product identifier that is required by this customer role. 
         /// A customer is added to this customer role once a specified product is purchased.
         /// </summary>
         public int PurchasedWithProductId { get; set; }
-        
+
         /// <summary>
-        /// Gets or sets the permission records
+        /// Gets or sets the permission record-customer role mappings
         /// </summary>
-        public virtual ICollection<PermissionRecord> PermissionRecords
+        public virtual ICollection<PermissionRecordCustomerRoleMapping> PermissionRecordCustomerRoleMappings
         {
-            get { return _permissionRecords ?? (_permissionRecords = new List<PermissionRecord>()); }
-            protected set { _permissionRecords = value; }
+            get => _permissionRecordCustomerRoleMappings ?? (_permissionRecordCustomerRoleMappings = new List<PermissionRecordCustomerRoleMapping>());
+            protected set => _permissionRecordCustomerRoleMappings = value;
         }
     }
-
 }

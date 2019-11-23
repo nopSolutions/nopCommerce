@@ -1,6 +1,5 @@
-using System.Collections.Generic;
-using System.Web.Routing;
-using Nop.Core.Plugins;
+﻿using System.Collections.Generic;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Cms
 {
@@ -10,27 +9,21 @@ namespace Nop.Services.Cms
     public partial interface IWidgetPlugin : IPlugin
     {
         /// <summary>
+        /// Gets a value indicating whether to hide this plugin on the widget list page in the admin area
+        /// </summary>
+        bool HideInWidgetList { get; }
+
+        /// <summary>
         /// Gets widget zones where this widget should be rendered
         /// </summary>
         /// <returns>Widget zones</returns>
         IList<string> GetWidgetZones();
 
         /// <summary>
-        /// Gets a route for plugin configuration
+        /// Gets a name of a view component for displaying widget
         /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues);
-        
-
-        /// <summary>
-        /// Gets a route for displaying widget
-        /// </summary>
-        /// <param name="widgetZone">Widget zone where it's displayed</param>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        void GetDisplayWidgetRoute(string widgetZone, out string actionName, out string controllerName, out RouteValueDictionary routeValues);
+        /// <param name="widgetZone">Name of the widget zone</param>
+        /// <returns>View component name</returns>
+        string GetWidgetViewComponentName(string widgetZone);
     }
 }

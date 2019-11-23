@@ -1,0 +1,64 @@
+﻿@model PopularSearchTermSearchModel
+
+@using Nop.Core
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject IWorkContext workContext
+@{
+    const string panelId = "popular-search-terms-box";
+    const string hidePanelAttributeName = "Reports.HidePopularSearchTermsReport";
+    var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
+}
+
+<div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <i class="fa fa-search"></i>
+            @T("Admin.SearchTermReport")
+        </h3>
+        <div class="box-tools pull-right">
+            <button class="btn btn-box-tool" data-widget="collapse">
+                @if (hidePanel)
+                {
+                    <text><i class="fa fa-plus"></i></text>
+                }
+                else
+                {
+                    <text><i class="fa fa-minus"></i></text>
+                }
+            </button>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
+                var collapsed = !$('#@panelId').hasClass('collapsed-box');
+                saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
+            });
+        });
+    </script>
+    <div class="box-body">
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "search-term-report-grid",
+            UrlRead = new DataUrl("PopularSearchTermsReport", "Common", null),
+            Length = Model.PageSize,
+            LengthMenu = Model.AvailablePageSizes,
+            Dom = "<'row'<'col-md-12't>>" +
+                  "<'row margin-t-5'" +
+                    "<'col-lg-10 col-xs-12'<'float-lg-left'p>>" +
+                    "<'col-lg-2 col-xs-12'<'float-lg-right text-center'i>>" +
+                  ">",
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(PopularSearchTermModel.Keyword))
+                {
+                    Title = T("Admin.SearchTermReport.Keyword").Text
+                },
+                new ColumnProperty(nameof(PopularSearchTermModel.Count))
+                {
+                    Title = T("Admin.SearchTermReport.Count").Text
+                }
+            }
+        })
+    </div>
+</div>

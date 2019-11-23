@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Plugin.Pickup.PickupInStore.Models
 {
@@ -9,7 +10,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Models
     {
         public StorePickupPointModel()
         {
-            this.Address = new AddressModel();
+            Address = new AddressModel();
             AvailableStores = new List<SelectListItem>();
         }
 
@@ -27,10 +28,23 @@ namespace Nop.Plugin.Pickup.PickupInStore.Models
         [NopResourceDisplayName("Plugins.Pickup.PickupInStore.Fields.OpeningHours")]
         public string OpeningHours { get; set; }
 
+        [NopResourceDisplayName("Plugins.Pickup.PickupInStore.Fields.DisplayOrder")]
+        public int DisplayOrder { get; set; }
+
         public List<SelectListItem> AvailableStores { get; set; }
         [NopResourceDisplayName("Plugins.Pickup.PickupInStore.Fields.Store")]
         public int StoreId { get; set; }
         public string StoreName { get; set; }
+
+        [DataType(DataType.Text)]
+        [DisplayFormat(DataFormatString = "{0:F8}", ApplyFormatInEditMode = true)]
+        [NopResourceDisplayName("Plugins.Pickup.PickupInStore.Fields.Latitude")]
+        public decimal? Latitude { get; set; }
+
+        [DataType(DataType.Text)]
+        [DisplayFormat(DataFormatString = "{0:F8}", ApplyFormatInEditMode = true)]
+        [NopResourceDisplayName("Plugins.Pickup.PickupInStore.Fields.Longitude")]
+        public decimal? Longitude { get; set; }
     }
 
     public class AddressModel
@@ -44,21 +58,26 @@ namespace Nop.Plugin.Pickup.PickupInStore.Models
         [NopResourceDisplayName("Admin.Address.Fields.Country")]
         public int? CountryId { get; set; }
         public IList<SelectListItem> AvailableCountries { get; set; }
+        public bool CountryEnabled { get; set; }
 
         [NopResourceDisplayName("Admin.Address.Fields.StateProvince")]
         public int? StateProvinceId { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
+        public bool StateProvinceEnabled { get; set; }
+
+        [NopResourceDisplayName("Admin.Address.Fields.County")]
+        public string County { get; set; }
+        public bool CountyEnabled { get; set; }
 
         [NopResourceDisplayName("Admin.Address.Fields.City")]
-        [AllowHtml]
         public string City { get; set; }
+        public bool CityEnabled { get; set; }
 
         [NopResourceDisplayName("Admin.Address.Fields.Address1")]
-        [AllowHtml]
         public string Address1 { get; set; }
 
         [NopResourceDisplayName("Admin.Address.Fields.ZipPostalCode")]
-        [AllowHtml]
         public string ZipPostalCode { get; set; }
+        public bool ZipPostalCodeEnabled { get; set; }
     }
 }

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
+using MimeKit;
+using MimeKit.Text;
+using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Infrastructure;
 using Nop.Services.Media;
 
 namespace Nop.Services.Messages
@@ -14,12 +16,94 @@ namespace Nop.Services.Messages
     /// </summary>
     public partial class EmailSender : IEmailSender
     {
-        private readonly IDownloadService _downloadService;
+        #region Fields
 
-        public EmailSender(IDownloadService downloadService)
+        private readonly IDownloadService _downloadService;
+        private readonly INopFileProvider _fileProvider;
+        private readonly ISmtpBuilder _smtpBuilder;
+
+        #endregion
+
+        #region Ctor
+
+        public EmailSender(IDownloadService downloadService, INopFileProvider fileProvider, ISmtpBuilder smtpBuilder)
         {
-            this._downloadService = downloadService;
+            _downloadService = downloadService;
+            _fileProvider = fileProvider;
+            _smtpBuilder = smtpBuilder;
         }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Create an file attachment for the specific download object from DB
+        /// </summary>
+        /// <param name="download">Attachment download (another attachment)</param>
+        /// <returns>A leaf-node MIME part that contains an attachment.</returns>
+        protected MimePart CreateMimeAttachment(Download download)
+        {
+            if (download is null)
+                throw new ArgumentNullException(nameof(download));
+
+            var fileName = !string.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
+
+            return CreateMimeAttachment($"{fileName}{download.Extension}", download.DownloadBinary, DateTime.UtcNow, DateTime.UtcNow, DateTime.UtcNow);
+        }
+
+        /// <summary>
+        /// Create an file attachment for the specific file path
+        /// </summary>
+        /// <param name="filePath">Attachment file path</param>
+        /// <param name="attachmentFileName">Attachment file name</param>
+        /// <returns>A leaf-node MIME part that contains an attachment.</returns>
+        protected MimePart CreateMimeAttachment(string filePath, string attachmentFileName = null)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+                throw new ArgumentNullException(nameof(filePath));
+
+            if (string.IsNullOrWhiteSpace(attachmentFileName))
+                attachmentFileName = Path.GetFileName(filePath);
+
+            return CreateMimeAttachment(
+                    attachmentFileName,
+                    _fileProvider.ReadAllBytes(filePath),
+                    _fileProvider.GetCreationTime(filePath),
+                    _fileProvider.GetLastWriteTime(filePath),
+                    _fileProvider.GetLastAccessTime(filePath));
+        }
+
+        /// <summary>
+        /// Create an file attachment for the binary data
+        /// </summary>
+        /// <param name="attachmentFileName">Attachment file name</param>
+        /// <param name="binaryContent">The array of unsigned bytes from which to create the attachment stream.</param>
+        /// <param name="cDate">Creation date and time for the specified file or directory</param>
+        /// <param name="mDate">Date and time that the specified file or directory was last written to</param>
+        /// <param name="rDate">Date and time that the specified file or directory was last access to.</param>
+        /// <returns>A leaf-node MIME part that contains an attachment.</returns>
+        protected MimePart CreateMimeAttachment(string attachmentFileName, byte[] binaryContent, DateTime cDate, DateTime mDate, DateTime rDate)
+        {
+            if (!ContentType.TryParse(MimeTypes.GetMimeType(attachmentFileName), out var mimeContentType))
+                mimeContentType = new ContentType("application", "octet-stream");
+
+            return new MimePart(mimeContentType)
+            {
+                FileName = attachmentFileName,
+                Content = new MimeContent(new MemoryStream(binaryContent), ContentEncoding.Default),
+                ContentDisposition = new ContentDisposition
+                {
+                    CreationDate = cDate,
+                    ModificationDate = mDate,
+                    ReadDate = rDate
+                }
+            };
+        }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Sends an email
@@ -37,46 +121,45 @@ namespace Nop.Services.Messages
         /// <param name="cc">CC addresses list</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
-        /// <param name="attachedDownloadId">Attachment download ID (another attachedment)</param>
+        /// <param name="attachedDownloadId">Attachment download ID (another attachment)</param>
         /// <param name="headers">Headers</param>
         public virtual void SendEmail(EmailAccount emailAccount, string subject, string body,
             string fromAddress, string fromName, string toAddress, string toName,
-             string replyTo = null, string replyToName = null,
+            string replyTo = null, string replyToName = null,
             IEnumerable<string> bcc = null, IEnumerable<string> cc = null,
             string attachmentFilePath = null, string attachmentFileName = null,
             int attachedDownloadId = 0, IDictionary<string, string> headers = null)
         {
-            var message = new MailMessage();
-            //from, to, reply to
-            message.From = new MailAddress(fromAddress, fromName);
-            message.To.Add(new MailAddress(toAddress, toName));
-            if (!String.IsNullOrEmpty(replyTo))
+            var message = new MimeMessage();
+
+            message.From.Add(new MailboxAddress(fromName, fromAddress));
+            message.To.Add(new MailboxAddress(toName, toAddress));
+
+            if (!string.IsNullOrEmpty(replyTo))
             {
-                message.ReplyToList.Add(new MailAddress(replyTo, replyToName));
+                message.ReplyTo.Add(new MailboxAddress(replyToName, replyTo));
             }
 
             //BCC
             if (bcc != null)
             {
-                foreach (var address in bcc.Where(bccValue => !String.IsNullOrWhiteSpace(bccValue)))
+                foreach (var address in bcc.Where(bccValue => !string.IsNullOrWhiteSpace(bccValue)))
                 {
-                    message.Bcc.Add(address.Trim());
+                    message.Bcc.Add(new MailboxAddress(address.Trim()));
                 }
             }
 
             //CC
             if (cc != null)
             {
-                foreach (var address in cc.Where(ccValue => !String.IsNullOrWhiteSpace(ccValue)))
+                foreach (var address in cc.Where(ccValue => !string.IsNullOrWhiteSpace(ccValue)))
                 {
-                    message.CC.Add(address.Trim());
+                    message.Cc.Add(new MailboxAddress(address.Trim()));
                 }
             }
 
             //content
             message.Subject = subject;
-            message.Body = body;
-            message.IsBodyHtml = true;
 
             //headers
             if (headers != null)
@@ -85,58 +168,38 @@ namespace Nop.Services.Messages
                     message.Headers.Add(header.Key, header.Value);
                 }
 
-            //create the file attachment for this e-mail message
-            if (!String.IsNullOrEmpty(attachmentFilePath) &&
-                File.Exists(attachmentFilePath))
+            var multipart = new Multipart("mixed")
             {
-                var attachment = new Attachment(attachmentFilePath);
-                attachment.ContentDisposition.CreationDate = File.GetCreationTime(attachmentFilePath);
-                attachment.ContentDisposition.ModificationDate = File.GetLastWriteTime(attachmentFilePath);
-                attachment.ContentDisposition.ReadDate = File.GetLastAccessTime(attachmentFilePath);
-                if (!String.IsNullOrEmpty(attachmentFileName))
-                {
-                    attachment.Name = attachmentFileName;
-                }
-                message.Attachments.Add(attachment);
+                new TextPart(TextFormat.Html) { Text = body }
+            };
+
+            //create the file attachment for this e-mail message
+            if (!string.IsNullOrEmpty(attachmentFilePath) && _fileProvider.FileExists(attachmentFilePath))
+            {
+                multipart.Add(CreateMimeAttachment(attachmentFilePath, attachmentFileName));
             }
+
             //another attachment?
             if (attachedDownloadId > 0)
             {
                 var download = _downloadService.GetDownloadById(attachedDownloadId);
-                if (download != null)
+                //we do not support URLs as attachments
+                if (!download?.UseDownloadUrl ?? false)
                 {
-                    //we do not support URLs as attachments
-                    if (!download.UseDownloadUrl)
-                    {
-                        string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
-                        fileName += download.Extension;
-
-
-                        var ms = new MemoryStream(download.DownloadBinary);                        
-                        var attachment = new Attachment(ms, fileName);
-                        //string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
-                        //var attachment = new Attachment(ms, fileName, contentType);
-                        attachment.ContentDisposition.CreationDate = DateTime.UtcNow;
-                        attachment.ContentDisposition.ModificationDate = DateTime.UtcNow;
-                        attachment.ContentDisposition.ReadDate = DateTime.UtcNow;
-                        message.Attachments.Add(attachment);                        
-                    }
+                    multipart.Add(CreateMimeAttachment(download));
                 }
             }
 
+            message.Body = multipart;
+
             //send email
-            using (var smtpClient = new SmtpClient())
+            using (var smtpClient = _smtpBuilder.Build(emailAccount))
             {
-                smtpClient.UseDefaultCredentials = emailAccount.UseDefaultCredentials;
-                smtpClient.Host = emailAccount.Host;
-                smtpClient.Port = emailAccount.Port;
-                smtpClient.EnableSsl = emailAccount.EnableSsl;
-                smtpClient.Credentials = emailAccount.UseDefaultCredentials ? 
-                    CredentialCache.DefaultNetworkCredentials :
-                    new NetworkCredential(emailAccount.Username, emailAccount.Password);
                 smtpClient.Send(message);
+                smtpClient.Disconnect(true);
             }
         }
 
+        #endregion
     }
 }

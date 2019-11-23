@@ -1,11 +1,11 @@
-﻿@{
-    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+﻿@model Nop.Plugin.Pickup.PickupInStore.Models.StorePickupPointModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
 }
-@model Nop.Plugin.Pickup.PickupInStore.Models.StorePickupPointModel
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<form asp-controller="PickupInStore" asp-action="Edit"
+      asp-route-btnId="@Context.Request.Query["btnId"]"
+      asp-route-formId="@Context.Request.Query["formId"]">
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Common.Edit")
@@ -20,7 +20,7 @@
 
     <div class="content">
         <div class="form-horizontal">
-            @Html.Partial("~/Plugins/Pickup.PickupInStore/Views/_CreateOrUpdate.cshtml", Model)
+            @await Html.PartialAsync("~/Plugins/Pickup.PickupInStore/Views/_CreateOrUpdate.cshtml", Model)
         </div>
     </div>
-}
+</form>

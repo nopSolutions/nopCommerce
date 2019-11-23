@@ -1,7 +1,6 @@
 ﻿@model ActiveDiscussionsModel
-@using Nop.Web.Models.Boards;
 @{
-    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Layout = "_ColumnsOne";
 
     //title
     Html.AddTitleParts(T("Forum.PageTitle.ActiveDiscussions").Text);
@@ -9,9 +8,9 @@
     Html.AppendPageCssClassParts("html-active-discussions-page");
 }
 <div class="page active-discussions-page">
-    @Html.Action("ForumBreadcrumb")
-    @Html.Partial("_ForumHeader")
-    @Html.Widget("boards_activediscussions_after_header")
-    @Html.Partial("_ActiveTopics", Model)
-    @Html.Widget("boards_activediscussions_after_topics")
+    @await Component.InvokeAsync("ForumBreadcrumb")
+    @await Html.PartialAsync("_ForumHeader")
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsActivediscussionsAfterHeader })
+    @await Html.PartialAsync("_ActiveTopics", Model)
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsActivediscussionsAfterTopics })
 </div>

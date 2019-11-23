@@ -12,6 +12,9 @@ using Nop.Core.Domain.Vendors;
 
 namespace Nop.Services.Messages
 {
+    /// <summary>
+    /// Message token provider
+    /// </summary>
     public partial interface IMessageTokenProvider
     {
         /// <summary>
@@ -184,5 +187,12 @@ namespace Nop.Services.Messages
         /// <param name="tokenGroups">Collection of token groups; pass null to get all available tokens</param>
         /// <returns>Collection of allowed message tokens</returns>
         IEnumerable<string> GetListOfAllowedTokens(IEnumerable<string> tokenGroups = null);
+
+        /// <summary>
+        /// Get token groups of message template
+        /// </summary>
+        /// <param name="messageTemplate">Message template</param>
+        /// <returns>Collection of token group names</returns>
+        IEnumerable<string> GetTokenGroups(MessageTemplate messageTemplate);
     }
 }

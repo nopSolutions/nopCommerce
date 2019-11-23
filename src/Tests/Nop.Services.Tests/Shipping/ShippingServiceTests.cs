@@ -1,115 +1,135 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Moq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
-using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
+using Nop.Services.Plugins;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Pickup;
 using Nop.Tests;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Shipping
 {
     [TestFixture]
     public class ShippingServiceTests : ServiceTest
     {
-        private IRepository<ShippingMethod> _shippingMethodRepository;
-        private IRepository<Warehouse> _warehouseRepository;
+        private Mock<IRepository<ShippingMethod>> _shippingMethodRepository;
+        private Mock<IRepository<Warehouse>> _warehouseRepository;
         private ILogger _logger;
-        private IProductAttributeParser _productAttributeParser;
-        private ICheckoutAttributeParser _checkoutAttributeParser;
+        private Mock<IProductAttributeParser> _productAttributeParser;
+        private Mock<ICheckoutAttributeParser> _checkoutAttributeParser;
         private ShippingSettings _shippingSettings;
-        private IEventPublisher _eventPublisher;
-        private ILocalizationService _localizationService;
-        private IAddressService _addressService;
-        private IGenericAttributeService _genericAttributeService;
+        private Mock<IEventPublisher> _eventPublisher;
+        private Mock<ILocalizationService> _localizationService;
+        private Mock<IAddressService> _addressService;
+        private Mock<IGenericAttributeService> _genericAttributeService;
         private IShippingService _shippingService;
         private ShoppingCartSettings _shoppingCartSettings;
-        private IProductService _productService;
+        private Mock<IProductService> _productService;
         private Store _store;
-        private IStoreContext _storeContext;
+        private Mock<IStoreContext> _storeContext;
+        private Mock<IPriceCalculationService> _priceCalcService;
+        private IPickupPluginManager _pickupPluginManager;
+        private IShippingPluginManager _shippingPluginManager;
+        private CatalogSettings _catalogSettings;
 
         [SetUp]
         public new void SetUp()
         {
-            _shippingSettings = new ShippingSettings();
-            _shippingSettings.ActiveShippingRateComputationMethodSystemNames = new List<string>();
+            _shippingSettings = new ShippingSettings
+            {
+                ActiveShippingRateComputationMethodSystemNames = new List<string>()
+            };
             _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add("FixedRateTestShippingRateComputationMethod");
 
-            _shippingMethodRepository = MockRepository.GenerateMock<IRepository<ShippingMethod>>();
-            _warehouseRepository = MockRepository.GenerateMock<IRepository<Warehouse>>();
+            _shippingMethodRepository = new Mock<IRepository<ShippingMethod>>();
+            _warehouseRepository = new Mock<IRepository<Warehouse>>();
             _logger = new NullLogger();
-            _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
-            _checkoutAttributeParser = MockRepository.GenerateMock<ICheckoutAttributeParser>();
+            _productAttributeParser = new Mock<IProductAttributeParser>();
+            _checkoutAttributeParser = new Mock<ICheckoutAttributeParser>();
 
-            var cacheManager = new NopNullCache();
+            var cacheManager = new TestCacheManager();
+            
+            _productService = new Mock<IProductService>();
 
-            var pluginFinder = new PluginFinder();
-            _productService = MockRepository.GenerateMock<IProductService>();
+            _eventPublisher = new Mock<IEventPublisher>();
+            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
-            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+            var customerService = new Mock<ICustomerService>();
+            var loger = new Mock<ILogger>();
+            var webHelper = new Mock<IWebHelper>();
 
-            _localizationService = MockRepository.GenerateMock<ILocalizationService>();
-            _addressService = MockRepository.GenerateMock<IAddressService>();
-            _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
+            _catalogSettings = new CatalogSettings();
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+
+            _pickupPluginManager = new PickupPluginManager(pluginService, _shippingSettings);
+            _shippingPluginManager = new ShippingPluginManager(pluginService, _shippingSettings);
+
+            _localizationService = new Mock<ILocalizationService>();
+            _addressService = new Mock<IAddressService>();
+            _genericAttributeService = new Mock<IGenericAttributeService>();
+            _priceCalcService = new Mock<IPriceCalculationService>();
 
             _store = new Store { Id = 1 };
-            _storeContext = MockRepository.GenerateMock<IStoreContext>();
-            _storeContext.Expect(x => x.CurrentStore).Return(_store);
+            _storeContext = new Mock<IStoreContext>();
+            _storeContext.Setup(x => x.CurrentStore).Returns(_store);
 
             _shoppingCartSettings = new ShoppingCartSettings();
-            _shippingService = new ShippingService(_shippingMethodRepository,
-                _warehouseRepository,
+
+            _shippingService = new ShippingService(_addressService.Object,
+                cacheManager,
+                _checkoutAttributeParser.Object,
+                _eventPublisher.Object,
+                _genericAttributeService.Object,
+                _localizationService.Object,
                 _logger,
-                _productService,
-                _productAttributeParser,
-                _checkoutAttributeParser,
-                _genericAttributeService,
-                _localizationService,
-                _addressService,
-                _shippingSettings, 
-                pluginFinder,
-                _storeContext,
-                _eventPublisher,
-                _shoppingCartSettings,
-                cacheManager);
+                _pickupPluginManager,
+                _priceCalcService.Object,
+                _productAttributeParser.Object,
+                _productService.Object,
+                _shippingMethodRepository.Object,
+                _warehouseRepository.Object,
+                _shippingPluginManager,
+                _storeContext.Object,
+                _shippingSettings,
+                _shoppingCartSettings);
         }
 
         [Test]
         public void Can_load_shippingRateComputationMethods()
         {
-            var srcm = _shippingService.LoadAllShippingRateComputationMethods();
+            var srcm = _shippingPluginManager.LoadAllPlugins();
             srcm.ShouldNotBeNull();
-            (srcm.Any()).ShouldBeTrue();
+            srcm.Any().ShouldBeTrue();
         }
 
         [Test]
         public void Can_load_shippingRateComputationMethod_by_systemKeyword()
         {
-            var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName("FixedRateTestShippingRateComputationMethod");
+            var srcm = _shippingPluginManager.LoadPluginBySystemName("FixedRateTestShippingRateComputationMethod");
             srcm.ShouldNotBeNull();
         }
 
         [Test]
         public void Can_load_active_shippingRateComputationMethods()
         {
-            var srcm = _shippingService.LoadActiveShippingRateComputationMethods();
+            var srcm = _shippingPluginManager.LoadActivePlugins(_shippingSettings.ActiveShippingRateComputationMethodSystemNames);
             srcm.ShouldNotBeNull();
-            (srcm.Any()).ShouldBeTrue();
+            srcm.Any().ShouldBeTrue();
         }
-        
+
         [Test]
         public void Can_get_shoppingCart_totalWeight_without_attributes()
         {

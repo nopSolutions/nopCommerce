@@ -1,0 +1,54 @@
+@model ShippingSettingsModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.Shipping").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Shipping settings");
+}
+
+@{
+    const string hideCommonBlockAttributeName = "ShippingSettingsPage.HideCommonBlock";
+    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+
+    const string hideNotificationsBlockAttributeName = "ShippingSettingsPage.HideNotificationsBlock";
+    var hideNotificationsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideNotificationsBlockAttributeName);
+
+    const string hideCheckoutBlockAttributeName = "ShippingSettingsPage.HideCheckoutBlock";
+    var hideCheckoutBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCheckoutBlockAttributeName);
+
+    const string hideShippingOriginBlockAttributeName = "ShippingSettingsPage.HideShippingOriginBlock";
+    var hideShippingOriginBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideShippingOriginBlockAttributeName);
+}
+
+<form asp-controller="Setting" asp-action="Shipping" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.Shipping")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShippingSettingsButtons })
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
+            <div asp-validation-summary="All"></div>
+
+            <nop-panels id="product-panels">
+                <nop-panel asp-name="product-info" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.Shipping.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Shipping.Common", Model)</nop-panel>
+                <nop-panel asp-name="product-notifications" asp-icon="fa fa-bell" asp-title="@T("Admin.Configuration.Settings.Shipping.BlockTitle.Notifications")" asp-hide-block-attribute-name="@hideNotificationsBlockAttributeName" asp-hide="@hideNotificationsBlock" asp-advanced="true">@await Html.PartialAsync("_Shipping.Notifications", Model)</nop-panel>
+                <nop-panel asp-name="product-checkout" asp-icon="fa fa-credit-card" asp-title="@T("Admin.Configuration.Settings.Shipping.BlockTitle.Checkout")" asp-hide-block-attribute-name="@hideCheckoutBlockAttributeName" asp-hide="@hideCheckoutBlock" asp-advanced="false">@await Html.PartialAsync("_Shipping.Checkout", Model)</nop-panel>
+                <nop-panel asp-name="product-shipping-origin" asp-icon="fa fa-truck" asp-title="@T("Admin.Configuration.Settings.Shipping.ShippingOriginAddress")" asp-hide-block-attribute-name="@hideShippingOriginBlockAttributeName" asp-hide="@hideShippingOriginBlock" asp-advanced="false">@await Html.PartialAsync("_Shipping.ShippingOrigin", Model)</nop-panel>
+                
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShippingDetailsBlock, additionalData = Model })
+            </nop-panels>
+        </div>
+    </div>
+</form>

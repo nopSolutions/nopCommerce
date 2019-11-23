@@ -1,24 +1,40 @@
-
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
+    /// <summary>
+    /// Represents a gift card usage history mapping configuration
+    /// </summary>
     public partial class GiftCardUsageHistoryMap : NopEntityTypeConfiguration<GiftCardUsageHistory>
     {
-        public GiftCardUsageHistoryMap()
+        #region Methods
+
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<GiftCardUsageHistory> builder)
         {
-            this.ToTable("GiftCardUsageHistory");
-            this.HasKey(gcuh => gcuh.Id);
-            this.Property(gcuh => gcuh.UsedValue).HasPrecision(18, 4);
-            //this.Property(gcuh => gcuh.UsedValueInCustomerCurrency).HasPrecision(18, 4);
+            builder.ToTable(nameof(GiftCardUsageHistory));
+            builder.HasKey(historyEntry => historyEntry.Id);
 
-            this.HasRequired(gcuh => gcuh.GiftCard)
-                .WithMany(gc => gc.GiftCardUsageHistory)
-                .HasForeignKey(gcuh => gcuh.GiftCardId);
+            builder.Property(historyEntry => historyEntry.UsedValue).HasColumnType("decimal(18, 4)");
 
-            this.HasRequired(gcuh => gcuh.UsedWithOrder)
-                .WithMany(o => o.GiftCardUsageHistory)
-                .HasForeignKey(gcuh => gcuh.UsedWithOrderId);
+            builder.HasOne(historyEntry => historyEntry.GiftCard)
+                .WithMany(giftCard => giftCard.GiftCardUsageHistory)
+                .HasForeignKey(historyEntry => historyEntry.GiftCardId)
+                .IsRequired();
+
+            builder.HasOne(historyEntry => historyEntry.UsedWithOrder)
+                .WithMany(order => order.GiftCardUsageHistory)
+                .HasForeignKey(historyEntry => historyEntry.UsedWithOrderId)
+                .IsRequired();
+
+            base.Configure(builder);
         }
+
+        #endregion
     }
 }

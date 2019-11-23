@@ -63,8 +63,8 @@ namespace Nop.Core.Domain.Messages
         /// </summary>
         public MessageDelayPeriod DelayPeriod
         {
-            get { return (MessageDelayPeriod)this.DelayPeriodId; }
-            set { this.DelayPeriodId = (int)value; }
+            get => (MessageDelayPeriod)DelayPeriodId;
+            set => DelayPeriodId = (int)value;
         }
     }
 }

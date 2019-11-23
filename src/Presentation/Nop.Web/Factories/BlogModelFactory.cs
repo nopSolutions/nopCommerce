@@ -6,75 +6,91 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Security;
 using Nop.Services.Blogs;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Media;
 using Nop.Services.Seo;
-using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Blogs;
 
 namespace Nop.Web.Factories
 {
+    /// <summary>
+    /// Represents the blog model factory
+    /// </summary>
     public partial class BlogModelFactory : IBlogModelFactory
     {
         #region Fields
 
-        private readonly IBlogService _blogService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly IPictureService _pictureService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ICacheManager _cacheManager;
-
-        private readonly MediaSettings _mediaSettings;
         private readonly BlogSettings _blogSettings;
-        private readonly CustomerSettings _customerSettings;
         private readonly CaptchaSettings _captchaSettings;
+        private readonly CustomerSettings _customerSettings;
+        private readonly IBlogService _blogService;
+        private readonly ICustomerService _customerService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IPictureService _pictureService;
+        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStoreContext _storeContext;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly IWorkContext _workContext;
+        private readonly MediaSettings _mediaSettings;
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
-        public BlogModelFactory(IBlogService blogService,
-            IWorkContext workContext,
-            IStoreContext storeContext,
-            IPictureService pictureService,
-            IDateTimeHelper dateTimeHelper,
-            ICacheManager cacheManager,
-            MediaSettings mediaSettings,
-            BlogSettings blogSettings,
+        public BlogModelFactory(BlogSettings blogSettings,
+            CaptchaSettings captchaSettings,
             CustomerSettings customerSettings,
-            CaptchaSettings captchaSettings)
+            IBlogService blogService,
+            ICustomerService customerService,
+            IDateTimeHelper dateTimeHelper,
+            IGenericAttributeService genericAttributeService,
+            IPictureService pictureService,
+            IStaticCacheManager cacheManager,
+            IStoreContext storeContext,
+            IUrlRecordService urlRecordService,
+            IWorkContext workContext,
+            MediaSettings mediaSettings)
         {
-            this._blogService = blogService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._pictureService = pictureService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._cacheManager = cacheManager;
-            this._mediaSettings = mediaSettings;
-            this._blogSettings = blogSettings;
-            this._customerSettings = customerSettings;
-            this._captchaSettings = captchaSettings;
+            _blogSettings = blogSettings;
+            _captchaSettings = captchaSettings;
+            _customerSettings = customerSettings;
+            _blogService = blogService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _genericAttributeService = genericAttributeService;
+            _pictureService = pictureService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
+            _mediaSettings = mediaSettings;
         }
 
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Prepare blog comment model
+        /// </summary>
+        /// <param name="blogComment">Blog comment entity</param>
+        /// <returns>Blog comment model</returns>
         public virtual BlogCommentModel PrepareBlogPostCommentModel(BlogComment blogComment)
         {
             if (blogComment == null)
-                throw new ArgumentNullException("blogComment");
+                throw new ArgumentNullException(nameof(blogComment));
 
             var model = new BlogCommentModel
             {
                 Id = blogComment.Id,
                 CustomerId = blogComment.CustomerId,
-                CustomerName = blogComment.Customer.FormatUserName(),
+                CustomerName = _customerService.FormatUsername(blogComment.Customer),
                 CommentText = blogComment.CommentText,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc),
                 AllowViewingProfiles = _customerSettings.AllowViewingProfiles && blogComment.Customer != null && !blogComment.Customer.IsGuest()
@@ -82,39 +98,43 @@ namespace Nop.Web.Factories
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
                 model.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                    blogComment.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
-                    _mediaSettings.AvatarPictureSize,
-                    _customerSettings.DefaultAvatarEnabled,
-                    defaultPictureType: PictureType.Avatar);
+                    _genericAttributeService.GetAttribute<int>(blogComment.Customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                    _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
             }
 
             return model;
         }
 
+        /// <summary>
+        /// Prepare blog post model
+        /// </summary>
+        /// <param name="model">Blog post model</param>
+        /// <param name="blogPost">Blog post entity</param>
+        /// <param name="prepareComments">Whether to prepare blog comments</param>
         public virtual void PrepareBlogPostModel(BlogPostModel model, BlogPost blogPost, bool prepareComments)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (blogPost == null)
-                throw new ArgumentNullException("blogPost");
+                throw new ArgumentNullException(nameof(blogPost));
 
             model.Id = blogPost.Id;
             model.MetaTitle = blogPost.MetaTitle;
             model.MetaDescription = blogPost.MetaDescription;
             model.MetaKeywords = blogPost.MetaKeywords;
-            model.SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false);
+            model.SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false);
             model.Title = blogPost.Title;
             model.Body = blogPost.Body;
             model.BodyOverview = blogPost.BodyOverview;
             model.AllowComments = blogPost.AllowComments;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogPost.StartDateUtc ?? blogPost.CreatedOnUtc, DateTimeKind.Utc);
-            model.Tags = blogPost.ParseTags().ToList();
+            model.Tags = _blogService.ParseTags(blogPost);
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage;
 
             //number of blog comments
             var storeId = _blogSettings.ShowBlogCommentsPerStore ? _storeContext.CurrentStore.Id : 0;
-            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_COMMENTS_NUMBER_KEY, blogPost.Id, storeId, true);
+            var cacheKey = string.Format(NopModelCacheDefaults.BlogCommentsNumberKey, blogPost.Id, storeId, true);
             model.NumberOfComments = _cacheManager.Get(cacheKey, () => _blogService.GetBlogCommentsCount(blogPost, storeId, true));
 
             if (prepareComments)
@@ -131,10 +151,15 @@ namespace Nop.Web.Factories
             }
         }
 
+        /// <summary>
+        /// Prepare blog post list model
+        /// </summary>
+        /// <param name="command">Blog paging filtering model</param>
+        /// <returns>Blog post list model</returns>
         public virtual BlogPostListModel PrepareBlogPostListModel(BlogPagingFilteringModel command)
         {
             if (command == null)
-                throw new ArgumentNullException("command");
+                throw new ArgumentNullException(nameof(command));
 
             var model = new BlogPostListModel();
             model.PagingFilteringContext.Tag = command.Tag;
@@ -144,11 +169,11 @@ namespace Nop.Web.Factories
             if (command.PageSize <= 0) command.PageSize = _blogSettings.PostsPageSize;
             if (command.PageNumber <= 0) command.PageNumber = 1;
 
-            DateTime? dateFrom = command.GetFromMonth();
-            DateTime? dateTo = command.GetToMonth();
+            var dateFrom = command.GetFromMonth();
+            var dateTo = command.GetToMonth();
 
             IPagedList<BlogPost> blogPosts;
-            if (String.IsNullOrEmpty(command.Tag))
+            if (string.IsNullOrEmpty(command.Tag))
             {
                 blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
                     _workContext.WorkingLanguage.Id,
@@ -174,9 +199,13 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        /// <summary>
+        /// Prepare blog post tag list model
+        /// </summary>
+        /// <returns>Blog post tag list model</returns>
         public virtual BlogPostTagListModel PrepareBlogPostTagListModel()
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_TAGS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cacheKey = string.Format(NopModelCacheDefaults.BlogTagsModelKey, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 var model = new BlogPostTagListModel();
@@ -201,9 +230,13 @@ namespace Nop.Web.Factories
             return cachedModel;
         }
 
+        /// <summary>
+        /// Prepare blog post year models
+        /// </summary>
+        /// <returns>List of blog post year model</returns>
         public virtual List<BlogPostYearModel> PrepareBlogPostYearModel()
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_MONTHS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cacheKey = string.Format(NopModelCacheDefaults.BlogMonthsModelKey, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 var model = new List<BlogPostYearModel>();
@@ -218,7 +251,8 @@ namespace Nop.Web.Factories
                     var first = blogPost.StartDateUtc ?? blogPost.CreatedOnUtc;
                     while (DateTime.SpecifyKind(first, DateTimeKind.Utc) <= DateTime.UtcNow.AddMonths(1))
                     {
-                        var list = blogPosts.GetPostsByDate(new DateTime(first.Year, first.Month, 1), new DateTime(first.Year, first.Month, 1).AddMonths(1).AddSeconds(-1));
+                        var list = _blogService.GetPostsByDate(blogPosts, new DateTime(first.Year, first.Month, 1),
+                            new DateTime(first.Year, first.Month, 1).AddMonths(1).AddSeconds(-1));
                         if (list.Any())
                         {
                             var date = new DateTime(first.Year, first.Month, 1);
@@ -229,7 +263,7 @@ namespace Nop.Web.Factories
                     }
 
 
-                    int current = 0;
+                    var current = 0;
                     foreach (var kvp in months)
                     {
                         var date = kvp.Key;

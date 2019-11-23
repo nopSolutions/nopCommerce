@@ -4,7 +4,9 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Seo;
 using Nop.Services.Events;
+using Nop.Services.Seo;
 
 namespace Nop.Services.Affiliates
 {
@@ -15,33 +17,36 @@ namespace Nop.Services.Affiliates
     {
         #region Fields
 
+        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Affiliate> _affiliateRepository;
         private readonly IRepository<Order> _orderRepository;
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly IWebHelper _webHelper;
+        private readonly SeoSettings _seoSettings;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="affiliateRepository">Affiliate repository</param>
-        /// <param name="orderRepository">Order repository</param>
-        /// <param name="eventPublisher">Event published</param>
-        public AffiliateService(IRepository<Affiliate> affiliateRepository,
+        public AffiliateService(IEventPublisher eventPublisher,
+            IRepository<Affiliate> affiliateRepository,
             IRepository<Order> orderRepository,
-            IEventPublisher eventPublisher)
+            IUrlRecordService urlRecordService,
+            IWebHelper webHelper,
+            SeoSettings seoSettings)
         {
-            this._affiliateRepository = affiliateRepository;
-            this._orderRepository = orderRepository;
-            this._eventPublisher = eventPublisher;
+            _eventPublisher = eventPublisher;
+            _affiliateRepository = affiliateRepository;
+            _orderRepository = orderRepository;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _seoSettings = seoSettings;
         }
 
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Gets an affiliate by affiliate identifier
         /// </summary>
@@ -51,18 +56,18 @@ namespace Nop.Services.Affiliates
         {
             if (affiliateId == 0)
                 return null;
-            
+
             return _affiliateRepository.GetById(affiliateId);
         }
-        
+
         /// <summary>
-        /// Gets an affiliate by friendly url name
+        /// Gets an affiliate by friendly URL name
         /// </summary>
-        /// <param name="friendlyUrlName">Friendly url name</param>
+        /// <param name="friendlyUrlName">Friendly URL name</param>
         /// <returns>Affiliate</returns>
         public virtual Affiliate GetAffiliateByFriendlyUrlName(string friendlyUrlName)
         {
-            if (String.IsNullOrWhiteSpace(friendlyUrlName))
+            if (string.IsNullOrWhiteSpace(friendlyUrlName))
                 return null;
 
             var query = from a in _affiliateRepository.Table
@@ -80,7 +85,7 @@ namespace Nop.Services.Affiliates
         public virtual void DeleteAffiliate(Affiliate affiliate)
         {
             if (affiliate == null)
-                throw new ArgumentNullException("affiliate");
+                throw new ArgumentNullException(nameof(affiliate));
 
             affiliate.Deleted = true;
             UpdateAffiliate(affiliate);
@@ -110,11 +115,11 @@ namespace Nop.Services.Affiliates
             bool showHidden = false)
         {
             var query = _affiliateRepository.Table;
-            if (!String.IsNullOrWhiteSpace(friendlyUrlName))
+            if (!string.IsNullOrWhiteSpace(friendlyUrlName))
                 query = query.Where(a => a.FriendlyUrlName.Contains(friendlyUrlName));
-            if (!String.IsNullOrWhiteSpace(firstName))
+            if (!string.IsNullOrWhiteSpace(firstName))
                 query = query.Where(a => a.Address.FirstName.Contains(firstName));
-            if (!String.IsNullOrWhiteSpace(lastName))
+            if (!string.IsNullOrWhiteSpace(lastName))
                 query = query.Where(a => a.Address.LastName.Contains(lastName));
             if (!showHidden)
                 query = query.Where(a => a.Active);
@@ -148,7 +153,7 @@ namespace Nop.Services.Affiliates
         public virtual void InsertAffiliate(Affiliate affiliate)
         {
             if (affiliate == null)
-                throw new ArgumentNullException("affiliate");
+                throw new ArgumentNullException(nameof(affiliate));
 
             _affiliateRepository.Insert(affiliate);
 
@@ -163,12 +168,101 @@ namespace Nop.Services.Affiliates
         public virtual void UpdateAffiliate(Affiliate affiliate)
         {
             if (affiliate == null)
-                throw new ArgumentNullException("affiliate");
+                throw new ArgumentNullException(nameof(affiliate));
 
             _affiliateRepository.Update(affiliate);
 
             //event notification
             _eventPublisher.EntityUpdated(affiliate);
+        }
+
+        /// <summary>
+        /// Get full name
+        /// </summary>
+        /// <param name="affiliate">Affiliate</param>
+        /// <returns>Affiliate full name</returns>
+        public virtual string GetAffiliateFullName(Affiliate affiliate)
+        {
+            if (affiliate == null)
+                throw new ArgumentNullException(nameof(affiliate));
+
+            var firstName = affiliate.Address.FirstName;
+            var lastName = affiliate.Address.LastName;
+
+            var fullName = string.Empty;
+            if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
+                fullName = $"{firstName} {lastName}";
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(firstName))
+                    fullName = firstName;
+
+                if (!string.IsNullOrWhiteSpace(lastName))
+                    fullName = lastName;
+            }
+
+            return fullName;
+        }
+
+        /// <summary>
+        /// Generate affiliate URL
+        /// </summary>
+        /// <param name="affiliate">Affiliate</param>
+        /// <returns>Generated affiliate URL</returns>
+        public virtual string GenerateUrl(Affiliate affiliate)
+        {
+            if (affiliate == null)
+                throw new ArgumentNullException(nameof(affiliate));
+
+            var storeUrl = _webHelper.GetStoreLocation(false);
+            var url = !string.IsNullOrEmpty(affiliate.FriendlyUrlName) ?
+                //use friendly URL
+                _webHelper.ModifyQueryString(storeUrl, NopAffiliateDefaults.AffiliateQueryParameter, affiliate.FriendlyUrlName) :
+                //use ID
+                _webHelper.ModifyQueryString(storeUrl, NopAffiliateDefaults.AffiliateIdQueryParameter, affiliate.Id.ToString());
+
+            return url;
+        }
+
+        /// <summary>
+        /// Validate friendly URL name
+        /// </summary>
+        /// <param name="affiliate">Affiliate</param>
+        /// <param name="friendlyUrlName">Friendly URL name</param>
+        /// <returns>Valid friendly name</returns>
+        public virtual string ValidateFriendlyUrlName(Affiliate affiliate, string friendlyUrlName)
+        {
+            if (affiliate == null)
+                throw new ArgumentNullException(nameof(affiliate));
+
+            //ensure we have only valid chars
+            friendlyUrlName = _urlRecordService.GetSeName(friendlyUrlName, _seoSettings.ConvertNonWesternChars, _seoSettings.AllowUnicodeCharsInUrls);
+
+            //max length
+            //(consider a store URL + probably added {0}-{1} below)
+            friendlyUrlName = CommonHelper.EnsureMaximumLength(friendlyUrlName, NopAffiliateDefaults.FriendlyUrlNameLength);
+
+            //ensure this name is not reserved yet
+            //empty? nothing to check
+            if (string.IsNullOrEmpty(friendlyUrlName))
+                return friendlyUrlName;
+            //check whether such friendly URL name already exists (and that is not the current affiliate)
+            var i = 2;
+            var tempName = friendlyUrlName;
+            while (true)
+            {
+                var affiliateByFriendlyUrlName = GetAffiliateByFriendlyUrlName(tempName);
+                var reserved = affiliateByFriendlyUrlName != null && affiliateByFriendlyUrlName.Id != affiliate.Id;
+                if (!reserved)
+                    break;
+
+                tempName = $"{friendlyUrlName}-{i}";
+                i++;
+            }
+
+            friendlyUrlName = tempName;
+
+            return friendlyUrlName;
         }
 
         #endregion

@@ -1,0 +1,38 @@
+﻿@using Nop.Services.Plugins
+@using Nop.Services.Security
+@using Nop.Web.Framework.Menu
+@inject IPermissionService permissionService
+@inject IPluginManager<IAdminMenuPlugin> adminMenuPluginManager
+@inject IWorkContext workContext
+
+<ul class="sidebar-menu" data-widget="tree">
+    @{
+        //load sitemap
+        var siteMap = new XmlSiteMap();
+        siteMap.LoadFrom("~/Areas/Admin/sitemap.config");
+
+        //standard (default) items
+        var rootNode = siteMap.RootNode;
+
+        //plugins
+        var adminMenuPlugins = adminMenuPluginManager.LoadAllPlugins(workContext.CurrentCustomer);
+        foreach (var adminMenuPlugin in adminMenuPlugins)
+        {
+            adminMenuPlugin.ManageSiteMap(rootNode);
+        }
+
+        //"Plugins" menu item should be visible when it has some child nodes
+        var pluginNode = rootNode.ChildNodes.FirstOrDefault(x => x.SystemName == "Third party plugins");
+        if (pluginNode != null && pluginNode.Visible)
+        {
+            var hasManagePluginsPermission = permissionService.Authorize(StandardPermissionProvider.ManagePlugins);
+            pluginNode.Visible = hasManagePluginsPermission && pluginNode.ChildNodes.Any(x => x.Visible);
+        }
+
+        //display menu items
+        foreach (var item in rootNode.ChildNodes.Where(x => x.Visible))
+        {
+            @await Html.PartialAsync("_MenuItem", item)
+        }
+    }
+</ul>

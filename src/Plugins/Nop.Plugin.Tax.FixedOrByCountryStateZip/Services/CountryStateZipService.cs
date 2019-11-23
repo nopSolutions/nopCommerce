@@ -34,9 +34,9 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
             ICacheManager cacheManager,
             IRepository<TaxRate> taxRateRepository)
         {
-            this._eventPublisher = eventPublisher;
-            this._cacheManager = cacheManager;
-            this._taxRateRepository = taxRateRepository;
+            _eventPublisher = eventPublisher;
+            _cacheManager = cacheManager;
+            _taxRateRepository = taxRateRepository;
         }
 
         #endregion
@@ -50,7 +50,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         public virtual void DeleteTaxRate(TaxRate taxRate)
         {
             if (taxRate == null)
-                throw new ArgumentNullException("taxRate");
+                throw new ArgumentNullException(nameof(taxRate));
 
             _taxRateRepository.Delete(taxRate);
 
@@ -95,7 +95,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         public virtual void InsertTaxRate(TaxRate taxRate)
         {
             if (taxRate == null)
-                throw new ArgumentNullException("taxRate");
+                throw new ArgumentNullException(nameof(taxRate));
 
             _taxRateRepository.Insert(taxRate);
 
@@ -110,7 +110,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         public virtual void UpdateTaxRate(TaxRate taxRate)
         {
             if (taxRate == null)
-                throw new ArgumentNullException("taxRate");
+                throw new ArgumentNullException(nameof(taxRate));
 
             _taxRateRepository.Update(taxRate);
 

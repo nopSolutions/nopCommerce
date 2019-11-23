@@ -13,49 +13,23 @@ namespace Nop.Services.Tax
     /// </summary>
     public partial class TaxCategoryService : ITaxCategoryService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        private const string TAXCATEGORIES_ALL_KEY = "Nop.taxcategory.all";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : tax category ID
-        /// </remarks>
-        private const string TAXCATEGORIES_BY_ID_KEY = "Nop.taxcategory.id-{0}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string TAXCATEGORIES_PATTERN_KEY = "Nop.taxcategory.";
-
-        #endregion
-
         #region Fields
 
-        private readonly IRepository<TaxCategory> _taxCategoryRepository;
-        private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<TaxCategory> _taxCategoryRepository;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="taxCategoryRepository">Tax category repository</param>
-        /// <param name="eventPublisher">Event published</param>
         public TaxCategoryService(ICacheManager cacheManager,
-            IRepository<TaxCategory> taxCategoryRepository,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            IRepository<TaxCategory> taxCategoryRepository)
         {
             _cacheManager = cacheManager;
-            _taxCategoryRepository = taxCategoryRepository;
             _eventPublisher = eventPublisher;
+            _taxCategoryRepository = taxCategoryRepository;
         }
 
         #endregion
@@ -69,11 +43,11 @@ namespace Nop.Services.Tax
         public virtual void DeleteTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
-                throw new ArgumentNullException("taxCategory");
+                throw new ArgumentNullException(nameof(taxCategory));
 
             _taxCategoryRepository.Delete(taxCategory);
 
-            _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(NopTaxDefaults.TaxCategoriesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(taxCategory);
@@ -85,8 +59,7 @@ namespace Nop.Services.Tax
         /// <returns>Tax categories</returns>
         public virtual IList<TaxCategory> GetAllTaxCategories()
         {
-            string key = string.Format(TAXCATEGORIES_ALL_KEY);
-            return _cacheManager.Get(key, () =>
+            return _cacheManager.Get(NopTaxDefaults.TaxCategoriesAllCacheKey, () =>
             {
                 var query = from tc in _taxCategoryRepository.Table
                             orderby tc.DisplayOrder, tc.Id
@@ -105,8 +78,8 @@ namespace Nop.Services.Tax
         {
             if (taxCategoryId == 0)
                 return null;
-            
-            string key = string.Format(TAXCATEGORIES_BY_ID_KEY, taxCategoryId);
+
+            var key = string.Format(NopTaxDefaults.TaxCategoriesByIdCacheKey, taxCategoryId);
             return _cacheManager.Get(key, () => _taxCategoryRepository.GetById(taxCategoryId));
         }
 
@@ -117,11 +90,11 @@ namespace Nop.Services.Tax
         public virtual void InsertTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
-                throw new ArgumentNullException("taxCategory");
+                throw new ArgumentNullException(nameof(taxCategory));
 
             _taxCategoryRepository.Insert(taxCategory);
 
-            _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(NopTaxDefaults.TaxCategoriesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(taxCategory);
@@ -134,15 +107,16 @@ namespace Nop.Services.Tax
         public virtual void UpdateTaxCategory(TaxCategory taxCategory)
         {
             if (taxCategory == null)
-                throw new ArgumentNullException("taxCategory");
+                throw new ArgumentNullException(nameof(taxCategory));
 
             _taxCategoryRepository.Update(taxCategory);
 
-            _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(NopTaxDefaults.TaxCategoriesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(taxCategory);
         }
+
         #endregion
     }
 }

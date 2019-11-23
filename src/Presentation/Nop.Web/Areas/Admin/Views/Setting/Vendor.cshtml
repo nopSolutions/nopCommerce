@@ -1,0 +1,51 @@
+@model VendorSettingsModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.Vendor").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Vendor settings");
+}
+
+
+@{
+    const string hideCommonBlockAttributeName = "VendorSettingsPage.HideCommonBlock";
+    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+
+    const string hideCatalogBlockAttributeName = "VendorSettingsPage.HideCatalogBlock";
+    var hideCatalogBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCatalogBlockAttributeName);
+
+    const string hideVendorAttributeBlockAttributeName = "VendorSettingsPage.HideVendorAttributeBlock";
+    var hideVendorAttributeBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideVendorAttributeBlockAttributeName);
+}
+
+<form asp-controller="Setting" asp-action="Vendor" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.Vendor")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorSettingsButtons })
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
+            <div asp-validation-summary="All"></div>
+
+            <nop-panels id="vendorsettings-panels">
+                <nop-panel asp-name="vendorsettings-common" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.Vendor.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Vendor.Common", Model)</nop-panel>
+                <nop-panel asp-name="vendorsettings-catalog" asp-icon="fa fa-list" asp-title="@T("Admin.Configuration.Settings.Vendor.BlockTitle.Catalog")" asp-hide-block-attribute-name="@hideCatalogBlockAttributeName" asp-hide="@hideCatalogBlock" asp-advanced="false">@await Html.PartialAsync("_Vendor.Catalog", Model)</nop-panel>
+                <nop-panel asp-name="vendorsettings-vendor-attributes" asp-icon="fa fa-paperclip" asp-title="@T("Admin.Vendors.VendorAttributes")" asp-hide-block-attribute-name="@hideVendorAttributeBlockAttributeName" asp-hide="@hideVendorAttributeBlock" asp-advanced="true">@await Html.PartialAsync("../VendorAttribute/ListBlock.cshtml", Model.VendorAttributeSearchModel)</nop-panel>
+
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.VendorSettingsDetailsBlock, additionalData = Model })
+            </nop-panels>
+        </div>
+    </div>
+</form>

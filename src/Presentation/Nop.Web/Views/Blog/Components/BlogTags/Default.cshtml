@@ -1,0 +1,18 @@
+﻿@model BlogPostTagListModel
+@if (Model.Tags.Count > 0)
+{
+    <div class="block block-popular-blogtags">
+        <div class="title">
+            <strong>@T("Blog.TagCloud")</strong>
+        </div>
+        <div class="listbox">
+            <ul class="tags">
+                @foreach (var item in Model.Tags)
+                {
+                    <li><a href="@Url.RouteUrl("BlogByTag", new { tag = item.Name })" style="font-size:@(Model.GetFontSize(item))%;">@item.Name</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}

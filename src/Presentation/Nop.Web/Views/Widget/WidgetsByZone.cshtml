@@ -1,6 +1,0 @@
-﻿@model List<RenderWidgetModel>
-@using Nop.Web.Models.Cms;
-@foreach (var widget in Model)
-{
-    @Html.Action(widget.ActionName, widget.ControllerName, widget.RouteValues)
-}

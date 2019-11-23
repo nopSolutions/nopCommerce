@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -12,33 +13,6 @@ namespace Nop.Services.Shipping
     /// </summary>
     public partial interface IShippingService
     {
-        #region Shipping rate computation methods
-
-        /// <summary>
-        /// Load active shipping rate computation methods
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <returns>Shipping rate computation methods</returns>
-        IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods(Customer customer = null, int storeId = 0);
-
-        /// <summary>
-        /// Load shipping rate computation method by system name
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        /// <returns>Found Shipping rate computation method</returns>
-        IShippingRateComputationMethod LoadShippingRateComputationMethodBySystemName(string systemName);
-
-        /// <summary>
-        /// Load all shipping rate computation methods
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <returns>Shipping rate computation methods</returns>
-        IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods(Customer customer = null, int storeId = 0);
-
-        #endregion
-
         #region Shipping methods
 
         /// <summary>
@@ -54,11 +28,10 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping method</returns>
         ShippingMethod GetShippingMethodById(int shippingMethodId);
 
-
         /// <summary>
         /// Gets all shipping methods
         /// </summary>
-        /// <param name="filterByCountryId">The country indentifier to filter by</param>
+        /// <param name="filterByCountryId">The country identifier to filter by</param>
         /// <returns>Shipping methods</returns>
         IList<ShippingMethod> GetAllShippingMethods(int? filterByCountryId = null);
 
@@ -73,6 +46,14 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shippingMethod">Shipping method</param>
         void UpdateShippingMethod(ShippingMethod shippingMethod);
+
+        /// <summary>
+        /// Does country restriction exist
+        /// </summary>
+        /// <param name="shippingMethod">Shipping method</param>
+        /// <param name="countryId">Country identifier</param>
+        /// <returns>Result</returns>
+        bool CountryRestrictionExists(ShippingMethod shippingMethod, int countryId);
 
         #endregion
 
@@ -110,50 +91,34 @@ namespace Nop.Services.Shipping
         void UpdateWarehouse(Warehouse warehouse);
 
         #endregion
-
-        #region Pickup points
-
-        /// <summary>
-        /// Load active pickup point providers
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <returns>Pickup point providers</returns>
-        IList<IPickupPointProvider> LoadActivePickupPointProviders(Customer customer = null, int storeId = 0);
-
-        /// <summary>
-        /// Load pickup point provider by system name
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        /// <returns>Found pickup point provider</returns>
-        IPickupPointProvider LoadPickupPointProviderBySystemName(string systemName);
-
-        /// <summary>
-        /// Load all pickup point providers
-        /// </summary>
-        /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
-        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <returns>Pickup point providers</returns>
-        IList<IPickupPointProvider> LoadAllPickupPointProviders(Customer customer = null, int storeId = 0);
-
-        #endregion
-
+        
         #region Workflow
 
         /// <summary>
         /// Gets shopping cart item weight (of one item)
         /// </summary>
         /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
         /// <returns>Shopping cart item weight</returns>
-        decimal GetShoppingCartItemWeight(ShoppingCartItem shoppingCartItem);
+        decimal GetShoppingCartItemWeight(ShoppingCartItem shoppingCartItem, bool ignoreFreeShippedItems = false);
+
+        /// <summary>
+        /// Gets product item weight (of one item)
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="attributesXml">Selected product attributes in XML</param>
+        /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
+        /// <returns>Item weight</returns>
+        decimal GetShoppingCartItemWeight(Product product, string attributesXml, bool ignoreFreeShippedItems = false);
 
         /// <summary>
         /// Gets shopping cart weight
         /// </summary>
         /// <param name="request">Request</param>
-        /// <param name="includeCheckoutAttributes">A value indicating whether we should calculate weights of selected checkotu attributes</param>
+        /// <param name="includeCheckoutAttributes">A value indicating whether we should calculate weights of selected checkout attributes</param>
+        /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
         /// <returns>Total weight</returns>
-        decimal GetTotalWeight(GetShippingOptionRequest request, bool includeCheckoutAttributes = true);
+        decimal GetTotalWeight(GetShippingOptionRequest request, bool includeCheckoutAttributes = true, bool ignoreFreeShippedItems = false);
 
         /// <summary>
         /// Get dimensions of associated products (for quantity 1)
@@ -162,8 +127,9 @@ namespace Nop.Services.Shipping
         /// <param name="width">Width</param>
         /// <param name="length">Length</param>
         /// <param name="height">Height</param>
+        /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
         void GetAssociatedProductDimensions(ShoppingCartItem shoppingCartItem,
-            out decimal width, out decimal length, out decimal height);
+            out decimal width, out decimal length, out decimal height, bool ignoreFreeShippedItems = false);
 
         /// <summary>
         /// Get total dimensions
@@ -172,8 +138,9 @@ namespace Nop.Services.Shipping
         /// <param name="width">Width</param>
         /// <param name="length">Length</param>
         /// <param name="height">Height</param>
+        /// <param name="ignoreFreeShippedItems">Whether to ignore the weight of the products marked as "Free shipping"</param>
         void GetDimensions(IList<GetShippingOptionRequest.PackageItem> packageItems,
-            out decimal width, out decimal length, out decimal height);
+            out decimal width, out decimal length, out decimal height, bool ignoreFreeShippedItems = false);
 
         /// <summary>
         /// Get the nearest warehouse for the specified address
@@ -215,6 +182,27 @@ namespace Nop.Services.Shipping
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Pickup points</returns>
         GetPickupPointsResponse GetPickupPoints(Address address, Customer customer = null, string providerSystemName = null, int storeId = 0);
+
+        /// <summary>
+        /// Whether the shopping cart item is ship enabled
+        /// </summary>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <returns>True if the shopping cart item requires shipping; otherwise false</returns>
+        bool IsShipEnabled(ShoppingCartItem shoppingCartItem);
+
+        /// <summary>
+        /// Whether the shopping cart item is free shipping
+        /// </summary>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <returns>True if the shopping cart item is free shipping; otherwise false</returns>
+        bool IsFreeShipping(ShoppingCartItem shoppingCartItem);
+
+        /// <summary>
+        /// Get the additional shipping charge
+        /// </summary> 
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <returns>The additional shipping charge of the shopping cart item</returns>
+        decimal GetAdditionalShippingCharge(ShoppingCartItem shoppingCartItem);
 
         #endregion
     }

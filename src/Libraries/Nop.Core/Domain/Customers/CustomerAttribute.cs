@@ -31,31 +31,22 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public int DisplayOrder { get; set; }
 
-
-
-
         /// <summary>
         /// Gets the attribute control type
         /// </summary>
         public AttributeControlType AttributeControlType
         {
-            get
-            {
-                return (AttributeControlType)this.AttributeControlTypeId;
-            }
-            set
-            {
-                this.AttributeControlTypeId = (int)value;
-            }
+            get => (AttributeControlType)AttributeControlTypeId;
+            set => AttributeControlTypeId = (int)value;
         }
+
         /// <summary>
         /// Gets the customer attribute values
         /// </summary>
         public virtual ICollection<CustomerAttributeValue> CustomerAttributeValues
         {
-            get { return _customerAttributeValues ?? (_customerAttributeValues = new List<CustomerAttributeValue>()); }
-            protected set { _customerAttributeValues = value; }
+            get => _customerAttributeValues ?? (_customerAttributeValues = new List<CustomerAttributeValue>());
+            protected set => _customerAttributeValues = value;
         }
     }
-
 }

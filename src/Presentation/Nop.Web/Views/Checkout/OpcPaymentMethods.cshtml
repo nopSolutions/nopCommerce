@@ -1,18 +1,24 @@
 ﻿@model CheckoutPaymentMethodModel
-@using Nop.Web.Models.Checkout;
 <div class="checkout-data">
-    @Html.Widget("op_checkout_payment_method_top")
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutPaymentMethodTop })
     <div class="section payment-method">
         @if (Model.DisplayRewardPoints && Model.PaymentMethods.Count > 0)
         {
             <div class="use-reward-points">
-                @Html.CheckBoxFor(x => x.UseRewardPoints, Model.RewardPointsEnoughToPayForOrder ? new {@onclick = "PaymentMethod.toggleUseRewardPoints(this)"} : null)
-                @string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)
                 @if (Model.RewardPointsEnoughToPayForOrder)
                 {
-                    <script type="text/javascript">
+                    <input asp-for="UseRewardPoints" onclick="PaymentMethod.toggleUseRewardPoints(this)" />
+                }
+                else
+                {
+                    <input asp-for="UseRewardPoints" />
+                }
+                <label asp-for="UseRewardPoints">@string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)</label>
+                @if (Model.RewardPointsEnoughToPayForOrder)
+                {
+                    <script>
                         $(document).ready(function() {
-                            PaymentMethod.toggleUseRewardPoints($('#@Html.FieldIdFor(model => model.UseRewardPoints)'));
+                            PaymentMethod.toggleUseRewardPoints($('#@Html.IdFor(model => model.UseRewardPoints)'));
                         });
                     </script>
                 }
@@ -21,19 +27,19 @@
         @if (Model.PaymentMethods.Count > 0)
         {
             <ul class="method-list" id="payment-method-block">
-                @for (int i = 0; i < Model.PaymentMethods.Count; i++)
+                @for (var i = 0; i < Model.PaymentMethods.Count; i++)
                 {
                     var paymentMethod = Model.PaymentMethods[i];
                     var paymentMethodName = paymentMethod.Name;
-                    if (!String.IsNullOrEmpty(paymentMethod.Fee))
+                    if (!string.IsNullOrEmpty(paymentMethod.Fee))
                     {
                         paymentMethodName = T("Checkout.SelectPaymentMethod.MethodAndFee", paymentMethodName, paymentMethod.Fee).Text;
                     }
                     <li>
                         <div class="method-name">
-                            @if (!String.IsNullOrEmpty(paymentMethod.LogoUrl))
+                            @if (!string.IsNullOrEmpty(paymentMethod.LogoUrl))
                             {
-                                <div class ="payment-logo">
+                                <div class="payment-logo">
                                     <label for="paymentmethod_@(i)">
                                         <img src="@paymentMethod.LogoUrl" alt="@paymentMethodName" />
                                     </label>
@@ -59,5 +65,5 @@
             </div>
         }
     </div>
-    @Html.Widget("op_checkout_payment_method_bottom")
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutPaymentMethodBottom })
 </div>

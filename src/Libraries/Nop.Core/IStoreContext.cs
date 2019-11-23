@@ -8,8 +8,13 @@ namespace Nop.Core
     public interface IStoreContext
     {
         /// <summary>
-        /// Gets or sets the current store
+        /// Gets the current store
         /// </summary>
         Store CurrentStore { get; }
+
+        /// <summary>
+        /// Gets active store scope configuration
+        /// </summary>
+        int ActiveStoreScopeConfiguration { get; }
     }
 }

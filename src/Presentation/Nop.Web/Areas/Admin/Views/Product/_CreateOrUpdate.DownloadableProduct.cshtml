@@ -1,0 +1,149 @@
+﻿@model ProductModel
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services
+<script>
+    $(document).ready(function() {
+        $("#@Html.IdFor(model => model.IsDownload)").click(toggleDownloadableProduct);
+        $("#@Html.IdFor(model => model.UnlimitedDownloads)").click(toggleDownloadableProduct);
+        $("#@Html.IdFor(model => model.HasSampleDownload)").click(toggleDownloadableProduct);
+        $("#@Html.IdFor(model => model.HasUserAgreement)").click(toggleDownloadableProduct);
+
+        toggleDownloadableProduct();
+    });
+
+    function toggleDownloadableProduct() {
+        if ($('#@Html.IdFor(model => model.IsDownload)').is(':checked')) {
+            $('#pnlDownloadFile').show();
+            $('#pnlUnlimitedDownloads').show();
+            if ($('#@Html.IdFor(model => model.UnlimitedDownloads)').is(':checked')) {
+                $('#pnlMaxNumberOfDownloads').hide();
+            } else {
+                $('#pnlMaxNumberOfDownloads').show();
+            }
+            $('#pnlDownloadExpirationDays').show();
+            $('#pnlDownloadActivationType').show();
+
+            $('#pnlHasUserAgreement').show();
+            if ($('#@Html.IdFor(model => model.HasUserAgreement)').is(':checked')) {
+                $('#pnlUserAgreementText').show();
+            } else {
+                $('#pnlUserAgreementText').hide();
+            }
+
+            $('#pnlHasSampleDownload').show();
+
+            if ($('#@Html.IdFor(model => model.HasSampleDownload)').is(':checked')) {
+                $('#pnlSampleDownloadFile').show();
+            } else {
+                $('#pnlSampleDownloadFile').hide();
+            }
+        } else {
+            $('#pnlDownloadFile').hide();
+            $('#pnlUnlimitedDownloads').hide();
+            $('#pnlMaxNumberOfDownloads').hide();
+            $('#pnlDownloadExpirationDays').hide();
+            $('#pnlDownloadActivationType').hide();
+            $('#pnlHasUserAgreement').hide();
+            $('#pnlUserAgreementText').hide();
+            $('#pnlHasSampleDownload').hide();
+            $('#pnlSampleDownloadFile').hide();
+        }
+    }
+</script>
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="IsDownload" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsDownload" />
+            <span asp-validation-for="IsDownload"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="IsDownload">
+        <div class="form-group" id="pnlDownloadFile">
+            <div class="col-md-3">
+                <nop-label asp-for="DownloadId" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="DownloadId" />
+                <span asp-validation-for="DownloadId"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlUnlimitedDownloads">
+            <div class="col-md-3">
+                <nop-label asp-for="UnlimitedDownloads" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="UnlimitedDownloads" />
+                <span asp-validation-for="UnlimitedDownloads"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlMaxNumberOfDownloads">
+            <div class="col-md-3">
+                <nop-label asp-for="MaxNumberOfDownloads" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="MaxNumberOfDownloads" />
+                <span asp-validation-for="MaxNumberOfDownloads"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlDownloadExpirationDays">
+            <div class="col-md-3">
+                <nop-label asp-for="DownloadExpirationDays" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="DownloadExpirationDays" />
+                <span asp-validation-for="DownloadExpirationDays"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlDownloadActivationType">
+            <div class="col-md-3">
+                <nop-label asp-for="DownloadActivationTypeId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="DownloadActivationTypeId" asp-items="@(((DownloadActivationType)Model.DownloadActivationTypeId).ToSelectList())" />
+                <span asp-validation-for="DownloadActivationTypeId"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlHasUserAgreement">
+            <div class="col-md-3">
+                <nop-label asp-for="HasUserAgreement" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="HasUserAgreement" />
+                <span asp-validation-for="HasUserAgreement"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlUserAgreementText">
+            <div class="col-md-3">
+                <nop-label asp-for="UserAgreementText" />
+            </div>
+            <div class="col-md-9">
+                <nop-textarea asp-for="UserAgreementText" />
+                <span asp-validation-for="UserAgreementText"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlHasSampleDownload">
+            <div class="col-md-3">
+                <nop-label asp-for="HasSampleDownload" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="HasSampleDownload" />
+                <span asp-validation-for="HasSampleDownload"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="HasSampleDownload">
+            <div class="form-group" id="pnlSampleDownloadFile">
+                <div class="col-md-3">
+                    <nop-label asp-for="SampleDownloadId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="SampleDownloadId" />
+                    <span asp-validation-for="SampleDownloadId"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
+    </nop-nested-setting>
+</div>

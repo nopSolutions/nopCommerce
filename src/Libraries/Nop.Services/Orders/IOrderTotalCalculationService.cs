@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Discounts;
+using Nop.Services.Shipping;
 
 namespace Nop.Services.Orders
 {
@@ -40,10 +41,6 @@ namespace Nop.Services.Orders
             out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount,
             out SortedDictionary<decimal, decimal> taxRates);
 
-
-
-
-
         /// <summary>
         /// Adjust shipping rate (free shipping, additional charges, discounts)
         /// </summary>
@@ -73,25 +70,28 @@ namespace Nop.Services.Orders
         /// Gets shopping cart shipping total
         /// </summary>
         /// <param name="cart">Cart</param>
+        /// <param name="shippingRateComputationMethods">Shipping rate computation methods</param>
         /// <returns>Shipping total</returns>
-        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart);
+        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, IList<IShippingRateComputationMethod> shippingRateComputationMethods);
 
         /// <summary>
         /// Gets shopping cart shipping total
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="shippingRateComputationMethods">Shipping rate computation methods</param>
         /// <returns>Shipping total</returns>
-        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax);
+        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax, IList<IShippingRateComputationMethod> shippingRateComputationMethods);
 
         /// <summary>
         /// Gets shopping cart shipping total
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="shippingRateComputationMethods">Shipping rate computation methods</param>
         /// <param name="taxRate">Applied tax rate</param>
         /// <returns>Shipping total</returns>
-        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax,
+        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax, IList<IShippingRateComputationMethod> shippingRateComputationMethods,
             out decimal taxRate);
 
         /// <summary>
@@ -99,38 +99,32 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
+        /// <param name="shippingRateComputationMethods">Shipping rate computation methods</param>
         /// <param name="taxRate">Applied tax rate</param>
         /// <param name="appliedDiscounts">Applied discounts</param>
         /// <returns>Shipping total</returns>
-        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax,
+        decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax, IList<IShippingRateComputationMethod> shippingRateComputationMethods,
             out decimal taxRate, out List<DiscountForCaching> appliedDiscounts);
 
-
-
-
-
-
         /// <summary>
         /// Gets tax
         /// </summary>
         /// <param name="cart">Shopping cart</param>
+        /// <param name="shippingRateComputationMethods">Shipping rate computation methods</param>
         /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating tax</param>
         /// <returns>Tax total</returns>
-        decimal GetTaxTotal(IList<ShoppingCartItem> cart, bool usePaymentMethodAdditionalFee = true);
+        decimal GetTaxTotal(IList<ShoppingCartItem> cart, IList<IShippingRateComputationMethod> shippingRateComputationMethods, bool usePaymentMethodAdditionalFee = true);
 
         /// <summary>
         /// Gets tax
         /// </summary>
         /// <param name="cart">Shopping cart</param>
+        /// <param name="shippingRateComputationMethods">Shipping rate computation methods</param>
         /// <param name="taxRates">Tax rates</param>
         /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating tax</param>
         /// <returns>Tax total</returns>
-        decimal GetTaxTotal(IList<ShoppingCartItem> cart, out SortedDictionary<decimal, decimal> taxRates, 
+        decimal GetTaxTotal(IList<ShoppingCartItem> cart, IList<IShippingRateComputationMethod> shippingRateComputationMethods, out SortedDictionary<decimal, decimal> taxRates, 
             bool usePaymentMethodAdditionalFee = true);
-
-
-
-
 
         /// <summary>
         /// Gets shopping cart total
@@ -159,9 +153,6 @@ namespace Nop.Services.Orders
             out List<AppliedGiftCard> appliedGiftCards,
             out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount,
             bool? useRewardPoints = null, bool usePaymentMethodAdditionalFee = true);
-
-
-
 
         /// <summary>
         /// Update order totals
@@ -198,6 +189,7 @@ namespace Nop.Services.Orders
         /// <param name="orderTotal">Order total</param>
         /// <returns>Applicable order total</returns>
         decimal CalculateApplicableOrderTotalForRewardPoints(decimal orderShippingInclTax, decimal orderTotal);
+
         /// <summary>
         /// Calculate how much reward points will be earned/reduced based on certain amount spent
         /// </summary>
