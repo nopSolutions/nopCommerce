@@ -11,6 +11,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Domain.Tax;
 using Nop.Core.Plugins;
 using Nop.Plugin.Feed.GoogleShopping.Data;
 using Nop.Plugin.Feed.GoogleShopping.Services;
@@ -45,7 +46,7 @@ namespace Nop.Plugin.Feed.GoogleShopping
         private readonly GoogleShoppingSettings _googleShoppingSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly GoogleProductObjectContext _objectContext;
-
+        private readonly TaxSettings _taxSettings;
         #endregion
 
         #region Ctor
@@ -65,7 +66,8 @@ namespace Nop.Plugin.Feed.GoogleShopping
             MeasureSettings measureSettings,
             GoogleShoppingSettings googleShoppingSettings,
             CurrencySettings currencySettings,
-            GoogleProductObjectContext objectContext)
+            GoogleProductObjectContext objectContext,
+            TaxSettings taxSettings)
         {
             this._googleService = googleService;
             this._priceCalculationService = priceCalculationService;
@@ -83,6 +85,7 @@ namespace Nop.Plugin.Feed.GoogleShopping
             this._googleShoppingSettings = googleShoppingSettings;
             this._currencySettings = currencySettings;
             this._objectContext = objectContext;
+            this._taxSettings = taxSettings;
         }
 
         #endregion
@@ -369,7 +372,17 @@ namespace Nop.Plugin.Feed.GoogleShopping
                         {
                             finalPriceBase = product.Price;
                         }
-                        decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, currency);
+                        decimal price=decimal.Zero;
+                        if (_taxSettings.PricesIncludeTax)
+                            price = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, currency);
+                        else
+                        {
+                            decimal taxCurrent = decimal.Zero;
+                            decimal priceBase = _taxService.GetProductPrice(
+                                product,
+                                finalPriceBase, out taxCurrent);
+                            price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, currency);
+                        }
                         //round price now so it matches the product details page
                         price = RoundingHelper.RoundPrice(price);
 
