@@ -9,6 +9,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.Migrations;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -27,8 +28,9 @@ namespace Nop.Services.Plugins
         private readonly ILogger _logger;
         private readonly IMigrationRunner _migrationRunner;
         private readonly INopFileProvider _fileProvider;
-        private readonly IWebHelper _webHelper;
         private readonly IPluginsInfo _pluginsInfo;
+        private readonly IRepository<MigrationVersionInfo> _migrationVersionInfoRepository;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -39,6 +41,7 @@ namespace Nop.Services.Plugins
             ILogger logger,
             IMigrationRunner migrationRunner,
             INopFileProvider fileProvider,
+            IRepository<MigrationVersionInfo> migrationVersionInfoRepository,
             IWebHelper webHelper)
         {
             _catalogSettings = catalogSettings;
@@ -46,8 +49,9 @@ namespace Nop.Services.Plugins
             _logger = logger;
             _migrationRunner = migrationRunner;
             _fileProvider = fileProvider;
-            _webHelper = webHelper;
             _pluginsInfo = Singleton<IPluginsInfo>.Instance;
+            _migrationVersionInfoRepository = migrationVersionInfoRepository;
+            _webHelper = webHelper;
         }
 
         #endregion
@@ -486,6 +490,16 @@ namespace Nop.Services.Plugins
                     {
                         try
                         {
+                            var migrationAttribute = migration
+                                .GetCustomAttributes(typeof(MigrationAttribute), false)
+                                .OfType<MigrationAttribute>()
+                                .FirstOrDefault();
+
+                            foreach (var migrationVersionInfo in _migrationVersionInfoRepository.Table.Where(p => p.Version == migrationAttribute.Version).ToList())
+                            {
+                                _migrationVersionInfoRepository.Delete(migrationVersionInfo);
+                            }
+
                             var downMigration = EngineContext.Current.ResolveUnregistered(migration) as IMigration;
                             _migrationRunner.Down(downMigration);
                         }

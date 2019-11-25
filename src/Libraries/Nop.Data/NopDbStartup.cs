@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Linq;
+using FluentMigrator;
+using FluentMigrator.Infrastructure;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Exceptions;
 using LinqToDB.Data;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
 using Nop.Data.Extensions;
+using Nop.Data.Migrations;
 
 namespace Nop.Data
 {
@@ -56,12 +59,10 @@ namespace Nop.Data
                 // add common FluentMigrator services
                 .AddFluentMigratorCore()
                 .ConfigureRunner(rb => rb.SetServer(dataSettings)
-                // define the assembly containing the migrations
-                .ScanIn(typeConfigurations.Select(p => p.Assembly).Distinct().ToArray()).For.Migrations())
-                // enable logging to console in the FluentMigrator way
-                .AddLogging(lb => lb.AddFluentMigratorConsole())
-                // build the service provider
-                .BuildServiceProvider(false);
+                    .WithVersionTable(new MigrationVersionInfo())
+                    // define the assembly containing the migrations
+                    .ScanIn(typeConfigurations.Select(p => p.Assembly).Distinct().ToArray()).For.Migrations());
+
         }
 
         /// <summary>
@@ -74,21 +75,34 @@ namespace Nop.Data
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
+            //find database mapping configuration by other assemblies
+            var typeFinder = new AppDomainTypeFinder();
+            var migrations = typeFinder.FindClassesOfType<AutoReversingMigration>().ToList();
             var runner = EngineContext.Current.Resolve<IMigrationRunner>();
 
-            try
+            foreach (var migration in migrations)
             {
-                // execute the migrations
-                if (runner.HasMigrationsToApplyUp())
-                    runner.MigrateUp();
-            }
-            catch (MissingMigrationsException)
-            {
-            }
-            catch (Exception ex)
-            {
-                if (!(ex.InnerException is SqlException))
-                    throw;
+                var migrationAttribute = migration
+                    .GetCustomAttributes(typeof(MigrationAttribute), false)
+                    .OfType<MigrationAttribute>()
+                    .FirstOrDefault();
+
+                try
+                {
+                    if (migrationAttribute == null || !runner.HasMigrationsToApplyUp(migrationAttribute.Version))
+                        continue;
+
+                    runner.MigrateUp(migrationAttribute.Version);
+                }
+                catch (MissingMigrationsException)
+                {
+                   continue;
+                }
+                catch (Exception ex)
+                {
+                    if (!(ex.InnerException is SqlException))
+                        throw;
+                }
             }
         }
 
