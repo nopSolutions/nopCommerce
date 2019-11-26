@@ -10,6 +10,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
+using Nop.Data.Migrations;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
@@ -24,7 +25,6 @@ namespace Nop.Services.Tests
     public class TestDiscountService : DiscountService
     {
         private readonly List<DiscountForCaching> _discountForCaching;
-        private readonly IRepository<Discount> _discountRepository;
 
         public TestDiscountService(
             ICustomerService customerService,
@@ -53,7 +53,6 @@ namespace Nop.Services.Tests
             storeContext)
         {
             _discountForCaching = new List<DiscountForCaching>();
-            _discountRepository = discountRepository;
         }
 
         public override DiscountValidationResult ValidateDiscount(Discount discount, Customer customer)
@@ -122,8 +121,9 @@ namespace Nop.Services.Tests
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
             var migrationRunner = new Mock<IMigrationRunner>();
+            var migrationVersionInfoRepository = new Mock<IRepository<MigrationVersionInfo>>();
 
-            var pluginService = new PluginService(new CatalogSettings(), customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+            var pluginService = new PluginService(new CatalogSettings(), customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, webHelper.Object);
 
             var discountPluginManager = new DiscountPluginManager(pluginService);
             var store = new Store { Id = 1 };

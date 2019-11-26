@@ -6,6 +6,8 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Data;
+using Nop.Data.Migrations;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -44,9 +46,10 @@ namespace Nop.Services.Tests.Payments
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
             var migrationRunner = new Mock<IMigrationRunner>();
+            var migrationVersionInfoRepository = new Mock<IRepository<MigrationVersionInfo>>();
 
             _catalogSettings = new CatalogSettings();
-            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, webHelper.Object);
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _settingService = new Mock<ISettingService>();

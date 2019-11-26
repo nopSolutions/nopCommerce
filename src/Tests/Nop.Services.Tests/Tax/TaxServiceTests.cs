@@ -10,6 +10,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
+using Nop.Data.Migrations;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -103,9 +104,10 @@ namespace Nop.Services.Tests.Tax
             var customerService = new Mock<ICustomerService>();
             var loger = new Mock<ILogger>();
             var migrationRunner = new Mock<IMigrationRunner>();
+            var migrationVersionInfoRepository = new Mock<IRepository<MigrationVersionInfo>>();
 
             _catalogSettings = new CatalogSettings();
-            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, _webHelper.Object);
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, _webHelper.Object);
             _taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
 
             var cacheManager = new TestCacheManager();
@@ -201,6 +203,8 @@ namespace Nop.Services.Tests.Tax
             _taxService.IsTaxExempt(null, customer).ShouldEqual(false);
 
             var customerRole = _customerRoleRepo.Object.Table.FirstOrDefault(cr => cr.Id == 1);
+
+            customerRole.ShouldNotBeNull();
 
             _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole.Id });
 

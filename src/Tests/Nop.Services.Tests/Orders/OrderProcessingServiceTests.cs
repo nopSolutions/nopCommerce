@@ -15,6 +15,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
+using Nop.Data.Migrations;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -88,7 +89,6 @@ namespace Nop.Services.Tests.Orders
         private Mock<ILanguageService> _languageService;
         private Mock<IPriceFormatter> _priceFormatter;
         private Mock<IProductAttributeFormatter> _productAttributeFormatter;
-        private Mock<IProductAttributeService> _productAttributeService;
         private Mock<IShoppingCartService> _shoppingCartService;
         private Mock<ICheckoutAttributeFormatter> _checkoutAttributeFormatter;
         private Mock<ICustomerService> _customerService;
@@ -134,7 +134,6 @@ namespace Nop.Services.Tests.Orders
             _languageService = new Mock<ILanguageService>();
             _priceFormatter = new Mock<IPriceFormatter>();
             _productAttributeFormatter = new Mock<IProductAttributeFormatter>();
-            _productAttributeService = new Mock<IProductAttributeService>();
             _shoppingCartService = new Mock<IShoppingCartService>();
             _checkoutAttributeFormatter = new Mock<ICheckoutAttributeFormatter>();
             _customerService = new Mock<ICustomerService>();
@@ -171,8 +170,9 @@ namespace Nop.Services.Tests.Orders
 
             var loger = new Mock<ILogger>();
             var migrationRunner = new Mock<IMigrationRunner>();
+            var migrationVersionInfoRepository = new Mock<IRepository<MigrationVersionInfo>>();
 
-            var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, _webHelper.Object);
+            var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, _webHelper.Object);
             _paymentPluginManager = new PaymentPluginManager(pluginService, null, _paymentSettings);
             _pickupPluginManager = new PickupPluginManager(pluginService, _shippingSettings);
             _shippingPluginManager = new ShippingPluginManager(pluginService, _shippingSettings);

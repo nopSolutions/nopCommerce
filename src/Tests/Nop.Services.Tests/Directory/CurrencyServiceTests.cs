@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
+using Nop.Data.Migrations;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
@@ -99,9 +100,10 @@ namespace Nop.Services.Tests.Directory
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
             var migrationRunner = new Mock<IMigrationRunner>();
+            var migrationVersionInfoRepository = new Mock<IRepository<MigrationVersionInfo>>();
 
             _catalogSettings = new CatalogSettings();
-            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, webHelper.Object);
             _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, pluginService);
             _currencyService = new CurrencyService(_currencySettings,
                 _eventPublisher.Object,

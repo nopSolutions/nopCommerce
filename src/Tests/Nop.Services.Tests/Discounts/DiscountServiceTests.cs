@@ -9,6 +9,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
+using Nop.Data.Migrations;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
@@ -24,21 +25,21 @@ namespace Nop.Services.Tests.Discounts
     [TestFixture]
     public class DiscountServiceTests : ServiceTest
     {
-        private Mock<IEventPublisher> _eventPublisher = new Mock<IEventPublisher>();
-        private Mock<ILocalizationService> _localizationService = new Mock<ILocalizationService>();
+        private readonly Mock<IEventPublisher> _eventPublisher = new Mock<IEventPublisher>();
+        private readonly Mock<ILocalizationService> _localizationService = new Mock<ILocalizationService>();
         private IDiscountPluginManager _discountPluginManager;
         private IDiscountService _discountService;
-        private Mock<IStoreContext> _storeContext = new Mock<IStoreContext>();
-        private Mock<ICustomerService> _customerService = new Mock<ICustomerService>();
-        private Mock<IProductService> _productService = new Mock<IProductService>();
-        private Mock<IRepository<Category>> _categoryRepo = new Mock<IRepository<Category>>();
-        private Mock<IRepository<Discount>> _discountRepo = new Mock<IRepository<Discount>>();
-        private Mock<IRepository<DiscountRequirement>> _discountRequirementRepo = new Mock<IRepository<DiscountRequirement>>();
-        private Mock<IRepository<DiscountUsageHistory>> _discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>();
-        private Mock<IRepository<Manufacturer>> _manufacturerRepo = new Mock<IRepository<Manufacturer>>();
-        private Mock<IRepository<Order>> _orderRepo = new Mock<IRepository<Order>>();
-        private Mock<IRepository<Product>> _productRepo = new Mock<IRepository<Product>>();        
-        private CatalogSettings _catalogSettings = new CatalogSettings();
+        private readonly Mock<IStoreContext> _storeContext = new Mock<IStoreContext>();
+        private readonly Mock<ICustomerService> _customerService = new Mock<ICustomerService>();
+        private readonly Mock<IProductService> _productService = new Mock<IProductService>();
+        private readonly Mock<IRepository<Category>> _categoryRepo = new Mock<IRepository<Category>>();
+        private readonly Mock<IRepository<Discount>> _discountRepo = new Mock<IRepository<Discount>>();
+        private readonly Mock<IRepository<DiscountRequirement>> _discountRequirementRepo = new Mock<IRepository<DiscountRequirement>>();
+        private readonly Mock<IRepository<DiscountUsageHistory>> _discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>();
+        private readonly Mock<IRepository<Manufacturer>> _manufacturerRepo = new Mock<IRepository<Manufacturer>>();
+        private readonly Mock<IRepository<Order>> _orderRepo = new Mock<IRepository<Order>>();
+        private readonly Mock<IRepository<Product>> _productRepo = new Mock<IRepository<Product>>();
+        private readonly CatalogSettings _catalogSettings = new CatalogSettings();
 
         [SetUp]
         public new void SetUp()
@@ -82,8 +83,9 @@ namespace Nop.Services.Tests.Discounts
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
             var migrationRunner = new Mock<IMigrationRunner>();
+            var migrationVersionInfoRepository = new Mock<IRepository<MigrationVersionInfo>>();
 
-            var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+            var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, webHelper.Object);
 
             var discountMappingRepo = new Mock<IRepository<DiscountMapping>>();
 
