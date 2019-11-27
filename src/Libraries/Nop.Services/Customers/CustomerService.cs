@@ -308,15 +308,12 @@ namespace Nop.Services.Customers
             if (countryId > 0)
                 customers = customers.Where(customer => customer.BillingAddress.CountryId == countryId);
 
-            //get customers with shopping carts
-            var customersWithCarts = items.GroupBy(item => item.CustomerId)
-                .Select(cart => new { CustomerId = cart.Key, CreatedOnUtc = cart.Max(item => item.CreatedOnUtc) })
-                .OrderByDescending(cart => cart.CreatedOnUtc)
-                .Select(cart => cart.CustomerId)
-                .ToList() //currently GroupBy and Join (when used together) are incorrectly translated from LINQ to SQL, see https://github.com/aspnet/EntityFrameworkCore/issues/12826, so we continue execution on the server side
-                .Join(customers, id => id, customer => customer.Id, (id, customer) => customer);
+            var customersWithCarts = from c in customers
+                join item in items on c.Id equals item.CustomerId
+                orderby c.Id
+                select c;
 
-            return new PagedList<Customer>(customersWithCarts.ToList(), pageIndex, pageSize);
+            return new PagedList<Customer>(customersWithCarts.Distinct(), pageIndex, pageSize);
         }
 
         /// <summary>
