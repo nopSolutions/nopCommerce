@@ -9406,7 +9406,7 @@
     <Value><![CDATA[This message template is used to notify a store owner that the vendor changed some vendor's details. You can allow vendors to change info about themselves in Configuration - Setting - Vendor settings by ticking the checkbox <strong>Allow vendors to edit info</strong>.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Wishlist.EmailAFriend">
-    <Value>This message template is used when a customer wants to share some product from the wishlist with a friend by sending an email. You can set up this option by ticking the checkbox Allow customers to email their wishlists in Configuration - Settings - Shopping cart settings.</Value>
+    <Value><![CDATA[This message template is used when a customer wants to share some product from the wishlist with a friend by sending an email. You can set up this option by ticking the checkbox Allow customers to email their wishlists in Configuration - Settings - Shopping cart settings.]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.EditMessageTemplateDetails">
     <Value>Edit message template details</Value>
