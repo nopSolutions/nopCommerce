@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.EntityFrameworkCore;
 using Nop.Core;
+using Nop.Core.Data;
 using Nop.Data.Mapping;
 
 namespace Nop.Data
@@ -18,6 +21,12 @@ namespace Nop.Data
 
         public NopObjectContext(DbContextOptions<NopObjectContext> options) : base(options)
         {
+            var dataSettings = DataSettingsManager.LoadSettings();
+
+            if (dataSettings.UseAzureIntegratedSecurity)
+            {
+                ((SqlConnection)Database.GetDbConnection()).AccessToken = new AzureServiceTokenProvider().GetAccessTokenAsync("https://database.windows.net/").GetAwaiter().GetResult();
+            }
         }
 
         #endregion

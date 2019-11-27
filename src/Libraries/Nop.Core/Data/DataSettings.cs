@@ -32,6 +32,11 @@ namespace Nop.Core.Data
         public string DataConnectionString { get; set; }
 
         /// <summary>
+        /// Whether to request an Azure token to use when authenticating with Azure SQL. Allows for connecting to Azure SQL using integrated security with a managed identity. Using integrated security, a password does not need to be embedded in the connection string. See https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-connect-msi.
+        /// </summary>
+        public bool UseAzureIntegratedSecurity { get; set; }
+
+        /// <summary>
         /// Gets or sets a raw settings
         /// </summary>
         public IDictionary<string, string> RawDataSettings { get; }
