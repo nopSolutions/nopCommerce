@@ -32,6 +32,11 @@ namespace Nop.Core.Configuration
         public bool AzureBlobStorageAppendContainerName { get; set; }
 
         /// <summary>
+        /// Setting this to true allows for connecting to Azure SQL using integrated security with a managed identity. Using integrated security, a password does not need to be embedded in the connection string. The connection uses the AppAuthentication package to request an access token from Azure when connecting.
+        /// </summary>
+        public bool UseAzureAccessTokenForSqlServer { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether we should use Redis server
         /// </summary>
         public bool RedisEnabled { get; set; }

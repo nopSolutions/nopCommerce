@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Data.SqlClient;
+using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
@@ -25,10 +27,17 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             var dbContextOptionsBuilder = optionsBuilder.UseLazyLoadingProxies();
 
+            var sqlConnection = new SqlConnection(dataSettings.DataConnectionString);
+
+            if (nopConfig.UseAzureAccessTokenForSqlServer)
+            {
+                sqlConnection.AccessToken = new AzureServiceTokenProvider().GetAccessTokenAsync("https://database.windows.net/").GetAwaiter().GetResult();
+            }
+
             if (nopConfig.UseRowNumberForPaging)
-                dbContextOptionsBuilder.UseSqlServer(dataSettings.DataConnectionString, option => option.CommandTimeout(nopConfig.SQLCommandTimeout).UseRowNumberForPaging());
+                dbContextOptionsBuilder.UseSqlServer(sqlConnection, option => option.CommandTimeout(nopConfig.SQLCommandTimeout).UseRowNumberForPaging());
             else
-                dbContextOptionsBuilder.UseSqlServer(dataSettings.DataConnectionString, option => option.CommandTimeout(nopConfig.SQLCommandTimeout));
+                dbContextOptionsBuilder.UseSqlServer(sqlConnection, option => option.CommandTimeout(nopConfig.SQLCommandTimeout));
         }
     }
 }
