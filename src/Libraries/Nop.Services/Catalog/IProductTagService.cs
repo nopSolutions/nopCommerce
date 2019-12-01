@@ -15,6 +15,19 @@ namespace Nop.Services.Catalog
         void DeleteProductTag(ProductTag productTag);
 
         /// <summary>
+        /// Delete product tags
+        /// </summary>
+        /// <param name="productTags">Product tags</param>
+        void DeleteProductTags(IList<ProductTag> productTags);
+
+        /// <summary>
+        /// Gets product tags
+        /// </summary>
+        /// <param name="productTagIds">Product tags identifiers</param>
+        /// <returns>Product tags</returns>
+        IList<ProductTag> GetProductTagsByIds(int[] productTagIds);
+
+        /// <summary>
         /// Gets all product tags
         /// </summary>
         /// <returns>Product tags</returns>
