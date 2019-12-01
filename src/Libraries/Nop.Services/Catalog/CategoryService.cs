@@ -116,6 +116,21 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Delete Categories
+        /// </summary>
+        /// <param name="categories">Categories</param>
+        public virtual void DeleteCategories(IList<Category> categories)
+        {
+            if (categories == null)
+                throw new ArgumentNullException(nameof(categories));
+
+            foreach (var category in categories)
+            {
+                DeleteCategory(category);
+            }
+        }
+
+        /// <summary>
         /// Gets all categories
         /// </summary>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
