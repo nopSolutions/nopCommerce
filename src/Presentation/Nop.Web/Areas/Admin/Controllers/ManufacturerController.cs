@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Http;
@@ -410,6 +411,28 @@ namespace Nop.Web.Areas.Admin.Controllers
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Deleted"));
 
             return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public virtual IActionResult DeleteSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                var manufacturers = _manufacturerService.GetManufacturersByIds(selectedIds.ToArray());
+                _manufacturerService.DeleteManufacturers(manufacturers);
+
+                manufacturers.ForEach(manufacturer => 
+                {
+                    //activity log
+                    _customerActivityService.InsertActivity("DeleteManufacturer",
+                        string.Format(_localizationService.GetResource("ActivityLog.DeleteManufacturer"), manufacturer.Name), manufacturer);
+                });
+            }
+
+            return Json(new { Result = true });
         }
 
         #endregion

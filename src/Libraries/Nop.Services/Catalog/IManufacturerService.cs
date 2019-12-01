@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 
@@ -14,6 +14,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
         void DeleteManufacturer(Manufacturer manufacturer);
+
+        /// <summary>
+        /// Delete manufacturers
+        /// </summary>
+        /// <param name="manufacturers">Manufacturers</param>
+        void DeleteManufacturers(IList<Manufacturer> manufacturers);
 
         /// <summary>
         /// Gets all manufacturers
@@ -36,6 +42,13 @@ namespace Nop.Services.Catalog
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>Manufacturer</returns>
         Manufacturer GetManufacturerById(int manufacturerId);
+
+        /// <summary>
+        /// Gets manufacturers by identifier
+        /// </summary>
+        /// <param name="manufacturerIds">manufacturer identifiers</param>
+        /// <returns>Manufacturers</returns>
+        List<Manufacturer> GetManufacturersByIds(int[] manufacturerIds);
 
         /// <summary>
         /// Inserts a manufacturer

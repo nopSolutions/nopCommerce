@@ -78,6 +78,21 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Delete manufacturers
+        /// </summary>
+        /// <param name="manufacturers">Manufacturers</param>
+        public virtual void DeleteManufacturers(IList<Manufacturer> manufacturers)
+        {
+            if (manufacturers == null)
+                throw new ArgumentNullException(nameof(manufacturers));
+
+            foreach (var manufacturer in manufacturers)
+            {
+                DeleteManufacturer(manufacturer);
+            }
+        }
+
+        /// <summary>
         /// Gets all manufacturers
         /// </summary>
         /// <param name="manufacturerName">Manufacturer name</param>
@@ -143,6 +158,23 @@ namespace Nop.Services.Catalog
 
             var key = string.Format(NopCatalogDefaults.ManufacturersByIdCacheKey, manufacturerId);
             return _cacheManager.Get(key, () => _manufacturerRepository.GetById(manufacturerId));
+        }
+
+        /// <summary>
+        /// Gets manufacturers by identifier
+        /// </summary>
+        /// <param name="manufacturerIds">manufacturer identifiers</param>
+        /// <returns>Manufacturers</returns>
+        public virtual List<Manufacturer> GetManufacturersByIds(int[] manufacturerIds)
+        {
+            if (manufacturerIds == null || manufacturerIds.Length == 0)
+                return new List<Manufacturer>();
+
+            var query = from p in _manufacturerRepository.Table
+                        where manufacturerIds.Contains(p.Id) && !p.Deleted
+                        select p;
+
+            return query.ToList();
         }
 
         /// <summary>
