@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Data.SqlClient;
 using System.Linq;
-using FluentMigrator;
-using FluentMigrator.Infrastructure;
 using FluentMigrator.Runner;
-using FluentMigrator.Runner.Exceptions;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
 using Microsoft.AspNetCore.Builder;
@@ -49,12 +45,6 @@ namespace Nop.Data
             var connSettings = new Linq2DbSettingsProvider(dataSettings);
             DataConnection.DefaultSettings = connSettings;
 
-            foreach (var typeConfiguration in typeConfigurations)
-            {
-                var mappingConfiguration = (IMappingConfiguration)Activator.CreateInstance(typeConfiguration);
-                mappingConfiguration.CreateTableIfNotExists();
-            }
-
             services
                 // add common FluentMigrator services
                 .AddFluentMigratorCore()
@@ -62,7 +52,6 @@ namespace Nop.Data
                     .WithVersionTable(new MigrationVersionInfo())
                     // define the assembly containing the migrations
                     .ScanIn(typeConfigurations.Select(p => p.Assembly).Distinct().ToArray()).For.Migrations());
-
         }
 
         /// <summary>
@@ -75,35 +64,7 @@ namespace Nop.Data
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
-            //find database mapping configuration by other assemblies
-            var typeFinder = new AppDomainTypeFinder();
-            var migrations = typeFinder.FindClassesOfType<AutoReversingMigration>().ToList();
-            var runner = EngineContext.Current.Resolve<IMigrationRunner>();
-
-            foreach (var migration in migrations)
-            {
-                var migrationAttribute = migration
-                    .GetCustomAttributes(typeof(MigrationAttribute), false)
-                    .OfType<MigrationAttribute>()
-                    .FirstOrDefault();
-
-                try
-                {
-                    if (migrationAttribute == null || !runner.HasMigrationsToApplyUp(migrationAttribute.Version))
-                        continue;
-
-                    runner.MigrateUp(migrationAttribute.Version);
-                }
-                catch (MissingMigrationsException)
-                {
-                   continue;
-                }
-                catch (Exception ex)
-                {
-                    if (!(ex.InnerException is SqlException))
-                        throw;
-                }
-            }
+            EngineContext.Current.Resolve<IDataProvider>().InitializeDatabase();
         }
 
         /// <summary>

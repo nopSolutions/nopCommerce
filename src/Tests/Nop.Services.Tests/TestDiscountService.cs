@@ -120,10 +120,9 @@ namespace Nop.Services.Tests
             var eventPublisher = new Mock<IEventPublisher>();
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
-            var migrationRunner = new Mock<IMigrationRunner>();
             var migrationVersionInfoRepository = new Mock<IRepository<MigrationVersionInfo>>();
 
-            var pluginService = new PluginService(new CatalogSettings(), customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, webHelper.Object);
+            var pluginService = new PluginService(new CatalogSettings(), customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, webHelper.Object);
 
             var discountPluginManager = new DiscountPluginManager(pluginService);
             var store = new Store { Id = 1 };

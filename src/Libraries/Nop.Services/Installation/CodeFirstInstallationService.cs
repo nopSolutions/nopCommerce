@@ -53,6 +53,7 @@ namespace Nop.Services.Installation
         #region Fields
 
         private readonly IAddressService _addressService;
+        private readonly IDataProvider _dataProvider;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly INopFileProvider _fileProvider;
         private readonly IRepository<ActivityLog> _activityLogRepository;
@@ -100,6 +101,8 @@ namespace Nop.Services.Installation
         private readonly IRepository<Shipment> _shipmentRepository;
         private readonly IRepository<ShipmentItem> _shipmentItemRepository;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
+        private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
+        private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRepository;
         private readonly IRepository<StateProvince> _stateProvinceRepository;
         private readonly IRepository<StockQuantityHistory> _stockQuantityHistoryRepository;
         private readonly IRepository<Store> _storeRepository;
@@ -117,6 +120,7 @@ namespace Nop.Services.Installation
         #region Ctor
 
         public CodeFirstInstallationService(IAddressService addressService,
+            IDataProvider dataProvider,
             IGenericAttributeService genericAttributeService,
             INopFileProvider fileProvider,
             IRepository<ActivityLog> activityLogRepository,
@@ -164,6 +168,8 @@ namespace Nop.Services.Installation
             IRepository<Shipment> shipmentRepository,
             IRepository<ShipmentItem> shipmentItemRepository,
             IRepository<ShippingMethod> shippingMethodRepository,
+            IRepository<SpecificationAttribute> specificationAttributeRepository,
+            IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository,
             IRepository<StateProvince> stateProvinceRepository,
             IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
             IRepository<Store> storeRepository,
@@ -177,6 +183,7 @@ namespace Nop.Services.Installation
             IWebHelper webHelper)
         {
             _addressService = addressService;
+            _dataProvider = dataProvider;
             _genericAttributeService = genericAttributeService;
             _fileProvider = fileProvider;
             _activityLogRepository = activityLogRepository;
@@ -224,6 +231,8 @@ namespace Nop.Services.Installation
             _shipmentItemRepository = shipmentItemRepository;
             _shipmentRepository = shipmentRepository;
             _shippingMethodRepository = shippingMethodRepository;
+            _specificationAttributeRepository = specificationAttributeRepository;
+            _specificationAttributeOptionRepository = specificationAttributeOptionRepository;
             _stateProvinceRepository = stateProvinceRepository;
             _stockQuantityHistoryRepository = stockQuantityHistoryRepository;
             _storeRepository = storeRepository;
@@ -243,17 +252,25 @@ namespace Nop.Services.Installation
 
         protected virtual T InsertInstallationData<T>(T entity) where T : BaseEntity
         {
-            
-            return entity;
+            return _dataProvider.InsertEntity(entity);
         }
 
         protected virtual void InsertInstallationData<T>(params T[] entities) where T : BaseEntity
         {
+            foreach (var entity in entities)
+            {
+                InsertInstallationData(entity);
+            }
         }
 
         protected virtual SpecificationAttributeOption GetSpecificationAttributeOption(string specAttributeName, string specAttributeOptionName)
         {
-            return null;
+            var specificationAttribute = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize");
+
+            var specificationAttributeOption = _specificationAttributeOptionRepository.Table.Single(sao =>
+                sao.Name == "13.0''" && sao.SpecificationAttributeId == specificationAttribute.Id);
+
+            return specificationAttributeOption;
         }
 
         /// <summary>
@@ -4175,8 +4192,7 @@ namespace Nop.Services.Installation
         protected virtual void InstallSampleCustomers()
         {
             var crRegistered = _customerRoleRepository.Table.FirstOrDefault(customerRole =>
-                customerRole.SystemName.Equals(NopCustomerDefaults.RegisteredRoleName,
-                    StringComparison.InvariantCultureIgnoreCase));
+                customerRole.SystemName == NopCustomerDefaults.RegisteredRoleName);
 
             if (crRegistered == null)
                 throw new ArgumentNullException(nameof(crRegistered));
@@ -4602,7 +4618,7 @@ namespace Nop.Services.Installation
                 throw new Exception("No default store could be loaded");
 
             //first order
-            var firstCustomer = _customerRepository.Table.First(c => c.Email.Equals("steve_gates@nopCommerce.com"));
+            var firstCustomer = _customerRepository.Table.First(c => c.Email == "steve_gates@nopCommerce.com");
 
             var firstCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(firstCustomer.BillingAddressId)));
             var firstCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(firstCustomer.ShippingAddressId)));
@@ -4670,7 +4686,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = firstOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name.Equals("Apple iCam")).Id,
+                ProductId = _productRepository.Table.First(p => p.Name == "Apple iCam").Id,
                 UnitPriceInclTax = 1300M,
                 UnitPriceExclTax = 1300M,
                 PriceInclTax = 1300M,
@@ -4695,7 +4711,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = firstOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name.Equals("Leica T Mirrorless Digital Camera")).Id,
+                ProductId = _productRepository.Table.First(p => p.Name == "Leica T Mirrorless Digital Camera").Id,
                 UnitPriceInclTax = 530M,
                 UnitPriceExclTax = 530M,
                 PriceInclTax = 530M,
@@ -4720,7 +4736,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = firstOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name.Equals("$25 Virtual Gift Card")).Id,
+                ProductId = _productRepository.Table.First(p => p.Name == "$25 Virtual Gift Card").Id,
                 UnitPriceInclTax = 25M,
                 UnitPriceExclTax = 25M,
                 PriceInclTax = 25M,
@@ -4772,7 +4788,7 @@ namespace Nop.Services.Installation
             });
 
             //second order
-            var secondCustomer = _customerRepository.Table.First(c => c.Email.Equals("arthur_holmes@nopCommerce.com"));
+            var secondCustomer = _customerRepository.Table.First(c => c.Email == "arthur_holmes@nopCommerce.com");
 
             var secondCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(secondCustomer.BillingAddressId)));
             var secondCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(secondCustomer.ShippingAddressId)));
@@ -4848,7 +4864,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = secondOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name.Equals("Vintage Style Engagement Ring")).Id,
+                ProductId = _productRepository.Table.First(p => p.Name == "Vintage Style Engagement Ring").Id,
                 UnitPriceInclTax = 2100M,
                 UnitPriceExclTax = 2100M,
                 PriceInclTax = 2100M,
@@ -4873,7 +4889,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = secondOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name.Equals("Flower Girl Bracelet")).Id,
+                ProductId = _productRepository.Table.First(p => p.Name == "Flower Girl Bracelet").Id,
                 UnitPriceInclTax = 360M,
                 UnitPriceExclTax = 360M,
                 PriceInclTax = 360M,
@@ -4894,7 +4910,7 @@ namespace Nop.Services.Installation
             _orderItemRepository.Insert(secondOrderItem2);
 
             //third order
-            var thirdCustomer = _customerRepository.Table.First(c => c.Email.Equals("james_pan@nopCommerce.com"));
+            var thirdCustomer = _customerRepository.Table.First(c => c.Email == "james_pan@nopCommerce.com");
 
             var thirdCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(thirdCustomer.BillingAddressId)));
 
@@ -4968,7 +4984,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = thirdOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name.Equals("If You Wait (donation)")).Id,
+                ProductId = _productRepository.Table.First(p => p.Name == "If You Wait (donation)").Id,
                 UnitPriceInclTax = 3M,
                 UnitPriceExclTax = 3M,
                 PriceInclTax = 3M,
@@ -4993,7 +5009,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = thirdOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name.Equals("Night Visions")).Id,
+                ProductId = _productRepository.Table.First(p => p.Name == "Night Visions").Id,
                 UnitPriceInclTax = 2.8M,
                 UnitPriceExclTax = 2.8M,
                 PriceInclTax = 2.8M,
@@ -5018,7 +5034,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = thirdOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name.Equals("Science & Faith")).Id,
+                ProductId = _productRepository.Table.First(p => p.Name == "Science & Faith").Id,
                 UnitPriceInclTax = 3M,
                 UnitPriceExclTax = 3M,
                 PriceInclTax = 3M,
@@ -5039,7 +5055,7 @@ namespace Nop.Services.Installation
             _orderItemRepository.Insert(thirdOrderItem3);
 
             //fourth order
-            var fourthCustomer = _customerRepository.Table.First(c => c.Email.Equals("brenda_lindgren@nopCommerce.com"));
+            var fourthCustomer = _customerRepository.Table.First(c => c.Email == "brenda_lindgren@nopCommerce.com");
 
             var fourthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fourthCustomer.BillingAddressId)));
             var fourthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fourthCustomer.ShippingAddressId)));
@@ -5129,7 +5145,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = fourthOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name.Equals("Pride and Prejudice")).Id,
+                ProductId = _productRepository.Table.First(p => p.Name == "Pride and Prejudice").Id,
                 UnitPriceInclTax = 24M,
                 UnitPriceExclTax = 24M,
                 PriceInclTax = 24M,
@@ -5154,7 +5170,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = fourthOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name.Equals("First Prize Pies")).Id,
+                ProductId = _productRepository.Table.First(p => p.Name == "First Prize Pies").Id,
                 UnitPriceInclTax = 51M,
                 UnitPriceExclTax = 51M,
                 PriceInclTax = 51M,
@@ -5179,7 +5195,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = fourthOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name.Equals("Fahrenheit 451 by Ray Bradbury")).Id,
+                ProductId = _productRepository.Table.First(p => p.Name == "Fahrenheit 451 by Ray Bradbury").Id,
                 UnitPriceInclTax = 27M,
                 UnitPriceExclTax = 27M,
                 PriceInclTax = 27M,
@@ -5254,7 +5270,7 @@ namespace Nop.Services.Installation
             _shipmentItemRepository.Insert(fourthOrderShipment2Item1);
 
             //fifth order
-            var fifthCustomer = _customerRepository.Table.First(c => c.Email.Equals("victoria_victoria@nopCommerce.com"));
+            var fifthCustomer = _customerRepository.Table.First(c => c.Email == "victoria_victoria@nopCommerce.com");
 
             var fifthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fifthCustomer.BillingAddressId)));
             var fifthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fifthCustomer.ShippingAddressId)));
@@ -5348,7 +5364,7 @@ namespace Nop.Services.Installation
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = fifthOrder.Id,
-                ProductId = _productRepository.Table.First(p => p.Name.Equals("Levi's 511 Jeans")).Id,
+                ProductId = _productRepository.Table.First(p => p.Name == "Levi's 511 Jeans").Id,
                 UnitPriceInclTax = 43.50M,
                 UnitPriceExclTax = 43.50M,
                 PriceInclTax = 43.50M,
@@ -5400,7 +5416,7 @@ namespace Nop.Services.Installation
 
             _activityLogRepository.Insert(new ActivityLog
             {
-                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword.Equals("EditCategory"))?.Id ?? throw new Exception("Cannot load LogType: EditCategory"),
+                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "EditCategory")?.Id ?? throw new Exception("Cannot load LogType: EditCategory"),
                 Comment = "Edited a category ('Computers')",
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = defaultCustomer.Id,
@@ -5409,7 +5425,7 @@ namespace Nop.Services.Installation
 
             _activityLogRepository.Insert(new ActivityLog
             {
-                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword.Equals("EditDiscount"))?.Id ?? throw new Exception("Cannot load LogType: EditDiscount"),
+                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "EditDiscount")?.Id ?? throw new Exception("Cannot load LogType: EditDiscount"),
                 Comment = "Edited a discount ('Sample discount with coupon code')",
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = defaultCustomer.Id,
@@ -5418,7 +5434,7 @@ namespace Nop.Services.Installation
 
             _activityLogRepository.Insert(new ActivityLog
             {
-                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword.Equals("EditSpecAttribute"))?.Id ?? throw new Exception("Cannot load LogType: EditSpecAttribute"),
+                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "EditSpecAttribute")?.Id ?? throw new Exception("Cannot load LogType: EditSpecAttribute"),
                 Comment = "Edited a specification attribute ('CPU Type')",
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = defaultCustomer.Id,
@@ -5427,7 +5443,7 @@ namespace Nop.Services.Installation
 
             _activityLogRepository.Insert(new ActivityLog
             {
-                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword.Equals("AddNewProductAttribute"))?.Id ?? throw new Exception("Cannot load LogType: AddNewProductAttribute"),
+                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "AddNewProductAttribute")?.Id ?? throw new Exception("Cannot load LogType: AddNewProductAttribute"),
                 Comment = "Added a new product attribute ('Some attribute')",
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = defaultCustomer.Id,
@@ -5436,7 +5452,7 @@ namespace Nop.Services.Installation
 
             _activityLogRepository.Insert(new ActivityLog
             {
-                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword.Equals("DeleteGiftCard"))?.Id ?? throw new Exception("Cannot load LogType: DeleteGiftCard"),
+                ActivityLogTypeId = _activityLogTypeRepository.Table.FirstOrDefault(alt => alt.SystemKeyword == "DeleteGiftCard")?.Id ?? throw new Exception("Cannot load LogType: DeleteGiftCard"),
                 Comment = "Deleted a gift card ('bdbbc0ef-be57')",
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = defaultCustomer.Id,

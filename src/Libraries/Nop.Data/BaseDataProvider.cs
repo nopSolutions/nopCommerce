@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
+using FluentMigrator;
+using FluentMigrator.Runner;
+using FluentMigrator.Runner.Exceptions;
 using LinqToDB;
 using LinqToDB.Data;
 using Nop.Core;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Data
 {
@@ -15,7 +20,7 @@ namespace Nop.Data
     {
         #region Ctor
 
-        protected readonly DataConnection _dataConnection;
+        protected DataConnection _dataConnection;
 
         #endregion
 
@@ -23,6 +28,9 @@ namespace Nop.Data
 
         protected BaseDataProvider()
         {
+            if (!DataSettingsManager.DatabaseIsInstalled)
+                return;
+
             _dataConnection = new NopDataConnection();
         }
 
@@ -66,7 +74,53 @@ namespace Nop.Data
 
             return parameter;
         }
-        
+
+        protected virtual void CreateDatabaseSchemaIfNotExists()
+        {
+            //find database mapping configuration by other assemblies
+            var typeFinder = new AppDomainTypeFinder();
+            var typeConfigurations = typeFinder.FindClassesOfType<IMappingConfiguration>().ToList();
+
+            foreach (var typeConfiguration in typeConfigurations)
+            {
+                var mappingConfiguration = (IMappingConfiguration)Activator.CreateInstance(typeConfiguration);
+                mappingConfiguration.CreateTableIfNotExists();
+            }
+        }
+
+        protected virtual void ApplyMigrations()
+        {
+            //find database mapping configuration by other assemblies
+            var typeFinder = new AppDomainTypeFinder();
+            var migrations = typeFinder.FindClassesOfType<AutoReversingMigration>().ToList();
+            var runner = EngineContext.Current.Resolve<IMigrationRunner>();
+
+            foreach (var migration in migrations)
+            {
+                var migrationAttribute = migration
+                    .GetCustomAttributes(typeof(MigrationAttribute), false)
+                    .OfType<MigrationAttribute>()
+                    .FirstOrDefault();
+
+                try
+                {
+                    if (migrationAttribute == null || !runner.HasMigrationsToApplyUp(migrationAttribute.Version))
+                        continue;
+
+                    runner.MigrateUp(migrationAttribute.Version);
+                }
+                catch (MissingMigrationsException)
+                {
+                    continue;
+                }
+                catch (Exception ex)
+                {
+                    if (!(ex.InnerException is SqlException))
+                        throw;
+                }
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -158,18 +212,43 @@ namespace Nop.Data
             return entities.FirstOrDefault(e => e.Id == Convert.ToInt32(entity.Id));
         }
 
+        /// <summary>
+        /// Insert a new entity
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <returns>Entity</returns>
+        public virtual TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
+        {
+            if (_dataConnection == null && !DataSettingsManager.DatabaseIsInstalled)
+                _dataConnection = new NopDataConnection();
+
+            entity.Id = _dataConnection.InsertWithInt32Identity(entity);
+
+            return entity;
+        }
+
         public virtual IEnumerable<T> QueryProc<T>(string sql, params DataParameter[] parameters)
         {
+            if (_dataConnection == null && !DataSettingsManager.DatabaseIsInstalled)
+                _dataConnection = new NopDataConnection();
+
             return _dataConnection.QueryProc<T>(sql, parameters);
         }
 
         public virtual IEnumerable<T> Query<T>(string sql)
         {
+            if (_dataConnection == null && !DataSettingsManager.DatabaseIsInstalled)
+                _dataConnection = new NopDataConnection();
+
             return _dataConnection.Query<T>(sql);
         }
 
         public virtual int Execute(string sql, params DataParameter[] parameters)
         {
+            if(_dataConnection == null && !DataSettingsManager.DatabaseIsInstalled)
+                _dataConnection = new NopDataConnection();
+
             return _dataConnection.Execute(sql, parameters);
         }
 

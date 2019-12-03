@@ -103,11 +103,10 @@ namespace Nop.Services.Tests.Tax
 
             var customerService = new Mock<ICustomerService>();
             var loger = new Mock<ILogger>();
-            var migrationRunner = new Mock<IMigrationRunner>();
             var migrationVersionInfoRepository = new Mock<IRepository<MigrationVersionInfo>>();
 
             _catalogSettings = new CatalogSettings();
-            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, _webHelper.Object);
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, _webHelper.Object);
             _taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
 
             var cacheManager = new TestCacheManager();

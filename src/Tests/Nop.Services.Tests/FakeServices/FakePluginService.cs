@@ -17,14 +17,12 @@ namespace Nop.Services.Tests.FakeServices
             CatalogSettings catalogSettings = null,
             ICustomerService customerService = null,
             ILogger logger = null,
-            IMigrationRunner migrationRunner = null,
             INopFileProvider fileProvider = null,
             IRepository<MigrationVersionInfo> migrationVersionInfoRepository= null,
             IWebHelper webHelper = null) : base(
             catalogSettings ?? new CatalogSettings(),
             customerService ?? new Mock<ICustomerService>().Object,
             logger ?? new NullLogger(),
-            migrationRunner ?? new Mock<IMigrationRunner>().Object,
             fileProvider ?? new Mock<INopFileProvider>().Object,
             migrationVersionInfoRepository ?? new Mock<IRepository<MigrationVersionInfo>>().Object,
             webHelper ?? new Mock<IWebHelper>().Object)

@@ -108,10 +108,18 @@ namespace Nop.Data
         /// <param name="entity">Entity</param>
         /// <returns>Copy of the passed entity</returns>
         TEntity LoadOriginalCopy<TEntity>(TEntity entity) where TEntity : BaseEntity;
-        
+
+        /// <summary>
+        /// Insert a new entity
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <returns>Entity</returns>
+        TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity;
+
         #endregion
 
-        #region Properties
+            #region Properties
 
         /// <summary>
         /// Gets a value indicating whether this data provider supports backup

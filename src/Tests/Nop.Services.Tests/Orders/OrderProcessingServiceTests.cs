@@ -169,10 +169,9 @@ namespace Nop.Services.Tests.Orders
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
             var loger = new Mock<ILogger>();
-            var migrationRunner = new Mock<IMigrationRunner>();
             var migrationVersionInfoRepository = new Mock<IRepository<MigrationVersionInfo>>();
 
-            var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, _webHelper.Object);
+            var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, _webHelper.Object);
             _paymentPluginManager = new PaymentPluginManager(pluginService, null, _paymentSettings);
             _pickupPluginManager = new PickupPluginManager(pluginService, _shippingSettings);
             _shippingPluginManager = new ShippingPluginManager(pluginService, _shippingSettings);

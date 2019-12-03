@@ -83,6 +83,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             TaskManager.Instance.Initialize();
             TaskManager.Instance.Start();
 
+            if (!DataSettingsManager.DatabaseIsInstalled)
+                return serviceProvider;
+
             //log application start
             engine.Resolve<ILogger>().Information("Application started");
 

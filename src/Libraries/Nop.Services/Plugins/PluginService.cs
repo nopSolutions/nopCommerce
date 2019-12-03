@@ -26,7 +26,6 @@ namespace Nop.Services.Plugins
         private readonly CatalogSettings _catalogSettings;
         private readonly ICustomerService _customerService;
         private readonly ILogger _logger;
-        private readonly IMigrationRunner _migrationRunner;
         private readonly INopFileProvider _fileProvider;
         private readonly IPluginsInfo _pluginsInfo;
         private readonly IRepository<MigrationVersionInfo> _migrationVersionInfoRepository;
@@ -39,7 +38,6 @@ namespace Nop.Services.Plugins
         public PluginService(CatalogSettings catalogSettings,
             ICustomerService customerService,
             ILogger logger,
-            IMigrationRunner migrationRunner,
             INopFileProvider fileProvider,
             IRepository<MigrationVersionInfo> migrationVersionInfoRepository,
             IWebHelper webHelper)
@@ -47,7 +45,6 @@ namespace Nop.Services.Plugins
             _catalogSettings = catalogSettings;
             _customerService = customerService;
             _logger = logger;
-            _migrationRunner = migrationRunner;
             _fileProvider = fileProvider;
             _pluginsInfo = Singleton<IPluginsInfo>.Instance;
             _migrationVersionInfoRepository = migrationVersionInfoRepository;
@@ -474,6 +471,9 @@ namespace Nop.Services.Plugins
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
             var customerActivityService = EngineContext.Current.Resolve<ICustomerActivityService>();
 
+            //do not inject services via constructor because it'll cause installation fails
+            var migrationRunner = EngineContext.Current.Resolve<IMigrationRunner>();
+
             var typeFinder = new AppDomainTypeFinder();
 
             //uninstall plugins
@@ -501,7 +501,7 @@ namespace Nop.Services.Plugins
                             }
 
                             var downMigration = EngineContext.Current.ResolveUnregistered(migration) as IMigration;
-                            _migrationRunner.Down(downMigration);
+                            migrationRunner.Down(downMigration);
                         }
                         catch (Exception ex)
                         {

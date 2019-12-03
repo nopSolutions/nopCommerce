@@ -82,10 +82,9 @@ namespace Nop.Services.Tests.Discounts
 
             var loger = new Mock<ILogger>();
             var webHelper = new Mock<IWebHelper>();
-            var migrationRunner = new Mock<IMigrationRunner>();
             var migrationVersionInfoRepository = new Mock<IRepository<MigrationVersionInfo>>();
 
-            var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, migrationRunner.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, webHelper.Object);
+            var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, webHelper.Object);
 
             var discountMappingRepo = new Mock<IRepository<DiscountMapping>>();
 
