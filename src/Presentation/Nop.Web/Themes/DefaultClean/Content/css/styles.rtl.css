@@ -1,4 +1,8 @@
-
+@font-face {
+	font-family:'Iran-Sans';
+	src:url(../fonts/eot/IRANSansWeb.eot);
+	src:url(../fonts/eot/IRANSansWeb.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb.ttf) format('truetype')
+}
 
 /*********** CSS RESET **********/
 
@@ -67,7 +71,7 @@ body {
     max-width: 100%;
 	overflow-x: hidden;
 	background-color: #fff;
-	font: normal 14px Arial, Helvetica, sans-serif;
+	font: normal 14px Iran-Sans, Helvetica, sans-serif;
     color: #777;
 }
 h1,h2,h3,h4,h5,h6 {
@@ -96,7 +100,7 @@ textarea, select {
 }
 input, textarea, select, button {
 	font-size: 14px;
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: Iran-Sans, Helvetica, sans-serif;
 	color: #777;
 }
 textarea {
@@ -5111,7 +5115,7 @@ label, label + * {
 	/*override jQuery UI styles, do not delete doubled properties*/
 	line-height: normal;
 	font-size: 14px;
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: Iran-Sans, Helvetica, sans-serif;
 	color: #777;
 }
 .profile-info-box .user-details {
@@ -5133,7 +5137,7 @@ label, label + * {
 	/*override jQuery UI styles, do not delete doubled properties*/
 	line-height: normal;
 	font-size: 14px;
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: Iran-Sans, Helvetica, sans-serif;
 	color: #777;
 }
 .latest-posts .topic {

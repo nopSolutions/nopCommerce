@@ -1,3 +1,59 @@
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:bold;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb_Medium.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb_Medium.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:700;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb_Medium.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb_Medium.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:500;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb_Medium.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb_Medium.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:400;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb_Medium.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb_Medium.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:300;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Light.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Light.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb_Light.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb_Light.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:200;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_UltraLight.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_UltraLight.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb_UltraLight.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb_UltraLight.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:100;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:normal;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb.ttf) format('truetype')
+}
 /*!
  *   AdminLTE v2.4.5
  *   Author: Almsaeed Studio
@@ -18,7 +74,7 @@ body {
   height: 100%;
 }
 body {
-  font-family: Vazir, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: Iran-Sans, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 400;
   overflow-x: hidden;
   overflow-y: auto;
@@ -158,7 +214,7 @@ h6,
 .h4,
 .h5,
 .h6 {
-  font-family: Vazir, sans-serif;
+  font-family: Iran-Sans, sans-serif;
 }
 /* General Links */
 a {
@@ -250,7 +306,7 @@ a:focus {
   background-color: transparent;
   background-image: none;
   padding: 15px 15px;
-  font-family: fontAwesome;
+  font-family: Iran-Sans;
 }
 .main-header .sidebar-toggle:before {
   content: "\f0c9";
@@ -290,7 +346,7 @@ a:focus {
   line-height: 50px;
   text-align: center;
   width: 230px;
-  font-family: Vazir, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: Iran-Sans, "Helvetica Neue", Helvetica, Arial, sans-serif;
   padding: 0 15px;
   font-weight: 300;
   overflow: hidden;

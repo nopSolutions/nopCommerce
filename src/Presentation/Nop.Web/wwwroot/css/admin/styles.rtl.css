@@ -1,4 +1,60 @@
-﻿/* COMMON */
+﻿@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:bold;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb_Medium.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb_Medium.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:700;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb_Medium.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb_Medium.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:500;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb_Medium.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb_Medium.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:400;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb_Medium.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb_Medium.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:300;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Light.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Light.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb_Light.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb_Light.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:200;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_UltraLight.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_UltraLight.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb_UltraLight.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb_UltraLight.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:100;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:normal;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb.ttf) format('truetype')
+}
+/* COMMON */
 .content{
 		padding-bottom: 55px;
 }
@@ -778,9 +834,6 @@ td.k-state-focused.k-state-selected {
     border-radius: 0;
     background: #3c8dbc;
 }
-input[type="text"].k-input {
-  box-sizing: content-box;
-}
 
 /* HEADER */
 .main-header {
@@ -967,6 +1020,10 @@ div.dataTables_wrapper div.dataTables_processing .fa {
 }
 .form-horizontal .label-wrapper i.fa {
     width: 16px;
+}
+.form-horizontal .label-wrapper i.fa:before {
+    position: absolute;
+    top: 9px;
 }
 .form-horizontal span.required {
     color: #ff2e2e;
@@ -1473,7 +1530,7 @@ span.grid-report-item.red {
     line-height: 32px;
     font-size: 14px;
     color: white;
-    font-family: Trebuchet, Arial, sans-serif;
+    font-family: Iran-Sans, Arial, sans-serif;
     font-weight: bold;
 }
 .onoffswitch-inner:before {

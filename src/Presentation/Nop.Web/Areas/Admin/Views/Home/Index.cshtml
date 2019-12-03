@@ -5,7 +5,7 @@
     Html.AppendCssFileParts("~/lib/ionicons/css/ionicons-2.0.1.min.css");
 
     //page title
-    ViewBag.PageTitle = T("Admin.Dashboard").Text;
+    ViewBag.Title = T("Admin.Dashboard").Text;
 
     var canManageOrders = permissionService.Authorize(StandardPermissionProvider.ManageOrders);
     var canManageCustomers = permissionService.Authorize(StandardPermissionProvider.ManageCustomers);
@@ -22,14 +22,6 @@
     <div class="row">
         <div class="col-md-12">
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DashboardTop })
-            @if (!Model.IsLoggedInAsVendor)
-            {
-                <div class="row">
-                    <div class="col-md-12">
-                        @await Component.InvokeAsync("NopCommerceNews")
-                    </div>
-                </div>
-            }
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DashboardNewsAfter })
             @if (!Model.IsLoggedInAsVendor && canManageOrders && canManageCustomers && canManageProducts && canManageReturnRequests)
             {

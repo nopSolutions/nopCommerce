@@ -1,3 +1,59 @@
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:bold;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb_Medium.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb_Medium.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:700;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb_Medium.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb_Medium.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:500;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb_Medium.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb_Medium.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:400;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Medium.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb_Medium.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb_Medium.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:300;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Light.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_Light.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb_Light.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb_Light.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:200;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_UltraLight.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb_UltraLight.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb_UltraLight.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb_UltraLight.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:100;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb.ttf) format('truetype')
+}
+@font-face {
+	font-family:'Iran-Sans';
+	font-style:normal;
+	font-weight:normal;
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb.eot);
+	src:url(/Themes/DefaultClean/Content/fonts/eot/IRANSansWeb.eot?#iefix) format('embedded-opentype'),url(/Themes/DefaultClean/Content/fonts/woff/IRANSansWeb.woff) format('woff'),url(/Themes/DefaultClean/Content/fonts/ttf/IRANSansWeb.ttf) format('truetype')
+}
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
  * Copyright 2011-2016 Twitter, Inc.
@@ -5,7 +61,7 @@
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 html {
-  font-family: sans-serif;
+  font-family: Iran-Sans;
   -webkit-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
 }
@@ -105,7 +161,7 @@ code,
 kbd,
 pre,
 samp {
-  font-family: monospace, monospace;
+  font-family: Iran-Sans, monospace;
   font-size: 1em;
 }
 button,
@@ -1082,7 +1138,7 @@ html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Iran-Sans", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 1.42857143;
   color: #333;
@@ -1531,7 +1587,7 @@ code,
 kbd,
 pre,
 samp {
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: Iran-Sans, Monaco, Consolas, "Courier New", monospace;
 }
 code {
   padding: 2px 4px;
@@ -5990,7 +6046,7 @@ button.close {
   position: absolute;
   z-index: 1070;
   display: block;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Iran-Sans", Helvetica, Arial, sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: normal;
@@ -6109,7 +6165,7 @@ button.close {
   display: none;
   max-width: 276px;
   padding: 1px;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Iran-Sans", Helvetica, Arial, sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: normal;
