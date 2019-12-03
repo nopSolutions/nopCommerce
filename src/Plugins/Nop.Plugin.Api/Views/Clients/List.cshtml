@@ -1,0 +1,100 @@
+﻿@{
+    Layout = ViewNames.AdminLayout;
+
+    //page title
+    ViewBag.Title = T("Plugins.Api.Admin.Page.Clients.Title").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Api-Clients-Menu");
+}
+
+@Html.AntiForgeryToken()
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Plugins.Api.Admin.Page.Clients.Title")
+    </h1>
+    <div class="pull-right">
+        <a href="Create" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="api-clients-grid"></div>
+
+                    <script>
+                        $(document).ready(function () {
+                            $("#api-clients-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Url.RouteUrl("Plugin.Api.ManageClients.List")",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false
+                                },
+                                editable: {
+                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "ClientName",
+                                        title: "@T("Plugins.Api.Admin.Client.Name")"
+                                    }, {
+                                        field: "ClientId",
+                                        title: "@T("Plugins.Api.Admin.Client.ClientId")"
+                                    }, {
+                                        field: "ClientSecret",
+                                        title: "@T("Plugins.Api.Admin.Client.ClientSecret")"
+                                    }, {
+                                        field: "RedirectUrl",
+                                        title: "@T("Plugins.Api.Admin.Client.CallbackUrl")"
+                                    }, {
+                                        field: "Enabled",
+                                        title: "@T("Plugins.Api.Admin.Client.IsActive")",
+                                        editable: true
+                                    }, {
+                                        field: "Id",
+                                        title: "@T("Admin.Common.Edit")",
+                                        width: 100,
+                                        template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
