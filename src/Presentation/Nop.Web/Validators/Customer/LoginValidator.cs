@@ -10,7 +10,7 @@ namespace Nop.Web.Validators.Customer
     {
         public LoginValidator(ILocalizationService localizationService, CustomerSettings customerSettings)
         {
-            if (!customerSettings.UsernamesEnabled)
+            if (!customerSettings.LoginUsernamesEnabled)
             {
                 //login by email
                 RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResource("Account.Login.Fields.Email.Required"));

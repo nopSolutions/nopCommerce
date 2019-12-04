@@ -110,7 +110,7 @@ namespace Nop.Services.Customers
         /// <returns>Result</returns>
         public virtual CustomerLoginResults ValidateCustomer(string usernameOrEmail, string password)
         {
-            var customer = _customerSettings.UsernamesEnabled ?
+            var customer = _customerSettings.LoginUsernamesEnabled ?
                 _customerService.GetCustomerByUsername(usernameOrEmail) :
                 _customerService.GetCustomerByEmail(usernameOrEmail);
 

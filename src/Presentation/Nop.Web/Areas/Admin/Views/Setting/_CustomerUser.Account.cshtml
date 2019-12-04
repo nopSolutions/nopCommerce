@@ -13,6 +13,15 @@
         </div>
     </div>
     <nop-nested-setting asp-for="CustomerSettings.UsernamesEnabled">
+        <div class="form-group advanced-setting" id="pnlLoginUsernamesEnabled">
+            <div class="col-md-3">
+                <nop-label asp-for="CustomerSettings.LoginUsernamesEnabled" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CustomerSettings.LoginUsernamesEnabled" />
+                <span asp-validation-for="CustomerSettings.LoginUsernamesEnabled"></span>
+            </div>
+        </div>
         <div class="form-group advanced-setting" id="pnlAllowUsersToChangeUsernames">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.AllowUsersToChangeUsernames" />

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -569,7 +569,7 @@ namespace Nop.Web.Factories
         {
             var model = new LoginModel
             {
-                UsernamesEnabled = _customerSettings.UsernamesEnabled,
+                UsernamesEnabled = _customerSettings.LoginUsernamesEnabled,
                 RegistrationType = _customerSettings.UserRegistrationType,
                 CheckoutAsGuest = checkoutAsGuest.GetValueOrDefault(),
                 DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage

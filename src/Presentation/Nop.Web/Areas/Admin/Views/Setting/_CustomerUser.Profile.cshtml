@@ -50,10 +50,12 @@ function toggleAvatar() {
 
 function toggleUsername() {
     if ($('#@Html.IdFor(model => model.CustomerSettings.UsernamesEnabled)').is(':checked')) {
+        $('#pnlLoginUsernamesEnabled').show();
         $('#pnlAllowUsersToChangeUsernames').show();
         $('#pnlCheckUsernameAvailability').show();
         $('#pnlUsernameValidationEnabled').show();
     } else {
+        $('#pnlLoginUsernamesEnabled').hide();
         $('#pnlAllowUsersToChangeUsernames').hide();
         $('#pnlCheckUsernameAvailability').hide();
         $('#pnlUsernameValidationEnabled').hide();
