@@ -1,23 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using FluentMigrator.Runner;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Data;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
-using Nop.Data.Migrations;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Localization;
-using Nop.Services.Logging;
-using Nop.Services.Plugins;
+using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 
 namespace Nop.Services.Tests
@@ -118,11 +114,8 @@ namespace Nop.Services.Tests
             var productService = new Mock<IProductService>();
 
             var eventPublisher = new Mock<IEventPublisher>();
-            var loger = new Mock<ILogger>();
-            var webHelper = new Mock<IWebHelper>();
-            var migrationVersionInfoRepository = new Mock<IRepository<MigrationVersionInfo>>();
-
-            var pluginService = new PluginService(new CatalogSettings(), customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, webHelper.Object);
+           
+            var pluginService = new FakePluginService();
 
             var discountPluginManager = new DiscountPluginManager(pluginService);
             var store = new Store { Id = 1 };

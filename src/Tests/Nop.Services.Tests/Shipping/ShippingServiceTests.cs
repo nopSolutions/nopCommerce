@@ -66,7 +66,7 @@ namespace Nop.Services.Tests.Shipping
                 ActiveShippingRateComputationMethodSystemNames = new List<string> { "FixedRateTestShippingRateComputationMethod" }
             };
 
-            var pluginService = new FakePluginService(fileProvider: CommonHelper.DefaultFileProvider);
+            var pluginService = new FakePluginService();
 
             _pickupPluginManager = new PickupPluginManager(pluginService, _shippingSettings);
             _shippingPluginManager = new ShippingPluginManager(pluginService, _shippingSettings);

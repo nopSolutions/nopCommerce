@@ -189,15 +189,15 @@ namespace Nop.Services.Catalog
                 //It's much faster with a large number of categories than the LINQ implementation below 
 
                 //prepare parameters
-                var showHiddenParameter = _dataProvider.GetBooleanParameter("ShowHidden", showHidden);
-                var nameParameter = _dataProvider.GetStringParameter("Name", categoryName ?? string.Empty);
-                var storeIdParameter = _dataProvider.GetInt32Parameter("StoreId", !_catalogSettings.IgnoreStoreLimitations ? storeId : 0);
-                var pageIndexParameter = _dataProvider.GetInt32Parameter("PageIndex", pageIndex);
-                var pageSizeParameter = _dataProvider.GetInt32Parameter("PageSize", pageSize);
+                var showHiddenParameter = SqlParameterHelper.GetBooleanParameter("ShowHidden", showHidden);
+                var nameParameter = SqlParameterHelper.GetStringParameter("Name", categoryName ?? string.Empty);
+                var storeIdParameter = SqlParameterHelper.GetInt32Parameter("StoreId", !_catalogSettings.IgnoreStoreLimitations ? storeId : 0);
+                var pageIndexParameter = SqlParameterHelper.GetInt32Parameter("PageIndex", pageIndex);
+                var pageSizeParameter = SqlParameterHelper.GetInt32Parameter("PageSize", pageSize);
                 //pass allowed customer role identifiers as comma-delimited string
-                var customerRoleIdsParameter = _dataProvider.GetStringParameter("CustomerRoleIds", !_catalogSettings.IgnoreAcl ? string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)) : string.Empty);
+                var customerRoleIdsParameter = SqlParameterHelper.GetStringParameter("CustomerRoleIds", !_catalogSettings.IgnoreAcl ? string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)) : string.Empty);
 
-                var totalRecordsParameter = _dataProvider.GetOutputInt32Parameter("TotalRecords");
+                var totalRecordsParameter = SqlParameterHelper.GetOutputInt32Parameter("TotalRecords");
 
                 //invoke stored procedure
                 var categories = _categoryRepository.EntityFromSql("CategoryLoadAllPaged",

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentMigrator.Runner;
 using Moq;
 using Nop.Core;
 using Nop.Data;
@@ -15,7 +14,6 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
-using Nop.Data.Migrations;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -28,11 +26,11 @@ using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
-using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
+using Nop.Services.Tests.FakeServices;
 using Nop.Services.Vendors;
 using Nop.Tests;
 using NUnit.Framework;
@@ -155,7 +153,6 @@ namespace Nop.Services.Tests.Orders
             _storeContext = new Mock<IStoreContext>();
             _store = new Store { Id = 1 };
             _storeContext.Setup(x => x.CurrentStore).Returns(_store);
-
             
             _catalogSettings = new CatalogSettings();
             var cacheManager = new TestCacheManager();
@@ -168,10 +165,7 @@ namespace Nop.Services.Tests.Orders
 
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var loger = new Mock<ILogger>();
-            var migrationVersionInfoRepository = new Mock<IRepository<MigrationVersionInfo>>();
-
-            var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, _webHelper.Object);
+            var pluginService = new FakePluginService(_catalogSettings);
             _paymentPluginManager = new PaymentPluginManager(pluginService, null, _paymentSettings);
             _pickupPluginManager = new PickupPluginManager(pluginService, _shippingSettings);
             _shippingPluginManager = new ShippingPluginManager(pluginService, _shippingSettings);

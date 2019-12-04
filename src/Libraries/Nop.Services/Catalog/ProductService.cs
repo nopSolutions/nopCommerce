@@ -683,39 +683,39 @@ namespace Nop.Services.Catalog
                 pageSize = int.MaxValue - 1;
 
             //prepare input parameters
-            var pCategoryIds = _dataProvider.GetStringParameter("CategoryIds", commaSeparatedCategoryIds);
-            var pManufacturerId = _dataProvider.GetInt32Parameter("ManufacturerId", manufacturerId);
-            var pStoreId = _dataProvider.GetInt32Parameter("StoreId", !_catalogSettings.IgnoreStoreLimitations ? storeId : 0);
-            var pVendorId = _dataProvider.GetInt32Parameter("VendorId", vendorId);
-            var pWarehouseId = _dataProvider.GetInt32Parameter("WarehouseId", warehouseId);
-            var pProductTypeId = _dataProvider.GetInt32Parameter("ProductTypeId", (int?)productType);
-            var pVisibleIndividuallyOnly = _dataProvider.GetBooleanParameter("VisibleIndividuallyOnly", visibleIndividuallyOnly);
-            var pMarkedAsNewOnly = _dataProvider.GetBooleanParameter("MarkedAsNewOnly", markedAsNewOnly);
-            var pProductTagId = _dataProvider.GetInt32Parameter("ProductTagId", productTagId);
-            var pFeaturedProducts = _dataProvider.GetBooleanParameter("FeaturedProducts", featuredProducts);
-            var pPriceMin = _dataProvider.GetDecimalParameter("PriceMin", priceMin);
-            var pPriceMax = _dataProvider.GetDecimalParameter("PriceMax", priceMax);
-            var pKeywords = _dataProvider.GetStringParameter("Keywords", keywords);
-            var pSearchDescriptions = _dataProvider.GetBooleanParameter("SearchDescriptions", searchDescriptions);
-            var pSearchManufacturerPartNumber = _dataProvider.GetBooleanParameter("SearchManufacturerPartNumber", searchManufacturerPartNumber);
-            var pSearchSku = _dataProvider.GetBooleanParameter("SearchSku", searchSku);
-            var pSearchProductTags = _dataProvider.GetBooleanParameter("SearchProductTags", searchProductTags);
-            var pUseFullTextSearch = _dataProvider.GetBooleanParameter("UseFullTextSearch", _commonSettings.UseFullTextSearch);
-            var pFullTextMode = _dataProvider.GetInt32Parameter("FullTextMode", (int)_commonSettings.FullTextMode);
-            var pFilteredSpecs = _dataProvider.GetStringParameter("FilteredSpecs", commaSeparatedSpecIds);
-            var pLanguageId = _dataProvider.GetInt32Parameter("LanguageId", searchLocalizedValue ? languageId : 0);
-            var pOrderBy = _dataProvider.GetInt32Parameter("OrderBy", (int)orderBy);
-            var pAllowedCustomerRoleIds = _dataProvider.GetStringParameter("AllowedCustomerRoleIds", !_catalogSettings.IgnoreAcl ? commaSeparatedAllowedCustomerRoleIds : string.Empty);
-            var pPageIndex = _dataProvider.GetInt32Parameter("PageIndex", pageIndex);
-            var pPageSize = _dataProvider.GetInt32Parameter("PageSize", pageSize);
-            var pShowHidden = _dataProvider.GetBooleanParameter("ShowHidden", showHidden);
-            var pOverridePublished = _dataProvider.GetBooleanParameter("OverridePublished", overridePublished);
-            var pLoadFilterableSpecificationAttributeOptionIds = _dataProvider.GetBooleanParameter("LoadFilterableSpecificationAttributeOptionIds", loadFilterableSpecificationAttributeOptionIds);
+            var pCategoryIds = SqlParameterHelper.GetStringParameter("CategoryIds", commaSeparatedCategoryIds);
+            var pManufacturerId = SqlParameterHelper.GetInt32Parameter("ManufacturerId", manufacturerId);
+            var pStoreId = SqlParameterHelper.GetInt32Parameter("StoreId", !_catalogSettings.IgnoreStoreLimitations ? storeId : 0);
+            var pVendorId = SqlParameterHelper.GetInt32Parameter("VendorId", vendorId);
+            var pWarehouseId = SqlParameterHelper.GetInt32Parameter("WarehouseId", warehouseId);
+            var pProductTypeId = SqlParameterHelper.GetInt32Parameter("ProductTypeId", (int?)productType);
+            var pVisibleIndividuallyOnly = SqlParameterHelper.GetBooleanParameter("VisibleIndividuallyOnly", visibleIndividuallyOnly);
+            var pMarkedAsNewOnly = SqlParameterHelper.GetBooleanParameter("MarkedAsNewOnly", markedAsNewOnly);
+            var pProductTagId = SqlParameterHelper.GetInt32Parameter("ProductTagId", productTagId);
+            var pFeaturedProducts = SqlParameterHelper.GetBooleanParameter("FeaturedProducts", featuredProducts);
+            var pPriceMin = SqlParameterHelper.GetDecimalParameter("PriceMin", priceMin);
+            var pPriceMax = SqlParameterHelper.GetDecimalParameter("PriceMax", priceMax);
+            var pKeywords = SqlParameterHelper.GetStringParameter("Keywords", keywords);
+            var pSearchDescriptions = SqlParameterHelper.GetBooleanParameter("SearchDescriptions", searchDescriptions);
+            var pSearchManufacturerPartNumber = SqlParameterHelper.GetBooleanParameter("SearchManufacturerPartNumber", searchManufacturerPartNumber);
+            var pSearchSku = SqlParameterHelper.GetBooleanParameter("SearchSku", searchSku);
+            var pSearchProductTags = SqlParameterHelper.GetBooleanParameter("SearchProductTags", searchProductTags);
+            var pUseFullTextSearch = SqlParameterHelper.GetBooleanParameter("UseFullTextSearch", _commonSettings.UseFullTextSearch);
+            var pFullTextMode = SqlParameterHelper.GetInt32Parameter("FullTextMode", (int)_commonSettings.FullTextMode);
+            var pFilteredSpecs = SqlParameterHelper.GetStringParameter("FilteredSpecs", commaSeparatedSpecIds);
+            var pLanguageId = SqlParameterHelper.GetInt32Parameter("LanguageId", searchLocalizedValue ? languageId : 0);
+            var pOrderBy = SqlParameterHelper.GetInt32Parameter("OrderBy", (int)orderBy);
+            var pAllowedCustomerRoleIds = SqlParameterHelper.GetStringParameter("AllowedCustomerRoleIds", !_catalogSettings.IgnoreAcl ? commaSeparatedAllowedCustomerRoleIds : string.Empty);
+            var pPageIndex = SqlParameterHelper.GetInt32Parameter("PageIndex", pageIndex);
+            var pPageSize = SqlParameterHelper.GetInt32Parameter("PageSize", pageSize);
+            var pShowHidden = SqlParameterHelper.GetBooleanParameter("ShowHidden", showHidden);
+            var pOverridePublished = SqlParameterHelper.GetBooleanParameter("OverridePublished", overridePublished);
+            var pLoadFilterableSpecificationAttributeOptionIds = SqlParameterHelper.GetBooleanParameter("LoadFilterableSpecificationAttributeOptionIds", loadFilterableSpecificationAttributeOptionIds);
 
             //prepare output parameters
-            var pFilterableSpecificationAttributeOptionIds = _dataProvider.GetOutputStringParameter("FilterableSpecificationAttributeOptionIds");
+            var pFilterableSpecificationAttributeOptionIds = SqlParameterHelper.GetOutputStringParameter("FilterableSpecificationAttributeOptionIds");
             pFilterableSpecificationAttributeOptionIds.Size = int.MaxValue - 1;
-            var pTotalRecords = _dataProvider.GetOutputInt32Parameter("TotalRecords");
+            var pTotalRecords = SqlParameterHelper.GetOutputInt32Parameter("TotalRecords");
 
             //invoke stored procedure
             var products = _productRepository.EntityFromSql("ProductLoadAllPaged",

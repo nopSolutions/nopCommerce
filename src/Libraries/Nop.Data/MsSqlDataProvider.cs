@@ -91,17 +91,14 @@ namespace Nop.Data
                 _dataConnection.Execute(command);
         }
 
-
         /// <summary>
         /// Initialize database
         /// </summary>
         public void InitializeDatabase()
         {
-            var dataSettings = Singleton<DataSettings>.Instance;
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
 
-            var connSettings = new Linq2DbSettingsProvider(dataSettings);
-            DataConnection.DefaultSettings = connSettings;
+            DataConnection.DefaultSettings = Singleton<DataSettings>.Instance;
 
             _dataConnection = new NopDataConnection();
 

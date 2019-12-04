@@ -346,7 +346,7 @@ namespace Nop.Web.Controllers
                 DataSettingsManager.SaveSettings(new DataSettings
                 {
                     DataProvider = model.DataProvider,
-                    DataConnectionString = connectionString
+                    ConnectionString = connectionString
                 }, _fileProvider);
 
                 //initialize database

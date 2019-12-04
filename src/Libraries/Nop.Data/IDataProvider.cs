@@ -17,59 +17,7 @@ namespace Nop.Data
         /// </summary>
         void InitializeDatabase();
 
-        /// <summary>
-        /// Get string parameter
-        /// </summary>
-        /// <param name="parameterName">Parameter name</param>
-        /// <param name="parameterValue">Parameter value</param>
-        /// <returns>Parameter</returns>
-        DataParameter GetStringParameter(string parameterName, string parameterValue);
-
-        /// <summary>
-        /// Get output string parameter
-        /// </summary>
-        /// <param name="parameterName">Parameter name</param>
-        /// <returns>Parameter</returns>
-        DataParameter GetOutputStringParameter(string parameterName);
-
-        /// <summary>
-        /// Get int parameter
-        /// </summary>
-        /// <param name="parameterName">Parameter name</param>
-        /// <param name="parameterValue">Parameter value</param>
-        /// <returns>Parameter</returns>
-        DataParameter GetInt32Parameter(string parameterName, int? parameterValue);
-
-        /// <summary>
-        /// Get output int32 parameter
-        /// </summary>
-        /// <param name="parameterName">Parameter name</param>
-        /// <returns>Parameter</returns>
-        DataParameter GetOutputInt32Parameter(string parameterName);
-
-        /// <summary>
-        /// Get boolean parameter
-        /// </summary>
-        /// <param name="parameterName">Parameter name</param>
-        /// <param name="parameterValue">Parameter value</param>
-        /// <returns>Parameter</returns>
-        DataParameter GetBooleanParameter(string parameterName, bool? parameterValue);
-
-        /// <summary>
-        /// Get decimal parameter
-        /// </summary>
-        /// <param name="parameterName">Parameter name</param>
-        /// <param name="parameterValue">Parameter value</param>
-        /// <returns>Parameter</returns>
-        DataParameter GetDecimalParameter(string parameterName, decimal? parameterValue);
-
-        /// <summary>
-        /// Get datetime parameter
-        /// </summary>
-        /// <param name="parameterName">Parameter name</param>
-        /// <param name="parameterValue">Parameter value</param>
-        /// <returns>Parameter</returns>
-        DataParameter GetDateTimeParameter(string parameterName, DateTime? parameterValue);
+        void DeletePluginData(Type pluginType);
 
         /// <summary>
         /// Get the current identity value
@@ -136,26 +84,19 @@ namespace Nop.Data
         /// returns results as collection of values of specified type
         /// </summary>
         /// <typeparam name="T">Result record type</typeparam>
-        /// <param name="sql">Command text. This is caller's responsibility to properly escape procedure name</param>
+        /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Returns collection of query result records</returns>
-        IEnumerable<T> QueryProc<T>(string sql, params DataParameter[] parameters);
+        IEnumerable<T> QueryProc<T>(string procedureName, params DataParameter[] parameters);
 
         /// <summary>
         /// Executes command and returns results as collection of values of specified type
         /// </summary>
         /// <typeparam name="T">Result record type</typeparam>
         /// <param name="sql">Command text</param>
-        /// <returns>Returns collection of query result records</returns>
-        IEnumerable<T> Query<T>(string sql);
-
-        /// <summary>
-        /// Executes command and returns number of affected records
-        /// </summary>
-        /// <param name="sql">Command text</param>
         /// <param name="parameters">Command parameters</param>
-        /// <returns>Number of records, affected by command execution</returns>
-        int Execute(string sql, params DataParameter[] parameters);
+        /// <returns>Returns collection of query result records</returns>
+        IEnumerable<T> Query<T>(string sql, params DataParameter[] parameters);
 
         #endregion
     }

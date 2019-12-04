@@ -421,7 +421,7 @@ namespace Nop.Services.Localization
                 return;
 
             ////stored procedures are enabled and supported by the database.
-            var pLanguageId = _dataProvider.GetInt32Parameter("LanguageId", language.Id);
+            var pLanguageId = SqlParameterHelper.GetInt32Parameter("LanguageId", language.Id);
 
             var pXmlPackage = new DataParameter
             {
@@ -430,10 +430,10 @@ namespace Nop.Services.Localization
                 DataType = DataType.Xml
             };
 
-            var pUpdateExistingResources = _dataProvider.GetBooleanParameter("UpdateExistingResources", updateExistingResources);
+            var pUpdateExistingResources = SqlParameterHelper.GetBooleanParameter("UpdateExistingResources", updateExistingResources);
 
             //long-running query. specify timeout (600 seconds)
-            _dataProvider.Execute("EXEC [LanguagePackImport] @LanguageId, @XmlPackage, @UpdateExistingResources",
+            _dataProvider.Query<object>("EXEC [LanguagePackImport] @LanguageId, @XmlPackage, @UpdateExistingResources",
                 pLanguageId, pXmlPackage, pUpdateExistingResources);
 
             //clear cache

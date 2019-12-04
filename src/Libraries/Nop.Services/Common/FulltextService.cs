@@ -5,15 +5,14 @@ using Nop.Data;
 
 namespace Nop.Services.Common
 {
+    //TODO: 239 try to implement FulltextService
     /// <summary>
     /// Full-Text service
     /// </summary>
     public partial class FulltextService : IFulltextService
     {
         #region Fields
-
         
-
         #endregion
 
         #region Ctor
@@ -33,8 +32,6 @@ namespace Nop.Services.Common
         /// <returns>Result</returns>
         public virtual bool IsFullTextSupported()
         {
-            //TODO: 239 try to implement
-
             return false;
         }
 
@@ -43,7 +40,7 @@ namespace Nop.Services.Common
         /// </summary>
         public virtual void EnableFullText()
         {
-            //TODO: 239 try to implement
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -51,7 +48,7 @@ namespace Nop.Services.Common
         /// </summary>
         public virtual void DisableFullText()
         {
-            //TODO: 239 try to implement
+            throw new NotImplementedException();
         }
 
         #endregion

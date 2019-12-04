@@ -119,11 +119,10 @@ namespace Nop.Services.Installation
                     statements.Add(statement);
             }
 
-            //TODO: 239 Should be exist
             var dataProvider = EngineContext.Current.Resolve<IDataProvider>();
 
             foreach (var stmt in statements)
-                dataProvider.Execute(stmt);
+                dataProvider.Query<object>(stmt);
         }
 
         /// <summary>

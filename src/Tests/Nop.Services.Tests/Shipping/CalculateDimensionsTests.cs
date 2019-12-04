@@ -42,7 +42,7 @@ namespace Nop.Services.Tests.Shipping
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var pluginService = new FakePluginService(fileProvider: CommonHelper.DefaultFileProvider);
+            var pluginService = new FakePluginService();
             _pickupPluginManager = new PickupPluginManager(pluginService, _shippingSettings);
             _shippingPluginManager = new ShippingPluginManager(pluginService, _shippingSettings);
 

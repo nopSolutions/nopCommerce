@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentMigrator.Runner;
 using Moq;
 using Nop.Core;
 using Nop.Data;
@@ -9,14 +8,12 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
-using Nop.Data.Migrations;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Localization;
-using Nop.Services.Logging;
-using Nop.Services.Plugins;
+using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -39,7 +36,6 @@ namespace Nop.Services.Tests.Discounts
         private readonly Mock<IRepository<Manufacturer>> _manufacturerRepo = new Mock<IRepository<Manufacturer>>();
         private readonly Mock<IRepository<Order>> _orderRepo = new Mock<IRepository<Order>>();
         private readonly Mock<IRepository<Product>> _productRepo = new Mock<IRepository<Product>>();
-        private readonly CatalogSettings _catalogSettings = new CatalogSettings();
 
         [SetUp]
         public new void SetUp()
@@ -78,13 +74,8 @@ namespace Nop.Services.Tests.Discounts
 
             var cacheManager = new TestCacheManager();
             _discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());
-
-
-            var loger = new Mock<ILogger>();
-            var webHelper = new Mock<IWebHelper>();
-            var migrationVersionInfoRepository = new Mock<IRepository<MigrationVersionInfo>>();
-
-            var pluginService = new PluginService(_catalogSettings, _customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, webHelper.Object);
+            
+            var pluginService = new FakePluginService();
 
             var discountMappingRepo = new Mock<IRepository<DiscountMapping>>();
 
