@@ -932,6 +932,9 @@ namespace Nop.Web.Controllers
                                 //send customer welcome message
                                 _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
 
+                                //raise event       
+                                _eventPublisher.Publish(new CustomerActivatedEvent(customer));
+
                                 var redirectUrl = Url.RouteUrl("RegisterResult",
                                     new { resultId = (int)UserRegistrationType.Standard, returnUrl }, _webHelper.CurrentRequestProtocol);
                                 return Redirect(redirectUrl);
@@ -1037,6 +1040,9 @@ namespace Nop.Web.Controllers
             _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.AccountActivationTokenAttribute, "");
             //send welcome message
             _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
+
+            //raise event       
+            _eventPublisher.Publish(new CustomerActivatedEvent(customer));
 
             var model = new AccountActivationModel
             {
