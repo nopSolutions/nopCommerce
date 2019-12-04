@@ -56,6 +56,10 @@ namespace Nop.Core.Domain.Security
         /// </summary>
         public bool ShowOnForum { get; set; }
         /// <summary>
+        /// The base reCAPTCHA API URL
+        /// </summary>
+        public string ReCaptchaApiUrl { get; set; }
+        /// <summary>
         /// reCAPTCHA public key
         /// </summary>
         public string ReCaptchaPublicKey { get; set; }

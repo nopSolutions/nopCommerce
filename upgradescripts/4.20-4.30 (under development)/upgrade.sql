@@ -365,3 +365,11 @@ BEGIN
 	
 	DROP TABLE #tmp_guests
 END
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'captchasettings.recaptchaapiurl')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'captchasettings.recaptchaapiurl', N'https://www.google.com/recaptcha/', 0)
+END
+GO

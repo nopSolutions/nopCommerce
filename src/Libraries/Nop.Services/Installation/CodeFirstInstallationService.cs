@@ -6661,6 +6661,7 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new CaptchaSettings
             {
+                ReCaptchaApiUrl = "https://www.google.com/recaptcha/",
                 ReCaptchaDefaultLanguage = string.Empty,
                 ReCaptchaPrivateKey = string.Empty,
                 ReCaptchaPublicKey = string.Empty,
