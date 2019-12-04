@@ -220,6 +220,26 @@ namespace Nop.Core.Domain.Customers
         #region Form fields
 
         /// <summary>
+        /// Gets or sets a value indicating whether 'First Name' is enabled
+        /// </summary>
+        public bool FirstNameEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'First Name' is required
+        /// </summary>
+        public bool FirstNameRequired { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Last Name' is enabled
+        /// </summary>
+        public bool LastNameEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Last Name' is required
+        /// </summary>
+        public bool LastNameRequired { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether 'Gender' is enabled
         /// </summary>
         public bool GenderEnabled { get; set; }
