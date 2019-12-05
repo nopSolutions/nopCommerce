@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -15,7 +17,85 @@ namespace Nop.Data
     /// </summary>
     public partial class MsSqlDataProvider: BaseDataProvider, IDataProvider
     {
+        #region Utils
+
+        protected SqlConnectionStringBuilder GetConnectionStringBuilder()
+        {
+            var connectionString = DataSettingsManager.LoadSettings().DataConnectionString;
+
+            return new SqlConnectionStringBuilder(connectionString);
+        }
+
+        #endregion
+
         #region Methods
+
+        public void CreateDatabase(string collation, int triesToConnect = 10)
+        {
+            if (IsDatabaseExists())
+                return;
+
+            var builder = GetConnectionStringBuilder();
+
+            //gets database name
+            var databaseName = builder.InitialCatalog;
+
+            //now create connection string to 'master' dabatase. It always exists.
+            builder.InitialCatalog = "master";
+
+            using (var connection = new SqlConnection(builder.ConnectionString))
+            {
+                var query = $"CREATE DATABASE [{databaseName}]";
+                if (!string.IsNullOrWhiteSpace(collation))
+                    query = $"{query} COLLATE {collation}";
+
+                var command = new SqlCommand(query, connection);
+                command.Connection.Open();
+
+                command.ExecuteNonQuery();
+            }
+
+            //try connect
+            if (triesToConnect <= 0)
+                return;
+
+            //sometimes on slow servers (hosting) there could be situations when database requires some time to be created.
+            //but we have already started creation of tables and sample data.
+            //as a result there is an exception thrown and the installation process cannot continue.
+            //that's why we are in a cycle of "triesToConnect" times trying to connect to a database with a delay of one second.
+            for (var i = 0; i <= triesToConnect; i++)
+            {
+                if (i == triesToConnect)
+                    throw new Exception("Unable to connect to the new database. Please try one more time");
+
+                if (!IsDatabaseExists())
+                    Thread.Sleep(1000);
+                else
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Checks if the specified database exists, returns true if database exists
+        /// </summary>
+        /// <returns>Returns true if the database exists.</returns>
+        public bool IsDatabaseExists() 
+        {
+            try
+            {
+                using (var connection = new SqlConnection(GetConnectionStringBuilder().ConnectionString))
+                {
+                    //just try to connect
+                    connection.Open();
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         /// <summary>
         /// Check whether backups are supported
@@ -214,6 +294,47 @@ namespace Nop.Data
                         DEALLOCATE cur_reindex";
 
             _dataConnection.Execute(commandText);
+        }
+
+
+        public virtual void SaveConnectionString(string connectionString)
+        {
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+
+            if (string.IsNullOrEmpty(connectionString))
+                throw new ArgumentNullException(nameof(connectionString));
+
+            var builder = new SqlConnectionStringBuilder(connectionString);
+
+            DataSettingsManager.SaveSettings(new DataSettings()
+            {
+                DataProvider = DataProviderType.SqlServer,
+                DataConnectionString = builder.ConnectionString
+            }, fileProvider);
+
+            //reset cache
+            DataSettingsManager.LoadSettings(reloadSettings: true);
+        }
+
+        public virtual void SaveConnectionString(INopConnectionStringInfo nopConnectionString)
+        {
+            if (nopConnectionString is null)
+                throw new ArgumentNullException(nameof(nopConnectionString));
+
+            var builder = new SqlConnectionStringBuilder
+            {
+                DataSource = nopConnectionString.ServerName,
+                InitialCatalog = nopConnectionString.DatabaseName,
+                PersistSecurityInfo = false
+            };
+
+            if (!nopConnectionString.IntegratedSecurity)
+            {
+                builder.UserID = nopConnectionString.Username;
+                builder.Password = nopConnectionString.Password;
+            }
+
+            SaveConnectionString(builder.ConnectionString);
         }
 
         #endregion

@@ -11,11 +11,19 @@ namespace Nop.Data
     public partial interface IDataProvider
     {
         #region Methods
-        
+
+        void CreateDatabase(string collation, int triesToConnect = 10);
+
         /// <summary>
         /// Initialize database
         /// </summary>
         void InitializeDatabase();
+
+        /// <summary>
+        /// Checks if the specified database exists, returns true if database exists
+        /// </summary>
+        /// <returns>Returns true if the database exists.</returns>
+        bool IsDatabaseExists();
 
         /// <summary>
         /// Get string parameter
@@ -117,9 +125,13 @@ namespace Nop.Data
         /// <returns>Entity</returns>
         TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity;
 
+        void SaveConnectionString(string connectionString);
+
+        void SaveConnectionString(INopConnectionStringInfo nopConnection);
+
         #endregion
 
-            #region Properties
+        #region Properties
 
         /// <summary>
         /// Gets a value indicating whether this data provider supports backup

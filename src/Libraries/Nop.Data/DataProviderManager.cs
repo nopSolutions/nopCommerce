@@ -18,17 +18,26 @@ namespace Nop.Data
             get
             {
                 var dataProviderType = Singleton<DataSettings>.Instance.DataProvider;
-
-                switch (dataProviderType)
-                {
-                    case DataProviderType.SqlServer:
-                        return new MsSqlDataProvider();
-                    default:
-                        throw new NopException($"Not supported data provider name: '{dataProviderType}'");
-                }
+                return GetDataProvider(dataProviderType);
             }
         }
 
         #endregion
+
+        /// <summary>
+        /// Gets data provider by specific type
+        /// </summary>
+        /// <param name="dataProviderType">Data provider type</param>
+        /// <returns></returns>
+        public static IDataProvider GetDataProvider(DataProviderType dataProviderType)
+        {
+            switch (dataProviderType)
+            {
+                case DataProviderType.SqlServer:
+                    return new MsSqlDataProvider();
+                default:
+                    throw new NopException($"Not supported data provider name: '{dataProviderType}'");
+            }
+        }
     }
 }
