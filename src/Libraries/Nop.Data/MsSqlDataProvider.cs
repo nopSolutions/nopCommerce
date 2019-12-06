@@ -322,7 +322,8 @@ namespace Nop.Data
             {
                 DataSource = nopConnectionString.ServerName,
                 InitialCatalog = nopConnectionString.DatabaseName,
-                PersistSecurityInfo = false
+                PersistSecurityInfo = false,
+                IntegratedSecurity = nopConnectionString.IntegratedSecurity
             };
 
             if (!nopConnectionString.IntegratedSecurity)
