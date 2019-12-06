@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentMigrator.Runner;
 using Moq;
-using Nop.Core;
 using Nop.Data;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
-using Nop.Data.Migrations;
-using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
-using Nop.Services.Logging;
-using Nop.Services.Plugins;
 using Nop.Services.Stores;
+using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -28,7 +22,6 @@ namespace Nop.Services.Tests.Directory
         private Mock<IEventPublisher> _eventPublisher;
         private ICurrencyService _currencyService;
         private IExchangeRatePluginManager _exchangeRatePluginManager;
-        private CatalogSettings _catalogSettings;
 
         private Currency _currencyUSD, _currencyRUR, _currencyEUR;
 
@@ -96,13 +89,7 @@ namespace Nop.Services.Tests.Directory
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var customerService = new Mock<ICustomerService>();
-            var loger = new Mock<ILogger>();
-            var webHelper = new Mock<IWebHelper>();
-            var migrationVersionInfoRepository = new Mock<IRepository<MigrationVersionInfo>>();
-
-            _catalogSettings = new CatalogSettings();
-            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, webHelper.Object);
+            var pluginService = new FakePluginService();
             _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, pluginService);
             _currencyService = new CurrencyService(_currencySettings,
                 _eventPublisher.Object,

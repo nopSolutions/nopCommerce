@@ -63,7 +63,7 @@ namespace Nop.Data
                                 dataSettings.DataProvider = Enum.TryParse(value, true, out DataProviderType providerType) ? providerType : DataProviderType.Unknown;
                                 continue;
                             case "DataConnectionString":
-                                dataSettings.DataConnectionString = value;
+                                dataSettings.ConnectionString = value;
                                 continue;
                             default:
                                 dataSettings.RawDataSettings.Add(key, value);
@@ -132,7 +132,7 @@ namespace Nop.Data
             get
             {
                 if (!_databaseIsInstalled.HasValue)
-                    _databaseIsInstalled = !string.IsNullOrEmpty(LoadSettings(reloadSettings: true)?.DataConnectionString);
+                    _databaseIsInstalled = !string.IsNullOrEmpty(LoadSettings(reloadSettings: true)?.ConnectionString);
 
                 return _databaseIsInstalled.Value;
             }

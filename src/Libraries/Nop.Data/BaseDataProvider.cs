@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using FluentMigrator;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Exceptions;
@@ -10,6 +10,7 @@ using LinqToDB;
 using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Data.Migrations;
 
 namespace Nop.Data
 {
@@ -37,43 +38,6 @@ namespace Nop.Data
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Get DB parameter
-        /// </summary>
-        /// <param name="dbType">Data type</param>
-        /// <param name="parameterName">Parameter name</param>
-        /// <param name="parameterValue">Parameter value</param>
-        /// <returns>Parameter</returns>
-        protected virtual DataParameter GetParameter(DataType dbType, string parameterName, object parameterValue)
-        {
-            var parameter = new DataParameter
-            {
-                Name = parameterName,
-                Value = parameterValue,
-                DataType = dbType
-            };
-
-            return parameter;
-        }
-
-        /// <summary>
-        /// Get output DB parameter
-        /// </summary>
-        /// <param name="dbType">Data type</param>
-        /// <param name="parameterName">Parameter name</param>
-        /// <returns>Parameter</returns>
-        protected virtual DataParameter GetOutputParameter(DataType dbType, string parameterName)
-        {
-            var parameter = new DataParameter
-            {
-                Name = parameterName,
-                DataType = dbType,
-                Direction = ParameterDirection.Output
-            };
-
-            return parameter;
-        }
 
         protected virtual void CreateDatabaseSchemaIfNotExists()
         {
@@ -111,7 +75,6 @@ namespace Nop.Data
                 }
                 catch (MissingMigrationsException)
                 {
-                    continue;
                 }
                 catch (Exception ex)
                 {
@@ -125,81 +88,52 @@ namespace Nop.Data
 
         #region Methods
 
-        /// <summary>
-        /// Get string parameter
-        /// </summary>
-        /// <param name="parameterName">Parameter name</param>
-        /// <param name="parameterValue">Parameter value</param>
-        /// <returns>Parameter</returns>
-        public virtual DataParameter GetStringParameter(string parameterName, string parameterValue)
+        //TODO: 239 need to move some other place
+        public virtual void DeletePluginData(Type pluginType)
         {
-            return GetParameter(DataType.NVarChar, parameterName, (object)parameterValue ?? DBNull.Value);
-        }
+            //do not inject services via constructor because it'll cause installation fails
+            var migrationRunner = EngineContext.Current.Resolve<IMigrationRunner>();
+            var migrationVersionInfoRepository = EngineContext.Current.Resolve<IRepository<MigrationVersionInfo>>();
+            var typeFinder = new AppDomainTypeFinder();
 
-        /// <summary>
-        /// Get output string parameter
-        /// </summary>
-        /// <param name="parameterName">Parameter name</param>
-        /// <returns>Parameter</returns>
-        public virtual DataParameter GetOutputStringParameter(string parameterName)
-        {
-            return GetOutputParameter(DataType.NVarChar, parameterName);
-        }
+            //executes a plugin Down migrations
+            foreach (var migration in typeFinder.FindClassesOfType<Migration>(new[] { Assembly.GetAssembly(pluginType) }))
+            {
+                try
+                {
+                    var migrationAttribute = migration
+                        .GetCustomAttributes(typeof(MigrationAttribute), false)
+                        .OfType<MigrationAttribute>()
+                        .FirstOrDefault();
 
-        /// <summary>
-        /// Get int parameter
-        /// </summary>
-        /// <param name="parameterName">Parameter name</param>
-        /// <param name="parameterValue">Parameter value</param>
-        /// <returns>Parameter</returns>
-        public virtual DataParameter GetInt32Parameter(string parameterName, int? parameterValue)
-        {
-            return GetParameter(DataType.Int32, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
-        }
+                    foreach (var migrationVersionInfo in migrationVersionInfoRepository.Table.Where(p => p.Version == migrationAttribute.Version).ToList())
+                    {
+                        migrationVersionInfoRepository.Delete(migrationVersionInfo);
+                    }
 
-        /// <summary>
-        /// Get output int32 parameter
-        /// </summary>
-        /// <param name="parameterName">Parameter name</param>
-        /// <returns>Parameter</returns>
-        public virtual DataParameter GetOutputInt32Parameter(string parameterName)
-        {
-            return GetOutputParameter(DataType.Int32, parameterName);
-        }
+                    var downMigration = EngineContext.Current.ResolveUnregistered(migration) as IMigration;
+                    migrationRunner.Down(downMigration);
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
 
-        /// <summary>
-        /// Get boolean parameter
-        /// </summary>
-        /// <param name="parameterName">Parameter name</param>
-        /// <param name="parameterValue">Parameter value</param>
-        /// <returns>Parameter</returns>
-        public virtual DataParameter GetBooleanParameter(string parameterName, bool? parameterValue)
-        {
-            return GetParameter(DataType.Boolean, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
+            //delete plugin tables
+            foreach (var mappingConfiguration in typeFinder.FindClassesOfType<IMappingConfiguration>(new[] { Assembly.GetAssembly(pluginType) }))
+            {
+                try
+                {
+                    (EngineContext.Current.ResolveUnregistered(mappingConfiguration) as IMappingConfiguration)?.DeleteTableIfExists();
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
         }
-
-        /// <summary>
-        /// Get decimal parameter
-        /// </summary>
-        /// <param name="parameterName">Parameter name</param>
-        /// <param name="parameterValue">Parameter value</param>
-        /// <returns>Parameter</returns>
-        public virtual DataParameter GetDecimalParameter(string parameterName, decimal? parameterValue)
-        {
-            return GetParameter(DataType.Decimal, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
-        }
-
-        /// <summary>
-        /// Get datetime parameter
-        /// </summary>
-        /// <param name="parameterName">Parameter name</param>
-        /// <param name="parameterValue">Parameter value</param>
-        /// <returns>Parameter</returns>
-        public virtual DataParameter GetDateTimeParameter(string parameterName, DateTime? parameterValue)
-        {
-            return GetParameter(DataType.DateTime, parameterName, parameterValue.HasValue ? (object)parameterValue.Value : DBNull.Value);
-        }
-
+        
         /// <summary>
         /// Loads the original copy of the entity
         /// </summary>
@@ -228,28 +162,20 @@ namespace Nop.Data
             return entity;
         }
 
-        public virtual IEnumerable<T> QueryProc<T>(string sql, params DataParameter[] parameters)
+        public virtual IEnumerable<T> QueryProc<T>(string procedureName, params DataParameter[] parameters)
         {
             if (_dataConnection == null && !DataSettingsManager.DatabaseIsInstalled)
                 _dataConnection = new NopDataConnection();
 
-            return _dataConnection.QueryProc<T>(sql, parameters);
+            return _dataConnection.QueryProc<T>(procedureName, parameters);
         }
 
-        public virtual IEnumerable<T> Query<T>(string sql)
+        public virtual IEnumerable<T> Query<T>(string sql, params DataParameter[] parameters)
         {
             if (_dataConnection == null && !DataSettingsManager.DatabaseIsInstalled)
                 _dataConnection = new NopDataConnection();
 
-            return _dataConnection.Query<T>(sql);
-        }
-
-        public virtual int Execute(string sql, params DataParameter[] parameters)
-        {
-            if(_dataConnection == null && !DataSettingsManager.DatabaseIsInstalled)
-                _dataConnection = new NopDataConnection();
-
-            return _dataConnection.Execute(sql, parameters);
+            return _dataConnection.Query<T>(sql, parameters);
         }
 
         #endregion

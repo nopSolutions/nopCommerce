@@ -47,7 +47,7 @@ namespace Nop.Web.Framework.Validators
         protected virtual void SetStringPropertiesMaxLength<TEntity>(params string[] filterPropertyNames)
             where TEntity : BaseEntity
         {
-            //TODO: 239 try to implement
+            //TODO: 239 try to implement SetStringPropertiesMaxLength
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Nop.Web.Framework.Validators
         /// <typeparam name="TEntity">Entity type</typeparam>
         protected virtual void SetDecimalMaxValue<TEntity>() where TEntity : BaseEntity
         {
-            //TODO: 239 try to implement
+            //TODO: 239 try to implement SetDecimalMaxValue
         }
 
         #endregion

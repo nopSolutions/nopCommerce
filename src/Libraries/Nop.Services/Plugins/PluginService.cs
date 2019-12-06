@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using FluentMigrator;
-using FluentMigrator.Runner;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Data.Migrations;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -25,10 +21,10 @@ namespace Nop.Services.Plugins
 
         private readonly CatalogSettings _catalogSettings;
         private readonly ICustomerService _customerService;
+        private readonly IDataProvider _dataProvider;
         private readonly ILogger _logger;
         private readonly INopFileProvider _fileProvider;
         private readonly IPluginsInfo _pluginsInfo;
-        private readonly IRepository<MigrationVersionInfo> _migrationVersionInfoRepository;
         private readonly IWebHelper _webHelper;
 
         #endregion
@@ -37,17 +33,17 @@ namespace Nop.Services.Plugins
 
         public PluginService(CatalogSettings catalogSettings,
             ICustomerService customerService,
+            IDataProvider dataProvider,
             ILogger logger,
             INopFileProvider fileProvider,
-            IRepository<MigrationVersionInfo> migrationVersionInfoRepository,
             IWebHelper webHelper)
         {
             _catalogSettings = catalogSettings;
             _customerService = customerService;
+            _dataProvider = dataProvider;
             _logger = logger;
             _fileProvider = fileProvider;
             _pluginsInfo = Singleton<IPluginsInfo>.Instance;
-            _migrationVersionInfoRepository = migrationVersionInfoRepository;
             _webHelper = webHelper;
         }
 
@@ -471,11 +467,6 @@ namespace Nop.Services.Plugins
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
             var customerActivityService = EngineContext.Current.Resolve<ICustomerActivityService>();
 
-            //do not inject services via constructor because it'll cause installation fails
-            var migrationRunner = EngineContext.Current.Resolve<IMigrationRunner>();
-
-            var typeFinder = new AppDomainTypeFinder();
-
             //uninstall plugins
             foreach (var descriptor in pluginDescriptors.OrderByDescending(pluginDescriptor => pluginDescriptor.DisplayOrder))
             {
@@ -485,42 +476,8 @@ namespace Nop.Services.Plugins
                     //try to uninstall an instance
                     plugin.Uninstall();
 
-                    //executes a plugin Down migrations
-                    foreach (var migration in typeFinder.FindClassesOfType<Migration>(new []{ Assembly.GetAssembly(plugin.GetType()) }))
-                    {
-                        try
-                        {
-                            var migrationAttribute = migration
-                                .GetCustomAttributes(typeof(MigrationAttribute), false)
-                                .OfType<MigrationAttribute>()
-                                .FirstOrDefault();
-
-                            foreach (var migrationVersionInfo in _migrationVersionInfoRepository.Table.Where(p => p.Version == migrationAttribute.Version).ToList())
-                            {
-                                _migrationVersionInfoRepository.Delete(migrationVersionInfo);
-                            }
-
-                            var downMigration = EngineContext.Current.ResolveUnregistered(migration) as IMigration;
-                            migrationRunner.Down(downMigration);
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.Warning(ex.Message, ex);
-                        }
-                    }
-
-                    //delete plugin tables
-                    foreach (var mappingConfiguration in typeFinder.FindClassesOfType<IMappingConfiguration>(new[] { Assembly.GetAssembly(plugin.GetType()) }))
-                    {
-                        try
-                        {
-                            (EngineContext.Current.ResolveUnregistered(mappingConfiguration) as IMappingConfiguration)?.DeleteTableIfExists();
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.Warning(ex.Message, ex);
-                        }
-                    }
+                    //clear plugin data on the database
+                    _dataProvider.DeletePluginData(descriptor.PluginType);
 
                     //remove plugin system name from appropriate lists
                     _pluginsInfo.InstalledPluginNames.Remove(descriptor.SystemName);

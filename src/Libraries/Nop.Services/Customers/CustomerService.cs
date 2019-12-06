@@ -602,13 +602,13 @@ namespace Nop.Services.Customers
         public virtual int DeleteGuestCustomers(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart)
         {
             //prepare parameters
-            var pOnlyWithoutShoppingCart = _dataProvider.GetBooleanParameter("OnlyWithoutShoppingCart", onlyWithoutShoppingCart);
-            var pCreatedFromUtc = _dataProvider.GetDateTimeParameter("CreatedFromUtc", createdFromUtc);
-            var pCreatedToUtc = _dataProvider.GetDateTimeParameter("CreatedToUtc", createdToUtc);
-            var pTotalRecordsDeleted = _dataProvider.GetOutputInt32Parameter("TotalRecordsDeleted");
+            var pOnlyWithoutShoppingCart = SqlParameterHelper.GetBooleanParameter("OnlyWithoutShoppingCart", onlyWithoutShoppingCart);
+            var pCreatedFromUtc = SqlParameterHelper.GetDateTimeParameter("CreatedFromUtc", createdFromUtc);
+            var pCreatedToUtc = SqlParameterHelper.GetDateTimeParameter("CreatedToUtc", createdToUtc);
+            var pTotalRecordsDeleted = SqlParameterHelper.GetOutputInt32Parameter("TotalRecordsDeleted");
 
             //invoke stored procedure
-            _dataProvider.Execute("EXEC [DeleteGuests] @OnlyWithoutShoppingCart, @CreatedFromUtc, @CreatedToUtc, @TotalRecordsDeleted OUTPUT",
+            _dataProvider.Query<object>("EXEC [DeleteGuests] @OnlyWithoutShoppingCart, @CreatedFromUtc, @CreatedToUtc, @TotalRecordsDeleted OUTPUT",
                 pOnlyWithoutShoppingCart,
                 pCreatedFromUtc,
                 pCreatedToUtc,
@@ -1497,7 +1497,7 @@ namespace Nop.Services.Customers
 
             var query = from address in _customerAddressRepository.Table
                 join cam in _customerAddressMappingRepository.Table on address.Id equals cam.AddressId
-                where cam.CustomerId == customerId
+                where cam.CustomerId == customerId && address.Id == addressId
                 select address;
 
             return query.Single();

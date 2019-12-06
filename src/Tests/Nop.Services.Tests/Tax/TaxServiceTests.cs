@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using FluentMigrator.Runner;
 using Moq;
 using Nop.Core;
 using Nop.Data;
@@ -10,14 +9,13 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
-using Nop.Data.Migrations;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Logging;
-using Nop.Services.Plugins;
 using Nop.Services.Tax;
+using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -43,7 +41,6 @@ namespace Nop.Services.Tests.Tax
         private ShippingSettings _shippingSettings;
         private AddressSettings _addressSettings;
         private Mock<IGenericAttributeService> _genericAttributeService;
-        private CatalogSettings _catalogSettings;
         private Mock<IRepository<CustomerCustomerRoleMapping>> _customerCustomerRoleMappingRepo;
         private Mock<IRepository<CustomerRole>> _customerRoleRepo;
 
@@ -100,13 +97,8 @@ namespace Nop.Services.Tests.Tax
             _customerSettings = new CustomerSettings();
             _shippingSettings = new ShippingSettings();
             _addressSettings = new AddressSettings();
-
-            var customerService = new Mock<ICustomerService>();
-            var loger = new Mock<ILogger>();
-            var migrationVersionInfoRepository = new Mock<IRepository<MigrationVersionInfo>>();
-
-            _catalogSettings = new CatalogSettings();
-            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, _webHelper.Object);
+            
+            var pluginService = new FakePluginService();
             _taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
 
             var cacheManager = new TestCacheManager();

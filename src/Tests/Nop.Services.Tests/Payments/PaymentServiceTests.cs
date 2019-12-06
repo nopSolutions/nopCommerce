@@ -1,19 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using FluentMigrator.Runner;
 using Moq;
-using Nop.Core;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Data;
-using Nop.Data.Migrations;
 using Nop.Services.Configuration;
-using Nop.Services.Customers;
 using Nop.Services.Events;
-using Nop.Services.Logging;
 using Nop.Services.Payments;
-using Nop.Services.Plugins;
+using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -28,7 +21,6 @@ namespace Nop.Services.Tests.Payments
         private Mock<ISettingService> _settingService;
         private IPaymentPluginManager _paymentPluginManager;
         private IPaymentService _paymentService;
-        private CatalogSettings _catalogSettings;
 
         [SetUp]
         public new void SetUp()
@@ -42,13 +34,7 @@ namespace Nop.Services.Tests.Payments
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var customerService = new Mock<ICustomerService>();
-            var loger = new Mock<ILogger>();
-            var webHelper = new Mock<IWebHelper>();
-            var migrationVersionInfoRepository = new Mock<IRepository<MigrationVersionInfo>>();
-
-            _catalogSettings = new CatalogSettings();
-            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, migrationVersionInfoRepository.Object, webHelper.Object);
+            var pluginService = new FakePluginService();
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _settingService = new Mock<ISettingService>();

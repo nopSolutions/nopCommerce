@@ -100,8 +100,8 @@ namespace Nop.Services.Catalog
             return _staticCacheManager.Get(key, () =>
             {
                 //prepare input parameters
-                var pStoreId = _dataProvider.GetInt32Parameter("StoreId", storeId);
-                var pAllowedCustomerRoleIds = _dataProvider.GetStringParameter("AllowedCustomerRoleIds", allowedCustomerRolesIds);
+                var pStoreId = SqlParameterHelper.GetInt32Parameter("StoreId", storeId);
+                var pAllowedCustomerRoleIds = SqlParameterHelper.GetStringParameter("AllowedCustomerRoleIds", allowedCustomerRolesIds);
 
                 //invoke stored procedure
                 return _dataProvider.QueryProc<ProductTagWithCount>("ProductTagCountLoadAll",

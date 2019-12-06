@@ -21,7 +21,7 @@ namespace Nop.Data
 
         protected SqlConnectionStringBuilder GetConnectionStringBuilder()
         {
-            var connectionString = DataSettingsManager.LoadSettings().DataConnectionString;
+            var connectionString = DataSettingsManager.LoadSettings().ConnectionString;
 
             return new SqlConnectionStringBuilder(connectionString);
         }
@@ -171,17 +171,14 @@ namespace Nop.Data
                 _dataConnection.Execute(command);
         }
 
-
         /// <summary>
         /// Initialize database
         /// </summary>
         public void InitializeDatabase()
         {
-            var dataSettings = Singleton<DataSettings>.Instance;
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
 
-            var connSettings = new Linq2DbSettingsProvider(dataSettings);
-            DataConnection.DefaultSettings = connSettings;
+            DataConnection.DefaultSettings = Singleton<DataSettings>.Instance;
 
             _dataConnection = new NopDataConnection();
 
@@ -309,7 +306,7 @@ namespace Nop.Data
             DataSettingsManager.SaveSettings(new DataSettings()
             {
                 DataProvider = DataProviderType.SqlServer,
-                DataConnectionString = builder.ConnectionString
+                ConnectionString = builder.ConnectionString
             }, fileProvider);
 
             //reset cache

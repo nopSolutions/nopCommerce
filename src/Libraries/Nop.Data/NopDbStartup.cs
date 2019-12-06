@@ -40,15 +40,12 @@ namespace Nop.Data
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
-            var dataSettings = Singleton<DataSettings>.Instance;
-
-            var connSettings = new Linq2DbSettingsProvider(dataSettings);
-            DataConnection.DefaultSettings = connSettings;
+            DataConnection.DefaultSettings = Singleton<DataSettings>.Instance;
 
             services
                 // add common FluentMigrator services
                 .AddFluentMigratorCore()
-                .ConfigureRunner(rb => rb.SetServer(dataSettings)
+                .ConfigureRunner(rb => rb.SetServer()
                     .WithVersionTable(new MigrationVersionInfo())
                     // define the assembly containing the migrations
                     .ScanIn(typeConfigurations.Select(p => p.Assembly).Distinct().ToArray()).For.Migrations());
