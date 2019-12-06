@@ -157,7 +157,8 @@ namespace Nop.Web.Framework.Controllers
 
                 var t = viewResult.View.RenderAsync(viewContext);
                 t.Wait();
-                return stringWriter.GetStringBuilder().ToString();
+                /// return stringWriter.GetStringBuilder().ToString();
+                return stringWriter.ToString();
             }
         }
 
