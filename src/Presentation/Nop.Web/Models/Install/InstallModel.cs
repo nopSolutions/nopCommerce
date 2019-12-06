@@ -22,6 +22,8 @@ namespace Nop.Web.Models.Install
         [NoTrim]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
+        public bool UseCustomCollation { get; set; }
+
         public string Collation { get; set; }
 
         public bool CreateDatabaseIfNotExists { get; set; }

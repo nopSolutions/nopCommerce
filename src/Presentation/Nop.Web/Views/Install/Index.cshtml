@@ -53,69 +53,61 @@
                 <p>@ILS.GetResource("Documentation1") <a href="http://docs.nopcommerce.com/dashboard.action?utm_source=installation-page&utm_medium=footer&utm_campaign=installation-page" target="_blank">@ILS.GetResource("Documentation2")</a>.</p>
 
                 <script>
-    function showThrobber(message) {
-        $('.throbber-header').html(message);
-        window.setTimeout(function () {
-            $(".throbber").show();
-        }, 1000);
-    }
+                    function showThrobber(message) {
+                        $('.throbber-header').html(message);
+                        window.setTimeout(function () {
+                            $(".throbber").show();
+                        }, 1000);
+                    }
 
-    $(document).ready(function () {
-        $('#installation-form').submit(function () {
-            if ($('#installation-form').valid()) {
-                $("html, body").animate({ scrollTop: 0 }, 400);
-                showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("Installing")))');
-                $('input[type=submit]', this).attr('disabled', 'disabled');
-            }
-        });
-    });
+                    $(document).ready(function () {
+                        $('#installation-form').submit(function () {
+                            if ($('#installation-form').valid()) {
+                                $("html, body").animate({ scrollTop: 0 }, 400);
+                                showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode(ILS.GetResource("Installing")))');
+                                $('input[type=submit]', this).attr('disabled', 'disabled');
+                            }
+                        });
+                    });
 
-    $(document).ready(function () {
-        $('#restart-form').submit(function () {
-            $("html, body").animate({ scrollTop: 0 }, 400);
-            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode("Restarting..."))');
-            $('input[type=submit]', this).attr('disabled', 'disabled');
-        });
-    });
+                    $(document).ready(function () {
+                        $('#restart-form').submit(function () {
+                            $("html, body").animate({ scrollTop: 0 }, 400);
+                            showThrobber('@Html.Raw(JavaScriptEncoder.Default.Encode("Restarting..."))');
+                            $('input[type=submit]', this).attr('disabled', 'disabled');
+                        });
+                    });
 
-    $(document).ready(function () {
-        $('input:radio[name=DataProvider]').click(toggleProvider);
-        $('#@Html.IdFor(x => x.ConnectionStringRaw)').click(toggleSqlConnectionInfo);
-        
-        $("input:checkbox[name=UseCustomCollation]").click(toggleCollation);
+                    $(document).ready(function () {
+                        $('#@Html.IdFor(x => x.ConnectionStringRaw)').click(toggleSqlConnectionInfo);
 
-        toggleProvider();
-        toggleSqlConnectionInfo();
-        toggleCollation();
-    });
+                        $("input:checkbox[name=UseCustomCollation]").click(toggleCollation);
 
-    function toggleProvider() {
-        var selectedProvider = $("input[name=DataProvider]:checked").attr('id');
-        if (selectedProvider == 'provider_sqlce') {
-            $('#sqlConnectionInfo').hide();
-        } else if (selectedProvider == 'provider_sqlserver') {
-            $('#sqlConnectionInfo').show();
-        }
-    }
+                        toggleSqlConnectionInfo();
+                        toggleCollation();
+                    });
 
-    function toggleSqlConnectionInfo() {
-        var connectionStringRaw = $("#@Html.IdFor(x => x.ConnectionStringRaw)").is(':checked');
-        if (connectionStringRaw) {
-            $('#sqlDatabaseInfo').hide();
-            $('#sqlDatabaseConnectionString').show();
-        } else {
-            $('#sqlDatabaseInfo').show();
-            $('#sqlDatabaseConnectionString').hide();
-        }
-    }
+                    function toggleSqlConnectionInfo() {
+                        var connectionStringRaw = $("#@Html.IdFor(x => x.ConnectionStringRaw)").is(':checked');
+                        if (connectionStringRaw) {
+                            $('#sqlDatabaseInfo').hide();
+                            $('#sqlDatabaseConnectionString').show();
+                        } else {
+                            $('#sqlDatabaseInfo').show();
+                            $('#sqlDatabaseConnectionString').hide();
+                        }
+                    }
 
-    function toggleCollation() {
-        if ($('#UseCustomCollation').is(':checked')) {
-            $('#Collation').show();
-        } else {
-            $('#Collation').hide();
-        }
-    }
+                    function toggleCollation() {
+                        
+                        var connectionStringRaw = $("#@Html.IdFor(x => x.UseCustomCollation)").is(':checked');
+                        var collationInput = $("#@Html.IdFor(x => x.Collation)")
+                        if (connectionStringRaw) {
+                            collationInput.show();
+                        } else {
+                            collationInput.hide();
+                        }
+                    }
                 </script>
 
                 <div class="form-horizontal">
@@ -193,34 +185,28 @@
                                     <nop-select asp-for="DataProvider" asp-items="Model.AvailableDataProviders" id="dataProviderSwitcher" />
                                 </div>
                             </div>
-
-                            <div id="sqlConnectionInfo">
-                                <hr />
-                                <div class="form-group">
-                                    <div class="col-xs-7 col-xs-offset-4">
-                                        <div class="checkbox">
-                                            <label>
-                                                <nop-editor asp-for="CreateDatabaseIfNotExists" />
-                                                @ILS.GetResource("CreateDatabaseIfDoesNotExist")
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-xs-4">
-                                        <label class="control-label">
-                                            @ILS.GetResource("ConnectionString")
+                            <div class="form-group">
+                                <div class="col-xs-7 col-xs-offset-4">
+                                    <div class="checkbox">
+                                        <label>
+                                            <nop-editor asp-for="CreateDatabaseIfNotExists" />
+                                            @ILS.GetResource("CreateDatabaseIfDoesNotExist")
                                         </label>
                                     </div>
-                                    <div class="col-xs-7 col-xs-offset-4">
-                                        <div class="checkbox">
-                                            <label>
-                                                <nop-editor asp-for="ConnectionStringRaw" />
-                                                @ILS.GetResource("RawConnectionString")
-                                            </label>
-                                        </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-7 col-xs-offset-4">
+                                    <div class="checkbox">
+                                        <label>
+                                            <nop-editor asp-for="ConnectionStringRaw" />
+                                            @ILS.GetResource("RawConnectionString")
+                                        </label>
                                     </div>
                                 </div>
+                            </div>
+                            <div id="sqlConnectionInfo">
+                                <hr />
                                 @await Html.PartialAsync("_Install.ConnectionString", Model)
                                 <div class="form-group" id="sqlDatabaseConnectionString">
                                     <div class="col-xs-4">
@@ -243,7 +229,7 @@
                                     <div class="col-xs-7 col-xs-offset-4">
                                         <div class="checkbox">
                                             <label>
-                                                <input asp-for="Collation" />
+                                                <input asp-for="UseCustomCollation" />
                                                 @ILS.GetResource("CustomCollation")
                                             </label>
                                             <input asp-for="Collation" class="form-control margin-t-10" />

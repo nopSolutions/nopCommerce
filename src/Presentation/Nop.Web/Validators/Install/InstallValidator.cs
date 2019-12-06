@@ -23,12 +23,12 @@ namespace Nop.Web.Validators.Install
                 .WithMessage(locService.GetResource("ConnectionStringRequired"));
 
             When(x => !x.ConnectionStringRaw, () => {
-                RuleFor(x => x.ServerName).NotEmpty().WithMessage(locService.GetResource("SqlServerNameRequired"));
+                RuleFor(x => x.ServerName).NotEmpty().WithMessage(locService.GetResource("ServerNameRequired"));
                 RuleFor(x => x.DatabaseName).NotEmpty().WithMessage(locService.GetResource("ConnectionStringRequired"));
 
                 When(x => !x.IntegratedSecurity, () => {
-                    RuleFor(x => x.Username).NotEmpty().WithMessage(locService.GetResource("SqlServerUsernameRequired"));
-                    RuleFor(x => x.Password).NotEmpty().WithMessage(locService.GetResource("SqlServerPasswordRequired"));
+                    RuleFor(x => x.Username).NotEmpty().WithMessage(locService.GetResource("SqlUsernameRequired"));
+                    RuleFor(x => x.Password).NotEmpty().WithMessage(locService.GetResource("SqlPasswordRequired"));
                 });
             });
  
