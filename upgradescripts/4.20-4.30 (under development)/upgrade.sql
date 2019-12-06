@@ -309,7 +309,7 @@ BEGIN
 	SELECT c.[Id] 
 	FROM [Customer] c with (NOLOCK)
 		LEFT JOIN [ShoppingCartItem] sci with (NOLOCK) ON sci.[CustomerId] = c.[Id]
-		LEFT JOIN (
+		INNER JOIN (
 			--guests only
 			SELECT ccrm.[Customer_Id] 
 			FROM [Customer_CustomerRole_Mapping] ccrm with (NOLOCK)
