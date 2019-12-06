@@ -303,7 +303,7 @@ namespace Nop.Data
 
             var builder = new SqlConnectionStringBuilder(connectionString);
 
-            DataSettingsManager.SaveSettings(new DataSettings()
+            DataSettingsManager.SaveSettings(new DataSettings
             {
                 DataProvider = DataProviderType.SqlServer,
                 ConnectionString = builder.ConnectionString
