@@ -1,6 +1,6 @@
-﻿using LinqToDB;
-using LinqToDB.Mapping;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Shipping;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Shipping
 {
@@ -19,7 +19,7 @@ namespace Nop.Data.Mapping.Shipping
         {
             builder.HasTableName(nameof(Shipment));
 
-            builder.Property(shipment => shipment.TotalWeight).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(shipment => shipment.TotalWeight).HasDecimal();
 
             builder.Property(shipment => shipment.OrderId);
             builder.Property(shipment => shipment.TrackingNumber);

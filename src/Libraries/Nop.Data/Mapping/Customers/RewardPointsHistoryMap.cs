@@ -1,6 +1,6 @@
-﻿using LinqToDB;
-using LinqToDB.Mapping;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Customers;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Customers
 {
@@ -19,7 +19,7 @@ namespace Nop.Data.Mapping.Customers
         {
             builder.HasTableName(nameof(RewardPointsHistory));
 
-            builder.Property(historyEntry => historyEntry.UsedAmount).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(historyEntry => historyEntry.UsedAmount).HasDecimal();
 
             builder.Property(historyEntry => historyEntry.CustomerId);
             builder.Property(historyEntry => historyEntry.StoreId);

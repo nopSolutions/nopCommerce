@@ -1,6 +1,6 @@
-﻿using LinqToDB;
-using LinqToDB.Mapping;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Orders;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Orders
 {
@@ -19,14 +19,14 @@ namespace Nop.Data.Mapping.Orders
         {
             builder.HasTableName(nameof(OrderItem));
 
-            builder.Property(orderItem => orderItem.UnitPriceInclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
-            builder.Property(orderItem => orderItem.UnitPriceExclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
-            builder.Property(orderItem => orderItem.PriceInclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
-            builder.Property(orderItem => orderItem.PriceExclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
-            builder.Property(orderItem => orderItem.DiscountAmountInclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
-            builder.Property(orderItem => orderItem.DiscountAmountExclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
-            builder.Property(orderItem => orderItem.OriginalProductCost).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
-            builder.Property(orderItem => orderItem.ItemWeight).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(orderItem => orderItem.UnitPriceInclTax).HasDecimal();
+            builder.Property(orderItem => orderItem.UnitPriceExclTax).HasDecimal();
+            builder.Property(orderItem => orderItem.PriceInclTax).HasDecimal();
+            builder.Property(orderItem => orderItem.PriceExclTax).HasDecimal();
+            builder.Property(orderItem => orderItem.DiscountAmountInclTax).HasDecimal();
+            builder.Property(orderItem => orderItem.DiscountAmountExclTax).HasDecimal();
+            builder.Property(orderItem => orderItem.OriginalProductCost).HasDecimal();
+            builder.Property(orderItem => orderItem.ItemWeight).HasDecimal();
 
             builder.Property(orderItem => orderItem.OrderItemGuid);
             builder.Property(orderItem => orderItem.OrderId);

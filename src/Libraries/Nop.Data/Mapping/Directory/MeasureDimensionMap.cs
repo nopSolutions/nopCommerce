@@ -1,6 +1,7 @@
 ﻿using LinqToDB;
 using LinqToDB.Mapping;
 using Nop.Core.Domain.Directory;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Directory
 {
@@ -23,7 +24,7 @@ namespace Nop.Data.Mapping.Directory
             builder.Property(dimension => dimension.SystemKeyword).HasLength(100);
             builder.HasColumn(dimension => dimension.Name).IsColumnRequired();
             builder.HasColumn(dimension => dimension.SystemKeyword).IsColumnRequired();
-            builder.Property(dimension => dimension.Ratio).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(8);
+            builder.Property(dimension => dimension.Ratio).HasDecimal(18, 8);
             builder.Property(measuredimension => measuredimension.DisplayOrder);
         }
 
