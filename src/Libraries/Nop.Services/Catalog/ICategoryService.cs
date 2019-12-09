@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 
@@ -78,6 +78,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="category">Category</param>
         void UpdateCategory(Category category);
+
+        /// <summary>
+        /// Delete a list of categories
+        /// </summary>
+        /// <param name="categories">Categories</param>
+        void DeleteCategories(IList<Category> categories);
 
         /// <summary>
         /// Deletes a product category mapping

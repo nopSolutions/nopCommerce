@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Http;
@@ -411,6 +412,20 @@ namespace Nop.Web.Areas.Admin.Controllers
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Deleted"));
 
             return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public virtual IActionResult DeleteSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                _categoryService.DeleteCategories(_categoryService.GetCategoriesByIds(selectedIds.ToArray()).Where(p => _workContext.CurrentVendor == null).ToList());
+            }
+
+            return Json(new { Result = true });
         }
 
         #endregion
