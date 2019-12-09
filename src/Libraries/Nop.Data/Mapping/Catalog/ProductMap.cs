@@ -1,4 +1,5 @@
-﻿using LinqToDB.Mapping;
+﻿using LinqToDB;
+using LinqToDB.Mapping;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
@@ -25,21 +26,21 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(product => product.Sku).HasLength(400);
             builder.Property(product => product.ManufacturerPartNumber).HasLength(400);
             builder.Property(product => product.Gtin).HasLength(400);
-            builder.Property(product => product.AdditionalShippingCharge).HasDbType("decimal(18, 4)");
-            builder.Property(product => product.Price).HasDbType("decimal(18, 4)");
-            builder.Property(product => product.OldPrice).HasDbType("decimal(18, 4)");
-            builder.Property(product => product.ProductCost).HasDbType("decimal(18, 4)");
-            builder.Property(product => product.MinimumCustomerEnteredPrice).HasDbType("decimal(18, 4)");
-            builder.Property(product => product.MaximumCustomerEnteredPrice).HasDbType("decimal(18, 4)");
-            builder.Property(product => product.Weight).HasDbType("decimal(18, 4)");
-            builder.Property(product => product.Length).HasDbType("decimal(18, 4)");
-            builder.Property(product => product.Width).HasDbType("decimal(18, 4)");
-            builder.Property(product => product.Height).HasDbType("decimal(18, 4)");
+            builder.Property(product => product.AdditionalShippingCharge).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(product => product.Price).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(product => product.OldPrice).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(product => product.ProductCost).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(product => product.MinimumCustomerEnteredPrice).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(product => product.MaximumCustomerEnteredPrice).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(product => product.Weight).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(product => product.Length).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(product => product.Width).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(product => product.Height).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
             builder.Property(product => product.RequiredProductIds).HasLength(1000);
             builder.Property(product => product.AllowedQuantities).HasLength(1000);
-            builder.Property(product => product.BasepriceAmount).HasDbType("decimal(18, 4)");
-            builder.Property(product => product.BasepriceBaseAmount).HasDbType("decimal(18, 4)");
-            builder.Property(product => product.OverriddenGiftCardAmount).HasDbType("decimal(18, 4)");
+            builder.Property(product => product.BasepriceAmount).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(product => product.BasepriceBaseAmount).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(product => product.OverriddenGiftCardAmount).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
             builder.Property(product => product.ProductTypeId);
             builder.Property(product => product.ParentGroupedProductId);
             builder.Property(product => product.VisibleIndividually);

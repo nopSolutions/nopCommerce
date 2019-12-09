@@ -9,14 +9,14 @@ namespace Nop.Web.Areas.Admin.Validators.Messages
 {
     public partial class EmailAccountValidator : BaseNopValidator<EmailAccountModel>
     {
-        public EmailAccountValidator(ILocalizationService localizationService)
+        public EmailAccountValidator(IDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Email).NotEmpty();
             RuleFor(x => x.Email).EmailAddress().WithMessage(localizationService.GetResource("Admin.Common.WrongEmail"));
             
             RuleFor(x => x.DisplayName).NotEmpty();
 
-            SetDatabaseValidationRules<EmailAccount>();
+            SetDatabaseValidationRules<EmailAccount>(dataProvider);
         }
     }
 }

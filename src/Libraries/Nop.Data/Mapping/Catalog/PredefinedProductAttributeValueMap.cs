@@ -1,4 +1,5 @@
-﻿using LinqToDB.Mapping;
+﻿using LinqToDB;
+using LinqToDB.Mapping;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
@@ -20,9 +21,9 @@ namespace Nop.Data.Mapping.Catalog
 
             builder.Property(value => value.Name).HasLength(400);
             builder.HasColumn(value => value.Name).IsColumnRequired();
-            builder.Property(value => value.PriceAdjustment).HasDbType("decimal(18, 4)");
-            builder.Property(value => value.WeightAdjustment).HasDbType("decimal(18, 4)");
-            builder.Property(value => value.Cost).HasDbType("decimal(18, 4)");
+            builder.Property(value => value.PriceAdjustment).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(value => value.WeightAdjustment).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(value => value.Cost).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
 
             builder.Property(value => value.ProductAttributeId);
             builder.Property(value => value.PriceAdjustmentUsePercentage);

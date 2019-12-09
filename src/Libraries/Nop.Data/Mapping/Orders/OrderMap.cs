@@ -1,4 +1,5 @@
-﻿using LinqToDB.Mapping;
+﻿using LinqToDB;
+using LinqToDB.Mapping;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
@@ -18,19 +19,19 @@ namespace Nop.Data.Mapping.Orders
         {
             builder.HasTableName(nameof(Order));
 
-            builder.Property(order => order.CurrencyRate).HasDbType("decimal(18, 8)");
-            builder.Property(order => order.OrderSubtotalInclTax).HasDbType("decimal(18, 4)");
-            builder.Property(order => order.OrderSubtotalExclTax).HasDbType("decimal(18, 4)");
-            builder.Property(order => order.OrderSubTotalDiscountInclTax).HasDbType("decimal(18, 4)");
-            builder.Property(order => order.OrderSubTotalDiscountExclTax).HasDbType("decimal(18, 4)");
-            builder.Property(order => order.OrderShippingInclTax).HasDbType("decimal(18, 4)");
-            builder.Property(order => order.OrderShippingExclTax).HasDbType("decimal(18, 4)");
-            builder.Property(order => order.PaymentMethodAdditionalFeeInclTax).HasDbType("decimal(18, 4)");
-            builder.Property(order => order.PaymentMethodAdditionalFeeExclTax).HasDbType("decimal(18, 4)");
-            builder.Property(order => order.OrderTax).HasDbType("decimal(18, 4)");
-            builder.Property(order => order.OrderDiscount).HasDbType("decimal(18, 4)");
-            builder.Property(order => order.OrderTotal).HasDbType("decimal(18, 4)");
-            builder.Property(order => order.RefundedAmount).HasDbType("decimal(18, 4)");
+            builder.Property(order => order.CurrencyRate).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(8);
+            builder.Property(order => order.OrderSubtotalInclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(order => order.OrderSubtotalExclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(order => order.OrderSubTotalDiscountInclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(order => order.OrderSubTotalDiscountExclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(order => order.OrderShippingInclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(order => order.OrderShippingExclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(order => order.PaymentMethodAdditionalFeeInclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(order => order.PaymentMethodAdditionalFeeExclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(order => order.OrderTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(order => order.OrderDiscount).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(order => order.OrderTotal).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(order => order.RefundedAmount).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
             builder.HasColumn(order => order.CustomOrderNumber).IsColumnRequired();
 
             builder.Property(order => order.OrderGuid);

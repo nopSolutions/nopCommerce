@@ -13,7 +13,8 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
 {
     public partial class CustomerValidator : BaseNopValidator<CustomerModel>
     {
-        public CustomerValidator(ILocalizationService localizationService,
+        public CustomerValidator(IDataProvider dataProvider, 
+            ILocalizationService localizationService,
             IStateProvinceService stateProvinceService,
             ICustomerService customerService,
             CustomerSettings customerSettings)
@@ -119,7 +120,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                     .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
             }
 
-            SetDatabaseValidationRules<Customer>();
+            SetDatabaseValidationRules<Customer>(dataProvider);
         }
 
         private bool IsRegisteredCustomerRoleChecked(CustomerModel model, ICustomerService customerService)

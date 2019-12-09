@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using LinqToDB.Data;
+using LinqToDB.Mapping;
 using Nop.Core;
 
 namespace Nop.Data
@@ -72,6 +73,8 @@ namespace Nop.Data
         /// <param name="entity">Entity</param>
         /// <returns>Entity</returns>
         TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity;
+
+        EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity;
 
         void SaveConnectionString(string connectionString);
 

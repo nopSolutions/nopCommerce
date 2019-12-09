@@ -9,11 +9,11 @@ namespace Nop.Web.Areas.Admin.Validators.Shipping
 {
     public partial class ShippingMethodValidator : BaseNopValidator<ShippingMethodModel>
     {
-        public ShippingMethodValidator(ILocalizationService localizationService)
+        public ShippingMethodValidator(IDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Shipping.Methods.Fields.Name.Required"));
 
-            SetDatabaseValidationRules<ShippingMethod>();
+            SetDatabaseValidationRules<ShippingMethod>(dataProvider);
         }
     }
 }

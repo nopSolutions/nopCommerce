@@ -8,6 +8,7 @@ using FluentMigrator.Runner;
 using FluentMigrator.Runner.Exceptions;
 using LinqToDB;
 using LinqToDB.Data;
+using LinqToDB.Mapping;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Data.Migrations;
@@ -133,7 +134,12 @@ namespace Nop.Data
                 }
             }
         }
-        
+
+        public virtual EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity 
+        {
+            return _dataConnection.MappingSchema.GetEntityDescriptor(typeof(TEntity));
+        }
+
         /// <summary>
         /// Loads the original copy of the entity
         /// </summary>

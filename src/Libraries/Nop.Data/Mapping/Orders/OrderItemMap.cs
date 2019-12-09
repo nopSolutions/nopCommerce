@@ -1,4 +1,5 @@
-﻿using LinqToDB.Mapping;
+﻿using LinqToDB;
+using LinqToDB.Mapping;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
@@ -18,14 +19,14 @@ namespace Nop.Data.Mapping.Orders
         {
             builder.HasTableName(nameof(OrderItem));
 
-            builder.Property(orderItem => orderItem.UnitPriceInclTax).HasDbType("decimal(18, 4)");
-            builder.Property(orderItem => orderItem.UnitPriceExclTax).HasDbType("decimal(18, 4)");
-            builder.Property(orderItem => orderItem.PriceInclTax).HasDbType("decimal(18, 4)");
-            builder.Property(orderItem => orderItem.PriceExclTax).HasDbType("decimal(18, 4)");
-            builder.Property(orderItem => orderItem.DiscountAmountInclTax).HasDbType("decimal(18, 4)");
-            builder.Property(orderItem => orderItem.DiscountAmountExclTax).HasDbType("decimal(18, 4)");
-            builder.Property(orderItem => orderItem.OriginalProductCost).HasDbType("decimal(18, 4)");
-            builder.Property(orderItem => orderItem.ItemWeight).HasDbType("decimal(18, 4)");
+            builder.Property(orderItem => orderItem.UnitPriceInclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(orderItem => orderItem.UnitPriceExclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(orderItem => orderItem.PriceInclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(orderItem => orderItem.PriceExclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(orderItem => orderItem.DiscountAmountInclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(orderItem => orderItem.DiscountAmountExclTax).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(orderItem => orderItem.OriginalProductCost).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(orderItem => orderItem.ItemWeight).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
 
             builder.Property(orderItem => orderItem.OrderItemGuid);
             builder.Property(orderItem => orderItem.OrderId);

@@ -10,13 +10,13 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
 {
     public partial class ProductValidator : BaseNopValidator<ProductModel>
     {
-        public ProductValidator(ILocalizationService localizationService)
+        public ProductValidator(IDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.Products.Fields.Name.Required"));
             RuleFor(x => x.SeName).Length(0, NopSeoDefaults.SearchEngineNameLength)
                 .WithMessage(string.Format(localizationService.GetResource("Admin.SEO.SeName.MaxLengthValidation"), NopSeoDefaults.SearchEngineNameLength));
 
-            SetDatabaseValidationRules<Product>();
+            SetDatabaseValidationRules<Product>(dataProvider);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using LinqToDB.Mapping;
+﻿using LinqToDB;
+using LinqToDB.Mapping;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
@@ -21,7 +22,7 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(combination => combination.Sku).HasLength(400);
             builder.Property(combination => combination.ManufacturerPartNumber).HasLength(400);
             builder.Property(combination => combination.Gtin).HasLength(400);
-            builder.Property(combination => combination.OverriddenPrice).HasDbType("decimal(18, 4)");
+            builder.Property(combination => combination.OverriddenPrice).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
 
             builder.Property(productattributecombination => productattributecombination.ProductId);
             builder.Property(productattributecombination => productattributecombination.AttributesXml);

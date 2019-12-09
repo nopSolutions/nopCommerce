@@ -1,4 +1,5 @@
-﻿using LinqToDB.Mapping;
+﻿using LinqToDB;
+using LinqToDB.Mapping;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
@@ -18,7 +19,7 @@ namespace Nop.Data.Mapping.Orders
         {
             builder.HasTableName(nameof(GiftCardUsageHistory));
 
-            builder.Property(historyEntry => historyEntry.UsedValue).HasDbType("decimal(18, 4)");
+            builder.Property(historyEntry => historyEntry.UsedValue).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
 
             builder.Property(historyEntry => historyEntry.GiftCardId);
             builder.Property(historyEntry => historyEntry.UsedWithOrderId);

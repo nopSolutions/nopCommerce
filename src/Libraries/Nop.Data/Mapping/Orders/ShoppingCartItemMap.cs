@@ -1,4 +1,5 @@
-﻿using LinqToDB.Mapping;
+﻿using LinqToDB;
+using LinqToDB.Mapping;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
@@ -18,7 +19,7 @@ namespace Nop.Data.Mapping.Orders
         {
             builder.HasTableName(nameof(ShoppingCartItem));
 
-            builder.Property(item => item.CustomerEnteredPrice).HasDbType("decimal(18, 4)");
+            builder.Property(item => item.CustomerEnteredPrice).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
 
             builder.Property(item => item.StoreId);
             builder.Property(item => item.ShoppingCartTypeId);

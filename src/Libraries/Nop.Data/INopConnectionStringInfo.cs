@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Nop.Data
+﻿namespace Nop.Data
 {
     public interface INopConnectionStringInfo
     {
