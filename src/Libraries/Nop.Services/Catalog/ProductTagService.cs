@@ -120,6 +120,21 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Delete product tags
+        /// </summary>
+        /// <param name="productTags">Product tags</param>
+        public virtual void DeleteProductTags(IList<ProductTag> productTags)
+        {
+            if (productTags == null)
+                throw new ArgumentNullException(nameof(productTags));
+
+            foreach (var productTag in productTags)
+            {
+                DeleteProductTag(productTag);
+            }
+        }
+
+        /// <summary>
         /// Gets all product tags
         /// </summary>
         /// <returns>Product tags</returns>
@@ -162,6 +177,23 @@ namespace Nop.Services.Catalog
                 return null;
 
             return _productTagRepository.GetById(productTagId);
+        }
+
+        /// <summary>
+        /// Gets product tags
+        /// </summary>
+        /// <param name="productTagIds">Product tags identifiers</param>
+        /// <returns>Product tags</returns>
+        public virtual IList<ProductTag> GetProductTagsByIds(int[] productTagIds)
+        {
+            if (productTagIds == null || productTagIds.Length == 0)
+                return new List<ProductTag>();
+
+            var query = from p in _productTagRepository.Table
+                        where productTagIds.Contains(p.Id)
+                        select p;
+
+            return query.ToList();
         }
 
         /// <summary>
