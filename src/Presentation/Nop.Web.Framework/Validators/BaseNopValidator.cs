@@ -39,6 +39,7 @@ namespace Nop.Web.Framework.Validators
         /// Sets validation rule(s) to appropriate database model
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="dataProvider">Data provider</param>
         /// <param name="filterStringPropertyNames">Properties to skip</param>
         protected virtual void SetDatabaseValidationRules<TEntity>(IDataProvider dataProvider, params string[] filterStringPropertyNames)
             where TEntity : BaseEntity
@@ -56,6 +57,7 @@ namespace Nop.Web.Framework.Validators
         /// Sets length validation rule(s) to string properties according to appropriate database model
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="entityDescriptor">Entity descriptor</param>
         /// <param name="filterPropertyNames">Properties to skip</param>
         protected virtual void SetStringPropertiesMaxLength<TEntity>(EntityDescriptor entityDescriptor, params string[] filterPropertyNames)
             where TEntity : BaseEntity
