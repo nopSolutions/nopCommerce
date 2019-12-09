@@ -110,21 +110,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>List of paths to the files</returns>
         protected override List<string> GetFiles(string directoryPath, string type)
         {
-            if (type == "#")
-                type = string.Empty;
-
-            var files = new List<string>();
-
             //store files on disk if needed
             FlushImagesOnDisk(directoryPath);
 
-            foreach (var fileName in _fileProvider.GetFiles(_fileProvider.DirectoryExists(directoryPath) ? directoryPath : GetFullPath(directoryPath)))
-            {
-                if (string.IsNullOrEmpty(type) || GetFileType(_fileProvider.GetFileExtension(fileName)) == type)
-                    files.Add(fileName);
-            }
-
-            return files;
+            return base.GetFiles(directoryPath, type);
         }
 
         /// <summary>
@@ -527,6 +516,10 @@ namespace Nop.Services.Media.RoxyFileman
             try
             {
                 var fullPath = GetFullPath(GetVirtualPath(directoryPath));
+
+                if (!IsPathAllowed(fullPath))
+                    throw new Exception(GetLanguageResource("E_UploadNotAll"));
+
                 foreach (var formFile in GetHttpContext().Request.Form.Files)
                 {
                     var fileName = formFile.FileName;
