@@ -1,0 +1,46 @@
+﻿@model DepartmentModel
+
+<input asp-for="Id" type="hidden" />
+@*<input asp-for="EmailCategoryRequired" type="hidden" />
+    <input asp-for="EmailCategoryEnabled" type="hidden" />
+    <input asp-for="EmailEnabled" type="hidden" />
+    <input asp-for="EmailRequired" type="hidden" />*@
+
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="DepartName" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="DepartName" />
+        <span asp-validation-for="DepartName"></span>
+    </div>
+</div>
+
+@*<div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="EmailCategoryId" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="EmailCategoryId" asp-items="Model.AvailableEmailCategories" asp-required="@Model.EmailCategoryRequired" />
+            <span asp-validation-for="EmailCategoryId"></span>
+        </div>
+    </div>*@
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="DepartAdminComment" />
+    </div>
+    <div class="col-md-9">
+        <nop-textarea asp-for="DepartAdminComment" />
+        <span asp-validation-for="DepartAdminComment"></span>
+    </div>
+</div>
+
+<div class="panel panel-default advanced-setting">
+    <div class="card-header">
+        @T("Admin.Vendors.Address")
+    </div>
+    <div class="card-body">
+        <nop-editor asp-for="Address" asp-template="Address" />
+    </div>
+</div>
+<nop-alert asp-alert-id="statesAlert" asp-alert-message="@T("Admin.Common.Alert.Department.Failed")" />

@@ -1,0 +1,27 @@
+﻿@model StoreDepartmentModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Stores.Stores.Department.AddNew").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Store list");
+}
+
+<form asp-controller="Store" asp-action="DepartmentCreate" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Stores.Stores.Department.AddNew")
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="Edit" asp-route-id="@Model.StoreId">@T("Admin.Stores.Stores.Department.BackToDepartment")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" class="btn bg-blue">
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.StoreDepartmentDetailsBottom })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdateDepartment", Model)
+</form>

@@ -1,0 +1,61 @@
+﻿@model EmployeeCompanyDetailModel
+
+<input asp-for="Id" type="hidden" />
+
+
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="DateOfJoin" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="DateOfJoin"  />
+        <span asp-validation-for="DateOfJoin"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="HolidaysDaysPerYear" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="HolidaysDaysPerYear" />
+        <span asp-validation-for="HolidaysDaysPerYear"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="NoticeDays" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="NoticeDays" />
+        <span asp-validation-for="NoticeDays"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="Department" />
+    </div>
+    <div class="col-md-9">
+        <nop-select asp-for="Department" asp-items="Model.Departmentlist" />
+        <span asp-validation-for="Department"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="ReportsTo" />
+    </div>
+    <div class="col-md-9">
+        <nop-select asp-for="ReportsTo" asp-items="Model.ReportsTolist" />
+        <span asp-validation-for="ReportsTo"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="DateOfContractEnd" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="DateOfContractEnd" />
+        <span asp-validation-for="DateOfContractEnd"></span>
+    </div>
+</div>
+
+<nop-alert asp-alert-id="statesAlert" asp-alert-message="@T("Admin.Common.Alert.CompanyDetail.Failed")" />

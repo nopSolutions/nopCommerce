@@ -1,0 +1,27 @@
+﻿@model EmailDetailsModel
+
+<input asp-for="Id" type="hidden" />
+<input asp-for="EmailCategoryRequired" type="hidden" />
+<input asp-for="EmailCategoryEnabled" type="hidden" />
+<input asp-for="EmailEnabled" type="hidden" />
+<input asp-for="EmailRequired" type="hidden" />
+
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="Email" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="Email" asp-required="@Model.EmailRequired" />
+        <span asp-validation-for="Email"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="EmailCategoryId" />
+    </div>
+    <div class="col-md-9">
+        <nop-select asp-for="EmailCategoryId" asp-items="Model.AvailableEmailCategories" asp-required="@Model.EmailCategoryRequired" />
+        <span asp-validation-for="EmailCategoryId"></span>
+    </div>
+</div>
+<nop-alert asp-alert-id="statesAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />

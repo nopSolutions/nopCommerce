@@ -1,0 +1,53 @@
+﻿@model EmployeeSettingsModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.Employee").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Employee and user settings");
+}
+
+
+@{
+    //const string hideCommonBlockAttributeName = "EmployeeSettingsPage.HideCommonBlock";
+    //var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+
+    //const string hideCatalogBlockAttributeName = "EmployeeSettingsPage.HideCatalogBlock";
+    //var hideCatalogBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCatalogBlockAttributeName);
+
+    const string hideEmployeeAttributeBlockAttributeName = "EmployeeSettingsPage.HideEmployeeAttributeBlock";
+    var hideEmployeeAttributeBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideEmployeeAttributeBlockAttributeName);
+}
+
+<form asp-controller="Setting" asp-action="Employee" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.Employee")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.EmployeeSettingsButtons })
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                @await Component.InvokeAsync("StoreScopeConfiguration")
+                @await Component.InvokeAsync("SettingMode")
+                <div asp-validation-summary="All"></div>
+
+                <nop-cards id="employeesettings-panels">
+                    @*<nop-card asp-name="employeesettings-common" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.Employee.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Employee.Common", Model)</nop-card>
+                    <nop-card asp-name="employeesettings-catalog" asp-icon="fa fa-list" asp-title="@T("Admin.Configuration.Settings.Employee.BlockTitle.Catalog")" asp-hide-block-attribute-name="@hideCatalogBlockAttributeName" asp-hide="@hideCatalogBlock" asp-advanced="false">@await Html.PartialAsync("_Employee.Catalog", Model)</nop-card>*@
+                    <nop-card asp-name="employeesettings-employee-attributes" asp-icon="fa fa-paperclip" asp-title="@T("Admin.Employees.EmployeeAttributes")" asp-hide-block-attribute-name="@hideEmployeeAttributeBlockAttributeName" asp-hide="@hideEmployeeAttributeBlock" asp-advanced="true">@await Html.PartialAsync("../EmployeeAttribute/ListBlock.cshtml", Model.EmployeeAttributeSearchModel)</nop-card>
+
+                    @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.EmployeeSettingsDetailsBlock, additionalData = Model })
+                </nop-cards>
+            </div>
+        </div>
+    </section>
+</form>

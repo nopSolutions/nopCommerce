@@ -1,0 +1,18 @@
+﻿@model StoreDepartmentModel
+
+<div asp-validation-summary="ModelOnly"></div>
+<input type="hidden" asp-for="StoreId" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DepartmentDetailsTop, additionalData = Model })
+            <div class="card card-default">
+                <div class="card-body">
+                    <nop-editor asp-for="Department" asp-template="Department" />
+                </div>
+            </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DepartmentDetailsBottom, additionalData = Model })
+        </div>
+    </div>
+</div>

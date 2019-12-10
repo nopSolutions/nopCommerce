@@ -1,0 +1,26 @@
+﻿@model PhoneDetailsModel
+
+<input asp-for="Id" type="hidden" />
+<input asp-for="PhoneCategoryRequired" type="hidden" />
+<input asp-for="PhoneCategoryEnabled" type="hidden" />
+<input asp-for="PhoneRequired" type="hidden" />
+
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="Phone" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="Phone" asp-required="@Model.PhoneRequired" />
+        <span asp-validation-for="Phone"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="PhoneCategoryId" />
+    </div>
+    <div class="col-md-9">
+        <nop-select asp-for="PhoneCategoryId" asp-items="Model.AvailablePhoneCategories" asp-required="@Model.PhoneCategoryRequired" />
+        <span asp-validation-for="PhoneCategoryId"></span>
+    </div>
+</div>
+<nop-alert asp-alert-id="statesAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />

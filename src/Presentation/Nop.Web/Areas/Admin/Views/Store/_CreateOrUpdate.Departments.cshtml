@@ -1,0 +1,43 @@
+﻿@model StoreModel
+
+<div class="card-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+{
+    Name = "store-department-grid",
+    UrlRead = new DataUrl("DepartmentsSelect", "Store", new RouteValueDictionary { [nameof(Model.StoreDepartmentSearchModel.StoreId)] = Model.StoreDepartmentSearchModel.StoreId }),
+    UrlDelete = new DataUrl("DepartmentDelete", "Store", new RouteValueDictionary { [nameof(Model.StoreDepartmentSearchModel.StoreId)] = Model.StoreDepartmentSearchModel.StoreId }),
+    Length = Model.StoreDepartmentSearchModel.PageSize,
+    LengthMenu = Model.StoreDepartmentSearchModel.AvailablePageSizes,
+    ColumnCollection = new List<ColumnProperty>
+    {
+
+        new ColumnProperty(nameof(DepartmentModel.DepartName))
+        {
+            Title = T("Admin.Department.Fields.DepartName").Text
+        },
+        new ColumnProperty(nameof(DepartmentModel.DepartAdminComment))
+        {
+            Title = T("Admin.Department.Fields.DepartAdminComment").Text
+        },        
+        new ColumnProperty(nameof(DepartmentModel.Id))
+        {
+            Title = T("Admin.Common.Edit").Text,
+            Width = "100",
+            ClassName =  NopColumnClassDefaults.Button,
+            Render = new RenderButtonEdit(new DataUrl("~/Admin/Store/DepartmentEdit?storeId=" + Model.StoreDepartmentSearchModel.StoreId + "&departmentid=", true))
+        },
+        new ColumnProperty(nameof(DepartmentModel.Id))
+        {
+            Title = T("Admin.Common.Delete").Text,
+            Width = "100",
+            Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+            ClassName =  NopColumnClassDefaults.Button
+        }
+    }
+})
+</div>
+<div class="card-body">
+    <button type="button" class="btn btn-primary" onclick="location.href = '@Url.Action("DepartmentCreate", new { storeId = Model.Id })'">
+        @T("Admin.Stores.Stores.Departments.AddButton")
+    </button>
+</div>

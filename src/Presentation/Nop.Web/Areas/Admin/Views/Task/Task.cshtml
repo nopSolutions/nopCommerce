@@ -1,0 +1,144 @@
+﻿@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Shipping.Warehouses").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("TaskEvent");
+}
+
+<meta name="referrer" content="no-referrer" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div id="scheduler"></div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        $("#scheduler").kendoScheduler({
+            //date: new Date("2019/10/29"),
+            date: new Date(),
+             editable: {
+                window: {
+                    title: "Task Event",
+                }
+             },
+            height: 700,
+            timezone: "Etc/UTC",
+            views: [
+                "day",
+                { type: "week", selected: true },
+                "workWeek",
+                "month",
+                "agenda",
+                "timeline",
+                "timelineWeek",
+                "timelineMonth",
+            ],
+            dataSource: {
+                batch: true,
+                transport: {
+                    read: {
+                        url: "@Url.Action("GetAllTaskEventsInPeriod", "Task")",
+                        dataType: "json",
+                        contentType: 'application/json; charset=utf-8',
+                        type: 'GET'
+                    },
+                    update: {
+                        url: "@Url.Action("UpdateTaskEvent", "Task")",
+                        contentType: 'application/json; charset=utf-8',
+
+                    },
+                    create: {
+
+                        url: "@Url.Action("CreateTaskEvent","Task")",
+                        contentType: 'application/json; charset=utf-8',
+                        //type: "POST"
+
+                    },
+                    destroy: {
+                        url: "@Url.Action("DestroyTaskEvent", "Task")",
+                        contentType: "application/json; charset=utf-8",
+
+                    },
+                    parameterMap: function (options, operation) {
+                        if (operation === "read") {
+                            var scheduler = $("#scheduler").data("kendoScheduler");
+                            var result = {
+                                start: scheduler.view().startDate(),
+                                end: scheduler.view().endDate()
+                            }
+                            return kendo.stringify(result);
+                        }
+                        console.log(options);
+                        return kendo.stringify(options);
+                        //if (operation !== "read" && options.models) {
+                        //    //window.alert(options);
+                        //    console.log(options);
+                        //    return { models: JSON.stringify(options.models) };
+                        //}
+                        //else {
+                        //    console.log(options);
+                        //    return kendo.stringify(options);
+                        //}
+                    }
+                },
+                batch: true,
+                serverFiltering: true,
+                schema: {
+                    model: {
+                        id: "taskId",
+                        fields: {
+                            taskId: { from: "Id", type: "number" },
+                            title: { from: "Title", defaultValue: "No title", validation: { required: true } },
+                            start: { type: "date", from: "Start" },
+                            end: { type: "date", from: "End" },
+                            startTimezone: { from: "StartTimezone" },
+                            endTimezone: { from: "EndTimezone" },
+                            description: { from: "Description" },
+                            recurrenceId: { from: "RecurrenceID" },
+                            recurrenceRule: { from: "RecurrenceRule" },
+                            recurrenceException: { from: "RecurrenceException" },
+                            ownerId: { from: "OwnerID", defaultValue: 1 },
+                            isAllDay: { type: "boolean", from: "IsAllDay" }
+                        }
+                    },
+                    data: "Data"
+                }
+            },
+            resources: [
+                {
+                    field: "ownerId",
+                    title: "Owner",
+                    dataSource: [
+                        { text: "Owner 1", value: '1', color: "#f8a398" },
+                        { text: "Owner 2", value: '2', color: "#51a0ed" },
+                        { text: "Owner 3", value: '3', color: "#56ca85" }
+                    ]
+                    //multiple: true
+                },
+                //{
+                //field: "roomId",
+                //dataSource: [
+                //    { text: "Meeting Room 101", value: 1, color: "#6eb3fa" },
+                //    { text: "Meeting Room 201", value: 2, color: "#f58a8a" }
+                //],
+                //title: "Room"
+                //},
+                //{
+                //    field: "attendees",
+                //    dataSource: [
+                //        { text: "Alex", value: 1, color: "#f8a398" },
+                //        { text: "Bob", value: 2, color: "#51a0ed" },
+                //        { text: "Charlie", value: 3, color: "#56ca85" }
+                //    ],
+                //    multiple: true,
+                //    title: "Attendees"
+                //}
+            ]
+        });
+
+
+    });
+</script>
+

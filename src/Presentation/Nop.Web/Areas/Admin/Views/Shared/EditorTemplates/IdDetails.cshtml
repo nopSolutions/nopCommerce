@@ -1,0 +1,55 @@
+﻿@model IdDetailsModel
+
+<input asp-for="Id" type="hidden" />
+<input asp-for="IdCategoryRequired" type="hidden" />
+<input asp-for="IdCategoryEnabled" type="hidden" />
+<input asp-for="CreatedOnUtcRequired" type="hidden" />
+<input asp-for="ExpiresOnUtcRequired" type="hidden" />
+<input asp-for="IdNoRequired" type="hidden" />
+
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="IdNo" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="IdNo" asp-required="@Model.IdNoRequired" />
+        <span asp-validation-for="IdNo"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="ExpiresOnUtc" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="ExpiresOnUtc" asp-required="@Model.IdNoRequired"/>
+        <span asp-validation-for="ExpiresOnUtc"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="CreatedOnUtc" asp-required="@Model.IdNoRequired" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="CreatedOnUtc" />
+        <span asp-validation-for="CreatedOnUtc"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="PlaceOfIssue" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="PlaceOfIssue"/>
+        <span asp-validation-for="PlaceOfIssue"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="IdCategoryId" />
+    </div>
+    <div class="col-md-9">
+        <nop-select asp-for="IdCategoryId" asp-items="Model.AvailableIdCategories" asp-required="@Model.IdCategoryRequired" />
+        <span asp-validation-for="IdCategoryId"></span>
+    </div>
+</div>
+<nop-alert asp-alert-id="statesAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />
