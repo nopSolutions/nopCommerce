@@ -1,6 +1,6 @@
-﻿using LinqToDB;
-using LinqToDB.Mapping;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Discounts;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Discounts
 {
@@ -21,9 +21,9 @@ namespace Nop.Data.Mapping.Discounts
 
             builder.Property(discount => discount.Name).HasLength(200).IsNullable(false);
             builder.Property(discount => discount.CouponCode).HasLength(100);
-            builder.Property(discount => discount.DiscountPercentage).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
-            builder.Property(discount => discount.DiscountAmount).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
-            builder.Property(discount => discount.MaximumDiscountAmount).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(discount => discount.DiscountPercentage).HasDecimal();
+            builder.Property(discount => discount.DiscountAmount).HasDecimal();
+            builder.Property(discount => discount.MaximumDiscountAmount).HasDecimal();
 
             builder.Property(discount => discount.DiscountTypeId);
             builder.Property(discount => discount.UsePercentage);

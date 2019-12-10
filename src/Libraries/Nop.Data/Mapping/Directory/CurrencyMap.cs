@@ -1,6 +1,6 @@
-﻿using LinqToDB;
-using LinqToDB.Mapping;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Directory;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Directory
 {
@@ -23,7 +23,7 @@ namespace Nop.Data.Mapping.Directory
             builder.Property(currency => currency.CurrencyCode).HasLength(5).IsNullable(false);
             builder.Property(currency => currency.DisplayLocale).HasLength(50);
             builder.Property(currency => currency.CustomFormatting).HasLength(50);
-            builder.Property(currency => currency.Rate).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
+            builder.Property(currency => currency.Rate).HasDecimal();
             builder.Property(currency => currency.LimitedToStores);
             builder.Property(currency => currency.Published);
             builder.Property(currency => currency.DisplayOrder);
