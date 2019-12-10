@@ -245,7 +245,6 @@ namespace Nop.Web.Framework.Controllers
         #endregion
 
         #region Security
-
         /// <summary>
         /// Security check URL
         /// </summary>

@@ -36,9 +36,9 @@
         <div class="panel-group">
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeCombinationDetailsTop, additionalData = Model })
             <div class="panel panel-default panel-popup">
-                <div class="panel-body">
+                <div class="card-body">
                     @await Html.PartialAsync("_ProductAttributes", Model.ProductAttributes)
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-sm-4">
                             <nop-label asp-for="StockQuantity"/>
                         </div>
@@ -47,7 +47,7 @@
                             <span asp-validation-for="StockQuantity"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-sm-4">
                             <nop-label asp-for="AllowOutOfStockOrders"/>
                         </div>
@@ -56,7 +56,7 @@
                             <span asp-validation-for="AllowOutOfStockOrders"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-sm-4">
                             <nop-label asp-for="Sku"/>
                         </div>
@@ -65,7 +65,7 @@
                             <span asp-validation-for="Sku"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-sm-4">
                             <nop-label asp-for="ManufacturerPartNumber"/>
                         </div>
@@ -74,7 +74,7 @@
                             <span asp-validation-for="ManufacturerPartNumber"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-sm-4">
                             <nop-label asp-for="Gtin"/>
                         </div>
@@ -83,7 +83,7 @@
                             <span asp-validation-for="Gtin"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-sm-4">
                             <nop-label asp-for="OverriddenPrice"/>
                         </div>
@@ -92,7 +92,7 @@
                             <span asp-validation-for="OverriddenPrice"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-sm-4">
                             <nop-label asp-for="NotifyAdminForQuantityBelow"/>
                         </div>
@@ -101,7 +101,7 @@
                             <span asp-validation-for="NotifyAdminForQuantityBelow"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-sm-4">
                             <nop-label asp-for="PictureId" />
                         </div>

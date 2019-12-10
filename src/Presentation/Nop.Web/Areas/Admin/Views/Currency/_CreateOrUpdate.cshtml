@@ -9,11 +9,11 @@
     <div class="form-horizontal">
         <div class="panel-group">
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CurrencyDetailsTop, additionalData = Model })
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
                     @(Html.LocalizedEditor<CurrencyModel, CurrencyLocalizedModel>("currency-info-localized",
                           @<div>
-                              <div class="form-group">
+                              <div class="form-group row">
                                   <div class="col-md-3">
                                       <nop-label asp-for="@Model.Locales[item].Name" />
                                   </div>
@@ -26,7 +26,7 @@
                           </div>
                           ,
                         @<div>
-                              <div class="form-group">
+                              <div class="form-group row">
                                   <div class="col-md-3">
                                       <nop-label asp-for="Name" />
                                   </div>
@@ -37,7 +37,7 @@
                               </div>
                           </div>
                           ))
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="CurrencyCode"/>
                         </div>
@@ -46,7 +46,7 @@
                             <span asp-validation-for="CurrencyCode"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="Rate"/>
                         </div>
@@ -55,7 +55,7 @@
                             <span asp-validation-for="Rate"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="DisplayLocale"/>
                         </div>
@@ -79,7 +79,7 @@
                             <span asp-validation-for="DisplayLocale"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="CustomFormatting"/>
                         </div>
@@ -88,7 +88,7 @@
                             <span asp-validation-for="CustomFormatting"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="SelectedStoreIds"/>
                         </div>
@@ -125,7 +125,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="RoundingTypeId"/>
                         </div>
@@ -134,7 +134,7 @@
                             <span asp-validation-for="RoundingTypeId"></span>
                         </div>
                     </div>                    
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="Published"/>
                         </div>
@@ -143,7 +143,7 @@
                             <span asp-validation-for="Published"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="DisplayOrder"/>
                         </div>
@@ -154,7 +154,7 @@
                     </div>
                     @if (Model.Id > 0)
                     {
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="CreatedOn"/>
                             </div>

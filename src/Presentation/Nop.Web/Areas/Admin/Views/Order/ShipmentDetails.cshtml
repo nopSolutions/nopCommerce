@@ -74,9 +74,9 @@
         <div asp-validation-summary="All"></div>
         <div class="form-horizontal">
             <div class="panel-group">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div class="form-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="CustomOrderNumber" />
                             </div>
@@ -84,7 +84,7 @@
                                 <a asp-controller="Order" asp-action="Edit" asp-route-id="@Model.OrderId">@Model.CustomOrderNumber - @T("Admin.Common.View")</a>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="TrackingNumber" />
                             </div>
@@ -103,7 +103,7 @@
                                 }
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="AdminComment" />
                             </div>
@@ -118,7 +118,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="TotalWeight" />
                             </div>
@@ -126,7 +126,7 @@
                                 <div class="form-text-row">@Model.TotalWeight</div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="ShippedDate" />
                             </div>
@@ -168,7 +168,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="DeliveryDate" />
                             </div>
@@ -215,11 +215,11 @@
                     </div>
                 </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="card card-default">
+                    <div class="card-header">
                         @T("Admin.Orders.Shipments.Products")
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <table class="table table-hover table-bordered">
                             <thead>
                                 <tr>
@@ -292,11 +292,11 @@
 
                 @if (Model.ShipmentStatusEvents.Count > 0)
                 {
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="card card-default">
+                    <div class="card-header">
                         @T("Admin.Orders.Shipments.ShipmentStatusEvents")
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <table class="table table-hover table-bordered text-center">
                             <thead>
                                 <tr>

@@ -7,8 +7,8 @@
     <div class="form-horizontal">
         <div class="panel-group">
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAddressDetailsTop, additionalData = Model })
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
                     <nop-editor asp-for="Address" asp-template="Address"/>
                 </div>
             </div>

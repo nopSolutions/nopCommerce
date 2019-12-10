@@ -15,12 +15,13 @@
     </h1>
 </div>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
         <div class="panel-group">
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PaymentMethodListTop, additionalData = Model })
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
                     <p>
                         @T("Admin.Configuration.Payment.Methods.DownloadMorePlugins")
                     </p>
@@ -134,3 +135,4 @@
         </div>
     </div>
 </div>
+</section>

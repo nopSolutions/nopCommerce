@@ -1,8 +1,8 @@
 @model OrderModel
 
-<div class="panel-body">
+<div class="card-body">
     <div class="panel panel-default sub-panel">
-        <div class="panel-body">
+        <div class="card-body">
             <div class="col-md-6">
                 <div class="row">
                     <table class="table table-hover table-bordered" style="max-width: 500px;">
@@ -158,7 +158,7 @@
                 <div class="row">
                     @if (!Model.IsLoggedInAsVendor)
                     {
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-12">
                                 <a asp-action="AddressEdit" asp-route-addressId="@Model.BillingAddress.Id" asp-route-orderId="@Model.Id" class="btn btn-primary">@T("Admin.Common.Edit")</a>
                             </div>
@@ -329,7 +329,7 @@
                         <div class="row">
                             @if (!Model.IsLoggedInAsVendor)
                             {
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-12">
                                         <a asp-action="AddressEdit" asp-route-addressId="@Model.ShippingAddress.Id" asp-route-orderId="@Model.Id" class="btn btn-primary">@T("Admin.Common.Edit")</a>
                                     </div>
@@ -426,8 +426,8 @@
     @if (Model.IsShippable)
     {
         <div class="panel panel-default sub-panel">
-            <div class="panel-body">
-                <div class="form-group">
+            <div class="card-body">
+                <div class="form-group row">
                     <div class="col-md-3">
                         <nop-label asp-for="ShippingMethod" />
                     </div>
@@ -489,7 +489,7 @@
 
                 @if (!Model.IsLoggedInAsVendor)
                 {
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-md-3">
                             <nop-label asp-for="ShippingStatus" />
                         </div>
@@ -501,10 +501,10 @@
             </div>
         </div>
         <div class="panel panel-default sub-panel">
-            <div class="panel-heading">
+            <div class="card-header">
                 @T("Admin.Orders.Shipments")
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 @await Html.PartialAsync("Table", new DataTablesModel
                 {
                     Name = "shipments-grid",
@@ -601,7 +601,7 @@
             </div>
             @if (Model.CanAddNewShipments)
             {
-                <div class="panel-footer">
+                <div class="card-footer">
                     <button type="submit" id="btnAddNewShipment" name="btnAddNewShipment" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new { id = Model.Id }))'); return false;" class="btn btn-primary">
                         @T("Admin.Orders.Shipments.AddNew")
                     </button>

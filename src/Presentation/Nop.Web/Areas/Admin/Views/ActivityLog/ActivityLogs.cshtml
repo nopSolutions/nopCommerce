@@ -27,11 +27,12 @@
 
 </div>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default panel-search">
-                <div class="panel-body">
+            <div class="card card-default panel-search">
+                <div class="card-body">
                     <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                         <div class="search-text">@T("Admin.Common.Search")</div>
                         <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
@@ -42,7 +43,7 @@
 
                         <div class="row">
                             <div class="col-md-5">
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="CreatedOnFrom" />
                                     </div>
@@ -50,7 +51,7 @@
                                         <nop-editor asp-for="CreatedOnFrom" />
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="CreatedOnTo" />
                                     </div>
@@ -60,7 +61,7 @@
                                 </div>
                             </div>
                             <div class="col-md-7">
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="ActivityLogTypeId" />
                                     </div>
@@ -68,7 +69,7 @@
                                         <nop-select asp-for="ActivityLogTypeId" asp-items="Model.ActivityLogType" />
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="IpAddress" />
                                     </div>
@@ -90,8 +91,8 @@
                 </div>
             </div>
 
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "activityLog-grid",
@@ -149,3 +150,4 @@
         </div>
     </div>
 </div>
+</section>

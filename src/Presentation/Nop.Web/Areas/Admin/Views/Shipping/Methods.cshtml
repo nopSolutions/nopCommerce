@@ -21,11 +21,12 @@
     </div>
 </div>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default panel-search">
-                <div class="panel-body">
+            <div class="card card-default panel-search">
+                <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
                             <p>
@@ -35,8 +36,8 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "shippingmethod-grid",
@@ -75,3 +76,4 @@
         </div>
     </div>
 </div>
+</section>

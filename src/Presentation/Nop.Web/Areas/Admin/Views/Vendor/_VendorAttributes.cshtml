@@ -3,15 +3,15 @@
 @using Nop.Core.Domain.Catalog;
 
 <div class="panel panel-default advanced-setting">
-    <div class="panel-heading">
+    <div class="card-header">
         @T("Admin.Vendors.VendorAttributes")
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         @foreach (var attribute in Model)
         {
             var controlId = $"vendor_attribute_{attribute.Id}";
             var textPrompt = attribute.Name;
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="col-md-3">
                     <div class="label-wrapper">
                         <label class="control-label">

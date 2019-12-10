@@ -1,12 +1,12 @@
 ﻿@model ProductModel
-<div class="panel-body">
+<div class="card-body">
     <p>
         @T("Admin.Catalog.Products.RelatedProducts.Hint")
     </p>
     @if (Model.Id > 0)
     {
-        <div class="panel panel-default">
-            <div class="panel-body">
+        <div class="card card-default">
+            <div class="card-body">
 
                 @await Html.PartialAsync("Table", new DataTablesModel
                 {
@@ -54,7 +54,7 @@
                         }
                 })
             </div>
-            <div class="panel-footer">
+            <div class="card-footer">
                 <button type="submit" id="btnAddNewRelatedProduct" class="btn btn-primary" onclick="javascript:OpenWindow('@(Url.Action("RelatedProductAddPopup", "Product", new {productId = Model.Id, btnId = "btnRefreshRelatedProducts", formId = "product-form"}))', 800, 800, true); return false;">
                     @T("Admin.Catalog.Products.RelatedProducts.AddNew")
                 </button>
@@ -75,8 +75,8 @@
     }
     else
     {
-        <div class="panel panel-default">
-            <div class="panel-body">
+        <div class="card card-default">
+            <div class="card-body">
                 @T("Admin.Catalog.Products.RelatedProducts.SaveBeforeEdit")
             </div>
         </div>

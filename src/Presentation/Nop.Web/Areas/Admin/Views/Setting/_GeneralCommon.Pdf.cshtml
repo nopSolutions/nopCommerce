@@ -1,7 +1,7 @@
 @model GeneralCommonSettingsModel
 
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="PdfSettings.LogoPictureId_OverrideForStore" asp-parent-container="pdf-logo-picture" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="PdfSettings.LogoPictureId" />
@@ -11,7 +11,7 @@
             <span asp-validation-for="PdfSettings.LogoPictureId"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="PdfSettings.InvoiceFooterTextColumn1_OverrideForStore" asp-input="PdfSettings.InvoiceFooterTextColumn1" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="PdfSettings.InvoiceFooterTextColumn1" />
@@ -21,7 +21,7 @@
             <span asp-validation-for="PdfSettings.InvoiceFooterTextColumn1"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="PdfSettings.InvoiceFooterTextColumn2_OverrideForStore" asp-input="PdfSettings.InvoiceFooterTextColumn2" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="PdfSettings.InvoiceFooterTextColumn2" />
@@ -31,7 +31,7 @@
             <span asp-validation-for="PdfSettings.InvoiceFooterTextColumn2"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="PdfSettings.LetterPageSizeEnabled_OverrideForStore" asp-input="PdfSettings.LetterPageSizeEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="PdfSettings.LetterPageSizeEnabled" />
@@ -41,7 +41,7 @@
             <span asp-validation-for="PdfSettings.LetterPageSizeEnabled"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="PdfSettings.DisablePdfInvoicesForPendingOrders_OverrideForStore" asp-input="PdfSettings.DisablePdfInvoicesForPendingOrders" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="PdfSettings.DisablePdfInvoicesForPendingOrders" />

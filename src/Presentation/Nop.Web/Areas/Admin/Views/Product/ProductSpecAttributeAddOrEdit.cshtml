@@ -70,9 +70,9 @@
         <div class="form-horizontal">
             <div class="panel-group">
                 @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsSpecificationAttributeDetailsTop, additionalData = Model })
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div class="form-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="AttributeTypeName" />
                             </div>
@@ -88,7 +88,7 @@
                                 <span asp-validation-for="AttributeTypeId"></span>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="AttributeName" />
                             </div>
@@ -173,7 +173,7 @@
                             </script>
                         }
 
-                        <div class="form-group" id="AttributeValueOptionSection">
+                        <div class="form-group row" id="AttributeValueOptionSection">
                             <div class="col-md-3">
                                 <nop-label asp-for="SpecificationAttributeOptionId" />
                             </div>
@@ -186,7 +186,7 @@
                         <div id="AttributeValueCustomHtmlTextSection">
                             @(Html.LocalizedEditor<AddSpecificationAttributeModel, AddSpecificationAttributeLocalizedModel>("AttributeValueCustomHtmlTextSection-localized",
                             @<div>
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-3">
                                         <nop-label asp-for="@Model.Locales[item].ValueRaw" />
                                     </div>
@@ -198,7 +198,7 @@
                                 <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
                             </div>,
                             @<div>
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-3">
                                         <nop-label asp-for="ValueRaw" />
                                     </div>
@@ -213,7 +213,7 @@
                         <div id="AttributeValueCustomTextSection">
                             @(Html.LocalizedEditor<AddSpecificationAttributeModel, AddSpecificationAttributeLocalizedModel>("AttributeValueCustomTextSection-localized",
                             @<div>
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-3">
                                         <nop-label asp-for="@Model.Locales[item].Value" />
                                     </div>
@@ -225,7 +225,7 @@
                                 <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
                             </div>,
                             @<div>
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-3">
                                         <nop-label asp-for="Value" />
                                     </div>
@@ -237,7 +237,7 @@
                             </div>))
                         </div>
                         
-                        <div class="form-group" id="AttributeValueHyperlinkSection">
+                        <div class="form-group row" id="AttributeValueHyperlinkSection">
                             <div class="col-md-3">
                                 <nop-label asp-for="Value" />
                             </div>
@@ -246,7 +246,7 @@
                                 <span asp-validation-for="Value"></span>
                             </div>
                         </div>
-                        <div class="form-group" id="AllowFilteringSection">
+                        <div class="form-group row" id="AllowFilteringSection">
                             <div class="col-md-3">
                                 <nop-label asp-for="AllowFiltering" />
                             </div>
@@ -256,7 +256,7 @@
                                 <span asp-validation-for="AllowFiltering"></span>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="ShowOnProductPage" />
                             </div>
@@ -265,7 +265,7 @@
                                 <span asp-validation-for="ShowOnProductPage"></span>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="DisplayOrder" />
                             </div>

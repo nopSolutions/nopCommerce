@@ -50,15 +50,15 @@
             @foreach (var attribute in Model.ProductAttributes)
             {
                 <div class="panel-group">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
+                    <div class="card card-default">
+                        <div class="card-header">
                             @attribute.Name
                             @if (attribute.IsRequired)
                             {
                                 <span>*</span>
                             }
                         </div>
-                        <div class="panel-body">
+                        <div class="card-body">
                             @foreach (var attributeValue in attribute.Values)
                             {
                                 <div>

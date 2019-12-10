@@ -44,9 +44,9 @@
     <div class="content">
         <div class="form-horizontal">
             <div class="panel-group">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div class="form-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="TrackingNumber" />
                             </div>
@@ -54,7 +54,7 @@
                                 <nop-editor asp-for="TrackingNumber" />
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="AdminComment" />
                             </div>
@@ -62,7 +62,7 @@
                                 <nop-editor asp-for="AdminComment" />
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-md-3">
                                 <nop-label asp-for="CanShip" />
                             </div>
@@ -71,7 +71,7 @@
                             </div>
                         </div>
                         <nop-nested-setting asp-for="CanShip">
-                            <div class="form-group" id="pnlHasDelivery">
+                            <div class="form-group row" id="pnlHasDelivery">
                                 <div class="col-md-3">
                                     <nop-label asp-for="CanDeliver" />
                                 </div>
@@ -163,11 +163,11 @@
                     </script>
                 </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="card card-default">
+                    <div class="card-header">
                         @T("Admin.Orders.Shipments.Products")
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <table class="table table-hover table-bordered">
                             <thead>
                                 <tr>

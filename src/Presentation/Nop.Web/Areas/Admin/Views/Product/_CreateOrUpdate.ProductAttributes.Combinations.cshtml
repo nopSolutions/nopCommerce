@@ -2,8 +2,8 @@
 
 @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsProductAttributesCombinationsTop, additionalData = Model })
 <div class="panel-group">
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div class="card card-default">
+        <div class="card-body">
             <p>
                 @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description")
             </p>
@@ -99,7 +99,7 @@
             </script>
             
         </div>
-        <div class="panel-footer">
+        <div class="card-footer">
             <button type="submit" id="btnAddNewCombination" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeCombinationCreatePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))', 800, 700, true); return false;" class="btn btn-primary">
                 @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")
             </button>

@@ -220,10 +220,10 @@
 </script>
 
 
-<div class="panel-body">
+<div class="card-body">
     @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-info-localized",
                                                             @<div>
-                                                                <div class="form-group">
+                                                                <div class="form-group row">
                                                                     <div class="col-md-3">
                                                                         <nop-label asp-for="@Model.Locales[item].Name" />
                                                                     </div>
@@ -232,7 +232,7 @@
                                                                         <span asp-validation-for="@Model.Locales[item].Name"></span>
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-group">
+                                                                <div class="form-group row">
                                                                     <div class="col-md-3">
                                                                         <nop-label asp-for="@Model.Locales[item].ShortDescription" />
                                                                     </div>
@@ -241,7 +241,7 @@
                                                                         <span asp-validation-for="@Model.Locales[item].ShortDescription"></span>
                                                                     </div>
                                                                 </div>
-                                                                <div class="form-group">
+                                                                <div class="form-group row">
                                                                     <div class="col-md-3">
                                                                         <nop-label asp-for="@Model.Locales[item].FullDescription" />
                                                                     </div>
@@ -254,7 +254,7 @@
                                                                 <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
                                                             </div>
                                                                                                                 ,@<div>
-                                                                                                                    <div class="form-group">
+                                                                                                                    <div class="form-group row">
                                                                                                                         <div class="col-md-3">
                                                                                                                             <nop-label asp-for="Name" />
                                                                                                                         </div>
@@ -263,7 +263,7 @@
                                                                                                                             <span asp-validation-for="Name"></span>
                                                                                                                         </div>
                                                                                                                     </div>
-                                                                                                                    <div class="form-group">
+                                                                                                                    <div class="form-group row">
                                                                                                                         <div class="col-md-3">
                                                                                                                             <nop-label asp-for="ShortDescription" />
                                                                                                                         </div>
@@ -272,7 +272,7 @@
                                                                                                                             <span asp-validation-for="ShortDescription"></span>
                                                                                                                         </div>
                                                                                                                     </div>
-                                                                                                                    <div class="form-group">
+                                                                                                                    <div class="form-group row">
                                                                                                                         <div class="col-md-3">
                                                                                                                             <nop-label asp-for="FullDescription" />
                                                                                                                         </div>
@@ -282,7 +282,7 @@
                                                                                                                         </div>
                                                                                                                     </div>
                                                                                                                 </div>))
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Sku" />
         </div>
@@ -291,7 +291,7 @@
             <span asp-validation-for="Sku"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="SelectedCategoryIds" />
         </div>
@@ -427,12 +427,12 @@
         </div>
     }
     <div class="panel panel-default margin-bottom" id="group-associated-products">
-        <div class="panel-heading">
+        <div class="card-header">
             @T("Admin.Catalog.Products.AssociatedProducts")
         </div>
         @if (Model.Id > 0)
         {
-        <div class="panel-body">
+        <div class="card-body">
             <ul class="common-list">
                 <li>
                     @T("Admin.Catalog.Products.AssociatedProducts.Note1")
@@ -488,7 +488,7 @@
                     }
             })
         </div>
-            <div class="panel-footer">
+            <div class="card-footer">
                 <button type="submit" id="btnAddNewAssociatedProduct" onclick="javascript:OpenWindow('@(Url.Action("AssociatedProductAddPopup", "Product", new {productId = Model.Id, btnId = "btnRefreshAssociatedProducts", formId = "product-form"}))', 800, 800, true); return false;" class="btn btn-primary">
                     @T("Admin.Catalog.Products.AssociatedProducts.AddNew")
                 </button>
@@ -508,7 +508,7 @@
         }
         else
         {
-            <div class="panel-body">
+            <div class="card-body">
                 @T("Admin.Catalog.Products.AssociatedProducts.SaveBeforeEdit")
             </div>
         }
@@ -614,7 +614,7 @@
         </div>
     </div>
     <div class="@(Model.ProductEditorSettingsModel.RequireOtherProductsAddedToTheCart ? null : "advanced-setting")" id="group-required-other-products">
-        <div class="form-group">
+        <div class="form-group row">
             <div class="col-md-3">
                 <nop-label asp-for="RequireOtherProducts" />
             </div>
@@ -624,7 +624,7 @@
             </div>
         </div>
         <nop-nested-setting asp-for="RequireOtherProducts">
-            <div class="form-group" id="pnlRequiredProductIds">
+            <div class="form-group row" id="pnlRequiredProductIds">
                 <div class="col-md-3">
                     <nop-label asp-for="RequiredProductIds" />
                     <span id="required-products-check-progress" style="display: none; float: right; clear: both" class="please-wait">
@@ -656,7 +656,7 @@
                     @Html.ValidationMessageFor(model => model.RequiredProductIds)
                 </div>
             </div>
-            <div class="form-group" id="pnlAutomaticallyAddRequiredProducts">
+            <div class="form-group row" id="pnlAutomaticallyAddRequiredProducts">
                 <div class="col-md-3">
                     <nop-label asp-for="AutomaticallyAddRequiredProducts" />
                 </div>

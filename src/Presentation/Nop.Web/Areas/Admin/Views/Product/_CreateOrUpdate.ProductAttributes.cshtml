@@ -1,6 +1,6 @@
 @model ProductModel
 
-<div class="panel-body">
+<div class="card-body">
     <p>
         @T("Admin.Catalog.Products.ProductAttributes.Hint")
     </p>
@@ -15,8 +15,8 @@
         }
         else
         {
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
                     @T("Admin.Catalog.Products.ProductAttributes.NoAttributesAvailable")
                 </div>
             </div>
@@ -24,8 +24,8 @@
     }
     else
     {
-        <div class="panel panel-default">
-            <div class="panel-body">
+        <div class="card card-default">
+            <div class="card-body">
                 @T("Admin.Catalog.Products.ProductAttributes.SaveBeforeEdit")
             </div>
         </div>

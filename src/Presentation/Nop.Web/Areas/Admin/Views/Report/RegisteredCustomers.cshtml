@@ -15,11 +15,11 @@
 </div>
 
 
-<div class="content">
-    <div class="form-horizontal">
+<section class="content">
+    <div class="container-fluid">    <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "registered-customers-grid",
@@ -44,3 +44,4 @@
         </div>
     </div>
 </div>
+</section>

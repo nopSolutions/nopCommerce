@@ -34,10 +34,10 @@ else
             <div class="form-horizontal">
                 <div class="panel-group">
                     <div class="panel panel-default panel-search panel-popup">
-                        <div class="panel-body">
+                        <div class="card-body">
                             <div class="row">
                                 <div class="col-sm-8">
-                                    <div class="form-group">
+                                    <div class="form-group row">
                                         <div class="col-sm-4">
                                             <nop-label asp-for="SearchManufacturerName" />
                                         </div>
@@ -58,8 +58,8 @@ else
                         </div>
                     </div>
 
-                    <div class="panel panel-default">
-                        <div class="panel-body">
+                    <div class="card card-default">
+                        <div class="card-body">
                             @await Html.PartialAsync("Table", new DataTablesModel
                             {
                                 Name = "manufacturers-grid",
@@ -94,7 +94,7 @@ else
                                 }
                             })
                         </div>
-                        <div class="panel-footer">
+                        <div class="card-footer">
                             <button type="submit" name="save" class="btn bg-blue">
                                 <i class="fa fa-floppy-o"></i>
                                 @T("Admin.Common.Save")

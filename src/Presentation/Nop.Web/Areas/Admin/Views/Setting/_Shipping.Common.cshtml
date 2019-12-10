@@ -1,7 +1,7 @@
 @model ShippingSettingsModel
 
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="AllowPickupInStore_OverrideForStore" asp-input="AllowPickupInStore" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="AllowPickupInStore" />
@@ -12,7 +12,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="AllowPickupInStore">
-        <div class="form-group advanced-setting" id="pnlIgnoreAdditionalShippingChargeForPickupInStore">
+        <div class="form-group row" id="pnlIgnoreAdditionalShippingChargeForPickupInStore">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="IgnoreAdditionalShippingChargeForPickupInStore_OverrideForStore" asp-input="IgnoreAdditionalShippingChargeForPickupInStore" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="IgnoreAdditionalShippingChargeForPickupInStore" />
@@ -22,7 +22,7 @@
                 <span asp-validation-for="IgnoreAdditionalShippingChargeForPickupInStore"></span>
             </div>
         </div>
-        <div class="form-group advanced-setting" id="pnlDisplayPickupPointsOnMap">
+        <div class="form-group row" id="pnlDisplayPickupPointsOnMap">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="DisplayPickupPointsOnMap_OverrideForStore" asp-input="DisplayPickupPointsOnMap" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="DisplayPickupPointsOnMap" />
@@ -33,7 +33,7 @@
             </div>
         </div>
         <nop-nested-setting asp-for="DisplayPickupPointsOnMap">
-            <div class="form-group advanced-setting" id="pnlGoogleMapsApiKey">
+            <div class="form-group row" id="pnlGoogleMapsApiKey">
                 <div class="col-md-3">
                     <nop-override-store-checkbox asp-for="GoogleMapsApiKey_OverrideForStore" asp-input="GoogleMapsApiKey" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                     <nop-label asp-for="GoogleMapsApiKey" />
@@ -45,7 +45,7 @@
             </div>
         </nop-nested-setting>
     </nop-nested-setting>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="FreeShippingOverXEnabled_OverrideForStore" asp-input="FreeShippingOverXEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="FreeShippingOverXEnabled" />
@@ -56,7 +56,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="FreeShippingOverXEnabled">
-        <div class="form-group" id="pnlValueOfX">
+        <div class="form-group row" id="pnlValueOfX">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="FreeShippingOverXValue_OverrideForStore" asp-input="FreeShippingOverXValue" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="FreeShippingOverXValue" />
@@ -66,7 +66,7 @@
                 <span asp-validation-for="FreeShippingOverXValue"></span>
             </div>
         </div>
-        <div class="form-group advanced-setting" id="pnlValueOfXincltax">
+        <div class="form-group row" id="pnlValueOfXincltax">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="FreeShippingOverXIncludingTax_OverrideForStore" asp-input="FreeShippingOverXIncludingTax" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
                 <nop-label asp-for="FreeShippingOverXIncludingTax" />
@@ -77,7 +77,7 @@
             </div>
         </div>
     </nop-nested-setting>
-    <div class="form-group advanced-setting">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="UseWarehouseLocation_OverrideForStore" asp-input="UseWarehouseLocation" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="UseWarehouseLocation" />
@@ -87,7 +87,7 @@
             <span asp-validation-for="UseWarehouseLocation"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ConsiderAssociatedProductsDimensions_OverrideForStore" asp-input="ConsiderAssociatedProductsDimensions" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ConsiderAssociatedProductsDimensions" />

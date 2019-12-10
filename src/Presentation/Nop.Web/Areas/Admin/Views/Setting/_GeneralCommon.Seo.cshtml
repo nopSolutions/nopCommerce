@@ -1,7 +1,7 @@
 @model GeneralCommonSettingsModel
 
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="SeoSettings.DefaultTitle_OverrideForStore" asp-input="SeoSettings.DefaultTitle" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="SeoSettings.DefaultTitle" />
@@ -11,7 +11,7 @@
             <span asp-validation-for="SeoSettings.DefaultTitle"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="SeoSettings.PageTitleSeoAdjustment_OverrideForStore" asp-input="SeoSettings.PageTitleSeoAdjustment" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="SeoSettings.PageTitleSeoAdjustment" />
@@ -21,7 +21,7 @@
             <span asp-validation-for="SeoSettings.PageTitleSeoAdjustment"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="SeoSettings.PageTitleSeparator_OverrideForStore" asp-input="SeoSettings.PageTitleSeparator" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="SeoSettings.PageTitleSeparator" />
@@ -31,7 +31,7 @@
             <span asp-validation-for="SeoSettings.PageTitleSeparator"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="SeoSettings.DefaultMetaKeywords_OverrideForStore" asp-input="SeoSettings.DefaultMetaKeywords" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="SeoSettings.DefaultMetaKeywords" />
@@ -41,7 +41,7 @@
             <span asp-validation-for="SeoSettings.DefaultMetaKeywords"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="SeoSettings.DefaultMetaDescription_OverrideForStore" asp-input="SeoSettings.DefaultMetaDescription" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="SeoSettings.DefaultMetaDescription" />
@@ -51,7 +51,7 @@
             <span asp-validation-for="SeoSettings.DefaultMetaDescription"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="SeoSettings.GenerateProductMetaDescription_OverrideForStore" asp-input="SeoSettings.GenerateProductMetaDescription" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="SeoSettings.GenerateProductMetaDescription" />
@@ -61,7 +61,7 @@
             <span asp-validation-for="SeoSettings.GenerateProductMetaDescription"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="SeoSettings.WwwRequirement_OverrideForStore" asp-input="SeoSettings.WwwRequirement" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="SeoSettings.WwwRequirement" />
@@ -71,7 +71,7 @@
             <span asp-validation-for="SeoSettings.WwwRequirement"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="SeoSettings.ConvertNonWesternChars_OverrideForStore" asp-input="SeoSettings.ConvertNonWesternChars" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="SeoSettings.ConvertNonWesternChars" />
@@ -81,7 +81,7 @@
             <span asp-validation-for="SeoSettings.ConvertNonWesternChars"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="SeoSettings.CanonicalUrlsEnabled_OverrideForStore" asp-input="SeoSettings.CanonicalUrlsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="SeoSettings.CanonicalUrlsEnabled" />
@@ -91,7 +91,7 @@
             <span asp-validation-for="SeoSettings.CanonicalUrlsEnabled"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="SeoSettings.TwitterMetaTags_OverrideForStore" asp-input="SeoSettings.TwitterMetaTags" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="SeoSettings.TwitterMetaTags" />
@@ -101,7 +101,7 @@
             <span asp-validation-for="SeoSettings.TwitterMetaTags"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="SeoSettings.OpenGraphMetaTags_OverrideForStore" asp-input="SeoSettings.OpenGraphMetaTags" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="SeoSettings.OpenGraphMetaTags" />
@@ -111,7 +111,7 @@
             <span asp-validation-for="SeoSettings.OpenGraphMetaTags"></span>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="SeoSettings.CustomHeadTags_OverrideForStore" asp-input="SeoSettings.CustomHeadTags" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="SeoSettings.CustomHeadTags" />

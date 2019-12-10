@@ -57,7 +57,7 @@
 <input asp-for="FaxRequired" type="hidden" />
 @if (Model.FirstNameEnabled)
 {
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="FirstName" />
         </div>
@@ -69,7 +69,7 @@
 }
 @if (Model.LastNameEnabled)
 {
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="LastName" />
         </div>
@@ -81,7 +81,7 @@
 }
 @if (Model.EmailEnabled)
 {
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Email" />
         </div>
@@ -93,7 +93,7 @@
 }
 @if (Model.CompanyEnabled)
 {
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Company" />
         </div>
@@ -105,7 +105,7 @@
 }
 @if (Model.CountryEnabled)
 {
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="CountryId" />
         </div>
@@ -117,7 +117,7 @@
 }
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="StateProvinceId" />
         </div>
@@ -129,7 +129,7 @@
 }
 @if (Model.CountyEnabled)
 {
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="County" />
         </div>
@@ -141,7 +141,7 @@
 }
 @if (Model.CityEnabled)
 {
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="City" />
         </div>
@@ -153,7 +153,7 @@
 }
 @if (Model.StreetAddressEnabled)
 {
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Address1" />
         </div>
@@ -165,7 +165,7 @@
 }
 @if (Model.StreetAddress2Enabled)
 {
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="Address2" />
         </div>
@@ -177,7 +177,7 @@
 }
 @if (Model.ZipPostalCodeEnabled)
 {
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="ZipPostalCode" />
         </div>
@@ -189,7 +189,7 @@
 }
 @if (Model.PhoneEnabled)
 {
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="PhoneNumber" />
         </div>
@@ -201,7 +201,7 @@
 }
 @if (Model.FaxEnabled)
 {
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-label asp-for="FaxNumber" />
         </div>

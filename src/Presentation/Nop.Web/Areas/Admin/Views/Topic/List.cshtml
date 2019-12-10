@@ -26,11 +26,12 @@
     </div>
 </div>
 
-<div class="content">
+<section class="content">
+    <div class="container-fluid">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default panel-search">
-                <div class="panel-body">
+            <div class="card card-default panel-search">
+                <div class="card-body">
                     <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
                         <div class="search-text">@T("Admin.Common.Search")</div>
                         <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
@@ -40,7 +41,7 @@
                     <div class="search-body @(hideSearchBlock ? "closed" : "")">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
+                                <div class="form-group row" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-md-4">
                                         <nop-label asp-for="SearchStoreId" />
                                     </div>
@@ -48,7 +49,7 @@
                                         <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-4">
                                         <nop-label asp-for="SearchKeywords" />
                                     </div>
@@ -56,7 +57,7 @@
                                         <nop-editor asp-for="SearchKeywords" />
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-md-8 col-md-offset-4">
                                         <button type="button" id="search-topics" class="btn btn-primary btn-search">
                                             <i class="fa fa-search"></i>
@@ -70,8 +71,8 @@
                 </div>
             </div>
 
-            <div class="panel panel-default">
-                <div class="panel-body">
+            <div class="card card-default">
+                <div class="card-body">
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "topics-grid",
@@ -159,3 +160,4 @@
         </div>
     </div>
 </div>
+</section>

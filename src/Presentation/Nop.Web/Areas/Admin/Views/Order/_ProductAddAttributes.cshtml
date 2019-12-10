@@ -17,8 +17,8 @@
         string.IsNullOrEmpty(attributeValue.PriceAdjustment) ? attributeValue.Name : T("Products.ProductAttributes.PriceAdjustment",
             attributeValue.Name, attributeValue.PriceAdjustment, attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text);
 
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div class="card card-default">
+        <div class="card-body">
             @foreach (var attribute in Model)
             {
                 <div id="@(NopAttributePrefixDefaults.Product)row_@(attribute.Id)" class="form-group">

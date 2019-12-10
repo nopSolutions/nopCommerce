@@ -70,11 +70,11 @@
     <input type="hidden" asp-for="@Model" />
 </div>
 
-<div class="panel panel-default">
-    <div class="panel-body">
+<div class="card card-default">
+    <div class="card-body">
         @if (!disableUrl)
         {
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="col-xs-4">
                     <div class="label-wrapper">
                         <label class="control-label">
@@ -89,7 +89,7 @@
             </div>
         }
         <div id="pnlDownloadURL@(randomNumber)">
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="col-xs-4">
                     <div class="label-wrapper">
                         <label class="control-label">
@@ -102,14 +102,14 @@
                            @if (download != null && !string.IsNullOrEmpty(download.DownloadUrl)) { <text> value="@(download.DownloadUrl)" </text> } />
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="col-xs-8 col-xs-offset-4">
                     <button type="button" id="saveDownloadUrl@(randomNumber)" class="btn btn-primary">@T("Admin.Download.SaveDownloadURL")</button>
                     <div id="pnlDownloadURLResult@(randomNumber)" style="display: none;">@T("Admin.Download.DownloadURLSaved")</div>
                 </div>
             </div>
         </div>
-        <div class="form-group" id="pnlDownloadFile@(randomNumber)">
+        <div class="form-group row" id="pnlDownloadFile@(randomNumber)">
             <div class="col-xs-4">
                 <div class="label-wrapper">
                     <label class="control-label">

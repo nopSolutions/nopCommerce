@@ -36,10 +36,10 @@
         <div class="form-horizontal">
             <div class="panel-group">
                 <div class="panel panel-default panel-search panel-popup">
-                    <div class="panel-body">
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-sm-6">
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-sm-5">
                                         <nop-label asp-for="SearchProductName" />
                                     </div>
@@ -47,7 +47,7 @@
                                         <nop-editor asp-for="SearchProductName" />
                                     </div>
                                 </div>
-                                <div class="form-group" @(Model.AvailableCategories.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                <div class="form-group row" @(Model.AvailableCategories.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-sm-5">
                                         <nop-label asp-for="SearchCategoryId" />
                                     </div>
@@ -55,7 +55,7 @@
                                         <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
                                     </div>
                                 </div>
-                                <div class="form-group" @(Model.AvailableVendors.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                <div class="form-group row" @(Model.AvailableVendors.SelectionIsNotPossible() || Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                     <div class="col-sm-5">
                                         <nop-label asp-for="SearchVendorId" />
                                     </div>
@@ -65,7 +65,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                <div class="form-group row" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-sm-5">
                                         <nop-label asp-for="SearchStoreId" />
                                     </div>
@@ -73,7 +73,7 @@
                                         <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="col-sm-5">
                                         <nop-label asp-for="SearchProductTypeId" />
                                     </div>
@@ -81,7 +81,7 @@
                                         <nop-select asp-for="SearchProductTypeId" asp-items="Model.AvailableProductTypes" />
                                     </div>
                                 </div>
-                                <div class="form-group" @(Model.AvailableManufacturers.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                <div class="form-group row" @(Model.AvailableManufacturers.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
                                     <div class="col-sm-5">
                                         <nop-label asp-for="SearchManufacturerId" />
                                     </div>
@@ -102,8 +102,8 @@
                     </div>
                 </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-body">
+                <div class="card card-default">
+                    <div class="card-body">
                         @await Html.PartialAsync("Table", new DataTablesModel
                         {
                             Name = "products-grid",

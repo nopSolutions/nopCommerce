@@ -26,9 +26,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             var dbContextOptionsBuilder = optionsBuilder.UseLazyLoadingProxies();
 
             if (nopConfig.UseRowNumberForPaging)
-                dbContextOptionsBuilder.UseSqlServer(dataSettings.DataConnectionString, option => option.CommandTimeout(nopConfig.SQLCommandTimeout).UseRowNumberForPaging());
+                dbContextOptionsBuilder.UseSqlServer(dataSettings.DataConnectionString, option => option.UseRowNumberForPaging());
             else
-                dbContextOptionsBuilder.UseSqlServer(dataSettings.DataConnectionString, option => option.CommandTimeout(nopConfig.SQLCommandTimeout));
+                dbContextOptionsBuilder.UseSqlServer(dataSettings.DataConnectionString);
         }
     }
 }

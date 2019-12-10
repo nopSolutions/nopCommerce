@@ -66,8 +66,8 @@
         <div class="panel-group">
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeValueDetailsTop, additionalData = Model })
             <div class="panel panel-default panel-popup panel-popup">
-                <div class="panel-body">
-                    <div class="form-group">
+                <div class="card-body">
+                    <div class="form-group row">
                         <div class="col-sm-3">
                             <nop-label asp-for="AttributeValueTypeId" />
                         </div>
@@ -76,7 +76,7 @@
                             <span asp-validation-for="AttributeValueTypeId"></span>
                         </div>
                     </div>
-                    <div class="form-group" id="group-associated-product">
+                    <div class="form-group row" id="group-associated-product">
                         <div class="col-sm-3">
                             <nop-label asp-for="AssociatedProductId" />
                         </div>
@@ -100,7 +100,7 @@
                             </script>
                         </div>
                     </div>
-                    <div class="form-group" id="group-customer-enters-qty">
+                    <div class="form-group row" id="group-customer-enters-qty">
                         <div class="col-sm-3">
                             <nop-label asp-for="CustomerEntersQty" />
                         </div>
@@ -109,7 +109,7 @@
                             <span asp-validation-for="CustomerEntersQty"></span>
                         </div>
                     </div>
-                    <div class="form-group" id="group-quantity">
+                    <div class="form-group row" id="group-quantity">
                         <div class="col-sm-3">
                             <nop-label asp-for="Quantity" />
                         </div>
@@ -121,7 +121,7 @@
 
                     @(Html.LocalizedEditor<ProductAttributeValueModel, ProductAttributeValueLocalizedModel>("productattributevalue-localized",
                     @<div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-sm-3">
                                 <nop-label asp-for="@Model.Locales[item].Name" />
                             </div>
@@ -134,7 +134,7 @@
                     </div>
     ,
                     @<div>
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-sm-3">
                                 <nop-label asp-for="Name" />
                             </div>
@@ -152,7 +152,7 @@
                         {
                             Model.ColorSquaresRgb = "#000000";
                         }
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-sm-3">
                                 <nop-label asp-for="ColorSquaresRgb" />
                             </div>
@@ -170,7 +170,7 @@
                     }
                     @if (Model.DisplayImageSquaresPicture)
                     {
-                        <div class="form-group">
+                        <div class="form-group row">
                             <div class="col-sm-3">
                                 <nop-label asp-for="ImageSquaresPictureId" />
                             </div>
@@ -180,7 +180,7 @@
                             </div>
                         </div>
                     }
-                    <div class="form-group" id="group-price-adjustment">
+                    <div class="form-group row" id="group-price-adjustment">
                         <div class="col-sm-3">
                             <nop-label asp-for="PriceAdjustment" />
                         </div>
@@ -189,7 +189,7 @@
                             <span asp-validation-for="PriceAdjustment"></span>
                         </div>
                     </div>
-                    <div class="form-group" id="group-price-adjustment-percentage">
+                    <div class="form-group row" id="group-price-adjustment-percentage">
                         <div class="col-sm-3">
                             <nop-label asp-for="PriceAdjustmentUsePercentage" />
                         </div>
@@ -198,7 +198,7 @@
                             <span asp-validation-for="PriceAdjustmentUsePercentage"></span>
                         </div>
                     </div>
-                    <div class="form-group" id="group-weight-adjustment">
+                    <div class="form-group row" id="group-weight-adjustment">
                         <div class="col-sm-3">
                             <nop-label asp-for="WeightAdjustment" />
                         </div>
@@ -207,7 +207,7 @@
                             <span asp-validation-for="WeightAdjustment"></span>
                         </div>
                     </div>
-                    <div class="form-group" id="group-cost">
+                    <div class="form-group row" id="group-cost">
                         <div class="col-sm-3">
                             <nop-label asp-for="Cost" />
                         </div>
@@ -216,7 +216,7 @@
                             <span asp-validation-for="Cost"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-sm-3">
                             <nop-label asp-for="IsPreSelected" />
                         </div>
@@ -225,7 +225,7 @@
                             <span asp-validation-for="IsPreSelected"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-sm-3">
                             <nop-label asp-for="DisplayOrder" />
                         </div>
@@ -234,7 +234,7 @@
                             <span asp-validation-for="DisplayOrder"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-sm-3">
                             <nop-label asp-for="PictureId" />
                         </div>

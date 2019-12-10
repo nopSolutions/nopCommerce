@@ -1,7 +1,7 @@
 @model MediaSettingsModel
 
-<div class="panel-body">
-    <div class="form-group">
+<div class="card-body">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="CategoryThumbPictureSize_OverrideForStore" asp-input="CategoryThumbPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="CategoryThumbPictureSize" />
@@ -11,7 +11,7 @@
             <span asp-validation-for="CategoryThumbPictureSize"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="ManufacturerThumbPictureSize_OverrideForStore" asp-input="ManufacturerThumbPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="ManufacturerThumbPictureSize" />
@@ -21,7 +21,7 @@
             <span asp-validation-for="ManufacturerThumbPictureSize"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="VendorThumbPictureSize_OverrideForStore" asp-input="VendorThumbPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="VendorThumbPictureSize" />
@@ -31,7 +31,7 @@
             <span asp-validation-for="VendorThumbPictureSize"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="CartThumbPictureSize_OverrideForStore" asp-input="CartThumbPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="CartThumbPictureSize" />
@@ -41,7 +41,7 @@
             <span asp-validation-for="CartThumbPictureSize"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="MiniCartThumbPictureSize_OverrideForStore" asp-input="MiniCartThumbPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="MiniCartThumbPictureSize" />
@@ -51,7 +51,7 @@
             <span asp-validation-for="MiniCartThumbPictureSize"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group row">
         <div class="col-md-3">
             <nop-override-store-checkbox asp-for="AvatarPictureSize_OverrideForStore" asp-input="AvatarPictureSize" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
             <nop-label asp-for="AvatarPictureSize" />

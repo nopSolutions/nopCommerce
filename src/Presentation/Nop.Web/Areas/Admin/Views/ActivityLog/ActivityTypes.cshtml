@@ -21,9 +21,10 @@
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ActivityTypesListButtons })
         </div>
     </div>
-    <div class="content">
-        <div class="panel panel-default">
-            <div class="panel-body">
+    <section class="content">
+    <div class="container-fluid">
+        <div class="card card-default">
+            <div class="card-body">
                 @await Html.PartialAsync("Table", new DataTablesModel
                 {
                     Name = "activityLogType-grid",
@@ -57,4 +58,5 @@
             </div>
         </div>
     </div>
+    </section>
 </form>

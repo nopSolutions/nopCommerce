@@ -74,7 +74,7 @@ namespace Nop.Web.Framework.Security.Captcha
             captchaTag.Attributes.Add("id", id);
 
             var url = string.Format($"{captchaSettings.ReCaptchaApiUrl}{NopSecurityDefaults.RecaptchaScriptPath}", id,
-                !string.IsNullOrEmpty(language) ? $"&hl={language}" : string.Empty);
+                 !string.IsNullOrEmpty(language) ? $"&hl={language}" : string.Empty);
             var scriptLoadApiTag = new TagBuilder("script") { TagRenderMode = TagRenderMode.Normal };
             scriptLoadApiTag.Attributes.Add("src", url);
             scriptLoadApiTag.Attributes.Add("async", null);
