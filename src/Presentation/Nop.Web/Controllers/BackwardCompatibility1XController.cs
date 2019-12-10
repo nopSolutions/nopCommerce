@@ -12,7 +12,9 @@ using Nop.Services.Topics;
 
 namespace Nop.Web.Controllers
 {
-    public partial class BackwardCompatibility1XController : BasePublicController
+    //do not inherit it from BasePublicController. otherwise a lot of extra action filters will be called
+    //they can create guest account(s), etc
+    public partial class BackwardCompatibility1XController : Controller
     {
         #region Fields
 
