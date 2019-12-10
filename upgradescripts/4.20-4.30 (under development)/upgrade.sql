@@ -383,6 +383,7 @@ BEGIN
 	
 	DROP TABLE #tmp_guests
 END
+GO
 
 --new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'captchasettings.recaptchaapiurl')
