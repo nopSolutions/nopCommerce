@@ -14,6 +14,8 @@ namespace Nop.Data.Migrations.Forums
                 .ForeignColumn(nameof(Forum.ForumGroupId))
                 .ToTable(NopMappingDefaults.ForumsGroupTable)
                 .PrimaryColumn(nameof(ForumGroup.Id));
+
+            Create.Index().OnTable(NopMappingDefaults.ForumTable).OnColumn(nameof(Forum.ForumGroupId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

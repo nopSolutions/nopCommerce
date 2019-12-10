@@ -15,6 +15,7 @@ namespace Nop.Data.Migrations.Catalog
                 .ToTable(nameof(Product))
                 .PrimaryColumn(nameof(Product.Id));
 
+            Create.Index().OnTable(nameof(BackInStockSubscription)).OnColumn(nameof(BackInStockSubscription.ProductId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

@@ -15,6 +15,8 @@ namespace Nop.Data.Migrations.Common
                 .ForeignColumn(nameof(Address.StateProvinceId))
                 .ToTable(nameof(StateProvince))
                 .PrimaryColumn(nameof(StateProvince.Id));
+
+            Create.Index().OnTable(nameof(Address)).OnColumn(nameof(Address.StateProvinceId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

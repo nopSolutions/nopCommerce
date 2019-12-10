@@ -14,6 +14,8 @@ namespace Nop.Data.Migrations.Messages
                 .ForeignColumn(nameof(QueuedEmail.EmailAccountId))
                 .ToTable(nameof(EmailAccount))
                 .PrimaryColumn(nameof(EmailAccount.Id));
+
+            Create.Index().OnTable(nameof(QueuedEmail)).OnColumn(nameof(QueuedEmail.EmailAccountId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

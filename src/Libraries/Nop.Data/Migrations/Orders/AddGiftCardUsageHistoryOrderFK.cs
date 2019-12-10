@@ -14,6 +14,8 @@ namespace Nop.Data.Migrations.Orders
                 .ForeignColumn(nameof(GiftCardUsageHistory.UsedWithOrderId))
                 .ToTable(nameof(Order))
                 .PrimaryColumn(nameof(Order.Id));
+
+            Create.Index().OnTable(nameof(GiftCardUsageHistory)).OnColumn(nameof(GiftCardUsageHistory.UsedWithOrderId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

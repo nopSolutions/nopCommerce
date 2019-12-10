@@ -1,4 +1,5 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 
@@ -14,7 +15,10 @@ namespace Nop.Data.Migrations.Logging
             Create.ForeignKey().FromTable(nameof(Log))
                 .ForeignColumn(nameof(Log.CustomerId))
                 .ToTable(nameof(Customer))
-                .PrimaryColumn(nameof(Customer.Id));
+                .PrimaryColumn(nameof(Customer.Id))
+                .OnDelete(Rule.Cascade);
+
+            Create.Index().OnTable(nameof(Log)).OnColumn(nameof(Log.CustomerId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

@@ -17,6 +17,8 @@ namespace Nop.Data.Migrations.Customers
                 .ToTable(nameof(Order))
                 .PrimaryColumn(nameof(Order.Id))
                 .OnDelete(Rule.SetNull);
+
+            Create.Index().OnTable(nameof(RewardPointsHistory)).OnColumn(nameof(RewardPointsHistory.OrderId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

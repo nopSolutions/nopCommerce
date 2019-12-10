@@ -15,6 +15,8 @@ namespace Nop.Data.Migrations.Customers
                 .ForeignColumn("ShippingAddress_Id")
                 .ToTable(nameof(Address))
                 .PrimaryColumn(nameof(Address.Id));
+
+            Create.Index().OnTable(nameof(Customer)).OnColumn("ShippingAddress_Id").Ascending().WithOptions().NonClustered();
         }
 
         #endregion

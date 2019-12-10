@@ -15,6 +15,8 @@ namespace Nop.Data.Migrations.News
                 .ForeignColumn(nameof(NewsComment.CustomerId))
                 .ToTable(nameof(Customer))
                 .PrimaryColumn(nameof(Customer.Id));
+
+            Create.Index().OnTable(nameof(NewsComment)).OnColumn(nameof(NewsComment.CustomerId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

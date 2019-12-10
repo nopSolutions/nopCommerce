@@ -15,6 +15,9 @@ namespace Nop.Data.Migrations.Catalog
                 .ForeignColumn(nameof(ProductPicture.PictureId))
                 .ToTable(nameof(Picture))
                 .PrimaryColumn(nameof(Picture.Id));
+
+
+            Create.Index().OnTable(NopMappingDefaults.ProductPictureTable).OnColumn(nameof(ProductPicture.PictureId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

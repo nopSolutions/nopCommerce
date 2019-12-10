@@ -14,6 +14,8 @@ namespace Nop.Data.Migrations.Logging
                 .ForeignColumn(nameof(ActivityLog.ActivityLogTypeId))
                 .ToTable(nameof(ActivityLogType))
                 .PrimaryColumn(nameof(ActivityLogType.Id));
+
+            Create.Index().OnTable(nameof(ActivityLog)).OnColumn(nameof(ActivityLog.ActivityLogTypeId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

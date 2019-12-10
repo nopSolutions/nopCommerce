@@ -18,6 +18,8 @@ namespace Nop.Data.Migrations.Polls
                 .ForeignColumn(nameof(Poll.LanguageId))
                 .ToTable(nameof(Language))
                 .PrimaryColumn(nameof(Language.Id));
+
+            Create.Index().OnTable(nameof(Poll)).OnColumn(nameof(Poll.LanguageId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

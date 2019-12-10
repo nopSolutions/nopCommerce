@@ -17,6 +17,8 @@ namespace Nop.Data.Migrations.Affiliates
                 .ToTable(nameof(Address))
                 .PrimaryColumn(nameof(Address.Id))
                 .OnDelete(Rule.None);
+
+            Create.Index().OnTable(nameof(Affiliate)).OnColumn(nameof(Affiliate.AddressId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

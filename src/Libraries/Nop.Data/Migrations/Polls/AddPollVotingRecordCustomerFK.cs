@@ -15,6 +15,8 @@ namespace Nop.Data.Migrations.Polls
                 .ForeignColumn(nameof(PollVotingRecord.CustomerId))
                 .ToTable(nameof(Customer))
                 .PrimaryColumn(nameof(Customer.Id));
+
+            Create.Index().OnTable(nameof(PollVotingRecord)).OnColumn(nameof(PollVotingRecord.CustomerId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

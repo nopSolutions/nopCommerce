@@ -15,6 +15,8 @@ namespace Nop.Data.Migrations.Catalog
                 .ForeignColumn(nameof(ProductWarehouseInventory.WarehouseId))
                 .ToTable(nameof(Warehouse))
                 .PrimaryColumn(nameof(Warehouse.Id));
+
+            Create.Index().OnTable(nameof(ProductWarehouseInventory)).OnColumn(nameof(ProductWarehouseInventory.WarehouseId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

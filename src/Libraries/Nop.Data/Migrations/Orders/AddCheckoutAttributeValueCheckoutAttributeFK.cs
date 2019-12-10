@@ -14,6 +14,8 @@ namespace Nop.Data.Migrations.Orders
                 .ForeignColumn(nameof(CheckoutAttributeValue.CheckoutAttributeId))
                 .ToTable(nameof(CheckoutAttribute))
                 .PrimaryColumn(nameof(CheckoutAttribute.Id));
+
+            Create.Index().OnTable(nameof(CheckoutAttributeValue)).OnColumn(nameof(CheckoutAttributeValue.CheckoutAttributeId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

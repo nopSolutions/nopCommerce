@@ -14,6 +14,8 @@ namespace Nop.Data.Migrations.Customers
                 .ForeignColumn(nameof(RewardPointsHistory.CustomerId))
                 .ToTable(nameof(Customer))
                 .PrimaryColumn(nameof(Customer.Id));
+
+            Create.Index().OnTable(nameof(RewardPointsHistory)).OnColumn(nameof(RewardPointsHistory.CustomerId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

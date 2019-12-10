@@ -16,6 +16,8 @@ namespace Nop.Data.Migrations.Media
                 .ToTable(nameof(Picture))
                 .PrimaryColumn(nameof(Picture.Id))
                 .OnDelete(Rule.Cascade);
+
+            Create.Index().OnTable(nameof(PictureBinary)).OnColumn(nameof(PictureBinary.PictureId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

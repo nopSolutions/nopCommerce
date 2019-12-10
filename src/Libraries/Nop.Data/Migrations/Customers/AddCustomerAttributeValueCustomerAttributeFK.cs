@@ -14,6 +14,8 @@ namespace Nop.Data.Migrations.Customers
                 .ForeignColumn(nameof(CustomerAttributeValue.CustomerAttributeId))
                 .ToTable(nameof(CustomerAttribute))
                 .PrimaryColumn(nameof(CustomerAttribute.Id));
+
+            Create.Index().OnTable(nameof(CustomerAttributeValue)).OnColumn(nameof(CustomerAttributeValue.CustomerAttributeId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

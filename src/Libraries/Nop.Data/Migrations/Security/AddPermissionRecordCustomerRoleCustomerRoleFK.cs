@@ -15,6 +15,8 @@ namespace Nop.Data.Migrations.Security
                 .ForeignColumn("CustomerRole_Id")
                 .ToTable(nameof(CustomerRole))
                 .PrimaryColumn(nameof(CustomerRole.Id));
+
+            Create.Index().OnTable(NopMappingDefaults.PermissionRecordRoleTable).OnColumn("CustomerRole_Id").Ascending().WithOptions().NonClustered();
         }
 
         #endregion

@@ -15,6 +15,8 @@ namespace Nop.Data.Migrations.Catalog
                 .ForeignColumn(nameof(ProductReview.CustomerId))
                 .ToTable(nameof(Customer))
                 .PrimaryColumn(nameof(Customer.Id));
+
+            Create.Index().OnTable(nameof(ProductReview)).OnColumn(nameof(ProductReview.CustomerId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

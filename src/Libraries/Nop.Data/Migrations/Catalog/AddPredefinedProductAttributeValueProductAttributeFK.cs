@@ -14,6 +14,8 @@ namespace Nop.Data.Migrations.Catalog
                 .ForeignColumn(nameof(PredefinedProductAttributeValue.ProductAttributeId))
                 .ToTable(nameof(ProductAttribute))
                 .PrimaryColumn(nameof(ProductAttribute.Id));
+
+            Create.Index().OnTable(nameof(PredefinedProductAttributeValue)).OnColumn(nameof(PredefinedProductAttributeValue.ProductAttributeId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

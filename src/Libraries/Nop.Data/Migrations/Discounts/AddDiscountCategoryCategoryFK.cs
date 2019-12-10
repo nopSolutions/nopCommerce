@@ -14,6 +14,8 @@ namespace Nop.Data.Migrations.Discounts
                 .ForeignColumn("Category_Id")
                 .ToTable(nameof(Category))
                 .PrimaryColumn(nameof(Category.Id));
+
+            Create.Index().OnTable(NopMappingDefaults.DiscountAppliedToCategoriesTable).OnColumn("Category_Id").Ascending().WithOptions().NonClustered();
         }
 
         #endregion

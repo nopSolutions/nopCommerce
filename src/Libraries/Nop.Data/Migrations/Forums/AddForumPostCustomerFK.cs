@@ -17,6 +17,8 @@ namespace Nop.Data.Migrations.Forums
                 .ToTable(nameof(Customer))
                 .PrimaryColumn(nameof(Customer.Id))
                 .OnDelete(Rule.None);
+
+            Create.Index().OnTable(NopMappingDefaults.ForumsPostTable).OnColumn(nameof(ForumPost.CustomerId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

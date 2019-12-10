@@ -15,6 +15,8 @@ namespace Nop.Data.Migrations.Blogs
                 .ForeignColumn(nameof(BlogPost.LanguageId))
                 .ToTable(nameof(Language))
                 .PrimaryColumn(nameof(Language.Id));
+
+            Create.Index().OnTable(nameof(BlogPost)).OnColumn(nameof(BlogPost.LanguageId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

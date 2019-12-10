@@ -16,6 +16,8 @@ namespace Nop.Data.Migrations.Common
                 .ForeignColumn(nameof(AddressAttributeValue.AddressAttributeId))
                 .ToTable(nameof(AddressAttribute))
                 .PrimaryColumn(nameof(AddressAttribute.Id));
+
+            Create.Index().OnTable(nameof(AddressAttributeValue)).OnColumn(nameof(AddressAttributeValue.AddressAttributeId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

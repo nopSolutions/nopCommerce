@@ -15,6 +15,8 @@ namespace Nop.Data.Migrations.Orders
                 .ForeignColumn(nameof(ShoppingCartItem.ProductId))
                 .ToTable(nameof(Product))
                 .PrimaryColumn(nameof(Product.Id));
+
+            Create.Index().OnTable(nameof(ShoppingCartItem)).OnColumn(nameof(ShoppingCartItem.ProductId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

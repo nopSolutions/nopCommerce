@@ -1,4 +1,5 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Migrations.Shipping
@@ -13,7 +14,10 @@ namespace Nop.Data.Migrations.Shipping
             Create.ForeignKey().FromTable(NopMappingDefaults.ShippingMethodRestrictionsTable)
                 .ForeignColumn("ShippingMethod_Id")
                 .ToTable(nameof(ShippingMethod))
-                .PrimaryColumn(nameof(ShippingMethod.Id));
+                .PrimaryColumn(nameof(ShippingMethod.Id))
+                .OnDelete(Rule.Cascade);
+
+            Create.Index().OnTable(NopMappingDefaults.ShippingMethodRestrictionsTable).OnColumn("ShippingMethod_Id").Ascending().WithOptions().NonClustered();
         }
 
         #endregion

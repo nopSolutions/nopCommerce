@@ -17,6 +17,8 @@ namespace Nop.Data.Migrations.Discounts
                 .ForeignColumn(nameof(DiscountUsageHistory.OrderId))
                 .ToTable(nameof(Order))
                 .PrimaryColumn(nameof(Order.Id));
+
+            Create.Index().OnTable(nameof(DiscountUsageHistory)).OnColumn(nameof(DiscountUsageHistory.OrderId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

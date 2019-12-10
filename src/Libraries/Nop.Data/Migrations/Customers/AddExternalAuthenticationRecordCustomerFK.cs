@@ -14,6 +14,8 @@ namespace Nop.Data.Migrations.Customers
                 .ForeignColumn(nameof(ExternalAuthenticationRecord.CustomerId))
                 .ToTable(nameof(Customer))
                 .PrimaryColumn(nameof(Customer.Id));
+
+            Create.Index().OnTable(nameof(ExternalAuthenticationRecord)).OnColumn(nameof(ExternalAuthenticationRecord.CustomerId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

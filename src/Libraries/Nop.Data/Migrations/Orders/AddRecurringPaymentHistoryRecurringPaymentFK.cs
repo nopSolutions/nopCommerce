@@ -14,6 +14,8 @@ namespace Nop.Data.Migrations.Orders
                 .ForeignColumn(nameof(RecurringPaymentHistory.RecurringPaymentId))
                 .ToTable(nameof(RecurringPayment))
                 .PrimaryColumn(nameof(RecurringPayment.Id));
+
+            Create.Index().OnTable(nameof(RecurringPaymentHistory)).OnColumn(nameof(RecurringPaymentHistory.RecurringPaymentId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

@@ -1,4 +1,5 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 
@@ -14,7 +15,10 @@ namespace Nop.Data.Migrations.Catalog
             Create.ForeignKey().FromTable(nameof(TierPrice))
                 .ForeignColumn(nameof(TierPrice.CustomerRoleId))
                 .ToTable(nameof(CustomerRole))
-                .PrimaryColumn(nameof(CustomerRole.Id));
+                .PrimaryColumn(nameof(CustomerRole.Id))
+                .OnDelete(Rule.Cascade);
+
+            Create.Index().OnTable(nameof(TierPrice)).OnColumn(nameof(TierPrice.CustomerRoleId)).Ascending().WithOptions().NonClustered();
         }
         
         #endregion

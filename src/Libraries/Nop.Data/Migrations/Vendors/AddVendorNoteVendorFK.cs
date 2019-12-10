@@ -14,6 +14,8 @@ namespace Nop.Data.Migrations.Vendors
                 .ForeignColumn(nameof(VendorNote.VendorId))
                 .ToTable(nameof(Vendor))
                 .PrimaryColumn(nameof(Vendor.Id));
+
+            Create.Index().OnTable(nameof(VendorNote)).OnColumn(nameof(VendorNote.VendorId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

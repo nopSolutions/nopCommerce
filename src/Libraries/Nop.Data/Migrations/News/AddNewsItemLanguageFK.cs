@@ -15,6 +15,8 @@ namespace Nop.Data.Migrations.News
                 .ForeignColumn(nameof(NewsItem.LanguageId))
                 .ToTable(nameof(Language))
                 .PrimaryColumn(nameof(Language.Id));
+
+            Create.Index().OnTable(NopMappingDefaults.NewsItemTable).OnColumn(nameof(NewsItem.LanguageId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

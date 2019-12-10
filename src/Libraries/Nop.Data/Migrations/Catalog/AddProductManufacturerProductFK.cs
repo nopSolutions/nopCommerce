@@ -14,6 +14,8 @@ namespace Nop.Data.Migrations.Catalog
                 .ForeignColumn(nameof(ProductManufacturer.ProductId))
                 .ToTable(nameof(Product))
                 .PrimaryColumn(nameof(Product.Id));
+
+            Create.Index().OnTable(NopMappingDefaults.ProductManufacturerTable).OnColumn(nameof(ProductManufacturer.ProductId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

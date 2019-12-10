@@ -17,6 +17,8 @@ namespace Nop.Data.Migrations.Localization
                 .ForeignColumn(nameof(LocalizedProperty.LanguageId))
                 .ToTable(nameof(Language))
                 .PrimaryColumn(nameof(Language.Id));
+
+            Create.Index().OnTable(nameof(LocalizedProperty)).OnColumn(nameof(LocalizedProperty.LanguageId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

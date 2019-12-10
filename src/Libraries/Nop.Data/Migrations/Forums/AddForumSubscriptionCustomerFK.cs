@@ -15,6 +15,8 @@ namespace Nop.Data.Migrations.Forums
                 .ForeignColumn(nameof(ForumSubscription.CustomerId))
                 .ToTable(nameof(Customer))
                 .PrimaryColumn(nameof(Customer.Id));
+
+            Create.Index().OnTable(NopMappingDefaults.ForumsSubscriptionTable).OnColumn(nameof(ForumSubscription.CustomerId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

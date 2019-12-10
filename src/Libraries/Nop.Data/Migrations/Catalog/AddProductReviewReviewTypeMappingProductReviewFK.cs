@@ -1,4 +1,5 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Migrations.Catalog
@@ -13,7 +14,10 @@ namespace Nop.Data.Migrations.Catalog
             Create.ForeignKey().FromTable(NopMappingDefaults.ProductReviewReviewTypeTable)
                 .ForeignColumn(nameof(ProductReviewReviewTypeMapping.ProductReviewId))
                 .ToTable(nameof(ProductReview))
-                .PrimaryColumn(nameof(ProductReview.Id));
+                .PrimaryColumn(nameof(ProductReview.Id))
+                .OnDelete(Rule.Cascade);
+
+            Create.Index().OnTable(NopMappingDefaults.ProductReviewReviewTypeTable).OnColumn(nameof(ProductReviewReviewTypeMapping.ProductReviewId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

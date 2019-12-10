@@ -15,6 +15,8 @@ namespace Nop.Data.Migrations.Blogs
                 .ForeignColumn(nameof(BlogComment.CustomerId))
                 .ToTable(nameof(Customer))
                 .PrimaryColumn(nameof(Customer.Id));
+
+            Create.Index().OnTable(nameof(BlogComment)).OnColumn(nameof(BlogComment.CustomerId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

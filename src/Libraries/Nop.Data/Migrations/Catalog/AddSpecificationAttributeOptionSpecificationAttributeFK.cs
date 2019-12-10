@@ -14,6 +14,8 @@ namespace Nop.Data.Migrations.Catalog
                 .ForeignColumn(nameof(SpecificationAttributeOption.SpecificationAttributeId))
                 .ToTable(nameof(SpecificationAttribute))
                 .PrimaryColumn(nameof(SpecificationAttribute.Id));
+
+            Create.Index().OnTable(nameof(SpecificationAttributeOption)).OnColumn(nameof(SpecificationAttributeOption.SpecificationAttributeId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

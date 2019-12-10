@@ -14,6 +14,8 @@ namespace Nop.Data.Migrations.Stores
                 .ForeignColumn(nameof(StoreMapping.StoreId))
                 .ToTable(nameof(Store))
                 .PrimaryColumn(nameof(Store.Id));
+
+            Create.Index().OnTable(nameof(StoreMapping)).OnColumn(nameof(StoreMapping.StoreId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

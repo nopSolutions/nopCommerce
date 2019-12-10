@@ -15,6 +15,8 @@ namespace Nop.Data.Migrations.Logging
                 .ForeignColumn(nameof(ActivityLog.CustomerId))
                 .ToTable(nameof(Customer))
                 .PrimaryColumn(nameof(Customer.Id));
+
+            Create.Index().OnTable(nameof(ActivityLog)).OnColumn(nameof(ActivityLog.CustomerId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

@@ -15,6 +15,8 @@ namespace Nop.Data.Migrations.Security
                 .ForeignColumn(nameof(AclRecord.CustomerRoleId))
                 .ToTable(nameof(CustomerRole))
                 .PrimaryColumn(nameof(CustomerRole.Id));
+
+            Create.Index().OnTable(nameof(AclRecord)).OnColumn(nameof(AclRecord.CustomerRoleId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion

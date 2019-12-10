@@ -15,6 +15,8 @@ namespace Nop.Data.Migrations.Catalog
                 .ForeignColumn(nameof(BackInStockSubscription.CustomerId))
                 .ToTable(nameof(Customer))
                 .PrimaryColumn(nameof(Customer.Id));
+
+            Create.Index().OnTable(nameof(BackInStockSubscription)).OnColumn(nameof(BackInStockSubscription.CustomerId)).Ascending().WithOptions().NonClustered();
         }
 
         #endregion
