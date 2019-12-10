@@ -13,8 +13,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json.Serialization;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -202,6 +205,24 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     return redisConnectionWrapper.GetDatabase(nopConfig.RedisDatabaseId ?? (int)RedisDatabaseNumber.DataProtectionKeys);
                 }, NopCachingDefaults.RedisDataProtectionKey);
             }
+            else if (nopConfig.UseAzureBlobStorageToStoreDataProtectionKeys)
+            {
+                var cloudStorageAccount = CloudStorageAccount.Parse(nopConfig.AzureBlobStorageConnectionString);
+
+                var client = cloudStorageAccount.CreateCloudBlobClient();
+                var container = client.GetContainerReference(nopConfig.AzureBlobStorageContainerNameForDataProtectionKeys);
+
+                var dataProtectionBuilder = services.AddDataProtection().PersistKeysToAzureBlobStorage(container, "DataProtectionKeys.xml");
+
+                if(nopConfig.EncryptDataProtectionKeysWithAzureKeyVault)
+                {
+                    var tokenProvider = new AzureServiceTokenProvider();
+                    var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(tokenProvider.KeyVaultTokenCallback));
+                    
+                    dataProtectionBuilder.ProtectKeysWithAzureKeyVault(keyVaultClient, nopConfig.AzureKeyVaultIdForDataProtectionKeys);
+                }
+            }
+
             else
             {
                 var dataProtectionKeysPath = CommonHelper.DefaultFileProvider.MapPath("~/App_Data/DataProtectionKeys");
