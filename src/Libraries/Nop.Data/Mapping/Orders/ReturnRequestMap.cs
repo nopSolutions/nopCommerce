@@ -18,9 +18,8 @@ namespace Nop.Data.Mapping.Orders
         {
             builder.HasTableName(nameof(ReturnRequest));
 
-            builder.HasColumn(returnRequest => returnRequest.ReasonForReturn).IsColumnRequired();
-            builder.HasColumn(returnRequest => returnRequest.RequestedAction).IsColumnRequired();
-
+            builder.Property(returnRequest => returnRequest.ReasonForReturn).IsNullable(false);
+            builder.Property(returnRequest => returnRequest.RequestedAction).IsNullable(false);
             builder.Property(returnrequest => returnrequest.CustomNumber);
             builder.Property(returnrequest => returnrequest.StoreId);
             builder.Property(returnrequest => returnrequest.OrderItemId);

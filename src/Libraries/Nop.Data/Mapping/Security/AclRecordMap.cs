@@ -18,8 +18,7 @@ namespace Nop.Data.Mapping.Security
         {
             builder.HasTableName(nameof(AclRecord));
 
-            builder.Property(record => record.EntityName).HasLength(400);
-            builder.HasColumn(record => record.EntityName).IsColumnRequired();
+            builder.Property(record => record.EntityName).HasLength(400).IsNullable(false);
             builder.Property(aclrecord => aclrecord.EntityId);
             builder.Property(aclrecord => aclrecord.CustomerRoleId);
         }

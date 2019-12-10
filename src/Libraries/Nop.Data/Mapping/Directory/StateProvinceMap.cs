@@ -18,8 +18,7 @@ namespace Nop.Data.Mapping.Directory
         {
             builder.HasTableName(nameof(StateProvince));
 
-            builder.Property(state => state.Name).HasLength(100);
-            builder.HasColumn(state => state.Name).IsColumnRequired();
+            builder.Property(state => state.Name).HasLength(100).IsNullable(false);
             builder.Property(state => state.Abbreviation).HasLength(100);
             builder.Property(stateprovince => stateprovince.CountryId);
             builder.Property(stateprovince => stateprovince.Published);

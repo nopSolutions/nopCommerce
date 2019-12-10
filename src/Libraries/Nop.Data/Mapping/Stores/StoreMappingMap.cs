@@ -18,9 +18,7 @@ namespace Nop.Data.Mapping.Stores
         {
             builder.HasTableName(nameof(StoreMapping));
 
-            builder.Property(storeMapping => storeMapping.EntityName).HasLength(400);
-            builder.HasColumn(storeMapping => storeMapping.EntityName).IsColumnRequired();
-
+            builder.Property(storeMapping => storeMapping.EntityName).HasLength(400).IsNullable(false);
             builder.Property(storemapping => storemapping.EntityId);
             builder.Property(storemapping => storemapping.StoreId);
         }

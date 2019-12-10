@@ -18,8 +18,7 @@ namespace Nop.Data.Mapping.Customers
         {
             builder.HasTableName(nameof(CustomerAttribute));
 
-            builder.Property(attribute => attribute.Name).HasLength(400);
-            builder.HasColumn(attribute => attribute.Name).IsColumnRequired();
+            builder.Property(attribute => attribute.Name).HasLength(400).IsNullable(false);
             builder.Property(customerattribute => customerattribute.IsRequired);
             builder.Property(customerattribute => customerattribute.AttributeControlTypeId);
             builder.Property(customerattribute => customerattribute.DisplayOrder);

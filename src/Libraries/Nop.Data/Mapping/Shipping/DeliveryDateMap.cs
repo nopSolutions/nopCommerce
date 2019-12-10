@@ -18,9 +18,7 @@ namespace Nop.Data.Mapping.Shipping
         {
             builder.HasTableName(nameof(DeliveryDate));
 
-            builder.Property(date => date.Name).HasLength(400);
-            builder.HasColumn(date => date.Name).IsColumnRequired();
-
+            builder.Property(date => date.Name).HasLength(400).IsNullable(false);
             builder.Property(date => date.DisplayOrder);
         }
 

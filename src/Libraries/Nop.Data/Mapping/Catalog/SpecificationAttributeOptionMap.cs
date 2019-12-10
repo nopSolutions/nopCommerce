@@ -18,7 +18,7 @@ namespace Nop.Data.Mapping.Catalog
         {
             builder.HasTableName(nameof(SpecificationAttributeOption));
 
-            builder.HasColumn(option => option.Name).IsColumnRequired();
+            builder.Property(option => option.Name).IsNullable(false);
             builder.Property(option => option.ColorSquaresRgb).HasLength(100);
 
             builder.Property(specificationattributeoption => specificationattributeoption.SpecificationAttributeId);

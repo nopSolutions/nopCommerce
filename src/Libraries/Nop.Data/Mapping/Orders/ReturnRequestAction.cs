@@ -18,8 +18,7 @@ namespace Nop.Data.Mapping.Orders
         {
             builder.HasTableName(nameof(ReturnRequestAction));
 
-            builder.Property(action => action.Name).HasLength(400);
-            builder.HasColumn(action => action.Name).IsColumnRequired();
+            builder.Property(action => action.Name).HasLength(400).IsNullable(false);
             builder.Property(action => action.DisplayOrder);
         }
 

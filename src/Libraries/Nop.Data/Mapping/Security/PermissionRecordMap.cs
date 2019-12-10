@@ -18,11 +18,9 @@ namespace Nop.Data.Mapping.Security
         {
             builder.HasTableName(nameof(PermissionRecord));
 
-            builder.HasColumn(record => record.Name).IsColumnRequired();
-            builder.Property(record => record.SystemName).HasLength(255);
-            builder.Property(record => record.Category).HasLength(255);
-            builder.HasColumn(record => record.SystemName).IsColumnRequired();
-            builder.HasColumn(record => record.Category).IsColumnRequired();
+            builder.Property(record => record.Name).IsNullable(false);
+            builder.Property(record => record.SystemName).HasLength(255).IsNullable(false);
+            builder.Property(record => record.Category).HasLength(255).IsNullable(false);
         }
 
         #endregion

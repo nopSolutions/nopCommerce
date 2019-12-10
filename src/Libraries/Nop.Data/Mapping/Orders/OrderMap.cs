@@ -32,8 +32,7 @@ namespace Nop.Data.Mapping.Orders
             builder.Property(order => order.OrderDiscount).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
             builder.Property(order => order.OrderTotal).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
             builder.Property(order => order.RefundedAmount).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
-            builder.HasColumn(order => order.CustomOrderNumber).IsColumnRequired();
-
+            builder.Property(order => order.CustomOrderNumber).IsNullable(false);
             builder.Property(order => order.OrderGuid);
             builder.Property(order => order.StoreId);
             builder.Property(order => order.CustomerId);

@@ -17,10 +17,8 @@ namespace Nop.Data.Mapping.Configuration
         public override void Configure(EntityMappingBuilder<Setting> builder)
         {
             builder.HasTableName(nameof(Setting));
-
-            builder.Property(setting => setting.Name).HasLength(200);
-            builder.HasColumn(setting => setting.Name).IsColumnRequired();
-            builder.HasColumn(setting => setting.Value).IsColumnRequired();
+            builder.Property(setting => setting.Name).HasLength(200).IsNullable(false);
+            builder.Property(setting => setting.Value).IsNullable(false);
             builder.Property(setting => setting.StoreId);
         }
 

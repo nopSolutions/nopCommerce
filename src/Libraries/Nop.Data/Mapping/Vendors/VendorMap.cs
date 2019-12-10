@@ -18,8 +18,7 @@ namespace Nop.Data.Mapping.Vendors
         {
             builder.HasTableName(nameof(Vendor));
 
-            builder.HasColumn(vendor => vendor.Name).IsColumnRequired();
-            builder.Property(vendor => vendor.Name).HasLength(400);
+            builder.Property(vendor => vendor.Name).HasLength(400).IsNullable(false);
             builder.Property(vendor => vendor.Email).HasLength(400);
             builder.Property(vendor => vendor.MetaKeywords).HasLength(400);
             builder.Property(vendor => vendor.MetaTitle).HasLength(400);

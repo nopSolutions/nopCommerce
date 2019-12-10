@@ -19,10 +19,8 @@ namespace Nop.Data.Mapping.Directory
         {
             builder.HasTableName(nameof(Currency));
 
-            builder.Property(currency => currency.Name).HasLength(50);
-            builder.Property(currency => currency.CurrencyCode).HasLength(5);
-            builder.HasColumn(currency => currency.Name).IsColumnRequired();
-            builder.HasColumn(currency => currency.CurrencyCode).IsColumnRequired();
+            builder.Property(currency => currency.Name).HasLength(50).IsNullable(false);
+            builder.Property(currency => currency.CurrencyCode).HasLength(5).IsNullable(false);
             builder.Property(currency => currency.DisplayLocale).HasLength(50);
             builder.Property(currency => currency.CustomFormatting).HasLength(50);
             builder.Property(currency => currency.Rate).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);

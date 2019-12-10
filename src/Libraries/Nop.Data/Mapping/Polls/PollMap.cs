@@ -18,8 +18,7 @@ namespace Nop.Data.Mapping.Polls
         {
             builder.HasTableName(nameof(Poll));
 
-            builder.HasColumn(poll => poll.Name).IsColumnRequired();
-
+            builder.Property(poll => poll.Name).IsNullable(false);
             builder.Property(poll => poll.LanguageId);
             builder.Property(poll => poll.SystemKeyword);
             builder.Property(poll => poll.Published);

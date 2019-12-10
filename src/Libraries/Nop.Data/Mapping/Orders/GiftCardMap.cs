@@ -32,7 +32,6 @@ namespace Nop.Data.Mapping.Orders
             builder.Property(giftCard => giftCard.Message);
             builder.Property(giftCard => giftCard.IsRecipientNotified);
             builder.Property(giftCard => giftCard.CreatedOnUtc);
-            builder.Property(giftCard => giftCard.GiftCardType);
 
             builder.Ignore(giftCard => giftCard.GiftCardType);
         }

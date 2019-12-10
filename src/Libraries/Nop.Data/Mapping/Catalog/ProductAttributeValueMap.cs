@@ -19,8 +19,7 @@ namespace Nop.Data.Mapping.Catalog
         {
             builder.HasTableName(nameof(ProductAttributeValue));
 
-            builder.Property(value => value.Name).HasLength(400);
-            builder.HasColumn(value => value.Name).IsColumnRequired();
+            builder.Property(value => value.Name).HasLength(400).IsNullable(false);
             builder.Property(value => value.ColorSquaresRgb).HasLength(100);
             builder.Property(value => value.PriceAdjustment).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
             builder.Property(value => value.WeightAdjustment).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
@@ -36,7 +35,6 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(productattributevalue => productattributevalue.IsPreSelected);
             builder.Property(productattributevalue => productattributevalue.DisplayOrder);
             builder.Property(productattributevalue => productattributevalue.PictureId);
-            builder.Property(productattributevalue => productattributevalue.AttributeValueType);
 
             builder.Ignore(value => value.AttributeValueType);
         }

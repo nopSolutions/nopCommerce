@@ -18,9 +18,7 @@ namespace Nop.Data.Mapping.Tax
         {
             builder.HasTableName(nameof(TaxCategory));
 
-            builder.HasColumn(taxCategory => taxCategory.Name).IsColumnRequired();
-            builder.Property(taxCategory => taxCategory.Name).HasLength(400);
-
+            builder.Property(taxCategory => taxCategory.Name).HasLength(400).IsNullable(false);
             builder.Property(taxcategory => taxcategory.DisplayOrder);
         }
 

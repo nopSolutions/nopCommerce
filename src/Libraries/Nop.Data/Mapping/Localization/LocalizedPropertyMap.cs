@@ -18,12 +18,9 @@ namespace Nop.Data.Mapping.Localization
         {
             builder.HasTableName(nameof(LocalizedProperty));
 
-            builder.Property(property => property.LocaleKeyGroup).HasLength(400);
-            builder.Property(property => property.LocaleKey).HasLength(400);
-            builder.HasColumn(property => property.LocaleValue).IsColumnRequired();
-            builder.HasColumn(property => property.LocaleKeyGroup).IsColumnRequired();
-            builder.HasColumn(property => property.LocaleKey).IsColumnRequired();
-
+            builder.Property(property => property.LocaleKeyGroup).HasLength(400).IsNullable(false);
+            builder.Property(property => property.LocaleKey).HasLength(400).IsNullable(false);
+            builder.Property(property => property.LocaleValue).IsNullable(false);
             builder.Property(localizedproperty => localizedproperty.EntityId);
             builder.Property(localizedproperty => localizedproperty.LanguageId);
         }

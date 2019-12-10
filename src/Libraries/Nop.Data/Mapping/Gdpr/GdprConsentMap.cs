@@ -18,7 +18,7 @@ namespace Nop.Data.Mapping.Gdpr
         {
             builder.HasTableName(nameof(GdprConsent));
 
-            builder.HasColumn(gdpr => gdpr.Message).IsColumnRequired();
+            builder.Property(gdpr => gdpr.Message).IsNullable(false);
 
             builder.Property(gdpr => gdpr.IsRequired);
             builder.Property(gdpr => gdpr.RequiredMessage);

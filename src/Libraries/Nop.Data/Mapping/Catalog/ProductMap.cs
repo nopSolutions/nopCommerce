@@ -19,8 +19,7 @@ namespace Nop.Data.Mapping.Catalog
         {
             builder.HasTableName(nameof(Product));
 
-            builder.HasColumn(product => product.Name).IsColumnRequired();
-            builder.Property(product => product.Name).HasLength(400);
+            builder.Property(product => product.Name).HasLength(400).IsNullable(false);
             builder.Property(product => product.MetaKeywords).HasLength(400);
             builder.Property(product => product.MetaTitle).HasLength(400);
             builder.Property(product => product.Sku).HasLength(400);

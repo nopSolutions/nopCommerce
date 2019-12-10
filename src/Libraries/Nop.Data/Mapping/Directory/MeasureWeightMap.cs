@@ -19,10 +19,8 @@ namespace Nop.Data.Mapping.Directory
         {
             builder.HasTableName(nameof(MeasureWeight));
 
-            builder.Property(weight => weight.Name).HasLength(100);
-            builder.Property(weight => weight.SystemKeyword).HasLength(100);
-            builder.HasColumn(weight => weight.Name).IsColumnRequired();
-            builder.HasColumn(weight => weight.SystemKeyword).IsColumnRequired();
+            builder.Property(weight => weight.Name).HasLength(100).IsNullable(false);
+            builder.Property(weight => weight.SystemKeyword).HasLength(100).IsNullable(false);
             builder.Property(weight => weight.Ratio).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(8);
 
             builder.Property(measureweight => measureweight.DisplayOrder);

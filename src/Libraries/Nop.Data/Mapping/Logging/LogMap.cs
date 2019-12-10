@@ -18,7 +18,7 @@ namespace Nop.Data.Mapping.Logging
         {
             builder.HasTableName(nameof(Log));
 
-            builder.HasColumn(logItem => logItem.ShortMessage).IsColumnRequired();
+            builder.Property(logItem => logItem.ShortMessage).IsNullable(false);
             builder.Property(logItem => logItem.IpAddress).HasLength(200);
             builder.Property(logItem => logItem.LogLevelId);
             builder.Property(logItem => logItem.FullMessage);

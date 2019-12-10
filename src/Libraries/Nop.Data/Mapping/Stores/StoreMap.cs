@@ -18,11 +18,8 @@ namespace Nop.Data.Mapping.Stores
         {
             builder.HasTableName(nameof(Store));
 
-            builder.HasColumn(store => store.Name).IsColumnRequired();
-            builder.HasColumn(store => store.Url).IsColumnRequired();
-
-            builder.Property(store => store.Name).HasLength(400);
-            builder.Property(store => store.Url).HasLength(400);
+            builder.Property(store => store.Name).HasLength(400).IsNullable(false);
+            builder.Property(store => store.Url).HasLength(400).IsNullable(false);
             builder.Property(store => store.Hosts).HasLength(1000);
             builder.Property(store => store.CompanyName).HasLength(1000);
             builder.Property(store => store.CompanyAddress).HasLength(1000);

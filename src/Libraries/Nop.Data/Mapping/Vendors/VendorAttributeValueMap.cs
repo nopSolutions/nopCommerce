@@ -18,9 +18,7 @@ namespace Nop.Data.Mapping.Vendors
         {
             builder.HasTableName(nameof(VendorAttributeValue));
 
-            builder.Property(value => value.Name).HasLength(400);
-            builder.HasColumn(value => value.Name).IsColumnRequired();
-
+            builder.Property(value => value.Name).HasLength(400).IsNullable(false);
             builder.Property(value => value.IsPreSelected);
             builder.Property(value => value.DisplayOrder);
             builder.Property(value => value.VendorAttributeId);

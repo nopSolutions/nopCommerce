@@ -18,10 +18,8 @@ namespace Nop.Data.Mapping.Media
         {
             builder.HasTableName(nameof(Picture));
             
-            builder.Property(picture => picture.MimeType).HasLength(40);
-            builder.HasColumn(picture => picture.MimeType).IsColumnRequired();
+            builder.Property(picture => picture.MimeType).HasLength(40).IsNullable(false);
             builder.Property(picture => picture.SeoFilename).HasLength(300);
-
             builder.Property(picture => picture.AltAttribute);
             builder.Property(picture => picture.TitleAttribute);
             builder.Property(picture => picture.IsNew);

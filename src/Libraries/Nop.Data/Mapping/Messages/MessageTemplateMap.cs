@@ -18,12 +18,10 @@ namespace Nop.Data.Mapping.Messages
         {
             builder.HasTableName(nameof(MessageTemplate));
 
-            builder.Property(template => template.Name).HasLength(200);
-            builder.HasColumn(template => template.Name).IsColumnRequired();
+            builder.Property(template => template.Name).HasLength(200).IsNullable(false);
             builder.Property(template => template.BccEmailAddresses).HasLength(200);
             builder.Property(template => template.Subject).HasLength(1000);
-            builder.HasColumn(template => template.EmailAccountId).IsColumnRequired();
-          
+            builder.Property(template => template.EmailAccountId).IsNullable(false);
             builder.Property(template => template.Body);
             builder.Property(template => template.IsActive);
             builder.Property(template => template.DelayBeforeSend);

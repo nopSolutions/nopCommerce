@@ -18,8 +18,7 @@ namespace Nop.Data.Mapping.Catalog
         {
             builder.HasTableName(nameof(ProductTag));
 
-            builder.Property(productTag => productTag.Name).HasLength(400);
-            builder.HasColumn(productTag => productTag.Name).IsColumnRequired();
+            builder.Property(productTag => productTag.Name).HasLength(400).IsNullable(false);
         }
 
         #endregion

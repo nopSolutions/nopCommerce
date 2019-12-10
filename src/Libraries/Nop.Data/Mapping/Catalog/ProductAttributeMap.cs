@@ -18,7 +18,7 @@ namespace Nop.Data.Mapping.Catalog
         {
             builder.HasTableName(nameof(ProductAttribute));
 
-            builder.HasColumn(attribute => attribute.Name).IsColumnRequired();
+            builder.Property(attribute => attribute.Name).IsNullable(false);
             builder.Property(productattribute => productattribute.Description);
         }
 

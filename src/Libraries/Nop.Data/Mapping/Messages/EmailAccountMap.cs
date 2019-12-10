@@ -19,15 +19,10 @@ namespace Nop.Data.Mapping.Messages
             builder.HasTableName(nameof(EmailAccount));
 
             builder.Property(emailAccount => emailAccount.DisplayName).HasLength(255);
-            builder.Property(emailAccount => emailAccount.Email).HasLength(255);
-            builder.Property(emailAccount => emailAccount.Host).HasLength(255);
-            builder.Property(emailAccount => emailAccount.Username).HasLength(255);
-            builder.Property(emailAccount => emailAccount.Password).HasLength(255);
-
-            builder.HasColumn(emailAccount => emailAccount.Email).IsColumnRequired();
-            builder.HasColumn(emailAccount => emailAccount.Host).IsColumnRequired();
-            builder.HasColumn(emailAccount => emailAccount.Username).IsColumnRequired();
-            builder.HasColumn(emailAccount => emailAccount.Password).IsColumnRequired();
+            builder.Property(emailAccount => emailAccount.Email).HasLength(255).IsNullable(false);
+            builder.Property(emailAccount => emailAccount.Host).HasLength(255).IsNullable(false);
+            builder.Property(emailAccount => emailAccount.Username).HasLength(255).IsNullable(false);
+            builder.Property(emailAccount => emailAccount.Password).HasLength(255).IsNullable(false);
             builder.Property(emailaccount => emailaccount.Port);
             builder.Property(emailaccount => emailaccount.EnableSsl);
 

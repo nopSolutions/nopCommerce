@@ -18,7 +18,7 @@ namespace Nop.Data.Mapping.Polls
         {
             builder.HasTableName(nameof(PollAnswer));
 
-            builder.HasColumn(pollAnswer => pollAnswer.Name).IsColumnRequired();
+            builder.Property(pollAnswer => pollAnswer.Name).IsNullable(false);
             builder.Property(pollAnswer => pollAnswer.PollId);
             builder.Property(pollAnswer => pollAnswer.NumberOfVotes);
             builder.Property(pollAnswer => pollAnswer.DisplayOrder);

@@ -18,9 +18,7 @@ namespace Nop.Data.Mapping.Shipping
         {
             builder.HasTableName(nameof(ProductAvailabilityRange));
 
-            builder.Property(range => range.Name).HasLength(400);
-            builder.HasColumn(range => range.Name).IsColumnRequired();
-
+            builder.Property(range => range.Name).HasLength(400).IsNullable(false);
             builder.Property(range => range.DisplayOrder);
         }
 

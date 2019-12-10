@@ -18,9 +18,7 @@ namespace Nop.Data.Mapping.Forums
         {
             builder.HasTableName(NopMappingDefaults.ForumsTopicTable);
 
-            builder.Property(topic => topic.Subject).HasLength(450);
-            builder.HasColumn(topic => topic.Subject).IsColumnRequired();
-
+            builder.Property(topic => topic.Subject).HasLength(450).IsNullable(false);
             builder.Property(forumtopic => forumtopic.ForumId);
             builder.Property(forumtopic => forumtopic.CustomerId);
             builder.Property(forumtopic => forumtopic.TopicTypeId);
@@ -31,9 +29,9 @@ namespace Nop.Data.Mapping.Forums
             builder.Property(forumtopic => forumtopic.LastPostTime);
             builder.Property(forumtopic => forumtopic.CreatedOnUtc);
             builder.Property(forumtopic => forumtopic.UpdatedOnUtc);
-            builder.Property(forumtopic => forumtopic.ForumTopicType);
 
             builder.Ignore(topic => topic.ForumTopicType);
+            builder.Ignore(topic => topic.NumReplies);
         }
 
         #endregion

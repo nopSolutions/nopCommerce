@@ -18,8 +18,7 @@ namespace Nop.Data.Mapping.Shipping
         {
             builder.HasTableName(nameof(ShippingMethod));
 
-            builder.Property(method => method.Name).HasLength(400);
-            builder.HasColumn(method => method.Name).IsColumnRequired();
+            builder.Property(method => method.Name).HasLength(400).IsNullable(false);
             builder.Property(method => method.Description);
             builder.Property(method => method.DisplayOrder);
         }

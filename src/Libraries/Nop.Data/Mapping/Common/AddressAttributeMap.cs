@@ -18,8 +18,7 @@ namespace Nop.Data.Mapping.Common
         {
             builder.HasTableName(nameof(AddressAttribute));
 
-            builder.Property(attribute => attribute.Name).HasLength(400);
-            builder.HasColumn(attribute => attribute.Name).IsColumnRequired();
+            builder.Property(attribute => attribute.Name).HasLength(400).IsNullable(false);
             builder.Property(addressattribute => addressattribute.IsRequired);
             builder.Property(addressattribute => addressattribute.AttributeControlTypeId);
             builder.Property(addressattribute => addressattribute.DisplayOrder);

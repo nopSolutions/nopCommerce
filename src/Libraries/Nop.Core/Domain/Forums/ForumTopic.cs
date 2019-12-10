@@ -76,7 +76,6 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the forum topic type
         /// </summary>
-        
         public ForumTopicType ForumTopicType
         {
             get => (ForumTopicType)TopicTypeId;
@@ -86,7 +85,6 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets the number of replies
         /// </summary>
-        
         public int NumReplies
         {
             get

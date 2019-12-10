@@ -18,10 +18,9 @@ namespace Nop.Data.Mapping.Logging
         {
             builder.HasTableName(nameof(ActivityLog));
 
-            builder.HasColumn(logItem => logItem.Comment).IsColumnRequired();
+            builder.Property(logItem => logItem.Comment).IsNullable(false);
             builder.Property(logItem => logItem.IpAddress).HasLength(200);
             builder.Property(logItem => logItem.EntityName).HasLength(400);
-
             builder.Property(logItem => logItem.ActivityLogTypeId);
             builder.Property(logItem => logItem.EntityId);
             builder.Property(logItem => logItem.CustomerId);

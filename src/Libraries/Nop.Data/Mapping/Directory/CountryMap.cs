@@ -18,11 +18,9 @@ namespace Nop.Data.Mapping.Directory
         {
             builder.HasTableName(nameof(Country));
 
-            builder.Property(country => country.Name).HasLength(100);
-            builder.HasColumn(country => country.Name).IsColumnRequired();
+            builder.Property(country => country.Name).HasLength(100).IsNullable(false);
             builder.Property(country => country.TwoLetterIsoCode).HasLength(2);
             builder.Property(country => country.ThreeLetterIsoCode).HasLength(3);
-
             builder.Property(country => country.AllowsBilling);
             builder.Property(country => country.AllowsShipping);
             builder.Property(country => country.NumericIsoCode);

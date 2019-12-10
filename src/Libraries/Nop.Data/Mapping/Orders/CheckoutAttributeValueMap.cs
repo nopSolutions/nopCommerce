@@ -19,12 +19,10 @@ namespace Nop.Data.Mapping.Orders
         {
             builder.HasTableName(nameof(CheckoutAttributeValue));
 
-            builder.Property(value => value.Name).HasLength(400);
-            builder.HasColumn(value => value.Name).IsColumnRequired();
+            builder.Property(value => value.Name).HasLength(400).IsNullable(false);
             builder.Property(value => value.ColorSquaresRgb).HasLength(100);
             builder.Property(value => value.PriceAdjustment).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
             builder.Property(value => value.WeightAdjustment).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
-
             builder.Property(value => value.CheckoutAttributeId);
             builder.Property(value => value.IsPreSelected);
             builder.Property(value => value.DisplayOrder);

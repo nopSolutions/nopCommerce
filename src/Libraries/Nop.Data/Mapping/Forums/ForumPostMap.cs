@@ -18,9 +18,8 @@ namespace Nop.Data.Mapping.Forums
         {
             builder.HasTableName(NopMappingDefaults.ForumsPostTable);
 
-            builder.HasColumn(post => post.Text).IsColumnRequired();
+            builder.Property(post => post.Text).IsNullable(false);
             builder.Property(post => post.IPAddress).HasLength(100);
-
             builder.Property(forumpost => forumpost.TopicId);
             builder.Property(forumpost => forumpost.CustomerId);
             builder.Property(forumpost => forumpost.CreatedOnUtc);

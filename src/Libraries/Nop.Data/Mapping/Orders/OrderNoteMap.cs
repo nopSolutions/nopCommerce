@@ -18,7 +18,7 @@ namespace Nop.Data.Mapping.Orders
         {
             builder.HasTableName(nameof(OrderNote));
 
-            builder.HasColumn(note => note.Note).IsColumnRequired();
+            builder.Property(note => note.Note).IsNullable(false);
 
             builder.Property(note => note.OrderId);
             builder.Property(note => note.DownloadId);

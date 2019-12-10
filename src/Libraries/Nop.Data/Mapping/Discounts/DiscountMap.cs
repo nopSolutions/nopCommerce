@@ -19,8 +19,7 @@ namespace Nop.Data.Mapping.Discounts
         {
             builder.HasTableName(nameof(Discount));
 
-            builder.Property(discount => discount.Name).HasLength(200);
-            builder.HasColumn(discount => discount.Name).IsColumnRequired();
+            builder.Property(discount => discount.Name).HasLength(200).IsNullable(false);
             builder.Property(discount => discount.CouponCode).HasLength(100);
             builder.Property(discount => discount.DiscountPercentage).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);
             builder.Property(discount => discount.DiscountAmount).HasDataType(DataType.Decimal).HasPrecision(18).HasScale(4);

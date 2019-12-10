@@ -18,9 +18,9 @@ namespace Nop.Data.Mapping.Messages
         {
             builder.HasTableName(nameof(Campaign));
 
-            builder.HasColumn(campaign => campaign.Name).IsColumnRequired();
-            builder.HasColumn(campaign => campaign.Subject).IsColumnRequired();
-            builder.HasColumn(campaign => campaign.Body).IsColumnRequired();
+            builder.Property(campaign => campaign.Name).IsNullable(false);
+            builder.Property(campaign => campaign.Subject).IsNullable(false);
+            builder.Property(campaign => campaign.Body).IsNullable(false);
 
             builder.Property(campaign => campaign.StoreId);
             builder.Property(campaign => campaign.CustomerRoleId);

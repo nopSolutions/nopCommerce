@@ -18,9 +18,7 @@ namespace Nop.Data.Mapping.Messages
         {
             builder.HasTableName(nameof(NewsLetterSubscription));
 
-            builder.Property(subscription => subscription.Email).HasLength(255);
-            builder.HasColumn(subscription => subscription.Email).IsColumnRequired();
-
+            builder.Property(subscription => subscription.Email).HasLength(255).IsNullable(false);
             builder.Property(subscription => subscription.NewsLetterSubscriptionGuid);
             builder.Property(subscription => subscription.Active);
             builder.Property(subscription => subscription.StoreId);

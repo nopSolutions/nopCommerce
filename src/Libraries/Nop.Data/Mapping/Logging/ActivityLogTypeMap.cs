@@ -18,10 +18,8 @@ namespace Nop.Data.Mapping.Logging
         {
             builder.HasTableName(nameof(ActivityLogType));
 
-            builder.Property(logType => logType.SystemKeyword).HasLength(100);
-            builder.Property(logType => logType.Name).HasLength(200);
-            builder.HasColumn(logType => logType.SystemKeyword).IsColumnRequired();
-            builder.HasColumn(logType => logType.Name).IsColumnRequired();
+            builder.Property(logType => logType.SystemKeyword).HasLength(100).IsNullable(false);
+            builder.Property(logType => logType.Name).HasLength(200).IsNullable(false);
             builder.Property(activitylogtype => activitylogtype.Enabled);
         }
 

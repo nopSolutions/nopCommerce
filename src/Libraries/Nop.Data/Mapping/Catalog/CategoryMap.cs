@@ -18,8 +18,7 @@ namespace Nop.Data.Mapping.Catalog
         {
             builder.HasTableName(nameof(Category));
 
-            builder.HasColumn(category => category.Name).IsColumnRequired();
-            builder.Property(category => category.Name).HasLength(400);
+            builder.Property(category => category.Name).HasLength(400).IsNullable(false);
             builder.Property(category => category.MetaKeywords).HasLength(400);
             builder.Property(category => category.MetaTitle).HasLength(400);
             builder.Property(category => category.PriceRanges).HasLength(400);

@@ -18,9 +18,7 @@ namespace Nop.Data.Mapping.Forums
         {
             builder.HasTableName(NopMappingDefaults.ForumTable);
 
-            builder.Property(forum => forum.Name).HasLength(200);
-            builder.HasColumn(forum => forum.Name).IsColumnRequired();
-
+            builder.Property(forum => forum.Name).HasLength(200).IsNullable(false);
             builder.Property(forum => forum.ForumGroupId);
             builder.Property(forum => forum.Description);
             builder.Property(forum => forum.NumTopics);

@@ -18,11 +18,8 @@ namespace Nop.Data.Mapping.Topics
         {
             builder.HasTableName(nameof(TopicTemplate));
 
-            builder.HasColumn(template => template.Name).IsColumnRequired();
-            builder.HasColumn(template => template.ViewPath).IsColumnRequired();
-            builder.Property(template => template.Name).HasLength(400);
-            builder.Property(template => template.ViewPath).HasLength(400);
-
+            builder.Property(template => template.Name).HasLength(400).IsNullable(false);
+            builder.Property(template => template.ViewPath).HasLength(400).IsNullable(false);
             builder.Property(template => template.DisplayOrder);
         }
 

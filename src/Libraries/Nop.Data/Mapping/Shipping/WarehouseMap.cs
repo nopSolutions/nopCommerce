@@ -18,8 +18,7 @@ namespace Nop.Data.Mapping.Shipping
         {
             builder.HasTableName(nameof(Warehouse));
 
-            builder.HasColumn(warehouse => warehouse.Name).IsColumnRequired();
-            builder.Property(warehouse => warehouse.Name).HasLength(400);
+            builder.Property(warehouse => warehouse.Name).HasLength(400).IsNullable(false);
             builder.Property(warehouse => warehouse.AdminComment);
             builder.Property(warehouse => warehouse.AddressId);
         }

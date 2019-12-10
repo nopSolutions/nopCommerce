@@ -18,9 +18,8 @@ namespace Nop.Data.Mapping.Tasks
         {
             builder.HasTableName(nameof(ScheduleTask));
 
-            builder.HasColumn(task => task.Name).IsColumnRequired();
-            builder.HasColumn(task => task.Type).IsColumnRequired();
-
+            builder.Property(task => task.Name).IsNullable(false);
+            builder.Property(task => task.Type).IsNullable(false);
             builder.Property(task => task.Seconds);
             builder.Property(task => task.Enabled);
             builder.Property(task => task.StopOnError);

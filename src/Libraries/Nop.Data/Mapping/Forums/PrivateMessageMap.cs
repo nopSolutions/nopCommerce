@@ -18,9 +18,8 @@ namespace Nop.Data.Mapping.Forums
         {
             builder.HasTableName(NopMappingDefaults.PrivateMessageTable);
 
-            builder.Property(message => message.Subject).HasLength(450);
-            builder.HasColumn(message => message.Subject).IsColumnRequired();
-            builder.HasColumn(message => message.Text).IsColumnRequired();
+            builder.Property(message => message.Subject).HasLength(450).IsNullable(false);
+            builder.Property(message => message.Text).IsNullable(false);
 
             builder.Property(message => message.StoreId);
             builder.Property(message => message.FromCustomerId);

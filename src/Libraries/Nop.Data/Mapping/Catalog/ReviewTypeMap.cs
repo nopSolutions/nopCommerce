@@ -18,10 +18,8 @@ namespace Nop.Data.Mapping.Catalog
         {
             builder.HasTableName(nameof(ReviewType));
 
-            builder.Property(reviewType => reviewType.Name).HasLength(400);
-            builder.Property(reviewType => reviewType.Description).HasLength(400);
-            builder.HasColumn(reviewType => reviewType.Name).IsColumnRequired();
-            builder.HasColumn(reviewType => reviewType.Description).IsColumnRequired();
+            builder.Property(reviewType => reviewType.Name).HasLength(400).IsNullable(false);
+            builder.Property(reviewType => reviewType.Description).HasLength(400).IsNullable(false);
             builder.Property(reviewtype => reviewtype.DisplayOrder);
             builder.Property(reviewtype => reviewtype.VisibleToAllCustomers);
             builder.Property(reviewtype => reviewtype.IsRequired);

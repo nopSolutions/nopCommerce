@@ -18,12 +18,11 @@ namespace Nop.Data.Mapping.News
         {
             builder.HasTableName(NopMappingDefaults.NewsItemTable);
 
-            builder.HasColumn(newsItem => newsItem.Title).IsColumnRequired();
-            builder.HasColumn(newsItem => newsItem.Short).IsColumnRequired();
-            builder.HasColumn(newsItem => newsItem.Full).IsColumnRequired();
+            builder.Property(newsItem => newsItem.Title).IsNullable(false);
+            builder.Property(newsItem => newsItem.Short).IsNullable(false);
+            builder.Property(newsItem => newsItem.Full).IsNullable(false);
             builder.Property(newsItem => newsItem.MetaKeywords).HasLength(400);
             builder.Property(newsItem => newsItem.MetaTitle).HasLength(400);
-
             builder.Property(newsitem => newsitem.LanguageId);
             builder.Property(newsitem => newsitem.Published);
             builder.Property(newsitem => newsitem.StartDateUtc);

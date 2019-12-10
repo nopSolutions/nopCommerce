@@ -18,9 +18,7 @@ namespace Nop.Data.Mapping.Orders
         {
             builder.HasTableName(nameof(CheckoutAttribute));
 
-            builder.Property(attribute => attribute.Name).HasLength(400);
-            builder.HasColumn(attribute => attribute.Name).IsColumnRequired();
-
+            builder.Property(attribute => attribute.Name).HasLength(400).IsNullable(false);
             builder.Property(attribute => attribute.TextPrompt);
             builder.Property(attribute => attribute.IsRequired);
             builder.Property(attribute => attribute.ShippableProductRequired);

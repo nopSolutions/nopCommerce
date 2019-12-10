@@ -18,8 +18,8 @@ namespace Nop.Data.Mapping.Blogs
         {
             builder.HasTableName(nameof(BlogPost));
 
-            builder.HasColumn(blogPost => blogPost.Title).IsColumnRequired();
-            builder.HasColumn(blogPost => blogPost.Body).IsColumnRequired();
+            builder.Property(blogPost => blogPost.Title).IsNullable(false);
+            builder.Property(blogPost => blogPost.Body).IsNullable(false);
             builder.Property(blogPost => blogPost.MetaKeywords).HasLength(400);
             builder.Property(blogPost => blogPost.MetaTitle).HasLength(400);
 

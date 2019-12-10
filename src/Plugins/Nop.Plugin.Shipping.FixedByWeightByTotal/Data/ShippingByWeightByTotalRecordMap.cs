@@ -22,14 +22,14 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Data
             builder.Property(record => record.CountryId);
             builder.Property(record => record.StateProvinceId);
             builder.Property(record => record.ShippingMethodId);
-            builder.Property(record => record.WeightFrom);
-            builder.Property(record => record.WeightTo);
-            builder.Property(record => record.OrderSubtotalFrom);
-            builder.Property(record => record.OrderSubtotalTo);
-            builder.Property(record => record.AdditionalFixedCost);
-            builder.Property(record => record.PercentageRateOfSubtotal);
-            builder.Property(record => record.RatePerWeightUnit);
-            builder.Property(record => record.LowerWeightLimit);
+            builder.Property(record => record.WeightFrom).HasPrecision(18).HasScale(2);
+            builder.Property(record => record.WeightTo).HasPrecision(18).HasScale(2);
+            builder.Property(record => record.OrderSubtotalFrom).HasPrecision(18).HasScale(2);
+            builder.Property(record => record.OrderSubtotalTo).HasPrecision(18).HasScale(2);
+            builder.Property(record => record.AdditionalFixedCost).HasPrecision(18).HasScale(2);
+            builder.Property(record => record.PercentageRateOfSubtotal).HasPrecision(18).HasScale(2);
+            builder.Property(record => record.RatePerWeightUnit).HasPrecision(18).HasScale(2);
+            builder.Property(record => record.LowerWeightLimit).HasPrecision(18).HasScale(2);
             builder.Property(record => record.Zip).HasLength(400);
         }
 

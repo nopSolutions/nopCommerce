@@ -18,12 +18,9 @@ namespace Nop.Data.Mapping.Common
         {
             builder.HasTableName(nameof(GenericAttribute));
 
-            builder.Property(attribute => attribute.KeyGroup).HasLength(400);
-            builder.Property(attribute => attribute.Key).HasLength(400);
-            builder.HasColumn(attribute => attribute.Value).IsColumnRequired();
-            builder.HasColumn(attribute => attribute.KeyGroup).IsColumnRequired();
-            builder.HasColumn(attribute => attribute.Key).IsColumnRequired();
-
+            builder.Property(attribute => attribute.KeyGroup).HasLength(400).IsNullable(false);
+            builder.Property(attribute => attribute.Key).HasLength(400).IsNullable(false);
+            builder.Property(attribute => attribute.Value).IsNullable(false);
             builder.Property(genericattribute => genericattribute.EntityId);
             builder.Property(genericattribute => genericattribute.StoreId);
         }

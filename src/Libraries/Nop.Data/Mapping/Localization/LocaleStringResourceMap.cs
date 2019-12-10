@@ -18,9 +18,8 @@ namespace Nop.Data.Mapping.Localization
         {
             builder.HasTableName(nameof(LocaleStringResource));
 
-            builder.Property(locale => locale.ResourceName).HasLength(200);
-            builder.HasColumn(locale => locale.ResourceName).IsColumnRequired();
-            builder.HasColumn(locale => locale.ResourceValue).IsColumnRequired();
+            builder.Property(locale => locale.ResourceName).HasLength(200).IsNullable(false);
+            builder.Property(locale => locale.ResourceValue).IsNullable(false);
 
             builder.Property(localestringresource => localestringresource.LanguageId);
         }

@@ -18,7 +18,7 @@ namespace Nop.Data.Mapping.Vendors
         {
             builder.HasTableName(nameof(VendorNote));
 
-            builder.HasColumn(note => note.Note).IsColumnRequired();
+            builder.Property(note => note.Note).IsNullable(false);
             builder.Property(note => note.VendorId);
             builder.Property(note => note.CreatedOnUtc);
         }

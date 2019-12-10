@@ -18,10 +18,8 @@ namespace Nop.Data.Mapping.Customers
         {
             builder.HasTableName(nameof(CustomerRole));
 
-            builder.Property(role => role.Name).HasLength(255);
-            builder.HasColumn(role => role.Name).IsColumnRequired();
+            builder.Property(role => role.Name).HasLength(255).IsNullable(false);
             builder.Property(role => role.SystemName).HasLength(255);
-
             builder.Property(role => role.FreeShipping);
             builder.Property(role => role.TaxExempt);
             builder.Property(role => role.Active);
