@@ -222,12 +222,12 @@ namespace Nop.Web.Infrastructure.Installation
                     Text = GetResource(DataProviderType.SqlServer.ToString()),
                     Selected = true
                 },
-                //    new SelectListItem()
-                //{
-                //    Value = DataProviderType.MySql.ToString(),
-                //    Text = GetResource(DataProviderType.MySql.ToString()),
-                //    Selected = true
-                //}
+                    new SelectListItem()
+                {
+                    Value = DataProviderType.MySql.ToString(),
+                    Text = GetResource(DataProviderType.MySql.ToString()),
+                    Selected = true
+                }
             };
         }
 

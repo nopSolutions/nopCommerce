@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
 using Nop.Core;
@@ -12,6 +13,8 @@ namespace Nop.Data
     public partial interface IDataProvider
     {
         #region Methods
+
+        void ConfigureDataContext(IDataContext dataContext);
 
         void CreateDatabase(string collation, int triesToConnect = 10);
 

@@ -42,6 +42,12 @@ namespace Nop.Data
 
         protected virtual void CreateDatabaseSchemaIfNotExists()
         {
+            DataConnection.DefaultSettings = Singleton<DataSettings>.Instance;
+
+            _dataConnection = new NopDataConnection();
+
+            ConfigureDataContext(_dataConnection);
+
             //find database mapping configuration by other assemblies
             var typeFinder = new AppDomainTypeFinder();
             var typeConfigurations = typeFinder.FindClassesOfType<IMappingConfiguration>().ToList();
@@ -49,7 +55,7 @@ namespace Nop.Data
             foreach (var typeConfiguration in typeConfigurations)
             {
                 var mappingConfiguration = (IMappingConfiguration)Activator.CreateInstance(typeConfiguration);
-                mappingConfiguration.CreateTableIfNotExists();
+                mappingConfiguration.CreateTableIfNotExists(_dataConnection);
             }
         }
 
@@ -88,6 +94,8 @@ namespace Nop.Data
         #endregion
 
         #region Methods
+
+        public abstract void ConfigureDataContext(IDataContext dataContext);
 
         //TODO: 239 need to move some other place
         public virtual void DeletePluginData(Type pluginType)

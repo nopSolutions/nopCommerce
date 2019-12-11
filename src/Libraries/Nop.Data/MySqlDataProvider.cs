@@ -1,41 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using LinqToDB;
 using LinqToDB.Data;
+using MySql.Data.MySqlClient;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Data
 {
-    /// <summary>
-    /// Represents the MS SQL Server data provider
-    /// </summary>
-    public partial class MsSqlDataProvider : BaseDataProvider, IDataProvider
+    class MySqlDataProvider : BaseDataProvider, IDataProvider
     {
         #region Utils
 
-        protected SqlConnectionStringBuilder GetConnectionStringBuilder()
+        protected MySqlConnectionStringBuilder GetConnectionStringBuilder()
         {
             var connectionString = DataSettingsManager.LoadSettings().ConnectionString;
 
-            return new SqlConnectionStringBuilder(connectionString);
+            return new MySqlConnectionStringBuilder(connectionString);
         }
 
         #endregion
 
         #region Methods
-
-        public override void ConfigureDataContext(IDataContext dataContext)
-        {
-            //nothing
-            return;
-        }
 
         public void CreateDatabase(string collation, int triesToConnect = 10)
         {
@@ -45,18 +35,18 @@ namespace Nop.Data
             var builder = GetConnectionStringBuilder();
 
             //gets database name
-            var databaseName = builder.InitialCatalog;
+            var databaseName = builder.Database;
 
             //now create connection string to 'master' dabatase. It always exists.
-            builder.InitialCatalog = "master";
+            builder.Database = null;
 
-            using (var connection = new SqlConnection(builder.ConnectionString))
+            using (var connection = new MySqlConnection(builder.ConnectionString))
             {
-                var query = $"CREATE DATABASE [{databaseName}]";
+                var query = $"CREATE DATABASE IF NOT EXISTS {databaseName};";
                 if (!string.IsNullOrWhiteSpace(collation))
                     query = $"{query} COLLATE {collation}";
 
-                var command = new SqlCommand(query, connection);
+                var command = new MySqlCommand(query, connection);
                 command.Connection.Open();
 
                 command.ExecuteNonQuery();
@@ -90,7 +80,7 @@ namespace Nop.Data
         {
             try
             {
-                using (var connection = new SqlConnection(GetConnectionStringBuilder().ConnectionString))
+                using (var connection = new MySqlConnection(GetConnectionStringBuilder().ConnectionString))
                 {
                     //just try to connect
                     connection.Open();
@@ -183,6 +173,12 @@ namespace Nop.Data
         /// </summary>
         public void InitializeDatabase()
         {
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+
+            DataConnection.DefaultSettings = Singleton<DataSettings>.Instance;
+
+            _dataConnection = new NopDataConnection();
+
             CreateDatabaseSchemaIfNotExists();
 
             if (DataSettingsManager.DatabaseIsInstalled)
@@ -191,8 +187,6 @@ namespace Nop.Data
             }
             else
             {
-                var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-
                 //create indexes
                 ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.SqlServerIndexesFilePath);
 
@@ -209,8 +203,9 @@ namespace Nop.Data
         public virtual int? GetTableIdent<T>() where T : BaseEntity
         {
             var tableName = _dataConnection.GetTable<T>().TableName;
+            var databaseName = _dataConnection.Connection.Database;
 
-            var result = _dataConnection.Query<decimal?>($"SELECT IDENT_CURRENT('[{tableName}]') as Value")
+            var result = _dataConnection.Query<decimal?>($"SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = '{databaseName}' AND TABLE_NAME = '{tableName}'")
                 .FirstOrDefault();
 
             return result.HasValue ? Convert.ToInt32(result) : 1;
@@ -229,7 +224,7 @@ namespace Nop.Data
 
             var tableName = _dataConnection.GetTable<T>().TableName;
 
-            _dataConnection.Execute($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
+            _dataConnection.Execute($"ALTER TABLE '{tableName}' AUTO_INCREMENT = {ident}");
         }
 
         /// <summary>
@@ -240,8 +235,8 @@ namespace Nop.Data
             CheckBackupSupported();
             //var fileName = _fileProvider.Combine(GetBackupDirectoryPath(), $"database_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(10)}.{NopCommonDefaults.DbBackupFileExtension}");
 
-            var commandText = $"BACKUP DATABASE [{_dataConnection.Connection.Database}] TO DISK = '{fileName}' WITH FORMAT";
-            _dataConnection.Execute(commandText);
+            //var commandText = $"BACKUP DATABASE [{_dataConnection.Connection.Database}] TO DISK = '{fileName}' WITH FORMAT";
+            //_dataConnection.Execute(commandText);
         }
 
         /// <summary>
@@ -252,24 +247,24 @@ namespace Nop.Data
         {
             CheckBackupSupported();
 
-            var commandText = string.Format(
-                "DECLARE @ErrorMessage NVARCHAR(4000)\n" +
-                "ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE\n" +
-                "BEGIN TRY\n" +
-                "RESTORE DATABASE [{0}] FROM DISK = '{1}' WITH REPLACE\n" +
-                "END TRY\n" +
-                "BEGIN CATCH\n" +
-                "SET @ErrorMessage = ERROR_MESSAGE()\n" +
-                "END CATCH\n" +
-                "ALTER DATABASE [{0}] SET MULTI_USER WITH ROLLBACK IMMEDIATE\n" +
-                "IF (@ErrorMessage is not NULL)\n" +
-                "BEGIN\n" +
-                "RAISERROR (@ErrorMessage, 16, 1)\n" +
-                "END",
-                _dataConnection.Connection.Database,
-                backupFileName);
+            //var commandText = string.Format(
+            //    "DECLARE @ErrorMessage NVARCHAR(4000)\n" +
+            //    "ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE\n" +
+            //    "BEGIN TRY\n" +
+            //    "RESTORE DATABASE [{0}] FROM DISK = '{1}' WITH REPLACE\n" +
+            //    "END TRY\n" +
+            //    "BEGIN CATCH\n" +
+            //    "SET @ErrorMessage = ERROR_MESSAGE()\n" +
+            //    "END CATCH\n" +
+            //    "ALTER DATABASE [{0}] SET MULTI_USER WITH ROLLBACK IMMEDIATE\n" +
+            //    "IF (@ErrorMessage is not NULL)\n" +
+            //    "BEGIN\n" +
+            //    "RAISERROR (@ErrorMessage, 16, 1)\n" +
+            //    "END",
+            //    _dataConnection.Connection.Database,
+            //    backupFileName);
 
-            _dataConnection.Execute(commandText);
+            //_dataConnection.Execute(commandText);
         }
 
         /// <summary>
@@ -304,11 +299,11 @@ namespace Nop.Data
             if (string.IsNullOrEmpty(connectionString))
                 throw new ArgumentNullException(nameof(connectionString));
 
-            var builder = new SqlConnectionStringBuilder(connectionString);
+            var builder = new MySqlConnectionStringBuilder(connectionString);
 
             DataSettingsManager.SaveSettings(new DataSettings
             {
-                DataProvider = DataProviderType.SqlServer,
+                DataProvider = DataProviderType.MySql,
                 ConnectionString = builder.ConnectionString
             }, fileProvider);
 
@@ -321,10 +316,10 @@ namespace Nop.Data
             if (nopConnectionString is null)
                 throw new ArgumentNullException(nameof(nopConnectionString));
 
-            var builder = new SqlConnectionStringBuilder
+            var builder = new MySqlConnectionStringBuilder
             {
-                DataSource = nopConnectionString.ServerName,
-                InitialCatalog = nopConnectionString.DatabaseName,
+                Server = nopConnectionString.ServerName,
+                Database = nopConnectionString.DatabaseName,
                 PersistSecurityInfo = false,
                 IntegratedSecurity = nopConnectionString.IntegratedSecurity
             };
@@ -345,7 +340,7 @@ namespace Nop.Data
         /// <summary>
         /// Gets a value indicating whether this data provider supports backup
         /// </summary>
-        public bool BackupSupported { get; } = true;
+        public bool BackupSupported { get; } = false;
 
         /// <summary>
         /// Gets a maximum length of the data for HASHBYTES functions, returns 0 if HASHBYTES function is not supported

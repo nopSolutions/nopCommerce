@@ -35,6 +35,8 @@ namespace Nop.Data
             {
                 case DataProviderType.SqlServer:
                     return new MsSqlDataProvider();
+                case DataProviderType.MySql:
+                    return new MySqlDataProvider();
                 default:
                     throw new NopException($"Not supported data provider name: '{dataProviderType}'");
             }

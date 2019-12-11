@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using LinqToDB;
+using LinqToDB.Data;
 using LinqToDB.Mapping;
+using LinqToDB.SqlQuery;
 using Nop.Core;
 
 namespace Nop.Data
@@ -33,9 +36,10 @@ namespace Nop.Data
         /// <summary>
         /// Creates new table in database for mapping class
         /// </summary>
-        public virtual void CreateTableIfNotExists()
+        public virtual void CreateTableIfNotExists(DataConnection dataConnection)
         {
-            var dataConnection = new NopDataConnection();
+            if (dataConnection is null)
+                throw new ArgumentNullException(nameof(dataConnection));
 
             var sp = dataConnection.DataProvider.GetSchemaProvider();
             var dbSchema = sp.GetSchema(dataConnection);
@@ -48,8 +52,13 @@ namespace Nop.Data
             {
                 dataConnection.CreateTable<TEntity>();
             }
-            catch (System.Data.SqlClient.SqlException)
+            catch (System.Data.Common.DbException)
             {
+            }
+            catch (Exception ex)
+            {
+                //Debug
+                throw ex;
             }
         }
 
