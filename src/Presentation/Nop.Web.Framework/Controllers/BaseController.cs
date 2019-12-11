@@ -33,7 +33,6 @@ namespace Nop.Web.Framework.Controllers
     public abstract class BaseController : Controller
     {
         #region Rendering
-
         /// <summary>
         /// Render component to string
         /// </summary>
