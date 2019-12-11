@@ -100,7 +100,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 }
 
                 //file already exists but passed file is more updated, so delete an existing file and copy again
-                //More info: https://www.nopcommerce.com/boards/t/11511/access-error-nopplugindiscountrulesbillingcountrydll.aspx?p=4#60838
+                //More info: https://www.nopcommerce.com/boards/topic/11511/access-error-nopplugindiscountrulesbillingcountrydll.aspx?p=4#60838
                 fileProvider.DeleteFile(shadowCopiedFile);
             }
 
@@ -270,7 +270,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             }
 
             //sort list by display order. NOTE: Lowest DisplayOrder will be first i.e 0 , 1, 1, 1, 5, 10
-            //it's required: https://www.nopcommerce.com/boards/t/17455/load-plugins-based-on-their-displayorder-on-startup.aspx
+            //it's required: https://www.nopcommerce.com/boards/topic/17455/load-plugins-based-on-their-displayorder-on-startup.aspx
             result = result.OrderBy(item => item.PluginDescriptor.DisplayOrder).ToList();
 
             return result;
