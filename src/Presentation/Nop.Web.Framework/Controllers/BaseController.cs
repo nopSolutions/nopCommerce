@@ -165,7 +165,6 @@ namespace Nop.Web.Framework.Controllers
         #endregion
 
         #region Notifications
-
         /// <summary>
         /// Error's JSON data
         /// </summary>
