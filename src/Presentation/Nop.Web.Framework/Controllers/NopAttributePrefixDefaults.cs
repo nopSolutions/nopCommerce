@@ -18,6 +18,5 @@ namespace Nop.Web.Framework.Controllers
         /// Gets default prefix for vendor
         /// </summary>
         public static string Vendor => "vendor_attribute_";
-
     }
 }
