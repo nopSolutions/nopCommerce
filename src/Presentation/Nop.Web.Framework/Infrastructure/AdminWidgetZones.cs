@@ -1,4 +1,4 @@
-﻿namespace Nop.Web.Framework.Infrastructure
+namespace Nop.Web.Framework.Infrastructure
 {
     public static partial class AdminWidgetZones
     {
@@ -80,50 +80,6 @@
         public static string DiscountDetailsBlock => "admin_discount_details_block";
         public static string DiscountDetailsButtons => "admin_discount_details_buttons";
         public static string DiscountListButtons => "admin_discount_list_buttons";
-
-
-        //My code
-        public static string EmployeeListButtons => "admin_employee_list_buttons";
-        public static string EmployeeEmailsDetailsTop => "admin_employee_emailsdetails_top";
-        public static string EmployeeEmailsDetailsBottom => "admin_employee_emailsdetails_bottom";
-        public static string EmployeePhonesDetailsTop => "admin_employee_phonesdetails_top";
-        public static string EmployeePhonesDetailsBottom => "admin_employee_phonesdetails_bottom";
-        public static string EmployeeIdsDetailsTop => "admin_employee_idsdetails_top";
-        public static string EmployeeIdsDetailsBottom => "admin_employee_idsdetails_bottom";
-        public static string EmployeeAttributeDetailsButtons => "admin_employee_attribute_details_buttons";
-        public static string EmployeeAttributeDetailsBlock => "admin_employee_attribute_details_block";
-        public static string EmployeeAttributeValueDetailsBottom => "admin_employee_attribute_value_details_bottom";
-        public static string EmployeeAttributeValueDetailsButtons => "admin_employee_attribute_value_details_buttons";
-        public static string EmployeeAttributeValueDetailsTop => "admin_employee_attribute_value_details_top";
-        public static string EmployeeSettingsButtons => "admin_employee_settings_buttons";
-        public static string EmployeeSettingsDetailsBlock => "admin_employee_settings_detail_block";
-
-        public static string EmployeeEmailDetailsButtons => "admin_employee_emaildetails_buttons";
-        public static string EmployeePhoneDetailsButtons => "admin_employee_phonedetails_buttons";
-        public static string EmployeeIdDetailsButtons => "admin_employee_iddetails_buttons";
-
-        public static string DepartmentDetailsTop => "admin_store_department_top";
-        public static string DepartmentDetailsBottom => "admin_store_department_bottom";
-        public static string EmployeeEducationDetailsButtons => "admin_employee_educationdetails_buttons";
-        public static string EmployeeEducationDetailsTop => "admin_employee_educationdetail_top";
-        public static string EmployeeEducationDetailsBottom => "admin_employee_educationdetail_bottom";
-
-        public static string EmployeeEmergencyDetailsButtons => "admin_employee_emergencydetails_buttons";
-        public static string EmployeeEmergencyDetailsTop => "admin_employee_emergencydetail_top";
-        public static string EmployeeEmergencyDetailsBottom => "admin_employee_emergencydetail_bottom";
-
-        public static string EmployeeFamilyDetailsButtons => "admin_employee_familydetails_buttons";
-        public static string EmployeeFamilyDetailsTop => "admin_employee_familydetail_top";
-        public static string EmployeeFamilyDetailsBottom => "admin_employee_familydetail_bottom";
-
-        public static string EmployeeClothDetailsButtons => "admin_employee_clothdetails_buttons";
-        public static string EmployeeClothDetailsTop => "admin_employee_clothdetail_top";
-        public static string EmployeeClothDetailsBottom => "admin_employee_clothdetail_bottom";
-
-        public static string EmployeeWorkExperiencesButtons => "admin_employee_workexperiences_buttons";
-        public static string EmployeeWorkExperiencesTop => "admin_employee_workexperience_top";
-        public static string EmployeeWorkExperiencesBottom => "admin_employee_workexperience_bottom";
-
         public static string EmailAccountDetailsBottom => "admin_email_account_details_bottom";
         public static string EmailAccountDetailsButtons => "admin_email_account_details_buttons";
         public static string EmailAccountDetailsTop => "admin_email_account_details_top";
@@ -330,14 +286,5 @@
         public static string WarningsButtons => "admin_warnings_buttons";
         public static string WarningsTop => "admin_warnings_top";
         public static string WidgetListButtons => "admin_widget_list_buttons";
-        
-        //Mycode
-        public static string StoreDepartmentDetailsTop => "store_department_detail_top";
-        public static string StoreDepartmentDetailsBottom => "store_department_detail_bottom";
-        public static string EmployeeAddressDetailsButtons => "employee_address_details_buttons";
-        public static string EmployeeDetailsButtons => "employee_details_buttons";
-
-        public static string EmployeeAddressDetailsTop => "employee_address_details_top";
-        public static string EmployeeAddressDetailsBottom => "employee_address_details_bottom";
     }
 }
