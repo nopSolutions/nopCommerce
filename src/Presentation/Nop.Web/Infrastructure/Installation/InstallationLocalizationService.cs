@@ -221,12 +221,6 @@ namespace Nop.Web.Infrastructure.Installation
                     Value = DataProviderType.SqlServer.ToString(),
                     Text = GetResource(DataProviderType.SqlServer.ToString()),
                     Selected = true
-                },
-                    new SelectListItem()
-                {
-                    Value = DataProviderType.MySql.ToString(),
-                    Text = GetResource(DataProviderType.MySql.ToString()),
-                    Selected = true
                 }
             };
         }
