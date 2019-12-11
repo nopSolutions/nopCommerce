@@ -361,18 +361,18 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 ? new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config), config)
                 : new PluginsInfo(_fileProvider);
 
-            if (PluginsInfo.LoadPluginInfo() || useRedisToStorePluginsInfo || !config.RedisEnabled) 
+            if (PluginsInfo.LoadPluginInfo() || useRedisToStorePluginsInfo || !config.RedisEnabled)
                 return;
 
             var redisPluginsInfo = new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config), config);
 
             if (!redisPluginsInfo.LoadPluginInfo()) 
                 return;
-            
+
             //copy plugins info data from redis 
             PluginsInfo.CopyFrom(redisPluginsInfo);
             PluginsInfo.Save();
-                    
+   
             //clear redis plugins info data
             redisPluginsInfo = new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config), config);
             redisPluginsInfo.Save();
@@ -394,7 +394,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             if (config == null)
                 throw new ArgumentNullException(nameof(config));
-            
+
             LoadPluginsInfo(config);
 
             //perform with locked access to resources
