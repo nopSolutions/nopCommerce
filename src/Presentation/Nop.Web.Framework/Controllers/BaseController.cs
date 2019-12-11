@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -33,6 +33,7 @@ namespace Nop.Web.Framework.Controllers
     public abstract class BaseController : Controller
     {
         #region Rendering
+
         /// <summary>
         /// Render component to string
         /// </summary>
@@ -165,6 +166,7 @@ namespace Nop.Web.Framework.Controllers
         #endregion
 
         #region Notifications
+
         /// <summary>
         /// Error's JSON data
         /// </summary>
@@ -243,6 +245,7 @@ namespace Nop.Web.Framework.Controllers
         #endregion
 
         #region Security
+
         /// <summary>
         /// Security check URL
         /// </summary>
