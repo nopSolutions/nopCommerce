@@ -366,13 +366,13 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             var redisPluginsInfo = new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config), config);
 
-            if (!redisPluginsInfo.LoadPluginInfo()) 
+            if (!redisPluginsInfo.LoadPluginInfo())
                 return;
 
             //copy plugins info data from redis 
             PluginsInfo.CopyFrom(redisPluginsInfo);
             PluginsInfo.Save();
-   
+
             //clear redis plugins info data
             redisPluginsInfo = new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config), config);
             redisPluginsInfo.Save();
