@@ -197,6 +197,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Tax.Providers.DownloadMorePlugins">
     <Value><![CDATA[You can download more plugins in our <a href="https://www.nopcommerce.com/extensions?category=taxes&utm_source=admin-panel&utm_medium=tax-plugins&utm_campaign=admin-panel" target="_blank">marketplace</a>]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Microdata">
+    <Value>Microdata tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Microdata.Hint">
+    <Value>Check to generate Microdata tags on the product details page.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -390,5 +396,14 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'captchasettings.recaptch
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'captchasettings.recaptchaapiurl', N'https://www.google.com/recaptcha/', 0)
+END
+GO
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'seosettings.microdataenabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'seosettings.microdataenabled', 'true', 0)
 END
 GO
