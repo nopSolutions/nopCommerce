@@ -511,8 +511,7 @@ namespace Nop.Web.Controllers
         [CheckAccessPublicStore(true)]
         public virtual IActionResult PasswordRecovery()
         {
-            var model = new PasswordRecoveryModel();
-            model = _customerModelFactory.PreparePasswordRecoveryModel(model);
+            var model = _customerModelFactory.PreparePasswordRecoveryModel();
             return View(model);
         }
 
@@ -555,11 +554,11 @@ namespace Nop.Web.Controllers
                     model.Result = _localizationService.GetResource("Account.PasswordRecovery.EmailNotFound");
                 }
 
-                return View(_customerModelFactory.PreparePasswordRecoveryModel(model));
+                return View(model);
             }
 
             //If we got this far, something failed, redisplay form
-            return View(_customerModelFactory.PreparePasswordRecoveryModel(model));
+            return View(model);
         }
 
         [HttpsRequirement(SslRequirement.Yes)]
