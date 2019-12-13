@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
+using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 
@@ -21,6 +22,7 @@ namespace Nop.Services.Helpers
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly INopFileProvider _fileProvider;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly NopConfig _nopConfig;
 
         #endregion
@@ -29,10 +31,12 @@ namespace Nop.Services.Helpers
 
         public UserAgentHelper(IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
+            IStaticCacheManager cacheManager,
             NopConfig nopConfig)
         {
             _httpContextAccessor = httpContextAccessor;
             _fileProvider = fileProvider;
+            _cacheManager = cacheManager;
             _nopConfig = nopConfig;
         }
 
@@ -72,7 +76,7 @@ namespace Nop.Services.Helpers
                     ? _fileProvider.MapPath(_nopConfig.CrawlerOnlyUserAgentStringsPath)
                     : string.Empty;
 
-                var browscapXmlHelper = new BrowscapXmlHelper(userAgentStringsPath, crawlerOnlyUserAgentStringsPath, _fileProvider);
+                var browscapXmlHelper = new BrowscapXmlHelper(userAgentStringsPath, crawlerOnlyUserAgentStringsPath, _fileProvider, _cacheManager);
                 Singleton<BrowscapXmlHelper>.Instance = browscapXmlHelper;
 
                 return Singleton<BrowscapXmlHelper>.Instance;

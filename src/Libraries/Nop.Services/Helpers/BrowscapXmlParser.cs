@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Helpers
@@ -16,6 +17,10 @@ namespace Nop.Services.Helpers
     {
         private Regex _crawlerUserAgentsRegexp;
         private readonly INopFileProvider _fileProvider;
+        private readonly IStaticCacheManager _cacheManager;
+
+        //in minutes
+        private const int CrawlerCacheExpiration = 5;
 
         /// <summary>
         /// Ctor
@@ -23,9 +28,10 @@ namespace Nop.Services.Helpers
         /// <param name="userAgentStringsPath">User agent file path</param>
         /// <param name="crawlerOnlyUserAgentStringsPath">User agent with crawlers only file path</param>
         /// <param name="fileProvider">File provider</param>
-        public BrowscapXmlHelper(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath, INopFileProvider fileProvider)
+        public BrowscapXmlHelper(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath, INopFileProvider fileProvider, IStaticCacheManager cacheManager)
         {
             _fileProvider = fileProvider;
+            _cacheManager = cacheManager;
 
             Initialize(userAgentStringsPath, crawlerOnlyUserAgentStringsPath);
         }
@@ -114,7 +120,8 @@ namespace Nop.Services.Helpers
         /// <returns>True if user agent is a crawler, otherwise - false</returns>
         public bool IsCrawler(string userAgent)
         {
-            return _crawlerUserAgentsRegexp.IsMatch(userAgent);
+            return _cacheManager.Get(userAgent, () =>
+                    _crawlerUserAgentsRegexp.IsMatch(userAgent), CrawlerCacheExpiration);
         }
     }
 }
