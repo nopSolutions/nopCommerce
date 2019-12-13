@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -71,21 +71,22 @@ namespace Nop.Services.Configuration
             {
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
-                var query = from s in _settingRepository.TableNoTracking
-                            orderby s.Name, s.StoreId
-                            select s;
-                var settings = query.ToList();
+                var settings = _settingRepository.TableNoTracking
+                    .OrderBy(s => s.Name)
+                        .ThenBy(s => s.StoreId)
+                        .Select(s => new SettingForCaching
+                        {
+                            Id = s.Id,
+                            Name = s.Name,
+                            Value = s.Value,
+                            StoreId = s.StoreId
+                        })
+                        .ToList();
+
                 var dictionary = new Dictionary<string, IList<SettingForCaching>>();
-                foreach (var s in settings)
+                foreach (var settingForCaching in settings)
                 {
-                    var resourceName = s.Name.ToLowerInvariant();
-                    var settingForCaching = new SettingForCaching
-                    {
-                        Id = s.Id,
-                        Name = s.Name,
-                        Value = s.Value,
-                        StoreId = s.StoreId
-                    };
+                    var resourceName = settingForCaching.Name.ToLowerInvariant();
                     if (!dictionary.ContainsKey(resourceName))
                     {
                         //first setting
