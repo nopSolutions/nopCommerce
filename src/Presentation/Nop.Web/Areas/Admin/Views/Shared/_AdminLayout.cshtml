@@ -1,4 +1,4 @@
-﻿@inject IWebHelper webHelper
+@inject IWebHelper webHelper
 @inject IWorkContext workContext
 @inject IDateTimeHelper dateTimeHelper
 @inject IPermissionService permissionService
@@ -63,8 +63,8 @@
     Html.AppendScriptParts($"~/lib/datatables-bs4/js/dataTables.bootstrap4.min.js");
     Html.AppendScriptParts($"~/lib/datatables-bs4/js/jquery.dataTables.min.js");
 
-    Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/kendo.ui.core.min.js");
-    //Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/kendo.web.min.js");
+    //Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/kendo.ui.core.min.js");
+    Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/kendo.web.min.js");
 
     Html.AppendScriptParts("~/js/admin.search.js");
     Html.AppendScriptParts("~/js/admin.navigation.js");
@@ -227,7 +227,7 @@
             <a href="@Url.Content("~/Admin")" class="brand-link">
                 <img src="~/css/admin/images/logo-mini.png" alt="logo.png" class="brand-image img-circle" > 
                 <span class="logo-xl"></span>
-                <span class="brand-text font-weight-normal">MedGreenHouse</span>
+                <span class="brand-text font-weight-normal">@storeInformationSettings.StoreGroupName</span>
             </a>
             <div class="sidebar">
                 <!-- Sidebar user panel (optional) -->
@@ -263,6 +263,7 @@
         <div class="content-wrapper">
             @await Html.PartialAsync("Notifications")
             <div>
+                <nop-antiforgery-token />
                 @RenderBody()
             </div>
         </div>
