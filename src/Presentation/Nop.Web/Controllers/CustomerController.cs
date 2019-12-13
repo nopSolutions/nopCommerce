@@ -528,6 +528,7 @@ namespace Nop.Web.Controllers
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnForgotPasswordPage && !captchaValid)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
+                model.DisplayCaptcha = true;
             }
 
             if (ModelState.IsValid)
