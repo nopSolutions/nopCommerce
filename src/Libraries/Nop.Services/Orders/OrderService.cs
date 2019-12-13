@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -8,6 +8,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Html;
+using Nop.Core.Infrastructure.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Orders
@@ -93,17 +94,10 @@ namespace Nop.Services.Orders
             var query = from o in _orderRepository.Table
                         where orderIds.Contains(o.Id) && !o.Deleted
                         select o;
-            var orders = query.ToList();
-            //sort by passed identifiers
-            var sortedOrders = new List<Order>();
-            foreach (var id in orderIds)
-            {
-                var order = orders.Find(x => x.Id == id);
-                if (order != null)
-                    sortedOrders.Add(order);
-            }
 
-            return sortedOrders;
+            return query.ToList()
+                        .OrderBy(o => Array.IndexOf(orderIds, o.Id))
+                        .AsList();
         }
 
         /// <summary>

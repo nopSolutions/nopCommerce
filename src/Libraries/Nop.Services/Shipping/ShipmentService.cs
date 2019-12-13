@@ -6,6 +6,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Infrastructure.Extensions;
 using Nop.Services.Events;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Shipping.Tracking;
@@ -155,20 +156,13 @@ namespace Nop.Services.Shipping
             if (shipmentIds == null || shipmentIds.Length == 0)
                 return new List<Shipment>();
 
-            var query = from o in _shipmentRepository.Table
-                        where shipmentIds.Contains(o.Id)
-                        select o;
-            var shipments = query.ToList();
-            //sort by passed identifiers
-            var sortedOrders = new List<Shipment>();
-            foreach (var id in shipmentIds)
-            {
-                var shipment = shipments.Find(x => x.Id == id);
-                if (shipment != null)
-                    sortedOrders.Add(shipment);
-            }
+            var query = from s in _shipmentRepository.Table
+                        where shipmentIds.Contains(s.Id)
+                        select s;
 
-            return sortedOrders;
+            return query.ToList()
+                        .OrderBy(s => Array.IndexOf(shipmentIds, s.Id))
+                        .AsList();
         }
 
         /// <summary>

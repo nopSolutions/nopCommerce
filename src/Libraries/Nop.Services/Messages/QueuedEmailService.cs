@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Infrastructure.Extensions;
 using Nop.Data;
 using Nop.Data.Extensions;
 using Nop.Services.Events;
@@ -127,17 +128,10 @@ namespace Nop.Services.Messages
             var query = from qe in _queuedEmailRepository.Table
                         where queuedEmailIds.Contains(qe.Id)
                         select qe;
-            var queuedEmails = query.ToList();
-            //sort by passed identifiers
-            var sortedQueuedEmails = new List<QueuedEmail>();
-            foreach (var id in queuedEmailIds)
-            {
-                var queuedEmail = queuedEmails.Find(x => x.Id == id);
-                if (queuedEmail != null)
-                    sortedQueuedEmails.Add(queuedEmail);
-            }
 
-            return sortedQueuedEmails;
+            return query.ToList()
+                        .OrderBy(qe => Array.IndexOf(queuedEmailIds, qe.Id))
+                        .AsList();
         }
 
         /// <summary>

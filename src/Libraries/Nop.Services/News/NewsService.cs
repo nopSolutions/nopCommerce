@@ -6,6 +6,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Infrastructure.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.News
@@ -248,17 +249,10 @@ namespace Nop.Services.News
             var query = from nc in _newsCommentRepository.Table
                         where commentIds.Contains(nc.Id)
                         select nc;
-            var comments = query.ToList();
-            //sort by passed identifiers
-            var sortedComments = new List<NewsComment>();
-            foreach (var id in commentIds)
-            {
-                var comment = comments.Find(x => x.Id == id);
-                if (comment != null)
-                    sortedComments.Add(comment);
-            }
 
-            return sortedComments;
+            return query.ToList()
+                        .OrderBy(nc => Array.IndexOf(commentIds, nc.Id))
+                        .AsList();
         }
 
         /// <summary>

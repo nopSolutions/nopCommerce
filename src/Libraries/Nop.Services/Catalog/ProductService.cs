@@ -14,6 +14,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
+using Nop.Core.Infrastructure.Extensions;
 using Nop.Data;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -362,17 +363,10 @@ namespace Nop.Services.Catalog
             var query = from p in _productRepository.Table
                         where productIds.Contains(p.Id) && !p.Deleted
                         select p;
-            var products = query.ToList();
-            //sort by passed identifiers
-            var sortedProducts = new List<Product>();
-            foreach (var id in productIds)
-            {
-                var product = products.Find(x => x.Id == id);
-                if (product != null)
-                    sortedProducts.Add(product);
-            }
 
-            return sortedProducts;
+            return query.ToList()
+                        .OrderBy(p => Array.IndexOf(productIds, p.Id))
+                        .AsList();
         }
 
         /// <summary>
@@ -2206,17 +2200,10 @@ namespace Nop.Services.Catalog
             var query = from pr in _productReviewRepository.Table
                         where productReviewIds.Contains(pr.Id)
                         select pr;
-            var productReviews = query.ToList();
-            //sort by passed identifiers
-            var sortedProductReviews = new List<ProductReview>();
-            foreach (var id in productReviewIds)
-            {
-                var productReview = productReviews.Find(x => x.Id == id);
-                if (productReview != null)
-                    sortedProductReviews.Add(productReview);
-            }
 
-            return sortedProductReviews;
+            return query.ToList()
+                .OrderBy(pr => Array.IndexOf(productReviewIds, pr.Id))
+                .AsList();
         }
 
         /// <summary>

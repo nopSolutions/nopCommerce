@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Infrastructure.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Catalog
@@ -165,17 +166,10 @@ namespace Nop.Services.Catalog
             var query = from sao in _specificationAttributeOptionRepository.Table
                         where specificationAttributeOptionIds.Contains(sao.Id)
                         select sao;
-            var specificationAttributeOptions = query.ToList();
-            //sort by passed identifiers
-            var sortedSpecificationAttributeOptions = new List<SpecificationAttributeOption>();
-            foreach (var id in specificationAttributeOptionIds)
-            {
-                var sao = specificationAttributeOptions.Find(x => x.Id == id);
-                if (sao != null)
-                    sortedSpecificationAttributeOptions.Add(sao);
-            }
 
-            return sortedSpecificationAttributeOptions;
+            return query.ToList()
+                        .OrderBy(sao => Array.IndexOf(specificationAttributeOptionIds, sao.Id))
+                        .AsList();
         }
 
         /// <summary>

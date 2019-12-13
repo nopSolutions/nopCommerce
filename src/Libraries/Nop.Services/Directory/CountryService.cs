@@ -7,6 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Infrastructure.Extensions;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 
@@ -163,17 +164,10 @@ namespace Nop.Services.Directory
             var query = from c in _countryRepository.Table
                         where countryIds.Contains(c.Id)
                         select c;
-            var countries = query.ToList();
-            //sort by passed identifiers
-            var sortedCountries = new List<Country>();
-            foreach (var id in countryIds)
-            {
-                var country = countries.Find(x => x.Id == id);
-                if (country != null)
-                    sortedCountries.Add(country);
-            }
 
-            return sortedCountries;
+            return query.ToList()
+                        .OrderBy(c => Array.IndexOf(countryIds, c.Id))
+                        .AsList();
         }
 
         /// <summary>

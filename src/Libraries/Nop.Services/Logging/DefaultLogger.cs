@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -6,6 +6,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
+using Nop.Core.Infrastructure.Extensions;
 using Nop.Data;
 using Nop.Data.Extensions;
 
@@ -177,17 +178,10 @@ namespace Nop.Services.Logging
             var query = from l in _logRepository.Table
                         where logIds.Contains(l.Id)
                         select l;
-            var logItems = query.ToList();
-            //sort by passed identifiers
-            var sortedLogItems = new List<Log>();
-            foreach (var id in logIds)
-            {
-                var log = logItems.Find(x => x.Id == id);
-                if (log != null)
-                    sortedLogItems.Add(log);
-            }
 
-            return sortedLogItems;
+            return query.ToList()
+                        .OrderBy(l => Array.IndexOf(logIds, l.Id))
+                        .AsList();
         }
 
         /// <summary>

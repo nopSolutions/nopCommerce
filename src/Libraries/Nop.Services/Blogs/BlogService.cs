@@ -6,6 +6,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Infrastructure.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Blogs
@@ -357,17 +358,10 @@ namespace Nop.Services.Blogs
             var query = from bc in _blogCommentRepository.Table
                         where commentIds.Contains(bc.Id)
                         select bc;
-            var comments = query.ToList();
-            //sort by passed identifiers
-            var sortedComments = new List<BlogComment>();
-            foreach (var id in commentIds)
-            {
-                var comment = comments.Find(x => x.Id == id);
-                if (comment != null)
-                    sortedComments.Add(comment);
-            }
 
-            return sortedComments;
+            return query.ToList()
+                        .OrderBy(bc => Array.IndexOf(commentIds, bc.Id))
+                        .AsList();
         }
 
         /// <summary>

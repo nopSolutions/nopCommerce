@@ -13,6 +13,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
+using Nop.Core.Infrastructure.Extensions;
 using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Events;
@@ -370,17 +371,10 @@ namespace Nop.Services.Customers
             var query = from c in _customerRepository.Table
                         where customerIds.Contains(c.Id) && !c.Deleted
                         select c;
-            var customers = query.ToList();
-            //sort by passed identifiers
-            var sortedCustomers = new List<Customer>();
-            foreach (var id in customerIds)
-            {
-                var customer = customers.Find(x => x.Id == id);
-                if (customer != null)
-                    sortedCustomers.Add(customer);
-            }
 
-            return sortedCustomers;
+            return query.ToList()
+                        .OrderBy(c => Array.IndexOf(customerIds, c.Id))
+                        .AsList();
         }
 
         /// <summary>
