@@ -236,6 +236,7 @@
             <div class="content-wrapper">
                 @await Html.PartialAsync("Notifications")
                 <div>
+                    <nop-antiforgery-token />
                     @RenderBody()
                 </div>
             </div>
