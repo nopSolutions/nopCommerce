@@ -52,8 +52,7 @@ namespace Nop.Web.Factories
         /// Prepare the password recovery model
         /// </summary>
         /// <returns>Password recovery model</returns>
-        PasswordRecoveryModel PreparePasswordRecoveryModel();
-
+        PasswordRecoveryModel PreparePasswordRecoveryModel(PasswordRecoveryModel model);
         /// <summary>
         /// Prepare the password recovery confirm model
         /// </summary>

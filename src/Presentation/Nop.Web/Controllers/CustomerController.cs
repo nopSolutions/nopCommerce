@@ -511,7 +511,8 @@ namespace Nop.Web.Controllers
         [CheckAccessPublicStore(true)]
         public virtual IActionResult PasswordRecovery()
         {
-            var model = _customerModelFactory.PreparePasswordRecoveryModel();
+            var model = new PasswordRecoveryModel();
+            model = _customerModelFactory.PreparePasswordRecoveryModel(model);
             return View(model);
         }
 
@@ -527,7 +528,6 @@ namespace Nop.Web.Controllers
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnForgotPasswordPage && !captchaValid)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
-                model.DisplayCaptcha = true;
             }
 
             if (ModelState.IsValid)
@@ -554,11 +554,11 @@ namespace Nop.Web.Controllers
                     model.Result = _localizationService.GetResource("Account.PasswordRecovery.EmailNotFound");
                 }
 
-                return View(model);
+                return View(_customerModelFactory.PreparePasswordRecoveryModel(model));
             }
 
             //If we got this far, something failed, redisplay form
-            return View(model);
+            return View(_customerModelFactory.PreparePasswordRecoveryModel(model));
         }
 
         [HttpsRequirement(SslRequirement.Yes)]
