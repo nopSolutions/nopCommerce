@@ -1,5 +1,7 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Security;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Security
 {
@@ -10,12 +12,11 @@ namespace Nop.Data.Migrations.Security
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(NopMappingDefaults.PermissionRecordRoleTable)
-                .ForeignColumn("PermissionRecord_Id")
-                .ToTable(nameof(PermissionRecord))
-                .PrimaryColumn(nameof(PermissionRecord.Id));
-
-            Create.Index().OnTable(NopMappingDefaults.PermissionRecordRoleTable).OnColumn("PermissionRecord_Id").Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(NopMappingDefaults.PermissionRecordRoleTable
+                , "PermissionRecord_Id"
+                , nameof(PermissionRecord)
+                , nameof(PermissionRecord.Id)
+                , Rule.Cascade);
         }
 
         #endregion

@@ -1,8 +1,8 @@
-﻿using FluentMigrator;
-using LinqToDB.Mapping;
-using Nop.Core.Domain.Common;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Discounts
 {
@@ -13,12 +13,11 @@ namespace Nop.Data.Migrations.Discounts
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(nameof(DiscountUsageHistory))
-                .ForeignColumn(nameof(DiscountUsageHistory.OrderId))
-                .ToTable(nameof(Order))
-                .PrimaryColumn(nameof(Order.Id));
-
-            Create.Index().OnTable(nameof(DiscountUsageHistory)).OnColumn(nameof(DiscountUsageHistory.OrderId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(nameof(DiscountUsageHistory)
+                , nameof(DiscountUsageHistory.OrderId)
+                , nameof(Order)
+                , nameof(Order.Id)
+                , Rule.Cascade);
         }
 
         #endregion

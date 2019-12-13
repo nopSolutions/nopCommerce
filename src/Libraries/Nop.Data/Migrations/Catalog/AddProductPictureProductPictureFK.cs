@@ -1,6 +1,8 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Catalog
 {
@@ -11,13 +13,11 @@ namespace Nop.Data.Migrations.Catalog
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(NopMappingDefaults.ProductPictureTable)
-                .ForeignColumn(nameof(ProductPicture.PictureId))
-                .ToTable(nameof(Picture))
-                .PrimaryColumn(nameof(Picture.Id));
-
-
-            Create.Index().OnTable(NopMappingDefaults.ProductPictureTable).OnColumn(nameof(ProductPicture.PictureId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(NopMappingDefaults.ProductPictureTable
+                , nameof(ProductPicture.PictureId)
+                , nameof(Picture)
+                , nameof(Picture.Id)
+                , Rule.Cascade);
         }
 
         #endregion

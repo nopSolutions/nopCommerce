@@ -1,5 +1,7 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Logging;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Logging
 {
@@ -10,12 +12,11 @@ namespace Nop.Data.Migrations.Logging
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(nameof(ActivityLog))
-                .ForeignColumn(nameof(ActivityLog.ActivityLogTypeId))
-                .ToTable(nameof(ActivityLogType))
-                .PrimaryColumn(nameof(ActivityLogType.Id));
-
-            Create.Index().OnTable(nameof(ActivityLog)).OnColumn(nameof(ActivityLog.ActivityLogTypeId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(nameof(ActivityLog)
+                , nameof(ActivityLog.ActivityLogTypeId)
+                , nameof(ActivityLogType)
+                , nameof(ActivityLogType.Id)
+                , Rule.Cascade);
         }
 
         #endregion

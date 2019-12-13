@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -152,7 +153,23 @@ namespace Nop.Services.Plugins
 
             return pluginDescriptor.DependsOn?.Contains(dependsOnSystemName) ?? false;
         }
-        
+
+        protected virtual void DeletePluginData(Type pluginType)
+        {
+            var assembly = Assembly.GetAssembly(pluginType);
+
+            _dataProvider.ApplyDownMigrations(assembly);
+            _dataProvider.DeleteDatabaseSchemaIfNotExists(assembly);
+        }
+
+        protected virtual void InsertPluginData(Type pluginType)
+        {
+            var assembly = Assembly.GetAssembly(pluginType);
+
+            _dataProvider.CreateDatabaseSchemaIfNotExists(assembly);
+            _dataProvider.ApplyUpMigrations(assembly);
+        }
+
         #endregion
 
         #region Methods
@@ -419,6 +436,8 @@ namespace Nop.Services.Plugins
             {
                 try
                 {
+                    InsertPluginData(descriptor.PluginType);
+
                     //try to install an instance
                     descriptor.Instance<IPlugin>().Install();
 
@@ -477,7 +496,7 @@ namespace Nop.Services.Plugins
                     plugin.Uninstall();
 
                     //clear plugin data on the database
-                    _dataProvider.DeletePluginData(descriptor.PluginType);
+                    DeletePluginData(descriptor.PluginType);
 
                     //remove plugin system name from appropriate lists
                     _pluginsInfo.InstalledPluginNames.Remove(descriptor.SystemName);

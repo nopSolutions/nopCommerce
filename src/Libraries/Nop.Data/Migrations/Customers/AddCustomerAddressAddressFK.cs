@@ -1,6 +1,8 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Customers
 {
@@ -11,12 +13,11 @@ namespace Nop.Data.Migrations.Customers
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(NopMappingDefaults.CustomerAddressesTable)
-                .ForeignColumn("Address_Id")
-                .ToTable(nameof(Address))
-                .PrimaryColumn(nameof(Address.Id));
-
-            Create.Index().OnTable(NopMappingDefaults.CustomerAddressesTable).OnColumn("Address_Id").Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(NopMappingDefaults.CustomerAddressesTable
+                , "Address_Id"
+                , nameof(Address)
+                , nameof(Address.Id)
+                , Rule.Cascade);
         }
 
         #endregion

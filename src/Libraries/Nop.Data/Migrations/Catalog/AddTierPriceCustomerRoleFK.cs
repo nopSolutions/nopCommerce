@@ -2,6 +2,7 @@
 using FluentMigrator;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Catalog
 {
@@ -12,13 +13,11 @@ namespace Nop.Data.Migrations.Catalog
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(nameof(TierPrice))
-                .ForeignColumn(nameof(TierPrice.CustomerRoleId))
-                .ToTable(nameof(CustomerRole))
-                .PrimaryColumn(nameof(CustomerRole.Id))
-                .OnDelete(Rule.Cascade);
-
-            Create.Index().OnTable(nameof(TierPrice)).OnColumn(nameof(TierPrice.CustomerRoleId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(nameof(TierPrice)
+                , nameof(TierPrice.CustomerRoleId)
+                , nameof(CustomerRole)
+                , nameof(CustomerRole.Id)
+                , Rule.Cascade);
         }
         
         #endregion

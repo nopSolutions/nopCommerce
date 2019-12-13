@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
 using Nop.Core;
@@ -20,14 +20,20 @@ namespace Nop.Data
         /// </summary>
         void InitializeDatabase();
 
+        void ApplyUpMigrations(Assembly assembly);
+
+        void ApplyDownMigrations(Assembly assembly);
+
+        void CreateDatabaseSchemaIfNotExists(Assembly assembly);
+
+        void DeleteDatabaseSchemaIfNotExists(Assembly assembly);
+
         /// <summary>
         /// Checks if the specified database exists, returns true if database exists
         /// </summary>
         /// <returns>Returns true if the database exists.</returns>
         bool IsDatabaseExists();
-
-        void DeletePluginData(Type pluginType);
-
+        
         /// <summary>
         /// Get the current identity value
         /// </summary>

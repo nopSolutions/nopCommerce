@@ -1,5 +1,7 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Messages;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Messages
 {
@@ -10,12 +12,11 @@ namespace Nop.Data.Migrations.Messages
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(nameof(QueuedEmail))
-                .ForeignColumn(nameof(QueuedEmail.EmailAccountId))
-                .ToTable(nameof(EmailAccount))
-                .PrimaryColumn(nameof(EmailAccount.Id));
-
-            Create.Index().OnTable(nameof(QueuedEmail)).OnColumn(nameof(QueuedEmail.EmailAccountId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(nameof(QueuedEmail)
+                , nameof(QueuedEmail.EmailAccountId)
+                , nameof(EmailAccount)
+                , nameof(EmailAccount.Id)
+                , Rule.Cascade);
         }
 
         #endregion

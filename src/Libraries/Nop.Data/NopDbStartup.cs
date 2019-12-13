@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using FluentMigrator.Runner;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
@@ -61,7 +62,7 @@ namespace Nop.Data
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
-            EngineContext.Current.Resolve<IDataProvider>().InitializeDatabase();
+            EngineContext.Current.Resolve<IDataProvider>().ApplyUpMigrations(Assembly.GetExecutingAssembly());
         }
 
         /// <summary>

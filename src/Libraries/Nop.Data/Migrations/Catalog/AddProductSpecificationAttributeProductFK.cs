@@ -1,5 +1,7 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Catalog;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Catalog
 {
@@ -10,12 +12,11 @@ namespace Nop.Data.Migrations.Catalog
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(NopMappingDefaults.ProductSpecificationAttributeTable)
-                .ForeignColumn(nameof(ProductSpecificationAttribute.ProductId))
-                .ToTable(nameof(Product))
-                .PrimaryColumn(nameof(Product.Id));
-
-            Create.Index().OnTable(NopMappingDefaults.ProductSpecificationAttributeTable).OnColumn(nameof(ProductSpecificationAttribute.ProductId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(NopMappingDefaults.ProductSpecificationAttributeTable
+                , nameof(ProductSpecificationAttribute.ProductId)
+                , nameof(Product)
+                , nameof(Product.Id)
+                , Rule.Cascade);
         }
 
         #endregion

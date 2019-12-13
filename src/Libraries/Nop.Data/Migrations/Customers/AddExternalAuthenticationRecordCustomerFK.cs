@@ -1,5 +1,7 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Customers;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Customers
 { 
@@ -10,12 +12,11 @@ namespace Nop.Data.Migrations.Customers
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(nameof(ExternalAuthenticationRecord))
-                .ForeignColumn(nameof(ExternalAuthenticationRecord.CustomerId))
-                .ToTable(nameof(Customer))
-                .PrimaryColumn(nameof(Customer.Id));
-
-            Create.Index().OnTable(nameof(ExternalAuthenticationRecord)).OnColumn(nameof(ExternalAuthenticationRecord.CustomerId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(nameof(ExternalAuthenticationRecord)
+                , nameof(ExternalAuthenticationRecord.CustomerId)
+                , nameof(Customer)
+                , nameof(Customer.Id)
+                , Rule.Cascade);
         }
 
         #endregion

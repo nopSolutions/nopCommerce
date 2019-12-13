@@ -1,5 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Orders;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Orders
 {
@@ -10,12 +11,10 @@ namespace Nop.Data.Migrations.Orders
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(nameof(RecurringPayment))
-                .ForeignColumn(nameof(RecurringPayment.InitialOrderId))
-                .ToTable(nameof(Order))
-                .PrimaryColumn(nameof(Order.Id));
-
-            Create.Index().OnTable(nameof(RecurringPayment)).OnColumn(nameof(RecurringPayment.InitialOrderId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(nameof(RecurringPayment)
+                , nameof(RecurringPayment.InitialOrderId)
+                , nameof(Order)
+                , nameof(Order.Id));
         }
 
         #endregion

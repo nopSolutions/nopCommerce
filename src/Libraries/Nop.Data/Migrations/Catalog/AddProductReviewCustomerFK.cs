@@ -1,6 +1,8 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Catalog
 {
@@ -11,12 +13,11 @@ namespace Nop.Data.Migrations.Catalog
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(nameof(ProductReview))
-                .ForeignColumn(nameof(ProductReview.CustomerId))
-                .ToTable(nameof(Customer))
-                .PrimaryColumn(nameof(Customer.Id));
-
-            Create.Index().OnTable(nameof(ProductReview)).OnColumn(nameof(ProductReview.CustomerId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(nameof(ProductReview)
+                , nameof(ProductReview.CustomerId)
+                , nameof(Customer)
+                , nameof(Customer.Id)
+                , Rule.Cascade);
         }
 
         #endregion

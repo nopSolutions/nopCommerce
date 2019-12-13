@@ -1,6 +1,8 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Customers;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Blogs
 {
@@ -11,12 +13,11 @@ namespace Nop.Data.Migrations.Blogs
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(nameof(BlogComment))
-                .ForeignColumn(nameof(BlogComment.CustomerId))
-                .ToTable(nameof(Customer))
-                .PrimaryColumn(nameof(Customer.Id));
-
-            Create.Index().OnTable(nameof(BlogComment)).OnColumn(nameof(BlogComment.CustomerId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(nameof(BlogComment)
+                , nameof(BlogComment.CustomerId)
+                , nameof(Customer)
+                , nameof(Customer.Id)
+                , Rule.Cascade);
         }
 
         #endregion

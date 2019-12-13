@@ -1,5 +1,7 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Forums;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Forums
 {
@@ -10,12 +12,11 @@ namespace Nop.Data.Migrations.Forums
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(NopMappingDefaults.ForumsTopicTable)
-                .ForeignColumn(nameof(ForumTopic.ForumId))
-                .ToTable(NopMappingDefaults.ForumTable)
-                .PrimaryColumn(nameof(Forum.Id));
-
-            Create.Index().OnTable(NopMappingDefaults.ForumsTopicTable).OnColumn(nameof(ForumTopic.ForumId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(NopMappingDefaults.ForumsTopicTable
+                , nameof(ForumTopic.ForumId)
+                , NopMappingDefaults.ForumTable
+                , nameof(Forum.Id)
+                , Rule.Cascade);
         }
 
         #endregion

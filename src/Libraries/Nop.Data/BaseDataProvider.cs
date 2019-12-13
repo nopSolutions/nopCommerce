@@ -20,7 +20,7 @@ namespace Nop.Data
     /// </summary>
     public abstract partial class BaseDataProvider
     {
-        #region Ctor
+        #region Fields
 
         protected DataConnection _dataConnection;
 
@@ -40,11 +40,18 @@ namespace Nop.Data
 
         #region Utilities
 
-        protected virtual void CreateDatabaseSchemaIfNotExists()
+        #endregion
+
+        #region Methods
+
+        public virtual void CreateDatabaseSchemaIfNotExists(Assembly assembly = null)
         {
             //find database mapping configuration by other assemblies
             var typeFinder = new AppDomainTypeFinder();
-            var typeConfigurations = typeFinder.FindClassesOfType<IMappingConfiguration>().ToList();
+
+            var typeConfigurations = assembly != null
+                ? typeFinder.FindClassesOfType<IMappingConfiguration>(new List<Assembly> { assembly }).ToList()
+                : typeFinder.FindClassesOfType<IMappingConfiguration>().ToList();
 
             foreach (var typeConfiguration in typeConfigurations)
             {
@@ -53,29 +60,45 @@ namespace Nop.Data
             }
         }
 
-        protected virtual void ApplyMigrations()
+        public virtual void DeleteDatabaseSchemaIfNotExists(Assembly assembly = null)
         {
             //find database mapping configuration by other assemblies
             var typeFinder = new AppDomainTypeFinder();
-            var migrations = typeFinder.FindClassesOfType<AutoReversingMigration>().ToList();
+
+            var typeConfigurations = assembly != null
+                ? typeFinder.FindClassesOfType<IMappingConfiguration>(new List<Assembly> { assembly }).ToList()
+                : typeFinder.FindClassesOfType<IMappingConfiguration>().ToList();
+
+            //delete tables
+            foreach (var mappingConfiguration in typeConfigurations)
+            {
+                (EngineContext.Current.ResolveUnregistered(mappingConfiguration) as IMappingConfiguration)
+                    ?.DeleteTableIfExists();
+            }
+        }
+
+        public virtual void ApplyUpMigrations(Assembly assembly = null)
+        {
             var runner = EngineContext.Current.Resolve<IMigrationRunner>();
+
+            //find database mapping configuration by other assemblies
+            var typeFinder = new AppDomainTypeFinder();
+            var migrations = (assembly == null ? typeFinder.FindClassesOfType<AutoReversingMigration>() : typeFinder.FindClassesOfType<AutoReversingMigration>(new List<Assembly> { assembly }))
+                .Select(migration => migration
+                    .GetCustomAttributes(typeof(MigrationAttribute), false)
+                    .OfType<MigrationAttribute>()
+                    .FirstOrDefault()).Where(migration => migration != null && runner.HasMigrationsToApplyUp(migration.Version)).OrderBy(migration => migration.Version)
+                .ToList();
 
             foreach (var migration in migrations)
             {
-                var migrationAttribute = migration
-                    .GetCustomAttributes(typeof(MigrationAttribute), false)
-                    .OfType<MigrationAttribute>()
-                    .FirstOrDefault();
-
                 try
                 {
-                    if (migrationAttribute == null || !runner.HasMigrationsToApplyUp(migrationAttribute.Version))
-                        continue;
-
-                    runner.MigrateUp(migrationAttribute.Version);
+                    runner.MigrateUp(migration.Version);
                 }
                 catch (MissingMigrationsException)
                 {
+                    // ignore
                 }
                 catch (Exception ex)
                 {
@@ -85,20 +108,15 @@ namespace Nop.Data
             }
         }
 
-        #endregion
-
-        #region Methods
-
-        //TODO: 239 need to move some other place
-        public virtual void DeletePluginData(Type pluginType)
+        public virtual void ApplyDownMigrations(Assembly assembly = null)
         {
             //do not inject services via constructor because it'll cause installation fails
             var migrationRunner = EngineContext.Current.Resolve<IMigrationRunner>();
             var migrationVersionInfoRepository = EngineContext.Current.Resolve<IRepository<MigrationVersionInfo>>();
             var typeFinder = new AppDomainTypeFinder();
 
-            //executes a plugin Down migrations
-            foreach (var migration in typeFinder.FindClassesOfType<Migration>(new[] { Assembly.GetAssembly(pluginType) }))
+            //executes a Down migrations
+            foreach (var migration in assembly == null ? typeFinder.FindClassesOfType<Migration>() : typeFinder.FindClassesOfType<Migration>(new[] { assembly }))
             {
                 try
                 {
@@ -121,18 +139,6 @@ namespace Nop.Data
                 }
             }
 
-            //delete plugin tables
-            foreach (var mappingConfiguration in typeFinder.FindClassesOfType<IMappingConfiguration>(new[] { Assembly.GetAssembly(pluginType) }))
-            {
-                try
-                {
-                    (EngineContext.Current.ResolveUnregistered(mappingConfiguration) as IMappingConfiguration)?.DeleteTableIfExists();
-                }
-                catch
-                {
-                    // ignored
-                }
-            }
         }
 
         public virtual EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity 

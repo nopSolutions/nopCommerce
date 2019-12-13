@@ -1,6 +1,8 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Polls;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Polls
 {
@@ -14,12 +16,11 @@ namespace Nop.Data.Migrations.Polls
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(nameof(Poll))
-                .ForeignColumn(nameof(Poll.LanguageId))
-                .ToTable(nameof(Language))
-                .PrimaryColumn(nameof(Language.Id));
-
-            Create.Index().OnTable(nameof(Poll)).OnColumn(nameof(Poll.LanguageId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(nameof(Poll)
+                , nameof(Poll.LanguageId)
+                , nameof(Language)
+                , nameof(Language.Id)
+                , Rule.Cascade);
         }
 
         #endregion

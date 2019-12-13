@@ -1,6 +1,8 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Security
 {
@@ -11,12 +13,11 @@ namespace Nop.Data.Migrations.Security
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(nameof(AclRecord))
-                .ForeignColumn(nameof(AclRecord.CustomerRoleId))
-                .ToTable(nameof(CustomerRole))
-                .PrimaryColumn(nameof(CustomerRole.Id));
-
-            Create.Index().OnTable(nameof(AclRecord)).OnColumn(nameof(AclRecord.CustomerRoleId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(nameof(AclRecord)
+                , nameof(AclRecord.CustomerRoleId)
+                , nameof(CustomerRole)
+                , nameof(CustomerRole.Id)
+                , Rule.Cascade);
         }
 
         #endregion

@@ -1,5 +1,7 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Customers;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Customers
 {
@@ -10,12 +12,11 @@ namespace Nop.Data.Migrations.Customers
         
         public override void Up()
         {
-            Create.ForeignKey().FromTable(nameof(RewardPointsHistory))
-                .ForeignColumn(nameof(RewardPointsHistory.CustomerId))
-                .ToTable(nameof(Customer))
-                .PrimaryColumn(nameof(Customer.Id));
-
-            Create.Index().OnTable(nameof(RewardPointsHistory)).OnColumn(nameof(RewardPointsHistory.CustomerId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(nameof(RewardPointsHistory)
+                , nameof(RewardPointsHistory.CustomerId)
+                , nameof(Customer)
+                , nameof(Customer.Id)
+                , Rule.Cascade);
         }
 
         #endregion

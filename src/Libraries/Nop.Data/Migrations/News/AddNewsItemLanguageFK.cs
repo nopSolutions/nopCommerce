@@ -1,6 +1,8 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.News
 {
@@ -11,12 +13,11 @@ namespace Nop.Data.Migrations.News
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(NopMappingDefaults.NewsItemTable)
-                .ForeignColumn(nameof(NewsItem.LanguageId))
-                .ToTable(nameof(Language))
-                .PrimaryColumn(nameof(Language.Id));
-
-            Create.Index().OnTable(NopMappingDefaults.NewsItemTable).OnColumn(nameof(NewsItem.LanguageId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(NopMappingDefaults.NewsItemTable
+                , nameof(NewsItem.LanguageId)
+                , nameof(Language)
+                , nameof(Language.Id)
+                , Rule.Cascade);
         }
 
         #endregion

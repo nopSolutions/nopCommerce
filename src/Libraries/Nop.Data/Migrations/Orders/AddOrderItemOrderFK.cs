@@ -1,5 +1,7 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Orders;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Orders
 {
@@ -10,12 +12,11 @@ namespace Nop.Data.Migrations.Orders
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(nameof(OrderItem))
-                .ForeignColumn(nameof(OrderItem.OrderId))
-                .ToTable(nameof(Order))
-                .PrimaryColumn(nameof(Order.Id));
-
-            Create.Index().OnTable(nameof(OrderItem)).OnColumn(nameof(OrderItem.OrderId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(nameof(OrderItem)
+                , nameof(OrderItem.OrderId)
+                , nameof(Order)
+                , nameof(Order.Id)
+                , Rule.Cascade);
         }
 
         #endregion

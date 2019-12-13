@@ -1,8 +1,10 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using LinqToDB.Mapping;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Orders
 {
@@ -13,12 +15,11 @@ namespace Nop.Data.Migrations.Orders
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(nameof(ReturnRequest))
-                .ForeignColumn(nameof(ReturnRequest.CustomerId))
-                .ToTable(nameof(Customer))
-                .PrimaryColumn(nameof(Customer.Id));
-
-            Create.Index().OnTable(nameof(ReturnRequest)).OnColumn(nameof(ReturnRequest.CustomerId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(nameof(ReturnRequest)
+                , nameof(ReturnRequest.CustomerId)
+                , nameof(Customer)
+                , nameof(Customer.Id)
+                , Rule.Cascade);
         }
 
         #endregion

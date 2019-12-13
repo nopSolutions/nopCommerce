@@ -5,15 +5,15 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Discounts
 {
-    [Migration(637097774149883528)]
-    public class AddDiscountManufacturerDiscountFK : AutoReversingMigration
+    [Migration(637118390520043560)]
+    public class AddDiscountRequirementDiscountFK : AutoReversingMigration
     {
         #region Methods
 
         public override void Up()
         {
-            this.AddForeignKey(NopMappingDefaults.DiscountAppliedToManufacturersTable
-                , "Discount_Id"
+            this.AddForeignKey(nameof(DiscountRequirement)
+                , nameof(DiscountRequirement.DiscountId)
                 , nameof(Discount)
                 , nameof(Discount.Id)
                 , Rule.Cascade);

@@ -1,5 +1,7 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Discounts;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Discounts
 {
@@ -10,12 +12,11 @@ namespace Nop.Data.Migrations.Discounts
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(NopMappingDefaults.DiscountAppliedToCategoriesTable)
-                .ForeignColumn("Discount_Id")
-                .ToTable(nameof(Discount))
-                .PrimaryColumn(nameof(Discount.Id));
-
-            Create.Index().OnTable(NopMappingDefaults.DiscountAppliedToCategoriesTable).OnColumn("Discount_Id").Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(NopMappingDefaults.DiscountAppliedToCategoriesTable
+                , "Discount_Id"
+                , nameof(Discount)
+                , nameof(Discount.Id)
+                , Rule.Cascade);
         }
 
         #endregion

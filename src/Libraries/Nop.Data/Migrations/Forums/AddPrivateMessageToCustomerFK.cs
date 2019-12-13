@@ -2,6 +2,7 @@
 using FluentMigrator;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Forums
 {
@@ -12,13 +13,10 @@ namespace Nop.Data.Migrations.Forums
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(NopMappingDefaults.PrivateMessageTable)
-                .ForeignColumn(nameof(PrivateMessage.ToCustomerId))
-                .ToTable(nameof(Customer))
-                .PrimaryColumn(nameof(Customer.Id))
-                .OnDelete(Rule.None);
-
-            Create.Index().OnTable(NopMappingDefaults.PrivateMessageTable).OnColumn(nameof(PrivateMessage.ToCustomerId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(NopMappingDefaults.PrivateMessageTable
+                , nameof(PrivateMessage.ToCustomerId)
+                , nameof(Customer)
+                , nameof(Customer.Id));
         }
 
         #endregion

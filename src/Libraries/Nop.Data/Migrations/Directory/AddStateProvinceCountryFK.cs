@@ -1,5 +1,7 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Directory;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Directory
 {
@@ -10,12 +12,11 @@ namespace Nop.Data.Migrations.Directory
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(nameof(StateProvince))
-                .ForeignColumn(nameof(StateProvince.CountryId))
-                .ToTable(nameof(Country))
-                .PrimaryColumn(nameof(Country.Id));
-
-            Create.Index().OnTable(nameof(StateProvince)).OnColumn(nameof(StateProvince.CountryId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(nameof(StateProvince)
+                , nameof(StateProvince.CountryId)
+                , nameof(Country)
+                , nameof(Country.Id)
+                , Rule.Cascade);
         }
 
         #endregion

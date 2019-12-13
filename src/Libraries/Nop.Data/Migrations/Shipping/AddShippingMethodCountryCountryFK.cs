@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using FluentMigrator;
 using Nop.Core.Domain.Directory;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Shipping
 {
@@ -11,13 +12,11 @@ namespace Nop.Data.Migrations.Shipping
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(NopMappingDefaults.ShippingMethodRestrictionsTable)
-                .ForeignColumn("Country_Id")
-                .ToTable(nameof(Country))
-                .PrimaryColumn(nameof(Country.Id))
-                .OnDelete(Rule.Cascade);
-
-            Create.Index().OnTable(NopMappingDefaults.ShippingMethodRestrictionsTable).OnColumn("Country_Id").Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(NopMappingDefaults.ShippingMethodRestrictionsTable
+                , "Country_Id"
+                , nameof(Country)
+                , nameof(Country.Id)
+                , Rule.Cascade);
         }
 
         #endregion

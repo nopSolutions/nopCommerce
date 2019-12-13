@@ -155,6 +155,7 @@ namespace Nop.Services.Common
                             where aav.AddressAttributeId == addressAttributeId
                             select aav;
                 var addressAttributeValues = query.ToList();
+
                 return addressAttributeValues;
             });
         }

@@ -2,6 +2,7 @@
 using FluentMigrator;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Shipping
 {
@@ -12,13 +13,11 @@ namespace Nop.Data.Migrations.Shipping
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(nameof(Shipment))
-                .ForeignColumn(nameof(Shipment.OrderId))
-                .ToTable(nameof(Order))
-                .PrimaryColumn(nameof(Order.Id))
-                .OnDelete(Rule.Cascade);
-
-            Create.Index().OnTable(nameof(Shipment)).OnColumn(nameof(Shipment.OrderId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(nameof(Shipment)
+                , nameof(Shipment.OrderId)
+                , nameof(Order)
+                , nameof(Order.Id)
+                , Rule.Cascade);
         }
 
         #endregion

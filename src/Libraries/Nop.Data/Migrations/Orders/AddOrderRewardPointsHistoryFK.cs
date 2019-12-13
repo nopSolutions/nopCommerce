@@ -6,18 +6,17 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Orders
 {
-    [Migration(637097805896028942)]
-    public class AddOrderCustomerFK : AutoReversingMigration
+    [Migration(637121109617140897)]
+    public class AddOrderRewardPointsHistoryFK : AutoReversingMigration
     {
         #region Methods
 
         public override void Up()
         {
             this.AddForeignKey(nameof(Order)
-                , nameof(Order.CustomerId)
-                , nameof(Customer)
-                , nameof(Customer.Id)
-                , Rule.None);
+                , nameof(Order.RewardPointsHistoryEntryId)
+                , nameof(RewardPointsHistory)
+                , nameof(RewardPointsHistory.Id));
         }
 
         #endregion

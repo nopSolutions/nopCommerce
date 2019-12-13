@@ -1,7 +1,7 @@
-﻿using System.Data;
-using FluentMigrator;
+﻿using FluentMigrator;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Common;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Affiliates
 {
@@ -12,13 +12,10 @@ namespace Nop.Data.Migrations.Affiliates
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(nameof(Affiliate))
-                .ForeignColumn(nameof(Affiliate.AddressId))
-                .ToTable(nameof(Address))
-                .PrimaryColumn(nameof(Address.Id))
-                .OnDelete(Rule.None);
-
-            Create.Index().OnTable(nameof(Affiliate)).OnColumn(nameof(Affiliate.AddressId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(nameof(Affiliate)
+                , nameof(Affiliate.AddressId)
+                , nameof(Address)
+                , nameof(Address.Id));
         }
 
         #endregion

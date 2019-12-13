@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using FluentMigrator;
 using Nop.Core.Domain.Media;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Media
 {
@@ -11,13 +12,11 @@ namespace Nop.Data.Migrations.Media
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(nameof(PictureBinary))
-                .ForeignColumn(nameof(PictureBinary.PictureId))
-                .ToTable(nameof(Picture))
-                .PrimaryColumn(nameof(Picture.Id))
-                .OnDelete(Rule.Cascade);
-
-            Create.Index().OnTable(nameof(PictureBinary)).OnColumn(nameof(PictureBinary.PictureId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(nameof(PictureBinary)
+                , nameof(PictureBinary.PictureId)
+                , nameof(Picture)
+                , nameof(Picture.Id)
+                , Rule.Cascade);
         }
 
         #endregion

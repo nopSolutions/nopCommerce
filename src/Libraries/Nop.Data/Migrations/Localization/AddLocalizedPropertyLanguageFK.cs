@@ -1,5 +1,7 @@
-﻿using FluentMigrator;
+﻿using System.Data;
+using FluentMigrator;
 using Nop.Core.Domain.Localization;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Localization
 {
@@ -13,12 +15,11 @@ namespace Nop.Data.Migrations.Localization
 
         public override void Up()
         {
-            Create.ForeignKey().FromTable(nameof(LocalizedProperty))
-                .ForeignColumn(nameof(LocalizedProperty.LanguageId))
-                .ToTable(nameof(Language))
-                .PrimaryColumn(nameof(Language.Id));
-
-            Create.Index().OnTable(nameof(LocalizedProperty)).OnColumn(nameof(LocalizedProperty.LanguageId)).Ascending().WithOptions().NonClustered();
+            this.AddForeignKey(nameof(LocalizedProperty)
+                , nameof(LocalizedProperty.LanguageId)
+                , nameof(Language)
+                , nameof(Language.Id)
+                , Rule.Cascade);
         }
 
         #endregion

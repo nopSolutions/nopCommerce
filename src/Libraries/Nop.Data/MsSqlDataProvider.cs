@@ -184,18 +184,11 @@ namespace Nop.Data
 
             CreateDatabaseSchemaIfNotExists();
 
-            if (DataSettingsManager.DatabaseIsInstalled)
-            {
-                ApplyMigrations();
-            }
-            else
-            {
-                //create indexes
-                ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.SqlServerIndexesFilePath);
+            //create indexes
+            ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.SqlServerIndexesFilePath);
 
-                //create stored procedures 
-                ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.SqlServerStoredProceduresFilePath);
-            }
+            //create stored procedures 
+            ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.SqlServerStoredProceduresFilePath);
         }
 
         /// <summary>
