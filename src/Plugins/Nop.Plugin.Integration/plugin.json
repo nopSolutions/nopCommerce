@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Integration",
+  "FriendlyName": "Integration plugin",
+  "SystemName": "Nop.Plugin.Integration",
+  "Version": "4.2.0",
+  "SupportedVersions": [ "4.20" ],
+  "Author": "Denduluri",
+  "DisplayOrder": -1,
+  "FileName": "Nop.Plugin.Integration.dll",
+  "Description": "This plugin is Restfull API"
+}

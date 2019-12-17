@@ -1,0 +1,11 @@
+﻿{
+	"Group": "Misc",
+	"FriendlyName": "Azure Application Insights Analytics",
+	"SystemName": "Analytics.ApplicationInsights",
+	"Version": "0.1",
+	"SupportedVersions": [ "4.20" ],
+	"Author": "D0b0",
+	"DisplayOrder": 1,
+	"FileName": "D0b0.Plugin.Analytics.ApplicationInsights.dll",
+	"Description": ""
+}
