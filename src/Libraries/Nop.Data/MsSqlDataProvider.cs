@@ -296,27 +296,7 @@ namespace Nop.Data
             _dataConnection.Execute(commandText);
         }
 
-
-        public virtual void SaveConnectionString(string connectionString)
-        {
-            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-
-            if (string.IsNullOrEmpty(connectionString))
-                throw new ArgumentNullException(nameof(connectionString));
-
-            var builder = new SqlConnectionStringBuilder(connectionString);
-
-            DataSettingsManager.SaveSettings(new DataSettings
-            {
-                DataProvider = DataProviderType.SqlServer,
-                ConnectionString = builder.ConnectionString
-            }, fileProvider);
-
-            //reset cache
-            DataSettingsManager.LoadSettings(reloadSettings: true);
-        }
-
-        public virtual void SaveConnectionString(INopConnectionStringInfo nopConnectionString)
+        public virtual string BuildConnectionString(INopConnectionStringInfo nopConnectionString)
         {
             if (nopConnectionString is null)
                 throw new ArgumentNullException(nameof(nopConnectionString));
@@ -335,7 +315,7 @@ namespace Nop.Data
                 builder.Password = nopConnectionString.Password;
             }
 
-            SaveConnectionString(builder.ConnectionString);
+            return builder.ConnectionString;
         }
 
         #endregion
