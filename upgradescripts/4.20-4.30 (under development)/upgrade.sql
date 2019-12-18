@@ -4,7 +4,7 @@
 declare @resources xml
 --a resource will be deleted if its value is empty
 set @resources='
-<Language>
+<Language>  
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification">
     <Value>HTML minification</Value>
   </LocaleResource>
@@ -202,6 +202,12 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.Microdata.Hint">
     <Value>Check to generate Microdata tags on the product details page.</Value>
+  </LocaleResource>
+   <LocaleResource Name="Admin.Promotions.Discounts.Fields.AdminComment">
+    <Value>Admin comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.AdminComment.Hint">
+    <Value>This comment is for internal use only, not visible for customers.</Value>
   </LocaleResource>
 </Language>
 '
@@ -407,3 +413,13 @@ BEGIN
     VALUES (N'seosettings.microdataenabled', 'true', 0)
 END
 GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Discount]') and NAME='AdminComment')
+BEGIN
+	ALTER TABLE [Discount] ADD
+	AdminComment nvarchar(max) NULL
+END
+GO
+
+ 
