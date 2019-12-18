@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -61,6 +61,23 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets specification attributes
         /// </summary>
+        /// <param name="specificationAttributeIds">The specification attribute identifiers</param>
+        /// <returns>Specification attributes</returns>
+        public virtual IList<SpecificationAttribute> GetSpecificationAttributeByIds(int[] specificationAttributeIds)
+        {
+            if (specificationAttributeIds == null || specificationAttributeIds.Length == 0)
+                return new List<SpecificationAttribute>();
+
+            var query = from p in _specificationAttributeRepository.Table
+                        where specificationAttributeIds.Contains(p.Id)
+                        select p;
+
+            return query.ToList();
+        }
+
+        /// <summary>
+        /// Gets specification attributes
+        /// </summary>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Specification attributes</returns>
@@ -99,6 +116,21 @@ namespace Nop.Services.Catalog
 
             //event notification
             _eventPublisher.EntityDeleted(specificationAttribute);
+        }
+
+        /// <summary>
+        /// Deletes specifications attributes
+        /// </summary>
+        /// <param name="specificationAttributes">Specification attributes</param>
+        public virtual void DeleteSpecificationAttributes(IList<SpecificationAttribute> specificationAttributes)
+        {
+            if (specificationAttributes == null)
+                throw new ArgumentNullException(nameof(specificationAttributes));
+
+            foreach (var specificationAttribute in specificationAttributes)
+            {
+                DeleteSpecificationAttribute(specificationAttribute);
+            }
         }
 
         /// <summary>
