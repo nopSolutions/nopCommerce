@@ -302,18 +302,20 @@ END
 GO
 
 --new column
-IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[StorePickupPoint]') and NAME='Latitude')
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[StorePickupPoint]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+and NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[StorePickupPoint]') AND NAME = 'Latitude')
 BEGIN
-	ALTER TABLE [StorePickupPoint] ADD
-	Latitude decimal(18, 8) NULL
+	ALTER TABLE [StorePickupPoint]
+	ADD Latitude decimal(18, 8) NULL
 END
 GO
 
 --new column
-IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[StorePickupPoint]') and NAME='Longitude')
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[StorePickupPoint]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+and NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[StorePickupPoint]') AND NAME = 'Longitude')
 BEGIN
-	ALTER TABLE [StorePickupPoint] ADD
-	Longitude decimal(18, 8) NULL
+	ALTER TABLE [StorePickupPoint]
+	ADD Longitude decimal(18, 8) NULL
 END
 GO
 
