@@ -40,12 +40,20 @@ namespace Nop.Data
 
         #region Utilities
 
+        protected abstract void ConfigureDataContext(IDataContext dataContext);
+
         #endregion
 
         #region Methods
 
         public virtual void CreateDatabaseSchemaIfNotExists(Assembly assembly = null)
         {
+            DataConnection.DefaultSettings = Singleton<DataSettings>.Instance;
+
+            _dataConnection = new NopDataConnection();
+
+            ConfigureDataContext(_dataConnection);
+
             //find database mapping configuration by other assemblies
             var typeFinder = new AppDomainTypeFinder();
 
@@ -56,7 +64,7 @@ namespace Nop.Data
             foreach (var typeConfiguration in typeConfigurations)
             {
                 var mappingConfiguration = (IMappingConfiguration)Activator.CreateInstance(typeConfiguration);
-                mappingConfiguration.CreateTableIfNotExists();
+                mappingConfiguration.CreateTableIfNotExists(_dataConnection);
             }
         }
 
@@ -107,7 +115,7 @@ namespace Nop.Data
                 }
             }
         }
-
+        
         public virtual void ApplyDownMigrations(Assembly assembly = null)
         {
             //do not inject services via constructor because it'll cause installation fails

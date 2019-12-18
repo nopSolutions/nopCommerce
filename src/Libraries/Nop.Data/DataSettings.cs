@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using LinqToDB.Configuration;
 using Newtonsoft.Json;
@@ -68,7 +69,7 @@ namespace Nop.Data
         /// Gets name of default data provider configuration
         /// </summary>
         [JsonIgnore]
-        public string DefaultDataProvider => DataProviderType.SqlServer.ToString();
+        public string DefaultDataProvider => Enum.GetName(typeof(DataProviderType), DataProvider);
 
         /// <summary>
         /// Gets list of connection configurations

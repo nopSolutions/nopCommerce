@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using LinqToDB;
 using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -15,15 +16,21 @@ namespace Nop.Data
     /// <summary>
     /// Represents the MS SQL Server data provider
     /// </summary>
-    public partial class MsSqlDataProvider: BaseDataProvider, IDataProvider
+    public partial class MsSqlDataProvider : BaseDataProvider, IDataProvider
     {
         #region Utils
 
-        protected SqlConnectionStringBuilder GetConnectionStringBuilder()
+        protected virtual SqlConnectionStringBuilder GetConnectionStringBuilder()
         {
             var connectionString = DataSettingsManager.LoadSettings().ConnectionString;
 
             return new SqlConnectionStringBuilder(connectionString);
+        }
+
+        protected override void ConfigureDataContext(IDataContext dataContext)
+        {
+            //nothing
+            return;
         }
 
         #endregion
@@ -79,7 +86,7 @@ namespace Nop.Data
         /// Checks if the specified database exists, returns true if database exists
         /// </summary>
         /// <returns>Returns true if the database exists.</returns>
-        public bool IsDatabaseExists() 
+        public bool IsDatabaseExists()
         {
             try
             {
@@ -176,13 +183,9 @@ namespace Nop.Data
         /// </summary>
         public void InitializeDatabase()
         {
-            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-
-            DataConnection.DefaultSettings = Singleton<DataSettings>.Instance;
-
-            _dataConnection = new NopDataConnection();
-
             CreateDatabaseSchemaIfNotExists();
+
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
 
             //create indexes
             ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.SqlServerIndexesFilePath);
@@ -286,27 +289,7 @@ namespace Nop.Data
             _dataConnection.Execute(commandText);
         }
 
-
-        public virtual void SaveConnectionString(string connectionString)
-        {
-            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-
-            if (string.IsNullOrEmpty(connectionString))
-                throw new ArgumentNullException(nameof(connectionString));
-
-            var builder = new SqlConnectionStringBuilder(connectionString);
-
-            DataSettingsManager.SaveSettings(new DataSettings
-            {
-                DataProvider = DataProviderType.SqlServer,
-                ConnectionString = builder.ConnectionString
-            }, fileProvider);
-
-            //reset cache
-            DataSettingsManager.LoadSettings(reloadSettings: true);
-        }
-
-        public virtual void SaveConnectionString(INopConnectionStringInfo nopConnectionString)
+        public virtual string BuildConnectionString(INopConnectionStringInfo nopConnectionString)
         {
             if (nopConnectionString is null)
                 throw new ArgumentNullException(nameof(nopConnectionString));
@@ -325,7 +308,7 @@ namespace Nop.Data
                 builder.Password = nopConnectionString.Password;
             }
 
-            SaveConnectionString(builder.ConnectionString);
+            return builder.ConnectionString;
         }
 
         #endregion

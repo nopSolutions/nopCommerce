@@ -2,8 +2,10 @@
 using System.Linq;
 using System.Reflection;
 using FluentMigrator.Runner;
+using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
+using LinqToDB.SqlQuery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +29,7 @@ namespace Nop.Data
         {
             var mappingBuilder = new FluentMappingBuilder(NopDataConnection.AdditionalSchema);
 
+
             //find database mapping configuration by other assemblies
             var typeFinder = new AppDomainTypeFinder();
             var typeConfigurations = typeFinder.FindClassesOfType<IMappingConfiguration>().ToList();
@@ -42,6 +45,8 @@ namespace Nop.Data
                 return;
 
             DataConnection.DefaultSettings = Singleton<DataSettings>.Instance;
+
+            MappingSchema.Default.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
 
             services
                 // add common FluentMigrator services

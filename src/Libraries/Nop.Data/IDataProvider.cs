@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
 using Nop.Core;
@@ -82,9 +83,7 @@ namespace Nop.Data
 
         EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity;
 
-        void SaveConnectionString(string connectionString);
-
-        void SaveConnectionString(INopConnectionStringInfo nopConnection);
+        string BuildConnectionString(INopConnectionStringInfo nopConnectionString);
 
         #endregion
 

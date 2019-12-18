@@ -124,10 +124,18 @@ namespace Nop.Web.Controllers
             {
                 var dataProvider = DataProviderManager.GetDataProvider(model.DataProvider);
 
-                if (model.ConnectionStringRaw)
-                    dataProvider.SaveConnectionString(model.ConnectionString);
-                else
-                    dataProvider.SaveConnectionString(model);
+                var connectionString = model.ConnectionStringRaw ? model.ConnectionString : dataProvider.BuildConnectionString(model);
+
+                if (string.IsNullOrEmpty(connectionString))
+                    throw new Exception(_locService.GetResource("ConnectionStringWrongFormat"));
+
+                DataSettingsManager.SaveSettings(new DataSettings
+                {
+                    DataProvider = model.DataProvider,
+                    ConnectionString = connectionString
+                }, _fileProvider);
+
+                DataSettingsManager.LoadSettings(reloadSettings: true);
 
                 if (model.CreateDatabaseIfNotExists)
                 {
