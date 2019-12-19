@@ -2,10 +2,8 @@
 using System.Linq;
 using System.Reflection;
 using FluentMigrator.Runner;
-using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
-using LinqToDB.SqlQuery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

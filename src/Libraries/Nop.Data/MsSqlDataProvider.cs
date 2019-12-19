@@ -187,9 +187,6 @@ namespace Nop.Data
 
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
 
-            //create indexes
-            ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.SqlServerIndexesFilePath);
-
             //create stored procedures 
             ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.SqlServerStoredProceduresFilePath);
         }
