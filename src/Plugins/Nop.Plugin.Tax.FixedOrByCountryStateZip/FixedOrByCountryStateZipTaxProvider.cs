@@ -2,6 +2,7 @@
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Services;
 using Nop.Services.Configuration;
@@ -76,7 +77,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
 
             //first, load all tax rate records (cached) - loaded only once
             var cacheKey = ModelCacheEventConsumer.ALL_TAX_RATES_MODEL_KEY;
-            var allTaxRates = _cacheManager.Get(cacheKey, () => _taxRateService.GetAllTaxRates().Select(taxRate => new TaxRateForCaching
+            var allTaxRates = _cacheManager.Get(cacheKey, () => _taxRateService.GetAllTaxRates().Select(taxRate => new TaxRate
             {
                 Id = taxRate.Id,
                 StoreId = taxRate.StoreId,

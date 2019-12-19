@@ -195,7 +195,7 @@ namespace Nop.Services.Orders
             public PlaceOrderContainer()
             {
                 Cart = new List<ShoppingCartItem>();
-                AppliedDiscounts = new List<DiscountForCaching>();
+                AppliedDiscounts = new List<Discount>();
                 AppliedGiftCards = new List<AppliedGiftCard>();
             }
 
@@ -292,7 +292,7 @@ namespace Nop.Services.Orders
             /// <summary>
             /// Applied discounts
             /// </summary>
-            public List<DiscountForCaching> AppliedDiscounts { get; set; }
+            public List<Discount> AppliedDiscounts { get; set; }
 
             /// <summary>
             /// Applied gift cards
@@ -744,7 +744,7 @@ namespace Nop.Services.Orders
             {
                 var d = _discountService.GetDiscountById(duh.DiscountId);
                 if (d != null)
-                    details.AppliedDiscounts.Add(_discountService.MapDiscount(d));
+                    details.AppliedDiscounts.Add(d);
             }
 
             //order total

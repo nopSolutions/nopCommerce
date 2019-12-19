@@ -45,9 +45,6 @@ namespace Nop.Services.Stores
             if (store == null)
                 throw new ArgumentNullException(nameof(store));
 
-            if (store is IEntityForCaching)
-                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
-
             var allStores = GetAllStores();
             if (allStores.Count == 1)
                 throw new Exception("You cannot delete the only configured store");
@@ -80,7 +77,7 @@ namespace Nop.Services.Stores
                 {
                     var result = new List<Store>();
                     foreach (var store in loadStoresFunc())
-                        result.Add(new StoreForCaching(store));
+                        result.Add(store);
                     return result;
                 });
             }
@@ -109,13 +106,7 @@ namespace Nop.Services.Stores
 
             //cacheable copy
             var key = string.Format(NopStoreDefaults.StoresByIdCacheKey, storeId);
-            return _cacheManager.Get(key, () =>
-            {
-                var store = LoadStoreFunc();
-                if (store == null)
-                    return null;
-                return new StoreForCaching(store);
-            });
+            return _cacheManager.Get(key, LoadStoreFunc);
         }
 
         /// <summary>
@@ -126,9 +117,6 @@ namespace Nop.Services.Stores
         {
             if (store == null)
                 throw new ArgumentNullException(nameof(store));
-
-            if (store is IEntityForCaching)
-                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
 
             _storeRepository.Insert(store);
 
@@ -146,10 +134,7 @@ namespace Nop.Services.Stores
         {
             if (store == null)
                 throw new ArgumentNullException(nameof(store));
-
-            if (store is IEntityForCaching)
-                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
-
+            
             _storeRepository.Update(store);
 
             _cacheManager.RemoveByPrefix(NopStoreDefaults.StoresPrefixCacheKey);

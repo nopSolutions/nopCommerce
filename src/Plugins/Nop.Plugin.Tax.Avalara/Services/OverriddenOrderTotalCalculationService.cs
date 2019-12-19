@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -116,7 +116,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating order total</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
         public override decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
-            out decimal discountAmount, out List<DiscountForCaching> appliedDiscounts,
+            out decimal discountAmount, out List<Discount> appliedDiscounts,
             out List<AppliedGiftCard> appliedGiftCards,
             out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount,
             bool? useRewardPoints = null, bool usePaymentMethodAdditionalFee = true)

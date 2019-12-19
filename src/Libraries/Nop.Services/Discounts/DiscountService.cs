@@ -180,36 +180,54 @@ namespace Nop.Services.Discounts
             string couponCode = null, string discountName = null, bool showHidden = false,
             DateTime? startDateUtc = null, DateTime? endDateUtc = null)
         {
-            var query = _discountRepository.Table;
+            //we load all discounts, and filter them using "discountType" parameter later (in memory)
+            //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
+            //that's why let's access the database only once
+            var cacheKey = string.Format(NopDiscountDefaults.DiscountAllCacheKey,
+                showHidden, couponCode ?? string.Empty, discountName ?? string.Empty);
 
-            if (!showHidden)
+            var discounts = _cacheManager.Get(cacheKey, () =>
             {
-                query = query.Where(discount =>
-                    (!discount.StartDateUtc.HasValue || discount.StartDateUtc <= DateTime.UtcNow) &&
-                    (!discount.EndDateUtc.HasValue || discount.EndDateUtc >= DateTime.UtcNow));
-            }
+                var query = _discountRepository.Table;
 
-            //filter by dates
-            if (startDateUtc.HasValue)
-                query = query.Where(discount => !discount.StartDateUtc.HasValue || discount.StartDateUtc >= startDateUtc.Value);
-            if (endDateUtc.HasValue)
-                query = query.Where(discount => !discount.EndDateUtc.HasValue || discount.EndDateUtc <= endDateUtc.Value);
+                if (!showHidden)
+                {
+                    query = query.Where(discount =>
+                        (!discount.StartDateUtc.HasValue || discount.StartDateUtc <= DateTime.UtcNow) &&
+                        (!discount.EndDateUtc.HasValue || discount.EndDateUtc >= DateTime.UtcNow));
+                }
 
-            //filter by coupon code
-            if (!string.IsNullOrEmpty(couponCode))
-                query = query.Where(discount => discount.CouponCode == couponCode);
+                //filter by dates
+                if (startDateUtc.HasValue)
+                    query = query.Where(discount =>
+                        !discount.StartDateUtc.HasValue || discount.StartDateUtc >= startDateUtc.Value);
+                if (endDateUtc.HasValue)
+                    query = query.Where(discount =>
+                        !discount.EndDateUtc.HasValue || discount.EndDateUtc <= endDateUtc.Value);
 
-            //filter by name
-            if (!string.IsNullOrEmpty(discountName))
-                query = query.Where(discount => discount.Name.Contains(discountName));
+                //filter by coupon code
+                if (!string.IsNullOrEmpty(couponCode))
+                    query = query.Where(discount => discount.CouponCode == couponCode);
 
-            //filter by type
+                //filter by name
+                if (!string.IsNullOrEmpty(discountName))
+                    query = query.Where(discount => discount.Name.Contains(discountName));
+
+                //filter by type
+                if (discountType.HasValue)
+                    query = query.Where(discount => discount.DiscountTypeId == (int)discountType.Value);
+
+                query = query.OrderBy(discount => discount.Name).ThenBy(discount => discount.Id);
+
+                return query.ToList();
+            });
+
+            //we know that this method is usually invoked multiple times
+            //that's why we filter discounts by type on the application layer
             if (discountType.HasValue)
-                query = query.Where(discount => discount.DiscountTypeId == (int)discountType.Value);
+                discounts = discounts.Where(discount => discount.DiscountType == discountType.Value).ToList();
 
-            query = query.OrderBy(discount => discount.Name).ThenBy(discount => discount.Id);
-
-            return query.ToList();
+            return discounts.ToList();
         }
 
         /// <summary>
@@ -261,74 +279,12 @@ namespace Nop.Services.Discounts
         #region Discounts (caching)
 
         /// <summary>
-        /// Gets all discounts (cacheable models)
-        /// </summary>
-        /// <param name="discountType">Discount type; pass null to load all records</param>
-        /// <param name="couponCode">Coupon code to find (exact match); pass null or empty to load all records</param>
-        /// <param name="discountName">Discount name; pass null or empty to load all records</param>
-        /// <param name="showHidden">A value indicating whether to show expired and not started discounts</param>
-        /// <returns>Discounts</returns>
-        public virtual IList<DiscountForCaching> GetAllDiscountsForCaching(DiscountType? discountType = null,
-            string couponCode = null, string discountName = null, bool showHidden = false)
-        {
-            //we cache discounts between requests. Otherwise, they will be loaded for almost each HTTP request
-            //we have to use the following workaround with cacheable model (DiscountForCaching) because
-            //Entity Framework doesn't support 2-level caching
-
-            //we load all discounts, and filter them using "discountType" parameter later (in memory)
-            //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
-            //that's why let's access the database only once
-            var cacheKey = string.Format(NopDiscountDefaults.DiscountAllCacheKey,
-                showHidden, couponCode ?? string.Empty, discountName ?? string.Empty);
-            var discounts = _cacheManager.Get(cacheKey, () => GetAllDiscounts(couponCode: couponCode, discountName: discountName, showHidden: showHidden)
-                .Select(MapDiscount).ToList());
-
-            //we know that this method is usually invoked multiple times
-            //that's why we filter discounts by type on the application layer
-            if (discountType.HasValue)
-                discounts = discounts.Where(discount => discount.DiscountType == discountType.Value).ToList();
-
-            return discounts;
-        }
-
-        /// <summary>
-        /// Map a discount to the same class for caching
-        /// </summary>
-        /// <param name="discount">Discount</param>
-        /// <returns>Result</returns>
-        public virtual DiscountForCaching MapDiscount(Discount discount)
-        {
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
-
-            return new DiscountForCaching
-            {
-                Id = discount.Id,
-                Name = discount.Name,
-                DiscountTypeId = discount.DiscountTypeId,
-                UsePercentage = discount.UsePercentage,
-                DiscountPercentage = discount.DiscountPercentage,
-                DiscountAmount = discount.DiscountAmount,
-                MaximumDiscountAmount = discount.MaximumDiscountAmount,
-                StartDateUtc = discount.StartDateUtc,
-                EndDateUtc = discount.EndDateUtc,
-                RequiresCouponCode = discount.RequiresCouponCode,
-                CouponCode = discount.CouponCode,
-                IsCumulative = discount.IsCumulative,
-                DiscountLimitationId = discount.DiscountLimitationId,
-                LimitationTimes = discount.LimitationTimes,
-                MaximumDiscountedQuantity = discount.MaximumDiscountedQuantity,
-                AppliedToSubCategories = discount.AppliedToSubCategories
-            };
-        }
-
-        /// <summary>
         /// Gets the discount amount for the specified value
         /// </summary>
         /// <param name="discount">Discount</param>
         /// <param name="amount">Amount</param>
         /// <returns>The discount amount</returns>
-        public virtual decimal GetDiscountAmount(DiscountForCaching discount, decimal amount)
+        public virtual decimal GetDiscountAmount(Discount discount, decimal amount)
         {
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
@@ -359,13 +315,13 @@ namespace Nop.Services.Discounts
         /// <param name="amount">Amount (initial value)</param>
         /// <param name="discountAmount">Discount amount</param>
         /// <returns>Preferred discount</returns>
-        public virtual List<DiscountForCaching> GetPreferredDiscount(IList<DiscountForCaching> discounts,
+        public virtual List<Discount> GetPreferredDiscount(IList<Discount> discounts,
             decimal amount, out decimal discountAmount)
         {
             if (discounts == null)
                 throw new ArgumentNullException(nameof(discounts));
 
-            var result = new List<DiscountForCaching>();
+            var result = new List<Discount>();
             discountAmount = decimal.Zero;
             if (!discounts.Any())
                 return result;
@@ -407,7 +363,7 @@ namespace Nop.Services.Discounts
         /// <param name="discounts">A list of discounts</param>
         /// <param name="discount">Discount to check</param>
         /// <returns>Result</returns>
-        public virtual bool ContainsDiscount(IList<DiscountForCaching> discounts, DiscountForCaching discount)
+        public virtual bool ContainsDiscount(IList<Discount> discounts, Discount discount)
         {
             if (discounts == null)
                 throw new ArgumentNullException(nameof(discounts));
@@ -527,7 +483,7 @@ namespace Nop.Services.Discounts
         #endregion
 
         #region Validation
-
+        
         /// <summary>
         /// Validate discount
         /// </summary>
@@ -535,35 +491,6 @@ namespace Nop.Services.Discounts
         /// <param name="customer">Customer</param>
         /// <returns>Discount validation result</returns>
         public virtual DiscountValidationResult ValidateDiscount(Discount discount, Customer customer)
-        {
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
-
-            return ValidateDiscount(MapDiscount(discount), customer);
-        }
-
-        /// <summary>
-        /// Validate discount
-        /// </summary>
-        /// <param name="discount">Discount</param>
-        /// <param name="customer">Customer</param>
-        /// <param name="couponCodesToValidate">Coupon codes to validate</param>
-        /// <returns>Discount validation result</returns>
-        public virtual DiscountValidationResult ValidateDiscount(Discount discount, Customer customer, string[] couponCodesToValidate)
-        {
-            if (discount == null)
-                throw new ArgumentNullException(nameof(discount));
-
-            return ValidateDiscount(MapDiscount(discount), customer, couponCodesToValidate);
-        }
-
-        /// <summary>
-        /// Validate discount
-        /// </summary>
-        /// <param name="discount">Discount</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Discount validation result</returns>
-        public virtual DiscountValidationResult ValidateDiscount(DiscountForCaching discount, Customer customer)
         {
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
@@ -582,7 +509,7 @@ namespace Nop.Services.Discounts
         /// <param name="customer">Customer</param>
         /// <param name="couponCodesToValidate">Coupon codes to validate</param>
         /// <returns>Discount validation result</returns>
-        public virtual DiscountValidationResult ValidateDiscount(DiscountForCaching discount, Customer customer, string[] couponCodesToValidate)
+        public virtual DiscountValidationResult ValidateDiscount(Discount discount, Customer customer, string[] couponCodesToValidate)
         {
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));

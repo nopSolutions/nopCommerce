@@ -40,54 +40,23 @@ namespace Nop.Services.Logging
         }
 
         #endregion
-
-        #region Nested classes
-
-        /// <summary>
-        /// Activity log type for caching
-        /// </summary>
-        [Serializable]
-        public class ActivityLogTypeForCaching
-        {
-            /// <summary>
-            /// Identifier
-            /// </summary>
-            public int Id { get; set; }
-
-            /// <summary>
-            /// System keyword
-            /// </summary>
-            public string SystemKeyword { get; set; }
-
-            /// <summary>
-            /// Name
-            /// </summary>
-            public string Name { get; set; }
-
-            /// <summary>
-            /// Enabled
-            /// </summary>
-            public bool Enabled { get; set; }
-        }
-
-        #endregion
-
+        
         #region Utilities
 
         /// <summary>
         /// Gets all activity log types (class for caching)
         /// </summary>
         /// <returns>Activity log types</returns>
-        protected virtual IList<ActivityLogTypeForCaching> GetAllActivityTypesCached()
+        protected virtual IList<ActivityLogType> GetAllActivityTypesCached()
         {
             //cache
             return _cacheManager.Get(NopLoggingDefaults.ActivityTypeAllCacheKey, () =>
             {
-                var result = new List<ActivityLogTypeForCaching>();
+                var result = new List<ActivityLogType>();
                 var activityLogTypes = GetAllActivityTypes();
                 foreach (var alt in activityLogTypes)
                 {
-                    var altForCaching = new ActivityLogTypeForCaching
+                    var altForCaching = new ActivityLogType
                     {
                         Id = alt.Id,
                         SystemKeyword = alt.SystemKeyword,

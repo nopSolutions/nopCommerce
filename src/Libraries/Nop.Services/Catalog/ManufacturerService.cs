@@ -163,7 +163,7 @@ namespace Nop.Services.Catalog
         /// <param name="discount">Discount</param>
         /// <param name="customer">Customer</param>
         /// <returns>Manufacturer identifiers</returns>
-        public virtual IList<int> GetAppliedManufacturerIds(DiscountForCaching discount, Customer customer)
+        public virtual IList<int> GetAppliedManufacturerIds(Discount discount, Customer customer)
         {
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));

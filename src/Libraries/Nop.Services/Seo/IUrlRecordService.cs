@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Seo;
 
@@ -61,7 +61,7 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="slug">Slug</param>
         /// <returns>Found URL record</returns>
-        UrlRecordService.UrlRecordForCaching GetBySlugCached(string slug);
+        UrlRecord GetBySlugCached(string slug);
 
         /// <summary>
         /// Gets all URL records

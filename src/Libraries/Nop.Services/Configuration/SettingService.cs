@@ -39,32 +39,13 @@ namespace Nop.Services.Configuration
 
         #endregion
 
-        #region Nested classes
-
-        /// <summary>
-        /// Setting (for caching)
-        /// </summary>
-        [Serializable]
-        public class SettingForCaching
-        {
-            public int Id { get; set; }
-
-            public string Name { get; set; }
-
-            public string Value { get; set; }
-
-            public int StoreId { get; set; }
-        }
-
-        #endregion
-
         #region Utilities
 
         /// <summary>
         /// Gets all settings
         /// </summary>
         /// <returns>Settings</returns>
-        protected virtual IDictionary<string, IList<SettingForCaching>> GetAllSettingsCached()
+        protected virtual IDictionary<string, IList<Setting>> GetAllSettingsCached()
         {
             //cache
             return _cacheManager.Get(NopConfigurationDefaults.SettingsAllCacheKey, () =>
@@ -75,11 +56,11 @@ namespace Nop.Services.Configuration
                             orderby s.Name, s.StoreId
                             select s;
                 var settings = query.ToList();
-                var dictionary = new Dictionary<string, IList<SettingForCaching>>();
+                var dictionary = new Dictionary<string, IList<Setting>>();
                 foreach (var s in settings)
                 {
                     var resourceName = s.Name.ToLowerInvariant();
-                    var settingForCaching = new SettingForCaching
+                    var settingForCaching = new Setting
                     {
                         Id = s.Id,
                         Name = s.Name,
@@ -89,7 +70,7 @@ namespace Nop.Services.Configuration
                     if (!dictionary.ContainsKey(resourceName))
                     {
                         //first setting
-                        dictionary.Add(resourceName, new List<SettingForCaching>
+                        dictionary.Add(resourceName, new List<Setting>
                         {
                             settingForCaching
                         });

@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Orders;
-using Nop.Services.Discounts;
+using Nop.Core.Domain.Discounts;
 
 namespace Nop.Services.Catalog
 {
@@ -45,7 +44,7 @@ namespace Nop.Services.Catalog
             bool includeDiscounts,
             int quantity,
             out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts);
+            out List<Discount> appliedDiscounts);
 
         /// <summary>
         /// Gets the final price
@@ -68,7 +67,7 @@ namespace Nop.Services.Catalog
             DateTime? rentalStartDate,
             DateTime? rentalEndDate,
             out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts);
+            out List<Discount> appliedDiscounts);
 
         /// <summary>
         /// Gets the final price
@@ -93,7 +92,7 @@ namespace Nop.Services.Catalog
             DateTime? rentalStartDate,
             DateTime? rentalEndDate,
             out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts);
+            out List<Discount> appliedDiscounts);
 
         /// <summary>
         /// Gets the product cost (one item)

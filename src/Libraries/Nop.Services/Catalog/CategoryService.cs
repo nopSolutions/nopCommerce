@@ -31,7 +31,6 @@ namespace Nop.Services.Catalog
         private readonly IAclService _aclService;
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerService _customerService;
-        private readonly IDataProvider _dataProvider;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<AclRecord> _aclRepository;
@@ -54,7 +53,6 @@ namespace Nop.Services.Catalog
             IAclService aclService,
             ICacheManager cacheManager,
             ICustomerService customerService,
-            IDataProvider dataProvider,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             IRepository<AclRecord> aclRepository,
@@ -73,7 +71,6 @@ namespace Nop.Services.Catalog
             _aclService = aclService;
             _cacheManager = cacheManager;
             _customerService = customerService;
-            _dataProvider = dataProvider;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
             _aclRepository = aclRepository;
@@ -118,9 +115,6 @@ namespace Nop.Services.Catalog
             if (category == null)
                 throw new ArgumentNullException(nameof(category));
 
-            if (category is IEntityForCaching)
-                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
-
             category.Deleted = true;
             UpdateCategory(category);
 
@@ -159,7 +153,7 @@ namespace Nop.Services.Catalog
                 {
                     var result = new List<Category>();
                     foreach (var category in loadCategoriesFunc())
-                        result.Add(new CategoryForCaching(category));
+                        result.Add(category);
                     return result;
                 });
             }
@@ -340,7 +334,7 @@ namespace Nop.Services.Catalog
         /// <param name="discount">Discount</param>
         /// <param name="customer">Customer</param>
         /// <returns>Category identifiers</returns>
-        public virtual IList<int> GetAppliedCategoryIds(DiscountForCaching discount, Customer customer)
+        public virtual IList<int> GetAppliedCategoryIds(Discount discount, Customer customer)
         {
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
@@ -459,9 +453,6 @@ namespace Nop.Services.Catalog
             if (category == null)
                 throw new ArgumentNullException(nameof(category));
 
-            if (category is IEntityForCaching)
-                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
-
             _categoryRepository.Insert(category);
 
             //cache
@@ -522,9 +513,6 @@ namespace Nop.Services.Catalog
         {
             if (category == null)
                 throw new ArgumentNullException(nameof(category));
-
-            if (category is IEntityForCaching)
-                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
 
             //validate category hierarchy
             var parentCategory = GetCategoryById(category.ParentCategoryId);

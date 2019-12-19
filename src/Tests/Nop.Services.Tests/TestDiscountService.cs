@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using Nop.Core;
@@ -20,7 +21,7 @@ namespace Nop.Services.Tests
 {
     public class TestDiscountService : DiscountService
     {
-        private readonly List<DiscountForCaching> _discountForCaching;
+        private readonly List<Discount> _discounts;
 
         public TestDiscountService(
             ICustomerService customerService,
@@ -48,24 +49,19 @@ namespace Nop.Services.Tests
             cacheManager,
             storeContext)
         {
-            _discountForCaching = new List<DiscountForCaching>();
+            _discounts = new List<Discount>();
         }
 
         public override DiscountValidationResult ValidateDiscount(Discount discount, Customer customer)
         {
             return new DiscountValidationResult { IsValid = true };
         }
-        
-        public override DiscountValidationResult ValidateDiscount(DiscountForCaching discount, Customer customer)
-        {
-            return new DiscountValidationResult { IsValid = true };
-        }
 
-        public override IList<DiscountForCaching> GetAllDiscountsForCaching(DiscountType? discountType = null,
-            string couponCode = null, string discountName = null,
-            bool showHidden = false)
+        public override IList<Discount> GetAllDiscounts(DiscountType? discountType = null,
+            string couponCode = null, string discountName = null, bool showHidden = false,
+            DateTime? startDateUtc = null, DateTime? endDateUtc = null)
         {
-            return _discountForCaching
+            return _discounts
                 .Where(x => !discountType.HasValue || x.DiscountType == discountType.Value)
                 .Where(x => string.IsNullOrEmpty(couponCode) || x.CouponCode == couponCode)
                 //UNDONE other filtering such as discountName, showHidden (not actually required in unit tests)
@@ -74,10 +70,10 @@ namespace Nop.Services.Tests
 
         public void AddDiscount(DiscountType discountType)
         {
-            _discountForCaching.Clear();
+            _discounts.Clear();
 
             //discounts
-            var discount = new DiscountForCaching
+            var discount = new Discount
             {
                 Id = 1,
                 Name = "Discount 1",
@@ -86,12 +82,12 @@ namespace Nop.Services.Tests
                 DiscountLimitation = DiscountLimitationType.Unlimited
             };
 
-            _discountForCaching.Add(discount);
+            _discounts.Add(discount);
         }
 
         public void ClearDiscount()
         {
-            _discountForCaching.Clear();
+            _discounts.Clear();
         }
 
         public static IDiscountService Init(IQueryable<Discount> discounts = default(IQueryable<Discount>), IQueryable<DiscountProductMapping> productDiscountMapping = null)

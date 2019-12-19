@@ -58,9 +58,6 @@ namespace Nop.Services.Directory
             if (currency == null)
                 throw new ArgumentNullException(nameof(currency));
 
-            if (currency is IEntityForCaching)
-                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
-
             _currencyRepository.Delete(currency);
 
             _cacheManager.RemoveByPrefix(NopDirectoryDefaults.CurrenciesPrefixCacheKey);
@@ -90,13 +87,7 @@ namespace Nop.Services.Directory
 
             //cacheable copy
             var key = string.Format(NopDirectoryDefaults.CurrenciesByIdCacheKey, currencyId);
-            return _cacheManager.Get(key, () =>
-            {
-                var currency = loadCurrencyFunc();
-                if (currency == null)
-                    return null;
-                return new CurrencyForCaching(currency);
-            });
+            return _cacheManager.Get(key, loadCurrencyFunc);
         }
 
         /// <summary>
@@ -140,7 +131,7 @@ namespace Nop.Services.Directory
                 {
                     var result = new List<Currency>();
                     foreach (var currency in loadCurrenciesFunc())
-                        result.Add(new CurrencyForCaching(currency));
+                        result.Add(currency);
                     return result;
                 });
             }
@@ -169,9 +160,6 @@ namespace Nop.Services.Directory
             if (currency == null)
                 throw new ArgumentNullException(nameof(currency));
 
-            if (currency is IEntityForCaching)
-                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
-
             _currencyRepository.Insert(currency);
 
             _cacheManager.RemoveByPrefix(NopDirectoryDefaults.CurrenciesPrefixCacheKey);
@@ -188,9 +176,6 @@ namespace Nop.Services.Directory
         {
             if (currency == null)
                 throw new ArgumentNullException(nameof(currency));
-
-            if (currency is IEntityForCaching)
-                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
 
             _currencyRepository.Update(currency);
 

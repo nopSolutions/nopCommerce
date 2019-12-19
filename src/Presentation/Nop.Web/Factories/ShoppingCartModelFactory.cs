@@ -841,7 +841,7 @@ namespace Nop.Web.Factories
             var discountCouponCodes = _customerService.ParseAppliedDiscountCouponCodes(_workContext.CurrentCustomer);
             foreach (var couponCode in discountCouponCodes)
             {
-                var discount = _discountService.GetAllDiscountsForCaching(couponCode: couponCode)
+                var discount = _discountService.GetAllDiscounts(couponCode: couponCode)
                     .FirstOrDefault(d => d.RequiresCouponCode && _discountService.ValidateDiscount(d, _workContext.CurrentCustomer).IsValid);
 
                 if (discount != null)

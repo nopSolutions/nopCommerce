@@ -51,7 +51,7 @@ namespace Nop.Services.Catalog
         /// <param name="discountId">Discount</param>
         /// <param name="customer">Customer</param>
         /// <returns>Manufacturer identifiers</returns>
-        IList<int> GetAppliedManufacturerIds(DiscountForCaching discount, Customer customer);
+        IList<int> GetAppliedManufacturerIds(Discount discount, Customer customer);
 
         /// <summary>
         /// Gets a manufacturer

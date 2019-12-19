@@ -278,7 +278,7 @@ namespace Nop.Services.Tests.Discounts
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            return _discountService.GetDiscountAmount(_discountService.MapDiscount(discount), amount);
+            return _discountService.GetDiscountAmount(discount, amount);
         }
     }
 }

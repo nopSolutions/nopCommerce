@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -1173,7 +1173,7 @@ namespace Nop.Services.Orders
         public virtual decimal GetSubTotal(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts,
+            out List<Discount> appliedDiscounts,
             out int? maximumDiscountQty)
         {
             if (shoppingCartItem == null)
@@ -1190,7 +1190,7 @@ namespace Nop.Services.Orders
             if (appliedDiscounts.Any())
             {
                 //we can properly use "MaximumDiscountedQuantity" property only for one discount (not cumulative ones)
-                DiscountForCaching oneAndOnlyDiscount = null;
+                Discount oneAndOnlyDiscount = null;
                 if (appliedDiscounts.Count == 1)
                     oneAndOnlyDiscount = appliedDiscounts.First();
 
@@ -1249,7 +1249,7 @@ namespace Nop.Services.Orders
         public virtual decimal GetUnitPrice(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts)
+            out List<Discount> appliedDiscounts)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException(nameof(shoppingCartItem));
@@ -1294,7 +1294,7 @@ namespace Nop.Services.Orders
             DateTime? rentalStartDate, DateTime? rentalEndDate,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts)
+            out List<Discount> appliedDiscounts)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -1303,7 +1303,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(customer));
 
             discountAmount = decimal.Zero;
-            appliedDiscounts = new List<DiscountForCaching>();
+            appliedDiscounts = new List<Discount>();
 
             decimal finalPrice;
 

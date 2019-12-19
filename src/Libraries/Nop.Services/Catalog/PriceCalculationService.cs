@@ -66,38 +66,7 @@ namespace Nop.Services.Catalog
         }
 
         #endregion
-
-        #region Nested classes
-
-        /// <summary>
-        /// Product price (for caching)
-        /// </summary>
-        [Serializable]
-        protected class ProductPriceForCaching
-        {
-            public ProductPriceForCaching()
-            {
-                AppliedDiscounts = new List<DiscountForCaching>();
-            }
-
-            /// <summary>
-            /// Price
-            /// </summary>
-            public decimal Price { get; set; }
-
-            /// <summary>
-            /// Applied discount amount
-            /// </summary>
-            public decimal AppliedDiscountAmount { get; set; }
-
-            /// <summary>
-            /// Applied discounts
-            /// </summary>
-            public List<DiscountForCaching> AppliedDiscounts { get; set; }
-        }
-
-        #endregion
-
+        
         #region Utilities
 
         /// <summary>
@@ -106,9 +75,9 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <returns>Discounts</returns>
-        protected virtual IList<DiscountForCaching> GetAllowedDiscountsAppliedToProduct(Product product, Customer customer)
+        protected virtual IList<Discount> GetAllowedDiscountsAppliedToProduct(Product product, Customer customer)
         {
-            var allowedDiscounts = new List<DiscountForCaching>();
+            var allowedDiscounts = new List<Discount>();
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
@@ -120,7 +89,7 @@ namespace Nop.Services.Catalog
             {
                 if (discount.DiscountType == DiscountType.AssignedToSkus &&
                     _discountService.ValidateDiscount(discount, customer).IsValid)
-                    allowedDiscounts.Add(_discountService.MapDiscount(discount));
+                    allowedDiscounts.Add(discount);
             }
 
             return allowedDiscounts;
@@ -132,14 +101,14 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <returns>Discounts</returns>
-        protected virtual IList<DiscountForCaching> GetAllowedDiscountsAppliedToCategories(Product product, Customer customer)
+        protected virtual IList<Discount> GetAllowedDiscountsAppliedToCategories(Product product, Customer customer)
         {
-            var allowedDiscounts = new List<DiscountForCaching>();
+            var allowedDiscounts = new List<Discount>();
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
             //load cached discount models (performance optimization)
-            foreach (var discount in _discountService.GetAllDiscountsForCaching(DiscountType.AssignedToCategories))
+            foreach (var discount in _discountService.GetAllDiscounts(DiscountType.AssignedToCategories))
             {
                 //load identifier of categories with this discount applied to
                 var discountCategoryIds = _categoryService.GetAppliedCategoryIds(discount, customer);
@@ -180,13 +149,13 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <returns>Discounts</returns>
-        protected virtual IList<DiscountForCaching> GetAllowedDiscountsAppliedToManufacturers(Product product, Customer customer)
+        protected virtual IList<Discount> GetAllowedDiscountsAppliedToManufacturers(Product product, Customer customer)
         {
-            var allowedDiscounts = new List<DiscountForCaching>();
+            var allowedDiscounts = new List<Discount>();
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
-            foreach (var discount in _discountService.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers))
+            foreach (var discount in _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers))
             {
                 //load identifier of manufacturers with this discount applied to
                 var discountManufacturerIds = _manufacturerService.GetAppliedManufacturerIds(discount, customer);
@@ -227,9 +196,9 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <returns>Discounts</returns>
-        protected virtual IList<DiscountForCaching> GetAllowedDiscounts(Product product, Customer customer)
+        protected virtual IList<Discount> GetAllowedDiscounts(Product product, Customer customer)
         {
-            var allowedDiscounts = new List<DiscountForCaching>();
+            var allowedDiscounts = new List<Discount>();
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
@@ -262,12 +231,12 @@ namespace Nop.Services.Catalog
         protected virtual decimal GetDiscountAmount(Product product,
             Customer customer,
             decimal productPriceWithoutDiscount,
-            out List<DiscountForCaching> appliedDiscounts)
+            out List<Discount> appliedDiscounts)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            appliedDiscounts = new List<DiscountForCaching>();
+            appliedDiscounts = new List<Discount>();
             var appliedDiscountAmount = decimal.Zero;
 
             //we don't apply discounts to products with price entered by a customer
@@ -328,7 +297,7 @@ namespace Nop.Services.Catalog
             bool includeDiscounts,
             int quantity,
             out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts)
+            out List<Discount> appliedDiscounts)
         {
             return GetFinalPrice(product, customer,
                 additionalCharge, includeDiscounts, quantity,
@@ -357,7 +326,7 @@ namespace Nop.Services.Catalog
             DateTime? rentalStartDate,
             DateTime? rentalEndDate,
             out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts)
+            out List<Discount> appliedDiscounts)
         {
             return GetFinalPrice(product, customer, null, additionalCharge, includeDiscounts, quantity,
                 rentalStartDate, rentalEndDate, out discountAmount, out appliedDiscounts);
@@ -386,13 +355,10 @@ namespace Nop.Services.Catalog
             DateTime? rentalStartDate,
             DateTime? rentalEndDate,
             out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts)
+            out List<Discount> appliedDiscounts)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
-
-            discountAmount = decimal.Zero;
-            appliedDiscounts = new List<DiscountForCaching>();
 
             var cacheKey = string.Format(NopCatalogDefaults.ProductPriceModelCacheKey,
                 product.Id,
@@ -407,9 +373,12 @@ namespace Nop.Services.Catalog
             //otherwise, it can cause memory leaks (to store all possible date period combinations)
             if (product.IsRental)
                 cacheTime = 0;
-            var cachedPrice = _cacheManager.Get(cacheKey, () =>
+
+            decimal rezPrice;
+            (rezPrice, discountAmount, appliedDiscounts) = _cacheManager.Get(cacheKey, () =>
             {
-                var result = new ProductPriceForCaching();
+                var discounts = new List<Discount>();
+                var appliedDiscountAmount = decimal.Zero;
 
                 //initial price
                 var price = overriddenProductPrice ?? product.Price;
@@ -435,28 +404,19 @@ namespace Nop.Services.Catalog
 
                     if (tmpAppliedDiscounts?.Any() ?? false)
                     {
-                        result.AppliedDiscounts = tmpAppliedDiscounts;
-                        result.AppliedDiscountAmount = tmpDiscountAmount;
+                        discounts.AddRange(tmpAppliedDiscounts);
+                        appliedDiscountAmount = tmpDiscountAmount;
                     }
                 }
 
                 if (price < decimal.Zero)
                     price = decimal.Zero;
 
-                result.Price = price;
-                return result;
+                return (price, appliedDiscountAmount, discounts);
+
             }, cacheTime);
 
-            if (!includeDiscounts) 
-                return cachedPrice.Price;
-
-            if (!cachedPrice.AppliedDiscounts.Any())
-                return cachedPrice.Price;
-
-            appliedDiscounts.AddRange(cachedPrice.AppliedDiscounts);
-            discountAmount = cachedPrice.AppliedDiscountAmount;
-
-            return cachedPrice.Price;
+            return rezPrice;
         }
 
         /// <summary>

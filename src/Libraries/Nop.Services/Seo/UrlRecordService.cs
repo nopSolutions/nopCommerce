@@ -50,34 +50,12 @@ namespace Nop.Services.Seo
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Map
-        /// </summary>
-        /// <param name="record">UrlRecord</param>
-        /// <returns>UrlRecordForCaching</returns>
-        protected UrlRecordForCaching Map(UrlRecord record)
-        {
-            if (record == null)
-                throw new ArgumentNullException(nameof(record));
-
-            var urlRecordForCaching = new UrlRecordForCaching
-            {
-                Id = record.Id,
-                EntityId = record.EntityId,
-                EntityName = record.EntityName,
-                Slug = record.Slug,
-                IsActive = record.IsActive,
-                LanguageId = record.LanguageId
-            };
-            return urlRecordForCaching;
-        }
-
+        
         /// <summary>
         /// Gets all cached URL records
         /// </summary>
         /// <returns>cached URL records</returns>
-        protected virtual IList<UrlRecordForCaching> GetAllUrlRecordsCached()
+        protected virtual IList<UrlRecord> GetAllUrlRecordsCached()
         {
             //cache
             return _cacheManager.Get(NopSeoDefaults.UrlRecordAllCacheKey, () =>
@@ -87,11 +65,10 @@ namespace Nop.Services.Seo
                 var query = from ur in _urlRecordRepository.Table
                             select ur;
                 var urlRecords = query.ToList();
-                var list = new List<UrlRecordForCaching>();
+                var list = new List<UrlRecord>();
                 foreach (var ur in urlRecords)
                 {
-                    var urlRecordForCaching = Map(ur);
-                    list.Add(urlRecordForCaching);
+                    list.Add(ur);
                 }
 
                 return list;
@@ -1164,30 +1141,7 @@ namespace Nop.Services.Seo
         }
 
         #endregion
-
-        #region Nested classes
-
-        /// <summary>
-        /// UrlRecord (for caching)
-        /// </summary>
-        [Serializable]
-        public class UrlRecordForCaching
-        {
-            public int Id { get; set; }
-
-            public int EntityId { get; set; }
-
-            public string EntityName { get; set; }
-
-            public string Slug { get; set; }
-
-            public bool IsActive { get; set; }
-
-            public int LanguageId { get; set; }
-        }
-
-        #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -1301,7 +1255,7 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="slug">Slug</param>
         /// <returns>Found URL record</returns>
-        public virtual UrlRecordForCaching GetBySlugCached(string slug)
+        public virtual UrlRecord GetBySlugCached(string slug)
         {
             if (string.IsNullOrEmpty(slug))
                 return null;
@@ -1324,11 +1278,8 @@ namespace Nop.Services.Seo
             return _cacheManager.Get(key, () =>
             {
                 var urlRecord = GetBySlug(slug);
-                if (urlRecord == null)
-                    return null;
 
-                var urlRecordForCaching = Map(urlRecord);
-                return urlRecordForCaching;
+                return urlRecord;
             });
         }
 
@@ -1520,9 +1471,7 @@ namespace Nop.Services.Seo
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            var entityName = entity is IEntityForCaching
-                ? entity.GetType().BaseType?.Name ?? entity.GetType().Name
-                : entity.GetType().Name;
+            var entityName = entity.GetType().Name;
 
             return GetSeName(entity.Id, entityName, languageId ?? _workContext.WorkingLanguage.Id, returnDefaultValue, ensureTwoPublishedLanguages);
         }

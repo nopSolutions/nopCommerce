@@ -56,10 +56,7 @@ namespace Nop.Services.Localization
         {
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
-
-            if (language is IEntityForCaching)
-                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
-
+            
             //update default admin area language (if required)
             if (_localizationSettings.DefaultAdminLanguageId == language.Id)
             {
@@ -109,7 +106,7 @@ namespace Nop.Services.Localization
                 {
                     var result = new List<Language>();
                     foreach (var language in LoadLanguagesFunc())
-                        result.Add(new LanguageForCaching(language));
+                        result.Add(language);
                     return result;
                 });
             }
@@ -153,7 +150,7 @@ namespace Nop.Services.Localization
             return _cacheManager.Get(key, () =>
             {
                 var language = LoadLanguageFunc();
-                return language == null ? null : new LanguageForCaching(language);
+                return language;
             });
         }
 
@@ -165,9 +162,6 @@ namespace Nop.Services.Localization
         {
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
-
-            if (language is IEntityForCaching)
-                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
 
             _languageRepository.Insert(language);
 
@@ -186,9 +180,6 @@ namespace Nop.Services.Localization
         {
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
-
-            if (language is IEntityForCaching)
-                throw new ArgumentException("Cacheable entities are not supported by Entity Framework");
 
             //update language
             _languageRepository.Update(language);

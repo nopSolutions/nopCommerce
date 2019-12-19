@@ -100,7 +100,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //get validated discounts with passed coupon codes
                 var discounts = couponCodes
-                    .SelectMany(couponCode => _discountService.GetAllDiscountsForCaching(couponCode: couponCode))
+                    .SelectMany(couponCode => _discountService.GetAllDiscounts(couponCode: couponCode))
                     .Distinct()
                     .ToList();
 

@@ -62,7 +62,7 @@ namespace Nop.Services.Localization
         /// Gets all cached localized properties
         /// </summary>
         /// <returns>Cached localized properties</returns>
-        protected virtual IList<LocalizedPropertyForCaching> GetAllLocalizedPropertiesCached()
+        protected virtual IList<LocalizedProperty> GetAllLocalizedPropertiesCached()
         {
             //cache
             return _cacheManager.Get(NopLocalizationDefaults.LocalizedPropertyAllCacheKey, () =>
@@ -70,10 +70,10 @@ namespace Nop.Services.Localization
                 var query = from lp in _localizedPropertyRepository.Table
                             select lp;
                 var localizedProperties = query.ToList();
-                var list = new List<LocalizedPropertyForCaching>();
+                var list = new List<LocalizedProperty>();
                 foreach (var lp in localizedProperties)
                 {
-                    var localizedPropertyForCaching = new LocalizedPropertyForCaching
+                    var localizedPropertyForCaching = new LocalizedProperty
                     {
                         Id = lp.Id,
                         EntityId = lp.EntityId,
@@ -90,30 +90,7 @@ namespace Nop.Services.Localization
         }
 
         #endregion
-
-        #region Nested classes
-
-        /// <summary>
-        /// LocalizedProperty (for caching)
-        /// </summary>
-        [Serializable]
-        public class LocalizedPropertyForCaching
-        {
-            public int Id { get; set; }
-
-            public int EntityId { get; set; }
-
-            public int LanguageId { get; set; }
-
-            public string LocaleKeyGroup { get; set; }
-
-            public string LocaleKey { get; set; }
-
-            public string LocaleValue { get; set; }
-        }
-
-        #endregion
-
+        
         #region Methods
 
         /// <summary>
