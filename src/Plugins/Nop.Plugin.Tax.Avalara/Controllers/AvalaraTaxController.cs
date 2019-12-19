@@ -251,7 +251,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 Address1 = model.TestAddress?.Address1,
                 ZipPostalCode = model.TestAddress?.ZipPostalCode,
                 StateProvince = _stateProvinceService.GetStateProvinceById(model.TestAddress?.StateProvinceId ?? 0)
-            }, _workContext.CurrentCustomer.Id.ToString());
+            }, _workContext.CurrentCustomer.Id.ToString(), "", "");
 
             if (transaction?.totalTax != null)
             {

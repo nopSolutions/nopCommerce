@@ -112,7 +112,7 @@ namespace Nop.Plugin.Tax.Avalara
         /// <param name="destinationAddress">Destination tax address</param>
         /// <param name="customerCode">Customer code</param>
         /// <returns>Request parameters to create tax transaction</returns>
-        private CreateTransactionModel PrepareEstimatedTaxModel(Address destinationAddress, string customerCode)
+        private CreateTransactionModel PrepareEstimatedTaxModel(Address destinationAddress, string customerCode, string productSku, string productTaxCategory)
         {
             //prepare common parameters
             var transactionModel = PrepareTaxModel(destinationAddress, customerCode, false);
@@ -121,7 +121,9 @@ namespace Nop.Plugin.Tax.Avalara
             transactionModel.lines.Add(new LineItemModel
             {
                 amount = 100,
-                quantity = 1
+                quantity = 1,
+                itemCode = productSku,
+                taxCode = productTaxCategory
             });
 
             return transactionModel;
@@ -498,7 +500,10 @@ namespace Nop.Plugin.Tax.Avalara
                 calculateTaxRequest.Address.City,
                 calculateTaxRequest.Address.StateProvinceId ?? 0,
                 calculateTaxRequest.Address.CountryId ?? 0,
-                calculateTaxRequest.Address.ZipPostalCode);
+                calculateTaxRequest.Address.ZipPostalCode,
+                calculateTaxRequest.Product.Sku,
+                calculateTaxRequest.Product.TaxCategoryId
+                );
 
             //we don't use standard way _cacheManager.Get() due the need write errors to CalculateTaxResult
             if (_cacheManager.IsSet(cacheKey))
@@ -506,7 +511,8 @@ namespace Nop.Plugin.Tax.Avalara
 
             //get estimated tax
             var address = _addressService.GetAddressById(calculateTaxRequest.Address.AddressId);
-            var totalTax = CreateEstimatedTaxTransaction(address, calculateTaxRequest.Customer?.Id.ToString())?.totalTax;
+            var productTaxCategoryName = _taxCategoryService.GetTaxCategoryById(calculateTaxRequest.Product.TaxCategoryId)?.Name;
+            var totalTax = CreateEstimatedTaxTransaction(address, calculateTaxRequest.Customer?.Id.ToString(), calculateTaxRequest.Product.Sku, productTaxCategoryName)?.totalTax;
             if (!totalTax.HasValue)
                 return new CalculateTaxResult { Errors = new[] { "No response from the service" }.ToList() };
 
@@ -522,9 +528,9 @@ namespace Nop.Plugin.Tax.Avalara
         /// <param name="destinationAddress">Destination tax address</param>
         /// <param name="customerCode">Customer code</param>
         /// <returns>Transaction</returns>
-        public TransactionModel CreateEstimatedTaxTransaction(Address destinationAddress, string customerCode)
+        public TransactionModel CreateEstimatedTaxTransaction(Address destinationAddress, string customerCode, string productSku, string productTaxCategory)
         {
-            var transactionModel = PrepareEstimatedTaxModel(destinationAddress, customerCode);
+            var transactionModel = PrepareEstimatedTaxModel(destinationAddress, customerCode, productSku, productTaxCategory);
             return _avalaraTaxManager.CreateTaxTransaction(transactionModel, false);
         }
 
