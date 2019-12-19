@@ -23,8 +23,8 @@
                     @if (Model.GenderEnabled)
                     {
                         <div class="inputs">
-                            <label>@T("Account.Fields.Gender"):</label>
-                            <div class="gender">
+                            <label for="gender">@T("Account.Fields.Gender"):</label>
+                            <div id="gender" class="gender">
                                 <span class="male">
                                     <input type="radio" asp-for="Gender" value="M" checked="@(Model.Gender == "M")" id="gender-male" />
                                     <label class="forcheckbox" for="gender-male">@T("Account.Fields.Gender.Male")</label>
@@ -131,11 +131,11 @@
                 </div>
             }
             @if (Model.StreetAddressEnabled ||
-              Model.StreetAddress2Enabled ||
-              Model.ZipPostalCodeEnabled ||
-              Model.CityEnabled ||
-              Model.CountyEnabled ||
-              Model.CountryEnabled)
+             Model.StreetAddress2Enabled ||
+             Model.ZipPostalCodeEnabled ||
+             Model.CityEnabled ||
+             Model.CountyEnabled ||
+             Model.CountryEnabled)
             {
                 <div class="fieldset">
                     <div class="title">
