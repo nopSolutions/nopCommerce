@@ -312,7 +312,7 @@ namespace Nop.Plugin.Tax.Avalara
                     amount = orderItem.PriceExclTax,
 
                     //item description
-                    description = CommonHelper.EnsureMaximumLength(orderItem.Product?.ShortDescription ?? orderItem.Product?.Name, 2096),
+                    description = CommonHelper.EnsureMaximumLength(orderItem.Product.Name, 2096),
 
                     //whether the discount to the item was applied
                     discounted = order.OrderSubTotalDiscountExclTax > decimal.Zero,
