@@ -12,13 +12,13 @@ namespace Nop.Plugin.Misc.SendinBlue.Infrastructure
         /// <summary>
         /// Register routes
         /// </summary>
-        /// <param name="routeBuilder">Route builder</param>
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        /// <param name="endpointRoute">Route builder</param>
+        public void RegisterRoutes(IEndpointRouteBuilder endpointRoute)
         {
-            routeBuilder.MapRoute(SendinBlueDefaults.ImportContactsRoute, "Plugins/SendinBlue/ImportContacts",
+            endpointRoute.MapControllerRoute(SendinBlueDefaults.ImportContactsRoute, "Plugins/SendinBlue/ImportContacts",
                 new { controller = "SendinBlue", action = "ImportContacts" });
 
-            routeBuilder.MapRoute(SendinBlueDefaults.UnsubscribeContactRoute, "Plugins/SendinBlue/UnsubscribeWebHook",
+            endpointRoute.MapControllerRoute(SendinBlueDefaults.UnsubscribeContactRoute, "Plugins/SendinBlue/UnsubscribeWebHook",
                 new { controller = "SendinBlue", action = "UnsubscribeWebHook" });
         }
 

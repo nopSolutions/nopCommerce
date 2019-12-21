@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Common;
 
 namespace Nop.Data.Mapping.Common
@@ -8,5 +8,18 @@ namespace Nop.Data.Mapping.Common
     /// </summary>
     public partial class StringQueryTypeMap : NopQueryTypeConfiguration<StringQueryType>
     {
+        #region Methods
+
+        /// <summary>
+        /// Configures the query type
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the query type</param>
+        public override void Configure(EntityTypeBuilder<StringQueryType> builder)
+        {
+            builder.HasNoKey();
+            base.Configure(builder);
+        }
+
+        #endregion
     }
 }

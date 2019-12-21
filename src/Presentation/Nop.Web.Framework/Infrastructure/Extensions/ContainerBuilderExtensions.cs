@@ -1,6 +1,6 @@
 ﻿using System;
-using Autofac;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Data;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
@@ -14,13 +14,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// Register data context for a plugin
         /// </summary>
         /// <typeparam name="TContext">DB Context type</typeparam>
-        /// <param name="builder">Builder</param>
+        /// <param name="services">Service Collection</param>
         /// <param name="contextName">Context name</param>
-        public static void RegisterPluginDataContext<TContext>(this ContainerBuilder builder, string contextName) where TContext : DbContext, IDbContext
+        public static void RegisterPluginDataContext<TContext>(this IServiceCollection services, string contextName) where TContext : DbContext, IDbContext
         {
             //register named context
-            builder.Register(context => (IDbContext)Activator.CreateInstance(typeof(TContext), new[] { context.Resolve<DbContextOptions<TContext>>() }))
-                .Named<IDbContext>(contextName).InstancePerLifetimeScope();
+            services.AddScoped(provider => (IDbContext)Activator.CreateInstance(typeof(TContext), new[] { provider.GetService<DbContextOptions<TContext>>() }));
         }
     }
 }

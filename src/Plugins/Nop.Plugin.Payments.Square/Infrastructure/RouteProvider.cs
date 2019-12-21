@@ -12,11 +12,11 @@ namespace Nop.Plugin.Payments.Square.Infrastructure
         /// <summary>
         /// Register routes
         /// </summary>
-        /// <param name="routeBuilder">Route builder</param>
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        /// <param name="endpointRoute">Route builder</param>
+        public void RegisterRoutes(IEndpointRouteBuilder endpointRoute)
         {
             //add route for the access token callback
-            routeBuilder.MapRoute(SquarePaymentDefaults.AccessTokenRoute, "Plugins/PaymentSquare/AccessToken/",
+            endpointRoute.MapControllerRoute(SquarePaymentDefaults.AccessTokenRoute, "Plugins/PaymentSquare/AccessToken/",
                 new { controller = "PaymentSquare", action = "AccessTokenCallback" });
         }
 

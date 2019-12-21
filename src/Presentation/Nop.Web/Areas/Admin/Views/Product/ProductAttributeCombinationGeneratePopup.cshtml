@@ -47,19 +47,19 @@
     <div class="content">
         <h4>@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.RequiredAttribute")</h4>
         <div class="form-horizontal">
-            @foreach (var attribute in Model.ProductAttributes)
+            @foreach (var attr in Model.ProductAttributes)
             {
                 <div class="panel-group">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            @attribute.Name
-                            @if (attribute.IsRequired)
+                            @attr.Name
+                            @if (attr.IsRequired)
                             {
                                 <span>*</span>
                             }
                         </div>
                         <div class="panel-body">
-                            @foreach (var attributeValue in attribute.Values)
+                            @foreach (var attributeValue in attr.Values)
                             {
                                 <div>
                                     <input id="attribute_value_@(attributeValue.Id)" type="checkbox" value="@(attributeValue.Id)" name="attribute_value_@(attributeValue.Id)" @(attributeValue.Checked)/>

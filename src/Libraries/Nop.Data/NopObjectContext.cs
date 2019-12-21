@@ -16,7 +16,8 @@ namespace Nop.Data
     {
         #region Ctor
 
-        public NopObjectContext(DbContextOptions<NopObjectContext> options) : base(options)
+        public NopObjectContext(DbContextOptions<NopObjectContext> options)
+            : base(options)
         {
         }
 
@@ -78,7 +79,7 @@ namespace Nop.Data
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <returns>A set for the given entity type</returns>
-        public virtual new DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
+        public new virtual DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
         {
             return base.Set<TEntity>();
         }
@@ -99,9 +100,10 @@ namespace Nop.Data
         /// <param name="sql">The raw SQL query</param>
         /// <param name="parameters">The values to be assigned to parameters</param>
         /// <returns>An IQueryable representing the raw SQL query</returns>
+        [Obsolete]
         public virtual IQueryable<TQuery> QueryFromSql<TQuery>(string sql, params object[] parameters) where TQuery : class
         {
-            return Query<TQuery>().FromSql(CreateSqlWithParameters(sql, parameters), parameters);
+            return Query<TQuery>().FromSqlRaw(CreateSqlWithParameters(sql, parameters), parameters);
         }
         
         /// <summary>
@@ -113,7 +115,7 @@ namespace Nop.Data
         /// <returns>An IQueryable representing the raw SQL query</returns>
         public virtual IQueryable<TEntity> EntityFromSql<TEntity>(string sql, params object[] parameters) where TEntity : BaseEntity
         {
-            return Set<TEntity>().FromSql(CreateSqlWithParameters(sql, parameters), parameters);
+            return Set<TEntity>().FromSqlRaw(CreateSqlWithParameters(sql, parameters), parameters);
         }
 
         /// <summary>
@@ -124,7 +126,7 @@ namespace Nop.Data
         /// <param name="timeout">The timeout to use for command. Note that the command timeout is distinct from the connection timeout, which is commonly set on the database connection string</param>
         /// <param name="parameters">Parameters to use with the SQL</param>
         /// <returns>The number of rows affected</returns>
-        public virtual int ExecuteSqlCommand(RawSqlString sql, bool doNotEnsureTransaction = false, int? timeout = null, params object[] parameters)
+        public virtual int ExecuteSqlCommand(string sql, bool doNotEnsureTransaction = false, int? timeout = null, params object[] parameters)
         {
             //set specific command timeout
             var previousTimeout = Database.GetCommandTimeout();
@@ -136,12 +138,12 @@ namespace Nop.Data
                 //use with transaction
                 using (var transaction = Database.BeginTransaction())
                 {
-                    result = Database.ExecuteSqlCommand(sql, parameters);
+                    result = Database.ExecuteSqlRaw(sql, parameters);
                     transaction.Commit();
                 }
             }
             else
-                result = Database.ExecuteSqlCommand(sql, parameters);
+                result = Database.ExecuteSqlRaw(sql, parameters);
             
             //return previous timeout back
             Database.SetCommandTimeout(previousTimeout);

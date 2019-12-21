@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
@@ -19,8 +20,8 @@ namespace Nop.Core.Infrastructure
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration of the application</param>
         /// <param name="nopConfig">Nop configuration parameters</param>
-        /// <returns>Service provider</returns>
-        IServiceProvider ConfigureServices(IServiceCollection services, IConfiguration configuration, NopConfig nopConfig);
+        /// <param name="environment">Environment of the application</param>
+        void ConfigureServices(IServiceCollection services, IConfiguration configuration, NopConfig nopConfig, IWebHostEnvironment environment);
 
         /// <summary>
         /// Configure HTTP request pipeline

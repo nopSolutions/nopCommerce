@@ -1,4 +1,4 @@
-﻿using Autofac;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
@@ -15,18 +15,18 @@ namespace Nop.Plugin.Misc.SendinBlue.Infrastructure
         /// <summary>
         /// Register services and interfaces
         /// </summary>
-        /// <param name="builder">Container builder</param>
+        /// <param name="services">Service Collection</param>
         /// <param name="typeFinder">Type finder</param>
         /// <param name="config">Config</param>
-        public void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
+        public virtual void Register(IServiceCollection services, ITypeFinder typeFinder, NopConfig config)
         {
             //register custom services
-            builder.RegisterType<SendinBlueManager>().AsSelf().InstancePerLifetimeScope();
-            builder.RegisterType<SendinBlueMarketingAutomationManager>().AsSelf().InstancePerLifetimeScope();
+            services.AddScoped<SendinBlueManager>();
+            services.AddScoped<SendinBlueMarketingAutomationManager>();
 
             //override services
-            builder.RegisterType<SendinBlueMessageService>().As<IWorkflowMessageService>().InstancePerLifetimeScope();
-            builder.RegisterType<SendinBlueEmailSender>().As<IEmailSender>().InstancePerLifetimeScope();
+            services.AddScoped<IWorkflowMessageService, SendinBlueMessageService>();
+            services.AddScoped<IEmailSender, SendinBlueEmailSender>();
         }
 
         /// <summary>

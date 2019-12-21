@@ -30,7 +30,7 @@ namespace Nop.Services.Media.RoxyFileman
 
         #region Ctor
 
-        public FileRoxyFilemanService(IHostingEnvironment hostingEnvironment,
+        public FileRoxyFilemanService(IWebHostEnvironment hostingEnvironment,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
             IWebHelper webHelper,

@@ -31,8 +31,8 @@ namespace Nop.Core.Data
             if (!reloadSettings && Singleton<DataSettings>.Instance != null)
                 return Singleton<DataSettings>.Instance;
 
-            fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
-            filePath = filePath ?? fileProvider.MapPath(NopDataSettingsDefaults.FilePath);
+            fileProvider ??= CommonHelper.DefaultFileProvider;
+            filePath ??= fileProvider.MapPath(NopDataSettingsDefaults.FilePath);
 
             //check whether file exists
             if (!fileProvider.FileExists(filePath))
@@ -100,7 +100,7 @@ namespace Nop.Core.Data
         {
             Singleton<DataSettings>.Instance = settings ?? throw new ArgumentNullException(nameof(settings));
 
-            fileProvider = fileProvider ?? CommonHelper.DefaultFileProvider;
+            fileProvider ??= CommonHelper.DefaultFileProvider;
             var filePath = fileProvider.MapPath(NopDataSettingsDefaults.FilePath);
 
             //create file if not exists

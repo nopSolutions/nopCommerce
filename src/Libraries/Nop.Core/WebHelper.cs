@@ -28,7 +28,7 @@ namespace Nop.Core
 
         private readonly HostingConfig _hostingConfig;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IApplicationLifetime _applicationLifetime;
+        private readonly IHostApplicationLifetime _applicationLifetime;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly INopFileProvider _fileProvider;
         private readonly IUrlHelperFactory _urlHelperFactory;
@@ -39,7 +39,7 @@ namespace Nop.Core
 
         public WebHelper(HostingConfig hostingConfig,
             IActionContextAccessor actionContextAccessor,
-            IApplicationLifetime applicationLifetime,
+            IHostApplicationLifetime applicationLifetime,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
             IUrlHelperFactory urlHelperFactory)

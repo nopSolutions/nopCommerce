@@ -19,7 +19,7 @@ namespace Nop.Services.Media.RoxyFileman
         private Dictionary<string, string> _settings;
         private Dictionary<string, string> _languageResources;
 
-        protected readonly IHostingEnvironment _hostingEnvironment;
+        protected readonly IWebHostEnvironment _hostingEnvironment;
         protected readonly IHttpContextAccessor _httpContextAccessor;
         protected readonly INopFileProvider _fileProvider;
         protected readonly IWebHelper _webHelper;
@@ -30,7 +30,7 @@ namespace Nop.Services.Media.RoxyFileman
 
         #region Ctor
 
-        protected BaseRoxyFilemanService(IHostingEnvironment hostingEnvironment,
+        protected BaseRoxyFilemanService(IWebHostEnvironment hostingEnvironment,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
             IWebHelper webHelper,

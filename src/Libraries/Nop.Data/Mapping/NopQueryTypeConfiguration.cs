@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Nop.Data.Mapping
@@ -7,7 +7,7 @@ namespace Nop.Data.Mapping
     /// Represents base query type mapping configuration
     /// </summary>
     /// <typeparam name="TQuery">Query type type</typeparam>
-    public partial class NopQueryTypeConfiguration<TQuery> : IMappingConfiguration, IQueryTypeConfiguration<TQuery> where TQuery : class
+    public partial class NopQueryTypeConfiguration<TQuery> : IMappingConfiguration, IEntityTypeConfiguration<TQuery> where TQuery : class
     {
         #region Utilities
 
@@ -15,7 +15,7 @@ namespace Nop.Data.Mapping
         /// Developers can override this method in custom partial classes in order to add some custom configuration code
         /// </summary>
         /// <param name="builder">The builder to be used to configure the query</param>
-        protected virtual void PostConfigure(QueryTypeBuilder<TQuery> builder)
+        protected virtual void PostConfigure(EntityTypeBuilder<TQuery> builder)
         {
         }
 
@@ -27,7 +27,7 @@ namespace Nop.Data.Mapping
         /// Configures the query type
         /// </summary>
         /// <param name="builder">The builder to be used to configure the query type</param>
-        public virtual void Configure(QueryTypeBuilder<TQuery> builder)
+        public virtual void Configure(EntityTypeBuilder<TQuery> builder)
         {
             //add custom configuration
             PostConfigure(builder);

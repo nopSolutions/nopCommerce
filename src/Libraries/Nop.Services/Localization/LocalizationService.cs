@@ -356,7 +356,7 @@ namespace Nop.Services.Localization
                     result = lsr;
             }
 
-            if (!string.IsNullOrEmpty(result)) 
+            if (!string.IsNullOrEmpty(result))
                 return result;
 
             if (logIfNotFound)
@@ -424,18 +424,29 @@ namespace Nop.Services.Localization
             if (xmlStreamReader.EndOfStream)
                 return;
 
+            IDataProvider dataProvider;
+            var providerName = DataSettingsManager.LoadSettings()?.DataProvider;
+            switch (providerName)
+            {
+                case DataProviderType.SqlServer:
+                    dataProvider = new SqlServerDataProvider();
+                    break;
+                default:
+                    throw new NopException($"Not supported data provider name: '{providerName}'");
+            }
+
             //stored procedures are enabled and supported by the database.
-            var pLanguageId = _dataProvider.GetParameter();
+            var pLanguageId = dataProvider.GetParameter();
             pLanguageId.ParameterName = "LanguageId";
             pLanguageId.Value = language.Id;
             pLanguageId.DbType = DbType.Int32;
 
-            var pXmlPackage = _dataProvider.GetParameter();
+            var pXmlPackage = dataProvider.GetParameter();
             pXmlPackage.ParameterName = "XmlPackage";
             pXmlPackage.Value = new SqlXml(XmlReader.Create(xmlStreamReader));
             pXmlPackage.DbType = DbType.Xml;
 
-            var pUpdateExistingResources = _dataProvider.GetParameter();
+            var pUpdateExistingResources = dataProvider.GetParameter();
             pUpdateExistingResources.ParameterName = "UpdateExistingResources";
             pUpdateExistingResources.Value = updateExistingResources;
             pUpdateExistingResources.DbType = DbType.Boolean;
@@ -502,7 +513,7 @@ namespace Nop.Services.Localization
             }
 
             //set default value if required
-            if (!string.IsNullOrEmpty(resultStr) || !returnDefaultValue) 
+            if (!string.IsNullOrEmpty(resultStr) || !returnDefaultValue)
                 return result;
             var localizer = keySelector.Compile();
             result = localizer(entity);

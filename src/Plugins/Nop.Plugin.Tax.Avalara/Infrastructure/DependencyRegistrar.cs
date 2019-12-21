@@ -1,5 +1,4 @@
-﻿using Autofac;
-using Autofac.Core;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
@@ -23,26 +22,24 @@ namespace Nop.Plugin.Tax.Avalara.Infrastructure
         /// <summary>
         /// Register services and interfaces
         /// </summary>
-        /// <param name="builder">Container builder</param>
+        /// <param name="services">Service Collection</param>
         /// <param name="typeFinder">Type finder</param>
         /// <param name="config">Config</param>
-        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
+        public virtual void Register(IServiceCollection services, ITypeFinder typeFinder, NopConfig config)
         {
             //register overridden services and factories
-            builder.RegisterType<OverriddenOrderProcessingService>().As<IOrderProcessingService>().InstancePerLifetimeScope();
-            builder.RegisterType<OverriddenOrderTotalCalculationService>().As<IOrderTotalCalculationService>().InstancePerLifetimeScope();
-            builder.RegisterType<OverriddenShoppingCartModelFactory>().As<Web.Factories.IShoppingCartModelFactory>().InstancePerLifetimeScope();
-            builder.RegisterType<OverriddenTaxModelFactory>().As<ITaxModelFactory>().InstancePerLifetimeScope();
+            services.AddScoped<IOrderProcessingService, OverriddenOrderProcessingService>();
+            services.AddScoped<IOrderTotalCalculationService, OverriddenOrderTotalCalculationService>();
+            services.AddScoped<Web.Factories.IShoppingCartModelFactory, OverriddenShoppingCartModelFactory>();
+            services.AddScoped<ITaxModelFactory, OverriddenTaxModelFactory>();
 
             //register custom services
-            builder.RegisterType<AvalaraTaxManager>().AsSelf().InstancePerLifetimeScope();
-            builder.RegisterType<TaxTransactionLogService>().AsSelf().InstancePerLifetimeScope();
+            services.AddScoped<AvalaraTaxManager>();
+            services.AddScoped<TaxTransactionLogService>();
 
             //register custom data context
-            builder.RegisterPluginDataContext<TaxTransactionLogObjectContext>(AvalaraTaxDefaults.ObjectContextName);
-            builder.RegisterType<EfRepository<TaxTransactionLog>>().As<IRepository<TaxTransactionLog>>()
-                .WithParameter(ResolvedParameter.ForNamed<IDbContext>(AvalaraTaxDefaults.ObjectContextName))
-                .InstancePerLifetimeScope();
+            services.RegisterPluginDataContext<TaxTransactionLogObjectContext>(AvalaraTaxDefaults.ObjectContextName);
+            services.AddScoped(typeof(IRepository<TaxTransactionLog>), typeof(EfRepository<TaxTransactionLog>));
         }
 
         /// <summary>

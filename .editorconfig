@@ -217,3 +217,18 @@ csharp_space_after_dot                                                      = fa
 # Wrapping preferences
 csharp_preserve_single_line_statements  = false
 csharp_preserve_single_line_blocks      = true
+
+# IDE0063: Use simple 'using' statement
+csharp_prefer_simple_using_statement = false:suggestion
+
+# IDE1006: Naming Styles
+dotnet_diagnostic.IDE1006.severity = none
+
+# CA2100: Review SQL queries for security vulnerabilities
+dotnet_diagnostic.CA2100.severity = none
+
+# CA1031: Do not catch general exception types
+dotnet_diagnostic.CA1031.severity = none
+
+# CA1822: Mark members as static
+dotnet_diagnostic.CA1822.severity = none

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,7 +15,8 @@ namespace Nop.Core.Infrastructure
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration of the application</param>
-        void ConfigureServices(IServiceCollection services, IConfiguration configuration);
+        /// <param name="environment">Environment of the application</param>
+        void ConfigureServices(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment);
 
         /// <summary>
         /// Configure the using of added middleware

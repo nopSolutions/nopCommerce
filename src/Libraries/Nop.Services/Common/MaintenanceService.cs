@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -140,7 +140,7 @@ namespace Nop.Services.Common
             };
 
             //this method (backups) works only with SQL Server database
-            using (var sqlConnectiononn = new SqlConnection(conn.ToString()))
+            using (var sqlConnection = new SqlConnection(conn.ToString()))
             {
                 var commandText = string.Format(
                     "DECLARE @ErrorMessage NVARCHAR(4000)\n" +
@@ -159,10 +159,12 @@ namespace Nop.Services.Common
                     _dbContext.DbName(),
                     backupFileName);
 
-                DbCommand dbCommand = new SqlCommand(commandText, sqlConnectiononn);
-                if (sqlConnectiononn.State != ConnectionState.Open)
-                    sqlConnectiononn.Open();
-                dbCommand.ExecuteNonQuery();
+                using (DbCommand dbCommand = new SqlCommand(commandText, sqlConnection))
+                {
+                    if (sqlConnection.State != ConnectionState.Open)
+                        sqlConnection.Open();
+                    dbCommand.ExecuteNonQuery();
+                }
             }
 
             //clear all pools

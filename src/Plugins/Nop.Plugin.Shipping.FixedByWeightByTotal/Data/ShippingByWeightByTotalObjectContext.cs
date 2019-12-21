@@ -88,11 +88,11 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Data
         /// <param name="timeout">The timeout to use for command. Note that the command timeout is distinct from the connection timeout, which is commonly set on the database connection string</param>
         /// <param name="parameters">Parameters to use with the SQL</param>
         /// <returns>The number of rows affected</returns>
-        public virtual int ExecuteSqlCommand(RawSqlString sql, bool doNotEnsureTransaction = false, int? timeout = null, params object[] parameters)
+        public virtual int ExecuteSqlCommand(string sql, bool doNotEnsureTransaction = false, int? timeout = null, params object[] parameters)
         {
             using (var transaction = Database.BeginTransaction())
             {
-                var result = Database.ExecuteSqlCommand(sql, parameters);
+                var result = Database.ExecuteSqlRaw(sql, parameters);
                 transaction.Commit();
 
                 return result;

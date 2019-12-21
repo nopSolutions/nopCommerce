@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
@@ -16,7 +17,8 @@ namespace Nop.Web.Framework.Infrastructure
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration of the application</param>
-        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        /// <param name="environment">Environment of the application</param>
+        public void ConfigureServices(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
             //add MiniProfiler services
             services.AddNopMiniProfiler();
@@ -25,7 +27,7 @@ namespace Nop.Web.Framework.Infrastructure
             services.AddNopWebMarkupMin();
 
             //add and configure MVC feature
-            services.AddNopMvc();
+            services.AddNopMvc(environment);
 
             //add custom redirect result executor
             services.AddNopRedirectResultExecutor();

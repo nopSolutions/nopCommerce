@@ -1,9 +1,10 @@
-﻿using EasyCaching.Core;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Infrastructure.Extensions;
+using Nop.Web.Framework.Seo;
 
 namespace Nop.Web.Framework.Infrastructure
 {
@@ -17,7 +18,8 @@ namespace Nop.Web.Framework.Infrastructure
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration of the application</param>
-        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        /// <param name="environment">Environment of the application</param>
+        public void ConfigureServices(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
             //compression
             services.AddResponseCompression();
@@ -71,11 +73,10 @@ namespace Nop.Web.Framework.Infrastructure
             //use request localization
             application.UseNopRequestLocalization();
 
+            //application.UseUrlCultureRedirection();
+
             //set request culture
             application.UseCulture();
-
-            //easy caching
-            application.UseEasyCaching();
         }
 
         /// <summary>

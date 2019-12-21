@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -166,7 +166,7 @@ namespace Nop.Data.Extensions
                 var entityType = dbContext.Model.FindRuntimeEntityType(typeof(TEntity));
 
                 //get the name of the table to which the entity type is mapped
-                tableNames.TryAdd(entityTypeFullName, entityType.Relational().TableName);
+                tableNames.TryAdd(entityTypeFullName, entityType.GetTableName());
             }
 
             tableNames.TryGetValue(entityTypeFullName, out var tableName);

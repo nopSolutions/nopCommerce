@@ -1,4 +1,4 @@
-using Autofac;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
@@ -15,14 +15,13 @@ namespace Nop.Services.Tests
         /// <summary>
         /// Register services and interfaces
         /// </summary>
-        /// <param name="builder">Container builder</param>
+        /// <param name="services">Service Collection</param>
         /// <param name="typeFinder">Type finder</param>
         /// <param name="config">Config</param>
-        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
+        public virtual void Register(IServiceCollection services, ITypeFinder typeFinder, NopConfig config)
         {
             //cache managers
-            builder.RegisterType<TestCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").SingleInstance();
-
+            services.AddSingleton<ICacheManager, TestCacheManager>();
         }
 
         /// <summary>

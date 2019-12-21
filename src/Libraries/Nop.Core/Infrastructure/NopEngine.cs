@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,6 +38,7 @@ namespace Nop.Core.Infrastructure
         {
             var accessor = ServiceProvider.GetService<IHttpContextAccessor>();
             var context = accessor.HttpContext;
+
             return context?.RequestServices ?? ServiceProvider;
         }
 
@@ -69,18 +69,13 @@ namespace Nop.Core.Infrastructure
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="typeFinder">Type finder</param>
         /// <param name="nopConfig">Nop configuration parameters</param>
-        protected virtual IServiceProvider RegisterDependencies(IServiceCollection services, ITypeFinder typeFinder, NopConfig nopConfig)
+        protected virtual void RegisterDependencies(IServiceCollection services, ITypeFinder typeFinder, NopConfig nopConfig)
         {
-            var containerBuilder = new ContainerBuilder();
-
             //register engine
-            containerBuilder.RegisterInstance(this).As<IEngine>().SingleInstance();
+            services.AddSingleton(typeof(IEngine), this);
 
             //register type finder
-            containerBuilder.RegisterInstance(typeFinder).As<ITypeFinder>().SingleInstance();
-
-            //populate Autofac container builder with the set of registered service descriptors
-            containerBuilder.Populate(services);
+            services.AddSingleton(typeof(ITypeFinder), typeFinder);
 
             //find dependency registrars provided by other assemblies
             var dependencyRegistrars = typeFinder.FindClassesOfType<IDependencyRegistrar>();
@@ -92,12 +87,10 @@ namespace Nop.Core.Infrastructure
 
             //register all provided dependencies
             foreach (var dependencyRegistrar in instances)
-                dependencyRegistrar.Register(containerBuilder, typeFinder, nopConfig);
+                dependencyRegistrar.Register(services, typeFinder, nopConfig);
 
             //create service provider
-            _serviceProvider = new AutofacServiceProvider(containerBuilder.Build());
-
-            return _serviceProvider;
+            _serviceProvider = services.BuildServiceProvider();
         }
 
         /// <summary>
@@ -151,8 +144,9 @@ namespace Nop.Core.Infrastructure
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration of the application</param>
         /// <param name="nopConfig">Nop configuration parameters</param>
+        /// <param name="environment">Environment of the application</param>
         /// <returns>Service provider</returns>
-        public IServiceProvider ConfigureServices(IServiceCollection services, IConfiguration configuration, NopConfig nopConfig)
+        public void ConfigureServices(IServiceCollection services, IConfiguration configuration, NopConfig nopConfig, IWebHostEnvironment environment)
         {
             //find startup configurations provided by other assemblies
             var typeFinder = new WebAppTypeFinder();
@@ -165,7 +159,7 @@ namespace Nop.Core.Infrastructure
 
             //configure services
             foreach (var instance in instances)
-                instance.ConfigureServices(services, configuration);
+                instance.ConfigureServices(services, configuration, environment);
 
             //register mapper configurations
             AddAutoMapper(services, typeFinder);
@@ -178,8 +172,6 @@ namespace Nop.Core.Infrastructure
 
             //resolve assemblies here. otherwise, plugins can throw an exception when rendering views
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-
-            return _serviceProvider;
         }
 
         /// <summary>

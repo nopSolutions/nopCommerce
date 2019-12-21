@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using EasyCaching.Core;
-using EasyCaching.InMemory;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -15,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -56,8 +53,8 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="configuration">Configuration of the application</param>
         /// <param name="hostingEnvironment">Hosting environment</param>
         /// <returns>Configured service provider</returns>
-        public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services,
-            IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        public static void ConfigureApplicationServices(this IServiceCollection services,
+            IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             //most of API providers require TLS 1.2 nowadays
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -80,23 +77,21 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             //create engine and configure service provider
             var engine = EngineContext.Create();
-            var serviceProvider = engine.ConfigureServices(services, configuration, nopConfig);
+            engine.ConfigureServices(services, configuration, nopConfig, hostingEnvironment);
 
             //further actions are performed only when the database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
-                return serviceProvider;
-
-            //initialize and start schedule tasks
-            TaskManager.Instance.Initialize();
-            TaskManager.Instance.Start();
+            if (DataSettingsManager.DatabaseIsInstalled)
+            {
+                //initialize and start schedule tasks
+                TaskManager.Instance.Initialize();
+                TaskManager.Instance.Start();
+            }
 
             //log application start
             engine.Resolve<ILogger>().Information("Application started");
 
             //install plugins
             engine.Resolve<IPluginService>().InstallPlugins();
-
-            return serviceProvider;
         }
 
         /// <summary>
@@ -267,16 +262,16 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <returns>A builder for configuring MVC services</returns>
-        public static IMvcBuilder AddNopMvc(this IServiceCollection services)
+        public static IMvcBuilder AddNopMvc(this IServiceCollection services, IWebHostEnvironment environment)
         {
             //add basic MVC feature
-            var mvcBuilder = services.AddMvc();
+            var mvcBuilder = services.AddControllersWithViews();
 
-            //we use legacy (from previous versions) routing logic
-            mvcBuilder.AddMvcOptions(options => options.EnableEndpointRouting = false);
+            //sets the default value of settings on MvcOptions to match the behavior of asp.net core mvc 3.1
+            mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Latest);
 
-            //sets the default value of settings on MvcOptions to match the behavior of asp.net core mvc 2.2
-            mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            if (environment.IsDevelopment())
+                mvcBuilder.AddRazorRuntimeCompilation();
 
             var nopConfig = services.BuildServiceProvider().GetRequiredService<NopConfig>();
             if (nopConfig.UseSessionStateTempDataProvider)
@@ -297,8 +292,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 });
             }
 
+            //add Newtonsoft.Json for mvc serializer/deserializer provider
             //MVC now serializes JSON with camel case names by default, use this code to avoid it
-            mvcBuilder.AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+            mvcBuilder.AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
             //add custom display metadata provider
             mvcBuilder.AddMvcOptions(options => options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider()));

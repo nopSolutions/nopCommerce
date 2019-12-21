@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +16,7 @@ using Nop.Services.Security;
 using Nop.Web.Framework.Security;
 using Nop.Web.Infrastructure.Installation;
 using Nop.Web.Models.Install;
+using Nop.Data;
 
 namespace Nop.Web.Controllers
 {
@@ -350,7 +351,15 @@ namespace Nop.Web.Controllers
                 }, _fileProvider);
 
                 //initialize database
-                EngineContext.Current.Resolve<IDataProvider>().InitializeDatabase();
+                var providerName = DataSettingsManager.LoadSettings()?.DataProvider;
+                switch (providerName)
+                {
+                    case DataProviderType.SqlServer:
+                        new SqlServerDataProvider().InitializeDatabase();
+                        break;
+                    default:
+                        throw new NopException($"Not supported data provider name: '{providerName}'");
+                }
 
                 //now resolve installation service
                 var installationService = EngineContext.Current.Resolve<IInstallationService>();
