@@ -55,12 +55,11 @@
                                 IsMasterCheckBox = true,
                                 Render = new RenderCheckBox("checkbox_countries"),
                                 ClassName =  NopColumnClassDefaults.CenterAll,
-                                Width = "50",
+                                Width = "50"
                             },
                             new ColumnProperty(nameof(CountryModel.Name))
                             {
-                                Title = T("Admin.Configuration.Countries.Fields.Name").Text,
-                                Width = "200"
+                                Title = T("Admin.Configuration.Countries.Fields.Name").Text
                             },
                             new ColumnProperty(nameof(CountryModel.AllowsBilling))
                             {
@@ -89,7 +88,7 @@
                             new ColumnProperty(nameof(CountryModel.NumericIsoCode))
                             {
                                 Title = T("Admin.Configuration.Countries.Fields.NumericIsoCode").Text,
-                                Width = "150"
+                                Width = "120"
                             },
                             new ColumnProperty(nameof(CountryModel.SubjectToVat))
                             {
@@ -113,7 +112,7 @@
                             new ColumnProperty(nameof(CountryModel.Published))
                             {
                                 Title = T("Admin.Configuration.Countries.Fields.Published").Text,
-                                Width = "100",
+                                Width = "80",
                                 ClassName =  NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },

@@ -1,6 +1,6 @@
-using System.Collections.Generic;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using System.Collections.Generic;
 
 namespace Nop.Services.Catalog
 {
@@ -18,6 +18,12 @@ namespace Nop.Services.Catalog
         void DeleteProductAttribute(ProductAttribute productAttribute);
 
         /// <summary>
+        /// Deletes product attributes
+        /// </summary>
+        /// <param name="productAttributes">Product attributes</param>
+        void DeleteProductAttributes(IList<ProductAttribute> productAttributes);
+
+        /// <summary>
         /// Gets all product attributes
         /// </summary>
         /// <param name="pageIndex">Page index</param>
@@ -31,6 +37,13 @@ namespace Nop.Services.Catalog
         /// <param name="productAttributeId">Product attribute identifier</param>
         /// <returns>Product attribute </returns>
         ProductAttribute GetProductAttributeById(int productAttributeId);
+
+        /// <summary>
+        /// Gets product attributes 
+        /// </summary>
+        /// <param name="productAttributeIds">Product attribute identifiers</param>
+        /// <returns>Product attributes</returns>
+        IList<ProductAttribute> GetProductAttributeByIds(int[] productAttributeIds);
 
         /// <summary>
         /// Inserts a product attribute
