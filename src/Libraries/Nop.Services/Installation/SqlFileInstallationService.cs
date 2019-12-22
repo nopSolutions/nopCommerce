@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Stores;

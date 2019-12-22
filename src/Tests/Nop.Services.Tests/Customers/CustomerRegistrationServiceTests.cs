@@ -6,6 +6,7 @@ using Nop.Core;
 using Nop.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
+using Nop.Core.Infrastructure;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -43,7 +44,6 @@ namespace Nop.Services.Tests.Customers
 
         public CustomerRegistrationServiceTests()
         {
-
             #region customers
             var customer1 = new Customer
             {
@@ -183,8 +183,18 @@ namespace Nop.Services.Tests.Customers
         [SetUp]
         public override void SetUp()
         {
+            var nopEngine = new Mock<NopEngine>();
+            nopEngine.Setup(x => x.ServiceProvider).Returns(new TestServiceProvider());
+            EngineContext.Replace(nopEngine.Object);
+
             _fakeDataStore.ResetStore();
             MappingCustomersToRegisteredRole();
+        }
+
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            EngineContext.Replace(null);
         }
 
         //[Test]

@@ -4,6 +4,7 @@ using System.Linq;
 using LinqToDB;
 using LinqToDB.Data;
 using Nop.Core;
+using Nop.Core.Caching;
 
 namespace Nop.Data
 {
@@ -16,15 +17,16 @@ namespace Nop.Data
         #region Fields
 
         private ITable<TEntity> _entities;
-
+        protected readonly IStaticCacheManager _cacheManager;
         private readonly NopDataConnection _dataConnection;
 
         #endregion
 
         #region Ctor
 
-        public EfRepository()
+        public EfRepository(IStaticCacheManager cacheManager)
         {
+            _cacheManager = cacheManager;
             _dataConnection = new NopDataConnection();
         }
 

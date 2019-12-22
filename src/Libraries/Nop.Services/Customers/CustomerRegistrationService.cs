@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
 using Nop.Services.Events;

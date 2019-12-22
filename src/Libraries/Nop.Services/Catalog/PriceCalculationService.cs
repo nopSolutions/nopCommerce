@@ -8,6 +8,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
@@ -118,10 +119,11 @@ namespace Nop.Services.Catalog
                 if (discountCategoryIds.Any())
                 {
                     //load identifier of categories of this product
-                    var cacheKey = string.Format(NopCatalogDefaults.ProductCategoryIdsModelCacheKey,
+                    var cacheKey = string.Format(NopCatalogCachingDefaults.ProductCategoryIdsModelCacheKey,
                         product.Id,
                         string.Join(",", _customerService.GetCustomerRoleIds(customer)),
                         _storeContext.CurrentStore.Id);
+
                     productCategoryIds = _cacheManager.Get(cacheKey, () =>
                         _categoryService
                         .GetProductCategoriesByProductId(product.Id)
@@ -165,7 +167,7 @@ namespace Nop.Services.Catalog
                 if (discountManufacturerIds.Any())
                 {
                     //load identifier of manufacturers of this product
-                    var cacheKey = string.Format(NopCatalogDefaults.ProductManufacturerIdsModelCacheKey,
+                    var cacheKey = string.Format(NopCatalogCachingDefaults.ProductManufacturerIdsModelCacheKey,
                         product.Id,
                         string.Join(",", _customerService.GetCustomerRoleIds(customer)),
                         _storeContext.CurrentStore.Id);
@@ -360,7 +362,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var cacheKey = string.Format(NopCatalogDefaults.ProductPriceModelCacheKey,
+            var cacheKey = string.Format(NopCatalogCachingDefaults.ProductPriceModelCacheKey,
                 product.Id,
                 overriddenProductPrice?.ToString(CultureInfo.InvariantCulture),
                 additionalCharge.ToString(CultureInfo.InvariantCulture),

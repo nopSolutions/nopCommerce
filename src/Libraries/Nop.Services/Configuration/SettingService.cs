@@ -143,7 +143,7 @@ namespace Nop.Services.Configuration
 
             //cache
             if (clearCache)
-                _cacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
+                ClearCache();
 
             //event notification
             _eventPublisher.EntityInserted(setting);
@@ -163,7 +163,7 @@ namespace Nop.Services.Configuration
 
             //cache
             if (clearCache)
-                _cacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
+                ClearCache();
 
             //event notification
             _eventPublisher.EntityUpdated(setting);
@@ -181,7 +181,7 @@ namespace Nop.Services.Configuration
             _settingRepository.Delete(setting);
 
             //cache
-            _cacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
+            ClearCache();
 
             //event notification
             _eventPublisher.EntityDeleted(setting);
@@ -199,7 +199,7 @@ namespace Nop.Services.Configuration
             _settingRepository.Delete(settings);
 
             //cache
-            _cacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
+            ClearCache();
 
             //event notification
             foreach (var setting in settings)

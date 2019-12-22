@@ -26,7 +26,6 @@ namespace Nop.Services.Tests
                 IRepository<ShoppingCartItem> shoppingCartRepository = null,
                 ShoppingCartSettings shoppingCartSettings = null) : base(
                     customerSettings ?? new CustomerSettings(),
-                    new TestCacheManager(),
                     dataProvider ?? new Mock<IDataProvider>().Object,
                     eventPublisher ?? new Mock<IEventPublisher>().Object,
                     genericAttributeService ?? new Mock<IGenericAttributeService>().Object,

@@ -39,8 +39,6 @@ namespace Nop.Services.Tests.Catalog
         [SetUp]
         public new void SetUp()
         {
-            var cacheManager = new TestCacheManager();
-
             _workContext = new Mock<IWorkContext>();
             _workContext.Setup(w => w.WorkingCurrency).Returns(new Currency { RoundingType = RoundingType.Rounding001 });
 
@@ -84,7 +82,6 @@ namespace Nop.Services.Tests.Catalog
                 null,
                 _exchangeRatePluginManager,
                 _currencyRepo.Object,
-                cacheManager,
                 _storeMappingService.Object);
 
             _taxSettings = new TaxSettings();

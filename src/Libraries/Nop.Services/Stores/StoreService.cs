@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Stores
@@ -17,19 +18,16 @@ namespace Nop.Services.Stores
 
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Store> _storeRepository;
-        private readonly IStaticCacheManager _cacheManager;
 
         #endregion
 
         #region Ctor
 
         public StoreService(IEventPublisher eventPublisher,
-            IRepository<Store> storeRepository,
-            IStaticCacheManager cacheManager)
+            IRepository<Store> storeRepository)
         {
             _eventPublisher = eventPublisher;
             _storeRepository = storeRepository;
-            _cacheManager = cacheManager;
         }
 
         #endregion
@@ -51,8 +49,6 @@ namespace Nop.Services.Stores
 
             _storeRepository.Delete(store);
 
-            _cacheManager.RemoveByPrefix(NopStoreDefaults.StoresPrefixCacheKey);
-
             //event notification
             _eventPublisher.EntityDeleted(store);
         }
@@ -64,25 +60,11 @@ namespace Nop.Services.Stores
         /// <returns>Stores</returns>
         public virtual IList<Store> GetAllStores(bool loadCacheableCopy = true)
         {
-            IList<Store> loadStoresFunc()
-            {
-                var query = from s in _storeRepository.Table orderby s.DisplayOrder, s.Id select s;
-                return query.ToList();
-            }
+            var query = from s in _storeRepository.Table orderby s.DisplayOrder, s.Id select s;
 
-            if (loadCacheableCopy)
-            {
-                //cacheable copy
-                return _cacheManager.Get(NopStoreDefaults.StoresAllCacheKey, () =>
-                {
-                    var result = new List<Store>();
-                    foreach (var store in loadStoresFunc())
-                        result.Add(store);
-                    return result;
-                });
-            }
+            var result = loadCacheableCopy ? query.ToCachedList(NopStoreCachingDefaults.StoresAllCacheKey) : query.ToList();
 
-            return loadStoresFunc();
+            return result;
         }
 
         /// <summary>
@@ -96,17 +78,13 @@ namespace Nop.Services.Stores
             if (storeId == 0)
                 return null;
 
-            Store LoadStoreFunc()
-            {
-                return _storeRepository.GetById(storeId);
-            }
+            var key = string.Format(NopStoreCachingDefaults.StoresByIdCacheKey, storeId);
 
-            if (!loadCacheableCopy) 
-                return LoadStoreFunc();
+            var store = loadCacheableCopy
+                ? _storeRepository.ToCachedGetById(storeId, key)
+                : _storeRepository.GetById(storeId);
 
-            //cacheable copy
-            var key = string.Format(NopStoreDefaults.StoresByIdCacheKey, storeId);
-            return _cacheManager.Get(key, LoadStoreFunc);
+            return store;
         }
 
         /// <summary>
@@ -119,8 +97,6 @@ namespace Nop.Services.Stores
                 throw new ArgumentNullException(nameof(store));
 
             _storeRepository.Insert(store);
-
-            _cacheManager.RemoveByPrefix(NopStoreDefaults.StoresPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(store);
@@ -136,8 +112,6 @@ namespace Nop.Services.Stores
                 throw new ArgumentNullException(nameof(store));
             
             _storeRepository.Update(store);
-
-            _cacheManager.RemoveByPrefix(NopStoreDefaults.StoresPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(store);

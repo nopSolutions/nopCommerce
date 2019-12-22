@@ -6,6 +6,8 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 
@@ -18,7 +20,6 @@ namespace Nop.Services.Security
     {
         #region Fields
 
-        private readonly ICacheManager _cacheManager;
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<PermissionRecord> _permissionRecordRepository;
@@ -30,15 +31,13 @@ namespace Nop.Services.Security
 
         #region Ctor
 
-        public PermissionService(ICacheManager cacheManager,
-            ICustomerService customerService,
+        public PermissionService(ICustomerService customerService,
             ILocalizationService localizationService,
             IRepository<PermissionRecord> permissionRecordRepository,
             IRepository<PermissionRecordCustomerRoleMapping> permissionRecordCustomerRoleMappingRepository,
             IStaticCacheManager staticCacheManager,
             IWorkContext workContext)
         {
-            _cacheManager = cacheManager;
             _customerService = customerService;
             _localizationService = localizationService;
             _permissionRecordRepository = permissionRecordRepository;
@@ -58,17 +57,16 @@ namespace Nop.Services.Security
         /// <returns>Permissions</returns>
         protected virtual IList<PermissionRecord> GetPermissionRecordsByCustomerRoleId(int customerRoleId)
         {
-            var key = string.Format(NopSecurityDefaults.PermissionsAllByCustomerRoleIdCacheKey, customerRoleId);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from pr in _permissionRecordRepository.Table
-                            join prcrm in _permissionRecordCustomerRoleMappingRepository.Table on pr.Id equals prcrm.PermissionRecordId
-                            where prcrm.CustomerRoleId == customerRoleId
-                            orderby pr.Id
-                            select pr;
+            var key = string.Format(NopSecurityCachingDefaults.PermissionsAllByCustomerRoleIdCacheKey, customerRoleId);
 
-                return query.ToList();
-            });
+            var query = from pr in _permissionRecordRepository.Table
+                join prcrm in _permissionRecordCustomerRoleMappingRepository.Table on pr.Id equals prcrm
+                    .PermissionRecordId
+                where prcrm.CustomerRoleId == customerRoleId
+                orderby pr.Id
+                select pr;
+
+            return query.ToCachedList(key);
         }
 
         #endregion
@@ -85,9 +83,6 @@ namespace Nop.Services.Security
                 throw new ArgumentNullException(nameof(permission));
 
             _permissionRecordRepository.Delete(permission);
-
-            _cacheManager.RemoveByPrefix(NopSecurityDefaults.PermissionsPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopSecurityDefaults.PermissionsPrefixCacheKey);
         }
 
         /// <summary>
@@ -145,9 +140,6 @@ namespace Nop.Services.Security
                 throw new ArgumentNullException(nameof(permission));
 
             _permissionRecordRepository.Insert(permission);
-
-            _cacheManager.RemoveByPrefix(NopSecurityDefaults.PermissionsPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopSecurityDefaults.PermissionsPrefixCacheKey);
         }
 
         /// <summary>
@@ -160,9 +152,6 @@ namespace Nop.Services.Security
                 throw new ArgumentNullException(nameof(permission));
 
             _permissionRecordRepository.Update(permission);
-
-            _cacheManager.RemoveByPrefix(NopSecurityDefaults.PermissionsPrefixCacheKey);
-            _staticCacheManager.RemoveByPrefix(NopSecurityDefaults.PermissionsPrefixCacheKey);
         }
 
         /// <summary>
@@ -324,7 +313,7 @@ namespace Nop.Services.Security
             if (string.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
 
-            var key = string.Format(NopSecurityDefaults.PermissionsAllowedCacheKey, customerRoleId, permissionRecordSystemName);
+            var key = string.Format(NopSecurityCachingDefaults.PermissionsAllowedCacheKey, customerRoleId, permissionRecordSystemName);
             return _staticCacheManager.Get(key, () =>
             {
                 var permissions = GetPermissionRecordsByCustomerRoleId(customerRoleId);

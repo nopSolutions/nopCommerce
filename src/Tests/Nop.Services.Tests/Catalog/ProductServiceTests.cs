@@ -66,7 +66,7 @@ namespace Nop.Services.Tests.Catalog
             _productWarehouseInventoryRepository = new Mock<IRepository<ProductWarehouseInventory>>();
             _productWarehouseInventoryRepository.Setup(x => x.Table).Returns(GetMockProductWarehouseInventoryRecords);
 
-            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new TestCacheManager(), null,
+            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, null,
                 null, null, null, null, null, null, null, null, null, null, _productRepository.Object, null, null, null, null, null, null, _productWarehouseInventoryRepository.Object, null, null, null, null, null, null,
                 null, null, null, new LocalizationSettings());
         }

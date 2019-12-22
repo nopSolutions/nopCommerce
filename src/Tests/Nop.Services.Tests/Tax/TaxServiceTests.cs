@@ -101,10 +101,7 @@ namespace Nop.Services.Tests.Tax
             var pluginService = new FakePluginService();
             _taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
 
-            var cacheManager = new TestCacheManager();
-
             _customerService = new CustomerService(new CustomerSettings(),
-                new TestCacheManager(),
                 null,
                 _eventPublisher.Object,
                 _genericAttributeService.Object,
@@ -128,7 +125,6 @@ namespace Nop.Services.Tests.Tax
                 _geoLookupService.Object,
                 _logger.Object,
                 _stateProvinceService.Object,
-                cacheManager,
                 _storeContext.Object,
                 _taxPluginManager,
                 _webHelper.Object,

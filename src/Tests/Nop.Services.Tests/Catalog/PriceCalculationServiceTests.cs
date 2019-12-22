@@ -75,7 +75,7 @@ namespace Nop.Services.Tests.Catalog
                 .Callback(
                     (CustomerCustomerRoleMapping ccrm) => { customerCustomerRoleMapping.Add(ccrm); });
 
-            _customerService = new CustomerService(null, null, null, null, null, null, null, null, _customerCustomerRoleMappingRepository.Object, null, _customerRoleRepository.Object, null, null, null, null);
+            _customerService = new CustomerService(null, null, null, null, null, null, null, _customerCustomerRoleMappingRepository.Object, null, _customerRoleRepository.Object, null, null, null, null);
 
             _manufacturerService = new Mock<IManufacturerService>();
 
@@ -88,11 +88,12 @@ namespace Nop.Services.Tests.Catalog
 
             _discountProductMappingRepository = new Mock<IRepository<DiscountProductMapping>>();
             _discountProductMappingRepository.Setup(r => r.Table).Returns(GetMockDiscountProductMapping);
+            _serviceProvider.DiscountProductMappingRepository.Setup(r => r.Table)
+                .Returns(GetMockDiscountProductMapping);
 
             var shipmentRepository = new Mock<IRepository<Shipment>>();
 
-            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null,
-                new TestCacheManager(), _customerService,
+            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, _customerService,
                 null, null, null, null, null, null, null, null, null, _discountProductMappingRepository.Object,
                 _productRepository.Object, null, null, null, null, null, null, null, null, shipmentRepository.Object,
                 null, null, _tierPriceRepository.Object, null,
@@ -269,12 +270,6 @@ namespace Nop.Services.Tests.Catalog
         #endregion
 
         #region Tests
-
-        [OneTimeTearDown]
-        public void TearDown()
-        {
-            EngineContext.Replace(null);
-        }
 
         [Test]
         public void Can_get_final_product_price()

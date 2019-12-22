@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
@@ -23,6 +24,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 using static SixLabors.ImageSharp.Configuration;
+using NopMediaDefaults = Nop.Services.Defaults.NopMediaDefaults;
 
 namespace Nop.Services.Media
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
@@ -8,6 +9,7 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
+using NopCatalogDefaults = Nop.Services.Defaults.NopCatalogDefaults;
 
 namespace Nop.Services.Catalog
 {

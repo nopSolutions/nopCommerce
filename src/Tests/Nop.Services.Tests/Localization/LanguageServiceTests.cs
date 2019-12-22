@@ -47,23 +47,24 @@ namespace Nop.Services.Tests.Localization
 
             _storeMappingService = new Mock<IStoreMappingService>();
 
-            var cacheManager = new TestCacheManager();
-
             _settingService = new Mock<ISettingService>();
 
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
             _localizationSettings = new LocalizationSettings();
-            _languageService = new LanguageService(_eventPublisher.Object, _languageRepo.Object,_settingService.Object, cacheManager, _storeMappingService.Object, _localizationSettings);
+            _languageService = new LanguageService(_eventPublisher.Object, _languageRepo.Object,_settingService.Object, _storeMappingService.Object, _localizationSettings);
         }
 
         [Test]
         public void Can_get_all_languages()
         {
-            var languages = _languageService.GetAllLanguages();
-            languages.ShouldNotBeNull();
-            languages.Any().ShouldBeTrue();
+            RunWithTestServiceProvider(() =>
+            {
+                var languages = _languageService.GetAllLanguages();
+                languages.ShouldNotBeNull();
+                languages.Any().ShouldBeTrue();
+            });
         }
     }
 }

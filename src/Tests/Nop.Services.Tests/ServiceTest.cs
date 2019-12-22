@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
 using Moq;
 using Nop.Core;
@@ -25,7 +26,18 @@ namespace Nop.Services.Tests
 
         }
 
-        public ServiceTest()
+        public void RunWithTestServiceProvider(Action action)
+        {
+            var nopEngine = new Mock<NopEngine>();
+            nopEngine.Setup(x => x.ServiceProvider).Returns(new TestServiceProvider());
+            EngineContext.Replace(nopEngine.Object);
+
+            action();
+
+            EngineContext.Replace(null);
+        }
+        
+        protected ServiceTest()
         {
             //init plugins
             InitPlugins();

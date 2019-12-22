@@ -531,7 +531,7 @@ namespace Nop.Plugin.Tax.Avalara
                 return new CalculateTaxResult { TaxRate = _cacheManager.Get(cacheKey, () => default(decimal)) };
 
             //get estimated tax
-            var address = _addressService.GetAddressById(calculateTaxRequest.Address.AddressId);
+            var address = _addressService.GetAddressById(calculateTaxRequest.Address.Id);
             var totalTax = CreateEstimatedTaxTransaction(address, calculateTaxRequest.Customer?.Id.ToString())?.totalTax;
             if (!totalTax.HasValue)
                 return new CalculateTaxResult { Errors = new[] { "No response from the service" }.ToList() };

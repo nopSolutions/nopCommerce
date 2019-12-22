@@ -186,10 +186,7 @@ namespace Nop.Services.Tests.Catalog
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var cacheManager = new TestCacheManager();
-
-            _productAttributeService = new ProductAttributeService(cacheManager,
-                _eventPublisher.Object,
+            _productAttributeService = new ProductAttributeService(_eventPublisher.Object,
                 _predefinedProductAttributeValueRepo.Object,
                 _productAttributeRepo.Object,
                 _productAttributeCombinationRepo.Object,
@@ -240,12 +237,15 @@ namespace Nop.Services.Tests.Catalog
             //custom text
             attributes = _productAttributeParser.AddProductAttribute(attributes, pam3_1, "Some custom text goes here");
 
-            var parsed_attributeValues = _productAttributeParser.ParseProductAttributeValues(attributes);
-            parsed_attributeValues.Contains(pav1_1).ShouldEqual(true);
-            parsed_attributeValues.Contains(pav1_2).ShouldEqual(false);
-            parsed_attributeValues.Contains(pav2_1).ShouldEqual(true);
-            parsed_attributeValues.Contains(pav2_2).ShouldEqual(true);
-            parsed_attributeValues.Contains(pav2_2).ShouldEqual(true);
+            RunWithTestServiceProvider(() =>
+            {
+                var parsed_attributeValues = _productAttributeParser.ParseProductAttributeValues(attributes);
+                parsed_attributeValues.Contains(pav1_1).ShouldEqual(true);
+                parsed_attributeValues.Contains(pav1_2).ShouldEqual(false);
+                parsed_attributeValues.Contains(pav2_1).ShouldEqual(true);
+                parsed_attributeValues.Contains(pav2_2).ShouldEqual(true);
+                parsed_attributeValues.Contains(pav2_2).ShouldEqual(true);
+            });
 
             var parsedValues = _productAttributeParser.ParseValues(attributes, pam3_1.Id);
             parsedValues.Count.ShouldEqual(1);
@@ -268,12 +268,15 @@ namespace Nop.Services.Tests.Catalog
             attributes = _productAttributeParser.RemoveProductAttribute(attributes, pam2_1);
             attributes = _productAttributeParser.RemoveProductAttribute(attributes, pam3_1);
 
-            var parsed_attributeValues = _productAttributeParser.ParseProductAttributeValues(attributes);
-            parsed_attributeValues.Contains(pav1_1).ShouldEqual(true);
-            parsed_attributeValues.Contains(pav1_2).ShouldEqual(false);
-            parsed_attributeValues.Contains(pav2_1).ShouldEqual(false);
-            parsed_attributeValues.Contains(pav2_2).ShouldEqual(false);
-            parsed_attributeValues.Contains(pav2_2).ShouldEqual(false);
+            RunWithTestServiceProvider(() =>
+            {
+                var parsed_attributeValues = _productAttributeParser.ParseProductAttributeValues(attributes);
+                parsed_attributeValues.Contains(pav1_1).ShouldEqual(true);
+                parsed_attributeValues.Contains(pav1_2).ShouldEqual(false);
+                parsed_attributeValues.Contains(pav2_1).ShouldEqual(false);
+                parsed_attributeValues.Contains(pav2_2).ShouldEqual(false);
+                parsed_attributeValues.Contains(pav2_2).ShouldEqual(false);
+            });
 
             var parsedValues = _productAttributeParser.ParseValues(attributes, pam3_1.Id);
             parsedValues.Count.ShouldEqual(0);
@@ -359,9 +362,14 @@ namespace Nop.Services.Tests.Catalog
                 GiftCardType = GiftCardType.Virtual
             };
             var customer = new Customer();
-            var formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
-                attributes, customer, "<br />", false, false);
-            formattedAttributes.ShouldEqual("Color: Green<br />Some custom option: Option 1<br />Some custom option: Option 2<br />Custom text: Some custom text goes here<br />From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
+
+            RunWithTestServiceProvider(() =>
+            {
+                var formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
+                    attributes, customer, "<br />", false, false);
+                formattedAttributes.ShouldEqual(
+                    "Color: Green<br />Some custom option: Option 1<br />Some custom option: Option 2<br />Custom text: Some custom text goes here<br />From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
+            });
         }
     }
 }

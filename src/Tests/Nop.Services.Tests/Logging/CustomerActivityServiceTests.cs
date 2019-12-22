@@ -2,7 +2,6 @@
 using System.Linq;
 using Moq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
@@ -15,7 +14,6 @@ namespace Nop.Services.Tests.Logging
     [TestFixture]
     public class CustomerActivityServiceTests : ServiceTest
     {
-        private IStaticCacheManager _cacheManager;
         private Mock<IRepository<ActivityLog>> _activityLogRepository;
         private Mock<IRepository<ActivityLogType>> _activityLogTypeRepository;
         private Mock<IWorkContext> _workContext;
@@ -68,14 +66,14 @@ namespace Nop.Services.Tests.Logging
                 ActivityLogTypeId = _activityType2.Id,
                 CustomerId = _customer2.Id
             };
-            _cacheManager = new TestCacheManager();
+
             _workContext = new Mock<IWorkContext>();
             _webHelper = new Mock<IWebHelper>();
             _activityLogRepository = new Mock<IRepository<ActivityLog>>();
             _activityLogTypeRepository = new Mock<IRepository<ActivityLogType>>();
             _activityLogTypeRepository.Setup(x => x.Table).Returns(new List<ActivityLogType> { _activityType1, _activityType2 }.AsQueryable());
             _activityLogRepository.Setup(x => x.Table).Returns(new List<ActivityLog> { _activity1, _activity2 }.AsQueryable());
-            _customerActivityService = new CustomerActivityService(_activityLogRepository.Object, _activityLogTypeRepository.Object, _cacheManager, _webHelper.Object, _workContext.Object);
+            _customerActivityService = new CustomerActivityService(_activityLogRepository.Object, _activityLogTypeRepository.Object, _webHelper.Object, _workContext.Object);
         }
 
         [Test]

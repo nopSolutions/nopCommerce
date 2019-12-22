@@ -7,6 +7,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Seo;
 using Nop.Data;
 using Nop.Services.Common;
+using Nop.Services.Defaults;
 using Nop.Services.Events;
 using Nop.Services.Seo;
 

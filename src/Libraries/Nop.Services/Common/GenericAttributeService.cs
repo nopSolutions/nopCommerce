@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Common
@@ -16,7 +17,6 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<GenericAttribute> _genericAttributeRepository;
 
@@ -24,11 +24,9 @@ namespace Nop.Services.Common
 
         #region Ctor
 
-        public GenericAttributeService(ICacheManager cacheManager,
-            IEventPublisher eventPublisher,
+        public GenericAttributeService(IEventPublisher eventPublisher,
             IRepository<GenericAttribute> genericAttributeRepository)
         {
-            _cacheManager = cacheManager;
             _eventPublisher = eventPublisher;
             _genericAttributeRepository = genericAttributeRepository;
         }
@@ -47,10 +45,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(attribute));
 
             _genericAttributeRepository.Delete(attribute);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCommonDefaults.GenericAttributePrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityDeleted(attribute);
         }
@@ -65,10 +60,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(attributes));
 
             _genericAttributeRepository.Delete(attributes);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCommonDefaults.GenericAttributePrefixCacheKey);
-
+            
             //event notification
             foreach (var attribute in attributes)
             {
@@ -99,10 +91,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(attribute));
 
             _genericAttributeRepository.Insert(attribute);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCommonDefaults.GenericAttributePrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityInserted(attribute);
         }
@@ -117,10 +106,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(attribute));
 
             _genericAttributeRepository.Update(attribute);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCommonDefaults.GenericAttributePrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityUpdated(attribute);
         }
@@ -133,16 +119,15 @@ namespace Nop.Services.Common
         /// <returns>Get attributes</returns>
         public virtual IList<GenericAttribute> GetAttributesForEntity(int entityId, string keyGroup)
         {
-            var key = string.Format(NopCommonDefaults.GenericAttributeCacheKey, entityId, keyGroup);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from ga in _genericAttributeRepository.Table
-                            where ga.EntityId == entityId &&
-                            ga.KeyGroup == keyGroup
-                            select ga;
-                var attributes = query.ToList();
-                return attributes;
-            });
+            var key = string.Format(NopCommonCachingDefaults.GenericAttributeCacheKey, entityId, keyGroup);
+
+            var query = from ga in _genericAttributeRepository.Table
+                where ga.EntityId == entityId &&
+                      ga.KeyGroup == keyGroup
+                select ga;
+            var attributes = query.ToCachedList(key);
+
+            return attributes;
         }
 
         /// <summary>

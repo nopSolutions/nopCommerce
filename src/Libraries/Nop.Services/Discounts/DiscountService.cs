@@ -8,6 +8,8 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -29,7 +31,6 @@ namespace Nop.Services.Discounts
         private readonly ILocalizationService _localizationService;
         private readonly IProductService _productService;
         private readonly IRepository<Discount> _discountRepository;
-        private readonly IRepository<DiscountMapping> _discountMappingRepository;
         private readonly IRepository<DiscountRequirement> _discountRequirementRepository;
         private readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
         private readonly IRepository<Order> _orderRepository;
@@ -46,7 +47,6 @@ namespace Nop.Services.Discounts
             ILocalizationService localizationService,
             IProductService productService,
             IRepository<Discount> discountRepository,
-            IRepository<DiscountMapping> discountMappingRepository,
             IRepository<DiscountRequirement> discountRequirementRepository,
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
             IRepository<Order> orderRepository,
@@ -59,7 +59,6 @@ namespace Nop.Services.Discounts
             _localizationService = localizationService;
             _productService = productService;
             _discountRepository = discountRepository;
-            _discountMappingRepository = discountMappingRepository;
             _discountRequirementRepository = discountRequirementRepository;
             _discountUsageHistoryRepository = discountUsageHistoryRepository;
             _orderRepository = orderRepository;
@@ -183,44 +182,41 @@ namespace Nop.Services.Discounts
             //we load all discounts, and filter them using "discountType" parameter later (in memory)
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
             //that's why let's access the database only once
-            var cacheKey = string.Format(NopDiscountDefaults.DiscountAllCacheKey,
+            var cacheKey = string.Format(NopDiscountCachingDefaults.DiscountAllCacheKey,
                 showHidden, couponCode ?? string.Empty, discountName ?? string.Empty);
 
-            var discounts = _cacheManager.Get(cacheKey, () =>
+            var query = _discountRepository.Table;
+
+            if (!showHidden)
             {
-                var query = _discountRepository.Table;
+                query = query.Where(discount =>
+                    (!discount.StartDateUtc.HasValue || discount.StartDateUtc <= DateTime.UtcNow) &&
+                    (!discount.EndDateUtc.HasValue || discount.EndDateUtc >= DateTime.UtcNow));
+            }
 
-                if (!showHidden)
-                {
-                    query = query.Where(discount =>
-                        (!discount.StartDateUtc.HasValue || discount.StartDateUtc <= DateTime.UtcNow) &&
-                        (!discount.EndDateUtc.HasValue || discount.EndDateUtc >= DateTime.UtcNow));
-                }
+            //filter by dates
+            if (startDateUtc.HasValue)
+                query = query.Where(discount =>
+                    !discount.StartDateUtc.HasValue || discount.StartDateUtc >= startDateUtc.Value);
+            if (endDateUtc.HasValue)
+                query = query.Where(discount =>
+                    !discount.EndDateUtc.HasValue || discount.EndDateUtc <= endDateUtc.Value);
 
-                //filter by dates
-                if (startDateUtc.HasValue)
-                    query = query.Where(discount =>
-                        !discount.StartDateUtc.HasValue || discount.StartDateUtc >= startDateUtc.Value);
-                if (endDateUtc.HasValue)
-                    query = query.Where(discount =>
-                        !discount.EndDateUtc.HasValue || discount.EndDateUtc <= endDateUtc.Value);
+            //filter by coupon code
+            if (!string.IsNullOrEmpty(couponCode))
+                query = query.Where(discount => discount.CouponCode == couponCode);
 
-                //filter by coupon code
-                if (!string.IsNullOrEmpty(couponCode))
-                    query = query.Where(discount => discount.CouponCode == couponCode);
+            //filter by name
+            if (!string.IsNullOrEmpty(discountName))
+                query = query.Where(discount => discount.Name.Contains(discountName));
 
-                //filter by name
-                if (!string.IsNullOrEmpty(discountName))
-                    query = query.Where(discount => discount.Name.Contains(discountName));
+            //filter by type
+            if (discountType.HasValue)
+                query = query.Where(discount => discount.DiscountTypeId == (int)discountType.Value);
 
-                //filter by type
-                if (discountType.HasValue)
-                    query = query.Where(discount => discount.DiscountTypeId == (int)discountType.Value);
+            query = query.OrderBy(discount => discount.Name).ThenBy(discount => discount.Id);
 
-                query = query.OrderBy(discount => discount.Name).ThenBy(discount => discount.Id);
-
-                return query.ToList();
-            });
+            var discounts = query.ToCachedList(cacheKey);
 
             //we know that this method is usually invoked multiple times
             //that's why we filter discounts by type on the application layer
@@ -238,6 +234,9 @@ namespace Nop.Services.Discounts
         /// <returns>List of discounts</returns>
         public virtual IList<Discount> GetAppliedDiscounts<T>(IDiscountSupported<T> entity) where T : DiscountMapping
         {
+
+            var _discountMappingRepository = EngineContext.Current.Resolve<IRepository<T>>();
+
             return (from d in _discountRepository.Table
                     join ad in _discountMappingRepository.Table on d.Id equals ad.DiscountId
                     where ad.EntityId == entity.Id
@@ -604,7 +603,7 @@ namespace Nop.Services.Discounts
             }
 
             //discount requirements
-            var key = string.Format(NopDiscountDefaults.DiscountRequirementModelCacheKey, discount.Id);
+            var key = string.Format(NopDiscountCachingDefaults.DiscountRequirementModelCacheKey, discount.Id);
             var requirements = _cacheManager.Get(key, () => GetAllDiscountRequirements(discount.Id, true));
 
             //get top-level group
