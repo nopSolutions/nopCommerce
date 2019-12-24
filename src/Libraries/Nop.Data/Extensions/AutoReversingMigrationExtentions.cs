@@ -13,7 +13,7 @@ namespace Nop.Data.Extensions
             if (migration.Schema.Table(foreignTable).Constraint(keyName).Exists())
                 keyName = GetForeignKeyName(foreignTable, foreignColumn, primaryTable, primaryColumn, false);
 
-            migration.Create.ForeignKey(keyName).FromTable(foreignTable)
+            migration.Create.ForeignKey().FromTable(foreignTable)
                 .ForeignColumn(foreignColumn)
                 .ToTable(primaryTable)
                 .PrimaryColumn(primaryColumn)
@@ -27,7 +27,7 @@ namespace Nop.Data.Extensions
             if(migration.Schema.Table(foreignTable).Index(indexName).Exists())
                 return;
 
-            migration.Create.Index(indexName).OnTable(foreignTable).OnColumn(foreignColumn).Ascending().WithOptions().NonClustered();
+            migration.Create.Index().OnTable(foreignTable).OnColumn(foreignColumn).Ascending().WithOptions().NonClustered();
         }
 
         private static string GetForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn, bool isShort=true)

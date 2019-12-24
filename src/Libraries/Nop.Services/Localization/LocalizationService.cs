@@ -426,15 +426,13 @@ namespace Nop.Services.Localization
             var pXmlPackage = new DataParameter
             {
                 Name = "XmlPackage",
-                Value = new SqlXml(XmlReader.Create(xmlStreamReader)),
-                DataType = DataType.Xml
+                Value = xmlStreamReader.ReadToEnd(),
+                DataType = DataType.Text
             };
 
             var pUpdateExistingResources = SqlParameterHelper.GetBooleanParameter("UpdateExistingResources", updateExistingResources);
 
-            //long-running query. specify timeout (600 seconds)
-            _dataProvider.Query<object>("EXEC [LanguagePackImport] @LanguageId, @XmlPackage, @UpdateExistingResources",
-                pLanguageId, pXmlPackage, pUpdateExistingResources);
+            _dataProvider.QueryProc<object>("LanguagePackImport", pLanguageId, pXmlPackage, pUpdateExistingResources);
 
             //clear cache
             _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);

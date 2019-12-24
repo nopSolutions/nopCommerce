@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using FluentMigrator.Runner;
+using FluentMigrator.Runner.Conventions;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
@@ -44,14 +45,21 @@ namespace Nop.Data
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
-            DataConnection.DefaultSettings = Singleton<DataSettings>.Instance;
+            var dataSettings = Singleton<DataSettings>.Instance;
 
+            DataConnection.DefaultSettings = dataSettings;
+
+            //TODO: 
             MappingSchema.Default.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
 
             services
                 // add common FluentMigrator services
                 .AddFluentMigratorCore()
-                .ConfigureRunner(rb => rb.SetServer()
+                .AddSingleton<IConventionSet, NopConventionSet>()
+                .ConfigureRunner(rb => 
+                    rb.SetServer(dataSettings)
+                    // set the connection string
+                    .WithGlobalConnectionString(dataSettings.ConnectionString)
                     .WithVersionTable(new MigrationVersionInfo())
                     // define the assembly containing the migrations
                     .ScanIn(typeConfigurations.Select(p => p.Assembly).Distinct().ToArray()).For.Migrations());
