@@ -511,7 +511,7 @@ namespace Nop.Plugin.Tax.Avalara
 
             //get estimated tax
             var address = _addressService.GetAddressById(calculateTaxRequest.Address.AddressId);
-            var productTaxCategoryName = _taxCategoryService.GetTaxCategoryById(calculateTaxRequest.Product.TaxCategoryId)?.Name;
+            var productTaxCategoryName = _taxCategoryService.GetTaxCategoryById(calculateTaxRequest.TaxCategoryId > 0 ? calculateTaxRequest.TaxCategoryId : calculateTaxRequest.Product?.TaxCategoryId ?? 0)?.Name;
             var totalTax = CreateEstimatedTaxTransaction(address, calculateTaxRequest.Customer?.Id.ToString(), calculateTaxRequest.Product.Sku, productTaxCategoryName)?.totalTax;
             if (!totalTax.HasValue)
                 return new CalculateTaxResult { Errors = new[] { "No response from the service" }.ToList() };
