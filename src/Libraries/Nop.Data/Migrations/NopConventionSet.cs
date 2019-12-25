@@ -7,9 +7,10 @@ namespace Nop.Data.Migrations
 {
     public class NopConventionSet : IConventionSet
     {
-        public NopConventionSet(IMigrationContext context)
-            : this(new DefaultConventionSet(), new NopForeignKeyConvention(context), new NopIndexConvention(context))
+        public NopConventionSet(IDataProvider dataProvider, IMigrationContext context)
+            : this(new DefaultConventionSet(), new NopForeignKeyConvention(dataProvider, context), new NopIndexConvention(dataProvider))
         {
+            
         }
 
         public NopConventionSet(IConventionSet innerConventionSet, NopForeignKeyConvention foreignKeyConvention, NopIndexConvention indexConvention)

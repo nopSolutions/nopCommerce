@@ -38,7 +38,7 @@ namespace Nop.Data
 
             dataContext.MappingSchema.SetDataType(
                 typeof(byte[]),
-                new SqlDataType(new DbDataType(typeof(byte[]), DataType.Blob, "LONGBLOB")));
+                new SqlDataType(new DbDataType(typeof(byte[]), DataType.Blob)));
         }
 
         #endregion
@@ -315,6 +315,16 @@ namespace Nop.Data
             }
 
             return builder.ConnectionString;
+        }
+
+        public virtual string GetForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn, bool isShort = true)
+        {
+            return $"FK_{Guid.NewGuid().ToString("D")}";
+        }
+
+        public virtual string GetIndexName(string targetTable, string targetColumn, bool isShort = true)
+        {
+            return $"IX_{Guid.NewGuid().ToString("D")}";
         }
 
         #endregion

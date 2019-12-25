@@ -11,12 +11,8 @@ namespace Nop.Data.Extensions
     {
         public static void AddForeignKey(this MigrationBase migration, string foreignTable, string foreignColumn, string primaryTable, string primaryColumn, Rule onDeleteRule = Rule.None, bool addIndex = true)
         {
-            var keyName = GetForeignKeyName(foreignTable, foreignColumn, primaryTable, primaryColumn);
 
-            if (migration.Schema.Table(foreignTable).Constraint(keyName).Exists())
-                keyName = GetForeignKeyName(foreignTable, foreignColumn, primaryTable, primaryColumn, false);
-
-            migration.Create.ForeignKey(keyName).FromTable(foreignTable)
+            migration.Create.ForeignKey().FromTable(foreignTable)
                 .ForeignColumn(foreignColumn)
                 .ToTable(primaryTable)
                 .PrimaryColumn(primaryColumn)
@@ -25,12 +21,7 @@ namespace Nop.Data.Extensions
             if (!addIndex)
                 return;
 
-            var indexName = $"IX_{foreignTable}_{foreignColumn}";
-
-            if(migration.Schema.Table(foreignTable).Index(indexName).Exists())
-                return;
-
-            migration.AddIndex(indexName, foreignTable, i=>i.Ascending(), foreignColumn);
+            migration.AddIndex(string.Empty, foreignTable, i=>i.Ascending(), foreignColumn);
         }
 
         public static ICreateIndexOnColumnSyntax AddIndex(this MigrationBase migration, string indexName, string tableName, Func<ICreateIndexColumnOptionsSyntax, ICreateIndexOnColumnSyntax> options, params string [] columnNames)
@@ -38,7 +29,7 @@ namespace Nop.Data.Extensions
             if(!columnNames.Any())
                 return null;
 
-            if (migration.Schema.Table(tableName).Index(indexName).Exists())
+            if (!string.IsNullOrEmpty(indexName) && migration.Schema.Table(tableName).Index(indexName).Exists())
                 return null;
 
             var index = migration.Create.Index(indexName).OnTable(tableName);
@@ -49,22 +40,6 @@ namespace Nop.Data.Extensions
             }
 
             return index.WithOptions().NonClustered();
-        }
-
-        private static string GetForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn, bool isShort=true)
-        {
-            var sb = new StringBuilder();
-
-            sb.Append("FK_");
-            sb.Append(foreignTable);
-            sb.Append("_");
-
-            sb.Append(isShort
-                ? $"{primaryTable}_{primaryTable}{primaryColumn}"
-                : $"{foreignColumn}_{primaryTable}_{primaryColumn}");
-
-
-            return sb.ToString();
         }
     }
 }

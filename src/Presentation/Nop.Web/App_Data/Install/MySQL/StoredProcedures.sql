@@ -215,42 +215,6 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `LanguagePackImport`(
-	`LanguageId` 				int,
-	`XmlPackage` 				longtext,
-	`UpdateExistingResources` 	bit
-)
-BEGIN
-	declare `row_index` int unsigned default 0;   
-	declare `row_count` int unsigned;  
-	declare `path_row` varchar(255); 
-        
-	IF EXISTS(SELECT * FROM `Language` WHERE Id = `LanguageId`) THEN
-		set `row_count`  = extractValue(`XmlPackage`, concat('count(//Language/LocaleResource)')); 
-        
-        while `row_index` < `row_count` do                
-			set `row_index` = `row_index` + 1;        
-			set `path_row` = concat('//Language/LocaleResource[', `row_index`, ']');
-			
-			set @locale_name = extractValue(`XmlPackage`, concat(`path_row`, '/@Name'));
-			set @locale_value = extractValue(`XmlPackage`, concat(`path_row`, '/Value'));
-            
-			IF (EXISTS (SELECT 1 FROM `LocaleStringResource` WHERE LanguageId = `LanguageId` AND ResourceName=@locale_name)) then
-				IF (`UpdateExistingResources`) then
-					UPDATE `LocaleStringResource` SET ResourceValue = @locale_value
-					WHERE LanguageId= `LanguageId` AND ResourceName= @locale_name;
-				end if;
-			else
-				INSERT INTO `LocaleStringResource` (`LanguageId`, `ResourceName`, `ResourceValue`)
-				VALUES (`LanguageId`, @locale_name, @locale_value);
-			end if;
-        
-		end while;
-    end if;    
-END$$
-DELIMITER ;
-
-DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ProductLoadAllPaged`(
 		`CategoryIds`										text,				#a list of category IDs (comma-separated list). e.g. 1,2,3
 		`ManufacturerId`									int,

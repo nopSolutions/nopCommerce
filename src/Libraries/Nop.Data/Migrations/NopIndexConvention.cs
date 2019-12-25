@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using FluentMigrator;
+﻿using System.Linq;
 using FluentMigrator.Expressions;
 using FluentMigrator.Infrastructure;
 using FluentMigrator.Model;
@@ -13,14 +9,14 @@ namespace Nop.Data.Migrations
     public class NopIndexConvention : IIndexConvention
     {
 
-        private readonly IMigrationContext _context;
+        private readonly IDataProvider _dataProvider;
 
-        public NopIndexConvention(IMigrationContext context)
+        public NopIndexConvention(IDataProvider dataProvider)
         {
-            _context = context;
+            _dataProvider = dataProvider;
         }
 
-        public IIndexExpression Apply(IIndexExpression expression) 
+        public IIndexExpression Apply(IIndexExpression expression)
         {
             if (string.IsNullOrEmpty(expression.Index.Name))
             {
@@ -32,40 +28,7 @@ namespace Nop.Data.Migrations
 
         private string GetIndexName(IndexDefinition index)
         {
-            var sb = new StringBuilder();
-
-            sb.Append("IX_");
-
-            if (DatabaseTypeApplies("MySQL"))
-            {
-                sb.Append("_");
-                sb.Append(Guid.NewGuid().ToString("D"));
-                return sb.ToString();
-            }
-
-            sb.Append(index.TableName);
-
-            foreach (var column in index.Columns)
-            {
-                sb.Append("_");
-                sb.Append(column.Name);
-            }
-
-            return sb.ToString();
-        }
-        private bool DatabaseTypeApplies(params string[] databaseTypes)
-        {
-            if (_context.QuerySchema is IMigrationProcessor mp)
-            {
-                var processorDbTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { mp.DatabaseType };
-                foreach (var databaseType in mp.DatabaseTypeAliases)
-                    processorDbTypes.Add(databaseType);
-
-                return databaseTypes
-                    .Any(db => processorDbTypes.Contains(db));
-            }
-
-            return false;
+            return _dataProvider.GetIndexName(index.TableName, string.Join('_', index.Columns.Select(c => c.Name)));
         }
     }
 }

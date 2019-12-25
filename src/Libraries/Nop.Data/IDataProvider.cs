@@ -81,9 +81,20 @@ namespace Nop.Data
         /// <returns>Entity</returns>
         TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity;
 
+        /// <summary>
+        /// Performs bulk insert entities operation
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="entities">Collection of Entities</param>
+        void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity;
+
         EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity;
 
         string BuildConnectionString(INopConnectionStringInfo nopConnectionString);
+
+        string GetForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn, bool isShort = true);
+
+        string GetIndexName(string targetTable, string targetColumn, bool isShort = true);        
 
         #endregion
 

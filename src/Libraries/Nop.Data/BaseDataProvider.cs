@@ -182,6 +182,18 @@ namespace Nop.Data
             return entity;
         }
 
+        /// <summary>
+        /// Performs bulk insert entities operation
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="entities">Collection of Entities</param>
+        public virtual void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        {
+            if (_dataConnection == null && !DataSettingsManager.DatabaseIsInstalled)
+                _dataConnection = new NopDataConnection();
+            _dataConnection.BulkCopy(entities);
+        }
+
         public virtual IEnumerable<T> QueryProc<T>(string procedureName, params DataParameter[] parameters)
         {
             if (_dataConnection == null && !DataSettingsManager.DatabaseIsInstalled)

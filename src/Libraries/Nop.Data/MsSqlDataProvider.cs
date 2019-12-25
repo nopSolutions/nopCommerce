@@ -308,6 +308,27 @@ namespace Nop.Data
             return builder.ConnectionString;
         }
 
+        public virtual string GetForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn, bool isShort = true)
+        {
+            var sb = new StringBuilder();
+
+            sb.Append("FK_");
+            sb.Append(foreignTable);
+            sb.Append("_");
+
+            sb.Append(isShort
+                ? $"{primaryTable}_{primaryTable}{primaryColumn}"
+                : $"{foreignColumn}_{primaryTable}_{primaryColumn}");
+
+
+            return sb.ToString();
+        }
+
+        public virtual string GetIndexName(string targetTable, string targetColumn, bool isShort = true)
+        {
+            return $"IX_{targetTable}_{targetColumn}";
+        }
+
         #endregion
 
         #region Properties
