@@ -168,7 +168,7 @@ namespace Nop.Web.Factories
                     {
                         RatingSum = _productService.GetAllProductReviews(productId: product.Id, approved: true, storeId: _storeContext.CurrentStore.Id)
                                 .Sum(pr => pr.Rating),
-                        TotalReviews = _productService.GetAllProductReviews(approved: true, storeId: _storeContext.CurrentStore.Id)
+                        TotalReviews = _productService.GetAllProductReviews(approved: true, productId: product.Id, storeId: _storeContext.CurrentStore.Id)
                                 .Count()
                     };
                 });
@@ -1364,7 +1364,8 @@ namespace Nop.Web.Factories
             model.ProductSeName = _urlRecordService.GetSeName(product);
 
             var productReviews = _productService.GetAllProductReviews(
-                approved: true,
+                approved: true, 
+                productId: product.Id,
                 storeId: _catalogSettings.ShowProductReviewsPerStore ? _storeContext.CurrentStore.Id : 0).AsEnumerable();
 
             productReviews = _catalogSettings.ProductReviewsSortByCreatedDateAscending

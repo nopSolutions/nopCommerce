@@ -2232,17 +2232,26 @@ namespace Nop.Services.Catalog
         {
             var query = _productReviewRepository.Table;
 
+            if (approved.HasValue)
+                query = query.Where(pr => pr.IsApproved == approved);
+            if (customerId > 0)
+                query = query.Where(pr => pr.CustomerId == customerId);
+            if (fromUtc.HasValue)
+                query = query.Where(pr => fromUtc.Value <= pr.CreatedOnUtc);
+            if (toUtc.HasValue)
+                query = query.Where(pr => toUtc.Value >= pr.CreatedOnUtc);
+            if (!string.IsNullOrEmpty(message))
+                query = query.Where(pr => pr.Title.Contains(message) || pr.ReviewText.Contains(message));
+            if (storeId > 0 && (showHidden || _catalogSettings.ShowProductReviewsPerStore))
+                query = query.Where(pr => pr.StoreId == storeId);
+            if (productId > 0)
+                query = query.Where(pr => pr.ProductId == productId);
+            
             query = from productReview in query
                 join product in _productRepository.Table on productReview.ProductId equals product.Id
                 where
-                    approved == null || productReview.IsApproved == approved &&
-                    customerId == 0 || productReview.CustomerId == customerId &&
-                    fromUtc == null || fromUtc.Value <= productReview.CreatedOnUtc &&
-                    toUtc == null || toUtc.Value >= productReview.CreatedOnUtc &&
-                    string.IsNullOrEmpty(message) || (productReview.Title.Contains(message) || productReview.ReviewText.Contains(message)) &&
-                    (storeId == 0 && !(showHidden || _catalogSettings.ShowProductReviewsPerStore)) || productReview.StoreId == storeId &&
-                    productId == 0 || productReview.ProductId == productId &&
-                    (vendorId == 0) || product.VendorId == vendorId &&
+                    (vendorId == 0 || product.VendorId == vendorId) &&
+                    //ignore deleted products
                     !product.Deleted
                 select productReview;
 
