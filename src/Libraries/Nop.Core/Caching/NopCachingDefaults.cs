@@ -15,15 +15,7 @@ namespace Nop.Core.Caching
         /// Gets the key used to store the protection key list to Redis (used with the PersistDataProtectionKeysToRedis option enabled)
         /// </summary>
         public static string RedisDataProtectionKey => "Nop.DataProtectionKeys";
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : Entity type name
-        /// </remarks>
-        public static string NopEntityPrefixCacheKey => "Nop.{0}";
-
+        
         /// <summary>
         /// Gets a key for caching
         /// </summary>

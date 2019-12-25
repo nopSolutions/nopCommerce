@@ -71,6 +71,62 @@
         /// </summary>
         public static string CustomerRolesPrefixCacheKey => "Nop.customerrole.";
 
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : customer identifier
+        /// {1} : show hidden
+        /// </remarks>
+        public static string CustomerRoleIdsCacheKey => "Nop.custome.customerrole.ids-{0}-{1}";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : customer identifier
+        /// {1} : show hidden
+        /// </remarks>
+        public static string CustomerRolesCacheKey => "Nop.custome.customerrole-{0}-{1}";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : customer identifier
+        /// {1} : customer role system name
+        /// {2} : only active customer roles
+        /// </remarks>
+        public static string IsInCustomerRoleCacheKey => "Nop.custome.customerrole.is.in-{0}-{1}-{2}";
+        
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string CustomerRoleIdsPrefixCacheKey => "Nop.custome.customerrole";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : customer identifier
+        /// </remarks>
+        public static string CustomerAddressesByCustomerIdCacheKey => "Nop.custome.addresses.by.id-{0}";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : customer identifier
+        /// {1} : address identifier
+        /// </remarks>
+        public static string CustomerAddressCacheKeyCacheKey => "Nop.custome.addresses.address-{0}-{1}";
+
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string CustomerAddressesPrefixCacheKey => "Nop.custome.addresses";
+
         #endregion
 
         /// <summary>

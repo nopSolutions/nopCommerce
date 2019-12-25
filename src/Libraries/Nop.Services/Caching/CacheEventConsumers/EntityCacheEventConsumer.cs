@@ -3,11 +3,11 @@ using Nop.Core.Caching;
 
 namespace Nop.Services.Caching.CacheEventConsumers
 {
-    public abstract class EntityCacheEventConsumer<T> : CacheEventConsumer<T> where T : BaseEntity
+    public abstract class EntityCacheEventConsumer<TEntity> : CacheEventConsumer<TEntity> where TEntity : BaseEntity
     {
-        public override void ClearCashe(T entity)
+        public override void ClearCashe(TEntity entity)
         {
-            _cacheManager.RemoveByPrefix(string.Format(NopCachingDefaults.NopEntityPrefixCacheKey, typeof(T).Name));
+            _cacheManager.Remove(string.Format(NopCachingDefaults.NopEntityCacheKey, typeof(TEntity).Name, entity.Id));
         }
     }
 }

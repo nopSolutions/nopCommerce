@@ -8,6 +8,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Customers
         public override void ClearCashe(CustomerRole entity)
         {
             _cacheManager.RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerRolesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerRoleIdsPrefixCacheKey);
         }
     }
 }

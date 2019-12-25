@@ -10,24 +10,43 @@ namespace Nop.Services.Caching.Extensions
     {
         private static IStaticCacheManager CacheManager => EngineContext.Current.Resolve<IStaticCacheManager>();
 
-        public static IList<T> ToCachedList<T>(this IQueryable<T> query, string cacheKey = null)
+        public static IList<T> ToCachedList<T>(this IQueryable<T> query, string cacheKey)
         {
-            return CacheManager.Get(cacheKey ?? query.ToString(), query.ToList);
+            return string.IsNullOrEmpty(cacheKey) ? query.ToList() : CacheManager.Get(cacheKey, query.ToList);
         }
 
-        public static T[] ToCachedArray<T>(this IQueryable<T> query, string cacheKey = null)
+        public static T[] ToCachedArray<T>(this IQueryable<T> query, string cacheKey)
         {
-            return CacheManager.Get(cacheKey ?? query.ToString(), query.ToArray);
+            return string.IsNullOrEmpty(cacheKey) ? query.ToArray() : CacheManager.Get(cacheKey, query.ToArray);
         }
 
-        public static T ToCachedFirstOrDefault<T>(this IQueryable<T> query, string cacheKey = null)
+        public static T ToCachedFirstOrDefault<T>(this IQueryable<T> query, string cacheKey)
         {
-            return CacheManager.Get(cacheKey ?? query.ToString(), query.FirstOrDefault);
+            return string.IsNullOrEmpty(cacheKey)
+                ? query.FirstOrDefault()
+                : CacheManager.Get(cacheKey, query.FirstOrDefault);
         }
 
-        public static IPagedList<T> ToCachedPagedList<T>(this IQueryable<T> query, string cacheKey, int pageIndex, int pageSize)
+        public static T ToCachedSingle<T>(this IQueryable<T> query, string cacheKey)
         {
-            return CacheManager.Get(cacheKey ?? query.ToString(), () => new PagedList<T>(query, pageIndex, pageSize));
+            return string.IsNullOrEmpty(cacheKey)
+                ? query.Single()
+                : CacheManager.Get(cacheKey, query.Single);
+        }
+
+        public static IPagedList<T> ToCachedPagedList<T>(this IQueryable<T> query, string cacheKey, int pageIndex,
+            int pageSize)
+        {
+            return string.IsNullOrEmpty(cacheKey)
+                ? new PagedList<T>(query, pageIndex, pageSize)
+                : CacheManager.Get(cacheKey, () => new PagedList<T>(query, pageIndex, pageSize));
+        }
+
+        public static bool ToCachedAny<T>(this IQueryable<T> query, string cacheKey)
+        {
+            return string.IsNullOrEmpty(cacheKey)
+                ? query.Any()
+                : CacheManager.Get(cacheKey, query.Any);
         }
     }
 }

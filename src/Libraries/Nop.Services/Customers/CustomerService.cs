@@ -28,6 +28,7 @@ namespace Nop.Services.Customers
         #region Fields
 
         private readonly CustomerSettings _customerSettings;
+        private readonly ICasheKeyFactory _casheKeyFactory;
         private readonly IDataProvider _dataProvider;
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -47,6 +48,7 @@ namespace Nop.Services.Customers
         #region Ctor
 
         public CustomerService(CustomerSettings customerSettings,
+            ICasheKeyFactory casheKeyFactory,
             IDataProvider dataProvider,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
@@ -62,6 +64,7 @@ namespace Nop.Services.Customers
             ShoppingCartSettings shoppingCartSettings)
         {
             _customerSettings = customerSettings;
+            _casheKeyFactory = casheKeyFactory;
             _dataProvider = dataProvider;
             _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
@@ -262,6 +265,7 @@ namespace Nop.Services.Customers
 
             query = query.OrderByDescending(c => c.LastActivityDateUtc);
             var customers = new PagedList<Customer>(query, pageIndex, pageSize);
+
             return customers;
         }
 
@@ -333,10 +337,7 @@ namespace Nop.Services.Customers
         {
             var customerId = shoppingCart.FirstOrDefault()?.CustomerId;
 
-            if ((customerId ?? 0) == 0)
-                return null;
-
-            return GetCustomerById(customerId.Value);
+            return customerId.HasValue && customerId != 0 ? GetCustomerById(customerId.Value) : null;
         }
 
         /// <summary>
@@ -377,7 +378,7 @@ namespace Nop.Services.Customers
             if (customerId == 0)
                 return null;
 
-            return _customerRepository.GetById(customerId);
+            return _customerRepository.ToCachedGetById(customerId);
         }
 
         /// <summary>
@@ -1065,7 +1066,7 @@ namespace Nop.Services.Customers
                         (showHidden || cr.Active)
                         select cr.Id;
 
-            return query.ToArray();
+            return query.ToCachedArray(_casheKeyFactory.GetCustomerRoleIdsCacheKey(customer.Id, showHidden));
         }
 
         /// <summary>
@@ -1085,7 +1086,7 @@ namespace Nop.Services.Customers
                         (showHidden || cr.Active)
                         select cr;
 
-            return query.ToList();
+            return query.ToCachedList(_casheKeyFactory.GetCustomerRolesCacheKey(customer.Id, showHidden));
         }
 
         /// <summary>
@@ -1101,6 +1102,7 @@ namespace Nop.Services.Customers
                 orderby cr.Name
                 where showHidden || cr.Active
                 select cr;
+
             var customerRoles = query.ToCachedList(key);
 
             return customerRoles;
@@ -1145,7 +1147,7 @@ namespace Nop.Services.Customers
                     (!onlyActiveCustomerRoles || cr.Active)
                 select cr;
 
-            return query.Any();
+            return query.ToCachedAny(_casheKeyFactory.GetIsInCustomerRoleCacheKey(customer.Id, customerRoleSystemName, onlyActiveCustomerRoles));
         }
 
         /// <summary>
@@ -1291,32 +1293,6 @@ namespace Nop.Services.Customers
 
             //event notification
             _eventPublisher.EntityUpdated(customerPassword);
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether customer is in a certain customer role
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="customerRoleSystemName">Customer role system name</param>
-        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
-        /// <returns>Result</returns>
-        public bool IsInCustomerRole(int customerId,
-            string customerRoleSystemName, bool onlyActiveCustomerRoles = true)
-        {
-            var customer = GetCustomerById(customerId);
-
-            if (customer == null)
-                throw new ArgumentException(nameof(customerId));
-
-            if (string.IsNullOrEmpty(customerRoleSystemName))
-                throw new ArgumentNullException(nameof(customerRoleSystemName));
-
-            return (from cr in _customerRoleRepository.Table
-                    join ccrm in _customerCustomerRoleMappingRepository.Table on cr.Id equals ccrm.CustomerRoleId
-                    where ccrm.CustomerId == customerId &&
-                       !onlyActiveCustomerRoles || cr.Active &&
-                       cr.SystemName == customerRoleSystemName
-                    select cr).Any();
         }
 
         /// <summary>
@@ -1469,7 +1445,7 @@ namespace Nop.Services.Customers
                 where cam.CustomerId == customerId
                 select address;
 
-            return query.ToList();
+            return query.ToCachedList(_casheKeyFactory.GetAddressesByCustomerIdCacheKey(customerId));
         }
 
         /// <summary>
@@ -1488,7 +1464,7 @@ namespace Nop.Services.Customers
                 where cam.CustomerId == customerId && address.Id == addressId
                 select address;
 
-            return query.Single();
+            return query.ToCachedSingle(_casheKeyFactory.GetCustomerAddressCacheKey(customerId, addressId));
         }
 
         /// <summary>

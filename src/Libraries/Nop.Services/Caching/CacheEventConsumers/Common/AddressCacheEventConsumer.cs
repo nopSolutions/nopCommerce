@@ -8,6 +8,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Common
         public override void ClearCashe(Address entity)
         {
             _cacheManager.RemoveByPrefix(NopCommonCachingDefaults.AddressesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerAddressesPrefixCacheKey);
         }
     }
 }

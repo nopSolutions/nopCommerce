@@ -336,6 +336,8 @@ namespace Nop.Services.Customers
         /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
         /// <returns>Result</returns>
         bool IsRegistered(Customer customer, bool onlyActiveCustomerRoles = true);
+
+        /// <summary>
         /// Gets a value indicating whether customer is guest
         /// </summary>
         /// <param name="customer">Customer</param>
@@ -406,15 +408,6 @@ namespace Nop.Services.Customers
         bool IsPasswordRecoveryLinkExpired(Customer customer);
 
         /// <summary>
-        /// Gets a value indicating whether customer is in a certain customer role
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="customerRoleSystemName">Customer role system name</param>
-        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
-        /// <returns>Result</returns>
-        bool IsInCustomerRole(int customerId, string customerRoleSystemName, bool onlyActiveCustomerRoles = true);
-        
-            /// <summary>
         /// Check whether customer password is expired 
         /// </summary>
         /// <param name="customer">Customer</param>

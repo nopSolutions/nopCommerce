@@ -8,7 +8,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Customers
     /// <summary>
     /// Customer cache event consumer (used for caching of current customer password)
     /// </summary>
-    public partial class CustomerCacheEventConsumer : IConsumer<CustomerPasswordChangedEvent>
+    public partial class CustomerCacheEventConsumer : EntityCacheEventConsumer<Customer>, IConsumer<CustomerPasswordChangedEvent>
     {
         #region Fields
 
@@ -31,6 +31,14 @@ namespace Nop.Services.Caching.CacheEventConsumers.Customers
         public void HandleEvent(CustomerPasswordChangedEvent eventMessage)
         {
             _cacheManager.Remove(string.Format(NopCustomerServiceCachingDefaults.CustomerPasswordLifetimeCacheKey, eventMessage.Password.CustomerId));
+        }
+
+        public override void ClearCashe(Customer entity)
+        {
+            _cacheManager.RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerRoleIdsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerAddressesPrefixCacheKey);
+
+             base.ClearCashe(entity);
         }
 
         #endregion
