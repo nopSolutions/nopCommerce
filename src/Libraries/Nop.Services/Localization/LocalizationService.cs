@@ -115,6 +115,41 @@ namespace Nop.Services.Localization
             }
         }
 
+        protected virtual HashSet<(string name, string value)> LoadLocaleResourcesFromStream(StreamReader xmlStreamReader, string language)
+        {
+            var result = new HashSet<(string name, string value)>();
+
+            using (var xmlReader = XmlReader.Create(xmlStreamReader))
+            {
+                while (xmlReader.ReadToFollowing("Language"))
+                {
+                    if (xmlReader.NodeType == XmlNodeType.Element && string.Equals(xmlReader.GetAttribute("Name"), language, StringComparison.OrdinalIgnoreCase))
+                    {
+                        using (var languageReader = xmlReader.ReadSubtree())
+                        {
+                            while (languageReader.ReadToFollowing("LocaleResource"))
+                            {
+                                if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.GetAttribute("Name") is string name)
+                                {
+                                    using (var lrReader = languageReader.ReadSubtree())
+                                    {
+                                        if (lrReader.ReadToFollowing("Value") && lrReader.NodeType == XmlNodeType.Element)
+                                        {
+                                            result.Add((name, lrReader.ReadInnerXml()));
+                                        } 
+                                    }
+                                }
+                            }
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
         private static Dictionary<string, KeyValuePair<int, string>> ResourceValuesToDictionary(IEnumerable<LocaleStringResource> locales)
         {
             //format: <name, <id, value>>
@@ -352,7 +387,7 @@ namespace Nop.Services.Localization
                     result = lsr;
             }
 
-            if (!string.IsNullOrEmpty(result)) 
+            if (!string.IsNullOrEmpty(result))
                 return result;
 
             if (logIfNotFound)
@@ -420,19 +455,31 @@ namespace Nop.Services.Localization
             if (xmlStreamReader.EndOfStream)
                 return;
 
-            ////stored procedures are enabled and supported by the database.
-            var pLanguageId = SqlParameterHelper.GetInt32Parameter("LanguageId", language.Id);
+            var lsNamesList = _lsrRepository.Table.Select(x => x.ResourceName).ToHashSet();
 
-            var pXmlPackage = new DataParameter
+            var lrsToUpdateList = new List<LocaleStringResource>();
+            var lrsToInsertList = new List<LocaleStringResource>();
+
+            foreach (var (name, value) in LoadLocaleResourcesFromStream(xmlStreamReader, language.Name))
             {
-                Name = "XmlPackage",
-                Value = xmlStreamReader.ReadToEnd(),
-                DataType = DataType.Text
-            };
+                var lsr = new LocaleStringResource { LanguageId = language.Id, ResourceName = name, ResourceValue = value };
+                if (lsNamesList.Contains(name))
+                {
+                    if (updateExistingResources)
+                        lrsToUpdateList.Add(lsr);
+                }
+                else
+                {
+                    lrsToInsertList.Add(lsr);
+                }
+            }
 
-            var pUpdateExistingResources = SqlParameterHelper.GetBooleanParameter("UpdateExistingResources", updateExistingResources);
+            foreach (var lrsToUpdate in lrsToUpdateList)
+            {
+                _lsrRepository.Update(lrsToUpdate);
+            }
 
-            _dataProvider.QueryProc<object>("LanguagePackImport", pLanguageId, pXmlPackage, pUpdateExistingResources);
+            _dataProvider.BulkInsertEntities(lrsToInsertList);
 
             //clear cache
             _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
@@ -492,7 +539,7 @@ namespace Nop.Services.Localization
             }
 
             //set default value if required
-            if (!string.IsNullOrEmpty(resultStr) || !returnDefaultValue) 
+            if (!string.IsNullOrEmpty(resultStr) || !returnDefaultValue)
                 return result;
             var localizer = keySelector.Compile();
             result = localizer(entity);
