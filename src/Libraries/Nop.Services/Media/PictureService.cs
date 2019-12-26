@@ -5,11 +5,12 @@ using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
@@ -665,7 +666,7 @@ namespace Nop.Services.Media
             if (pictureId == 0)
                 return null;
 
-            return _pictureRepository.GetById(pictureId);
+            return _pictureRepository.ToCachedGetById(pictureId);
         }
 
         /// <summary>
@@ -708,7 +709,10 @@ namespace Nop.Services.Media
 
             query = query.OrderByDescending(p => p.Id);
 
-            var pics = new PagedList<Picture>(query, pageIndex, pageSize);
+            var key = string.Format(NopMediaCachingDefaults.PicturesByVirtualPathCacheKey, virtualPath);
+
+            var pics = query.ToCachedPagedList(key, pageIndex, pageSize);
+
             return pics;
         }
 
