@@ -29,6 +29,19 @@
         /// <summary>
         /// Gets a key for caching
         /// </summary>
+        public static string CategoriesAllDisplayedOnHomepageCacheKey => "Nop.category.homepage";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : show hidden records?
+        /// </remarks>
+        public static string CategoriesDisplayedOnHomepageWithoutHiddenCacheKey => "Nop.category.homepage.withouthidden";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
         /// <remarks>
         /// {0} : current store ID
         /// {1} : comma separated list of customer roles
@@ -143,6 +156,37 @@
         /// Gets a key pattern to clear cache
         /// </summary>
         public static string ProductsPrefixCacheKey => "Nop.product.";
+
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        /// <remarks>
+        /// {0} : product IDs hash
+        /// </remarks>
+        public static string ProductsByIdsCacheKey => "Nop.product.ids-{0}";
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        /// <remarks>
+        /// {0} : product atribute ID
+        /// </remarks>
+        public static string ProductsByProductAtributeCacheKey => "Nop.product.productatribute-{0}";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        public static string ProductsAllDisplayedOnHomepageCacheKey => "Nop.product.homepage";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : show hidden records?
+        /// </remarks>
+        //public static string CategoriesDisplayedOnHomepageWithoutHiddenCacheKey => "Nop.category.homepage.withouthidden";
+
 
         /// <summary>
         /// Gets a key for product prices

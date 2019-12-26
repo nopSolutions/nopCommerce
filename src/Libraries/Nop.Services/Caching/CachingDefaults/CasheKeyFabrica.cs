@@ -1,15 +1,21 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Nop.Core.Caching;
 using Nop.Core.Domain;
+using Nop.Services.Security;
 
 namespace Nop.Services.Caching.CachingDefaults
 {
     public partial class CasheKeyFactory : ICasheKeyFactory
     {
         private readonly CachingSettings _cachingSettings;
+        private readonly IEncryptionService _encryptionService;
 
-        public CasheKeyFactory(CachingSettings cachingSettings)
+        public CasheKeyFactory(CachingSettings cachingSettings, IEncryptionService encryptionService)
         {
             _cachingSettings = cachingSettings;
+            _encryptionService = encryptionService;
         }
 
         protected virtual string CreateCacheKey(string keyFormater, params object[] keyObjects)
@@ -57,8 +63,10 @@ namespace Nop.Services.Caching.CachingDefaults
             return CreateCacheKey(NopCustomerServiceCachingDefaults.CustomerAddressCacheKeyCacheKey, keyObjects);
         }
 
-
-
-        
+        public virtual string GetIdsHash(IEnumerable<int> ids)
+        {
+            return _encryptionService.CreateHash(Encoding.UTF8.GetBytes(string.Join(", ", ids.OrderBy(id => id))),
+                NopCustomerServiceDefaults.DefaultHashedPasswordFormat);
+        }
     }
 }

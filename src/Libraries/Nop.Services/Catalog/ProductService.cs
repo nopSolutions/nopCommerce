@@ -35,6 +35,7 @@ namespace Nop.Services.Catalog
         protected readonly CatalogSettings _catalogSettings;
         protected readonly CommonSettings _commonSettings;
         protected readonly IAclService _aclService;
+        protected readonly ICasheKeyFactory _casheKeyFactory;
         protected readonly ICustomerService _customerService;
         protected readonly IDataProvider _dataProvider;
         protected readonly IDateRangeService _dateRangeService;
@@ -72,6 +73,7 @@ namespace Nop.Services.Catalog
         public ProductService(CatalogSettings catalogSettings,
             CommonSettings commonSettings,
             IAclService aclService,
+            ICasheKeyFactory casheKeyFactory,
             ICustomerService customerService,
             IDataProvider dataProvider,
             IDateRangeService dateRangeService,
@@ -105,6 +107,7 @@ namespace Nop.Services.Catalog
             _catalogSettings = catalogSettings;
             _commonSettings = commonSettings;
             _aclService = aclService;
+            _casheKeyFactory = casheKeyFactory;
             _customerService = customerService;
             _dataProvider = dataProvider;
             _dateRangeService = dateRangeService;
@@ -352,7 +355,9 @@ namespace Nop.Services.Catalog
                         !p.Deleted &&
                         p.ShowOnHomepage
                         select p;
-            var products = query.ToList();
+
+            var products = query.ToCachedList(NopCatalogCachingDefaults.ProductsAllDisplayedOnHomepageCacheKey);
+
             return products;
         }
 
@@ -380,15 +385,19 @@ namespace Nop.Services.Catalog
             if (productIds == null || productIds.Length == 0)
                 return new List<Product>();
 
+            var key = string.Format(NopCatalogCachingDefaults.ProductsByIdsCacheKey, _casheKeyFactory.GetIdsHash(productIds));
+
             var query = from p in _productRepository.Table
                         where productIds.Contains(p.Id) && !p.Deleted
                         select p;
-            var products = query.ToList();
+
+            var products = query.ToCachedList(key);
+
             //sort by passed identifiers
             var sortedProducts = new List<Product>();
             foreach (var id in productIds)
             {
-                var product = products.Find(x => x.Id == id);
+                var product = products.FirstOrDefault(x => x.Id == id);
                 if (product != null)
                     sortedProducts.Add(product);
             }
@@ -738,6 +747,7 @@ namespace Nop.Services.Catalog
                 pLoadFilterableSpecificationAttributeOptionIds,
                 pFilterableSpecificationAttributeOptionIds,
                 pTotalRecords).ToList();
+
             //get filterable specification attribute option identifier
             var filterableSpecificationAttributeOptionIdsStr =
                 pFilterableSpecificationAttributeOptionIds.Value != DBNull.Value
@@ -775,7 +785,10 @@ namespace Nop.Services.Catalog
                 orderby p.Name
                 select p;
 
-            var products = new PagedList<Product>(query, pageIndex, pageSize);
+            var key = string.Format(NopCatalogCachingDefaults.ProductsByProductAtributeCacheKey, productAttributeId);
+
+            var products = query.ToCachedPagedList(key, pageIndex, pageSize);
+
             return products;
         }
 

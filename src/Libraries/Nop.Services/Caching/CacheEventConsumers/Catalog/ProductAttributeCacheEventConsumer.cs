@@ -11,6 +11,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
             _cacheManager.RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributeMappingsPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributeValuesPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributeCombinationsPrefixCacheKey);
+            _cacheManager.Remove(string.Format(NopCatalogCachingDefaults.ProductsByProductAtributeCacheKey, entity.Id));
         }
     }
 }
