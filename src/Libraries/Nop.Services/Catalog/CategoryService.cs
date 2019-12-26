@@ -328,12 +328,16 @@ namespace Nop.Services.Catalog
                         c.ShowOnHomepage
                         select c;
 
-            var categories = query.ToList();
+            var categories = query.ToCachedList(NopCatalogCachingDefaults.CategoriesAllDisplayedOnHomepageCacheKey);
+
             if (!showHidden)
             {
-                categories = categories
-                    .Where(c => _aclService.Authorize(c) && _storeMappingService.Authorize(c))
-                    .ToList();
+                categories = _staticCacheManager.Get(NopCatalogCachingDefaults.CategoriesDisplayedOnHomepageWithoutHiddenCacheKey, () =>
+                {
+                    return categories
+                        .Where(c => _aclService.Authorize(c) && _storeMappingService.Authorize(c))
+                        .ToList();
+                });
             }
 
             return categories;
