@@ -6,6 +6,7 @@ using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
+using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Catalog;
 using Nop.Tests;
 using NUnit.Framework;
@@ -66,7 +67,7 @@ namespace Nop.Services.Tests.Catalog
             _productWarehouseInventoryRepository = new Mock<IRepository<ProductWarehouseInventory>>();
             _productWarehouseInventoryRepository.Setup(x => x.Table).Returns(GetMockProductWarehouseInventoryRecords);
 
-            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, null,
+            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new Mock<ICasheKeyFactory>().Object, null,
                 null, null, null, null, null, null, null, null, null, null, _productRepository.Object, null, null, null, null, null, null, _productWarehouseInventoryRepository.Object, null, null, null, null, null, null,
                 null, null, null, new LocalizationSettings());
         }

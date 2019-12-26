@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -27,6 +28,7 @@ namespace Nop.Services.Tests
         public FakeShoppingCartService(CatalogSettings catalogSettings = null,
             IAclService aclService = null,
             IActionContextAccessor actionContextAccessor = null,
+            ICasheKeyFactory casheKeyFactory = null,
             ICheckoutAttributeParser checkoutAttributeParser = null,
             ICheckoutAttributeService checkoutAttributeService = null,
             ICurrencyService currencyService = null,
@@ -54,6 +56,7 @@ namespace Nop.Services.Tests
                 catalogSettings ?? new CatalogSettings(),
                 aclService ?? new Mock<IAclService>().Object,
                 actionContextAccessor ?? new Mock<IActionContextAccessor>().Object,
+                casheKeyFactory ?? new Mock<ICasheKeyFactory>().Object,
                 checkoutAttributeParser ?? new Mock<ICheckoutAttributeParser>().Object,
                 checkoutAttributeService ?? new Mock<ICheckoutAttributeService>().Object,
                 currencyService ?? new Mock<ICurrencyService>().Object,

@@ -14,6 +14,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
+using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
@@ -61,8 +62,7 @@ namespace Nop.Services.Tests.Catalog
             _storeContext.Setup(x => x.CurrentStore).Returns(_store);
 
             _categoryService = new Mock<ICategoryService>();
-
-
+            
             _customerRoleRepository = new Mock<IRepository<CustomerRole>>();
             _customerRoleRepository.Setup(r => r.Table).Returns(GetMockCustomerRoles);
 
@@ -75,7 +75,7 @@ namespace Nop.Services.Tests.Catalog
                 .Callback(
                     (CustomerCustomerRoleMapping ccrm) => { customerCustomerRoleMapping.Add(ccrm); });
 
-            _customerService = new CustomerService(null, null, null, null, null, null, null, _customerCustomerRoleMappingRepository.Object, null, _customerRoleRepository.Object, null, null, null, null);
+            _customerService = new CustomerService(null, new Mock<ICasheKeyFactory>().Object, null, null, null, null, null, null, _customerCustomerRoleMappingRepository.Object, null, _customerRoleRepository.Object, null, null, null, null);
 
             _manufacturerService = new Mock<IManufacturerService>();
 
@@ -93,7 +93,7 @@ namespace Nop.Services.Tests.Catalog
 
             var shipmentRepository = new Mock<IRepository<Shipment>>();
 
-            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, _customerService,
+            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new Mock<ICasheKeyFactory>().Object, _customerService,
                 null, null, null, null, null, null, null, null, null, _discountProductMappingRepository.Object,
                 _productRepository.Object, null, null, null, null, null, null, null, null, shipmentRepository.Object,
                 null, null, _tierPriceRepository.Object, null,
