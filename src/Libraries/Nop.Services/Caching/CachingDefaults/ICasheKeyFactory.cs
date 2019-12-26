@@ -9,6 +9,7 @@ namespace Nop.Services.Caching.CachingDefaults
         string GetIsInCustomerRoleCacheKey(params object[] keyObjects);
         string GetAddressesByCustomerIdCacheKey(params object[] keyObjects);
         string GetCustomerAddressCacheKey(params object[] keyObjects);
+        string GetShoppingCartCacheKey(params object[] keyObjects);
         string GetIdsHash(IEnumerable<int> ids);
     }
 }

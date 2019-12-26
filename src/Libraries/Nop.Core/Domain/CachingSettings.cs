@@ -6,5 +6,6 @@ namespace Nop.Core.Domain
     {
         public bool CachingCustomerRolesEnabled { get; set; } = true;
         public bool CachingCustomerAddressEnabled { get; set; } = true;
+        public bool CachingShoppingCartEnabled { get; set; } = true;
     }
 }

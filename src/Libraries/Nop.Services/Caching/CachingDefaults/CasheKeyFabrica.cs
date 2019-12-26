@@ -63,6 +63,14 @@ namespace Nop.Services.Caching.CachingDefaults
             return CreateCacheKey(NopCustomerServiceCachingDefaults.CustomerAddressCacheKeyCacheKey, keyObjects);
         }
 
+        public virtual string GetShoppingCartCacheKey(params object[] keyObjects)
+        {
+            if (!_cachingSettings.CachingShoppingCartEnabled)
+                return null;
+
+            return CreateCacheKey(NopOrderCachingDefaults.ShoppingCartCacheKey, keyObjects);
+        }
+
         public virtual string GetIdsHash(IEnumerable<int> ids)
         {
             return _encryptionService.CreateHash(Encoding.UTF8.GetBytes(string.Join(", ", ids.OrderBy(id => id))),

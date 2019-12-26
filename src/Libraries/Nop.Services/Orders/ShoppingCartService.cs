@@ -11,6 +11,8 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -36,6 +38,7 @@ namespace Nop.Services.Orders
         private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly ICasheKeyFactory _casheKeyFactory;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICurrencyService _currencyService;
@@ -68,6 +71,7 @@ namespace Nop.Services.Orders
         public ShoppingCartService(CatalogSettings catalogSettings,
             IAclService aclService,
             IActionContextAccessor actionContextAccessor,
+            ICasheKeyFactory casheKeyFactory,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICheckoutAttributeService checkoutAttributeService,
             ICurrencyService currencyService,
@@ -96,6 +100,7 @@ namespace Nop.Services.Orders
             _catalogSettings = catalogSettings;
             _aclService = aclService;
             _actionContextAccessor = actionContextAccessor;
+            _casheKeyFactory = casheKeyFactory;
             _checkoutAttributeParser = checkoutAttributeParser;
             _checkoutAttributeService = checkoutAttributeService;
             _currencyService = currencyService;
@@ -648,7 +653,9 @@ namespace Nop.Services.Orders
             if (createdToUtc.HasValue)
                 items = items.Where(item => createdToUtc.Value >= item.CreatedOnUtc);
 
-            return items.ToList();
+            var key = _casheKeyFactory.GetShoppingCartCacheKey(customer.Id, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
+
+            return items.ToCachedList(key);
         }
 
         /// <summary>
@@ -1572,7 +1579,7 @@ namespace Nop.Services.Orders
 
             var warnings = new List<string>();
 
-            var shoppingCartItem = _sciRepository.GetById(shoppingCartItemId);
+            var shoppingCartItem = _sciRepository.ToCachedGetById(shoppingCartItemId);
 
             if (shoppingCartItem == null || shoppingCartItem.CustomerId != customer.Id)
                 return warnings;

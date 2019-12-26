@@ -37,8 +37,9 @@ namespace Nop.Services.Caching.CacheEventConsumers.Customers
         {
             _cacheManager.RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerRoleIdsPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerAddressesPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopOrderCachingDefaults.ShoppingCartPrefixCacheKey);
 
-             base.ClearCashe(entity);
+            base.ClearCashe(entity);
         }
 
         #endregion
