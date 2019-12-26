@@ -26,6 +26,14 @@
         /// Gets a key for caching
         /// </summary>
         /// <remarks>
+        /// {0} : IDs hash
+        /// </remarks>
+        public static string UrlRecordByIdsCacheKey => "Nop.urlrecord.byids-{0}";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
         /// {0} : slug
         /// </remarks>
         public static string UrlRecordBySlugCacheKey => "Nop.urlrecord.active.slug-{0}";

@@ -24,6 +24,7 @@ namespace Nop.Services.Seo
         private static readonly object _lock = new object();
         private static Dictionary<string, string> _seoCharacterTable;
 
+        private readonly ICasheKeyFactory _casheKeyFactory;
         private readonly ILanguageService _languageService;
         private readonly IRepository<UrlRecord> _urlRecordRepository;
         private readonly IStaticCacheManager _cacheManager;
@@ -35,13 +36,15 @@ namespace Nop.Services.Seo
 
         #region Ctor
 
-        public UrlRecordService(ILanguageService languageService,
+        public UrlRecordService(ICasheKeyFactory casheKeyFactory,
+            ILanguageService languageService,
             IRepository<UrlRecord> urlRecordRepository,
             IStaticCacheManager cacheManager,
             IWorkContext workContext,
             LocalizationSettings localizationSettings,
             SeoSettings seoSettings)
         {
+            _casheKeyFactory = casheKeyFactory;
             _languageService = languageService;
             _urlRecordRepository = urlRecordRepository;
             _cacheManager = cacheManager;
@@ -1156,7 +1159,10 @@ namespace Nop.Services.Seo
         {
             var query = _urlRecordRepository.Table;
 
-            return query.Where(p => urlRecordIds.Contains(p.Id)).ToList();
+            var key = string.Format(NopSeoCachingDefaults.UrlRecordByIdsCacheKey,
+                _casheKeyFactory.GetIdsHash(urlRecordIds));
+
+            return query.Where(p => urlRecordIds.Contains(p.Id)).ToCachedList(key);
         }
 
         /// <summary>
@@ -1169,7 +1175,7 @@ namespace Nop.Services.Seo
             if (urlRecordId == 0)
                 return null;
 
-            return _urlRecordRepository.GetById(urlRecordId);
+            return _urlRecordRepository.ToCachedGetById(urlRecordId);
         }
 
         /// <summary>
@@ -1398,10 +1404,6 @@ namespace Nop.Services.Seo
                 UpdateUrlRecord(activeUrlRecord);
             }
         }
-
-        #region SEO
-
-        #endregion
 
         /// <summary>
         ///  Get search engine friendly name (slug)
