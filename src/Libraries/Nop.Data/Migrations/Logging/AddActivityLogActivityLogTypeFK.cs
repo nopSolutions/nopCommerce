@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Logging
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(ActivityLog)
-                , nameof(ActivityLog.ActivityLogTypeId)
-                , nameof(ActivityLogType)
-                , nameof(ActivityLogType.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(ActivityLog),
+                nameof(ActivityLog.ActivityLogTypeId),
+                nameof(ActivityLogType),
+                nameof(ActivityLogType.Id),
+                Rule.Cascade);
         }
 
         #endregion

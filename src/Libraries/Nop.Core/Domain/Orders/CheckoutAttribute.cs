@@ -1,5 +1,4 @@
-﻿
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Stores;
 
@@ -90,7 +89,6 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets the attribute control type
         /// </summary>
-        
         public AttributeControlType AttributeControlType
         {
             get => (AttributeControlType)AttributeControlTypeId;

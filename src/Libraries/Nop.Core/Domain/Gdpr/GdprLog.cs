@@ -1,6 +1,5 @@
 ﻿using System;
 
-
 namespace Nop.Core.Domain.Gdpr
 {
     /// <summary>
@@ -41,7 +40,6 @@ namespace Nop.Core.Domain.Gdpr
         /// <summary>
         /// Gets or sets the request type
         /// </summary>
-        
         public GdprRequestType RequestType
         {
             get => (GdprRequestType)RequestTypeId;

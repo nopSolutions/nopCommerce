@@ -22,7 +22,6 @@ namespace Nop.Services.Installation
     {
         #region Fields
 
-        
         private readonly INopFileProvider _fileProvider;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Language> _languageRepository;

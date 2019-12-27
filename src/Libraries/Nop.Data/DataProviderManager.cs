@@ -4,7 +4,7 @@ using Nop.Core.Infrastructure;
 namespace Nop.Data
 {
     /// <summary>
-    /// Represents the Entity Framework data provider manager
+    /// Represents the data provider manager
     /// </summary>
     public partial class DataProviderManager : IDataProviderManager
     {
@@ -24,6 +24,8 @@ namespace Nop.Data
 
         #endregion
 
+        #region Methods
+
         /// <summary>
         /// Gets data provider by specific type
         /// </summary>
@@ -39,5 +41,7 @@ namespace Nop.Data
                     throw new NopException($"Not supported data provider name: '{dataProviderType}'");
             }
         }
+
+        #endregion
     }
 }

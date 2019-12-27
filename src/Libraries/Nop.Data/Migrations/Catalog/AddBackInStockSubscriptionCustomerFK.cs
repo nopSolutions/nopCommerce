@@ -7,17 +7,17 @@ using Nop.Data.Extensions;
 namespace Nop.Data.Migrations.Catalog
 {
     [Migration(637097608748261631)]
-    public  class AddBackInStockSubscriptionCustomerFK : AutoReversingMigration
+    public class AddBackInStockSubscriptionCustomerFK : AutoReversingMigration
     {
         #region Methods
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(BackInStockSubscription)
-                , nameof(BackInStockSubscription.CustomerId)
-                , nameof(Customer)
-                , nameof(Customer.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(BackInStockSubscription),
+                nameof(BackInStockSubscription.CustomerId),
+                nameof(Customer),
+                nameof(Customer.Id),
+                Rule.Cascade);
         }
 
         #endregion

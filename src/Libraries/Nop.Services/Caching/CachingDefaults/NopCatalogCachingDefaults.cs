@@ -157,7 +157,6 @@
         /// </summary>
         public static string ProductsPrefixCacheKey => "Nop.product.";
 
-
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
@@ -178,15 +177,6 @@
         /// Gets a key for caching
         /// </summary>
         public static string ProductsAllDisplayedOnHomepageCacheKey => "Nop.product.homepage";
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : show hidden records?
-        /// </remarks>
-        //public static string CategoriesDisplayedOnHomepageWithoutHiddenCacheKey => "Nop.category.homepage.withouthidden";
-
 
         /// <summary>
         /// Gets a key for product prices

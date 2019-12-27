@@ -155,11 +155,13 @@ namespace Nop.Services.Topics
                             {
                                 c1 = c.Id,
                                 c2 = nameof(Topic)
-                            } equals new
+                            } 
+                            equals new
                             {
                                 c1 = acl.EntityId,
                                 c2 = acl.EntityName
-                            } into cAcl
+                            } 
+                            into cAcl
                         from acl in cAcl.DefaultIfEmpty()
                         where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                         select c;
@@ -174,11 +176,13 @@ namespace Nop.Services.Topics
                             {
                                 c1 = c.Id,
                                 c2 = nameof(Topic)
-                            } equals new
+                            } 
+                            equals new
                             {
                                 c1 = sm.EntityId,
                                 c2 = sm.EntityName
-                            } into cSm
+                            } 
+                            into cSm
                         from sm in cSm.DefaultIfEmpty()
                         where !c.LimitedToStores || storeId == sm.StoreId
                         select c;

@@ -70,7 +70,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string ShoppingCartPrefixCacheKey => "Nop.shoppingcart.";
+        public static string ShoppingCartPrefixCacheKey => "Nop.shoppingcart";
 
         #endregion
     }

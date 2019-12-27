@@ -234,7 +234,6 @@ namespace Nop.Services.Discounts
         /// <returns>List of discounts</returns>
         public virtual IList<Discount> GetAppliedDiscounts<T>(IDiscountSupported<T> entity) where T : DiscountMapping
         {
-
             var _discountMappingRepository = EngineContext.Current.Resolve<IRepository<T>>();
 
             return (from d in _discountRepository.Table

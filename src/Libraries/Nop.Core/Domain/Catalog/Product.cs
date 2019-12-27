@@ -1,5 +1,4 @@
 ﻿using System;
-
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
@@ -562,7 +561,6 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the download activation type
         /// </summary>
-        
         public DownloadActivationType DownloadActivationType
         {
             get => (DownloadActivationType)DownloadActivationTypeId;
@@ -572,7 +570,6 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the gift card type
         /// </summary>
-        
         public GiftCardType GiftCardType
         {
             get => (GiftCardType)GiftCardTypeId;
@@ -582,7 +579,6 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the low stock activity
         /// </summary>
-        
         public LowStockActivity LowStockActivity
         {
             get => (LowStockActivity)LowStockActivityId;
@@ -592,7 +588,6 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the value indicating how to manage inventory
         /// </summary>
-        
         public ManageInventoryMethod ManageInventoryMethod
         {
             get => (ManageInventoryMethod)ManageInventoryMethodId;
@@ -602,7 +597,6 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the cycle period for recurring products
         /// </summary>
-        
         public RecurringProductCyclePeriod RecurringCyclePeriod
         {
             get => (RecurringProductCyclePeriod)RecurringCyclePeriodId;
@@ -612,7 +606,6 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the period for rental products
         /// </summary>
-        
         public RentalPricePeriod RentalPricePeriod
         {
             get => (RentalPricePeriod)RentalPricePeriodId;

@@ -348,8 +348,7 @@ namespace Nop.Services.Catalog
                 //quantity change history
                 _productService.AddStockQuantityHistoryEntry(productCopy, combination.StockQuantity,
                     combination.StockQuantity,
-                    message: string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"),
-                        product.Id), combinationId: combination.Id);
+                    message: string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id), combinationId: combination.Id);
             }
         }
 

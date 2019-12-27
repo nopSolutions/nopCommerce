@@ -26,8 +26,8 @@ namespace Nop.Services.Polls
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Polls</returns>
-        IPagedList<Poll> GetPolls(int storeId, int languageId = 0, bool
-            showHidden = false, bool loadShownOnHomepageOnly = false, string systemKeyword = null,
+        IPagedList<Poll> GetPolls(int storeId, int languageId = 0, bool showHidden = false,
+            bool loadShownOnHomepageOnly = false, string systemKeyword = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>

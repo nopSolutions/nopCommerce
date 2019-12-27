@@ -4,7 +4,7 @@ using Nop.Data.Migrations;
 namespace Nop.Data.Mapping.Migrations
 {
     /// <summary>
-    /// Represents an affiliate mapping configuration
+    /// Represents a migration version configuration
     /// </summary>
     public partial class MigrationVersionInfoMap : NopEntityTypeConfiguration<MigrationVersionInfo>
     {

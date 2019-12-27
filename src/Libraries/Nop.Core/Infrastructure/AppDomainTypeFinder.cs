@@ -16,9 +16,8 @@ namespace Nop.Core.Infrastructure
     {
         #region Fields
 
-        protected INopFileProvider _fileProvider;
-
         private bool _ignoreReflectionErrors = true;
+        protected INopFileProvider _fileProvider;
 
         #endregion
 

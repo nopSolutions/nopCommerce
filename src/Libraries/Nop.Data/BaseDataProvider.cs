@@ -40,12 +40,21 @@ namespace Nop.Data
 
         #region Utilities
 
+        /// <summary>
+        /// Configure the data context
+        /// </summary>
+        /// <param name="dataContext">Data context</param>
         protected abstract void ConfigureDataContext(IDataContext dataContext);
 
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Create database schema if it not exists
+        /// </summary>
+        /// <param name="assembly">Assembly to find the mapping configurations classes;
+        /// leave null to search mapping configurations classes on the whole application pull</param>
         public virtual void CreateDatabaseSchemaIfNotExists(Assembly assembly = null)
         {
             DataConnection.DefaultSettings = Singleton<DataSettings>.Instance;
@@ -68,7 +77,12 @@ namespace Nop.Data
             }
         }
 
-        public virtual void DeleteDatabaseSchemaIfNotExists(Assembly assembly = null)
+        /// <summary>
+        /// Delete database schema if it exists
+        /// </summary>
+        /// <param name="assembly">Assembly to find the mapping configurations classes;
+        /// leave null to search mapping configurations classes on the whole application pull</param>
+        public virtual void DeleteDatabaseSchemaIfExists(Assembly assembly = null)
         {
             //find database mapping configuration by other assemblies
             var typeFinder = new AppDomainTypeFinder();
@@ -85,6 +99,11 @@ namespace Nop.Data
             }
         }
 
+        /// <summary>
+        /// Executes all found (and unapplied) migrations
+        /// </summary>
+        /// <param name="assembly">Assembly to find the migration;
+        /// leave null to search migration on the whole application pull</param>
         public virtual void ApplyUpMigrations(Assembly assembly = null)
         {
             var runner = EngineContext.Current.Resolve<IMigrationRunner>();
@@ -115,7 +134,12 @@ namespace Nop.Data
                 }
             }
         }
-        
+
+        /// <summary>
+        /// Executes an Down migration
+        /// </summary>
+        /// <param name="assembly">Assembly to find the migration;
+        /// leave null to search migration on the whole application pull</param>
         public virtual void ApplyDownMigrations(Assembly assembly = null)
         {
             //do not inject services via constructor because it'll cause installation fails
@@ -146,9 +170,13 @@ namespace Nop.Data
                     // ignored
                 }
             }
-
         }
 
+        /// <summary>
+        /// Returns mapped entity descriptor
+        /// </summary>
+        /// <typeparam name="TEntity">Type of entity</typeparam>
+        /// <returns>Mapped entity descriptor</returns>
         public virtual EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity 
         {
             return _dataConnection.MappingSchema.GetEntityDescriptor(typeof(TEntity));
@@ -177,11 +205,18 @@ namespace Nop.Data
             if (_dataConnection == null && !DataSettingsManager.DatabaseIsInstalled)
                 _dataConnection = new NopDataConnection();
 
-            entity.Id = _dataConnection.InsertWithInt32Identity(entity);
+            entity.Id = _dataConnection?.InsertWithInt32Identity(entity) ?? 0;
 
             return entity;
         }
 
+        /// <summary>
+        /// Executes stored procedure and returns results as collection of values of specified type
+        /// </summary>
+        /// <typeparam name="T">Type of result items</typeparam>
+        /// <param name="procedureName">Stored procedure name</param>
+        /// <param name="parameters">Parameters to execute the stored procedure</param>
+        /// <returns>Collection of values of specified type</returns>
         public virtual IEnumerable<T> QueryProc<T>(string procedureName, params DataParameter[] parameters)
         {
             if (_dataConnection == null && !DataSettingsManager.DatabaseIsInstalled)
@@ -190,6 +225,13 @@ namespace Nop.Data
             return _dataConnection.QueryProc<T>(procedureName, parameters);
         }
 
+        /// <summary>
+        /// Executes SQL command and returns results as collection of values of specified type
+        /// </summary>
+        /// <typeparam name="T">Type of result items</typeparam>
+        /// <param name="sql">SQL command text</param>
+        /// <param name="parameters">Parameters to execute the SQL command</param>
+        /// <returns>Collection of values of specified type</returns>
         public virtual IEnumerable<T> Query<T>(string sql, params DataParameter[] parameters)
         {
             if (_dataConnection == null && !DataSettingsManager.DatabaseIsInstalled)

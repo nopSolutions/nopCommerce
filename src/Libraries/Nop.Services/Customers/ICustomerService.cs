@@ -253,7 +253,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="role">Customer role</param>
-        void    RemoveCustomerRoleMapping(Customer customer, CustomerRole role);
+        void RemoveCustomerRoleMapping(Customer customer, CustomerRole role);
 
         /// <summary>
         /// Delete a customer role

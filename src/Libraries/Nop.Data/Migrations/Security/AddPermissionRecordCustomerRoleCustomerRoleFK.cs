@@ -1,7 +1,6 @@
 ﻿using System.Data;
 using FluentMigrator;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Security;
 using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Security
@@ -13,11 +12,11 @@ namespace Nop.Data.Migrations.Security
 
         public override void Up()
         {
-            this.AddForeignKey(NopMappingDefaults.PermissionRecordRoleTable
-                , "CustomerRole_Id"
-                , nameof(CustomerRole)
-                , nameof(CustomerRole.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(NopMappingDefaults.PermissionRecordRoleTable,
+                "CustomerRole_Id",
+                nameof(CustomerRole),
+                nameof(CustomerRole.Id),
+                Rule.Cascade);
         }
 
         #endregion

@@ -10,7 +10,7 @@ namespace Nop.Data
     /// <summary>
     /// Represents the data settings
     /// </summary>
-    public partial class DataSettings: IConnectionStringSettings, ILinqToDBSettings
+    public partial class DataSettings : IConnectionStringSettings, ILinqToDBSettings
     {
         #region Ctor
 
@@ -51,7 +51,7 @@ namespace Nop.Data
 
         #endregion
 
-        #region MyRegion
+        #region ILinqToDBSettings
 
         /// <summary>
         /// Gets list of data provider settings

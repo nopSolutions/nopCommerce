@@ -18,7 +18,9 @@ namespace Nop.Services.Caching.CacheEventConsumers
             _cacheManager = EngineContext.Current.Resolve<ICacheManager>();
         }
 
-        public virtual void ClearCashe(TEntity entity) { }
+        public virtual void ClearCashe(TEntity entity)
+        {
+        }
 
         protected virtual void RemoveByPrefix(string prefixCacheKey, bool useStaticCashe = true)
         {
@@ -59,4 +61,3 @@ namespace Nop.Services.Caching.CacheEventConsumers
         }
     }
 }
-

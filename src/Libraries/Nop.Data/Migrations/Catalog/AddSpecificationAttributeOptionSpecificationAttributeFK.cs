@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Catalog
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(SpecificationAttributeOption)
-                , nameof(SpecificationAttributeOption.SpecificationAttributeId)
-                , nameof(SpecificationAttribute)
-                , nameof(SpecificationAttribute.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(SpecificationAttributeOption), 
+                nameof(SpecificationAttributeOption.SpecificationAttributeId), 
+                nameof(SpecificationAttribute), 
+                nameof(SpecificationAttribute.Id), 
+                Rule.Cascade);
         }
 
         #endregion

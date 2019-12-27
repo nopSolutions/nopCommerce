@@ -177,7 +177,6 @@ namespace Nop.Services.Orders
                             //encode (if required)
                             if (htmlEncode)
                                 formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
-
                         }
                     }
 

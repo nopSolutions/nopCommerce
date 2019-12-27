@@ -30,7 +30,6 @@ namespace Nop.Data
         protected override void ConfigureDataContext(IDataContext dataContext)
         {
             //nothing
-            return;
         }
 
         #endregion

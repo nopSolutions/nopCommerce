@@ -243,7 +243,7 @@ namespace Nop.Services.Common
             {
                 var value = _addressAttributeParser.ParseValues(address.CustomAttributes, requiredAttribute.Id);
 
-                if (!value.Any() || (string.IsNullOrEmpty(value[0])))
+                if (!value.Any() || string.IsNullOrEmpty(value[0]))
                     return false;
             }
 

@@ -692,7 +692,6 @@ namespace Nop.Services.Media
             _eventPublisher.EntityDeleted(picture);
         }
 
-
         /// <summary>
         /// Gets a collection of pictures
         /// </summary>

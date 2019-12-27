@@ -12,10 +12,10 @@ namespace Nop.Data.Migrations.Common
         
         public override void Up()
         { 
-            this.AddForeignKey(nameof(Address)
-                , nameof(Address.CountryId)
-                , nameof(Country)
-                , nameof(Country.Id));
+            this.AddForeignKey(nameof(Address),
+                nameof(Address.CountryId),
+                nameof(Country),
+                nameof(Country.Id));
         }
 
         #endregion

@@ -54,7 +54,6 @@ namespace Nop.Services.Seo
         private readonly SecuritySettings _securitySettings;
         private readonly SitemapXmlSettings _sitemapXmlSettings;
 
-
         #endregion
 
         #region Ctor

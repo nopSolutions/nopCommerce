@@ -1,6 +1,5 @@
 ﻿using System;
 
-
 namespace Nop.Core.Domain.Messages
 {
     /// <summary>
@@ -106,7 +105,6 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the priority
         /// </summary>
-        
         public QueuedEmailPriority Priority
         {
             get => (QueuedEmailPriority)PriorityId;

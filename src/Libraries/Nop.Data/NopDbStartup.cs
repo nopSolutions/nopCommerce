@@ -26,8 +26,7 @@ namespace Nop.Data
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             var mappingBuilder = new FluentMappingBuilder(NopDataConnection.AdditionalSchema);
-
-
+            
             //find database mapping configuration by other assemblies
             var typeFinder = new AppDomainTypeFinder();
             var typeConfigurations = typeFinder.FindClassesOfType<IMappingConfiguration>().ToList();

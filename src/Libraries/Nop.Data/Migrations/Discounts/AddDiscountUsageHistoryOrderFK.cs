@@ -13,11 +13,11 @@ namespace Nop.Data.Migrations.Discounts
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(DiscountUsageHistory)
-                , nameof(DiscountUsageHistory.OrderId)
-                , nameof(Order)
-                , nameof(Order.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(DiscountUsageHistory),
+                nameof(DiscountUsageHistory.OrderId),
+                nameof(Order),
+                nameof(Order.Id),
+                Rule.Cascade);
         }
 
         #endregion

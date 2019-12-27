@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Forums
 
         public override void Up()
         {
-            this.AddForeignKey(NopMappingDefaults.ForumsPostTable
-                , nameof(ForumPost.TopicId)
-                , NopMappingDefaults.ForumsTopicTable
-                , nameof(ForumTopic.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(NopMappingDefaults.ForumsPostTable,
+                nameof(ForumPost.TopicId),
+                NopMappingDefaults.ForumsTopicTable,
+                nameof(ForumTopic.Id),
+                Rule.Cascade);
         }
 
         #endregion

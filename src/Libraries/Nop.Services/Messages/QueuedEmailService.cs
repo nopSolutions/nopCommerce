@@ -16,7 +16,6 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<QueuedEmail> _queuedEmailRepository;
 

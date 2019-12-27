@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Linq;
-using Nop.Core.Domain.Common;
-using Nop.Data;
 
+//TODO: 239 try to implement FulltextService
 namespace Nop.Services.Common
 {
-    //TODO: 239 try to implement FulltextService
     /// <summary>
     /// Full-Text service
     /// </summary>
@@ -19,7 +16,6 @@ namespace Nop.Services.Common
 
         public FulltextService()
         {
-           
         }
 
         #endregion

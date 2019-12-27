@@ -13,11 +13,11 @@ namespace Nop.Data.Migrations.Orders
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(Order)
-                , nameof(Order.CustomerId)
-                , nameof(Customer)
-                , nameof(Customer.Id)
-                , Rule.None);
+            this.AddForeignKey(nameof(Order),
+                nameof(Order.CustomerId),
+                nameof(Customer),
+                nameof(Customer.Id),
+                Rule.None);
         }
 
         #endregion

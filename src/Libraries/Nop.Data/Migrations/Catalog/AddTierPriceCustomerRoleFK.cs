@@ -13,11 +13,11 @@ namespace Nop.Data.Migrations.Catalog
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(TierPrice)
-                , nameof(TierPrice.CustomerRoleId)
-                , nameof(CustomerRole)
-                , nameof(CustomerRole.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(TierPrice), 
+                nameof(TierPrice.CustomerRoleId), 
+                nameof(CustomerRole), 
+                nameof(CustomerRole.Id), 
+                Rule.Cascade);
         }
         
         #endregion

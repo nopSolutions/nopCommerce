@@ -12,10 +12,10 @@ namespace Nop.Data.Migrations.Customers
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(Customer)
-                , "BillingAddress_Id"
-                , nameof(Address)
-                , nameof(Address.Id));
+            this.AddForeignKey(nameof(Customer),
+                "BillingAddress_Id",
+                nameof(Address),
+                nameof(Address.Id));
         }
 
         #endregion

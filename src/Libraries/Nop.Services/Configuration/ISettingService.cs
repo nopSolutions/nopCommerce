@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Nop.Core.Configuration;
@@ -86,6 +86,7 @@ namespace Nop.Services.Configuration
         /// <typeparam name="T">Type</typeparam>
         /// <param name="storeId">Store identifier for which settings should be loaded</param>
         T LoadSetting<T>(int storeId = 0) where T : ISettings, new();
+        
         /// <summary>
         /// Load settings
         /// </summary>

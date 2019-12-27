@@ -4,29 +4,26 @@ using System.Linq;
 using LinqToDB;
 using LinqToDB.Data;
 using Nop.Core;
-using Nop.Core.Caching;
 
 namespace Nop.Data
 {
     /// <summary>
-    /// Represents the Entity Framework repository
+    /// Represents the Entity repository
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
-    public partial class EfRepository<TEntity> : IRepository<TEntity>, IDisposable where TEntity : BaseEntity
+    public partial class EntityRepository<TEntity> : IRepository<TEntity>, IDisposable where TEntity : BaseEntity
     {
         #region Fields
 
-        private ITable<TEntity> _entities;
-        protected readonly IStaticCacheManager _cacheManager;
         private readonly NopDataConnection _dataConnection;
+        private ITable<TEntity> _entities;
 
         #endregion
 
         #region Ctor
 
-        public EfRepository(IStaticCacheManager cacheManager)
+        public EntityRepository()
         {
-            _cacheManager = cacheManager;
             _dataConnection = new NopDataConnection();
         }
 
@@ -151,7 +148,7 @@ namespace Nop.Data
         /// <returns>Collection of query result records</returns>
         public virtual IEnumerable<TEntity> EntityFromSql(string storeProcedureName, params object[] dataParameters)
         {
-            return _dataConnection.QueryProc<TEntity>(storeProcedureName, dataParameters?.Select(param=>param as DataParameter).ToArray());
+            return _dataConnection.QueryProc<TEntity>(storeProcedureName, dataParameters?.Select(param => param as DataParameter).ToArray());
         }
 
         /// <summary>

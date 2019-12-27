@@ -12,10 +12,10 @@ namespace Nop.Data.Migrations.Catalog
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(StockQuantityHistory)
-                , nameof(StockQuantityHistory.WarehouseId)
-                , nameof(Warehouse)
-                , nameof(Warehouse.Id));
+            this.AddForeignKey(nameof(StockQuantityHistory), 
+                nameof(StockQuantityHistory.WarehouseId), 
+                nameof(Warehouse), 
+                nameof(Warehouse.Id));
         }
 
         #endregion

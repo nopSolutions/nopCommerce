@@ -365,8 +365,14 @@ namespace Nop.Services.Orders
                          join o in _orderRepository.Table on orderItem.OrderId equals o.Id
                          join p in _productRepository.Table on orderItem.ProductId equals p.Id
                          join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
-                         join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId into p_pc from pc in p_pc.DefaultIfEmpty()
-                         join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId into p_pm from pm in p_pm.DefaultIfEmpty()
+                         join pc in _productCategoryRepository.Table on p.Id 
+                             equals pc.ProductId 
+                             into p_pc
+                from pc in p_pc.DefaultIfEmpty()
+                         join pm in _productManufacturerRepository.Table on p.Id 
+                             equals pm.ProductId 
+                             into p_pm
+                from pm in p_pm.DefaultIfEmpty()
                          where (storeId == 0 || storeId == o.StoreId) &&
                                (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
                                (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
@@ -494,8 +500,14 @@ namespace Nop.Services.Orders
             var simpleProductTypeId = (int)ProductType.SimpleProduct;
 
             var query = from p in _productRepository.Table
-                        join pm in _productManufacturerRepository.Table on p.Id equals pm.ProductId into p_pm from pm in p_pm.DefaultIfEmpty()
-                        join pc in _productCategoryRepository.Table on p.Id equals pc.ProductId into p_pc from pc in p_pc.DefaultIfEmpty()
+                        join pm in _productManufacturerRepository.Table on p.Id 
+                            equals pm.ProductId 
+                            into p_pm
+                from pm in p_pm.DefaultIfEmpty()
+                        join pc in _productCategoryRepository.Table on p.Id 
+                            equals pc.ProductId 
+                            into p_pc
+                from pc in p_pc.DefaultIfEmpty()
                         where !query_tmp.Contains(p.Id) &&
                               //include only simple products
                               p.ProductTypeId == simpleProductTypeId &&
@@ -579,9 +591,7 @@ namespace Nop.Services.Orders
                       !o.Deleted &&
                       (vendorId == 0 || p.VendorId == vendorId) &&
                       (productId == 0 || orderItem.ProductId == productId) &&
-                      (
-                          warehouseId == 0
-                          ||
+                      (warehouseId == 0 ||
                           //"Use multiple warehouses" enabled
                           //we search in each warehouse
                           p.ManageInventoryMethodId == manageStockInventoryMethodId &&
@@ -593,8 +603,7 @@ namespace Nop.Services.Orders
                           //we use standard "warehouse" property
                           (p.ManageInventoryMethodId != manageStockInventoryMethodId ||
                            !p.UseMultipleWarehouses) &&
-                          p.WarehouseId == warehouseId
-                      ) &&
+                          p.WarehouseId == warehouseId) &&
                       //we do not ignore deleted products when calculating order reports
                       //(!p.Deleted)
                       (dontSearchPhone || (!string.IsNullOrEmpty(oba.PhoneNumber) &&

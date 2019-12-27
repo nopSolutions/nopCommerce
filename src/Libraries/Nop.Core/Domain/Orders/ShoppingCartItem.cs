@@ -1,6 +1,5 @@
 ﻿using System;
 
-
 namespace Nop.Core.Domain.Orders
 {
     /// <summary>
@@ -66,7 +65,6 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets the log type
         /// </summary>
-        
         public ShoppingCartType ShoppingCartType
         {
             get => (ShoppingCartType)ShoppingCartTypeId;

@@ -276,11 +276,13 @@ namespace Nop.Services.Catalog
                             {
                                 c1 = c.Id,
                                 c2 = nameof(Category)
-                            } equals new
+                            } 
+                            equals new
                             {
                                 c1 = acl.EntityId,
                                 c2 = acl.EntityName
-                            } into c_acl
+                            } 
+                            into c_acl
                         from acl in c_acl.DefaultIfEmpty()
                         where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                         select c;
@@ -296,11 +298,13 @@ namespace Nop.Services.Catalog
                             {
                                 c1 = c.Id,
                                 c2 = nameof(Category)
-                            } equals new
+                            } 
+                            equals new
                             {
                                 c1 = sm.EntityId,
                                 c2 = sm.EntityName
-                            } into c_sm
+                            } 
+                            into c_sm
                         from sm in c_sm.DefaultIfEmpty()
                         where !c.LimitedToStores || currentStoreId == sm.StoreId
                         select c;
@@ -586,11 +590,13 @@ namespace Nop.Services.Catalog
                             {
                                 c1 = c.Id,
                                 c2 = nameof(Category)
-                            } equals new
+                            } 
+                            equals new
                             {
                                 c1 = acl.EntityId,
                                 c2 = acl.EntityName
-                            } into c_acl
+                            } 
+                            into c_acl
                         from acl in c_acl.DefaultIfEmpty()
                         where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                         select pc;
@@ -607,11 +613,13 @@ namespace Nop.Services.Catalog
                             {
                                 c1 = c.Id,
                                 c2 = nameof(Category)
-                            } equals new
+                            } 
+                            equals new
                             {
                                 c1 = sm.EntityId,
                                 c2 = sm.EntityName
-                            } into c_sm
+                            } 
+                            into c_sm
                         from sm in c_sm.DefaultIfEmpty()
                         where !c.LimitedToStores || currentStoreId == sm.StoreId
                         select pc;

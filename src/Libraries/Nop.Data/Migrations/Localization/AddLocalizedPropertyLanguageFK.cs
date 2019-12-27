@@ -15,11 +15,11 @@ namespace Nop.Data.Migrations.Localization
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(LocalizedProperty)
-                , nameof(LocalizedProperty.LanguageId)
-                , nameof(Language)
-                , nameof(Language.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(LocalizedProperty),
+                nameof(LocalizedProperty.LanguageId),
+                nameof(Language),
+                nameof(Language.Id),
+                Rule.Cascade);
         }
 
         #endregion

@@ -30,6 +30,7 @@ namespace Nop.Services.Payments
         /// Gets or sets an order unique identifier. Used when order is not saved yet (payment gateways that do not redirect a customer to a third-party URL)
         /// </summary>
         public Guid OrderGuid { get; set; }
+        
         /// <summary>
         /// Gets or sets a datetime when "OrderGuid" property was generated (used for security purposes)
         /// </summary>

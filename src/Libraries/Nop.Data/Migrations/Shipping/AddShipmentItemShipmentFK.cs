@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Shipping
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(ShipmentItem)
-                , nameof(ShipmentItem.ShipmentId)
-                , nameof(Shipment)
-                , nameof(Shipment.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(ShipmentItem),
+                nameof(ShipmentItem.ShipmentId),
+                nameof(Shipment),
+                nameof(Shipment.Id),
+                Rule.Cascade);
         }
 
         #endregion

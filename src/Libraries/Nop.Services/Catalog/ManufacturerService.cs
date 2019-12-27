@@ -188,7 +188,8 @@ namespace Nop.Services.Catalog
                 return null;
 
             var key = string.Format(NopCatalogCachingDefaults.ManufacturersByIdCacheKey, manufacturerId);
-            return  _manufacturerRepository.ToCachedGetById(manufacturerId, key);
+
+            return _manufacturerRepository.ToCachedGetById(manufacturerId, key);
         }
 
         /// <summary>
@@ -301,11 +302,13 @@ namespace Nop.Services.Catalog
                             {
                                 c1 = m.Id,
                                 c2 = nameof(Manufacturer)
-                            } equals new
+                            } 
+                            equals new
                             {
                                 c1 = acl.EntityId,
                                 c2 = acl.EntityName
-                            } into m_acl
+                            } 
+                            into m_acl
                         from acl in m_acl.DefaultIfEmpty()
                         where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                         select pm;
@@ -322,11 +325,13 @@ namespace Nop.Services.Catalog
                             {
                                 c1 = m.Id,
                                 c2 = nameof(Manufacturer)
-                            } equals new
+                            } 
+                            equals new
                             {
                                 c1 = sm.EntityId,
                                 c2 = sm.EntityName
-                            } into m_sm
+                            } 
+                            into m_sm
                         from sm in m_sm.DefaultIfEmpty()
                         where !m.LimitedToStores || currentStoreId == sm.StoreId
                         select pm;
@@ -375,11 +380,13 @@ namespace Nop.Services.Catalog
                             {
                                 c1 = m.Id,
                                 c2 = nameof(Manufacturer)
-                            } equals new
+                            } 
+                            equals new
                             {
                                 c1 = acl.EntityId,
                                 c2 = acl.EntityName
-                            } into m_acl
+                            } 
+                            into m_acl
                         from acl in m_acl.DefaultIfEmpty()
                         where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                         select pm;
@@ -396,11 +403,13 @@ namespace Nop.Services.Catalog
                             {
                                 c1 = m.Id,
                                 c2 = nameof(Manufacturer)
-                            } equals new
+                            } 
+                            equals new
                             {
                                 c1 = sm.EntityId,
                                 c2 = sm.EntityName
-                            } into m_sm
+                            } 
+                            into m_sm
                         from sm in m_sm.DefaultIfEmpty()
                         where !m.LimitedToStores || currentStoreId == sm.StoreId
                         select pm;

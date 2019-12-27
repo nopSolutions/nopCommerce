@@ -167,11 +167,13 @@ namespace Nop.Services.Messages
                     {
                         c1 = t.Id,
                         c2 = nameof(MessageTemplate)
-                    } equals new
+                    } 
+                    equals new
                     {
                         c1 = sm.EntityId,
                         c2 = sm.EntityName
-                    } into tSm
+                    } 
+                    into tSm
                 from sm in tSm.DefaultIfEmpty()
                 where !t.LimitedToStores || storeId == sm.StoreId
                 select t;

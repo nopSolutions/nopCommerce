@@ -121,7 +121,6 @@
         /// </remarks>
         public static string CustomerAddressCacheKeyCacheKey => "Nop.customer.addresses.address-{0}-{1}";
 
-
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>

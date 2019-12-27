@@ -367,7 +367,7 @@ namespace Nop.Services.Media.RoxyFileman
                 };
 
                 _pictureService.InsertPicture(
-                    new RoxyFilemanFormFile(picture, new PictureBinary{ BinaryData = _fileProvider.ReadAllBytes(filePath) },  _fileProvider.GetFileExtension(filePath)),
+                    new RoxyFilemanFormFile(picture, new PictureBinary { BinaryData = _fileProvider.ReadAllBytes(filePath) },  _fileProvider.GetFileExtension(filePath)),
                     string.Empty, _fileProvider.GetVirtualPath(filePath));
             }
         }

@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Catalog
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(BackInStockSubscription)
-                , nameof(BackInStockSubscription.ProductId)
-                , nameof(Product)
-                , nameof(Product.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(BackInStockSubscription),
+                nameof(BackInStockSubscription.ProductId),
+                nameof(Product),
+                nameof(Product.Id),
+                Rule.Cascade);
         }
 
         #endregion

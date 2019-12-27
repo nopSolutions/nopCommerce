@@ -1,6 +1,4 @@
-﻿
-
-namespace Nop.Core.Domain.Discounts
+﻿namespace Nop.Core.Domain.Discounts
 {
     /// <summary>
     /// Represents a discount requirement
@@ -35,7 +33,6 @@ namespace Nop.Core.Domain.Discounts
         /// <summary>
         /// Gets or sets an interaction type
         /// </summary>
-        
         public RequirementGroupInteractionType? InteractionType
         {
             get => (RequirementGroupInteractionType?)InteractionTypeId;

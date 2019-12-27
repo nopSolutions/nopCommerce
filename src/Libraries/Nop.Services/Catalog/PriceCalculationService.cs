@@ -415,7 +415,6 @@ namespace Nop.Services.Catalog
                     price = decimal.Zero;
 
                 return (price, appliedDiscountAmount, discounts);
-
             }, cacheTime);
 
             return rezPrice;

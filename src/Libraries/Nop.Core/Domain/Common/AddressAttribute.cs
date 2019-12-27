@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Common
@@ -33,7 +31,6 @@ namespace Nop.Core.Domain.Common
         /// <summary>
         /// Gets the attribute control type
         /// </summary>
-        
         public AttributeControlType AttributeControlType
         {
             get => (AttributeControlType)AttributeControlTypeId;

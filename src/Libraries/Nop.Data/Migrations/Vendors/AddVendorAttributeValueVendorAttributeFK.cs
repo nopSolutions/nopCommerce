@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Vendors
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(VendorAttributeValue)
-                , nameof(VendorAttributeValue.VendorAttributeId)
-                , nameof(VendorAttribute)
-                , nameof(VendorAttribute.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(VendorAttributeValue),
+                nameof(VendorAttributeValue.VendorAttributeId),
+                nameof(VendorAttribute),
+                nameof(VendorAttribute.Id),
+                Rule.Cascade);
         }
 
         #endregion
