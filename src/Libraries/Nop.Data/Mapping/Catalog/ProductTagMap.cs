@@ -1,4 +1,5 @@
-﻿using LinqToDB.Mapping;
+﻿using LinqToDB;
+using LinqToDB.Mapping;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
@@ -18,7 +19,7 @@ namespace Nop.Data.Mapping.Catalog
         {
             builder.HasTableName(nameof(ProductTag));
 
-            builder.Property(productTag => productTag.Name).HasLength(400).IsNullable(false);
+            builder.Property(productTag => productTag.Name).HasLength(400).IsNullable(false).HasDataType(DataType.NVarChar);
         }
 
         #endregion

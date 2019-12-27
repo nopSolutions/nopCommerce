@@ -1,4 +1,5 @@
-﻿using LinqToDB.Mapping;
+﻿using LinqToDB;
+using LinqToDB.Mapping;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Data.Mapping.Localization
@@ -18,7 +19,7 @@ namespace Nop.Data.Mapping.Localization
         {
             builder.HasTableName(nameof(LocaleStringResource));
 
-            builder.Property(locale => locale.ResourceName).HasLength(200).IsNullable(false);
+            builder.Property(locale => locale.ResourceName).HasLength(200).IsNullable(false).HasDataType(DataType.NVarChar);
             builder.Property(locale => locale.ResourceValue).IsNullable(false);
 
             builder.Property(localestringresource => localestringresource.LanguageId);

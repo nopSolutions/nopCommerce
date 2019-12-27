@@ -1,4 +1,5 @@
-﻿using LinqToDB.Mapping;
+﻿using LinqToDB;
+using LinqToDB.Mapping;
 using Nop.Core.Domain.Security;
 
 namespace Nop.Data.Mapping.Security
@@ -18,7 +19,7 @@ namespace Nop.Data.Mapping.Security
         {
             builder.HasTableName(nameof(AclRecord));
 
-            builder.Property(record => record.EntityName).HasLength(400).IsNullable(false);
+            builder.Property(record => record.EntityName).HasLength(400).IsNullable(false).HasDataType(DataType.NVarChar);
             builder.Property(aclrecord => aclrecord.EntityId);
             builder.Property(aclrecord => aclrecord.CustomerRoleId);
         }

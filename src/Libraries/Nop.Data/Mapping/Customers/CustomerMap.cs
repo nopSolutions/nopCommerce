@@ -1,4 +1,5 @@
-﻿using LinqToDB.Mapping;
+﻿using LinqToDB;
+using LinqToDB.Mapping;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Data.Mapping.Customers
@@ -18,10 +19,10 @@ namespace Nop.Data.Mapping.Customers
         {
             builder.HasTableName(nameof(Customer));
 
-            builder.Property(customer => customer.Username).HasLength(1000);
-            builder.Property(customer => customer.Email).HasLength(1000);
+            builder.Property(customer => customer.Username).HasLength(1000).HasDataType(DataType.NVarChar);
+            builder.Property(customer => customer.Email).HasLength(1000).HasDataType(DataType.NVarChar);
             builder.Property(customer => customer.EmailToRevalidate).HasLength(1000);
-            builder.Property(customer => customer.SystemName).HasLength(400);
+            builder.Property(customer => customer.SystemName).HasLength(400).HasDataType(DataType.NVarChar);
 
             builder.Property(customer => customer.BillingAddressId).HasColumnName("BillingAddress_Id");
             builder.Property(customer => customer.ShippingAddressId).HasColumnName("ShippingAddress_Id");

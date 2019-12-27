@@ -1,4 +1,5 @@
-﻿using LinqToDB.Mapping;
+﻿using LinqToDB;
+using LinqToDB.Mapping;
 using Nop.Core.Domain.Seo;
 
 namespace Nop.Data.Mapping.Seo
@@ -18,8 +19,8 @@ namespace Nop.Data.Mapping.Seo
         {
             builder.HasTableName(nameof(UrlRecord));
 
-            builder.Property(record => record.EntityName).HasLength(400).IsNullable(false);
-            builder.Property(record => record.Slug).HasLength(400).IsNullable(false);
+            builder.Property(record => record.EntityName).HasLength(400).IsNullable(false).HasDataType(DataType.NVarChar);
+            builder.Property(record => record.Slug).HasLength(400).IsNullable(false).HasDataType(DataType.NVarChar);
             builder.Property(urlrecord => urlrecord.EntityId);
             builder.Property(urlrecord => urlrecord.IsActive);
             builder.Property(urlrecord => urlrecord.LanguageId);

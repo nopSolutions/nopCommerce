@@ -1,4 +1,5 @@
-﻿using LinqToDB.Mapping;
+﻿using LinqToDB;
+using LinqToDB.Mapping;
 using Nop.Core.Domain.Stores;
 
 namespace Nop.Data.Mapping.Stores
@@ -18,7 +19,7 @@ namespace Nop.Data.Mapping.Stores
         {
             builder.HasTableName(nameof(StoreMapping));
 
-            builder.Property(storeMapping => storeMapping.EntityName).HasLength(400).IsNullable(false);
+            builder.Property(storeMapping => storeMapping.EntityName).HasLength(400).IsNullable(false).HasDataType(DataType.NVarChar);
             builder.Property(storemapping => storemapping.EntityId);
             builder.Property(storemapping => storemapping.StoreId);
         }

@@ -1,9 +1,10 @@
-use nop_mysql_db_test111;
+use nop_mysql_db_test;
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` FUNCTION `Check_Exists_FullText_Index`(
 	`TableName` 	varchar(200),
 	`IndexName` 	varchar(200)
 ) RETURNS tinyint(1)
+sql security invoker
 BEGIN
 
 RETURN exists(
@@ -14,7 +15,7 @@ RETURN exists(
 END$$
 DELIMITER ;
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `CategoryLoadAllPaged`(
+CREATE DEFINER=`root`@`lodcalhost` PROCEDURE `CategoryLoadAllPaged`(
 	`ShowHidden`        	bool,
     `Name`              	text,
     `StoreId`           	int,
@@ -23,6 +24,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `CategoryLoadAllPaged`(
 	`PageSize`				int,
     OUT `TotalRecords`		int
 )
+sql security invoker
 BEGIN
 	Set @lengthId = (select CHAR_LENGTH(MAX(Id)) FROM Category);
 	Set @lengthOrder = (select CHAR_LENGTH(MAX(DisplayOrder)) FROM Category);
@@ -82,6 +84,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `Create_FullText_Index`(
 		`IndexName` 	varchar(200),
     out `Result` 		bool
 )
+sql security invoker
 BEGIN
 	set `Result` = true;
 	select if (
@@ -104,6 +107,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `DeleteGuests`(
 	CreatedToUtc datetime,
 	out TotalRecordsDeleted int
 )
+sql security invoker
 BEGIN
 	create temporary table tmp_guests (CustomerId int);
     
@@ -174,6 +178,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `Drop_FullText_Index`(
 		`IndexName` 	varchar(200),
     out `Result` 		bool
 )
+sql security invoker
 BEGIN
 	set `Result` = true;
 	select if (
@@ -191,6 +196,7 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `FullText_Disable`()
+sql security invoker
 BEGIN
     call `Drop_FullText_Index`('Product', 'FT_IX_Product', @drop_result);
     call `Drop_FullText_Index`('LocalizedProperty', 'FT_IX_LocalizedProperty', @drop_result);
@@ -200,6 +206,7 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `FullText_Enable`()
+sql security invoker
 BEGIN
 	CALL `nop_mysql_db_test`.`Create_FullText_Index`('Product', 'Name, ShortDescription, FullDescription', 'FT_IX_Product',  @result);
     CALL `nop_mysql_db_test`.`Create_FullText_Index`('LocalizedProperty', 'LocaleValue', 'FT_IX_LocalizedProperty',  @result);
@@ -209,6 +216,7 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `FullText_IsSupported`()
+sql security invoker
 BEGIN
 	select true;
 END$$
@@ -247,6 +255,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ProductLoadAllPaged`(
 	out	`FilterableSpecificationAttributeOptionIds` 		text, 				#the specification attribute option identifiers applied to loaded products (all pages). returned as a comma separated list of identifiers
 	out	`TotalRecords`										int
 )
+sql security invoker
 BEGIN
 
 END$$
@@ -257,6 +266,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ProductTagCountLoadAll`(
 	`StoreId` 					int,
 	`AllowedCustomerRoleIds`	text	#a list of customer role IDs (comma-separated list) for which a product should be shown (if a subject to ACL)
 )
+sql security invoker
 BEGIN
 	#filter by customer role IDs (access control list)	
 	SELECT pt.Id as `ProductTagId`, COUNT(p.Id) as `ProductCount`

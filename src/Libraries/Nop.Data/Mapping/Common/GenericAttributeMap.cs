@@ -1,4 +1,5 @@
-﻿using LinqToDB.Mapping;
+﻿using LinqToDB;
+using LinqToDB.Mapping;
 using Nop.Core.Domain.Common;
 
 namespace Nop.Data.Mapping.Common
@@ -18,7 +19,7 @@ namespace Nop.Data.Mapping.Common
         {
             builder.HasTableName(nameof(GenericAttribute));
 
-            builder.Property(attribute => attribute.KeyGroup).HasLength(400).IsNullable(false);
+            builder.Property(attribute => attribute.KeyGroup).HasLength(400).IsNullable(false).HasDataType(DataType.NVarChar);
             builder.Property(attribute => attribute.Key).HasLength(400).IsNullable(false);
             builder.Property(attribute => attribute.Value).IsNullable(false);
             builder.Property(genericattribute => genericattribute.EntityId);

@@ -1,4 +1,5 @@
-﻿using LinqToDB.Mapping;
+﻿using LinqToDB;
+using LinqToDB.Mapping;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Data.Mapping.Messages
@@ -18,7 +19,7 @@ namespace Nop.Data.Mapping.Messages
         {
             builder.HasTableName(nameof(NewsLetterSubscription));
 
-            builder.Property(subscription => subscription.Email).HasLength(255).IsNullable(false);
+            builder.Property(subscription => subscription.Email).HasLength(255).IsNullable(false).HasDataType(DataType.NVarChar);
             builder.Property(subscription => subscription.NewsLetterSubscriptionGuid);
             builder.Property(subscription => subscription.Active);
             builder.Property(subscription => subscription.StoreId);
