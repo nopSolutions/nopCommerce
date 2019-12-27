@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Media
     /// <summary>
     /// Represents a picture binary data
     /// </summary>
-    public partial class PictureBinaryCacheEventConsumer : EntityCacheEventConsumer<PictureBinary>
+    public partial class PictureBinaryCacheEventConsumer : CacheEventConsumer<PictureBinary>
     {
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Topics;
 using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Topics
@@ -71,7 +72,7 @@ namespace Nop.Services.Topics
             if (topicTemplateId == 0)
                 return null;
 
-            return _topicTemplateRepository.GetById(topicTemplateId);
+            return _topicTemplateRepository.ToCachedGetById(topicTemplateId);
         }
 
         /// <summary>

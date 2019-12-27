@@ -162,7 +162,7 @@ namespace Nop.Services.Discounts
             if (discountId == 0)
                 return null;
 
-            return _discountRepository.GetById(discountId);
+            return _discountRepository.ToCachedGetById(discountId);
         }
 
         /// <summary>
@@ -412,7 +412,7 @@ namespace Nop.Services.Discounts
             if (discountRequirementId == 0)
                 return null;
 
-            return _discountRequirementRepository.GetById(discountRequirementId);
+            return _discountRequirementRepository.ToCachedGetById(discountRequirementId);
         }
 
         /// <summary>
@@ -640,7 +640,7 @@ namespace Nop.Services.Discounts
             if (discountUsageHistoryId == 0)
                 return null;
 
-            return _discountUsageHistoryRepository.GetById(discountUsageHistoryId);
+            return _discountUsageHistoryRepository.ToCachedGetById(discountUsageHistoryId);
         }
 
         /// <summary>

@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Vendors
     /// <summary>
     /// Represents a vendor
     /// </summary>
-    public partial class VendorCacheEventConsumer : EntityCacheEventConsumer<Vendor>
+    public partial class VendorCacheEventConsumer : CacheEventConsumer<Vendor>
     {
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Moq;
+using Nop.Core.Caching;
 using Nop.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -15,6 +16,7 @@ namespace Nop.Services.Tests
     {
         public FakeCustomerService(CustomerSettings customerSettings = null,
                 ICasheKeyFactory casheKeyFactory = null,
+                ICacheManager cacheManager = null,
                 IDataProvider dataProvider = null,
                 IEventPublisher eventPublisher = null,
                 IGenericAttributeService genericAttributeService = null,
@@ -29,6 +31,7 @@ namespace Nop.Services.Tests
                 ShoppingCartSettings shoppingCartSettings = null) : base(
                     customerSettings ?? new CustomerSettings(),
                     casheKeyFactory ?? new Mock<ICasheKeyFactory>().Object,
+                    cacheManager ?? new Mock<ICacheManager>().Object,
                     dataProvider ?? new Mock<IDataProvider>().Object,
                     eventPublisher ?? new Mock<IEventPublisher>().Object,
                     genericAttributeService ?? new Mock<IGenericAttributeService>().Object,

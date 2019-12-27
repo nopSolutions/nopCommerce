@@ -56,7 +56,7 @@ namespace Nop.Services.Catalog
             if (specificationAttributeId == 0)
                 return null;
 
-            return _specificationAttributeRepository.GetById(specificationAttributeId);
+            return _specificationAttributeRepository.ToCachedGetById(specificationAttributeId);
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace Nop.Services.Catalog
             if (specificationAttributeOptionId == 0)
                 return null;
 
-            return _specificationAttributeOptionRepository.GetById(specificationAttributeOptionId);
+            return _specificationAttributeOptionRepository.ToCachedGetById(specificationAttributeOptionId);
         }
 
         /// <summary>
@@ -310,7 +310,7 @@ namespace Nop.Services.Catalog
             if (productSpecificationAttributeId == 0)
                 return null;
 
-            return _productSpecificationAttributeRepository.GetById(productSpecificationAttributeId);
+            return _productSpecificationAttributeRepository.ToCachedGetById(productSpecificationAttributeId);
         }
 
         /// <summary>

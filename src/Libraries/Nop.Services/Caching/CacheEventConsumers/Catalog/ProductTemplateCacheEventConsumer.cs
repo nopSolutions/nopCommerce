@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
     /// <summary>
     /// Represents a product template
     /// </summary>
-    public partial class ProductTemplateCacheEventConsumer : EntityCacheEventConsumer<ProductTemplate>
+    public partial class ProductTemplateCacheEventConsumer : CacheEventConsumer<ProductTemplate>
     {
     }
 }

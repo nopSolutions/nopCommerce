@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
     /// <summary>
     /// Represents a product review helpfulness
     /// </summary>
-    public partial class ProductReviewHelpfulnessCacheEventConsumer : EntityCacheEventConsumer<ProductReviewHelpfulness>
+    public partial class ProductReviewHelpfulnessCacheEventConsumer : CacheEventConsumer<ProductReviewHelpfulness>
     {
     }
 }

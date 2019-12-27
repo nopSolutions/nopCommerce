@@ -119,7 +119,7 @@ namespace Nop.Services.Localization
             //cacheable copy key
             var key = string.Format(NopLocalizationCachingDefaults.LanguagesByIdCacheKey, languageId);
 
-            return loadCacheableCopy ? _languageRepository.ToCachedGetById(languageId, key) : _languageRepository.GetById(languageId);
+            return loadCacheableCopy ? _languageRepository.ToCachedGetById(languageId, key) : _languageRepository.ToCachedGetById(languageId);
         }
 
         /// <summary>

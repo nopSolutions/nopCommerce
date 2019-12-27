@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
     /// <summary>
     /// Represents a product picture mapping
     /// </summary>
-    public partial class ProductPictureCacheEventConsumer : EntityCacheEventConsumer<ProductPicture>
+    public partial class ProductPictureCacheEventConsumer : CacheEventConsumer<ProductPicture>
     {
     }
 }

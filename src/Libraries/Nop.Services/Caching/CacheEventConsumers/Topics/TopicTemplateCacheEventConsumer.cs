@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Topics
     /// <summary>
     /// Represents a topic template
     /// </summary>
-    public partial class TopicTemplateCacheEventConsumer : EntityCacheEventConsumer<TopicTemplate>
+    public partial class TopicTemplateCacheEventConsumer : CacheEventConsumer<TopicTemplate>
     {
     }
 }

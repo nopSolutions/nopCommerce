@@ -424,7 +424,7 @@ namespace Nop.Services.Catalog
             if (productManufacturerId == 0)
                 return null;
 
-            return _productManufacturerRepository.GetById(productManufacturerId);
+            return _productManufacturerRepository.ToCachedGetById(productManufacturerId);
         }
 
         /// <summary>

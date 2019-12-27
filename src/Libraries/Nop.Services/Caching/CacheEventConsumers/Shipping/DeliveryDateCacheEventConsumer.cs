@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Shipping
     /// <summary>
     /// Represents a delivery date 
     /// </summary>
-    public partial class DeliveryDateCacheEventConsumer : EntityCacheEventConsumer<DeliveryDate>
+    public partial class DeliveryDateCacheEventConsumer : CacheEventConsumer<DeliveryDate>
     {
     }
 }

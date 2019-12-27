@@ -2,6 +2,7 @@
 using System.Linq;
 using Moq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -104,6 +105,7 @@ namespace Nop.Services.Tests.Tax
 
             _customerService = new CustomerService(new CustomerSettings(),
                 new Mock<ICasheKeyFactory>().Object,
+                new Mock<ICacheManager>().Object,
                 null,
                 _eventPublisher.Object,
                 _genericAttributeService.Object,

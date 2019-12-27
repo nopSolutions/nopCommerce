@@ -7,7 +7,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
     {
         public override void ClearCashe(ReviewType entity)
         {
-            _cacheManager.RemoveByPrefix(NopCatalogCachingDefaults.ReviewTypeByPrefixCacheKey);
+            RemoveByPrefix(NopCatalogCachingDefaults.ReviewTypeByPrefixCacheKey);
         }
     }
 }

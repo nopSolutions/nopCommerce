@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Orders
     /// <summary>
     /// Represents a gift card usage history entry
     /// </summary>
-    public partial class GiftCardUsageHistoryCacheEventConsumer : EntityCacheEventConsumer<GiftCardUsageHistory>
+    public partial class GiftCardUsageHistoryCacheEventConsumer : CacheEventConsumer<GiftCardUsageHistory>
     {
     }
 }

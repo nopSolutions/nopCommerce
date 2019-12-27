@@ -7,8 +7,8 @@ namespace Nop.Services.Caching.CacheEventConsumers.Vendors
     {
         public override void ClearCashe(VendorAttributeValue entity)
         {
-            _cacheManager.RemoveByPrefix(NopVendorsServiceCachingDefaults.VendorAttributesPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopVendorsServiceCachingDefaults.VendorAttributeValuesPrefixCacheKey);
+            RemoveByPrefix(NopVendorsServiceCachingDefaults.VendorAttributesPrefixCacheKey);
+            RemoveByPrefix(NopVendorsServiceCachingDefaults.VendorAttributeValuesPrefixCacheKey);
         }
     }
 }

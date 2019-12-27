@@ -7,7 +7,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Directory
     {
         public override void ClearCashe(Currency entity)
         {
-            _cacheManager.RemoveByPrefix(NopDirectoryCachingDefaults.CurrenciesPrefixCacheKey);
+            RemoveByPrefix(NopDirectoryCachingDefaults.CurrenciesPrefixCacheKey);
         }
     }
 }

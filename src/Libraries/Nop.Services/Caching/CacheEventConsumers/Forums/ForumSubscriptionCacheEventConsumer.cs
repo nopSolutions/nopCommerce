@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Forums
     /// <summary>
     /// Represents a forum subscription item
     /// </summary>
-    public partial class ForumSubscriptionCacheEventConsumer : EntityCacheEventConsumer<ForumSubscription>
+    public partial class ForumSubscriptionCacheEventConsumer : CacheEventConsumer<ForumSubscription>
     {
     }
 }

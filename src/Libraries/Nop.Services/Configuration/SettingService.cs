@@ -9,6 +9,7 @@ using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Configuration;
 using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Configuration
@@ -218,7 +219,7 @@ namespace Nop.Services.Configuration
             if (settingId == 0)
                 return null;
 
-            return _settingRepository.GetById(settingId);
+            return _settingRepository.ToCachedGetById(settingId);
         }
 
         /// <summary>

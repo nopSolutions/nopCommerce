@@ -7,7 +7,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Topics
     {
         public override void ClearCashe(Topic entity)
         {
-            _cacheManager.RemoveByPrefix(NopTopicCachingDefaults.TopicsPrefixCacheKey);
+            RemoveByPrefix(NopTopicCachingDefaults.TopicsPrefixCacheKey);
         }
     }
 }

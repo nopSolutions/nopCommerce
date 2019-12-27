@@ -7,7 +7,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Orders
     {
         public override void ClearCashe(Order entity)
         {
-            _cacheManager.RemoveByPrefix(NopCatalogCachingDefaults.ProductPricePrefixCacheKey);
+            RemoveByPrefix(NopCatalogCachingDefaults.ProductPricePrefixCacheKey);
         }
     }
 }

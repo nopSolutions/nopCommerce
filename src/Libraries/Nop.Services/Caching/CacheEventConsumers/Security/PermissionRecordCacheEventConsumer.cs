@@ -7,7 +7,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Security
     {
         public override void ClearCashe(PermissionRecord entity)
         {
-            _cacheManager.RemoveByPrefix(NopSecurityCachingDefaults.PermissionsPrefixCacheKey);
+            RemoveByPrefix(NopSecurityCachingDefaults.PermissionsPrefixCacheKey);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Shipping
     {
         public override void ClearCashe(Warehouse entity)
         {
-            _cacheManager.RemoveByPrefix(NopShippingCachingDefaults.WarehousesPrefixCacheKey);
+            RemoveByPrefix(NopShippingCachingDefaults.WarehousesPrefixCacheKey);
         }
     }
 }

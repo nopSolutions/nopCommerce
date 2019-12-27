@@ -7,7 +7,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Security
     {
         public override void ClearCashe(AclRecord entity)
         {
-            _cacheManager.RemoveByPrefix(NopSecurityCachingDefaults.AclRecordPrefixCacheKey);
+            RemoveByPrefix(NopSecurityCachingDefaults.AclRecordPrefixCacheKey);
         }
     }
 }

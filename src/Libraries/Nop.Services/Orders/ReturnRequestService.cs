@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Orders
@@ -64,7 +65,7 @@ namespace Nop.Services.Orders
             if (returnRequestId == 0)
                 return null;
 
-            return _returnRequestRepository.GetById(returnRequestId);
+            return _returnRequestRepository.ToCachedGetById(returnRequestId);
         }
 
         /// <summary>
@@ -150,7 +151,7 @@ namespace Nop.Services.Orders
             if (returnRequestActionId == 0)
                 return null;
 
-            return _returnRequestActionRepository.GetById(returnRequestActionId);
+            return _returnRequestActionRepository.ToCachedGetById(returnRequestActionId);
         }
 
         /// <summary>
@@ -250,7 +251,7 @@ namespace Nop.Services.Orders
             if (returnRequestReasonId == 0)
                 return null;
 
-            return _returnRequestReasonRepository.GetById(returnRequestReasonId);
+            return _returnRequestReasonRepository.ToCachedGetById(returnRequestReasonId);
         }
 
         /// <summary>

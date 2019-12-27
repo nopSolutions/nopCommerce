@@ -7,7 +7,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Logging
     {
         public override void ClearCashe(ActivityLogType entity)
         {
-            _cacheManager.RemoveByPrefix(NopLoggingCachingDefaults.ActivityTypePrefixCacheKey);
+            RemoveByPrefix(NopLoggingCachingDefaults.ActivityTypePrefixCacheKey);
         }
     }
 }

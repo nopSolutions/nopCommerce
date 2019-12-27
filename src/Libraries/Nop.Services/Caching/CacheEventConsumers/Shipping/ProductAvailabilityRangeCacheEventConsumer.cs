@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Shipping
     /// <summary>
     /// Represents a product availability range
     /// </summary>
-    public partial class ProductAvailabilityRangeCacheEventConsumer : EntityCacheEventConsumer<ProductAvailabilityRange>
+    public partial class ProductAvailabilityRangeCacheEventConsumer : CacheEventConsumer<ProductAvailabilityRange>
     {
     }
 }

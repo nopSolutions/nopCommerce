@@ -7,8 +7,8 @@ namespace Nop.Services.Caching.CacheEventConsumers.Customers
     {
         public override void ClearCashe(CustomerAttributeValue entity)
         {
-            _cacheManager.RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerAttributesPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerAttributeValuesPrefixCacheKey);
+            RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerAttributesPrefixCacheKey);
+            RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerAttributeValuesPrefixCacheKey);
         }
     }
 }

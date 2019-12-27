@@ -155,7 +155,7 @@ namespace Nop.Services.Localization
             if (localeStringResourceId == 0)
                 return null;
 
-            return _lsrRepository.GetById(localeStringResourceId);
+            return _lsrRepository.ToCachedGetById(localeStringResourceId);
         }
 
         /// <summary>

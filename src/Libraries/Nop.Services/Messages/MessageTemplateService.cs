@@ -115,7 +115,7 @@ namespace Nop.Services.Messages
             if (messageTemplateId == 0)
                 return null;
 
-            return _messageTemplateRepository.GetById(messageTemplateId);
+            return _messageTemplateRepository.ToCachedGetById(messageTemplateId);
         }
 
         /// <summary>

@@ -6,12 +6,11 @@ namespace Nop.Services.Caching.CacheEventConsumers.Customers
     /// <summary>
     /// Represents a customer-address mapping class
     /// </summary>
-    public partial class CustomerAddressMappingCacheEventConsumer : EntityCacheEventConsumer<CustomerAddressMapping>
+    public partial class CustomerAddressMappingCacheEventConsumer : CacheEventConsumer<CustomerAddressMapping>
     {
         public override void ClearCashe(CustomerAddressMapping entity)
         {
-            _cacheManager.RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerAddressesPrefixCacheKey);
-            base.ClearCashe(entity);
+            RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerAddressesPrefixCacheKey, false);
         }
     }
 }

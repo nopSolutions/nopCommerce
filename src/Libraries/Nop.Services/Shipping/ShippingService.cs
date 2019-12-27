@@ -167,7 +167,7 @@ namespace Nop.Services.Shipping
             if (shippingMethodId == 0)
                 return null;
 
-            return _shippingMethodRepository.GetById(shippingMethodId);
+            return _shippingMethodRepository.ToCachedGetById(shippingMethodId);
         }
 
         /// <summary>

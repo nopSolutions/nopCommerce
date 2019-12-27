@@ -7,7 +7,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Directory
     {
         public override void ClearCashe(StateProvince entity)
         {
-            _cacheManager.RemoveByPrefix(NopDirectoryCachingDefaults.StateProvincesPrefixCacheKey);
+            RemoveByPrefix(NopDirectoryCachingDefaults.StateProvincesPrefixCacheKey);
         }
     }
 }

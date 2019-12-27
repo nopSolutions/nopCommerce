@@ -98,7 +98,7 @@ namespace Nop.Services.Localization
             if (localizedPropertyId == 0)
                 return null;
 
-            return _localizedPropertyRepository.GetById(localizedPropertyId);
+            return _localizedPropertyRepository.ToCachedGetById(localizedPropertyId);
         }
 
         /// <summary>

@@ -388,7 +388,7 @@ namespace Nop.Services.Catalog
             if (id == 0)
                 return null;
 
-            return _predefinedProductAttributeValueRepository.GetById(id);
+            return _predefinedProductAttributeValueRepository.ToCachedGetById(id);
         }
 
         /// <summary>
@@ -471,7 +471,7 @@ namespace Nop.Services.Catalog
             if (productAttributeCombinationId == 0)
                 return null;
 
-            return _productAttributeCombinationRepository.GetById(productAttributeCombinationId);
+            return _productAttributeCombinationRepository.ToCachedGetById(productAttributeCombinationId);
         }
 
         /// <summary>

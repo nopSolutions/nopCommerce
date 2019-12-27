@@ -7,6 +7,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Events;
 using Nop.Services.Orders;
@@ -53,7 +54,7 @@ namespace Nop.Services.Media
             if (downloadId == 0)
                 return null;
 
-            return _downloadRepository.GetById(downloadId);
+            return _downloadRepository.ToCachedGetById(downloadId);
         }
 
         /// <summary>

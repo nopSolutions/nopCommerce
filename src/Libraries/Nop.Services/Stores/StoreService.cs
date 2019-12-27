@@ -82,7 +82,7 @@ namespace Nop.Services.Stores
 
             var store = loadCacheableCopy
                 ? _storeRepository.ToCachedGetById(storeId, key)
-                : _storeRepository.GetById(storeId);
+                : _storeRepository.ToCachedGetById(storeId);
 
             return store;
         }

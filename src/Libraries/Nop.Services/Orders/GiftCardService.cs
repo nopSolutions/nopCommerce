@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 
@@ -68,7 +69,7 @@ namespace Nop.Services.Orders
             if (giftCardId == 0)
                 return null;
 
-            return _giftCardRepository.GetById(giftCardId);
+            return _giftCardRepository.ToCachedGetById(giftCardId);
         }
 
         /// <summary>

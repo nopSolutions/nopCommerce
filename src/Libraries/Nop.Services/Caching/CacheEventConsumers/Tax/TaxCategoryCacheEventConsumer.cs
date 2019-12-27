@@ -7,7 +7,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Tax
     {
         public override void ClearCashe(TaxCategory entity)
         {
-            _cacheManager.RemoveByPrefix(NopTaxCachingDefaults.TaxCategoriesPrefixCacheKey);
+            RemoveByPrefix(NopTaxCachingDefaults.TaxCategoriesPrefixCacheKey);
         }
     }
 }

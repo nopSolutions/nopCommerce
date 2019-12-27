@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Messages
     /// <summary>
     /// Represents an email account
     /// </summary>
-    public partial class EmailAccountCacheEventConsumer : EntityCacheEventConsumer<EmailAccount>
+    public partial class EmailAccountCacheEventConsumer : CacheEventConsumer<EmailAccount>
     {
     }
 }

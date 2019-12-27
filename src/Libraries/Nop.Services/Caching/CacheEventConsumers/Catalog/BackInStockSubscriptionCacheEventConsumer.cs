@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
     /// <summary>
     /// Represents a back in stock subscription
     /// </summary>
-    public partial class BackInStockSubscriptionCacheEventConsumer : EntityCacheEventConsumer<BackInStockSubscription>
+    public partial class BackInStockSubscriptionCacheEventConsumer : CacheEventConsumer<BackInStockSubscription>
     {
     }
 }

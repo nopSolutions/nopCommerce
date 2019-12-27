@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Discounts
     /// <summary>
     /// Represents a discount-category mapping class
     /// </summary>
-    public partial class DiscountCategoryMappingCacheEventConsumer : EntityCacheEventConsumer<DiscountCategoryMapping>
+    public partial class DiscountCategoryMappingCacheEventConsumer : CacheEventConsumer<DiscountCategoryMapping>
     {
     }
 }

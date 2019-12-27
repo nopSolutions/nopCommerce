@@ -72,7 +72,7 @@ namespace Nop.Services.Security
             if (aclRecordId == 0)
                 return null;
 
-            return _aclRecordRepository.GetById(aclRecordId);
+            return _aclRecordRepository.ToCachedGetById(aclRecordId);
         }
 
         /// <summary>

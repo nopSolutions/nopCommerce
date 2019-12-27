@@ -29,6 +29,7 @@ namespace Nop.Services.Customers
 
         private readonly CustomerSettings _customerSettings;
         private readonly ICasheKeyFactory _casheKeyFactory;
+        private readonly ICacheManager _cacheManager;
         private readonly IDataProvider _dataProvider;
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -49,6 +50,7 @@ namespace Nop.Services.Customers
 
         public CustomerService(CustomerSettings customerSettings,
             ICasheKeyFactory casheKeyFactory,
+            ICacheManager cacheManager,
             IDataProvider dataProvider,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
@@ -65,6 +67,7 @@ namespace Nop.Services.Customers
         {
             _customerSettings = customerSettings;
             _casheKeyFactory = casheKeyFactory;
+            _cacheManager = cacheManager;
             _dataProvider = dataProvider;
             _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
@@ -1025,7 +1028,7 @@ namespace Nop.Services.Customers
             if (customerRoleId == 0)
                 return null;
 
-            return _customerRoleRepository.GetById(customerRoleId);
+            return _customerRoleRepository.ToCachedGetById(customerRoleId);
         }
 
         /// <summary>
@@ -1066,7 +1069,9 @@ namespace Nop.Services.Customers
                         (showHidden || cr.Active)
                         select cr.Id;
 
-            return query.ToCachedArray(_casheKeyFactory.GetCustomerRoleIdsCacheKey(customer.Id, showHidden));
+            var key = _casheKeyFactory.GetCustomerRoleIdsCacheKey(customer.Id, showHidden);
+
+            return string.IsNullOrEmpty(key) ? query.ToArray() : _cacheManager.Get(key, () => query.ToArray());
         }
 
         /// <summary>
@@ -1086,7 +1091,9 @@ namespace Nop.Services.Customers
                         (showHidden || cr.Active)
                         select cr;
 
-            return query.ToCachedList(_casheKeyFactory.GetCustomerRolesCacheKey(customer.Id, showHidden));
+            var key = _casheKeyFactory.GetCustomerRolesCacheKey(customer.Id, showHidden);
+
+            return string.IsNullOrEmpty(key) ? query.ToList() : _cacheManager.Get(key, () => query.ToList());
         }
 
         /// <summary>
@@ -1147,7 +1154,9 @@ namespace Nop.Services.Customers
                     (!onlyActiveCustomerRoles || cr.Active)
                 select cr;
 
-            return query.ToCachedAny(_casheKeyFactory.GetIsInCustomerRoleCacheKey(customer.Id, customerRoleSystemName, onlyActiveCustomerRoles));
+            var key = _casheKeyFactory.GetIsInCustomerRoleCacheKey(customer.Id, customerRoleSystemName, onlyActiveCustomerRoles);
+
+            return string.IsNullOrEmpty(key) ? query.Any() : _cacheManager.Get(key, () => query.Any());
         }
 
         /// <summary>
@@ -1445,7 +1454,9 @@ namespace Nop.Services.Customers
                 where cam.CustomerId == customerId
                 select address;
 
-            return query.ToCachedList(_casheKeyFactory.GetAddressesByCustomerIdCacheKey(customerId));
+            var key = _casheKeyFactory.GetAddressesByCustomerIdCacheKey(customerId);
+
+            return string.IsNullOrEmpty(key) ? query.ToList() : _cacheManager.Get(key, () => query.ToList());
         }
 
         /// <summary>
@@ -1464,7 +1475,9 @@ namespace Nop.Services.Customers
                 where cam.CustomerId == customerId && address.Id == addressId
                 select address;
 
-            return query.ToCachedSingle(_casheKeyFactory.GetCustomerAddressCacheKey(customerId, addressId));
+            var key = _casheKeyFactory.GetCustomerAddressCacheKey(customerId, addressId);
+
+            return string.IsNullOrEmpty(key) ? query.Single() : _cacheManager.Get(key, () => query.Single());
         }
 
         /// <summary>

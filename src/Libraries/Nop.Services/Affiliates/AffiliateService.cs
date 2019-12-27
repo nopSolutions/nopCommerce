@@ -6,6 +6,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Seo;
 using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Defaults;
 using Nop.Services.Events;
@@ -66,7 +67,7 @@ namespace Nop.Services.Affiliates
             if (affiliateId == 0)
                 return null;
 
-            return _affiliateRepository.GetById(affiliateId);
+            return _affiliateRepository.ToCachedGetById(affiliateId);
         }
 
         /// <summary>

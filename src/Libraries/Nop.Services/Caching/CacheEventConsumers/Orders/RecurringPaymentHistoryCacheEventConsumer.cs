@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Orders
     /// <summary>
     /// Represents a recurring payment history
     /// </summary>
-    public partial class RecurringPaymentHistoryCacheEventConsumer : EntityCacheEventConsumer<RecurringPaymentHistory>
+    public partial class RecurringPaymentHistoryCacheEventConsumer : CacheEventConsumer<RecurringPaymentHistory>
     {
     }
 }

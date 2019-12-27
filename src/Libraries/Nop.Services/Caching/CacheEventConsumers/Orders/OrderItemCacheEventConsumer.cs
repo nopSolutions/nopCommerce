@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Orders
     /// <summary>
     /// Represents an order item
     /// </summary>
-    public partial class OrderItemCacheEventConsumer : EntityCacheEventConsumer<OrderItem>
+    public partial class OrderItemCacheEventConsumer : CacheEventConsumer<OrderItem>
     {
     }
 }

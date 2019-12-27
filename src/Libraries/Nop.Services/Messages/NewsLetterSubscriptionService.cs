@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 
@@ -172,7 +173,7 @@ namespace Nop.Services.Messages
         {
             if (newsLetterSubscriptionId == 0) return null;
 
-            return _subscriptionRepository.GetById(newsLetterSubscriptionId);
+            return _subscriptionRepository.ToCachedGetById(newsLetterSubscriptionId);
         }
 
         /// <summary>

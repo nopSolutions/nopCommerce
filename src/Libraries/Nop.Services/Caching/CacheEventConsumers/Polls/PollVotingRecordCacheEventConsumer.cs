@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Polls
     /// <summary>
     /// Represents a poll voting record
     /// </summary>
-    public partial class PollVotingRecordCacheEventConsumer : EntityCacheEventConsumer<PollVotingRecord>
+    public partial class PollVotingRecordCacheEventConsumer : CacheEventConsumer<PollVotingRecord>
     {
     }
 }

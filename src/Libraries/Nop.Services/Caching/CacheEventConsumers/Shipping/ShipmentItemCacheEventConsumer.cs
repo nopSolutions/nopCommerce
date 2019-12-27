@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Shipping
     /// <summary>
     /// Represents a shipment item
     /// </summary>
-    public partial class ShipmentItemCacheEventConsumer : EntityCacheEventConsumer<ShipmentItem>
+    public partial class ShipmentItemCacheEventConsumer : CacheEventConsumer<ShipmentItem>
     {
     }
 }

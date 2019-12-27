@@ -8,38 +8,21 @@ namespace Nop.Services.Caching.CacheEventConsumers.Customers
     /// <summary>
     /// Customer cache event consumer (used for caching of current customer password)
     /// </summary>
-    public partial class CustomerCacheEventConsumer : EntityCacheEventConsumer<Customer>, IConsumer<CustomerPasswordChangedEvent>
+    public partial class CustomerCacheEventConsumer : CacheEventConsumer<Customer>, IConsumer<CustomerPasswordChangedEvent>
     {
-        #region Fields
-
-        private readonly IStaticCacheManager _cacheManager;
-
-        #endregion
-
-        #region Ctor
-
-        public CustomerCacheEventConsumer(IStaticCacheManager cacheManager)
-        {
-            _cacheManager = cacheManager;
-        }
-
-        #endregion
-
         #region Methods
 
         //password changed
         public void HandleEvent(CustomerPasswordChangedEvent eventMessage)
         {
-            _cacheManager.Remove(string.Format(NopCustomerServiceCachingDefaults.CustomerPasswordLifetimeCacheKey, eventMessage.Password.CustomerId));
+            Remove(string.Format(NopCustomerServiceCachingDefaults.CustomerPasswordLifetimeCacheKey, eventMessage.Password.CustomerId));
         }
 
         public override void ClearCashe(Customer entity)
         {
-            _cacheManager.RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerRoleIdsPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerAddressesPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopOrderCachingDefaults.ShoppingCartPrefixCacheKey);
-
-            base.ClearCashe(entity);
+            RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerCustomerRolesPrefixCacheKey, false);
+            RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerAddressesPrefixCacheKey, false);
+            RemoveByPrefix(NopOrderCachingDefaults.ShoppingCartPrefixCacheKey);
         }
 
         #endregion

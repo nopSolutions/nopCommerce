@@ -261,7 +261,7 @@ namespace Nop.Services.Forums
                 return null;
             }
 
-            return _forumGroupRepository.GetById(forumGroupId);
+            return _forumGroupRepository.ToCachedGetById(forumGroupId);
         }
 
         /// <summary>
@@ -364,7 +364,7 @@ namespace Nop.Services.Forums
             if (forumId == 0)
                 return null;
 
-            return _forumRepository.GetById(forumId);
+            return _forumRepository.ToCachedGetById(forumId);
         }
 
         /// <summary>
@@ -478,7 +478,7 @@ namespace Nop.Services.Forums
             if (forumTopicId == 0)
                 return null;
 
-            var forumTopic = _forumTopicRepository.GetById(forumTopicId);
+            var forumTopic = _forumTopicRepository.ToCachedGetById(forumTopicId);
             if (forumTopic == null)
                 return null;
 
@@ -711,7 +711,7 @@ namespace Nop.Services.Forums
             if (forumPostId == 0)
                 return null;
 
-            return _forumPostRepository.GetById(forumPostId);
+            return _forumPostRepository.ToCachedGetById(forumPostId);
         }
 
         /// <summary>
@@ -868,7 +868,7 @@ namespace Nop.Services.Forums
             if (privateMessageId == 0)
                 return null;
 
-            return _forumPrivateMessageRepository.GetById(privateMessageId);
+            return _forumPrivateMessageRepository.ToCachedGetById(privateMessageId);
         }
 
         /// <summary>
@@ -996,7 +996,7 @@ namespace Nop.Services.Forums
             if (forumSubscriptionId == 0)
                 return null;
 
-            return _forumSubscriptionRepository.GetById(forumSubscriptionId);
+            return _forumSubscriptionRepository.ToCachedGetById(forumSubscriptionId);
         }
 
         /// <summary>

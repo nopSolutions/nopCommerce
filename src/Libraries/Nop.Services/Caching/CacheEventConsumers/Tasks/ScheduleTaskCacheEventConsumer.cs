@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Tasks
     /// <summary>
     /// Schedule task
     /// </summary>
-    public partial class ScheduleTaskCacheEventConsumer : EntityCacheEventConsumer<ScheduleTask>
+    public partial class ScheduleTaskCacheEventConsumer : CacheEventConsumer<ScheduleTask>
     {
     }
 }

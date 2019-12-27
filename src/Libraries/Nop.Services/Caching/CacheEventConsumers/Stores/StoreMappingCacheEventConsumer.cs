@@ -7,7 +7,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Stores
     {
         public override void ClearCashe(StoreMapping entity)
         {
-            _cacheManager.RemoveByPrefix(NopStoreCachingDefaults.StoreMappingPrefixCacheKey);
+            RemoveByPrefix(NopStoreCachingDefaults.StoreMappingPrefixCacheKey);
         }
     }
 }

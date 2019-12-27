@@ -1698,7 +1698,7 @@ namespace Nop.Services.Catalog
             if (pwi == null)
                 return 0;
             
-            var shipment = _shipmentRepository.GetById(shipmentItem.ShipmentId);
+            var shipment = _shipmentRepository.ToCachedGetById(shipmentItem.ShipmentId);
 
             //not shipped yet? hence "BookReservedInventory" method was not invoked
             if (!shipment.ShippedDateUtc.HasValue)
@@ -1768,7 +1768,7 @@ namespace Nop.Services.Catalog
             if (relatedProductId == 0)
                 return null;
 
-            return _relatedProductRepository.GetById(relatedProductId);
+            return _relatedProductRepository.ToCachedGetById(relatedProductId);
         }
 
         /// <summary>
@@ -1878,7 +1878,7 @@ namespace Nop.Services.Catalog
             if (crossSellProductId == 0)
                 return null;
 
-            return _crossSellProductRepository.GetById(crossSellProductId);
+            return _crossSellProductRepository.ToCachedGetById(crossSellProductId);
         }
 
         /// <summary>
@@ -2047,7 +2047,7 @@ namespace Nop.Services.Catalog
             if (tierPriceId == 0)
                 return null;
 
-            return _tierPriceRepository.GetById(tierPriceId);
+            return _tierPriceRepository.ToCachedGetById(tierPriceId);
         }
 
         /// <summary>
@@ -2147,7 +2147,7 @@ namespace Nop.Services.Catalog
             if (productPictureId == 0)
                 return null;
 
-            return _productPictureRepository.GetById(productPictureId);
+            return _productPictureRepository.ToCachedGetById(productPictureId);
         }
 
         /// <summary>
@@ -2300,7 +2300,7 @@ namespace Nop.Services.Catalog
             if (productReviewId == 0)
                 return null;
 
-            return _productReviewRepository.GetById(productReviewId);
+            return _productReviewRepository.ToCachedGetById(productReviewId);
         }
 
         /// <summary>
@@ -2501,7 +2501,7 @@ namespace Nop.Services.Catalog
             if (warehouseId == 0)
                 return null;
 
-            return _warehouseRepository.GetById(warehouseId);
+            return _warehouseRepository.ToCachedGetById(warehouseId);
         }
 
         /// <summary>

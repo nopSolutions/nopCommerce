@@ -7,10 +7,10 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
     {
         public override void ClearCashe(ProductManufacturer entity)
         {
-            _cacheManager.RemoveByPrefix(NopCatalogCachingDefaults.ManufacturersPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopCatalogCachingDefaults.ProductManufacturersPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopCatalogCachingDefaults.ProductPricePrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopCatalogCachingDefaults.ProductManufacturerIdsPrefixCacheKey);
+            RemoveByPrefix(NopCatalogCachingDefaults.ManufacturersPrefixCacheKey);
+            RemoveByPrefix(NopCatalogCachingDefaults.ProductManufacturersPrefixCacheKey);
+            RemoveByPrefix(NopCatalogCachingDefaults.ProductPricePrefixCacheKey);
+            RemoveByPrefix(NopCatalogCachingDefaults.ProductManufacturerIdsPrefixCacheKey);
         }
     }
 }

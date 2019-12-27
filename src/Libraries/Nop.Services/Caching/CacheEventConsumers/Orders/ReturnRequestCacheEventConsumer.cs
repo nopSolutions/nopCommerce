@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Orders
     /// <summary>
     /// Represents a return request
     /// </summary>
-    public partial class ReturnRequestCacheEventConsumer : EntityCacheEventConsumer<ReturnRequest>
+    public partial class ReturnRequestCacheEventConsumer : CacheEventConsumer<ReturnRequest>
     {
     }
 }

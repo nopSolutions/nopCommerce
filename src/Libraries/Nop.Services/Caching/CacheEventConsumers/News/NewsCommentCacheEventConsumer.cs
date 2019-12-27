@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.News
     /// <summary>
     /// Represents a news comment
     /// </summary>
-    public partial class NewsCommentCacheEventConsumer : EntityCacheEventConsumer<NewsComment>
+    public partial class NewsCommentCacheEventConsumer : CacheEventConsumer<NewsComment>
     {
     }
 }

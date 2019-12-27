@@ -5,32 +5,58 @@ using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Caching.CacheEventConsumers
 {
-    public abstract class CacheEventConsumer<T> : IConsumer<EntityInsertedEvent<T>>,
-        IConsumer<EntityUpdatedEvent<T>>,
-        IConsumer<EntityDeletedEvent<T>> where T : BaseEntity
+    public partial class CacheEventConsumer<TEntity> : IConsumer<EntityInsertedEvent<TEntity>>,
+        IConsumer<EntityUpdatedEvent<TEntity>>,
+        IConsumer<EntityDeletedEvent<TEntity>> where TEntity : BaseEntity
     {
-        protected readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
+        private readonly ICacheManager _cacheManager;
 
         protected CacheEventConsumer()
         {
-            _cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
+            _staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
+            _cacheManager = EngineContext.Current.Resolve<ICacheManager>();
         }
 
-        public abstract void ClearCashe(T entity);
+        public virtual void ClearCashe(TEntity entity) { }
 
-        public virtual void HandleEvent(EntityInsertedEvent<T> eventMessage)
+        protected virtual void RemoveByPrefix(string prefixCacheKey, bool useStaticCashe = true)
         {
+            if (useStaticCashe)
+                _staticCacheManager.RemoveByPrefix(prefixCacheKey);
+            else
+                _cacheManager.RemoveByPrefix(prefixCacheKey);
+        }
+
+        protected virtual void Remove(string cacheKey, bool useStaticCashe = true)
+        {
+            if (useStaticCashe)
+                _staticCacheManager.Remove(cacheKey);
+            else
+                _cacheManager.Remove(cacheKey);
+        }
+
+        public virtual void HandleEvent(EntityInsertedEvent<TEntity> eventMessage)
+        {
+            var entity = eventMessage.Entity;
+            ClearCashe(entity);
+        }
+
+        public virtual void HandleEvent(EntityUpdatedEvent<TEntity> eventMessage)
+        {
+            var entity = eventMessage.Entity;
+
+            _staticCacheManager.Remove(string.Format(NopCachingDefaults.NopEntityCacheKey, typeof(TEntity).Name, entity.Id));
             ClearCashe(eventMessage.Entity);
         }
 
-        public virtual void HandleEvent(EntityUpdatedEvent<T> eventMessage)
+        public virtual void HandleEvent(EntityDeletedEvent<TEntity> eventMessage)
         {
-            ClearCashe(eventMessage.Entity);
-        }
+            var entity = eventMessage.Entity;
 
-        public virtual void HandleEvent(EntityDeletedEvent<T> eventMessage)
-        {
+            _staticCacheManager.Remove(string.Format(NopCachingDefaults.NopEntityCacheKey, typeof(TEntity).Name, entity.Id));
             ClearCashe(eventMessage.Entity);
         }
     }
 }
+

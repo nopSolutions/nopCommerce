@@ -95,7 +95,7 @@ namespace Nop.Services.Security
             if (permissionId == 0)
                 return null;
 
-            return _permissionRecordRepository.GetById(permissionId);
+            return _permissionRecordRepository.ToCachedGetById(permissionId);
         }
 
         /// <summary>

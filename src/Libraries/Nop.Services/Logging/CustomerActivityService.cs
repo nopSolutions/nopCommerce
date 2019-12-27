@@ -101,7 +101,7 @@ namespace Nop.Services.Logging
             if (activityLogTypeId == 0)
                 return null;
 
-            return _activityLogTypeRepository.GetById(activityLogTypeId);
+            return _activityLogTypeRepository.ToCachedGetById(activityLogTypeId);
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace Nop.Services.Logging
             if (activityLogId == 0)
                 return null;
 
-            return _activityLogRepository.GetById(activityLogId);
+            return _activityLogRepository.ToCachedGetById(activityLogId);
         }
 
         /// <summary>

@@ -78,7 +78,7 @@
         /// {0} : customer identifier
         /// {1} : show hidden
         /// </remarks>
-        public static string CustomerRoleIdsCacheKey => "Nop.custome.customerrole.ids-{0}-{1}";
+        public static string CustomerRoleIdsCacheKey => "Nop.customer.customerrole.ids-{0}-{1}";
 
         /// <summary>
         /// Gets a key for caching
@@ -87,7 +87,7 @@
         /// {0} : customer identifier
         /// {1} : show hidden
         /// </remarks>
-        public static string CustomerRolesCacheKey => "Nop.custome.customerrole-{0}-{1}";
+        public static string CustomerRolesCacheKey => "Nop.customer.customerrole-{0}-{1}";
 
         /// <summary>
         /// Gets a key for caching
@@ -97,12 +97,12 @@
         /// {1} : customer role system name
         /// {2} : only active customer roles
         /// </remarks>
-        public static string IsInCustomerRoleCacheKey => "Nop.custome.customerrole.is.in-{0}-{1}-{2}";
+        public static string IsInCustomerRoleCacheKey => "Nop.customer.customerrole.is.in-{0}-{1}-{2}";
         
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string CustomerRoleIdsPrefixCacheKey => "Nop.custome.customerrole";
+        public static string CustomerCustomerRolesPrefixCacheKey => "Nop.customer.customerrole";
 
         /// <summary>
         /// Gets a key for caching
@@ -110,7 +110,7 @@
         /// <remarks>
         /// {0} : customer identifier
         /// </remarks>
-        public static string CustomerAddressesByCustomerIdCacheKey => "Nop.custome.addresses.by.id-{0}";
+        public static string CustomerAddressesByCustomerIdCacheKey => "Nop.customer.addresses.by.id-{0}";
 
         /// <summary>
         /// Gets a key for caching
@@ -119,13 +119,13 @@
         /// {0} : customer identifier
         /// {1} : address identifier
         /// </remarks>
-        public static string CustomerAddressCacheKeyCacheKey => "Nop.custome.addresses.address-{0}-{1}";
+        public static string CustomerAddressCacheKeyCacheKey => "Nop.customer.addresses.address-{0}-{1}";
 
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string CustomerAddressesPrefixCacheKey => "Nop.custome.addresses";
+        public static string CustomerAddressesPrefixCacheKey => "Nop.customer.addresses";
 
         #endregion
 

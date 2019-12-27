@@ -684,7 +684,7 @@ namespace Nop.Services.Catalog
             if (productCategoryId == 0)
                 return null;
 
-            return _productCategoryRepository.GetById(productCategoryId);
+            return _productCategoryRepository.ToCachedGetById(productCategoryId);
         }
 
         /// <summary>

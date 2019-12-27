@@ -169,7 +169,7 @@ namespace Nop.Services.Catalog
             if (productTagId == 0)
                 return null;
 
-            return _productTagRepository.GetById(productTagId);
+            return _productTagRepository.ToCachedGetById(productTagId);
         }
 
         /// <summary>

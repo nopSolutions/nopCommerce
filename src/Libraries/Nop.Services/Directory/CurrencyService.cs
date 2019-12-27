@@ -78,7 +78,7 @@ namespace Nop.Services.Directory
 
             return loadCacheableCopy
                 ? _currencyRepository.ToCachedGetById(currencyId, key)
-                : _currencyRepository.GetById(currencyId);
+                : _currencyRepository.ToCachedGetById(currencyId);
         }
 
         /// <summary>
