@@ -5,7 +5,7 @@ using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Caching.CacheEventConsumers
 {
-    public partial class CacheEventConsumer<TEntity> : IConsumer<EntityInsertedEvent<TEntity>>,
+    public abstract partial class CacheEventConsumer<TEntity> : IConsumer<EntityInsertedEvent<TEntity>>,
         IConsumer<EntityUpdatedEvent<TEntity>>,
         IConsumer<EntityDeletedEvent<TEntity>> where TEntity : BaseEntity
     {
