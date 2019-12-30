@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Nop.Tests\Nop.Tests.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Domain\Common\" />
+  </ItemGroup>
+
 </Project>

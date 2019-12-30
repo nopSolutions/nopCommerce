@@ -11,7 +11,7 @@ namespace Nop.Services.Plugins
     /// <summary>
     /// Represents an information about plugins
     /// </summary>
-    public partial class PluginsInfo: IPluginsInfo
+    public partial class PluginsInfo : IPluginsInfo
     {
         #region Fields
 
@@ -121,7 +121,7 @@ namespace Nop.Services.Plugins
                 InstalledPluginNames = GetObsoleteInstalledPluginNames();
 
                 //and save info into a new file if need
-                if(InstalledPluginNames.Any())
+                if (InstalledPluginNames.Any())
                     Save();
             }
 

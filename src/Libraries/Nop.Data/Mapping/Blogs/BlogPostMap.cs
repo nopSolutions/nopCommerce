@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Blogs;
 
 namespace Nop.Data.Mapping.Blogs
@@ -15,22 +14,25 @@ namespace Nop.Data.Mapping.Blogs
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<BlogPost> builder)
+        public override void Configure(EntityMappingBuilder<BlogPost> builder)
         {
-            builder.ToTable(nameof(BlogPost));
-            builder.HasKey(blogPost => blogPost.Id);
+            builder.HasTableName(nameof(BlogPost));
 
-            builder.Property(blogPost => blogPost.Title).IsRequired();
-            builder.Property(blogPost => blogPost.Body).IsRequired();
-            builder.Property(blogPost => blogPost.MetaKeywords).HasMaxLength(400);
-            builder.Property(blogPost => blogPost.MetaTitle).HasMaxLength(400);
+            builder.Property(blogPost => blogPost.Title).IsNullable(false);
+            builder.Property(blogPost => blogPost.Body).IsNullable(false);
+            builder.Property(blogPost => blogPost.MetaKeywords).HasLength(400);
+            builder.Property(blogPost => blogPost.MetaTitle).HasLength(400);
 
-            builder.HasOne(blogPost => blogPost.Language)
-                .WithMany()
-                .HasForeignKey(blogPost => blogPost.LanguageId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(blogpost => blogpost.LanguageId);
+            builder.Property(blogpost => blogpost.IncludeInSitemap);
+            builder.Property(blogpost => blogpost.BodyOverview);
+            builder.Property(blogpost => blogpost.AllowComments);
+            builder.Property(blogpost => blogpost.Tags);
+            builder.Property(blogpost => blogpost.StartDateUtc);
+            builder.Property(blogpost => blogpost.EndDateUtc);
+            builder.Property(blogpost => blogpost.MetaDescription);
+            builder.Property(blogpost => blogpost.LimitedToStores);
+            builder.Property(blogpost => blogpost.CreatedOnUtc);
         }
 
         #endregion

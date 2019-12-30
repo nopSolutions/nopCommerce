@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
@@ -15,17 +14,17 @@ namespace Nop.Data.Mapping.Catalog
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<StockQuantityHistory> builder)
+        public override void Configure(EntityMappingBuilder<StockQuantityHistory> builder)
         {
-            builder.ToTable(nameof(StockQuantityHistory));
-            builder.HasKey(historyEntry => historyEntry.Id);
+            builder.HasTableName(nameof(StockQuantityHistory));
 
-            builder.HasOne(historyEntry => historyEntry.Product)
-                .WithMany()
-                .HasForeignKey(historyEntry => historyEntry.ProductId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(stockquantityhistory => stockquantityhistory.QuantityAdjustment);
+            builder.Property(stockquantityhistory => stockquantityhistory.StockQuantity);
+            builder.Property(stockquantityhistory => stockquantityhistory.Message);
+            builder.Property(stockquantityhistory => stockquantityhistory.CreatedOnUtc);
+            builder.Property(stockquantityhistory => stockquantityhistory.ProductId);
+            builder.Property(stockquantityhistory => stockquantityhistory.CombinationId);
+            builder.Property(stockquantityhistory => stockquantityhistory.WarehouseId);
         }
 
         #endregion

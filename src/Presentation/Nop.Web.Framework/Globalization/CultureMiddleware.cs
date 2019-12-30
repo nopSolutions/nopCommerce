@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Data;
 
 namespace Nop.Web.Framework.Globalization
 {

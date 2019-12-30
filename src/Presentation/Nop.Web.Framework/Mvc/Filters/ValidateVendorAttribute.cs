@@ -3,8 +3,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
-using Nop.Core.Data;
-using Nop.Core.Domain.Customers;
+using Nop.Data;
+using Nop.Services.Customers;
 
 namespace Nop.Web.Framework.Mvc.Filters
 {
@@ -52,15 +52,17 @@ namespace Nop.Web.Framework.Mvc.Filters
             #region Fields
 
             private readonly bool _ignoreFilter;
+            private readonly ICustomerService _customerService;
             private readonly IWorkContext _workContext;
 
             #endregion
 
             #region Ctor
 
-            public ValidateVendorFilter(bool ignoreFilter, IWorkContext workContext)
+            public ValidateVendorFilter(bool ignoreFilter, IWorkContext workContext, ICustomerService customerService)
             {
                 _ignoreFilter = ignoreFilter;
+                _customerService = customerService;
                 _workContext = workContext;
             }
 
@@ -90,7 +92,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //whether current customer is vendor
-                if (!_workContext.CurrentCustomer.IsVendor())
+                if (!_customerService.IsVendor(_workContext.CurrentCustomer))
                     return;
 
                 //ensure that this user has active vendor record associated

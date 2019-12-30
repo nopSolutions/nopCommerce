@@ -18,6 +18,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Helpers;
@@ -54,10 +55,12 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IAddressAttributeModelFactory _addressAttributeModelFactory;
+        private readonly IAddressService _addressService;
         private readonly IAffiliateService _affiliateService;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDiscountService _discountService;
         private readonly IDownloadService _downloadService;
@@ -76,8 +79,10 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductService _productService;
         private readonly IReturnRequestService _returnRequestService;
+        private readonly IRewardPointService _rewardPointService;
         private readonly IShipmentService _shipmentService;
         private readonly IShippingService _shippingService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreService _storeService;
         private readonly ITaxService _taxService;
         private readonly IUrlHelperFactory _urlHelperFactory;
@@ -99,10 +104,12 @@ namespace Nop.Web.Areas.Admin.Factories
             IActionContextAccessor actionContextAccessor,
             IAddressAttributeFormatter addressAttributeFormatter,
             IAddressAttributeModelFactory addressAttributeModelFactory,
+            IAddressService addressService,
             IAffiliateService affiliateService,
             IBaseAdminModelFactory baseAdminModelFactory,
             ICountryService countryService,
             ICurrencyService currencyService,
+            ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IDiscountService discountService,
             IDownloadService downloadService,
@@ -121,8 +128,10 @@ namespace Nop.Web.Areas.Admin.Factories
             IProductAttributeService productAttributeService,
             IProductService productService,
             IReturnRequestService returnRequestService,
+            IRewardPointService rewardPointService,
             IShipmentService shipmentService,
             IShippingService shippingService,
+            IStateProvinceService stateProvinceService,
             IStoreService storeService,
             ITaxService taxService,
             IUrlHelperFactory urlHelperFactory,
@@ -140,10 +149,12 @@ namespace Nop.Web.Areas.Admin.Factories
             _actionContextAccessor = actionContextAccessor;
             _addressAttributeFormatter = addressAttributeFormatter;
             _addressAttributeModelFactory = addressAttributeModelFactory;
+            _addressService = addressService;
             _affiliateService = affiliateService;
             _baseAdminModelFactory = baseAdminModelFactory;
             _countryService = countryService;
             _currencyService = currencyService;
+            _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _discountService = discountService;
             _downloadService = downloadService;
@@ -162,8 +173,10 @@ namespace Nop.Web.Areas.Admin.Factories
             _productAttributeService = productAttributeService;
             _productService = productService;
             _returnRequestService = returnRequestService;
+            _rewardPointService = rewardPointService;
             _shipmentService = shipmentService;
             _shippingService = shippingService;
+            _stateProvinceService = stateProvinceService;
             _storeService = storeService;
             _taxService = taxService;
             _urlHelperFactory = urlHelperFactory;
@@ -236,22 +249,22 @@ namespace Nop.Web.Areas.Admin.Factories
             var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
 
             //get order items
-            var orderItems = order.OrderItems;
-            if (_workContext.CurrentVendor != null)
-                orderItems = orderItems.Where(orderItem => orderItem.Product.VendorId == _workContext.CurrentVendor.Id).ToList();
+            var orderItems = _orderService.GetOrderItems(order.Id, vendorId: _workContext.CurrentVendor?.Id ?? 0);
 
             foreach (var orderItem in orderItems)
             {
+                var product = _productService.GetProductById(orderItem.ProductId);
+
                 //fill in model values from the entity
                 var orderItemModel = new OrderItemModel
                 {
                     Id = orderItem.Id,
                     ProductId = orderItem.ProductId,
-                    ProductName = orderItem.Product.Name,
+                    ProductName = product.Name,
                     Quantity = orderItem.Quantity,
-                    IsDownload = orderItem.Product.IsDownload,
+                    IsDownload = product.IsDownload,
                     DownloadCount = orderItem.DownloadCount,
-                    DownloadActivationType = orderItem.Product.DownloadActivationType,
+                    DownloadActivationType = product.DownloadActivationType,
                     IsDownloadActivated = orderItem.IsDownloadActivated,
                     UnitPriceInclTaxValue = orderItem.UnitPriceInclTax,
                     UnitPriceExclTaxValue = orderItem.UnitPriceExclTax,
@@ -263,11 +276,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 };
 
                 //fill in additional values (not existing in the entity)
-                orderItemModel.Sku = _productService.FormatSku(orderItem.Product, orderItem.AttributesXml);
-                orderItemModel.VendorName = _vendorService.GetVendorById(orderItem.Product.VendorId)?.Name;
+                orderItemModel.Sku = _productService.FormatSku(product, orderItem.AttributesXml);
+                orderItemModel.VendorName = _vendorService.GetVendorById(product.VendorId)?.Name;
 
                 //picture
-                var orderItemPicture = _pictureService.GetProductPicture(orderItem.Product, orderItem.AttributesXml);
+                var orderItemPicture = _pictureService.GetProductPicture(product, orderItem.AttributesXml);
                 orderItemModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(orderItemPicture, 75);
 
                 //license file
@@ -296,19 +309,19 @@ namespace Nop.Web.Areas.Admin.Factories
                     _workContext.WorkingLanguage, false, true);
 
                 //recurring info
-                if (orderItem.Product.IsRecurring)
+                if (product.IsRecurring)
                 {
                     orderItemModel.RecurringInfo = string.Format(_localizationService.GetResource("Admin.Orders.Products.RecurringPeriod"),
-                        orderItem.Product.RecurringCycleLength, _localizationService.GetLocalizedEnum(orderItem.Product.RecurringCyclePeriod));
+                        product.RecurringCycleLength, _localizationService.GetLocalizedEnum(product.RecurringCyclePeriod));
                 }
 
                 //rental info
-                if (orderItem.Product.IsRental)
+                if (product.IsRental)
                 {
                     var rentalStartDate = orderItem.RentalStartDateUtc.HasValue
-                        ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalStartDateUtc.Value) : string.Empty;
+                        ? _productService.FormatRentalDate(product, orderItem.RentalStartDateUtc.Value) : string.Empty;
                     var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
-                        ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalEndDateUtc.Value) : string.Empty;
+                        ? _productService.FormatRentalDate(product, orderItem.RentalEndDateUtc.Value) : string.Empty;
                     orderItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
                         rentalStartDate, rentalEndDate);
                 }
@@ -428,21 +441,21 @@ namespace Nop.Web.Areas.Admin.Factories
             model.OrderTotalDiscountValue = order.OrderDiscount;
 
             //gift cards
-            foreach (var gcuh in order.GiftCardUsageHistory)
+            foreach (var gcuh in _giftCardService.GetGiftCardUsageHistory(order))
             {
                 model.GiftCards.Add(new OrderModel.GiftCard
                 {
-                    CouponCode = gcuh.GiftCard.GiftCardCouponCode,
+                    CouponCode = _giftCardService.GetGiftCardById(gcuh.GiftCardId).GiftCardCouponCode,
                     Amount = _priceFormatter.FormatPrice(-gcuh.UsedValue, true, false)
                 });
             }
 
             //reward points
-            if (order.RedeemedRewardPointsEntry != null)
+            if (order.RedeemedRewardPointsEntryId.HasValue && _rewardPointService.GetRewardPointsHistoryEntryById(order.RedeemedRewardPointsEntryId.Value) is RewardPointsHistory redeemedRewardPointsEntry)
             {
-                model.RedeemedRewardPoints = -order.RedeemedRewardPointsEntry.Points;
+                model.RedeemedRewardPoints = -redeemedRewardPointsEntry.Points;
                 model.RedeemedRewardPointsAmount =
-                    _priceFormatter.FormatPrice(-order.RedeemedRewardPointsEntry.UsedAmount, true, false);
+                    _priceFormatter.FormatPrice(-redeemedRewardPointsEntry.UsedAmount, true, false);
             }
 
             //total
@@ -457,10 +470,12 @@ namespace Nop.Web.Areas.Admin.Factories
             var duh = _discountService.GetAllDiscountUsageHistory(orderId: order.Id);
             foreach (var d in duh)
             {
+                var discount = _discountService.GetDiscountById(d.DiscountId);
+
                 model.UsedDiscounts.Add(new OrderModel.UsedDiscountModel
                 {
                     DiscountId = d.DiscountId,
-                    DiscountName = d.Discount.Name
+                    DiscountName = discount.Name
                 });
             }
 
@@ -485,11 +500,15 @@ namespace Nop.Web.Areas.Admin.Factories
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
+            var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+
             //prepare billing address
-            model.BillingAddress = order.BillingAddress.ToModel(model.BillingAddress);
-            model.BillingAddress.CountryName = order.BillingAddress.Country?.Name;
-            model.BillingAddress.StateProvinceName = order.BillingAddress.StateProvince?.Name;
-            PrepareAddressModel(model.BillingAddress, order.BillingAddress);
+            model.BillingAddress = billingAddress.ToModel(model.BillingAddress);
+
+            model.BillingAddress.CountryName = _countryService.GetCountryByAddress(billingAddress)?.Name;
+            model.BillingAddress.StateProvinceName = _stateProvinceService.GetStateProvinceByAddress(billingAddress)?.Name;
+
+            PrepareAddressModel(model.BillingAddress, billingAddress);
 
             if (order.AllowStoringCreditCardNumber)
             {
@@ -569,19 +588,28 @@ namespace Nop.Web.Areas.Admin.Factories
             model.PickupInStore = order.PickupInStore;
             if (!order.PickupInStore)
             {
-                model.ShippingAddress = order.ShippingAddress.ToModel(model.ShippingAddress);
-                model.ShippingAddress.CountryName = order.ShippingAddress.Country?.Name;
-                model.ShippingAddress.StateProvinceName = order.ShippingAddress.StateProvince?.Name;
-                PrepareAddressModel(model.ShippingAddress, order.ShippingAddress);
-                model.ShippingAddressGoogleMapsUrl = $"https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={WebUtility.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : ""))}";
+                var shippingAddress = _addressService.GetAddressById(order.ShippingAddressId.Value);
+                var shippingCountry = _countryService.GetCountryByAddress(shippingAddress);
+
+                model.ShippingAddress = shippingAddress.ToModel(model.ShippingAddress);
+                model.ShippingAddress.CountryName = shippingCountry?.Name;
+                model.ShippingAddress.StateProvinceName = _stateProvinceService.GetStateProvinceByAddress(shippingAddress)?.Name;
+                PrepareAddressModel(model.ShippingAddress, shippingAddress);
+                model.ShippingAddressGoogleMapsUrl = "https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q=" +
+                    $"{WebUtility.UrlEncode(shippingAddress.Address1 + " " + shippingAddress.ZipPostalCode + " " + shippingAddress.City + " " + (shippingCountry?.Name ?? string.Empty))}";
             }
             else
             {
-                if (order.PickupAddress == null)
+                if (order.PickupAddressId is null)
                     return;
 
-                model.PickupAddress = order.PickupAddress.ToModel(model.PickupAddress);
-                model.PickupAddressGoogleMapsUrl = $"https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={WebUtility.UrlEncode($"{order.PickupAddress.Address1} {order.PickupAddress.ZipPostalCode} {order.PickupAddress.City} {(order.PickupAddress.Country != null ? order.PickupAddress.Country.Name : string.Empty)}")}";
+                var pickupAddress = _addressService.GetAddressById(order.PickupAddressId.Value);
+
+                var pickupCountry = _countryService.GetCountryByAddress(pickupAddress);
+
+                model.PickupAddress = pickupAddress.ToModel(model.PickupAddress);
+                model.PickupAddressGoogleMapsUrl = $"https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q=" +
+                    $"{WebUtility.UrlEncode($"{pickupAddress.Address1} {pickupAddress.ZipPostalCode} {pickupAddress.City} {(pickupCountry?.Name ?? string.Empty)}")}";
             }
         }
 
@@ -609,7 +637,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Id = attribute.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
-                    Name = attribute.ProductAttribute.Name,
+                    Name = _productAttributeService.GetProductAttributeById(attribute.ProductAttributeId).Name,
                     TextPrompt = attribute.TextPrompt,
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
@@ -624,13 +652,15 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 if (attribute.ShouldHaveValues())
                 {
+                    var customer = _customerService.GetCustomerById(order.CustomerId);
+
                     //values
                     var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
                         //price adjustment
                         var priceAdjustment = _taxService.GetProductPrice(product,
-                            _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue, order.Customer), out _);
+                            _priceCalculationService.GetProductAttributeValuePriceAdjustment(product, attributeValue, customer), out _);
 
                         var priceAdjustmentStr = string.Empty;
                         if (priceAdjustment != 0)
@@ -668,18 +698,28 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <param name="model">Shipment item model</param>
         /// <param name="orderItem">Order item</param>
-        protected virtual void PrepareShipmentItemModel(ShipmentItemModel model, OrderItem orderItem)
+        /// <param name="product">Product item</param>
+        protected virtual void PrepareShipmentItemModel(ShipmentItemModel model, OrderItem orderItem, Product product)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            if (orderItem is null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            if (product is null)
+                throw new ArgumentNullException(nameof(product));
+
+            if (orderItem.ProductId != product.Id)
+                throw new ArgumentException($"{nameof(orderItem.ProductId)} != {nameof(product.Id)}");
+
             //fill in additional values (not existing in the entity)
             model.OrderItemId = orderItem.Id;
             model.ProductId = orderItem.ProductId;
-            model.ProductName = orderItem.Product.Name;
-            model.Sku = _productService.FormatSku(orderItem.Product, orderItem.AttributesXml);
+            model.ProductName = product.Name;
+            model.Sku = _productService.FormatSku(product, orderItem.AttributesXml);
             model.AttributeInfo = orderItem.AttributeDescription;
-            model.ShipSeparately = orderItem.Product.ShipSeparately;
+            model.ShipSeparately = product.ShipSeparately;
             model.QuantityOrdered = orderItem.Quantity;
             model.QuantityInAllShipments = _orderService.GetTotalNumberOfItemsInAllShipment(orderItem);
             model.QuantityToAdd = _orderService.GetTotalNumberOfItemsCanBeAddedToShipment(orderItem);
@@ -689,15 +729,15 @@ namespace Nop.Web.Areas.Admin.Factories
             if (orderItem.ItemWeight.HasValue)
                 model.ItemWeight = $"{orderItem.ItemWeight:F2} [{baseWeight}]";
             model.ItemDimensions =
-                $"{orderItem.Product.Length:F2} x {orderItem.Product.Width:F2} x {orderItem.Product.Height:F2} [{baseDimension}]";
+                $"{product.Length:F2} x {product.Width:F2} x {product.Height:F2} [{baseDimension}]";
 
-            if (!orderItem.Product.IsRental)
+            if (!product.IsRental)
                 return;
 
             var rentalStartDate = orderItem.RentalStartDateUtc.HasValue
-                ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalStartDateUtc.Value) : string.Empty;
+                ? _productService.FormatRentalDate(product, orderItem.RentalStartDateUtc.Value) : string.Empty;
             var rentalEndDate = orderItem.RentalEndDateUtc.HasValue
-                ? _productService.FormatRentalDate(orderItem.Product, orderItem.RentalEndDateUtc.Value) : string.Empty;
+                ? _productService.FormatRentalDate(product, orderItem.RentalEndDateUtc.Value) : string.Empty;
             model.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"), rentalStartDate, rentalEndDate);
         }
 
@@ -926,6 +966,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 //fill in model values from the entity
                 return orders.Select(order =>
                 {
+                    var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+
                     //fill in model values from the entity
                     var orderModel = new OrderModel
                     {
@@ -933,8 +975,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         OrderStatusId = order.OrderStatusId,
                         PaymentStatusId = order.PaymentStatusId,
                         ShippingStatusId = order.ShippingStatusId,
-                        CustomerEmail = order.BillingAddress.Email,
-                        CustomerFullName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}",
+                        CustomerEmail = billingAddress.Email,
+                        CustomerFullName = $"{billingAddress.FirstName} {billingAddress.LastName}",
                         CustomerId = order.CustomerId,
                         CustomOrderNumber = order.CustomOrderNumber
                     };
@@ -1051,13 +1093,15 @@ namespace Nop.Web.Areas.Admin.Factories
                     CheckoutAttributeInfo = order.CheckoutAttributeDescription
                 };
 
+                var customer = _customerService.GetCustomerById(order.CustomerId);
+
                 model.OrderGuid = order.OrderGuid;
                 model.CustomOrderNumber = order.CustomOrderNumber;
                 model.CustomerIp = order.CustomerIp;
-                model.CustomerId = order.CustomerId;
+                model.CustomerId = customer.Id;
                 model.OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus);
                 model.StoreName = _storeService.GetStoreById(order.StoreId)?.Name ?? "Deleted";
-                model.CustomerInfo = order.Customer.IsRegistered() ? order.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+                model.CustomerInfo = _customerService.IsRegistered(customer) ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                 model.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
                 model.CustomValues = _paymentService.DeserializeCustomValues(order);
 
@@ -1202,6 +1246,8 @@ namespace Nop.Web.Areas.Admin.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
+            var customer = _customerService.GetCustomerById(order.CustomerId);
+
             model.ProductId = product.Id;
             model.OrderId = order.Id;
             model.Name = product.Name;
@@ -1210,9 +1256,9 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AutoUpdateOrderTotals = _orderSettings.AutoUpdateOrderTotalsOnEditingOrder;
 
             var presetQty = 1;
-            var presetPrice = _priceCalculationService.GetFinalPrice(product, order.Customer, decimal.Zero, true, presetQty);
-            var presetPriceInclTax = _taxService.GetProductPrice(product, presetPrice, true, order.Customer, out _);
-            var presetPriceExclTax = _taxService.GetProductPrice(product, presetPrice, false, order.Customer, out _);
+            var presetPrice = _priceCalculationService.GetFinalPrice(product, customer, decimal.Zero, true, presetQty);
+            var presetPriceInclTax = _taxService.GetProductPrice(product, presetPrice, true, customer, out _);
+            var presetPriceExclTax = _taxService.GetProductPrice(product, presetPrice, false, customer, out _);
             model.UnitPriceExclTax = presetPriceExclTax;
             model.UnitPriceInclTax = presetPriceInclTax;
             model.Quantity = presetQty;
@@ -1322,6 +1368,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.TrackingNumber,
                 searchModel.LoadNotShipped,
                 searchModel.LoadNotDelivered,
+                0,
                 startDateValue,
                 endDateValue,
                 searchModel.Page - 1,
@@ -1347,7 +1394,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     shipmentModel.CanShip = !shipment.ShippedDateUtc.HasValue;
                     shipmentModel.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
-                    shipmentModel.CustomOrderNumber = shipment.Order.CustomOrderNumber;
+
+                    var order = _orderService.GetOrderById(shipment.OrderId);
+
+                    shipmentModel.CustomOrderNumber = order.CustomOrderNumber;
 
                     if (shipment.TotalWeight.HasValue)
                         shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{_measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name}]";
@@ -1377,7 +1427,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 model.CanShip = !shipment.ShippedDateUtc.HasValue;
                 model.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
-                model.CustomOrderNumber = shipment.Order.CustomOrderNumber;
+
+                var shipmentOrder = _orderService.GetOrderById(shipment.OrderId);
+
+                model.CustomOrderNumber = shipmentOrder.CustomOrderNumber;
 
                 model.ShippedDate = shipment.ShippedDateUtc.HasValue
                     ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc).ToString()
@@ -1391,11 +1444,13 @@ namespace Nop.Web.Areas.Admin.Factories
                         $"{shipment.TotalWeight:F2} [{_measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name}]";
 
                 //prepare shipment items
-                foreach (var item in shipment.ShipmentItems)
+                foreach (var item in _shipmentService.GetShipmentItemsByShipmentId(shipment.Id))
                 {
                     var orderItem = _orderService.GetOrderItemById(item.OrderItemId);
                     if (orderItem == null)
                         continue;
+
+                    var product = _productService.GetProductById(orderItem.ProductId);
 
                     //fill in model values from the entity
                     var shipmentItemModel = new ShipmentItemModel
@@ -1405,7 +1460,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         ShippedFromWarehouse = _shippingService.GetWarehouseById(item.WarehouseId)?.Name
                     };
 
-                    PrepareShipmentItemModel(shipmentItemModel, orderItem);
+                    PrepareShipmentItemModel(shipmentItemModel, orderItem, product);
 
                     model.Items.Add(shipmentItemModel);
                 }
@@ -1428,29 +1483,29 @@ namespace Nop.Web.Areas.Admin.Factories
 
             model.OrderId = order.Id;
             model.CustomOrderNumber = order.CustomOrderNumber;
-            var orderItems = order.OrderItems.Where(item => item.Product.IsShipEnabled).ToList();
-            if (_workContext.CurrentVendor != null)
-                orderItems = orderItems.Where(item => item.Product.VendorId == _workContext.CurrentVendor.Id).ToList();
+
+            var orderItems = _orderService.GetOrderItems(order.Id, isShipEnabled: true, vendorId: _workContext.CurrentVendor?.Id ?? 0).ToList();
 
             foreach (var orderItem in orderItems)
             {
                 var shipmentItemModel = new ShipmentItemModel();
-                PrepareShipmentItemModel(shipmentItemModel, orderItem);
+
+                var product = _productService.GetProductById(orderItem.ProductId);
+
+                PrepareShipmentItemModel(shipmentItemModel, orderItem, product);
 
                 //ensure that this product can be added to a shipment
                 if (shipmentItemModel.QuantityToAdd <= 0)
                     continue;
 
-                if (orderItem.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
-                    orderItem.Product.UseMultipleWarehouses)
+                if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+                    product.UseMultipleWarehouses)
                 {
                     //multiple warehouses supported
                     shipmentItemModel.AllowToChooseWarehouse = true;
-                    foreach (var pwi in orderItem.Product.ProductWarehouseInventory.OrderBy(w => w.WarehouseId)
-                        .ToList())
+                    foreach (var pwi in _productService.GetAllProductWarehouseInventoryRecords(orderItem.ProductId).OrderBy(w => w.WarehouseId).ToList())
                     {
-                        var warehouse = pwi.Warehouse;
-                        if (warehouse != null)
+                        if (_productService.GetWarehousesById(pwi.WarehouseId) is Warehouse warehouse)
                         {
                             shipmentItemModel.AvailableWarehouses.Add(new ShipmentItemModel.WarehouseInfo
                             {
@@ -1459,7 +1514,7 @@ namespace Nop.Web.Areas.Admin.Factories
                                 StockQuantity = pwi.StockQuantity,
                                 ReservedQuantity = pwi.ReservedQuantity,
                                 PlannedQuantity =
-                                    _shipmentService.GetQuantityInShipments(orderItem.Product, warehouse.Id, true, true)
+                                    _shipmentService.GetQuantityInShipments(product, warehouse.Id, true, true)
                             });
                         }
                     }
@@ -1467,14 +1522,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 else
                 {
                     //multiple warehouses are not supported
-                    var warehouse = _shippingService.GetWarehouseById(orderItem.Product.WarehouseId);
+                    var warehouse = _shippingService.GetWarehouseById(product.WarehouseId);
                     if (warehouse != null)
                     {
                         shipmentItemModel.AvailableWarehouses.Add(new ShipmentItemModel.WarehouseInfo
                         {
                             WarehouseId = warehouse.Id,
                             WarehouseName = warehouse.Name,
-                            StockQuantity = orderItem.Product.StockQuantity
+                            StockQuantity = product.StockQuantity
                         });
                     }
                 }
@@ -1500,16 +1555,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(order));
 
             //get shipments
-            var shipments = order.Shipments.ToList();
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
-                shipments = shipments.Where(shipment => shipment.ShipmentItems.Any(item =>
-                    _orderService.GetOrderItemById(item.OrderItemId)?.Product?.VendorId == _workContext.CurrentVendor.Id)).ToList();
-            }
-
-            shipments = shipments.OrderBy(shipment => shipment.CreatedOnUtc).ToList();
+            var shipments = _shipmentService.GetAllShipments(
+                orderId: order.Id,
+                //a vendor should have access only to his products
+                vendorId: _workContext.CurrentVendor?.Id ?? 0)
+                .OrderBy(shipment => shipment.CreatedOnUtc)
+                .ToList();
 
             var pagedShipments = shipments.ToPagedList(searchModel);
 
@@ -1533,9 +1584,11 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     shipmentModel.CanShip = !shipment.ShippedDateUtc.HasValue;
                     shipmentModel.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;
-                    shipmentModel.CustomOrderNumber = shipment.Order.CustomOrderNumber;
+
+                    shipmentModel.CustomOrderNumber = order.CustomOrderNumber;
 
                     var baseWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name;
+
                     if (shipment.TotalWeight.HasValue)
                         shipmentModel.TotalWeight = $"{shipment.TotalWeight:F2} [{baseWeight}]";
 
@@ -1561,7 +1614,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(shipment));
 
             //get shipments
-            var shipmentItems = shipment.ShipmentItems.ToList().ToPagedList(searchModel);
+            var shipmentItems = _shipmentService.GetShipmentItemsByShipmentId(shipment.Id).ToPagedList(searchModel);
 
             //prepare list model
             var model = new ShipmentItemListModel().PrepareToGrid(searchModel, shipmentItems, () =>
@@ -1581,9 +1634,11 @@ namespace Nop.Web.Areas.Admin.Factories
                     if (orderItem == null)
                         return shipmentItemModel;
 
+                    var product = _productService.GetProductById(orderItem.ProductId);
+
                     shipmentItemModel.OrderItemId = orderItem.Id;
                     shipmentItemModel.ProductId = orderItem.ProductId;
-                    shipmentItemModel.ProductName = orderItem.Product.Name;
+                    shipmentItemModel.ProductName = product.Name;
                     shipmentItemModel.ShippedFromWarehouse = _shippingService.GetWarehouseById(item.WarehouseId)?.Name;
 
                     var baseWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name;
@@ -1592,7 +1647,7 @@ namespace Nop.Web.Areas.Admin.Factories
                         shipmentItemModel.ItemWeight = $"{orderItem.ItemWeight:F2} [{baseWeight}]";
 
                     shipmentItemModel.ItemDimensions =
-                        $"{orderItem.Product.Length:F2} x {orderItem.Product.Width:F2} x {orderItem.Product.Height:F2} [{baseDimension}]";
+                        $"{product.Length:F2} x {product.Width:F2} x {product.Height:F2} [{baseDimension}]";
 
                     return shipmentItemModel;
                 });
@@ -1616,7 +1671,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(order));
 
             //get notes
-            var orderNotes = order.OrderNotes.OrderByDescending(on => on.CreatedOnUtc).ToList().ToPagedList(searchModel);
+            var orderNotes = _orderService.GetOrderNotesByOrderId(order.Id).OrderByDescending(on => on.CreatedOnUtc).ToList().ToPagedList(searchModel);
 
             //prepare list model
             var model = new OrderNoteListModel().PrepareToGrid(searchModel, orderNotes, () =>

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -22,6 +23,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.News;
 using Nop.Services.Topics;
+using NopSeoDefaults = Nop.Services.Defaults.NopSeoDefaults;
 
 namespace Nop.Services.Seo
 {
@@ -51,7 +53,6 @@ namespace Nop.Services.Seo
         private readonly NewsSettings _newsSettings;
         private readonly SecuritySettings _securitySettings;
         private readonly SitemapXmlSettings _sitemapXmlSettings;
-
 
         #endregion
 

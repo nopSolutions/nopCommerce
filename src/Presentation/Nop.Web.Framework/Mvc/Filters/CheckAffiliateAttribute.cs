@@ -3,9 +3,9 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Customers;
+using Nop.Data;
 using Nop.Services.Affiliates;
 using Nop.Services.Customers;
 

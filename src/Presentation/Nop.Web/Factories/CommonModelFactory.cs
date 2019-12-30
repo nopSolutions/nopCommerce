@@ -199,7 +199,7 @@ namespace Nop.Web.Factories
         {
             var result = 0;
             var customer = _workContext.CurrentCustomer;
-            if (_forumSettings.AllowPrivateMessages && !customer.IsGuest())
+            if (_forumSettings.AllowPrivateMessages && !_customerService.IsGuest(customer))
             {
                 var privateMessages = _forumService.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
                     0, customer.Id, false, null, false, string.Empty, 0, 1);
@@ -360,11 +360,11 @@ namespace Nop.Web.Factories
 
             var model = new HeaderLinksModel
             {
-                IsAuthenticated = customer.IsRegistered(),
-                CustomerName = customer.IsRegistered() ? _customerService.FormatUsername(customer) : "",
+                IsAuthenticated = _customerService.IsRegistered(customer),
+                CustomerName = _customerService.IsRegistered(customer) ? _customerService.FormatUsername(customer) : "",
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
-                AllowPrivateMessages = customer.IsRegistered() && _forumSettings.AllowPrivateMessages,
+                AllowPrivateMessages = _customerService.IsRegistered(customer) && _forumSettings.AllowPrivateMessages,
                 UnreadPrivateMessages = unreadMessage,
                 AlertMessage = alertMessage,
             };
@@ -391,7 +391,7 @@ namespace Nop.Web.Factories
 
             var model = new AdminHeaderLinksModel
             {
-                ImpersonatedCustomerName = customer.IsRegistered() ? _customerService.FormatUsername(customer) : "",
+                ImpersonatedCustomerName = _customerService.IsRegistered(customer) ? _customerService.FormatUsername(customer) : "",
                 IsCustomerImpersonated = _workContext.OriginalCustomerIfImpersonated != null,
                 DisplayAdminLink = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
                 EditPageUrl = _pageHeadBuilder.GetEditPageUrl()
@@ -428,7 +428,7 @@ namespace Nop.Web.Factories
             var topicCacheKey = string.Format(NopModelCacheDefaults.TopicFooterModelKey,
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
+                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)));
             var cachedTopicModel = _cacheManager.Get(topicCacheKey, () =>
                 _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
                 .Where(t => t.IncludeInFooterColumn1 || t.IncludeInFooterColumn2 || t.IncludeInFooterColumn3)
@@ -543,7 +543,7 @@ namespace Nop.Web.Factories
         {
             var cacheKey = string.Format(NopModelCacheDefaults.SitemapPageModelKey,
                 _workContext.WorkingLanguage.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                 _storeContext.CurrentStore.Id);
 
             var cachedModel = _cacheManager.Get(cacheKey, () =>
@@ -738,7 +738,7 @@ namespace Nop.Web.Factories
         {
             var cacheKey = string.Format(NopModelCacheDefaults.SitemapSeoModelKey, id,
                 _workContext.WorkingLanguage.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                 _storeContext.CurrentStore.Id);
             var siteMap = _cacheManager.Get(cacheKey, () => _sitemapGenerator.Generate(id));
             return siteMap;

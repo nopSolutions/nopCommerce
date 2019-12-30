@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>SQL Server Compact</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>Име или мрежов адрес на SQL Server</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>Въведете името или мрежовия адрес на SQL Server</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>Парола за вход в SQL Server</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>Въведете паролата за вход в SQL Server</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>Потребителско име за вход в SQL Server</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>Въведете потребителското името за вход в SQL Server</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Microsoft SQL Server или SQL Express</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Информация за магазина</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>За да инсталирате успешно nopCommerce, е нужно да знаете низа за връзка с базата данни. Ако нямате тази информация, може да я узнаете от вашия хостинг провайдер. Ако искате да инсталирате nopCommerce на локалния ви компютър, то вие можете да я узнаете от вашия системен администратор.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>
       Вход с Windows
     </Value>

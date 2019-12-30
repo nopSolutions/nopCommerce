@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Directory;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Directory
 {
@@ -15,16 +15,14 @@ namespace Nop.Data.Mapping.Directory
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<MeasureWeight> builder)
+        public override void Configure(EntityMappingBuilder<MeasureWeight> builder)
         {
-            builder.ToTable(nameof(MeasureWeight));
-            builder.HasKey(weight => weight.Id);
+            builder.HasTableName(nameof(MeasureWeight));
 
-            builder.Property(weight => weight.Name).HasMaxLength(100).IsRequired();
-            builder.Property(weight => weight.SystemKeyword).HasMaxLength(100).IsRequired();
-            builder.Property(weight => weight.Ratio).HasColumnType("decimal(18, 8)");
-
-            base.Configure(builder);
+            builder.Property(weight => weight.Name).HasLength(100).IsNullable(false);
+            builder.Property(weight => weight.SystemKeyword).HasLength(100).IsNullable(false);
+            builder.Property(weight => weight.Ratio).HasDecimal(18, 8);
+            builder.Property(measureweight => measureweight.DisplayOrder);
         }
 
         #endregion

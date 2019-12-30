@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Data.Mapping.Localization
@@ -15,20 +14,14 @@ namespace Nop.Data.Mapping.Localization
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<LocaleStringResource> builder)
+        public override void Configure(EntityMappingBuilder<LocaleStringResource> builder)
         {
-            builder.ToTable(nameof(LocaleStringResource));
-            builder.HasKey(locale => locale.Id);
+            builder.HasTableName(nameof(LocaleStringResource));
 
-            builder.Property(locale => locale.ResourceName).HasMaxLength(200).IsRequired();
-            builder.Property(locale => locale.ResourceValue).IsRequired();
+            builder.Property(locale => locale.ResourceName).HasLength(200).IsNullable(false);
+            builder.Property(locale => locale.ResourceValue).IsNullable(false);
 
-            builder.HasOne(locale => locale.Language)
-                .WithMany()
-                .HasForeignKey(locale => locale.LanguageId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(localestringresource => localestringresource.LanguageId);
         }
 
         #endregion

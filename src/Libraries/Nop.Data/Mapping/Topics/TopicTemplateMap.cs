@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Topics;
 
 namespace Nop.Data.Mapping.Topics
@@ -15,15 +14,13 @@ namespace Nop.Data.Mapping.Topics
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<TopicTemplate> builder)
+        public override void Configure(EntityMappingBuilder<TopicTemplate> builder)
         {
-            builder.ToTable(nameof(TopicTemplate));
-            builder.HasKey(template => template.Id);
+            builder.HasTableName(nameof(TopicTemplate));
 
-            builder.Property(template => template.Name).HasMaxLength(400).IsRequired();
-            builder.Property(template => template.ViewPath).HasMaxLength(400).IsRequired();
-
-            base.Configure(builder);
+            builder.Property(template => template.Name).HasLength(400).IsNullable(false);
+            builder.Property(template => template.ViewPath).HasLength(400).IsNullable(false);
+            builder.Property(template => template.DisplayOrder);
         }
 
         #endregion

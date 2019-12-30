@@ -820,21 +820,23 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var country in countries)
                 {
                     var restrict = countryIdsToRestrict.Contains(country.Id);
+                    var shippingMethodCountryMappings =
+                        _shippingService.GetShippingMethodCountryMapping(shippingMethod.Id, country.Id);
+
                     if (restrict)
                     {
-                        if (shippingMethod.ShippingMethodCountryMappings.FirstOrDefault(mapping => mapping.CountryId == country.Id) != null)
+                        if (shippingMethodCountryMappings.Any())
                             continue;
 
-                        shippingMethod.ShippingMethodCountryMappings.Add(new ShippingMethodCountryMapping { Country = country });
+                        _shippingService.InsertShippingMethodCountryMapping(new ShippingMethodCountryMapping { CountryId = country.Id, ShippingMethodId = shippingMethod.Id});
                         _shippingService.UpdateShippingMethod(shippingMethod);
                     }
                     else
                     {
-                        if (shippingMethod.ShippingMethodCountryMappings.FirstOrDefault(mapping => mapping.CountryId == country.Id) == null)
+                        if (!shippingMethodCountryMappings.Any())
                             continue;
 
-                        shippingMethod.ShippingMethodCountryMappings
-                            .Remove(shippingMethod.ShippingMethodCountryMappings.FirstOrDefault(mapping => mapping.CountryId == country.Id));
+                        _shippingService.DeleteShippingMethodCountryMapping(shippingMethodCountryMappings.FirstOrDefault());
                         _shippingService.UpdateShippingMethod(shippingMethod);
                     }
                 }

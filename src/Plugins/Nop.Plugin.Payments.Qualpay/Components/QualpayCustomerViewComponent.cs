@@ -67,7 +67,7 @@ namespace Nop.Plugin.Payments.Qualpay.Components
 
             //check whether a customer exists and isn't guest
             var customer = _customerService.GetCustomerById(customerModel.Id);
-            if (customer?.IsGuest() ?? true)
+            if (customer is null || _customerService.IsGuest(customer))
                 return Content(string.Empty);
 
             var model = _qualpayCustomerModelFactory.PrepareQualpayCustomerModel(customerModel, customer);

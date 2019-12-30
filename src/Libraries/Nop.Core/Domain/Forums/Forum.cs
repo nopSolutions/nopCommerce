@@ -66,10 +66,5 @@ namespace Nop.Core.Domain.Forums
         /// Gets or sets the date and time of instance update
         /// </summary>
         public DateTime UpdatedOnUtc { get; set; }
-
-        /// <summary>
-        /// Gets the ForumGroup
-        /// </summary>
-        public virtual ForumGroup ForumGroup { get; set; }
     }
 }

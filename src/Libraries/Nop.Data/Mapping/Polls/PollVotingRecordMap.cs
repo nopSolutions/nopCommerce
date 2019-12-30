@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Polls;
 
 namespace Nop.Data.Mapping.Polls
@@ -15,22 +14,13 @@ namespace Nop.Data.Mapping.Polls
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<PollVotingRecord> builder)
+        public override void Configure(EntityMappingBuilder<PollVotingRecord> builder)
         {
-            builder.ToTable(nameof(PollVotingRecord));
-            builder.HasKey(record => record.Id);
+            builder.HasTableName(nameof(PollVotingRecord));
 
-            builder.HasOne(record => record.PollAnswer)
-                .WithMany(pollAnswer => pollAnswer.PollVotingRecords)
-                .HasForeignKey(record => record.PollAnswerId)
-                .IsRequired();
-
-            builder.HasOne(record => record.Customer)
-                .WithMany()
-                .HasForeignKey(record => record.CustomerId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(pollvotingrecord => pollvotingrecord.PollAnswerId);
+            builder.Property(pollvotingrecord => pollvotingrecord.CustomerId);
+            builder.Property(pollvotingrecord => pollvotingrecord.CreatedOnUtc);
         }
 
         #endregion

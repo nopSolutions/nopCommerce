@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Stores;
 
 namespace Nop.Data.Mapping.Stores
@@ -15,20 +14,21 @@ namespace Nop.Data.Mapping.Stores
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<Store> builder)
+        public override void Configure(EntityMappingBuilder<Store> builder)
         {
-            builder.ToTable(nameof(Store));
-            builder.HasKey(store => store.Id);
+            builder.HasTableName(nameof(Store));
 
-            builder.Property(store => store.Name).HasMaxLength(400).IsRequired();
-            builder.Property(store => store.Url).HasMaxLength(400).IsRequired();
-            builder.Property(store => store.Hosts).HasMaxLength(1000);
-            builder.Property(store => store.CompanyName).HasMaxLength(1000);
-            builder.Property(store => store.CompanyAddress).HasMaxLength(1000);
-            builder.Property(store => store.CompanyPhoneNumber).HasMaxLength(1000);
-            builder.Property(store => store.CompanyVat).HasMaxLength(1000);
+            builder.Property(store => store.Name).HasLength(400).IsNullable(false);
+            builder.Property(store => store.Url).HasLength(400).IsNullable(false);
+            builder.Property(store => store.Hosts).HasLength(1000);
+            builder.Property(store => store.CompanyName).HasLength(1000);
+            builder.Property(store => store.CompanyAddress).HasLength(1000);
+            builder.Property(store => store.CompanyPhoneNumber).HasLength(1000);
+            builder.Property(store => store.CompanyVat).HasLength(1000);
 
-            base.Configure(builder);
+            builder.Property(store => store.SslEnabled);
+            builder.Property(store => store.DefaultLanguageId);
+            builder.Property(store => store.DisplayOrder);
         }
 
         #endregion

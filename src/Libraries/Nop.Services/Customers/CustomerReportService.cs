@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using Nop.Data;
 using Nop.Services.Helpers;
 
 namespace Nop.Services.Customers
@@ -122,16 +122,9 @@ namespace Nop.Services.Customers
             if (registeredCustomerRole == null)
                 return 0;
 
-            var query = from c in _customerRepository.Table
-                        from mapping in c.CustomerCustomerRoleMappings
-                        where !c.Deleted &&
-                        mapping.CustomerRoleId == registeredCustomerRole.Id &&
-                        c.CreatedOnUtc >= date
-                        //&& c.CreatedOnUtc <= DateTime.UtcNow
-                        select c;
-
-            var count = query.Count();
-            return count;
+            return _customerService.GetAllCustomers(
+                createdFromUtc: date,
+                customerRoleIds: new int[] { registeredCustomerRole.Id }).Count();
         }
 
         #endregion

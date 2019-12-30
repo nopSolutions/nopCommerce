@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>SQL Server Compact kullan</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>SQL Server adı</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>SQL Server adı alanı boş bırakılamaz</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL Şifre</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>SQL Şifre alanı boş bırakılamaz</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>SQL Kullanıcı adı</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>SQL Kullanıcı adı boş bırakılamaz</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Microsoft SQL Server (veya SQL Express) veritabanı kullan</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Mağaza bilgisi</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>Bu sihirbazı tamamlamak için bazı bilgilere ihtiyaç duyacaksınız. SQL bağlantı cümleciğinizi ("connection string") bilmiyorsanız lütfen internet servis sağlayıcınız ile iletişime geçin. Kurulumu kendi bilgisayarınız üzerinde gerçekleştirecekseniz sistem yöneticinizden bu bilgileri alabilirsiniz.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>Windows kullanıcı bilgilerini kullan</Value>
   </LocaleResource>
 </Language>

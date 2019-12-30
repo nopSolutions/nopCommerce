@@ -145,6 +145,8 @@ namespace Nop.Web.Factories
             if (topic == null)
                 throw new ArgumentNullException(nameof(topic));
 
+            var customer = _customerService.GetCustomerById(topic.CustomerId);
+
             var topicModel = new ForumTopicRowModel
             {
                 Id = topic.Id,
@@ -156,8 +158,8 @@ namespace Nop.Web.Factories
                 NumReplies = topic.NumReplies,
                 ForumTopicType = topic.ForumTopicType,
                 CustomerId = topic.CustomerId,
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !topic.Customer.IsGuest(),
-                CustomerName = _customerService.FormatUsername(topic.Customer)
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !_customerService.IsGuest(customer),
+                CustomerName = _customerService.FormatUsername(customer)
             };
 
             var forumPosts = _forumService.GetAllPosts(topic.Id, 0, string.Empty, 1, _forumSettings.PostsPageSize);
@@ -381,6 +383,11 @@ namespace Nop.Web.Factories
             model.PostsTotalRecords = posts.TotalCount;
             foreach (var post in posts)
             {
+                var customer = _customerService.GetCustomerById(post.CustomerId);
+
+                var customerIsGuest = _customerService.IsGuest(customer);
+                var customerIsModerator = customerIsGuest ? false : _customerService.IsForumModerator(customer);
+
                 var forumPostModel = new ForumPostModel
                 {
                     Id = post.Id,
@@ -390,16 +397,16 @@ namespace Nop.Web.Factories
                     IsCurrentCustomerAllowedToEditPost = _forumService.IsCustomerAllowedToEditPost(_workContext.CurrentCustomer, post),
                     IsCurrentCustomerAllowedToDeletePost = _forumService.IsCustomerAllowedToDeletePost(_workContext.CurrentCustomer, post),
                     CustomerId = post.CustomerId,
-                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !post.Customer.IsGuest(),
-                    CustomerName = _customerService.FormatUsername(post.Customer),
-                    IsCustomerForumModerator = post.Customer.IsForumModerator(),
+                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !customerIsGuest,
+                    CustomerName = _customerService.FormatUsername(customer),
+                    IsCustomerForumModerator = customerIsModerator,
                     ShowCustomersPostCount = _forumSettings.ShowCustomersPostCount,
-                    ForumPostCount = _genericAttributeService.GetAttribute<int>(post.Customer, NopCustomerDefaults.ForumPostCountAttribute),
-                    ShowCustomersJoinDate = _customerSettings.ShowCustomersJoinDate && !post.Customer.IsGuest(),
-                    CustomerJoinDate = post.Customer.CreatedOnUtc,
-                    AllowPrivateMessages = _forumSettings.AllowPrivateMessages && !post.Customer.IsGuest(),
+                    ForumPostCount = _genericAttributeService.GetAttribute<Customer, int>(post.CustomerId, NopCustomerDefaults.ForumPostCountAttribute),
+                    ShowCustomersJoinDate = _customerSettings.ShowCustomersJoinDate && !customerIsGuest,
+                    CustomerJoinDate = customer?.CreatedOnUtc ?? DateTime.Now,
+                    AllowPrivateMessages = _forumSettings.AllowPrivateMessages && !customerIsGuest,
                     SignaturesEnabled = _forumSettings.SignaturesEnabled,
-                    FormattedSignature = _forumService.FormatForumSignatureText(_genericAttributeService.GetAttribute<string>(post.Customer, NopCustomerDefaults.SignatureAttribute)),
+                    FormattedSignature = _forumService.FormatForumSignatureText(_genericAttributeService.GetAttribute<Customer, string>(post.CustomerId, NopCustomerDefaults.SignatureAttribute)),
                 };
                 //created on string
                 var languageCode = _workContext.WorkingLanguage.LanguageCulture;
@@ -415,16 +422,16 @@ namespace Nop.Web.Factories
                 if (_customerSettings.AllowCustomersToUploadAvatars)
                 {
                     forumPostModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                        _genericAttributeService.GetAttribute<int>(post.Customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                        _genericAttributeService.GetAttribute<Customer, int>(post.CustomerId, NopCustomerDefaults.AvatarPictureIdAttribute),
                         _mediaSettings.AvatarPictureSize,
                         _customerSettings.DefaultAvatarEnabled,
                         defaultPictureType: PictureType.Avatar);
                 }
                 //location
-                forumPostModel.ShowCustomersLocation = _customerSettings.ShowCustomersLocation && !post.Customer.IsGuest();
+                forumPostModel.ShowCustomersLocation = _customerSettings.ShowCustomersLocation && !customerIsGuest;
                 if (_customerSettings.ShowCustomersLocation)
                 {
-                    var countryId = _genericAttributeService.GetAttribute<int>(post.Customer, NopCustomerDefaults.CountryIdAttribute);
+                    var countryId = _genericAttributeService.GetAttribute<Customer, int>(post.CustomerId, NopCustomerDefaults.CountryIdAttribute);
                     var country = _countryService.GetCountryById(countryId);
                     forumPostModel.CustomerLocation = country != null ? _localizationService.GetLocalized(country, x => x.Name) : string.Empty;
                 }
@@ -506,7 +513,7 @@ namespace Nop.Web.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            var forum = forumTopic.Forum;
+            var forum = _forumService.GetForumById(forumTopic.ForumId);
             if (forum == null)
                 throw new ArgumentException("forum cannot be loaded");
 
@@ -548,7 +555,7 @@ namespace Nop.Web.Factories
             if (forumTopic == null)
                 throw new ArgumentNullException(nameof(forumTopic));
 
-            var forum = forumTopic.Forum;
+            var forum = _forumService.GetForumById(forumTopic.ForumId);
             if (forum == null)
                 throw new ArgumentException("forum cannot be loaded");
 
@@ -579,6 +586,8 @@ namespace Nop.Web.Factories
                 if (quote.HasValue)
                 {
                     var quotePost = _forumService.GetPostById(quote.Value);
+                    var customer = _customerService.GetCustomerById(quotePost.CustomerId);
+
                     if (quotePost != null && quotePost.TopicId == forumTopic.Id)
                     {
                         var quotePostText = quotePost.Text;
@@ -586,10 +595,10 @@ namespace Nop.Web.Factories
                         switch (_forumSettings.ForumEditor)
                         {
                             case EditorType.SimpleTextBox:
-                                text = $"{_customerService.FormatUsername(quotePost.Customer)}:\n{quotePostText}\n";
+                                text = $"{_customerService.FormatUsername(customer)}:\n{quotePostText}\n";
                                 break;
                             case EditorType.BBCodeEditor:
-                                text = $"[quote={_customerService.FormatUsername(quotePost.Customer)}]{BBCodeHelper.RemoveQuotes(quotePostText)}[/quote]";
+                                text = $"[quote={_customerService.FormatUsername(customer)}]{BBCodeHelper.RemoveQuotes(quotePostText)}[/quote]";
                                 break;
                         }
                         model.Text = text;
@@ -611,11 +620,11 @@ namespace Nop.Web.Factories
             if (forumPost == null)
                 throw new ArgumentNullException(nameof(forumPost));
 
-            var forumTopic = forumPost.ForumTopic;
+            var forumTopic = _forumService.GetTopicById(forumPost.TopicId);
             if (forumTopic == null)
                 throw new ArgumentException("forum topic cannot be loaded");
 
-            var forum = forumTopic.Forum;
+            var forum = _forumService.GetForumById(forumTopic.ForumId);
             if (forum == null)
                 throw new ArgumentException("forum cannot be loaded");
 
@@ -853,13 +862,20 @@ namespace Nop.Web.Factories
             if (forumPost == null)
                 return model;
 
+            var topic = _forumService.GetTopicById(forumPost.TopicId);
+
+            if (topic is null)
+                return model;
+
+            var customer = _customerService.GetCustomerById(forumPost.CustomerId);
+
             model.Id = forumPost.Id;
-            model.ForumTopicId = forumPost.TopicId;
-            model.ForumTopicSeName = _forumService.GetTopicSeName(forumPost.ForumTopic);
-            model.ForumTopicSubject = _forumService.StripTopicSubject(forumPost.ForumTopic);
+            model.ForumTopicId = topic.Id;
+            model.ForumTopicSeName = _forumService.GetTopicSeName(topic);
+            model.ForumTopicSubject = _forumService.StripTopicSubject(topic);
             model.CustomerId = forumPost.CustomerId;
-            model.AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !forumPost.Customer.IsGuest();
-            model.CustomerName = _customerService.FormatUsername(forumPost.Customer);
+            model.AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !_customerService.IsGuest(customer);
+            model.CustomerName = _customerService.FormatUsername(customer);
             //created on string
             var languageCode = _workContext.WorkingLanguage.LanguageCulture;
             if (_forumSettings.RelativeDateTimeFormattingEnabled)

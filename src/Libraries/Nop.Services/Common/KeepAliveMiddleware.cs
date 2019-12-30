@@ -2,7 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Core.Caching;
+using Nop.Data;
 
 namespace Nop.Services.Common
 {

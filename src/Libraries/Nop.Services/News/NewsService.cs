@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Stores;
+using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.News
@@ -71,7 +72,7 @@ namespace Nop.Services.News
             if (newsId == 0)
                 return null;
 
-            return _newsItemRepository.GetById(newsId);
+            return _newsItemRepository.ToCachedGetById(newsId);
         }
 
         /// <summary>
@@ -232,7 +233,7 @@ namespace Nop.Services.News
             if (newsCommentId == 0)
                 return null;
 
-            return _newsCommentRepository.GetById(newsCommentId);
+            return _newsCommentRepository.ToCachedGetById(newsCommentId);
         }
 
         /// <summary>
@@ -309,6 +310,21 @@ namespace Nop.Services.News
             {
                 DeleteNewsComment(newsComment);
             }
+        }
+
+        /// <summary>
+        /// Inserts a news comment
+        /// </summary>
+        /// <param name="comment">News comment</param>
+        public virtual void InsertNewsComment(NewsComment comment)
+        {
+            if (comment == null)
+                throw new ArgumentNullException(nameof(comment));
+
+            _newsCommentRepository.Insert(comment);
+
+            //event notification
+            _eventPublisher.EntityInserted(comment);
         }
 
         #endregion

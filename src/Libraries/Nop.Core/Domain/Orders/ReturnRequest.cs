@@ -1,5 +1,4 @@
-using System;
-using Nop.Core.Domain.Customers;
+﻿using System;
 
 namespace Nop.Core.Domain.Orders
 {
@@ -81,10 +80,5 @@ namespace Nop.Core.Domain.Orders
             get => (ReturnRequestStatus)ReturnRequestStatusId;
             set => ReturnRequestStatusId = (int)value;
         }
-
-        /// <summary>
-        /// Gets or sets the customer
-        /// </summary>
-        public virtual Customer Customer { get; set; }
     }
 }

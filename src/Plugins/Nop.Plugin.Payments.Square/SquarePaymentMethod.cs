@@ -36,6 +36,7 @@ namespace Nop.Plugin.Payments.Square
         #region Fields
 
         private readonly CurrencySettings _currencySettings;
+        private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -45,6 +46,7 @@ namespace Nop.Plugin.Payments.Square
         private readonly IPageHeadBuilder _pageHeadBuilder;
         private readonly ISettingService _settingService;
         private readonly IScheduleTaskService _scheduleTaskService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IWebHelper _webHelper;
         private readonly SquarePaymentManager _squarePaymentManager;
         private readonly SquarePaymentSettings _squarePaymentSettings;
@@ -55,6 +57,7 @@ namespace Nop.Plugin.Payments.Square
         #region Ctor
 
         public SquarePaymentMethod(CurrencySettings currencySettings,
+            ICountryService countryService,
             ICurrencyService currencyService,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
@@ -64,12 +67,14 @@ namespace Nop.Plugin.Payments.Square
             IPageHeadBuilder pageHeadBuilder,
             ISettingService settingService,
             IScheduleTaskService scheduleTaskService,
+            IStateProvinceService stateProvinceService,
             IWebHelper webHelper,
             SquarePaymentManager squarePaymentManager,
             SquarePaymentSettings squarePaymentSettings,
             IStoreContext storeContext)
         {
             _currencySettings = currencySettings;
+            _countryService = countryService;
             _currencyService = currencyService;
             _customerService = customerService;
             _genericAttributeService = genericAttributeService;
@@ -79,6 +84,7 @@ namespace Nop.Plugin.Payments.Square
             _pageHeadBuilder = pageHeadBuilder;
             _settingService = settingService;
             _scheduleTaskService = scheduleTaskService;
+            _stateProvinceService = stateProvinceService;
             _webHelper = webHelper;
             _squarePaymentManager = squarePaymentManager;
             _squarePaymentSettings = squarePaymentSettings;
@@ -210,18 +216,22 @@ namespace Nop.Plugin.Payments.Square
             (
                 AddressLine1: address.Address1,
                 AddressLine2: address.Address2,
-                AdministrativeDistrictLevel1: address.StateProvince?.Abbreviation,
+                AdministrativeDistrictLevel1: _stateProvinceService.GetStateProvinceByAddress(address)?.Abbreviation,
                 AdministrativeDistrictLevel2: address.County,
-                Country: string.Equals(address.Country?.TwoLetterIsoCode, new RegionInfo(address.Country?.TwoLetterIsoCode).TwoLetterISORegionName, StringComparison.InvariantCultureIgnoreCase)
-                    ? address.Country?.TwoLetterIsoCode : null,
+                Country: Enum.TryParse(_countryService.GetCountryByAddress(address)?.TwoLetterIsoCode, out SquareModel.Address.CountryEnum countryCode)
+                    ? (SquareModel.Address.CountryEnum?)countryCode : null,
                 FirstName: address.FirstName,
                 LastName: address.LastName,
                 Locality: address.City,
                 PostalCode: address.ZipPostalCode
             );
-            var billingAddress = createAddress(customer.BillingAddress);
-            var shippingAddress = billingAddress == null ? createAddress(customer.ShippingAddress) : null;
-            var email = customer.BillingAddress != null ? customer.BillingAddress.Email : customer.ShippingAddress?.Email;
+
+            var customerBillingAddress = _customerService.GetCustomerBillingAddress(customer);
+            var customerShippingAddress = _customerService.GetCustomerShippingAddress(customer);
+
+            var billingAddress = createAddress(customerBillingAddress);
+            var shippingAddress = billingAddress == null ? createAddress(customerShippingAddress) : null;
+            var email = customerBillingAddress != null ? customerBillingAddress.Email : customerShippingAddress?.Email;
 
             //the transaction is ineligible for chargeback protection if they are not provided
             if ((billingAddress == null && shippingAddress == null) || string.IsNullOrEmpty(email))
@@ -279,7 +289,7 @@ namespace Nop.Plugin.Payments.Square
 
             //whether to save card details for the future purchasing
             var saveCardKey = _localizationService.GetResource("Plugins.Payments.Square.Fields.SaveCard.Key");
-            if (paymentRequest.CustomValues.TryGetValue(saveCardKey, out var saveCardValue) && saveCardValue is bool saveCard && saveCard && !customer.IsGuest())
+            if (paymentRequest.CustomValues.TryGetValue(saveCardKey, out var saveCardValue) && saveCardValue is bool saveCard && saveCard && !_customerService.IsGuest(customer))
             {
                 //remove the value from payment custom values, since it is no longer needed
                 paymentRequest.CustomValues.Remove(saveCardKey);

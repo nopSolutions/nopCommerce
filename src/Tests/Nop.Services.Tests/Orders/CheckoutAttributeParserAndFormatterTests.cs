@@ -2,7 +2,7 @@
 using System.Linq;
 using Moq;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
@@ -40,7 +40,7 @@ namespace Nop.Services.Tests.Orders
 
         private CheckoutAttribute ca1, ca2, ca3;
         private CheckoutAttributeValue cav1_1, cav1_2, cav2_1, cav2_2;
-        
+
         [SetUp]
         public new void SetUp()
         {
@@ -50,18 +50,18 @@ namespace Nop.Services.Tests.Orders
             ca1 = new CheckoutAttribute
             {
                 Id = 1,
-                Name= "Color",
+                Name = "Color",
                 TextPrompt = "Select color:",
                 IsRequired = true,
                 AttributeControlType = AttributeControlType.DropdownList,
                 DisplayOrder = 1
             };
+
             cav1_1 = new CheckoutAttributeValue
             {
                 Id = 11,
                 Name = "Green",
                 DisplayOrder = 1,
-                CheckoutAttribute = ca1,
                 CheckoutAttributeId = ca1.Id
             };
             cav1_2 = new CheckoutAttributeValue
@@ -69,11 +69,8 @@ namespace Nop.Services.Tests.Orders
                 Id = 12,
                 Name = "Red",
                 DisplayOrder = 2,
-                CheckoutAttribute = ca1,
                 CheckoutAttributeId = ca1.Id
             };
-            ca1.CheckoutAttributeValues.Add(cav1_1);
-            ca1.CheckoutAttributeValues.Add(cav1_2);
 
             //custom option (checkboxes)
             ca2 = new CheckoutAttribute
@@ -90,7 +87,6 @@ namespace Nop.Services.Tests.Orders
                 Id = 21,
                 Name = "Option 1",
                 DisplayOrder = 1,
-                CheckoutAttribute = ca2,
                 CheckoutAttributeId = ca2.Id
             };
             cav2_2 = new CheckoutAttributeValue
@@ -98,11 +94,8 @@ namespace Nop.Services.Tests.Orders
                 Id = 22,
                 Name = "Option 2",
                 DisplayOrder = 2,
-                CheckoutAttribute = ca2,
                 CheckoutAttributeId = ca2.Id
             };
-            ca2.CheckoutAttributeValues.Add(cav2_1);
-            ca2.CheckoutAttributeValues.Add(cav2_2);
 
             //custom text
             ca3 = new CheckoutAttribute
@@ -117,7 +110,7 @@ namespace Nop.Services.Tests.Orders
 
 
             #endregion
-            
+
             _checkoutAttributeRepo = new Mock<IRepository<CheckoutAttribute>>();
             _checkoutAttributeRepo.Setup(x => x.Table).Returns(new List<CheckoutAttribute> { ca1, ca2, ca3 }.AsQueryable());
             _checkoutAttributeRepo.Setup(x => x.GetById(ca1.Id)).Returns(ca1);
@@ -159,7 +152,7 @@ namespace Nop.Services.Tests.Orders
                 _checkoutAttributeService, _currencyService.Object, _downloadService.Object, _localizationService,
                 _priceFormatter.Object, _taxService.Object, _webHelper.Object, _workContext.Object);
         }
-        
+
         [Test]
         public void Can_add_and_parse_checkoutAttributes()
         {
@@ -172,17 +165,20 @@ namespace Nop.Services.Tests.Orders
             //custom text
             attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca3, "Some custom text goes here");
 
-            var parsed_attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes);
-            parsed_attributeValues.Contains(cav1_1).ShouldEqual(true);
-            parsed_attributeValues.Contains(cav1_2).ShouldEqual(false);
-            parsed_attributeValues.Contains(cav2_1).ShouldEqual(true);
-            parsed_attributeValues.Contains(cav2_2).ShouldEqual(true);
-            parsed_attributeValues.Contains(cav2_2).ShouldEqual(true);
+            RunWithTestServiceProvider(() =>
+            {
+                var parsedAttributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes).ToList();
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav1_1).ShouldEqual(true);
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav1_2).ShouldEqual(false);
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav2_1).ShouldEqual(true);
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav2_2).ShouldEqual(true);
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav2_2).ShouldEqual(true);
 
-            var parsedValues = _checkoutAttributeParser.ParseValues(attributes, ca3.Id);
-            parsedValues.Count.ShouldEqual(1);
-            parsedValues.Contains("Some custom text goes here").ShouldEqual(true);
-            parsedValues.Contains("Some other custom text").ShouldEqual(false);
+                var parsedValues = _checkoutAttributeParser.ParseValues(attributes, ca3.Id);
+                parsedValues.Count.ShouldEqual(1);
+                parsedValues.Contains("Some custom text goes here").ShouldEqual(true);
+                parsedValues.Contains("Some other custom text").ShouldEqual(false);
+            });
         }
 
         [Test]
@@ -196,11 +192,15 @@ namespace Nop.Services.Tests.Orders
             attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca2, cav2_2.Id.ToString());
             //custom text
             attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca3, "Some custom text goes here");
-
-
+            
             var customer = new Customer();
-            var formattedAttributes = _checkoutAttributeFormatter.FormatAttributes(attributes, customer, "<br />", false, false);
-            formattedAttributes.ShouldEqual("Color: Green<br />Custom option: Option 1<br />Custom option: Option 2<br />Custom text: Some custom text goes here");
+            RunWithTestServiceProvider(() =>
+            {
+                var formattedAttributes =
+                    _checkoutAttributeFormatter.FormatAttributes(attributes, customer, "<br />", false, false);
+                formattedAttributes.ShouldEqual(
+                    "Color: Green<br />Custom option: Option 1<br />Custom option: Option 2<br />Custom text: Some custom text goes here");
+            });
         }
 
         [Test]
@@ -217,16 +217,18 @@ namespace Nop.Services.Tests.Orders
             //delete some of them
             attributes = _checkoutAttributeParser.RemoveCheckoutAttribute(attributes, ca2);
             attributes = _checkoutAttributeParser.RemoveCheckoutAttribute(attributes, ca3);
+            RunWithTestServiceProvider(() =>
+            {
+                var parsedAttributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes).ToList();
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav1_1).ShouldEqual(true);
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav1_2).ShouldEqual(false);
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav2_1).ShouldEqual(false);
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav2_2).ShouldEqual(false);
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav2_2).ShouldEqual(false);
 
-            var parsed_attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes);
-            parsed_attributeValues.Contains(cav1_1).ShouldEqual(true);
-            parsed_attributeValues.Contains(cav1_2).ShouldEqual(false);
-            parsed_attributeValues.Contains(cav2_1).ShouldEqual(false);
-            parsed_attributeValues.Contains(cav2_2).ShouldEqual(false);
-            parsed_attributeValues.Contains(cav2_2).ShouldEqual(false);
-
-            var parsedValues = _checkoutAttributeParser.ParseValues(attributes, ca3.Id);
-            parsedValues.Count.ShouldEqual(0);
+                var parsedValues = _checkoutAttributeParser.ParseValues(attributes, ca3.Id);
+                parsedValues.Count.ShouldEqual(0);
+            });
         }
     }
 }

@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Stores;
+﻿using System;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -10,9 +7,6 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class ProductReview : BaseEntity
     {
-        private ICollection<ProductReviewHelpfulness> _productReviewHelpfulnessEntries;
-        private ICollection<ProductReviewReviewTypeMapping> _productReviewReviewTypeMappingEntries;
-
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
@@ -72,38 +66,5 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-
-        /// <summary>
-        /// Gets or sets the customer
-        /// </summary>
-        public virtual Customer Customer { get; set; }
-
-        /// <summary>
-        /// Gets the product
-        /// </summary>
-        public virtual Product Product { get; set; }
-
-        /// <summary>
-        /// Gets or sets the store
-        /// </summary>
-        public virtual Store Store { get; set; }
-
-        /// <summary>
-        /// Gets the entries of product review helpfulness
-        /// </summary>
-        public virtual ICollection<ProductReviewHelpfulness> ProductReviewHelpfulnessEntries
-        {
-            get => _productReviewHelpfulnessEntries ?? (_productReviewHelpfulnessEntries = new List<ProductReviewHelpfulness>());
-            protected set => _productReviewHelpfulnessEntries = value;
-        }
-
-        /// <summary>
-        /// Gets the entries of product reviews
-        /// </summary>
-        public virtual ICollection<ProductReviewReviewTypeMapping> ProductReviewReviewTypeMappingEntries
-        {
-            get { return _productReviewReviewTypeMappingEntries ?? (_productReviewReviewTypeMappingEntries = new List<ProductReviewReviewTypeMapping>()); }
-            protected set { _productReviewReviewTypeMappingEntries = value; }
-        }
     }
 }

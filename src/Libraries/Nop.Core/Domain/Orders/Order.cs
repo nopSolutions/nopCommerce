@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -14,12 +10,6 @@ namespace Nop.Core.Domain.Orders
     /// </summary>
     public partial class Order : BaseEntity
     {
-        private ICollection<DiscountUsageHistory> _discountUsageHistory;
-        private ICollection<GiftCardUsageHistory> _giftCardUsageHistory;
-        private ICollection<OrderNote> _orderNotes;
-        private ICollection<OrderItem> _orderItems;
-        private ICollection<Shipment> _shipments;
-
         #region Properties
 
         /// <summary>
@@ -297,79 +287,10 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public string CustomOrderNumber { get; set; }
 
-        #endregion
-
-        #region Navigation properties
-
-        /// <summary>
-        /// Gets or sets the customer
-        /// </summary>
-        public virtual Customer Customer { get; set; }
-
-        /// <summary>
-        /// Gets or sets the billing address
-        /// </summary>
-        public virtual Address BillingAddress { get; set; }
-
-        /// <summary>
-        /// Gets or sets the shipping address
-        /// </summary>
-        public virtual Address ShippingAddress { get; set; }
-
-        /// <summary>
-        /// Gets or sets the pickup address
-        /// </summary>
-        public virtual Address PickupAddress { get; set; }
-
         /// <summary>
         /// Gets or sets the reward points history record (spent by a customer when placing this order)
         /// </summary>
-        public virtual RewardPointsHistory RedeemedRewardPointsEntry { get; set; }
-
-        /// <summary>
-        /// Gets or sets discount usage history
-        /// </summary>
-        public virtual ICollection<DiscountUsageHistory> DiscountUsageHistory
-        {
-            get => _discountUsageHistory ?? (_discountUsageHistory = new List<DiscountUsageHistory>());
-            protected set => _discountUsageHistory = value;
-        }
-
-        /// <summary>
-        /// Gets or sets gift card usage history (gift card that were used with this order)
-        /// </summary>
-        public virtual ICollection<GiftCardUsageHistory> GiftCardUsageHistory
-        {
-            get => _giftCardUsageHistory ?? (_giftCardUsageHistory = new List<GiftCardUsageHistory>());
-            protected set => _giftCardUsageHistory = value;
-        }
-
-        /// <summary>
-        /// Gets or sets order notes
-        /// </summary>
-        public virtual ICollection<OrderNote> OrderNotes
-        {
-            get => _orderNotes ?? (_orderNotes = new List<OrderNote>());
-            protected set => _orderNotes = value;
-        }
-
-        /// <summary>
-        /// Gets or sets order items
-        /// </summary>
-        public virtual ICollection<OrderItem> OrderItems
-        {
-            get => _orderItems ?? (_orderItems = new List<OrderItem>());
-            protected set => _orderItems = value;
-        }
-
-        /// <summary>
-        /// Gets or sets shipments
-        /// </summary>
-        public virtual ICollection<Shipment> Shipments
-        {
-            get => _shipments ?? (_shipments = new List<Shipment>());
-            protected set => _shipments = value;
-        }
+        public virtual int? RedeemedRewardPointsEntryId { get; set; }
 
         #endregion
 

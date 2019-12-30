@@ -26,6 +26,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IGiftCardService _giftCardService;
         private readonly ILocalizationService _localizationService;
+        private readonly IOrderService _orderService;
         private readonly IPriceFormatter _priceFormatter;
 
         #endregion
@@ -37,6 +38,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IDateTimeHelper dateTimeHelper,
             IGiftCardService giftCardService,
             ILocalizationService localizationService,
+            IOrderService orderService,
             IPriceFormatter priceFormatter)
         {
             _currencySettings = currencySettings;
@@ -44,6 +46,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _dateTimeHelper = dateTimeHelper;
             _giftCardService = giftCardService;
             _localizationService = localizationService;
+            _orderService = orderService;
             _priceFormatter = priceFormatter;
         }
 
@@ -166,11 +169,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 //fill in model values from the entity
                 model = model ?? giftCard.ToModel<GiftCardModel>();
 
-                model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem?.OrderId;
+                var order = _orderService.GetOrderByOrderItem(giftCard.PurchasedWithOrderItemId ?? 0);
+
+                model.PurchasedWithOrderId = order?.Id;
                 model.RemainingAmountStr = _priceFormatter.FormatPrice(_giftCardService.GetGiftCardRemainingAmount(giftCard), true, false);
                 model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
                 model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
-                model.PurchasedWithOrderNumber = giftCard.PurchasedWithOrderItem?.Order?.CustomOrderNumber;
+                model.PurchasedWithOrderNumber = order?.CustomOrderNumber;
 
                 //prepare nested search model
                 PrepareGiftCardUsageHistorySearchModel(model.GiftCardUsageHistorySearchModel, giftCard);
@@ -197,7 +202,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(giftCard));
 
             //get gift card usage history
-            var usageHistory = giftCard.GiftCardUsageHistory
+            var usageHistory = _giftCardService.GetGiftCardUsageHistory(giftCard)
                 .OrderByDescending(historyEntry => historyEntry.CreatedOnUtc).ToList()
                 .ToPagedList(searchModel);
 
@@ -214,7 +219,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     giftCardUsageHistoryModel.OrderId = historyEntry.UsedWithOrderId;
-                    giftCardUsageHistoryModel.CustomOrderNumber = historyEntry.UsedWithOrder.CustomOrderNumber;
+                    giftCardUsageHistoryModel.CustomOrderNumber = _orderService.GetOrderById(historyEntry.UsedWithOrderId)?.CustomOrderNumber;
                     giftCardUsageHistoryModel.UsedValue = _priceFormatter.FormatPrice(historyEntry.UsedValue, true, false);
 
                     return giftCardUsageHistoryModel;

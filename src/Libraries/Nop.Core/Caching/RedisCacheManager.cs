@@ -267,7 +267,6 @@ namespace Nop.Core.Caching
             _perRequestCacheManager.Remove(key);
         }
 
-
         /// <summary>
         /// Removes items by key prefix
         /// </summary>

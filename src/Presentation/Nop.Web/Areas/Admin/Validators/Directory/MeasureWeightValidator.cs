@@ -9,12 +9,12 @@ namespace Nop.Web.Areas.Admin.Validators.Directory
 {
     public partial class MeasureWeightValidator : BaseNopValidator<MeasureWeightModel>
     {
-        public MeasureWeightValidator(ILocalizationService localizationService, IDbContext dbContext)
+        public MeasureWeightValidator(IDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Shipping.Measures.Weights.Fields.Name.Required"));
             RuleFor(x => x.SystemKeyword).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Shipping.Measures.Weights.Fields.SystemKeyword.Required"));
 
-            SetDatabaseValidationRules<MeasureWeight>(dbContext);
+            SetDatabaseValidationRules<MeasureWeight>(dataProvider);
         }
     }
 }

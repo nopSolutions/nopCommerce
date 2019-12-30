@@ -28,6 +28,14 @@ namespace Nop.Services.Catalog
         IList<ProductTag> GetProductTagsByIds(int[] productTagIds);
 
         /// <summary>
+        /// Indicates whether a product tag exists
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="productTagId">Product tag identifier</param>
+        /// <returns>Result</returns>
+        bool ProductTagExists(Product product, int productTagId);
+
+        /// <summary>
         /// Gets all product tags
         /// </summary>
         /// <returns>Product tags</returns>
@@ -53,6 +61,12 @@ namespace Nop.Services.Catalog
         /// <param name="name">Product tag name</param>
         /// <returns>Product tag</returns>
         ProductTag GetProductTagByName(string name);
+
+        /// <summary>
+        /// Inserts a product-product tag mapping
+        /// </summary>
+        /// <param name="tagMapping">Product-product tag mapping</param>
+        void InsertProductProductTagMapping(ProductProductTagMapping tagMapping);
 
         /// <summary>
         /// Inserts a product tag

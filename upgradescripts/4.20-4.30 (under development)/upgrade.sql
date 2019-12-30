@@ -406,22 +406,32 @@ BEGIN
     VALUES (N'captchasettings.recaptchaapiurl', N'https://www.google.com/recaptcha/', 0)
 END
 GO
-GO
+
 
 --new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'seosettings.microdataenabled')
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'seosettings.microdataenabled', 'true', 0)
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='RedeemedRewardPointsEntryId')
+BEGIN
+	ALTER TABLE [Order] ADD	RedeemedRewardPointsEntryId int NULL
 END
 GO
 
 --new column
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Discount]') and NAME='AdminComment')
 BEGIN
-	ALTER TABLE [Discount] ADD
-	AdminComment nvarchar(max) NULL
+	ALTER TABLE [Discount] ADD 	AdminComment nvarchar(max) NULL
 END
 GO
 
- 
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[RewardPointsHistory]') and NAME='OrderId')
+BEGIN
+	ALTER TABLE [RewardPointsHistory] ADD OrderId int NULL
+END
+GO

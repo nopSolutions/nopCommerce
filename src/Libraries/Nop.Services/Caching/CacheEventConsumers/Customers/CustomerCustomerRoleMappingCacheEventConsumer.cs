@@ -1,0 +1,16 @@
+﻿using Nop.Core.Domain.Customers;
+using Nop.Services.Caching.CachingDefaults;
+
+namespace Nop.Services.Caching.CacheEventConsumers.Customers
+{
+    /// <summary>
+    /// Represents a customer-customer role mapping class
+    /// </summary>
+    public partial class CustomerCustomerRoleMappingCacheEventConsumer : CacheEventConsumer<CustomerCustomerRoleMapping>
+    {
+        public override void ClearCashe(CustomerCustomerRoleMapping entity)
+        {
+            RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerCustomerRolesPrefixCacheKey, false);
+        }
+    }
+}

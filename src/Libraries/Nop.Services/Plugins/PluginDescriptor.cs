@@ -36,6 +36,26 @@ namespace Nop.Services.Plugins
         #region Methods
 
         /// <summary>
+        /// Get plugin descriptor from the description text
+        /// </summary>
+        /// <param name="text">Description text</param>
+        /// <returns>Plugin descriptor</returns>
+        public static PluginDescriptor GetPluginDescriptorFromText(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return new PluginDescriptor();
+
+            //get plugin descriptor from the JSON file
+            var descriptor = JsonConvert.DeserializeObject<PluginDescriptor>(text);
+
+            //nopCommerce 2.00 didn't have 'SupportedVersions' parameter, so let's set it to "2.00"
+            if (!descriptor.SupportedVersions.Any())
+                descriptor.SupportedVersions.Add("2.00");
+
+            return descriptor;
+        }
+
+        /// <summary>
         /// Get the instance of the plugin
         /// </summary>
         /// <typeparam name="TPlugin">Type of the plugin</typeparam>
@@ -112,26 +132,6 @@ namespace Nop.Services.Plugins
             //save the file
             var text = JsonConvert.SerializeObject(this, Formatting.Indented);
             fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
-        }
-
-        /// <summary>
-        /// Get plugin descriptor from the description text
-        /// </summary>
-        /// <param name="text">Description text</param>
-        /// <returns>Plugin descriptor</returns>
-        public static PluginDescriptor GetPluginDescriptorFromText(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return new PluginDescriptor();
-
-            //get plugin descriptor from the JSON file
-            var descriptor = JsonConvert.DeserializeObject<PluginDescriptor>(text);
-
-            //nopCommerce 2.00 didn't have 'SupportedVersions' parameter, so let's set it to "2.00"
-            if (!descriptor.SupportedVersions.Any())
-                descriptor.SupportedVersions.Add("2.00");
-
-            return descriptor;
         }
 
         #endregion

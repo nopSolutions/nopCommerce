@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
 {
     public partial class ProductAttributeValueModelValidator : BaseNopValidator<ProductAttributeValueModel>
     {
-        public ProductAttributeValueModelValidator(ILocalizationService localizationService, IDbContext dbContext)
+        public ProductAttributeValueModelValidator(IDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
@@ -25,7 +25,7 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
                 .WithMessage(localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.Choose"))
                 .When(x => x.AttributeValueTypeId == (int)AttributeValueType.AssociatedToProduct);
 
-            SetDatabaseValidationRules<ProductAttributeValue>(dbContext);
+            SetDatabaseValidationRules<ProductAttributeValue>(dataProvider);
         }
     }
 }

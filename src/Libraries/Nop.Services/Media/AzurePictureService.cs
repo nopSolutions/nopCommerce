@@ -7,11 +7,11 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
@@ -42,7 +42,6 @@ namespace Nop.Services.Media
         #region Ctor
 
         public AzurePictureService(IDataProvider dataProvider,
-            IDbContext dbContext,
             IDownloadService downloadService,
             IEventPublisher eventPublisher,
             IHttpContextAccessor httpContextAccessor,
@@ -58,7 +57,6 @@ namespace Nop.Services.Media
             MediaSettings mediaSettings,
             NopConfig config)
             : base(dataProvider,
-                  dbContext,
                   downloadService,
                   eventPublisher,
                   httpContextAccessor,
@@ -213,7 +211,7 @@ namespace Nop.Services.Media
             }
             while (continuationToken != null);
 
-            _cacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopMediaCachingDefaults.ThumbsPrefixCacheKey);
         }
 
         /// <summary>
@@ -226,7 +224,7 @@ namespace Nop.Services.Media
         {
             try
             {
-                var key = string.Format(NopMediaDefaults.ThumbExistsCacheKey, thumbFileName);
+                var key = string.Format(NopMediaCachingDefaults.ThumbExistsCacheKey, thumbFileName);
                 return await _cacheManager.GetAsync(key, async () =>
                 {
                     //GetBlockBlobReference doesn't need to be async since it doesn't contact the server yet
@@ -263,7 +261,7 @@ namespace Nop.Services.Media
 
             await blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length);
 
-            _cacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopMediaCachingDefaults.ThumbsPrefixCacheKey);
         }
 
         #endregion

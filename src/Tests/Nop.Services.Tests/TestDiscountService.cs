@@ -1,55 +1,53 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Data;
-using Nop.Core.Domain.Catalog;
+using Nop.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Localization;
-using Nop.Services.Logging;
-using Nop.Services.Plugins;
+using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 
 namespace Nop.Services.Tests
 {
     public class TestDiscountService : DiscountService
     {
-        private readonly List<DiscountForCaching> _discountForCaching;
+        private readonly List<Discount> _discounts;
 
-        public TestDiscountService(ICategoryService categoryService,
+        public TestDiscountService(
             ICustomerService customerService,
             IDiscountPluginManager discountPluginManager,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
-            IRepository<Category> categoryRepository,
+            IProductService productService,
             IRepository<Discount> discountRepository,
             IRepository<DiscountRequirement> discountRequirementRepository,
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
-            IRepository<Manufacturer> manufacturerRepository,
-            IRepository<Product> productRepository,
+            IRepository<Order> orderRepository,
             IStaticCacheManager cacheManager,
-            IStoreContext storeContext) : base(categoryService,
-                customerService,
-                discountPluginManager,
-                eventPublisher,
-                localizationService,
-                categoryRepository,
-                discountRepository,
-                discountRequirementRepository,
-                discountUsageHistoryRepository,
-                manufacturerRepository,
-                productRepository,
-                cacheManager,
-                storeContext)
+            IStoreContext storeContext) : base(
+            customerService,
+            discountPluginManager,
+            eventPublisher,
+            localizationService,
+            productService,
+            discountRepository,
+            discountRequirementRepository,
+            discountUsageHistoryRepository,
+            orderRepository,
+            cacheManager,
+            storeContext)
         {
-            _discountForCaching = new List<DiscountForCaching>();
+            _discounts = new List<Discount>();
         }
 
         public override DiscountValidationResult ValidateDiscount(Discount discount, Customer customer)
@@ -57,17 +55,11 @@ namespace Nop.Services.Tests
             return new DiscountValidationResult { IsValid = true };
         }
 
-        public override DiscountValidationResult ValidateDiscount(DiscountForCaching discount, Customer customer)
+        public override IList<Discount> GetAllDiscounts(DiscountType? discountType = null,
+            string couponCode = null, string discountName = null, bool showHidden = false,
+            DateTime? startDateUtc = null, DateTime? endDateUtc = null)
         {
-            return new DiscountValidationResult { IsValid = true };
-        }
-
-        public override IList<DiscountForCaching> GetAllDiscountsForCaching(DiscountType? discountType = null,
-            string couponCode = null, string discountName = null,
-            bool showHidden = false)
-        {
-
-            return _discountForCaching
+            return _discounts
                 .Where(x => !discountType.HasValue || x.DiscountType == discountType.Value)
                 .Where(x => string.IsNullOrEmpty(couponCode) || x.CouponCode == couponCode)
                 //UNDONE other filtering such as discountName, showHidden (not actually required in unit tests)
@@ -76,10 +68,10 @@ namespace Nop.Services.Tests
 
         public void AddDiscount(DiscountType discountType)
         {
-            _discountForCaching.Clear();
+            _discounts.Clear();
 
             //discounts
-            var discount = new DiscountForCaching
+            var discount = new Discount
             {
                 Id = 1,
                 Name = "Discount 1",
@@ -88,51 +80,54 @@ namespace Nop.Services.Tests
                 DiscountLimitation = DiscountLimitationType.Unlimited
             };
 
-            _discountForCaching.Add(discount);
+            _discounts.Add(discount);
         }
 
         public void ClearDiscount()
         {
-            _discountForCaching.Clear();
+            _discounts.Clear();
         }
 
-        public static IDiscountService Init()
+        public static IDiscountService Init(IQueryable<Discount> discounts = default(IQueryable<Discount>), IQueryable<DiscountProductMapping> productDiscountMapping = null)
         {
             var cacheManager = new TestCacheManager();
             var discountRepo = new Mock<IRepository<Discount>>();
+
+            discountRepo.Setup(r => r.Table).Returns(discounts);
+
             var discountRequirementRepo = new Mock<IRepository<DiscountRequirement>>();
             discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());
             var discountUsageHistoryRepo = new Mock<IRepository<DiscountUsageHistory>>();
-            var categoryRepo = new Mock<IRepository<Category>>();
-            categoryRepo.Setup(x => x.Table).Returns(new List<Category>().AsQueryable());
-            var manufacturerRepo = new Mock<IRepository<Manufacturer>>();
-            manufacturerRepo.Setup(x => x.Table).Returns(new List<Manufacturer>().AsQueryable());
-            var productRepo = new Mock<IRepository<Product>>();
-            productRepo.Setup(x => x.Table).Returns(new List<Product>().AsQueryable());
+
+            var discountMappingRepo = new Mock<IRepository<DiscountMapping>>();
+
+            discountMappingRepo.Setup(x => x.Table).Returns(productDiscountMapping);
+
             var customerService = new Mock<ICustomerService>();
             var localizationService = new Mock<ILocalizationService>();
-            var eventPublisher = new Mock<IEventPublisher>();
-            var loger = new Mock<ILogger>();
-            var webHelper = new Mock<IWebHelper>();
+            var productService = new Mock<IProductService>();
 
-            var pluginService = new PluginService(new CatalogSettings(), customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
-            var categoryService = new Mock<ICategoryService>();
+            var eventPublisher = new Mock<IEventPublisher>();
+           
+            var pluginService = new FakePluginService();
+
             var discountPluginManager = new DiscountPluginManager(pluginService);
             var store = new Store { Id = 1 };
             var storeContext = new Mock<IStoreContext>();
             storeContext.Setup(x => x.CurrentStore).Returns(store);
 
-            var discountService = new TestDiscountService(categoryService.Object,
+            var orderRepo = new Mock<IRepository<Order>>();
+
+            var discountService = new TestDiscountService(
                 customerService.Object,
                 discountPluginManager,
                 eventPublisher.Object,
                 localizationService.Object,
-                categoryRepo.Object,
+                productService.Object,
                 discountRepo.Object,
                 discountRequirementRepo.Object,
                 discountUsageHistoryRepo.Object,
-                manufacturerRepo.Object,
-                productRepo.Object,
+                orderRepo.Object,
                 cacheManager,
                 storeContext.Object);
 

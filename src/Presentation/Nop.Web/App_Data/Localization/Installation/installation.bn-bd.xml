@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>বিল্ট ইন ডাটা স্টোরেজ ব্যবহার করুন (SQL সার্ভার কমপ্যাক্ট)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>SQL সার্ভারের নাম</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>SQL সার্ভারের নাম বাধ্যতামূলক</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL পাসওয়ার্ড</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>SQL সার্ভারের পাসওয়ার্ড প্রয়োজনীয়</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>SQL ব্যবহারকারীর নাম</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>SQL ব্যবহারকারীর নাম প্রয়োজনীয়</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Microsoft SQL Server (অথবা SQL Express) ডাটাবেস ব্যবহার করুন</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>দোকানের তথ্য</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>এই উইজার্ডটি সম্পূর্ণ করতে আপনার ডাটাবেস সার্ভার সংক্রান্ত কিছু তথ্য ("কানেকশন স্ট্রিং") আপনাকে জানতে হবে। প্রয়োজন হলে আপনার ISP-র সাথে যোগাযোগ করুন। যদি আপনি এটি আপনার লোকাল ম্যাশিন অথবা সার্ভারে ইন্সটল করেন তাহলে আপনার সিস্টেম অ্যাডমিন থেকে কিছু তথ্য প্রয়োজন হতে পারে।</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>ইন্টিগ্রেটেড উইন্ডোজ অথেন্টিকেশন ব্যবহার করুন</Value>
   </LocaleResource>
 </Language>

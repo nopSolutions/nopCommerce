@@ -37,7 +37,7 @@ namespace Nop.Web.Framework.Factories
         public virtual IList<T> PrepareLocalizedModels<T>(Action<T, int> configure = null) where T : ILocalizedLocaleModel
         {
             //get all available languages
-            var availableLanguages = _languageService.GetAllLanguages(showHidden: true);
+            var availableLanguages = _languageService.GetAllLanguages(true);
 
             //prepare models
             var localizedModels = availableLanguages.Select(language =>
@@ -49,8 +49,7 @@ namespace Nop.Web.Framework.Factories
                 localizedModel.LanguageId = language.Id;
 
                 //invoke the model configuration action
-                if (configure != null)
-                    configure.Invoke(localizedModel, localizedModel.LanguageId);
+                configure?.Invoke(localizedModel, localizedModel.LanguageId);
 
                 return localizedModel;
             }).ToList();

@@ -59,7 +59,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
                 throw new ArgumentException("Discount could not be loaded");
 
             //check whether the discount requirement exists
-            if (discountRequirementId.HasValue && !discount.DiscountRequirements.Any(requirement => requirement.Id == discountRequirementId.Value))
+            if (discountRequirementId.HasValue && _discountService.GetDiscountRequirementById(discountRequirementId.Value) is null)
                 return Content("Failed to load requirement.");
 
             //try to get previously saved restricted customer role identifier
@@ -104,18 +104,18 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
                 throw new ArgumentException("Discount could not be loaded");
 
             //get the discount requirement
-            var discountRequirement = discountRequirementId.HasValue 
-                ? discount.DiscountRequirements.FirstOrDefault(requirement => requirement.Id == discountRequirementId.Value) : null;
+            var discountRequirement = _discountService.GetDiscountRequirementById(discountRequirementId ?? 0);
 
             //the discount requirement does not exist, so create a new one
             if (discountRequirement == null)
             {
                 discountRequirement = new DiscountRequirement
                 {
+                    DiscountId = discount.Id,
                     DiscountRequirementRuleSystemName = DiscountRequirementDefaults.SystemName
                 };
-                discount.DiscountRequirements.Add(discountRequirement);
-                _discountService.UpdateDiscount(discount);
+
+                _discountService.InsertDiscountRequirement(discountRequirement);
             }
 
             //save restricted customer role identifier

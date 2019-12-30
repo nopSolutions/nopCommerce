@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
@@ -59,6 +59,12 @@ namespace Nop.Services.Orders
         /// <param name="returnRequestActionId">Return request action identifier</param>
         /// <returns>Return request action</returns>
         ReturnRequestAction GetReturnRequestActionById(int returnRequestActionId);
+
+        /// <summary>
+        /// Inserts a return request
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        void InsertReturnRequest(ReturnRequest returnRequest);
 
         /// <summary>
         /// Inserts a return request action

@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
@@ -15,17 +14,13 @@ namespace Nop.Data.Mapping.Catalog
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<ProductReviewHelpfulness> builder)
+        public override void Configure(EntityMappingBuilder<ProductReviewHelpfulness> builder)
         {
-            builder.ToTable(nameof(ProductReviewHelpfulness));
-            builder.HasKey(productReviewHelpfulness => productReviewHelpfulness.Id);
+            builder.HasTableName(nameof(ProductReviewHelpfulness));
 
-            builder.HasOne(productReviewHelpfulness => productReviewHelpfulness.ProductReview)
-                .WithMany(productReview => productReview.ProductReviewHelpfulnessEntries)
-                .HasForeignKey(productReviewHelpfulness => productReviewHelpfulness.ProductReviewId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(productReviewHelpfulness => productReviewHelpfulness.ProductReviewId);
+            builder.Property(productReviewHelpfulness => productReviewHelpfulness.WasHelpful);
+            builder.Property(productReviewHelpfulness => productReviewHelpfulness.CustomerId);
         }
 
         #endregion

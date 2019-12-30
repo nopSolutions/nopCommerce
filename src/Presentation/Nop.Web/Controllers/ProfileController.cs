@@ -42,7 +42,7 @@ namespace Nop.Web.Controllers
             }
 
             var customer = _customerService.GetCustomerById(customerId);
-            if (customer == null || customer.IsGuest())
+            if (customer == null || _customerService.IsGuest(customer))
             {
                 return RedirectToRoute("Homepage");
             }

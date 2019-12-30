@@ -57,7 +57,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult AccessDenied(string pageUrl)
         {
             var currentCustomer = _workContext.CurrentCustomer;
-            if (currentCustomer == null || currentCustomer.IsGuest())
+            if (currentCustomer == null || _customerService.IsGuest(currentCustomer))
             {
                 _logger.Information($"Access denied to anonymous request on {pageUrl}");
                 return View();
@@ -98,23 +98,20 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var pr in permissionRecords)
                 {
                     var allow = permissionRecordSystemNamesToRestrict.Contains(pr.SystemName);
+
+                    if (allow == _permissionService.Authorize(pr.SystemName, cr.Id))
+                        continue;
+
                     if (allow)
                     {
-                        if (pr.PermissionRecordCustomerRoleMappings.FirstOrDefault(x => x.CustomerRoleId == cr.Id) != null)
-                            continue;
-
-                        pr.PermissionRecordCustomerRoleMappings.Add(new PermissionRecordCustomerRoleMapping { CustomerRole = cr });
-                        _permissionService.UpdatePermissionRecord(pr);
+                        _permissionService.InsertPermissionRecordCustomerRoleMapping(new PermissionRecordCustomerRoleMapping { PermissionRecordId = pr.Id, CustomerRoleId = cr.Id });
                     }
                     else
                     {
-                        if (pr.PermissionRecordCustomerRoleMappings.FirstOrDefault(x => x.CustomerRoleId == cr.Id) == null)
-                            continue;
-
-                        pr.PermissionRecordCustomerRoleMappings
-                            .Remove(pr.PermissionRecordCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == cr.Id));
-                        _permissionService.UpdatePermissionRecord(pr);
+                        _permissionService.DeletePermissionRecordCustomerRoleMapping(pr.Id, cr.Id);                        
                     }
+
+                    _permissionService.UpdatePermissionRecord(pr);
                 }
             }
 

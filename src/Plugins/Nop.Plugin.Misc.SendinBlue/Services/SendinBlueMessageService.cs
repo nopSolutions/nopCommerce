@@ -4,14 +4,17 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Affiliates;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
+using Nop.Services.Orders;
 using Nop.Services.Stores;
 
 namespace Nop.Plugin.Misc.SendinBlue.Services
@@ -36,6 +39,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
 
         public SendinBlueMessageService(CommonSettings commonSettings,
             EmailAccountSettings emailAccountSettings,
+            IAddressService addressService,
             IAffiliateService affiliateService,
             ICustomerService customerService,
             IEmailAccountService emailAccountService,
@@ -45,14 +49,18 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             ILocalizationService localizationService,
             IMessageTemplateService messageTemplateService,
             IMessageTokenProvider messageTokenProvider,
+            IOrderService orderService,
+            IProductService productService,
             ISettingService settingService,
             IStoreContext storeContext,
             IStoreService storeService,
             IQueuedEmailService queuedEmailService,
             ITokenizer tokenizer,
-            SendinBlueManager sendinBlueEmailManager)
+            SendinBlueManager sendinBlueEmailManager,
+            LocalizationSettings localizationSettings)
             : base(commonSettings,
                 emailAccountSettings,
+                addressService,
                 affiliateService,
                 customerService,
                 emailAccountService,
@@ -61,10 +69,13 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 localizationService,
                 messageTemplateService,
                 messageTokenProvider,
+                orderService,
+                productService,
                 queuedEmailService,
                 storeContext,
                 storeService,
-                tokenizer)
+                tokenizer,
+                localizationSettings)
         {
             _emailAccountService = emailAccountService;
             _genericAttributeService = genericAttributeService;

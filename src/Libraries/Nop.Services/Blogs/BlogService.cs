@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Stores;
+using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Blogs
@@ -71,7 +72,7 @@ namespace Nop.Services.Blogs
             if (blogPostId == 0)
                 return null;
 
-            return _blogPostRepository.GetById(blogPostId);
+            return _blogPostRepository.ToCachedGetById(blogPostId);
         }
 
         /// <summary>
@@ -341,7 +342,7 @@ namespace Nop.Services.Blogs
             if (blogCommentId == 0)
                 return null;
 
-            return _blogCommentRepository.GetById(blogCommentId);
+            return _blogCommentRepository.ToCachedGetById(blogCommentId);
         }
 
         /// <summary>
@@ -418,6 +419,21 @@ namespace Nop.Services.Blogs
             {
                 DeleteBlogComment(blogComment);
             }
+        }
+
+        /// <summary>
+        /// Inserts a blog comment
+        /// </summary>
+        /// <param name="blogComment">Blog comment</param>
+        public virtual void InsertBlogComment(BlogComment blogComment)
+        {
+            if (blogComment == null)
+                throw new ArgumentNullException(nameof(blogComment));
+
+            _blogCommentRepository.Insert(blogComment);
+
+            //event notification
+            _eventPublisher.EntityInserted(blogComment);
         }
 
         #endregion

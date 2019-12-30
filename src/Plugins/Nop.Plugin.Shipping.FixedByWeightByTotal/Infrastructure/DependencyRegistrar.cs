@@ -1,14 +1,8 @@
-using Autofac;
-using Autofac.Core;
+﻿using Autofac;
 using Nop.Core.Configuration;
-using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
-using Nop.Data;
-using Nop.Plugin.Shipping.FixedByWeightByTotal.Data;
-using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Services;
-using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Infrastructure
 {
@@ -26,14 +20,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Infrastructure
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
         {
             builder.RegisterType<ShippingByWeightByTotalService>().As<IShippingByWeightByTotalService>().InstancePerLifetimeScope();
-
-            //data context
-            builder.RegisterPluginDataContext<ShippingByWeightByTotalObjectContext>("nop_object_context_shipping_weight_total_zip");
-
-            //override required repository with our custom context
-            builder.RegisterType<EfRepository<ShippingByWeightByTotalRecord>>().As<IRepository<ShippingByWeightByTotalRecord>>()
-                .WithParameter(ResolvedParameter.ForNamed<IDbContext>("nop_object_context_shipping_weight_total_zip"))
-                .InstancePerLifetimeScope();
         }
 
         /// <summary>

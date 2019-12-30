@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Catalog;
-
 
 namespace Nop.Data.Mapping.Catalog
 {
@@ -16,15 +14,15 @@ namespace Nop.Data.Mapping.Catalog
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<ReviewType> builder)
+        public override void Configure(EntityMappingBuilder<ReviewType> builder)
         {
-            builder.ToTable(nameof(ReviewType));
-            builder.HasKey(reviewType => reviewType.Id);
+            builder.HasTableName(nameof(ReviewType));
 
-            builder.Property(reviewType => reviewType.Name).IsRequired().HasMaxLength(400);
-            builder.Property(reviewType => reviewType.Description).IsRequired().HasMaxLength(400);            
-
-            base.Configure(builder);
+            builder.Property(reviewType => reviewType.Name).HasLength(400).IsNullable(false);
+            builder.Property(reviewType => reviewType.Description).HasLength(400).IsNullable(false);
+            builder.Property(reviewtype => reviewtype.DisplayOrder);
+            builder.Property(reviewtype => reviewtype.VisibleToAllCustomers);
+            builder.Property(reviewtype => reviewtype.IsRequired);
         }
 
         #endregion

@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
 using Nop.Services.Events;
@@ -121,7 +122,7 @@ namespace Nop.Services.Customers
             if (!customer.Active)
                 return CustomerLoginResults.NotActive;
             //only registered can login
-            if (!customer.IsRegistered())
+            if (!_customerService.IsRegistered(customer))
                 return CustomerLoginResults.NotRegistered;
             //check whether a customer is locked out
             if (customer.CannotLoginUntilDateUtc.HasValue && customer.CannotLoginUntilDateUtc.Value > DateTime.UtcNow)
@@ -181,7 +182,7 @@ namespace Nop.Services.Customers
                 return result;
             }
 
-            if (request.Customer.IsRegistered())
+            if (_customerService.IsRegistered(request.Customer))
             {
                 result.AddError("Current customer is already registered");
                 return result;
@@ -230,7 +231,7 @@ namespace Nop.Services.Customers
 
             var customerPassword = new CustomerPassword
             {
-                Customer = request.Customer,
+                CustomerId = request.Customer.Id,
                 PasswordFormat = request.PasswordFormat,
                 CreatedOnUtc = DateTime.UtcNow
             };
@@ -257,15 +258,14 @@ namespace Nop.Services.Customers
             var registeredRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
             if (registeredRole == null)
                 throw new NopException("'Registered' role could not be loaded");
-            //request.Customer.CustomerRoles.Add(registeredRole);
-            request.Customer.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = registeredRole });
-            //remove from 'Guests' role
-            var guestRole = request.Customer.CustomerRoles.FirstOrDefault(cr => cr.SystemName == NopCustomerDefaults.GuestsRoleName);
-            if (guestRole != null)
-            {
-                //request.Customer.CustomerRoles.Remove(guestRole);
-                request.Customer.RemoveCustomerRoleMapping(
-                    request.Customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == guestRole.Id));
+            
+            _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = request.Customer.Id, CustomerRoleId = registeredRole.Id });
+
+            //remove from 'Guests' role            
+            if (_customerService.IsGuest(request.Customer))
+            {                
+                var guestRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
+                _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = request.Customer.Id, CustomerRoleId = guestRole.Id });
             }
 
             //add reward points for customer registration (if enabled)
@@ -336,7 +336,7 @@ namespace Nop.Services.Customers
             //at this point request is valid
             var customerPassword = new CustomerPassword
             {
-                Customer = customer,
+                CustomerId = customer.Id,
                 PasswordFormat = request.NewPasswordFormat,
                 CreatedOnUtc = DateTime.UtcNow
             };

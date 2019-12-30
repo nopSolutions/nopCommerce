@@ -58,7 +58,8 @@ namespace Nop.Web.Factories
                 AlreadyVoted = setAlreadyVotedProperty && _pollService.AlreadyVoted(poll.Id, _workContext.CurrentCustomer.Id),
                 Name = poll.Name
             };
-            var answers = poll.PollAnswers.OrderBy(x => x.DisplayOrder);
+            var answers = _pollService.GetPollAnswerByPoll(poll.Id);
+            
             foreach (var answer in answers)
                 model.TotalVotes += answer.NumberOfVotes;
             foreach (var pa in answers)

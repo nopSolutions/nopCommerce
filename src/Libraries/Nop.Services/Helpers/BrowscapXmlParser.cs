@@ -14,8 +14,8 @@ namespace Nop.Services.Helpers
     /// </summary>
     public class BrowscapXmlHelper
     {
-        private Regex _crawlerUserAgentsRegexp;
         private readonly INopFileProvider _fileProvider;
+        private Regex _crawlerUserAgentsRegexp;
 
         /// <summary>
         /// Ctor
@@ -73,8 +73,7 @@ namespace Nop.Services.Helpers
             if (crawlerItems == null || !crawlerItems.Any())
                 throw new Exception("Incorrect file format");
 
-            var crawlerRegexpPattern = string.Join("|",
-                crawlerItems
+            var crawlerRegexpPattern = string.Join("|", crawlerItems
                 //get only user agent names
                 .Select(e => e.Attribute("name"))
                 .Where(e => !string.IsNullOrEmpty(e?.Value))

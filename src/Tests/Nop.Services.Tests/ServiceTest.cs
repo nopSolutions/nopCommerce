@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
 using Moq;
 using Nop.Core;
@@ -9,6 +10,7 @@ using Nop.Services.Tests.Discounts;
 using Nop.Services.Tests.Payments;
 using Nop.Services.Tests.Shipping;
 using Nop.Services.Tests.Tax;
+using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests
@@ -16,8 +18,26 @@ namespace Nop.Services.Tests
     [TestFixture]
     public abstract class ServiceTest
     {
+        protected readonly FakeDataStore _fakeDataStore = new FakeDataStore();
+
         [SetUp]
-        public void SetUp()
+        public virtual void SetUp()
+        {
+
+        }
+
+        public void RunWithTestServiceProvider(Action action)
+        {
+            var nopEngine = new Mock<NopEngine>();
+            nopEngine.Setup(x => x.ServiceProvider).Returns(new TestServiceProvider());
+            EngineContext.Replace(nopEngine.Object);
+
+            action();
+
+            EngineContext.Replace(null);
+        }
+        
+        protected ServiceTest()
         {
             //init plugins
             InitPlugins();

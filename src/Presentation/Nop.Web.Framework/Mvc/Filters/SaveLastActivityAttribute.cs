@@ -3,7 +3,7 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Services.Customers;
 
 namespace Nop.Web.Framework.Mvc.Filters

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.News;
@@ -116,6 +116,12 @@ namespace Nop.Services.News
         /// </summary>
         /// <param name="newsComments">News comments</param>
         void DeleteNewsComments(IList<NewsComment> newsComments);
+
+        /// <summary>
+        /// Inserts a news comment
+        /// </summary>
+        /// <param name="comment">News comment</param>
+        void InsertNewsComment(NewsComment comment);
 
         #endregion
     }

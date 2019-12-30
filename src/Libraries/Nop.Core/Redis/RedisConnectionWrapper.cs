@@ -17,10 +17,9 @@ namespace Nop.Core.Redis
         #region Fields
 
         private readonly NopConfig _config;
-
         private readonly object _lock = new object();
-        private volatile ConnectionMultiplexer _connection;
         private readonly Lazy<string> _connectionString;
+        private volatile ConnectionMultiplexer _connection;
         private volatile RedLockFactory _redisLockFactory;
 
         #endregion

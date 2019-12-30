@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Discounts;
 
 namespace Nop.Data.Mapping.Discounts
@@ -15,18 +14,17 @@ namespace Nop.Data.Mapping.Discounts
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<DiscountRequirement> builder)
+        public override void Configure(EntityMappingBuilder<DiscountRequirement> builder)
         {
-            builder.ToTable(nameof(DiscountRequirement));
-            builder.HasKey(requirement => requirement.Id);
+            builder.HasTableName(nameof(DiscountRequirement));
 
-            builder.HasMany(requirement => requirement.ChildRequirements)
-                .WithOne()
-                .HasForeignKey(requirement => requirement.ParentId);
+            builder.Property(requirement => requirement.DiscountId);
+            builder.Property(requirement => requirement.DiscountRequirementRuleSystemName);
+            builder.Property(requirement => requirement.ParentId);
+            builder.Property(requirement => requirement.InteractionTypeId);
+            builder.Property(requirement => requirement.IsGroup);
 
             builder.Ignore(requirement => requirement.InteractionType);
-
-            base.Configure(builder);
         }
 
         #endregion

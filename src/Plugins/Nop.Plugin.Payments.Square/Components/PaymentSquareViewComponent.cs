@@ -3,12 +3,12 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Payments.Square.Models;
 using Nop.Plugin.Payments.Square.Services;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -25,6 +25,7 @@ namespace Nop.Plugin.Payments.Square.Components
 
         private readonly CurrencySettings _currencySettings;
         private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
@@ -40,6 +41,7 @@ namespace Nop.Plugin.Payments.Square.Components
 
         public PaymentSquareViewComponent(CurrencySettings currencySettings,
             ICurrencyService currencyService,
+            ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IOrderTotalCalculationService orderTotalCalculationService,
@@ -51,6 +53,7 @@ namespace Nop.Plugin.Payments.Square.Components
         {
             _currencySettings = currencySettings;
             _currencyService = currencyService;
+            _customerService = customerService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _orderTotalCalculationService = orderTotalCalculationService;
@@ -76,11 +79,11 @@ namespace Nop.Plugin.Payments.Square.Components
             var model = new PaymentInfoModel
             {
                 //whether current customer is guest
-                IsGuest = _workContext.CurrentCustomer.IsGuest(),
+                IsGuest = _customerService.IsGuest(_workContext.CurrentCustomer),
 
                 //get postal code from the billing address or from the shipping one
-                PostalCode = _workContext.CurrentCustomer.BillingAddress?.ZipPostalCode
-                    ?? _workContext.CurrentCustomer.ShippingAddress?.ZipPostalCode
+                PostalCode = _customerService.GetCustomerBillingAddress(_workContext.CurrentCustomer)?.ZipPostalCode
+                    ?? _customerService.GetCustomerShippingAddress(_workContext.CurrentCustomer)?.ZipPostalCode
             };
 
             //whether customer already has stored cards in current store

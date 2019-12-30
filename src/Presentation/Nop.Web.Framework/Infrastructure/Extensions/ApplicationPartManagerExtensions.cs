@@ -543,7 +543,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                                 //determine a plugin type (only one plugin per assembly is allowed)
                                 var pluginType = pluginDescriptor.ReferencedAssembly.GetTypes().FirstOrDefault(type =>
                                     typeof(IPlugin).IsAssignableFrom(type) && !type.IsInterface && type.IsClass && !type.IsAbstract);
-                                if (pluginType != default(Type))
+                                if (pluginType != default(Type)) 
                                     pluginDescriptor.PluginType = pluginType;
                             }
 

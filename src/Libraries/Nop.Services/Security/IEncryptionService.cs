@@ -27,7 +27,7 @@
         /// <param name="data">The data for calculating the hash</param>
         /// <param name="hashAlgorithm">Hash algorithm</param>
         /// <returns>Data hash</returns>
-        string CreateHash(byte [] data, string hashAlgorithm);
+        string CreateHash(byte[] data, string hashAlgorithm);
 
         /// <summary>
         /// Encrypt text

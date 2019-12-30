@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
@@ -15,12 +14,12 @@ namespace Nop.Data.Mapping.Catalog
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<CrossSellProduct> builder)
+        public override void Configure(EntityMappingBuilder<CrossSellProduct> builder)
         {
-            builder.ToTable(nameof(CrossSellProduct));
-            builder.HasKey(product => product.Id);
+            builder.HasTableName(nameof(CrossSellProduct));
 
-            base.Configure(builder);
+            builder.Property(crosssellproduct => crosssellproduct.ProductId1);
+            builder.Property(crosssellproduct => crosssellproduct.ProductId2);
         }
 
         #endregion

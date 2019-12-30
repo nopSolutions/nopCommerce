@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Security.Claims;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Events;
 using Nop.Services.Authentication.External;
 using Nop.Services.Common;
 using Nop.Services.Events;

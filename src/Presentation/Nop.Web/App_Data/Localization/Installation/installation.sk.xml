@@ -106,26 +106,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>Použiť vstavanú databázu (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>Názov SQL Servera</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>Názov SQL Servera je povinné</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL - heslo</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>SQL - heslo je povinné</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>SQL - užívateľské meno</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>SQL - užívateľské meno je povinné</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Použiť databázu Microsoft SQL Server (alebo SQL Express)</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Informácie o obchode</Value>
@@ -139,7 +136,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>K úspešnému dokončeniu inštalácie a nastaveniu musíte mať k dispozicii informácie o databázovom serveri a databázy (databázové spojenie - "connection string"). Ak ich budete potrebovať, spýtajte sa Vášho poskytovateľa internetových služeb (ISP). Ak inštalujete na miestny počítač alebo server, pravdepodobne získate požadované informacie od vašeho systémového administrátora.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>Integrované overovanie Windows</Value>
   </LocaleResource>
 </Language>

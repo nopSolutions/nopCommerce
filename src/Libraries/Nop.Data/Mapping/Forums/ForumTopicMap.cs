@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Forums;
 
 namespace Nop.Data.Mapping.Forums
@@ -15,27 +14,24 @@ namespace Nop.Data.Mapping.Forums
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<ForumTopic> builder)
+        public override void Configure(EntityMappingBuilder<ForumTopic> builder)
         {
-            builder.ToTable(NopMappingDefaults.ForumsTopicTable);
-            builder.HasKey(topic => topic.Id);
+            builder.HasTableName(NopMappingDefaults.ForumsTopicTable);
 
-            builder.Property(topic => topic.Subject).HasMaxLength(450).IsRequired();
-
-            builder.HasOne(topic => topic.Forum)
-                .WithMany()
-                .HasForeignKey(topic => topic.ForumId)
-                .IsRequired();
-
-            builder.HasOne(topic => topic.Customer)
-               .WithMany()
-               .HasForeignKey(topic => topic.CustomerId)
-               .IsRequired()
-               .OnDelete(DeleteBehavior.Restrict);
+            builder.Property(topic => topic.Subject).HasLength(450).IsNullable(false);
+            builder.Property(forumtopic => forumtopic.ForumId);
+            builder.Property(forumtopic => forumtopic.CustomerId);
+            builder.Property(forumtopic => forumtopic.TopicTypeId);
+            builder.Property(forumtopic => forumtopic.NumPosts);
+            builder.Property(forumtopic => forumtopic.Views);
+            builder.Property(forumtopic => forumtopic.LastPostId);
+            builder.Property(forumtopic => forumtopic.LastPostCustomerId);
+            builder.Property(forumtopic => forumtopic.LastPostTime);
+            builder.Property(forumtopic => forumtopic.CreatedOnUtc);
+            builder.Property(forumtopic => forumtopic.UpdatedOnUtc);
 
             builder.Ignore(topic => topic.ForumTopicType);
-
-            base.Configure(builder);
+            builder.Ignore(topic => topic.NumReplies);
         }
 
         #endregion
