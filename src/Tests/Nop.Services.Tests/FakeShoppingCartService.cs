@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Routing;
 using Moq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
@@ -29,6 +30,7 @@ namespace Nop.Services.Tests
             IAclService aclService = null,
             IActionContextAccessor actionContextAccessor = null,
             ICacheKeyFactory cacheKeyFactory = null,
+            ICacheManager cacheManager = null,
             ICheckoutAttributeParser checkoutAttributeParser = null,
             ICheckoutAttributeService checkoutAttributeService = null,
             ICurrencyService currencyService = null,
@@ -57,6 +59,7 @@ namespace Nop.Services.Tests
                 aclService ?? new Mock<IAclService>().Object,
                 actionContextAccessor ?? new Mock<IActionContextAccessor>().Object,
                 cacheKeyFactory ?? new Mock<ICacheKeyFactory>().Object,
+                cacheManager ?? new Mock<ICacheManager>().Object,
                 checkoutAttributeParser ?? new Mock<ICheckoutAttributeParser>().Object,
                 checkoutAttributeService ?? new Mock<ICheckoutAttributeService>().Object,
                 currencyService ?? new Mock<ICurrencyService>().Object,
