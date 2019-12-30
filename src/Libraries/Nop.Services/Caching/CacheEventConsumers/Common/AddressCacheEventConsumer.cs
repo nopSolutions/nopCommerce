@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Common
 {
     public partial class AddressCacheEventConsumer : CacheEventConsumer<Address>
     {
-        public override void ClearCashe(Address entity)
+        public override void ClearCache(Address entity)
         {
             RemoveByPrefix(NopCommonCachingDefaults.AddressesPrefixCacheKey);
             RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerAddressesPrefixCacheKey, false);

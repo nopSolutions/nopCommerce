@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Security
 {
     public partial class PermissionRecordCacheEventConsumer : CacheEventConsumer<PermissionRecord>
     {
-        public override void ClearCashe(PermissionRecord entity)
+        public override void ClearCache(PermissionRecord entity)
         {
             RemoveByPrefix(NopSecurityCachingDefaults.PermissionsPrefixCacheKey);
         }

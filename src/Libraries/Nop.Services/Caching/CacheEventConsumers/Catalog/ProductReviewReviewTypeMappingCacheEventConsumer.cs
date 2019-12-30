@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
 {
     public partial class ProductReviewReviewTypeMappingCacheEventConsumer : CacheEventConsumer<ProductReviewReviewTypeMapping>
     {
-        public override void ClearCashe(ProductReviewReviewTypeMapping entity)
+        public override void ClearCache(ProductReviewReviewTypeMapping entity)
         {
             RemoveByPrefix(NopCatalogCachingDefaults.ReviewTypeByPrefixCacheKey);
         }

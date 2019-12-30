@@ -30,7 +30,7 @@ namespace Nop.Web.Infrastructure
             builder.RegisterType<DiscountSupportedModelFactory>().As<IDiscountSupportedModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<LocalizedModelFactory>().As<ILocalizedModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<StoreMappingSupportedModelFactory>().As<IStoreMappingSupportedModelFactory>().InstancePerLifetimeScope();
-            builder.RegisterType<CasheKeyFactory>().As<ICasheKeyFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<CacheKeyFactory>().As<ICacheKeyFactory>().InstancePerLifetimeScope();
 
             //admin factories
             builder.RegisterType<BaseAdminModelFactory>().As<IBaseAdminModelFactory>().InstancePerLifetimeScope();

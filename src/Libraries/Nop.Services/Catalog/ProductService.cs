@@ -35,7 +35,7 @@ namespace Nop.Services.Catalog
         protected readonly CatalogSettings _catalogSettings;
         protected readonly CommonSettings _commonSettings;
         protected readonly IAclService _aclService;
-        protected readonly ICasheKeyFactory _casheKeyFactory;
+        protected readonly ICacheKeyFactory _cacheKeyFactory;
         protected readonly ICustomerService _customerService;
         protected readonly IDataProvider _dataProvider;
         protected readonly IDateRangeService _dateRangeService;
@@ -73,7 +73,7 @@ namespace Nop.Services.Catalog
         public ProductService(CatalogSettings catalogSettings,
             CommonSettings commonSettings,
             IAclService aclService,
-            ICasheKeyFactory casheKeyFactory,
+            ICacheKeyFactory cacheKeyFactory,
             ICustomerService customerService,
             IDataProvider dataProvider,
             IDateRangeService dateRangeService,
@@ -107,7 +107,7 @@ namespace Nop.Services.Catalog
             _catalogSettings = catalogSettings;
             _commonSettings = commonSettings;
             _aclService = aclService;
-            _casheKeyFactory = casheKeyFactory;
+            _cacheKeyFactory = cacheKeyFactory;
             _customerService = customerService;
             _dataProvider = dataProvider;
             _dateRangeService = dateRangeService;
@@ -385,7 +385,7 @@ namespace Nop.Services.Catalog
             if (productIds == null || productIds.Length == 0)
                 return new List<Product>();
 
-            var key = string.Format(NopCatalogCachingDefaults.ProductsByIdsCacheKey, _casheKeyFactory.GetIdsHash(productIds));
+            var key = string.Format(NopCatalogCachingDefaults.ProductsByIdsCacheKey, _cacheKeyFactory.GetIdsHash(productIds));
 
             var query = from p in _productRepository.Table
                         where productIds.Contains(p.Id) && !p.Deleted

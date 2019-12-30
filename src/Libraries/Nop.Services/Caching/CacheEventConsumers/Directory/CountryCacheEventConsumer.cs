@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Directory
 {
     public partial class CountryCacheEventConsumer : CacheEventConsumer<Country>
     {
-        public override void ClearCashe(Country entity)
+        public override void ClearCache(Country entity)
         {
             RemoveByPrefix(NopDirectoryCachingDefaults.CountriesPrefixCacheKey);
         }

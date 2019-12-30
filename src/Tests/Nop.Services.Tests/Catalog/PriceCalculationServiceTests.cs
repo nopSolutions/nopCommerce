@@ -75,7 +75,7 @@ namespace Nop.Services.Tests.Catalog
                 .Callback(
                     (CustomerCustomerRoleMapping ccrm) => { customerCustomerRoleMapping.Add(ccrm); });
 
-            _customerService = new CustomerService(null, new Mock<ICasheKeyFactory>().Object, new Mock<ICacheManager>().Object, null, null, null, null, null, null, _customerCustomerRoleMappingRepository.Object, null, _customerRoleRepository.Object, null, null, null, null);
+            _customerService = new CustomerService(null, new Mock<ICacheKeyFactory>().Object, new Mock<ICacheManager>().Object, null, null, null, null, null, null, _customerCustomerRoleMappingRepository.Object, null, _customerRoleRepository.Object, null, null, null, null);
 
             _manufacturerService = new Mock<IManufacturerService>();
 
@@ -93,7 +93,7 @@ namespace Nop.Services.Tests.Catalog
 
             var shipmentRepository = new Mock<IRepository<Shipment>>();
 
-            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new Mock<ICasheKeyFactory>().Object, _customerService,
+            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new Mock<ICacheKeyFactory>().Object, _customerService,
                 null, null, null, null, null, null, null, null, null, _discountProductMappingRepository.Object,
                 _productRepository.Object, null, null, null, null, null, null, null, null, shipmentRepository.Object,
                 null, null, _tierPriceRepository.Object, null,

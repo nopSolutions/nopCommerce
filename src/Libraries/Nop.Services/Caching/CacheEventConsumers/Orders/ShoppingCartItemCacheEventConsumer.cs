@@ -8,9 +8,9 @@ namespace Nop.Services.Caching.CacheEventConsumers.Orders
     /// </summary>
     public partial class ShoppingCartItemCacheEventConsumer : CacheEventConsumer<ShoppingCartItem>
     {
-        public override void ClearCashe(ShoppingCartItem entity)
+        public override void ClearCache(ShoppingCartItem entity)
         {
-            RemoveByPrefix(NopOrderCachingDefaults.ShoppingCartPrefixCacheKey);
+            RemoveByPrefix(NopOrderCachingDefaults.ShoppingCartPrefixCacheKey, false);
         }
     }
 }

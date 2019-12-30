@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Orders
 {
     public partial class CheckoutAttributeValueCacheEventConsumer : CacheEventConsumer<CheckoutAttributeValue>
     {
-        public override void ClearCashe(CheckoutAttributeValue entity)
+        public override void ClearCache(CheckoutAttributeValue entity)
         {
             RemoveByPrefix(NopOrderCachingDefaults.CheckoutAttributesPrefixCacheKey);
             RemoveByPrefix(NopOrderCachingDefaults.CheckoutAttributeValuesPrefixCacheKey);

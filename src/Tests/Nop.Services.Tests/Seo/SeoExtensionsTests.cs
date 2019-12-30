@@ -33,7 +33,7 @@ namespace Nop.Services.Tests.Seo
             _localizationSettings=new LocalizationSettings();
             _seoSettings=new SeoSettings();
 
-            _urlRecordService = new UrlRecordService(new Mock<ICasheKeyFactory>().Object, _languageService.Object, _urlRecordRepository.Object,
+            _urlRecordService = new UrlRecordService(new Mock<ICacheKeyFactory>().Object, _languageService.Object, _urlRecordRepository.Object,
                 _cacheManager.Object, _workContext.Object, _localizationSettings, _seoSettings);
         }
 

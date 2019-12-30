@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
@@ -38,7 +39,8 @@ namespace Nop.Services.Orders
         private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ICasheKeyFactory _casheKeyFactory;
+        private readonly ICacheKeyFactory _cacheKeyFactory;
+        private readonly ICacheManager _cacheManager; 
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICurrencyService _currencyService;
@@ -71,7 +73,8 @@ namespace Nop.Services.Orders
         public ShoppingCartService(CatalogSettings catalogSettings,
             IAclService aclService,
             IActionContextAccessor actionContextAccessor,
-            ICasheKeyFactory casheKeyFactory,
+            ICacheKeyFactory cacheKeyFactory,
+            ICacheManager cacheManager,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICheckoutAttributeService checkoutAttributeService,
             ICurrencyService currencyService,
@@ -100,7 +103,8 @@ namespace Nop.Services.Orders
             _catalogSettings = catalogSettings;
             _aclService = aclService;
             _actionContextAccessor = actionContextAccessor;
-            _casheKeyFactory = casheKeyFactory;
+            _cacheKeyFactory = cacheKeyFactory;
+            _cacheManager = cacheManager;
             _checkoutAttributeParser = checkoutAttributeParser;
             _checkoutAttributeService = checkoutAttributeService;
             _currencyService = currencyService;
@@ -653,9 +657,12 @@ namespace Nop.Services.Orders
             if (createdToUtc.HasValue)
                 items = items.Where(item => createdToUtc.Value >= item.CreatedOnUtc);
 
-            var key = _casheKeyFactory.GetShoppingCartCacheKey(customer.Id, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
+            var key = _cacheKeyFactory.GetShoppingCartCacheKey(customer.Id, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
 
-            return items.ToCachedList(key);
+            if (string.IsNullOrEmpty(key))
+                return items.ToList();
+
+            return _cacheManager.Get(key, () => items.ToList());
         }
 
         /// <summary>

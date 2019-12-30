@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Discounts
 {
     public partial class DiscountRequirementCacheEventConsumer : CacheEventConsumer<DiscountRequirement>
     {
-        public override void ClearCashe(DiscountRequirement entity)
+        public override void ClearCache(DiscountRequirement entity)
         {
             RemoveByPrefix(NopDiscountCachingDefaults.DiscountRequirementPrefixCacheKey);
         }

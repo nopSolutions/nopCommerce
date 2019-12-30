@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Directory
 {
     public partial class StateProvinceCacheEventConsumer : CacheEventConsumer<StateProvince>
     {
-        public override void ClearCashe(StateProvince entity)
+        public override void ClearCache(StateProvince entity)
         {
             RemoveByPrefix(NopDirectoryCachingDefaults.StateProvincesPrefixCacheKey);
         }

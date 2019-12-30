@@ -5,10 +5,10 @@ namespace Nop.Services.Caching.CacheEventConsumers.Stores
 {
     public partial class StoreCacheEventConsumer : CacheEventConsumer<Store>
     {
-        public override void ClearCashe(Store entity)
+        public override void ClearCache(Store entity)
         {
             RemoveByPrefix(NopStoreCachingDefaults.StoresPrefixCacheKey);
-            RemoveByPrefix(NopOrderCachingDefaults.ShoppingCartPrefixCacheKey);
+            RemoveByPrefix(NopOrderCachingDefaults.ShoppingCartPrefixCacheKey, false);
         }
     }
 }

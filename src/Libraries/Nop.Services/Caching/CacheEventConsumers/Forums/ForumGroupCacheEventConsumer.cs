@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Forums
 {
     public partial class ForumGroupCacheEventConsumer : CacheEventConsumer<ForumGroup>
     {
-        public override void ClearCashe(ForumGroup entity)
+        public override void ClearCache(ForumGroup entity)
         {
             RemoveByPrefix(NopForumCachingDefaults.ForumGroupPrefixCacheKey);
             RemoveByPrefix(NopForumCachingDefaults.ForumPrefixCacheKey);

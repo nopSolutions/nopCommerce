@@ -15,7 +15,7 @@ namespace Nop.Services.Tests
     public class FakeCustomerService : CustomerService
     {
         public FakeCustomerService(CustomerSettings customerSettings = null,
-                ICasheKeyFactory casheKeyFactory = null,
+                ICacheKeyFactory cacheKeyFactory = null,
                 ICacheManager cacheManager = null,
                 IDataProvider dataProvider = null,
                 IEventPublisher eventPublisher = null,
@@ -30,7 +30,7 @@ namespace Nop.Services.Tests
                 IRepository<ShoppingCartItem> shoppingCartRepository = null,
                 ShoppingCartSettings shoppingCartSettings = null) : base(
                     customerSettings ?? new CustomerSettings(),
-                    casheKeyFactory ?? new Mock<ICasheKeyFactory>().Object,
+                    cacheKeyFactory ?? new Mock<ICacheKeyFactory>().Object,
                     cacheManager ?? new Mock<ICacheManager>().Object,
                     dataProvider ?? new Mock<IDataProvider>().Object,
                     eventPublisher ?? new Mock<IEventPublisher>().Object,

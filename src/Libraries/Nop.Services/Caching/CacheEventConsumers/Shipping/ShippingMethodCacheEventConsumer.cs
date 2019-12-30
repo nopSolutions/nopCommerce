@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Shipping
 {
     public partial class ShippingMethodCacheEventConsumer : CacheEventConsumer<ShippingMethod>
     {
-        public override void ClearCashe(ShippingMethod entity)
+        public override void ClearCache(ShippingMethod entity)
         {
             RemoveByPrefix(NopShippingCachingDefaults.ShippingMethodsPrefixCacheKey);
         }

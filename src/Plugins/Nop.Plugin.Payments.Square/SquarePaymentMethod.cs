@@ -212,19 +212,27 @@ namespace Nop.Plugin.Payments.Square
             var storeId = _storeContext.CurrentStore.Id;
 
             //check customer's billing address, shipping address and email, 
-            SquareModel.Address createAddress(Address address) => address == null ? null : new SquareModel.Address
-            (
-                AddressLine1: address.Address1,
-                AddressLine2: address.Address2,
-                AdministrativeDistrictLevel1: _stateProvinceService.GetStateProvinceByAddress(address)?.Abbreviation,
-                AdministrativeDistrictLevel2: address.County,
-                Country: Enum.TryParse(_countryService.GetCountryByAddress(address)?.TwoLetterIsoCode, out SquareModel.Address.CountryEnum countryCode)
-                    ? (SquareModel.Address.CountryEnum?)countryCode : null,
-                FirstName: address.FirstName,
-                LastName: address.LastName,
-                Locality: address.City,
-                PostalCode: address.ZipPostalCode
-            );
+            SquareModel.Address createAddress(Address address)
+            {
+                if (address == null)
+                    return null;
+
+                var country = _countryService.GetCountryByAddress(address);
+
+                return new SquareModel.Address
+                (
+                    AddressLine1: address.Address1,
+                    AddressLine2: address.Address2,
+                    AdministrativeDistrictLevel1: _stateProvinceService.GetStateProvinceByAddress(address)?.Abbreviation,
+                    AdministrativeDistrictLevel2: address.County,
+                    Country: string.Equals(country?.TwoLetterIsoCode, new RegionInfo(country?.TwoLetterIsoCode).TwoLetterISORegionName, StringComparison.InvariantCultureIgnoreCase)
+                        ? country?.TwoLetterIsoCode : null,
+                    FirstName: address.FirstName,
+                    LastName: address.LastName,
+                    Locality: address.City,
+                    PostalCode: address.ZipPostalCode
+                );
+            }
 
             var customerBillingAddress = _customerService.GetCustomerBillingAddress(customer);
             var customerShippingAddress = _customerService.GetCustomerShippingAddress(customer);

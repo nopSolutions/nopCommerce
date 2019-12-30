@@ -18,21 +18,21 @@ namespace Nop.Services.Caching.CacheEventConsumers
             _cacheManager = EngineContext.Current.Resolve<ICacheManager>();
         }
 
-        public virtual void ClearCashe(TEntity entity)
+        public virtual void ClearCache(TEntity entity)
         {
         }
 
-        protected virtual void RemoveByPrefix(string prefixCacheKey, bool useStaticCashe = true)
+        protected virtual void RemoveByPrefix(string prefixCacheKey, bool useStaticCache = true)
         {
-            if (useStaticCashe)
+            if (useStaticCache)
                 _staticCacheManager.RemoveByPrefix(prefixCacheKey);
             else
                 _cacheManager.RemoveByPrefix(prefixCacheKey);
         }
 
-        protected virtual void Remove(string cacheKey, bool useStaticCashe = true)
+        protected virtual void Remove(string cacheKey, bool useStaticCache = true)
         {
-            if (useStaticCashe)
+            if (useStaticCache)
                 _staticCacheManager.Remove(cacheKey);
             else
                 _cacheManager.Remove(cacheKey);
@@ -41,7 +41,7 @@ namespace Nop.Services.Caching.CacheEventConsumers
         public virtual void HandleEvent(EntityInsertedEvent<TEntity> eventMessage)
         {
             var entity = eventMessage.Entity;
-            ClearCashe(entity);
+            ClearCache(entity);
         }
 
         public virtual void HandleEvent(EntityUpdatedEvent<TEntity> eventMessage)
@@ -49,7 +49,7 @@ namespace Nop.Services.Caching.CacheEventConsumers
             var entity = eventMessage.Entity;
 
             _staticCacheManager.Remove(string.Format(NopCachingDefaults.NopEntityCacheKey, typeof(TEntity).Name, entity.Id));
-            ClearCashe(eventMessage.Entity);
+            ClearCache(eventMessage.Entity);
         }
 
         public virtual void HandleEvent(EntityDeletedEvent<TEntity> eventMessage)
@@ -57,7 +57,7 @@ namespace Nop.Services.Caching.CacheEventConsumers
             var entity = eventMessage.Entity;
 
             _staticCacheManager.Remove(string.Format(NopCachingDefaults.NopEntityCacheKey, typeof(TEntity).Name, entity.Id));
-            ClearCashe(eventMessage.Entity);
+            ClearCache(eventMessage.Entity);
         }
     }
 }

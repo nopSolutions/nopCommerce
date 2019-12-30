@@ -7,12 +7,12 @@ using Nop.Services.Security;
 
 namespace Nop.Services.Caching.CachingDefaults
 {
-    public partial class CasheKeyFactory : ICasheKeyFactory
+    public partial class CacheKeyFactory : ICacheKeyFactory
     {
         private readonly CachingSettings _cachingSettings;
         private readonly IEncryptionService _encryptionService;
 
-        public CasheKeyFactory(CachingSettings cachingSettings, IEncryptionService encryptionService)
+        public CacheKeyFactory(CachingSettings cachingSettings, IEncryptionService encryptionService)
         {
             _cachingSettings = cachingSettings;
             _encryptionService = encryptionService;

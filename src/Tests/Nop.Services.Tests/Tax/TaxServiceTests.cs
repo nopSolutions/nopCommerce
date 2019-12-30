@@ -104,7 +104,7 @@ namespace Nop.Services.Tests.Tax
             _taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
 
             _customerService = new CustomerService(new CustomerSettings(),
-                new Mock<ICasheKeyFactory>().Object,
+                new Mock<ICacheKeyFactory>().Object,
                 new Mock<ICacheManager>().Object,
                 null,
                 _eventPublisher.Object,

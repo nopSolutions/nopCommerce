@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Messages
 {
     public partial class MessageTemplateCacheEventConsumer : CacheEventConsumer<MessageTemplate>
     {
-        public override void ClearCashe(MessageTemplate entity)
+        public override void ClearCache(MessageTemplate entity)
         {
             RemoveByPrefix(NopMessageCachingDefaults.MessageTemplatesPrefixCacheKey);
         }

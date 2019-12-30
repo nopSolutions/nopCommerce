@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Directory
 {
     public partial class MeasureWeightCacheEventConsumer : CacheEventConsumer<MeasureWeight>
     {
-        public override void ClearCashe(MeasureWeight entity)
+        public override void ClearCache(MeasureWeight entity)
         {
             RemoveByPrefix(NopDirectoryCachingDefaults.MeasureDimensionsPrefixCacheKey);
         }

@@ -24,7 +24,7 @@ namespace Nop.Services.Seo
         private static readonly object _lock = new object();
         private static Dictionary<string, string> _seoCharacterTable;
 
-        private readonly ICasheKeyFactory _casheKeyFactory;
+        private readonly ICacheKeyFactory _cacheKeyFactory;
         private readonly ILanguageService _languageService;
         private readonly IRepository<UrlRecord> _urlRecordRepository;
         private readonly IStaticCacheManager _cacheManager;
@@ -36,7 +36,7 @@ namespace Nop.Services.Seo
 
         #region Ctor
 
-        public UrlRecordService(ICasheKeyFactory casheKeyFactory,
+        public UrlRecordService(ICacheKeyFactory cacheKeyFactory,
             ILanguageService languageService,
             IRepository<UrlRecord> urlRecordRepository,
             IStaticCacheManager cacheManager,
@@ -44,7 +44,7 @@ namespace Nop.Services.Seo
             LocalizationSettings localizationSettings,
             SeoSettings seoSettings)
         {
-            _casheKeyFactory = casheKeyFactory;
+            _cacheKeyFactory = cacheKeyFactory;
             _languageService = languageService;
             _urlRecordRepository = urlRecordRepository;
             _cacheManager = cacheManager;
@@ -1160,7 +1160,7 @@ namespace Nop.Services.Seo
             var query = _urlRecordRepository.Table;
 
             var key = string.Format(NopSeoCachingDefaults.UrlRecordByIdsCacheKey,
-                _casheKeyFactory.GetIdsHash(urlRecordIds));
+                _cacheKeyFactory.GetIdsHash(urlRecordIds));
 
             return query.Where(p => urlRecordIds.Contains(p.Id)).ToCachedList(key);
         }

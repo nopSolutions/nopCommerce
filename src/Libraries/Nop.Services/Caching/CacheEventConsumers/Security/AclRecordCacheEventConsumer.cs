@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Security
 {
     public partial class AclRecordCacheEventConsumer : CacheEventConsumer<AclRecord>
     {
-        public override void ClearCashe(AclRecord entity)
+        public override void ClearCache(AclRecord entity)
         {
             RemoveByPrefix(NopSecurityCachingDefaults.AclRecordPrefixCacheKey);
         }

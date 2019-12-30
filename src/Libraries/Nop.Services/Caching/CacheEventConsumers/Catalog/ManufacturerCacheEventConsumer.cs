@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
 {
     public partial class ManufacturerCacheEventConsumer : CacheEventConsumer<Manufacturer>
     {
-        public override void ClearCashe(Manufacturer entity)
+        public override void ClearCache(Manufacturer entity)
         {
             RemoveByPrefix(NopCatalogCachingDefaults.ManufacturersPrefixCacheKey);
             RemoveByPrefix(NopCatalogCachingDefaults.ProductManufacturersPrefixCacheKey);

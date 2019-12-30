@@ -2,7 +2,7 @@
 
 namespace Nop.Services.Caching.CachingDefaults
 {
-    public interface ICasheKeyFactory
+    public interface ICacheKeyFactory
     {
         /// <summary>
         /// Create the customer role Ids cache key
