@@ -17,14 +17,7 @@ namespace Nop.Services.Caching.CachingDefaults
         /// <param name="keyObjects"></param>
         /// <returns></returns>
         string GetCustomerRolesCacheKey(params object[] keyObjects);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="keyObjects"></param>
-        /// <returns></returns>
-        string GetIsInCustomerRoleCacheKey(params object[] keyObjects);
-
+       
         /// <summary>
         /// 
         /// </summary>
