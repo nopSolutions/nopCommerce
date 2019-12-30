@@ -23,13 +23,6 @@ namespace Nop.Services.Caching.CachingDefaults
         /// </summary>
         /// <param name="keyObjects"></param>
         /// <returns></returns>
-        string GetIsInCustomerRoleCacheKey(params object[] keyObjects);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="keyObjects"></param>
-        /// <returns></returns>
         string GetAddressesByCustomerIdCacheKey(params object[] keyObjects);
 
         /// <summary>
@@ -38,7 +31,7 @@ namespace Nop.Services.Caching.CachingDefaults
         /// <param name="keyObjects"></param>
         /// <returns></returns>
         string GetCustomerAddressCacheKey(params object[] keyObjects);
-        
+
         /// <summary>
         /// 
         /// </summary>

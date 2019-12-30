@@ -1143,17 +1143,9 @@ namespace Nop.Services.Customers
             if (string.IsNullOrEmpty(customerRoleSystemName))
                 throw new ArgumentNullException(nameof(customerRoleSystemName));
 
-            var query = from cr in _customerRoleRepository.Table
-                join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerRoleId
-                where
-                    crm.CustomerId == customer.Id &&
-                    cr.SystemName == customerRoleSystemName &&
-                    (!onlyActiveCustomerRoles || cr.Active)
-                select cr;
+            var customerRoles = GetCustomerRoles(customer, !onlyActiveCustomerRoles);
 
-            var key = _cacheKeyFactory.GetIsInCustomerRoleCacheKey(customer.Id, customerRoleSystemName, onlyActiveCustomerRoles);
-
-            return string.IsNullOrEmpty(key) ? query.Any() : _cacheManager.Get(key, () => query.Any());
+            return customerRoles.Any(cr => cr.SystemName == customerRoleSystemName);
         }
 
         /// <summary>

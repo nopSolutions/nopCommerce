@@ -39,14 +39,6 @@ namespace Nop.Services.Caching.CachingDefaults
             return CreateCacheKey(NopCustomerServiceCachingDefaults.CustomerRolesCacheKey, keyObjects);
         }
 
-        public virtual string GetIsInCustomerRoleCacheKey(params object[] keyObjects)
-        {
-            if (!_cachingSettings.CachingCustomerRolesEnabled)
-                return null;
-
-            return CreateCacheKey(NopCustomerServiceCachingDefaults.IsInCustomerRoleCacheKey, keyObjects);
-        }
-
         public virtual string GetAddressesByCustomerIdCacheKey(params object[] keyObjects)
         {
             if (!_cachingSettings.CachingCustomerAddressEnabled)

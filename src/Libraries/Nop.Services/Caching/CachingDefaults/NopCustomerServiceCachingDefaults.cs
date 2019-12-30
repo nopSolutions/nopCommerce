@@ -88,16 +88,6 @@
         /// {1} : show hidden
         /// </remarks>
         public static string CustomerRolesCacheKey => "Nop.customer.customerrole-{0}-{1}";
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer identifier
-        /// {1} : customer role system name
-        /// {2} : only active customer roles
-        /// </remarks>
-        public static string IsInCustomerRoleCacheKey => "Nop.customer.customerrole.is.in-{0}-{1}-{2}";
         
         /// <summary>
         /// Gets a key pattern to clear cache
