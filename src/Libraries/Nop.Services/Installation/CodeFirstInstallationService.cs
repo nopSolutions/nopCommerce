@@ -4109,13 +4109,12 @@ namespace Nop.Services.Installation
         protected virtual void InstallSampleCustomers()
         {
             var crRegistered = _customerRoleRepository.Table.FirstOrDefault(customerRole =>
-                customerRole.SystemName.Equals(NopCustomerDefaults.RegisteredRoleName,
-                    StringComparison.InvariantCultureIgnoreCase));
+                customerRole.SystemName.Equals(NopCustomerDefaults.RegisteredRoleName));
 
             if (crRegistered == null)
                 throw new ArgumentNullException(nameof(crRegistered));
 
-            //default store 
+            //default store
             var defaultStore = _storeRepository.Table.FirstOrDefault();
 
             if (defaultStore == null)
@@ -4427,7 +4426,7 @@ namespace Nop.Services.Installation
             };
             _customerRoleRepository.Insert(customerRoles);
 
-            //default store 
+            //default store
             var defaultStore = _storeRepository.Table.FirstOrDefault();
 
             if (defaultStore == null)
@@ -4484,7 +4483,7 @@ namespace Nop.Services.Installation
             var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
             customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
                  PasswordFormat.Hashed, defaultUserPassword, null, NopCustomerServiceDefaults.DefaultHashedPasswordFormat));
-            
+
             //search engine (crawler) built-in user
             var searchEngineUser = new Customer
             {
@@ -12396,7 +12395,7 @@ namespace Nop.Services.Installation
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Install required data
         /// </summary>

@@ -16,7 +16,7 @@
   <ItemGroup>
     <PackageReference Include="EPPlus" Version="4.5.3.2" />
     <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.6.1" />
-	<PackageReference Include="MailKit" Version="2.4.1" />
+    <PackageReference Include="MailKit" Version="2.4.1" />
     <PackageReference Include="MaxMind.GeoIP2" Version="3.1.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0006" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.19" />
