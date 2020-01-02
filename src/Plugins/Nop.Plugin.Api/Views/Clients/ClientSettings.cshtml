@@ -1,0 +1,76 @@
+﻿@model ClientApiModel
+
+<div class="content">
+    <div class="form-horizontal">
+
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ClientName" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="ClientName" asp-required="true"/>
+                            <span asp-validation-for="ClientName"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ClientId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="ClientId" asp-required="true" />
+                            <span asp-validation-for="ClientId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="ClientSecret" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="ClientSecret" asp-required="true" />
+                            <span asp-validation-for="ClientSecret"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="RedirectUrl" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="RedirectUrl" asp-required="true" />
+                            <span asp-validation-for="RedirectUrl"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AccessTokenLifetime" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="AccessTokenLifetime" asp-required="true" asp-postfix="sec"/>
+                            <span asp-validation-for="AccessTokenLifetime"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="RefreshTokenLifetime" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="RefreshTokenLifetime" asp-required="true" asp-postfix="sec"/>
+                            <span asp-validation-for="RefreshTokenLifetime"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Enabled" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Enabled" />
+                            <span asp-validation-for="Enabled"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

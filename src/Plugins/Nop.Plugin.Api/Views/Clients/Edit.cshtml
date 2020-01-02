@@ -1,0 +1,41 @@
+@model ClientApiModel
+
+@{
+    Layout = ViewNames.AdminLayout;
+
+    //page title
+    ViewBag.Title = T("Plugins.Api.Admin.Page.Clients.Edit.Title").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Api-Clients-Menu");
+}
+
+<form asp-controller="ManageClientsAdmin" asp-action="Edit" method="post">
+    @Html.HiddenFor(model => model.Id)
+    @Html.AntiForgeryToken()
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Plugins.Api.Admin.Page.Clients.Edit.Title") - @Model.ClientName
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Plugins.Api.Admin.Client.BackToList").Text, "List")</small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="client-delete" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+    </div>
+
+    @await Html.PartialAsync(ViewNames.AdminApiClientsCreateOrUpdate, Model)
+
+</form>
+
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="client-delete" />

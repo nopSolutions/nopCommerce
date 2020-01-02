@@ -1,0 +1,83 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <Description>This plugin allows you to access/create Nop resources outside of the system</Description>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\Presentation\Nop.Web\Plugins\Nop.Plugin.Api</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\Presentation\Nop.Web\Plugins\Nop.Plugin.Api</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <None Remove="logo.jpg" />
+    <None Remove="plugin.json" />
+    <None Remove="Views\Clients\ClientSettings.cshtml" />
+    <None Remove="Views\Clients\Create.cshtml" />
+    <None Remove="Views\Clients\CreateOrUpdate.cshtml" />
+    <None Remove="Views\Clients\Edit.cshtml" />
+    <None Remove="Views\Clients\List.cshtml" />
+    <None Remove="Views\Clients\_ViewStart.cshtml" />
+    <None Remove="Views\Settings.cshtml" />
+    <None Remove="Views\_ViewImports.cshtml" />
+  </ItemGroup> 
+  <ItemGroup>
+    <Content Include="logo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="plugin.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Clients\ClientSettings.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Clients\Create.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Clients\CreateOrUpdate.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Clients\Edit.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Clients\List.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Settings.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\_ViewImports.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup> 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.1.0" />
+    <PackageReference Include="IdentityServer4" Version="2.5.0-preview.3.10" />
+    <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="2.5.0" />
+    <PackageReference Include="IdentityServer4.EntityFramework" Version="2.5.0-preview.3.10" />
+    <PackageReference Include="IdentityServer4.EntityFramework.Storage" Version="2.5.0-preview.3.10" />
+    <PackageReference Include="IdentityServer4.Storage" Version="2.5.0-preview.3.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Rewrite" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj" />
+    <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
+  </ItemGroup>
+ 
+  <Target Name="FilterCopyLocalItems" AfterTargets="ResolveLockFileCopyLocalProjectDeps">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(Filename)' != 'IdentityServer4' AND '%(Filename)' != 'IdentityServer4.Storage' AND '%(Filename)' != 'IdentityServer4.AccessTokenValidation' AND '%(Filename)' != 'IdentityServer4.EntityFramework' AND '%(Filename)' != 'IdentityServer4.EntityFramework.Storage' AND '%(Filename)' != 'Microsoft.AspNetCore.Rewrite' AND '%(Filename)' != 'IdentityModel.AspNetCore.OAuth2Introspection' AND '%(Filename)' != 'IdentityModel' AND '%(Filename)' != 'System.IdentityModel.Tokens.Jwt'" />
+    </ItemGroup>
+  </Target>
+
+</Project>
