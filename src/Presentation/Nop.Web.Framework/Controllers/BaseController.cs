@@ -4,11 +4,13 @@ using System.IO;
 using System.Net;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -243,6 +245,23 @@ namespace Nop.Web.Framework.Controllers
         #endregion
 
         #region Security
+
+        /// <summary>
+        /// Security check URL
+        /// </summary>
+        /// <param name="filterContext">The action executing context</param>
+        /// <remarks>Since the name of the optional URL parameter is copied into the response in the query string of the URL, 
+        /// you cannot enter arbitrary parameters of the query string in the application URL</remarks>
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            var path = Request.Path.HasValue ? Request.Path.ToString() : "";
+            var queryString = Request.QueryString.HasValue ? Request.QueryString.ToString() : "";
+            if (string.Concat(path, queryString).Contains("%26") || string.Concat(path, queryString).Contains("%3"))
+            {
+                var routeValueDictionary = new RouteValueDictionary { { "controller", "Error" }, { "action", "Error" } };
+                filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(routeValueDictionary));
+            }
+        }
 
         /// <summary>
         /// Access denied view

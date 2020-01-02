@@ -678,7 +678,7 @@ namespace Nop.Web.Factories
             //so there's no need to invoke "GetAllCategoriesByParentCategoryId" multiple times (extra SQL commands) to load childs
             //so we load all categories at once (we know they are cached)
             var allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
-            var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).ToList();
+            var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).OrderBy(c => c.DisplayOrder).ToList();
             foreach (var category in categories)
             {
                 var categoryModel = new CategorySimpleModel

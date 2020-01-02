@@ -137,8 +137,9 @@
         /// <remarks>
         /// {0} : store URL
         /// {1} : whether the store based is on the localhost
+        /// {2} : language code
         /// </remarks>
-        public static string NopCopyrightWarningPath => "SiteWarnings.aspx?local={0}&url={1}";
+        public static string NopCopyrightWarningPath => "site-warnings?url={0}&local={1}&language={2}";
 
         /// <summary>
         /// Gets a path to request the nopCommerce official site for news RSS
@@ -148,18 +149,25 @@
         /// {1} : whether the store based is on the localhost
         /// {2} : whether advertisements are hidden
         /// {3} : store URL
+        /// {4} : language code
         /// </remarks>
-        public static string NopNewsRssPath => "NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}";
+        public static string NopNewsRssPath => "nopcommerce-news-rss?version={0}&localhost={1}&hideAdvertisements={2}&storeUrl={3}&language={4}";
 
         /// <summary>
         /// Gets a path to request the nopCommerce official site for available categories of marketplace extensions
         /// </summary>
-        public static string NopExtensionsCategoriesPath => "ExtensionsXml.aspx?getCategories=1";
+        /// <remarks>
+        /// {0} : language code
+        /// </remarks>
+        public static string NopExtensionsCategoriesPath => "extensions-feed?getCategories=1&language={0}";
 
         /// <summary>
         /// Gets a path to request the nopCommerce official site for available versions of marketplace extensions
         /// </summary>
-        public static string NopExtensionsVersionsPath => "ExtensionsXml.aspx?getVersions=1";
+        /// <remarks>
+        /// {0} : language code
+        /// </remarks>
+        public static string NopExtensionsVersionsPath => "extensions-feed?getVersions=1&language={0}";
 
         /// <summary>
         /// Gets a path to request the nopCommerce official site for marketplace extensions
@@ -171,8 +179,9 @@
         /// {3} : search term
         /// {4} : page index
         /// {5} : page size
+        /// {6} : language code
         /// </remarks>
-        public static string NopExtensionsPath => "ExtensionsXml.aspx?category={0}&version={1}&price={2}&searchTerm={3}&pageIndex={4}&pageSize={5}";
+        public static string NopExtensionsPath => "extensions-feed?category={0}&version={1}&price={2}&searchTerm={3}&pageIndex={4}&pageSize={5}&language={6}";
 
         #endregion
     }

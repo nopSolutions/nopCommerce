@@ -4,7 +4,7 @@
 @inject IWorkContext workContext
 @if (!Model.CustomerEntersPrice)
 {
-    <div class="prices" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+    <div class="prices">
         @if (Model.CallForPrice)
         {
         @*call for price*@
@@ -42,10 +42,11 @@
                     @*display "Price:" label if we have old price or discounted one*@
                     <label>@T("Products.Price"):</label>
                 }
-                @*render price*@<span @if (string.IsNullOrWhiteSpace(Model.PriceWithDiscount))
-                                      {
-                                          <text> itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="price-value-@(Model.ProductId)" </text>
-                                      }>
+                @*render price*@
+                <span @if (string.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+                        {
+                            <text>class="price-value-@(Model.ProductId)" </text>
+                        }>
                     @Html.Raw(Model.Price)
                 </span>
             </div>
@@ -54,7 +55,7 @@
             @*discounted price*@
                 <div class="product-price discounted-price">
                     <span>@T("Products.Price.WithDiscount"):</span>
-                    <span itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="price-value-@(Model.ProductId)">
+                    <span class="price-value-@(Model.ProductId)">
                         @Html.Raw(Model.PriceWithDiscount)
                     </span>
                 </div>
@@ -73,10 +74,6 @@
                 <div class="tax-shipping-info">
                     @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("shippinginfo")}))
                 </div>
-            }
-            if (!string.IsNullOrEmpty(Model.CurrencyCode))
-            {
-                <meta itemprop="priceCurrency" content="@Model.CurrencyCode"/>
             }
         }
     </div>

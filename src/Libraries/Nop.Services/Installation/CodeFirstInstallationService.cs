@@ -6048,6 +6048,7 @@ namespace Nop.Services.Installation
                 WwwRequirement = WwwRequirement.NoMatter,
                 TwitterMetaTags = true,
                 OpenGraphMetaTags = true,
+                MicrodataEnabled = true,
                 ReservedUrlRecordSlugs = new List<string>
                 {
                     "admin",
@@ -6661,6 +6662,7 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new CaptchaSettings
             {
+                ReCaptchaApiUrl = "https://www.google.com/recaptcha/",
                 ReCaptchaDefaultLanguage = string.Empty,
                 ReCaptchaPrivateKey = string.Empty,
                 ReCaptchaPublicKey = string.Empty,

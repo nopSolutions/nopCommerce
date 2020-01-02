@@ -131,7 +131,7 @@
         /// {0} : abbreviation
         /// {1} : country ID
         /// </remarks>
-        public static string StateProvincesByAbbreviationCacheKey => "Nop.stateprovince.abbreviationcountryid-{0}";
+        public static string StateProvincesByAbbreviationCacheKey => "Nop.stateprovince.abbreviationcountryid-{0}-{1}";
 
 
         /// <summary>

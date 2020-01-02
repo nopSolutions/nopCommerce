@@ -1979,6 +1979,21 @@ namespace Nop.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [HttpPost]
+        public virtual IActionResult ProductTagsDelete(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                var tags = _productTagService.GetProductTagsByIds(selectedIds.ToArray());
+                _productTagService.DeleteProductTags(tags);
+            }
+
+            return Json(new { Result = true });
+        }
+
         public virtual IActionResult EditProductTag(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))

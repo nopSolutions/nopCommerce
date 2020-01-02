@@ -769,6 +769,9 @@ td.k-state-focused.k-state-selected {
     border-radius: 0;
     background: #3c8dbc;
 }
+input[type="text"].k-input {
+  box-sizing: content-box;
+}
 
 /* HEADER */
 .main-header {

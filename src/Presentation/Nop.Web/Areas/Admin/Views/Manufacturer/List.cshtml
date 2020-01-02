@@ -12,7 +12,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Catalog.Manufacturers")
@@ -39,7 +38,7 @@
                     </a>
                 </li>
                 <li>
-                    <a  asp-action="ExportXlsx">
+                    <a asp-action="ExportXlsx">
                         <i class="fa fa-file-excel-o"></i>
                         @T("Admin.Common.ExportToExcel")
                     </a>
@@ -51,6 +50,11 @@
             @T("Admin.Common.Import")
         </button>
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerListButtons })
+        <button type="button" id="delete-selected" class="btn bg-red">
+            <i class="fa fa-trash-o"></i>
+            @T("Admin.Common.Delete.Selected")
+        </button>
+        <nop-action-confirmation asp-button-id="delete-selected" />
     </div>
 </div>
 
@@ -114,6 +118,13 @@
                         },
                         ColumnCollection = new List<ColumnProperty>
                         {
+                            new ColumnProperty(nameof(ManufacturerModel.Id))
+                            {
+                                IsMasterCheckBox = true,
+                                Render = new RenderCheckBox("checkbox_manufacturers"),
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Width = "50"
+                            },
                             new ColumnProperty(nameof(ManufacturerModel.Name))
                             {
                                 Title = T("Admin.Catalog.Manufacturers.Fields.Name").Text
@@ -139,7 +150,35 @@
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             }
                         }
-                    })  
+                    })
+
+                    <script>
+                        $(document).ready(function () {
+                            $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                                var postData = {
+                                    selectedIds: selectedIds
+                                };
+                                addAntiForgeryToken(postData);
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@(Url.Action("DeleteSelected", "Manufacturer"))",
+                                    data: postData,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#deleteSelectedFailed-info').text(errorThrown);
+                                        $('#deleteSelectedFailed').click();
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                        updateTable('#manufacturers-grid');
+                                    }
+                                });
+                                $('#delete-selected-action-confirmation').modal('toggle');
+                                return false;
+                            });
+                        });
+
+                    </script>
+                    <nop-alert asp-alert-id="deleteSelectedFailed" />
                 </div>
             </div>
         </div>

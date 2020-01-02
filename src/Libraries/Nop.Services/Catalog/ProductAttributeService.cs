@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
@@ -77,6 +77,21 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Deletes product attributes
+        /// </summary>
+        /// <param name="productAttributes">Product attributes</param>
+        public virtual void DeleteProductAttributes(IList<ProductAttribute> productAttributes)
+        {
+            if (productAttributes == null)
+                throw new ArgumentNullException(nameof(productAttributes));
+
+            foreach (var productAttribute in productAttributes)
+            {
+                DeleteProductAttribute(productAttribute);
+            }
+        }
+
+        /// <summary>
         /// Gets all product attributes
         /// </summary>
         /// <param name="pageIndex">Page index</param>
@@ -107,6 +122,23 @@ namespace Nop.Services.Catalog
 
             var key = string.Format(NopCatalogDefaults.ProductAttributesByIdCacheKey, productAttributeId);
             return _cacheManager.Get(key, () => _productAttributeRepository.GetById(productAttributeId));
+        }
+
+        /// <summary>
+        /// Gets product attributes 
+        /// </summary>
+        /// <param name="productAttributeIds">Product attribute identifiers</param>
+        /// <returns>Product attributes </returns>
+        public virtual IList<ProductAttribute> GetProductAttributeByIds(int[] productAttributeIds)
+        {
+            if (productAttributeIds == null || productAttributeIds.Length == 0)
+                return new List<ProductAttribute>();
+
+            var query = from p in _productAttributeRepository.Table
+                        where productAttributeIds.Contains(p.Id)
+                        select p;
+
+            return query.ToList();
         }
 
         /// <summary>
