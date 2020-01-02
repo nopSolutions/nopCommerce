@@ -22,7 +22,7 @@ namespace Nop.Core.Plugins
         private static XmlDocument GetDocument(string feedQuery, params object[] args)
         {
             var request = WebRequest.Create(MakeUrl(feedQuery, args));
-            request.Timeout = 500000;
+            request.Timeout = 5000;
             using (var response = request.GetResponse())
             {
                 using (var dataStream = response.GetResponseStream())
