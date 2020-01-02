@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Order
@@ -33,8 +33,11 @@ namespace Nop.Web.Models.Order
             [NopResourceDisplayName("RewardPoints.Fields.Message")]
             public string Message { get; set; }
 
-            [NopResourceDisplayName("RewardPoints.Fields.Date")]
+            [NopResourceDisplayName("RewardPoints.Fields.CreatedDate")]
             public DateTime CreatedOn { get; set; }
+
+            [NopResourceDisplayName("RewardPoints.Fields.EndDate")]
+            public DateTime? EndDate { get; set; }
         }
 
         #endregion

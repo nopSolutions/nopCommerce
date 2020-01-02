@@ -10,10 +10,11 @@
     <div class="form-horizontal">
         @await Component.InvokeAsync("SettingMode", new { modeName = "messagetemplate-advanced-mode" })
         <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MessageTemplateDetailsTop, additionalData = Model })
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="margin-bottom">
-                        <em>@T(string.Format("Admin.ContentManagement.MessageTemplates.Description.{0}", Model.Name))</em>
+                        <em>@T($"Admin.ContentManagement.MessageTemplates.Description.{Model.Name}")</em>
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">
@@ -35,13 +36,13 @@
                             <input asp-for="Name" type="hidden" />
                         </div>
                     </div>
-                    <script type="text/javascript">
+                    <script>
                         function toggleLoadedAllowedTokens() {
                             $('#pnlAllowedTokens').toggle();
                             if ($('#pnlAllowedTokens').css('display') == 'none') {
-                                $('#allowedTokensShowHide').html('@T("Admin.Common.Show")');
+                                $('#allowedTokensShowHide').text('@T("Admin.Common.Show")');
                             } else {
-                                $('#allowedTokensShowHide').html('@T("Admin.Common.Hide")');
+                                $('#allowedTokensShowHide').text('@T("Admin.Common.Hide")');
                             }
                         }
                     </script>
@@ -70,7 +71,7 @@
                                 {
                                     <nop-textarea asp-for="@Model.Locales[item].Body"/>
                                     <text>
-                                    <script type="text/javascript">
+                                    <script>
                                           $(document).ready(function() {
                                               $('#@Html.IdFor(model => model.Locales[item].Body)')
                                                   .height($('#@Html.IdFor(model => model.Body)')[0].scrollHeight);
@@ -142,7 +143,7 @@
                                 {
                                     <nop-textarea asp-for="Body" asp-required="true" />
                                     <text>
-                                    <script type="text/javascript">
+                                    <script>
                               $(document).ready(function() {
                                   $('#@Html.IdFor(model => model.Body)')
                                       .height($('#@Html.IdFor(model => model.Body)')[0].scrollHeight);
@@ -255,7 +256,8 @@
                                             var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)')
                                                 .data("kendoMultiSelect");
                                             storesIdsInput.setOptions({
-                                                autoClose: false
+                                                autoClose: false,
+                                                filter: "contains"
                                             });
 
                                             @if (Model.AvailableStores.Count == 0)
@@ -280,8 +282,9 @@
                     </div>
                 </div>
             </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.MessageTemplateDetailsBottom, additionalData = Model })
         </div>
-        <script type="text/javascript">
+        <script>
     $(document).ready(function() {
         $("#@Html.IdFor(model => model.HasAttachedDownload)").change(toggleHasAttachedDownload);
         $("#@Html.IdFor(model => model.SendImmediately)").click(sendImmediately);

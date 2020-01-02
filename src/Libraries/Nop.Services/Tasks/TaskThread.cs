@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Net;
+using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Tasks;
+using Nop.Core.Http;
 using Nop.Core.Infrastructure;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 
 namespace Nop.Services.Tasks
@@ -17,26 +21,27 @@ namespace Nop.Services.Tasks
     {
         #region Fields
 
+        private static readonly string _scheduleTaskUrl;
+        private static readonly int? _timeout;
+
+        private readonly Dictionary<string, string> _tasks;
         private Timer _timer;
         private bool _disposed;
-        private readonly Dictionary<string, string> _tasks;
-        private static readonly string _scheduleTaskUrl;
 
         #endregion
 
-        #region Ctors
+        #region Ctor
 
         static TaskThread()
         {
-            var storeContext = EngineContext.Current.Resolve<IStoreContext>();
-            
-            _scheduleTaskUrl = storeContext.CurrentStore.Url + TaskManager.ScheduleTaskPatch;
+            _scheduleTaskUrl = $"{EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Url}{NopTaskDefaults.ScheduleTaskPath}";
+            _timeout = EngineContext.Current.Resolve<CommonSettings>().ScheduleTaskRunTimeout;
         }
 
         internal TaskThread()
         {
-            this._tasks = new Dictionary<string, string>();
-            this.Seconds = 10 * 60;
+            _tasks = new Dictionary<string, string>();
+            Seconds = 10 * 60;
         }
 
         #endregion
@@ -48,44 +53,61 @@ namespace Nop.Services.Tasks
             if (Seconds <= 0)
                 return;
 
-            this.StartedUtc = DateTime.UtcNow;
-            this.IsRunning = true;
-            foreach (var taskType in _tasks.Values)
-            {
-                //create and send post data
-                var postData = new NameValueCollection
-                {
-                    {"taskType", taskType}
-                };
+            StartedUtc = DateTime.UtcNow;
+            IsRunning = true;
 
+            foreach (var taskName in _tasks.Keys)
+            {
+                var taskType = _tasks[taskName];
                 try
                 {
-                    using (var client = new WebClient())
-                    {
-                        client.UploadValues(_scheduleTaskUrl, postData);
-                    }
+                    //create and configure client
+                    var client = EngineContext.Current.Resolve<IHttpClientFactory>().CreateClient(NopHttpDefaults.DefaultHttpClient);
+                    if (_timeout.HasValue)
+                        client.Timeout = TimeSpan.FromMilliseconds(_timeout.Value);
+
+                    //send post data
+                    var data = new FormUrlEncodedContent(new[] { new KeyValuePair<string, string>(nameof(taskType), taskType) });
+                    client.PostAsync(_scheduleTaskUrl, data).Wait();
                 }
                 catch (Exception ex)
                 {
-                    var logger = EngineContext.Current.Resolve<ILogger>();
-                    logger.Error(ex.Message, ex);
+                    var _serviceScopeFactory = EngineContext.Current.Resolve<IServiceScopeFactory>();
+                    using (var scope = _serviceScopeFactory.CreateScope())
+                    {
+                        // Resolve
+                        var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
+                        var localizationService = scope.ServiceProvider.GetRequiredService<ILocalizationService>();
+                        var storeContext = scope.ServiceProvider.GetRequiredService<IStoreContext>();
+
+                        var message = ex.InnerException?.GetType() == typeof(TaskCanceledException) ? localizationService.GetResource("ScheduleTasks.TimeoutError") : ex.Message;
+
+                        message = string.Format(localizationService.GetResource("ScheduleTasks.Error"), taskName,
+                            message, taskType, storeContext.CurrentStore.Name, _scheduleTaskUrl);
+
+                        logger.Error(message, ex);
+                    }
                 }
-               
             }
-            this.IsRunning = false;
+
+            IsRunning = false;
         }
 
         private void TimerHandler(object state)
         {
-            this._timer.Change(-1, -1);
-            this.Run();
-            if (this.RunOnlyOnce)
+            try
             {
-                this.Dispose();
+                _timer.Change(-1, -1);
+                Run();
+
+                if (RunOnlyOnce)
+                    Dispose();
+                else
+                    _timer.Change(Interval, Interval);
             }
-            else
+            catch
             {
-                this._timer.Change(this.Interval, this.Interval);
+                // ignore
             }
         }
 
@@ -98,14 +120,14 @@ namespace Nop.Services.Tasks
         /// </summary>
         public void Dispose()
         {
-            if ((this._timer != null) && !this._disposed)
+            if (_timer == null || _disposed)
+                return;
+
+            lock (this)
             {
-                lock (this)
-                {
-                    this._timer.Dispose();
-                    this._timer = null;
-                    this._disposed = true;
-                }
+                _timer.Dispose();
+                _timer = null;
+                _disposed = true;
             }
         }
 
@@ -114,10 +136,8 @@ namespace Nop.Services.Tasks
         /// </summary>
         public void InitTimer()
         {
-            if (this._timer == null)
-            {
-                this._timer = new Timer(this.TimerHandler, null, this.Interval, this.Interval);
-            }
+            if (_timer == null)
+                _timer = new Timer(TimerHandler, null, InitInterval, Interval);
         }
 
         /// <summary>
@@ -126,10 +146,8 @@ namespace Nop.Services.Tasks
         /// <param name="task">The task to be added</param>
         public void AddTask(ScheduleTask task)
         {
-            if (!this._tasks.ContainsKey(task.Name))
-            {
-                this._tasks.Add(task.Name, task.Type);
-            }
+            if (!_tasks.ContainsKey(task.Name))
+                _tasks.Add(task.Name, task.Type);
         }
 
         #endregion
@@ -140,6 +158,11 @@ namespace Nop.Services.Tasks
         /// Gets or sets the interval in seconds at which to run the tasks
         /// </summary>
         public int Seconds { get; set; }
+
+        /// <summary>
+        /// Get or set the interval before timer first start 
+        /// </summary>
+        public int InitSeconds { get; set; }
 
         /// <summary>
         /// Get or sets a datetime when thread has been started
@@ -159,9 +182,24 @@ namespace Nop.Services.Tasks
             get
             {
                 //if somebody entered more than "2147483" seconds, then an exception could be thrown (exceeds int.MaxValue)
-                var interval = this.Seconds * 1000;
+                var interval = Seconds * 1000;
                 if (interval <= 0)
                     interval = int.MaxValue;
+                return interval;
+            }
+        }
+
+        /// <summary>
+        /// Gets the due time interval (in milliseconds) at which to begin start the task
+        /// </summary>
+        public int InitInterval
+        {
+            get
+            {
+                //if somebody entered less than "0" seconds, then an exception could be thrown
+                var interval = InitSeconds * 1000;
+                if (interval <= 0)
+                    interval = 0;
                 return interval;
             }
         }

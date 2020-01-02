@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -15,12 +16,16 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public class CheckLanguageSeoCodeAttribute : TypeFilterAttribute
     {
+        #region Ctor
+
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         public CheckLanguageSeoCodeAttribute() : base(typeof(CheckLanguageSeoCodeFilter))
         {
         }
+        
+        #endregion
 
         #region Nested filter
 
@@ -45,10 +50,10 @@ namespace Nop.Web.Framework.Mvc.Filters
                 IWorkContext workContext,
                 LocalizationSettings localizationSettings)
             {
-                this._languageService = languageService;
-                this._webHelper = webHelper;
-                this._workContext = workContext;
-                this._localizationSettings = localizationSettings;
+                _languageService = languageService;
+                _webHelper = webHelper;
+                _workContext = workContext;
+                _localizationSettings = localizationSettings;
             }
 
             #endregion
@@ -61,30 +66,30 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">A context for action filters</param>
             public void OnActionExecuting(ActionExecutingContext context)
             {
-                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
+                if (context == null)
+                    throw new ArgumentNullException(nameof(context));
+
+                if (context.HttpContext.Request == null)
                     return;
 
-                if (!DataSettingsHelper.DatabaseIsInstalled())
-                    return;
-                
                 //only in GET requests
-                if (context.HttpContext.Request.Method != WebRequestMethods.Http.Get)
+                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
+                    return;
+
+                if (!DataSettingsManager.DatabaseIsInstalled)
                     return;
 
                 //whether SEO friendly URLs are enabled
                 if (!_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
                     return;
-
-                
+                                
                 //ensure that this route is registered and localizable (LocalizedRoute in RouteProvider)
-                if (context.RouteData == null 
-                    || context.RouteData.Routers == null 
-                    || !context.RouteData.Routers.ToList().Any(r => r is LocalizedRoute))
+                if (context.RouteData?.Routers == null || !context.RouteData.Routers.ToList().Any(r => r is LocalizedRoute))
                     return;
 
                 //check whether current page URL is already localized URL
                 var pageUrl = _webHelper.GetRawUrl(context.HttpContext.Request);
-                if (pageUrl.IsLocalizedUrl(context.HttpContext.Request.PathBase, true, out Language language))
+                if (pageUrl.IsLocalizedUrl(context.HttpContext.Request.PathBase, true, out Language _))
                     return;
 
                 //not localized yet, so redirect to the page with working language SEO code

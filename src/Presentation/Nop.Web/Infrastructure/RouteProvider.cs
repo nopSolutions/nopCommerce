@@ -24,7 +24,7 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapRoute(name: "areaRoute", template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
             //home page
-            routeBuilder.MapLocalizedRoute("HomePage", "",
+            routeBuilder.MapLocalizedRoute("Homepage", "",
 				new { controller = "Home", action = "Index" });
 
             //login
@@ -41,7 +41,7 @@ namespace Nop.Web.Infrastructure
 
             //shopping cart
             routeBuilder.MapLocalizedRoute("ShoppingCart", "cart/",
-				new { controller = "ShoppingCart", action = "Cart" });
+				new { controller = "ShoppingCart", action = "Cart" });            
 
             //estimate shipping
             routeBuilder.MapLocalizedRoute("EstimateShipping", "cart/estimateshipping",
@@ -71,7 +71,7 @@ namespace Nop.Web.Infrastructure
 
             //product search
             routeBuilder.MapLocalizedRoute("ProductSearch", "search/",
-				new { controller = "Catalog", action = "Search" });
+				new { controller = "Catalog", action = "Search" });                     
 
             routeBuilder.MapLocalizedRoute("ProductSearchAutoComplete", "catalog/searchtermautocomplete",
 				new { controller = "Catalog", action = "SearchTermAutoComplete" });
@@ -124,7 +124,6 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("VendorList", "vendor/all/",
 				new { controller = "Catalog", action = "VendorAll" });
 
-
             //add product to cart (without any attributes and options). used on catalog pages.
             routeBuilder.MapLocalizedRoute("AddProductToCart-Catalog", "addproducttocart/catalog/{productId:min(0)}/{shoppingCartTypeId:min(0)}/{quantity:min(0)}",
 				new { controller = "ShoppingCart", action = "AddProductToCart_Catalog" });
@@ -132,10 +131,6 @@ namespace Nop.Web.Infrastructure
             //add product to cart (with attributes and options). used on the product details pages.
             routeBuilder.MapLocalizedRoute("AddProductToCart-Details", "addproducttocart/details/{productId:min(0)}/{shoppingCartTypeId:min(0)}",
 				new { controller = "ShoppingCart", action = "AddProductToCart_Details" });
-
-            //product tags
-            routeBuilder.MapLocalizedRoute("ProductsByTag", "producttag/{productTagId:min(0)}/{SeName?}",
-				new { controller = "Catalog", action = "ProductsByTag" });
 
             //comparing products
             routeBuilder.MapLocalizedRoute("AddProductToCompare", "compareproducts/add/{productId:min(0)}",
@@ -152,7 +147,7 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("CustomerProductReviews", "customer/productreviews",
 				new { controller = "Product", action = "CustomerProductReviews" });
 
-            routeBuilder.MapLocalizedRoute("CustomerProductReviewsPaged", "customer/productreviews/page/{page:min(0)}",
+            routeBuilder.MapLocalizedRoute("CustomerProductReviewsPaged", "customer/productreviews/page/{pageNumber:min(0)}",
 				new { controller = "Product", action = "CustomerProductReviews" });
 
             //back in stock notifications
@@ -197,8 +192,8 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("CheckoutConfirm", "checkout/confirm",
 				new { controller = "Checkout", action = "Confirm" });
 
-            routeBuilder.MapLocalizedRoute("CheckoutCompleted", "checkout/completed/{orderId:regex(\\d*)}",
-				new { controller = "Checkout", action = "Completed" });
+            routeBuilder.MapLocalizedRoute("CheckoutCompleted", "checkout/completed/{orderId:int}",
+                new { controller = "Checkout", action = "Completed" });
 
             //subscribe newsletters
             routeBuilder.MapLocalizedRoute("SubscribeNewsletter", "subscribenewsletter",
@@ -258,16 +253,13 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("CustomerDownloadableProducts", "customer/downloadableproducts",
 				new { controller = "Customer", action = "DownloadableProducts" });
 
-            routeBuilder.MapLocalizedRoute("CustomerBackInStockSubscriptions", "backinstocksubscriptions/manage",
-				new { controller = "BackInStockSubscription", action = "CustomerSubscriptions" });
-
-            routeBuilder.MapLocalizedRoute("CustomerBackInStockSubscriptionsPaged", "backinstocksubscriptions/manage/{page:regex(\\d*)}",
-				new { controller = "BackInStockSubscription", action = "CustomerSubscriptions" });
+            routeBuilder.MapLocalizedRoute("CustomerBackInStockSubscriptions", "backinstocksubscriptions/manage/{pageNumber:int?}",
+                new { controller = "BackInStockSubscription", action = "CustomerSubscriptions" });
 
             routeBuilder.MapLocalizedRoute("CustomerRewardPoints", "rewardpoints/history",
 				new { controller = "Order", action = "CustomerRewardPoints" });
 
-            routeBuilder.MapLocalizedRoute("CustomerRewardPointsPaged", "rewardpoints/history/page/{page:min(0)}",
+            routeBuilder.MapLocalizedRoute("CustomerRewardPointsPaged", "rewardpoints/history/page/{pageNumber:min(0)}",
 				new { controller = "Order", action = "CustomerRewardPoints" });
 
             routeBuilder.MapLocalizedRoute("CustomerChangePassword", "customer/changepassword",
@@ -282,10 +274,7 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("EmailRevalidation", "customer/revalidateemail",
 				new { controller = "Customer", action = "EmailRevalidation" });
 
-            routeBuilder.MapLocalizedRoute("CustomerForumSubscriptions", "boards/forumsubscriptions",
-				new { controller = "Boards", action = "CustomerForumSubscriptions" });
-
-            routeBuilder.MapLocalizedRoute("CustomerForumSubscriptionsPaged", "boards/forumsubscriptions/{page:regex(\\d*)}",
+            routeBuilder.MapLocalizedRoute("CustomerForumSubscriptions", "boards/forumsubscriptions/{pageNumber:int?}",
 				new { controller = "Boards", action = "CustomerForumSubscriptions" });
 
             routeBuilder.MapLocalizedRoute("CustomerAddressEdit", "customer/addressedit/{addressId:min(0)}",
@@ -298,7 +287,7 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("CustomerProfile", "profile/{id:min(0)}",
 				new { controller = "Profile", action = "Index" });
 
-            routeBuilder.MapLocalizedRoute("CustomerProfilePaged", "profile/{id}/page/{page:min(0)}",
+            routeBuilder.MapLocalizedRoute("CustomerProfilePaged", "profile/{id:min(0)}/page/{pageNumber:min(0)}",
 				new { controller = "Profile", action = "Index" });
 
             //orders
@@ -345,6 +334,14 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("CustomerVendorInfo", "customer/vendorinfo",
 				new { controller = "Vendor", action = "Info" });
 
+            //customer GDPR
+            routeBuilder.MapLocalizedRoute("GdprTools", "customer/gdpr",
+                new { controller = "Customer", action = "GdprTools" });
+
+            //customer check gift card balance 
+            routeBuilder.MapLocalizedRoute("CheckGiftCardBalance", "customer/checkgiftcardbalance",
+                new { controller = "Customer", action = "CheckGiftCardBalance" });
+
             //poll vote AJAX link
             routeBuilder.MapLocalizedRoute("PollVote", "poll/vote",
 				new { controller = "Poll", action = "Vote" });
@@ -380,7 +377,7 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("UploadFileCheckoutAttribute", "uploadfilecheckoutattribute/{attributeId:min(0)}",
 				new { controller = "ShoppingCart", action = "UploadFileCheckoutAttribute" });
 
-            //return request with "upload file" tsupport
+            //return request with "upload file" support
             routeBuilder.MapLocalizedRoute("UploadFileReturnRequest", "uploadfilereturnrequest",
 				new { controller = "ReturnRequest", action = "UploadFileReturnRequest" });
 
@@ -388,8 +385,8 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("ActiveDiscussions", "boards/activediscussions",
 				new { controller = "Boards", action = "ActiveDiscussions" });
 
-            routeBuilder.MapLocalizedRoute("ActiveDiscussionsPaged", "boards/activediscussions/page/{page:regex(\\d*)}",
-				new { controller = "Boards", action = "ActiveDiscussions" });
+            routeBuilder.MapLocalizedRoute("ActiveDiscussionsPaged", "boards/activediscussions/page/{pageNumber:int}",
+                new { controller = "Boards", action = "ActiveDiscussions" });
 
             routeBuilder.MapLocalizedRoute("ActiveDiscussionsRSS", "boards/activediscussionsrss",
 				new { controller = "Boards", action = "ActiveDiscussionsRSS" });
@@ -424,8 +421,8 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("TopicSlug", "boards/topic/{id:min(0)}/{slug?}",
 				new { controller = "Boards", action = "Topic" });
 
-            routeBuilder.MapLocalizedRoute("TopicSlugPaged", "boards/topic/{id:min(0)}/{slug?}/page/{page:regex(\\d*)}",
-				new { controller = "Boards", action = "Topic" });
+            routeBuilder.MapLocalizedRoute("TopicSlugPaged", "boards/topic/{id:min(0)}/{slug?}/page/{pageNumber:int}",
+                new { controller = "Boards", action = "Topic" });
 
             routeBuilder.MapLocalizedRoute("ForumWatch", "boards/forumwatch/{id:min(0)}",
 				new { controller = "Boards", action = "ForumWatch" });
@@ -436,8 +433,8 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("ForumSlug", "boards/forum/{id:min(0)}/{slug?}",
 				new { controller = "Boards", action = "Forum" });
 
-            routeBuilder.MapLocalizedRoute("ForumSlugPaged", "boards/forum/{id:min(0)}/{slug?}/page/{page:regex(\\d*)}",
-				new { controller = "Boards", action = "Forum" });
+            routeBuilder.MapLocalizedRoute("ForumSlugPaged", "boards/forum/{id:min(0)}/{slug?}/page/{pageNumber:int}",
+                new { controller = "Boards", action = "Forum" });
 
             routeBuilder.MapLocalizedRoute("ForumGroupSlug", "boards/forumgroup/{id:min(0)}/{slug?}",
 				new { controller = "Boards", action = "ForumGroup"});
@@ -449,7 +446,7 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("PrivateMessages", "privatemessages/{tab?}",
 				new { controller = "PrivateMessages", action = "Index" });
 
-            routeBuilder.MapLocalizedRoute("PrivateMessagesPaged", "privatemessages/{tab?}/page/{page:min(0)}",
+            routeBuilder.MapLocalizedRoute("PrivateMessagesPaged", "privatemessages/{tab?}/page/{pageNumber:min(0)}",
 				new { controller = "PrivateMessages", action = "Index" });
 
             routeBuilder.MapLocalizedRoute("PrivateMessagesInbox", "inboxupdate",

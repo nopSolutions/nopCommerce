@@ -2,22 +2,29 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
-    public partial class TaxSettingsModel : BaseNopModel
+    /// <summary>
+    /// Represents a tax settings model
+    /// </summary>
+    public partial class TaxSettingsModel : BaseNopModel, ISettingsModel
     {
+        #region Ctor
+
         public TaxSettingsModel()
         {
-            PaymentMethodAdditionalFeeTaxCategories = new List<SelectListItem>();
             TaxCategories = new List<SelectListItem>();
             EuVatShopCountries = new List<SelectListItem>();
             DefaultTaxAddress = new AddressModel();
         }
 
-        public int ActiveStoreScopeConfiguration { get; set; }
+        #endregion
 
+        #region Properties
+
+        public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.PricesIncludeTax")]
         public bool PricesIncludeTax { get; set; }
@@ -92,7 +99,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.PaymentMethodAdditionalFeeTaxClass")]
         public int PaymentMethodAdditionalFeeTaxClassId { get; set; }
         public bool PaymentMethodAdditionalFeeTaxClassId_OverrideForStore { get; set; }
-        public IList<SelectListItem> PaymentMethodAdditionalFeeTaxCategories { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.EuVatEnabled")]
         public bool EuVatEnabled { get; set; }
@@ -118,5 +124,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.EuVatEmailAdminWhenNewVatSubmitted")]
         public bool EuVatEmailAdminWhenNewVatSubmitted { get; set; }
         public bool EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore { get; set; }
+
+        #endregion
     }
 }

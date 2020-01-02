@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
-using FluentValidation.Attributes;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
-using Nop.Web.Validators.Common;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Common
 {
-    [Validator(typeof(AddressValidator))]
     public partial class AddressModel : BaseNopEntityModel
     {
         public AddressModel()
@@ -21,6 +19,7 @@ namespace Nop.Web.Models.Common
         public string FirstName { get; set; }
         [NopResourceDisplayName("Address.Fields.LastName")]
         public string LastName { get; set; }
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Address.Fields.Email")]
         public string Email { get; set; }
 
@@ -41,6 +40,11 @@ namespace Nop.Web.Models.Common
         public int? StateProvinceId { get; set; }
         [NopResourceDisplayName("Address.Fields.StateProvince")]
         public string StateProvinceName { get; set; }
+
+        public bool CountyEnabled { get; set; }
+        public bool CountyRequired { get; set; }
+        [NopResourceDisplayName("Address.Fields.County")]
+        public string County { get; set; }
 
         public bool CityEnabled { get; set; }
         public bool CityRequired { get; set; }
@@ -64,6 +68,7 @@ namespace Nop.Web.Models.Common
 
         public bool PhoneEnabled { get; set; }
         public bool PhoneRequired { get; set; }
+        [DataType(DataType.PhoneNumber)]
         [NopResourceDisplayName("Address.Fields.PhoneNumber")]
         public string PhoneNumber { get; set; }
 
@@ -74,7 +79,6 @@ namespace Nop.Web.Models.Common
         
         public IList<SelectListItem> AvailableCountries { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
-
 
         public string FormattedCustomAddressAttributes { get; set; }
         public IList<AddressAttributeModel> CustomAddressAttributes { get; set; }

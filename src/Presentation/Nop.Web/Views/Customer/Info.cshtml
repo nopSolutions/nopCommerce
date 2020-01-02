@@ -1,5 +1,6 @@
 ﻿@using Nop.Core
 @model CustomerInfoModel
+@inject Nop.Core.IWebHelper webHelper
 @{
     Layout = "_ColumnsTwo";
 
@@ -11,39 +12,8 @@
 }
 
 @section left
-{
+    {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Info })
-}
-
-@if (Model.CountryEnabled && Model.StateProvinceEnabled)
-{
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#@Html.IdFor(model => model.CountryId)").change(function () {
-                var selectedItem = $(this).val();
-                var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
-             var statesProgress = $("#states-loading-progress");
-             statesProgress.show();
-             $.ajax({
-                 cache: false,
-                 type: "GET",
-                 url: "@(Url.RouteUrl("GetStatesByCountryId"))",
-                 data: { "countryId": selectedItem, "addSelectStateItem": "true" },
-                    success: function (data) {
-                        ddlStates.html('');
-                        $.each(data, function (id, option) {
-                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
-                        });
-                        statesProgress.hide();
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        alert('Failed to retrieve states.');
-                        statesProgress.hide();
-                    }
-                });
-            });
-        });
-    </script>
 }
 
 <div class="page account-page customer-info-page">
@@ -75,13 +45,13 @@
                         </div>
                     }
                     <div class="inputs">
-                        <label asp-for="FirstName">@T("Account.Fields.FirstName"):</label>
+                        <label asp-for="FirstName" asp-postfix=":"></label>
                         <input asp-for="FirstName" />
-                        <nop-required/>
+                        <nop-required />
                         <span asp-validation-for="FirstName"></span>
                     </div>
                     <div class="inputs">
-                        <label asp-for="LastName">@T("Account.Fields.LastName"):</label>
+                        <label asp-for="LastName" asp-postfix=":"></label>
                         <input asp-for="LastName" />
                         <nop-required />
                         <span asp-validation-for="LastName"></span>
@@ -90,16 +60,14 @@
                     {
                         <div class="inputs date-of-birth">
                             <label>@T("Account.Fields.DateOfBirth"):</label>
-                            <nop-date-picker 
-                                asp-day-name="@Html.NameFor(x => x.DateOfBirthDay)" 
-                                asp-month-name="@Html.NameFor(x => x.DateOfBirthMonth)" 
-                                asp-year-name="@Html.NameFor(x => x.DateOfBirthYear)"
-                                asp-begin-year="@(DateTime.Now.Year - 110)"
-                                asp-end-year="@(DateTime.Now.Year)"
-                                asp-selected-day="@Model.DateOfBirthDay"
-                                asp-selected-month="@Model.DateOfBirthMonth"
-                                asp-selected-year="@Model.DateOfBirthYear"
-                            />
+                            <nop-date-picker asp-day-name="@Html.NameFor(x => x.DateOfBirthDay)"
+                                             asp-month-name="@Html.NameFor(x => x.DateOfBirthMonth)"
+                                             asp-year-name="@Html.NameFor(x => x.DateOfBirthYear)"
+                                             asp-begin-year="@(DateTime.Now.Year - 110)"
+                                             asp-end-year="@(DateTime.Now.Year)"
+                                             asp-selected-day="@Model.DateOfBirthDay"
+                                             asp-selected-month="@Model.DateOfBirthMonth"
+                                             asp-selected-year="@Model.DateOfBirthYear" />
                             @if (Model.DateOfBirthRequired)
                             {
                                 <nop-required />
@@ -110,15 +78,15 @@
                         </div>
                     }
                     <div class="inputs">
-                        <label asp-for="Email">@T("Account.Fields.Email"):</label>
+                        <label asp-for="Email" asp-postfix=":"></label>
                         <input asp-for="Email" />
                         <nop-required />
                         <span asp-validation-for="Email"></span>
                     </div>
-                    @if (!String.IsNullOrEmpty(Model.EmailToRevalidate))
+                    @if (!string.IsNullOrEmpty(Model.EmailToRevalidate))
                     {
                         <div class="inputs">
-                            <label asp-for="EmailToRevalidate">@T("Account.Fields.EmailToRevalidate"):</label>
+                            <label asp-for="EmailToRevalidate"></label>
                             <span class="email-to-revalidate">@Model.EmailToRevalidate</span>
                             <span class="email-to-revalidate-note">
                                 <em>@T("Account.Fields.EmailToRevalidate.Note")</em>
@@ -130,7 +98,7 @@
                         if (Model.AllowUsersToChangeUsernames)
                         {
                             <div class="inputs">
-                                <label asp-for="Username">@T("Account.Fields.Username"):</label>
+                                <label asp-for="Username" asp-postfix=":"></label>
                                 <input asp-for="Username" />
                                 <nop-required />
                                 <span asp-validation-for="Username"></span>
@@ -143,7 +111,7 @@
                         else
                         {
                             <div class="inputs">
-                                <label asp-for="Username">@T("Account.Fields.Username"):</label>
+                                <label asp-for="Username" asp-postfix=":"></label>
                                 <span class="readonly-username">@Model.Username</span>
                             </div>
                         }
@@ -160,7 +128,7 @@
                         @if (Model.CompanyEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="Company">@T("Account.Fields.Company"):</label>
+                                <label asp-for="Company" asp-postfix=":"></label>
                                 <input asp-for="Company" />
                                 @if (Model.CompanyRequired)
                                 {
@@ -172,7 +140,7 @@
                         @if (Model.DisplayVatNumber)
                         {
                             <div class="inputs">
-                                <label asp-for="VatNumber">@T("Account.Fields.VatNumber"):</label>
+                                <label asp-for="VatNumber" asp-postfix=":"></label>
                                 <input asp-for="VatNumber" />
                                 <span class="vat-status">@Model.VatNumberStatusNote</span>
                                 <span class="vat-note">
@@ -184,10 +152,11 @@
                 </div>
             }
             @if (Model.StreetAddressEnabled ||
-                    Model.StreetAddress2Enabled ||
-                    Model.ZipPostalCodeEnabled ||
-                    Model.CityEnabled ||
-                    Model.CountryEnabled)
+        Model.StreetAddress2Enabled ||
+        Model.ZipPostalCodeEnabled ||
+        Model.CityEnabled ||
+        Model.CountyEnabled ||
+        Model.CountryEnabled)
             {
                 <div class="fieldset">
                     <div class="title">
@@ -197,7 +166,7 @@
                         @if (Model.StreetAddressEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="StreetAddress">@T("Account.Fields.StreetAddress"):</label>
+                                <label asp-for="StreetAddress" asp-postfix=":"></label>
                                 <input asp-for="StreetAddress" />
                                 @if (Model.StreetAddressRequired)
                                 {
@@ -209,7 +178,7 @@
                         @if (Model.StreetAddress2Enabled)
                         {
                             <div class="inputs">
-                                <label asp-for="StreetAddress2">@T("Account.Fields.StreetAddress2"):</label>
+                                <label asp-for="StreetAddress2" asp-postfix=":"></label>
                                 <input asp-for="StreetAddress2" />
                                 @if (Model.StreetAddress2Required)
                                 {
@@ -221,7 +190,7 @@
                         @if (Model.ZipPostalCodeEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="ZipPostalCode">@T("Account.Fields.ZipPostalCode"):</label>
+                                <label asp-for="ZipPostalCode" asp-postfix=":"></label>
                                 <input asp-for="ZipPostalCode" />
                                 @if (Model.ZipPostalCodeRequired)
                                 {
@@ -233,7 +202,7 @@
                         @if (Model.CityEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="City">@T("Account.Fields.City"):</label>
+                                <label asp-for="City" asp-postfix=":"></label>
                                 <input asp-for="City" />
                                 @if (Model.CityRequired)
                                 {
@@ -242,11 +211,27 @@
                                 <span asp-validation-for="City"></span>
                             </div>
                         }
+                        @if (Model.CountyEnabled)
+                        {
+                            <div class="inputs">
+                                <label asp-for="County" asp-postfix=":"></label>
+                                <input asp-for="County" />
+                                @if (Model.CountyRequired)
+                                {
+                                    <nop-required />
+                                }
+                                <span asp-validation-for="County"></span>
+                            </div>
+                        }
                         @if (Model.CountryEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="CountryId">@T("Account.Fields.Country"):</label>
-                                <select asp-for="CountryId" asp-items="Model.AvailableCountries"></select>
+                                <label asp-for="CountryId" asp-postfix=":"></label>
+                                <select asp-for="CountryId" asp-items="Model.AvailableCountries"
+                                        data-trigger="country-select"
+                                        data-url="@(Url.RouteUrl("GetStatesByCountryId"))"
+                                        data-stateprovince="#@Html.IdFor(model => model.StateProvinceId)"
+                                        data-loading="#states-loading-progress"></select>
                                 @if (Model.CountryRequired)
                                 {
                                     <nop-required />
@@ -257,14 +242,14 @@
                         @if (Model.CountryEnabled && Model.StateProvinceEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="StateProvinceId">@T("Account.Fields.StateProvince"):</label>
+                                <label asp-for="StateProvinceId" asp-postfix=":"></label>
                                 <select asp-for="StateProvinceId" asp-items="Model.AvailableStates"></select>
                                 @if (Model.StateProvinceRequired)
                                 {
                                     <nop-required />
                                 }
-                                <span asp-validation-for="StateProvinceId"></span>
                                 <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+                                <span asp-validation-for="StateProvinceId"></span>
                             </div>
                         }
                     </div>
@@ -280,7 +265,7 @@
                         @if (Model.PhoneEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="Phone">@T("Account.Fields.Phone"):</label>
+                                <label asp-for="Phone" asp-postfix=":"></label>
                                 <input asp-for="Phone" />
                                 @if (Model.PhoneRequired)
                                 {
@@ -292,7 +277,7 @@
                         @if (Model.FaxEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="Fax">@T("Account.Fields.Fax"):</label>
+                                <label asp-for="Fax" asp-postfix=":"></label>
                                 <input asp-for="Fax" />
                                 @if (Model.FaxRequired)
                                 {
@@ -314,7 +299,7 @@
                         @if (Model.NewsletterEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="Newsletter">@T("Account.Fields.Newsletter"):</label>
+                                <label asp-for="Newsletter" asp-postfix=":"></label>
                                 <input asp-for="Newsletter" />
                                 <span asp-validation-for="Newsletter"></span>
                             </div>
@@ -336,7 +321,7 @@
                         @if (Model.AllowCustomersToSetTimeZone)
                         {
                             <div class="inputs">
-                                <label asp-for="TimeZoneId">@T("Account.Fields.TimeZone"):</label>
+                                <label asp-for="TimeZoneId" asp-postfix=":"></label>
                                 <select asp-for="TimeZoneId" asp-items="Model.AvailableTimeZones"></select>
                                 <span asp-validation-for="TimeZoneId"></span>
                             </div>
@@ -344,7 +329,7 @@
                         @if (Model.SignatureEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="Signature">@T("Account.Fields.Signature"):</label>
+                                <label asp-for="Signature" asp-postfix=":"></label>
                                 <textarea asp-for="Signature" class="account-signature-text"></textarea>
                             </div>
                         }
@@ -378,9 +363,12 @@
                                         <th class="external-id">
                                             @T("Account.AssociatedExternalAuth.ExternalIdentifier")
                                         </th>
-                                        <th class="remove">
-                                            @T("Account.AssociatedExternalAuth.Remove")
-                                        </th>
+                                        @if (Model.AllowCustomersToRemoveAssociations)
+                                        {
+                                            <th class="remove">
+                                                @T("Account.AssociatedExternalAuth.Remove")
+                                            </th>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -396,9 +384,12 @@
                                             <td class="external-id">
                                                 @CommonHelper.EnsureMaximumLength(item.ExternalIdentifier, 40, "...")
                                             </td>
-                                            <td class="remove">
-                                                <a href="#" onclick="return removeexternalassociation(@item.Id)">@T("Account.AssociatedExternalAuth.Remove")</a>
-                                            </td>
+                                            @if (Model.AllowCustomersToRemoveAssociations)
+                                            {
+                                                <td class="remove">
+                                                    <a href="#" onclick="return removeexternalassociation(@item.Id)">@T("Account.AssociatedExternalAuth.Remove")</a>
+                                                </td>
+                                            }
                                         </tr>
                                     }
                                 </tbody>
@@ -408,23 +399,57 @@
                     @if (Model.NumberOfExternalAuthenticationProviders > Model.AssociatedExternalAuthRecords.Count)
                     {
                         //we can add more external records
+                        var loginUrl = Url.RouteUrl("Login", null, webHelper.CurrentRequestProtocol);
                         <div class="form-fields add-more-external-records">
                             @T("Account.AssociatedExternalAuth.AddMoreRecords")
-                            <a href="@Url.RouteUrl("Login", null, "http")">
-                                @Url.RouteUrl("Login", null, "http")
-                            </a>
+                            <a href="@loginUrl">@loginUrl</a>
                         </div>
                     }
                 </div>
             }
+
+            @if (Model.GdprConsents.Count > 0)
+            {
+                <div class="fieldset">
+                    <div class="title">
+                        <strong>@T("Account.UserAgreement")</strong>
+                    </div>
+                    <div class="form-fields">
+                        @foreach (var consent in Model.GdprConsents)
+                        {
+                            if (consent.IsRequired)
+                            {
+                                <script asp-location="Footer">
+                                    $(document).ready(function() {
+                                        $('#save-info-button').on('click', function() {
+                                            if ($('#consent@(consent.Id)').is(':checked')) {
+                                                    //do some stuff
+                                                    return true;
+                                                } else {
+                                                    //just show validation errors, don't post
+                                               alert('@Html.Raw(JavaScriptEncoder.Default.Encode(consent.RequiredMessage))');
+                                                    return false;
+                                                }
+                                            });
+                                    });
+                                </script>
+                            }
+                            <div class="inputs accept-consent">
+                                <input id="consent@(consent.Id)" type="checkbox" name="consent@(consent.Id)" checked="@consent.Accepted" />
+                                <label for="consent@(consent.Id)">@consent.Message</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
             <div class="buttons">
-                <input type="submit" value="@T("Common.Save")" name="save-info-button" class="button-1 save-customer-info-button" />
+                <input type="submit" id="save-info-button" value="@T("Common.Save")" name="save-info-button" class="button-1 save-customer-info-button" />
             </div>
         </form>
     </div>
 </div>
 
-<script type="text/javascript">
+<script asp-location="Footer">
     function removeexternalassociation(itemId) {
         if (confirm('@T("Common.AreYouSure")')) {
             var postData = {
@@ -433,14 +458,14 @@
             addAntiForgeryToken(postData);
             $.ajax({
                 cache: false,
-                type: 'POST',
-                url: '@Url.Action("RemoveExternalAssociation", "Customer")',
+                type: "POST",
+                url: "@Url.Action("RemoveExternalAssociation", "Customer")",
                 data: postData,
-                dataType: 'json',
-                success: function (data) {
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
                     location.href = data.redirect;
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function (jqXHR, textStatus, errorThrown) {
                     alert('Failed to delete');
                 }
             });

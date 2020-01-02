@@ -1,8 +1,8 @@
-﻿@model ProductModel
+@model ProductModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Catalog.Products.EditProductDetails").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Products.EditProductDetails").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Products");
 }
@@ -37,6 +37,7 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

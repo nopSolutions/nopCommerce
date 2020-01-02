@@ -9,43 +9,48 @@ using Nop.Services.Events;
 
 namespace Nop.Services.Messages
 {
+    /// <summary>
+    /// Campaign service
+    /// </summary>
     public partial class CampaignService : ICampaignService
     {
-        private readonly IRepository<Campaign> _campaignRepository;
-        private readonly IEmailSender _emailSender;
-        private readonly IMessageTokenProvider _messageTokenProvider;
-        private readonly ITokenizer _tokenizer;
-        private readonly IQueuedEmailService _queuedEmailService;
-        private readonly ICustomerService _customerService;
-        private readonly IStoreContext _storeContext;
-        private readonly IEventPublisher _eventPublisher;
+        #region Fields
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="campaignRepository">Campaign repository</param>
-        /// <param name="emailSender">Email sender</param>
-        /// <param name="messageTokenProvider">Message token provider</param>
-        /// <param name="tokenizer">Tokenizer</param>
-        /// <param name="queuedEmailService">Queued email service</param>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="eventPublisher">Event published</param>
-        public CampaignService(IRepository<Campaign> campaignRepository,
-            IEmailSender emailSender, IMessageTokenProvider messageTokenProvider,
-            ITokenizer tokenizer, IQueuedEmailService queuedEmailService,
-            ICustomerService customerService, IStoreContext storeContext,
-            IEventPublisher eventPublisher)
+        private readonly ICustomerService _customerService;
+        private readonly IEmailSender _emailSender;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IMessageTokenProvider _messageTokenProvider;
+        private readonly IQueuedEmailService _queuedEmailService;
+        private readonly IRepository<Campaign> _campaignRepository;
+        private readonly IStoreContext _storeContext;
+        private readonly ITokenizer _tokenizer;
+
+        #endregion
+
+        #region Ctor
+
+        public CampaignService(ICustomerService customerService,
+            IEmailSender emailSender,
+            IEventPublisher eventPublisher,
+            IMessageTokenProvider messageTokenProvider,
+            IQueuedEmailService queuedEmailService,
+            IRepository<Campaign> campaignRepository,
+            IStoreContext storeContext,
+            ITokenizer tokenizer)
         {
-            this._campaignRepository = campaignRepository;
-            this._emailSender = emailSender;
-            this._messageTokenProvider = messageTokenProvider;
-            this._tokenizer = tokenizer;
-            this._queuedEmailService = queuedEmailService;
-            this._storeContext = storeContext;
-            this._customerService = customerService;
-            this._eventPublisher = eventPublisher;
+            _customerService = customerService;
+            _emailSender = emailSender;
+            _eventPublisher = eventPublisher;
+            _messageTokenProvider = messageTokenProvider;
+            _queuedEmailService = queuedEmailService;
+            _campaignRepository = campaignRepository;
+            _storeContext = storeContext;
+            _tokenizer = tokenizer;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Inserts a campaign
@@ -103,7 +108,6 @@ namespace Nop.Services.Messages
                 return null;
 
             return _campaignRepository.GetById(campaignId);
-
         }
 
         /// <summary>
@@ -113,7 +117,6 @@ namespace Nop.Services.Messages
         /// <returns>Campaigns</returns>
         public virtual IList<Campaign> GetAllCampaigns(int storeId = 0)
         {
-
             var query = _campaignRepository.Table;
 
             if (storeId > 0)
@@ -127,7 +130,7 @@ namespace Nop.Services.Messages
 
             return campaigns;
         }
-        
+
         /// <summary>
         /// Sends a campaign to specified emails
         /// </summary>
@@ -144,7 +147,7 @@ namespace Nop.Services.Messages
             if (emailAccount == null)
                 throw new ArgumentNullException(nameof(emailAccount));
 
-            int totalEmailsSent = 0;
+            var totalEmailsSent = 0;
 
             foreach (var subscription in subscriptions)
             {
@@ -159,8 +162,8 @@ namespace Nop.Services.Messages
                 if (customer != null)
                     _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
-                string subject = _tokenizer.Replace(campaign.Subject, tokens, false);
-                string body = _tokenizer.Replace(campaign.Body, tokens, true);
+                var subject = _tokenizer.Replace(campaign.Subject, tokens, false);
+                var body = _tokenizer.Replace(campaign.Body, tokens, true);
 
                 var email = new QueuedEmail
                 {
@@ -177,6 +180,7 @@ namespace Nop.Services.Messages
                 _queuedEmailService.InsertQueuedEmail(email);
                 totalEmailsSent++;
             }
+
             return totalEmailsSent;
         }
 
@@ -199,11 +203,13 @@ namespace Nop.Services.Messages
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer != null)
                 _messageTokenProvider.AddCustomerTokens(tokens, customer);
-            
-            string subject = _tokenizer.Replace(campaign.Subject, tokens, false);
-            string body = _tokenizer.Replace(campaign.Body, tokens, true);
+
+            var subject = _tokenizer.Replace(campaign.Subject, tokens, false);
+            var body = _tokenizer.Replace(campaign.Body, tokens, true);
 
             _emailSender.SendEmail(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, email, null);
         }
+
+        #endregion
     }
 }

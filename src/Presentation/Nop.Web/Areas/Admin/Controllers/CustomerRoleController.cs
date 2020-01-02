@@ -1,178 +1,152 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Helpers;
-using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Core;
-using Nop.Core.Caching;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Security;
-using Nop.Services.Stores;
-using Nop.Services.Vendors;
+using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
+using Nop.Web.Areas.Admin.Models.Customers;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class CustomerRoleController : BaseAdminController
-	{
-		#region Fields
+    {
+        #region Fields
 
-		private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerRoleModelFactory _customerRoleModelFactory;
+        private readonly ICustomerService _customerService;
+        private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IProductService _productService;
-        private readonly ICategoryService _categoryService;
-        private readonly IManufacturerService _manufacturerService;
-        private readonly IStoreService _storeService;
-        private readonly IVendorService _vendorService;
         private readonly IWorkContext _workContext;
-        private readonly IStaticCacheManager _cacheManager;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Ctor
 
-        public CustomerRoleController(ICustomerService customerService,
-            ILocalizationService localizationService, 
-            ICustomerActivityService customerActivityService,
+        public CustomerRoleController(ICustomerActivityService customerActivityService,
+            ICustomerRoleModelFactory customerRoleModelFactory,
+            ICustomerService customerService,
+            ILocalizationService localizationService,
+            INotificationService notificationService,
             IPermissionService permissionService,
             IProductService productService,
-            ICategoryService categoryService,
-            IManufacturerService manufacturerService,
-            IStoreService storeService,
-            IVendorService vendorService,
-            IWorkContext workContext, 
-            IStaticCacheManager cacheManager)
-		{
-            this._customerService = customerService;
-            this._localizationService = localizationService;
-            this._customerActivityService = customerActivityService;
-            this._permissionService = permissionService;
-            this._productService = productService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._storeService = storeService;
-            this._vendorService = vendorService;
-            this._workContext = workContext;
-            this._cacheManager = cacheManager;
-		}
-
-		#endregion 
-
-        #region Utilities
-
-        protected virtual CustomerRoleModel PrepareCustomerRoleModel(CustomerRole customerRole)
+            IWorkContext workContext)
         {
-            var model = customerRole.ToModel();
-            var product = _productService.GetProductById(customerRole.PurchasedWithProductId);
-            if (product != null)
-            {
-                model.PurchasedWithProductName = product.Name;
-            }
-            return model;
+            _customerActivityService = customerActivityService;
+            _customerRoleModelFactory = customerRoleModelFactory;
+            _customerService = customerService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _productService = productService;
+            _workContext = workContext;
         }
 
         #endregion
 
-        #region Customer roles
+        #region Methods
 
         public virtual IActionResult Index()
         {
             return RedirectToAction("List");
         }
 
-		public virtual IActionResult List()
+        public virtual IActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
-            
-			return View();
-		}
 
-		[HttpPost]
-		public virtual IActionResult List(DataSourceRequest command)
+            //prepare model
+            var model = _customerRoleModelFactory.PrepareCustomerRoleSearchModel(new CustomerRoleSearchModel());
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public virtual IActionResult List(CustomerRoleSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
-            
-            var customerRoles = _customerService.GetAllCustomerRoles(true);
-            var gridModel = new DataSourceResult
-			{
-                Data = customerRoles.Select(PrepareCustomerRoleModel),
-                Total = customerRoles.Count()
-			};
+                return AccessDeniedDataTablesJson();
 
-            return Json(gridModel);
+            //prepare model
+            var model = _customerRoleModelFactory.PrepareCustomerRoleListModel(searchModel);
+
+            return Json(model);
         }
 
         public virtual IActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
-            
-            var model = new CustomerRoleModel();
-            //default values
-            model.Active = true;
+
+            //prepare model
+            var model = _customerRoleModelFactory.PrepareCustomerRoleModel(new CustomerRoleModel(), null);
+
             return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual IActionResult Create(CustomerRoleModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
-            
+
             if (ModelState.IsValid)
             {
-                var customerRole = model.ToEntity();
+                var customerRole = model.ToEntity<CustomerRole>();
                 _customerService.InsertCustomerRole(customerRole);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewCustomerRole", _localizationService.GetResource("ActivityLog.AddNewCustomerRole"), customerRole.Name);
+                _customerActivityService.InsertActivity("AddNewCustomerRole",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewCustomerRole"), customerRole.Name), customerRole);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Added"));
+
                 return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id }) : RedirectToAction("List");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
+            model = _customerRoleModelFactory.PrepareCustomerRoleModel(model, null, true);
+
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
-		public virtual IActionResult Edit(int id)
+        public virtual IActionResult Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
-            
+
+            //try to get a customer role with the specified id
             var customerRole = _customerService.GetCustomerRoleById(id);
             if (customerRole == null)
-                //No customer role found with the specified id
                 return RedirectToAction("List");
-		    
-            var model = PrepareCustomerRoleModel(customerRole);
+
+            //prepare model
+            var model = _customerRoleModelFactory.PrepareCustomerRoleModel(null, customerRole);
+
             return View(model);
-		}
+        }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual IActionResult Edit(CustomerRoleModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
-            
+
+            //try to get a customer role with the specified id
             var customerRole = _customerService.GetCustomerRoleById(model.Id);
             if (customerRole == null)
-                //No customer role found with the specified id
                 return RedirectToAction("List");
 
             try
@@ -185,26 +159,31 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (customerRole.IsSystemRole && !customerRole.SystemName.Equals(model.SystemName, StringComparison.InvariantCultureIgnoreCase))
                         throw new NopException(_localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.SystemName.CantEditSystem"));
 
-                    if (SystemCustomerRoleNames.Registered.Equals(customerRole.SystemName, StringComparison.InvariantCultureIgnoreCase) &&
+                    if (NopCustomerDefaults.RegisteredRoleName.Equals(customerRole.SystemName, StringComparison.InvariantCultureIgnoreCase) &&
                         model.PurchasedWithProductId > 0)
                         throw new NopException(_localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Registered"));
-                    
+
                     customerRole = model.ToEntity(customerRole);
                     _customerService.UpdateCustomerRole(customerRole);
 
                     //activity log
-                    _customerActivityService.InsertActivity("EditCustomerRole", _localizationService.GetResource("ActivityLog.EditCustomerRole"), customerRole.Name);
+                    _customerActivityService.InsertActivity("EditCustomerRole",
+                        string.Format(_localizationService.GetResource("ActivityLog.EditCustomerRole"), customerRole.Name), customerRole);
 
-                    SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Updated"));
-                    return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id}) : RedirectToAction("List");
+                    _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Updated"));
+
+                    return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id }) : RedirectToAction("List");
                 }
 
-                //If we got this far, something failed, redisplay form
+                //prepare model
+                model = _customerRoleModelFactory.PrepareCustomerRoleModel(model, customerRole, true);
+
+                //if we got this far, something failed, redisplay form
                 return View(model);
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("Edit", new { id = customerRole.Id });
             }
         }
@@ -212,12 +191,12 @@ namespace Nop.Web.Areas.Admin.Controllers
         [HttpPost]
         public virtual IActionResult Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
-            
+
+            //try to get a customer role with the specified id
             var customerRole = _customerService.GetCustomerRoleById(id);
             if (customerRole == null)
-                //No customer role found with the specified id
                 return RedirectToAction("List");
 
             try
@@ -225,96 +204,51 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _customerService.DeleteCustomerRole(customerRole);
 
                 //activity log
-                _customerActivityService.InsertActivity("DeleteCustomerRole", _localizationService.GetResource("ActivityLog.DeleteCustomerRole"), customerRole.Name);
+                _customerActivityService.InsertActivity("DeleteCustomerRole",
+                    string.Format(_localizationService.GetResource("ActivityLog.DeleteCustomerRole"), customerRole.Name), customerRole);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Deleted"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Deleted"));
+
                 return RedirectToAction("List");
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc.Message);
+                _notificationService.ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = customerRole.Id });
             }
-
-		}
+        }
 
         public virtual IActionResult AssociateProductToCustomerRolePopup()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
-            var model = new CustomerRoleModel.AssociateProductToCustomerRoleModel();
-            //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-
-            //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var categories = SelectListHelper.GetCategoryList(_categoryService, _cacheManager, true);
-            foreach (var c in categories)
-                model.AvailableCategories.Add(c);
-
-            //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var manufacturers = SelectListHelper.GetManufacturerList(_manufacturerService, _cacheManager, true);
-            foreach (var m in manufacturers)
-                model.AvailableManufacturers.Add(m);
-
-            //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
-
-            //vendors
-            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var vendors = SelectListHelper.GetVendorList(_vendorService, _cacheManager, true);
-            foreach (var v in vendors)
-                model.AvailableVendors.Add(v);
-
-            //product types
-            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            //prepare model
+            var model = _customerRoleModelFactory.PrepareCustomerRoleProductSearchModel(new CustomerRoleProductSearchModel());
 
             return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult AssociateProductToCustomerRolePopupList(DataSourceRequest command,
-            CustomerRoleModel.AssociateProductToCustomerRoleModel model)
+        public virtual IActionResult AssociateProductToCustomerRolePopupList(CustomerRoleProductSearchModel searchModel)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedKendoGridJson();
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+                return AccessDeniedDataTablesJson();
 
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null)
-            {
-                model.SearchVendorId = _workContext.CurrentVendor.Id;
-            }
+            //prepare model
+            var model = _customerRoleModelFactory.PrepareCustomerRoleProductListModel(searchModel);
 
-            var products = _productService.SearchProducts(
-                categoryIds: new List<int> { model.SearchCategoryId },
-                manufacturerId: model.SearchManufacturerId,
-                storeId: model.SearchStoreId,
-                vendorId: model.SearchVendorId,
-                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
-                keywords: model.SearchProductName,
-                pageIndex: command.Page - 1,
-                pageSize: command.PageSize,
-                showHidden: true
-                );
-            var gridModel = new DataSourceResult();
-            gridModel.Data = products.Select(x => x.ToModel());
-            gridModel.Total = products.TotalCount;
-
-            return Json(gridModel);
+            return Json(model);
         }
 
         [HttpPost]
         [FormValueRequired("save")]
-        public virtual IActionResult AssociateProductToCustomerRolePopup(CustomerRoleModel.AssociateProductToCustomerRoleModel model)
+        public virtual IActionResult AssociateProductToCustomerRolePopup([Bind(Prefix = nameof(AddProductToCustomerRoleModel))] AddProductToCustomerRoleModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers) || !_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                 return AccessDeniedView();
 
+            //try to get a product with the specified id
             var associatedProduct = _productService.GetProductById(model.AssociatedToProductId);
             if (associatedProduct == null)
                 return Content("Cannot load a product");
@@ -323,14 +257,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (_workContext.CurrentVendor != null && associatedProduct.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             ViewBag.RefreshPage = true;
             ViewBag.productId = associatedProduct.Id;
             ViewBag.productName = associatedProduct.Name;
-            return View(model);
+
+            return View(new CustomerRoleProductSearchModel());
         }
 
-		#endregion
+        #endregion
     }
 }

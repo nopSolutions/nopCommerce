@@ -1,18 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Blogs;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class BlogMonthsViewComponent : ViewComponent
+    public class BlogMonthsViewComponent : NopViewComponent
     {
-        private readonly IBlogModelFactory _blogModelFactory;
         private readonly BlogSettings _blogSettings;
+        private readonly IBlogModelFactory _blogModelFactory;
 
-        public BlogMonthsViewComponent(IBlogModelFactory blogModelFactory, BlogSettings blogSettings)
+        public BlogMonthsViewComponent(BlogSettings blogSettings, IBlogModelFactory blogModelFactory)
         {
-            this._blogModelFactory = blogModelFactory;
-            this._blogSettings = blogSettings;
+            _blogSettings = blogSettings;
+            _blogModelFactory = blogModelFactory;
         }
 
         public IViewComponentResult Invoke(int currentCategoryId, int currentProductId)

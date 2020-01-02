@@ -14,12 +14,12 @@
         <h1>@T("Checkout.ConfirmYourOrder")</h1>
     </div>
     <div class="page-body checkout-data">
-        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_confirm_top" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutConfirmTop })
         <div class="section confirm-order">
             <form asp-route="CheckoutConfirm" method="post" id="confirm-order-form">
-                <script type="text/javascript">
+                <script asp-location="Footer">
                     $(document).ready(function () {
-                        $('.confirm-order-next-step-button').click(function () {
+                        $('.confirm-order-next-step-button').on('click', function () {
                             //terms of service
                             var termOfServiceOk = true;
                             if ($('#termsofservice').length > 0) {
@@ -33,7 +33,7 @@
                             }
                             if (termOfServiceOk) {
                                 //$('#confirm-order-form').submit();
-                                //$('.confirm-order-next-step-button').attr('disabled', 'disabled');
+                                //$('.confirm-order-next-step-button').prop('disabled', true);
                                 return true;
                             } else {
                                 return false;
@@ -41,7 +41,7 @@
                         });
                     });
                 </script>
-                @if (!String.IsNullOrEmpty(Model.MinOrderTotalWarning))
+                @if (!string.IsNullOrEmpty(Model.MinOrderTotalWarning))
                 {
                     <span class="min-order-warning">@Model.MinOrderTotalWarning</span>
                 }
@@ -55,31 +55,36 @@
                         <div class="terms-of-service">
                             <input id="termsofservice" type="checkbox" name="termsofservice" />
                             <label for="termsofservice">@T("Checkout.TermsOfService.IAccept")</label>
-                            <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
-                            <script>
-                                $(document).ready(function() {
-                                    $('#read-terms').on('click',
-                                        function(e) {
-                                            e.preventDefault();
-                                            displayPopupContentFromUrl(
-                                                '@Url.RouteUrl("TopicPopup", new {SystemName = "conditionsofuse"})',
-                                                '@T("Checkout.TermsOfService")');
-                                        });
-                                });
-                            </script>
+                            @if (Model.TermsOfServicePopup)
+                            {
+                                <a class="read" id="read-terms">@T("Checkout.TermsOfService.Read")</a>
+                                <script asp-location="Footer">
+                                    $(document).ready(function() {
+                                        $('#read-terms').on('click',
+                                            function(e) {
+                                                e.preventDefault();
+                                                displayPopupContentFromUrl('@Url.RouteUrl("TopicPopup", new {SystemName = "conditionsofuse"})', '@T("Checkout.TermsOfService")');
+                                            });
+                                    });
+                                </script>
+                            }
+                            else
+                            {
+                                <a class="read" id="read-terms" href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("conditionsofuse") })">@T("Checkout.TermsOfService.Read")</a>
+                            }
                         </div>
                     }
                     <div class="buttons">
                         <input type="submit" name="nextstep" value="@T("Checkout.ConfirmButton")" class="button-1 confirm-order-next-step-button" />
                     </div>
-                    <script>
+                    <script asp-location="Footer">
                         $('#confirm-order-form').on('submit',
                             function () {
                                 var button = $(this).find('input[type="submit"][name="nextstep"]');
                                 setTimeout(function () {
-                                    button.attr('disabled', 'disabled');
+                                    button.prop('disabled', true);
                                 },
-                                    0);
+                                0);
                             });
                     </script>
                 }
@@ -96,7 +101,7 @@
                 }
             </form>
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_confirm_bottom" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutConfirmBottom })
         <div class="section order-summary">
             @await Component.InvokeAsync("OrderSummary", new { prepareAndDisplayOrderReviewData = true })
         </div>

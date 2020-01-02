@@ -1,18 +1,23 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Nop.Web.Framework.Extensions;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
+    /// <summary>
+    /// nop-action-confirmation tag helper
+    /// </summary>
     [HtmlTargetElement("nop-action-confirmation", Attributes = ButtonIdAttributeName, TagStructure = TagStructure.WithoutEndTag)]
     public class NopActionConfirmationTagHelper : TagHelper
     {
         private const string ButtonIdAttributeName = "asp-button-id";
         private const string ActionAttributeName = "asp-action";
+        private const string AdditionaConfirmText = "asp-additional-confirm";
 
         private readonly IHtmlHelper _htmlHelper;
 
@@ -40,13 +45,29 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
+        /// <summary>
+        /// Additional confirm text
+        /// </summary>
+        [HtmlAttributeName(AdditionaConfirmText)]
+        public string ConfirmText { get; set; }
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="generator">HTML generator</param>
+        /// <param name="htmlHelper">HTML helper</param>
         public NopActionConfirmationTagHelper(IHtmlGenerator generator, IHtmlHelper htmlHelper)
         {
             Generator = generator;
             _htmlHelper = htmlHelper;
         }
 
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        /// <summary>
+        /// Process
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="output">Output</param>
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
             {
@@ -71,7 +92,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             {
                 ControllerName = _htmlHelper.ViewContext.RouteData.Values["controller"].ToString(),
                 ActionName = Action,
-                WindowId = modalId
+                WindowId = modalId,
+                AdditonalConfirmText = ConfirmText
             };
 
             //tag details
@@ -83,7 +105,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             output.Attributes.Add("tabindex", "-1");
             output.Attributes.Add("role", "dialog");
             output.Attributes.Add("aria-labelledby", $"{modalId}-title");
-            output.Content.SetHtmlContent(_htmlHelper.Partial("Confirm", actionConfirmationModel));
+            output.Content.SetHtmlContent(await _htmlHelper.PartialAsync("Confirm", actionConfirmationModel));
 
             //modal script
             var script = new TagBuilder("script");

@@ -5,41 +5,41 @@ using Nop.Plugin.Payments.Manual.Models;
 using Nop.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Security;
-using Nop.Services.Stores;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.Payments.Manual.Controllers
 {
     [AuthorizeAdmin]
-    [Area("Admin")]
+    [Area(AreaNames.Admin)]
     public class PaymentManualController : BasePaymentController
     {
         #region Fields
         
         private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
-        private readonly IStoreService _storeService;
-        private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
 
         #endregion
 
         #region Ctor
 
         public PaymentManualController(ILocalizationService localizationService,
+            INotificationService notificationService,
             IPermissionService permissionService,
             ISettingService settingService,
-            IStoreService storeService,
-            IWorkContext workContext)
+            IStoreContext storeContext)
         {
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._storeService = storeService;
-            this._workContext = workContext;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _storeContext = storeContext;
         }
 
         #endregion
@@ -52,7 +52,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var manualPaymentSettings = _settingService.LoadSetting<ManualPaymentSettings>(storeScope);
 
             var model = new ConfigurationModel
@@ -84,7 +84,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
                 return Configure();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var manualPaymentSettings = _settingService.LoadSetting<ManualPaymentSettings>(storeScope);
 
             //save settings
@@ -103,7 +103,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
             //now clear settings cache
             _settingService.ClearCache();
 
-            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }

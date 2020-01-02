@@ -1,10 +1,10 @@
-﻿@model SpecificationAttributeOptionModel
+@model SpecificationAttributeOptionModel
 
 @{
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew").Text;
 }
 
 <form asp-controller="SpecificationAttribute" asp-action="OptionCreatePopup"
@@ -20,6 +20,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeOptionDetailsButtons })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateOption", Model)

@@ -1,13 +1,17 @@
-﻿@model TopicListModel
+@model TopicSearchModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.ContentManagement.Topics").Text;
+    ViewBag.PageTitle = T("Admin.ContentManagement.Topics").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Topics");
 }
 
-<nop-antiforgery-token />
+@{
+    const string hideSearchBlockAttributeName = "TopicsPage.HideSearchBlock";
+    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+}
+
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.Topics")
@@ -17,31 +21,47 @@
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.TopicListButtons })
     </div>
 </div>
 
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            @*hide the entire search block if no elements are displayed*@
-            <div class="panel panel-default panel-search" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+            <div class="panel panel-default panel-search">
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
-                                <div class="col-md-4">
-                                    <nop-label asp-for="SearchStoreId" />
+                    <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchStoreId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchKeywords" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchKeywords" />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-8 col-md-offset-4">
-                                    <button type="button" id="search-topics" class="btn btn-primary btn-search">
-                                        <i class="fa fa-search"></i>
-                                        @T("Admin.Common.Search")
-                                    </button>
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <button type="button" id="search-topics" class="btn btn-primary btn-search">
+                                            <i class="fa fa-search"></i>
+                                            @T("Admin.Common.Search")
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -51,135 +71,88 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="topics-grid"></div>
-
-                    <script>
-                        $(document).ready(function () {
-                            $("#topics-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("List", "Topic"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: additionalData
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function (e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false,
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [
-                                {
-                                    field: "SystemName",
-                                    title: "@T("Admin.ContentManagement.Topics.Fields.SystemName")"
-                                }, {
-                                    field: "Published",
-                                    title: "@T("Admin.ContentManagement.Topics.Fields.Published")",
-                                    width: 150,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                }, {
-                                    field: "IsPasswordProtected",
-                                    title: "@T("Admin.ContentManagement.Topics.Fields.IsPasswordProtected")",
-                                    width: 150,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(IsPasswordProtected) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                }, {
-                                    field: "IncludeInSitemap",
-                                    title: "@T("Admin.ContentManagement.Topics.Fields.IncludeInSitemap")",
-                                    width: 150,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(IncludeInSitemap) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                }, {
-                                    field: "IncludeInTopMenu",
-                                    title: "@T("Admin.ContentManagement.Topics.Fields.IncludeInTopMenu")",
-                                    width: 150,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(IncludeInTopMenu) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                }, {
-                                    field: "IncludeInFooterColumn1",
-                                    title: "@T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1")",
-                                    width: 150,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(IncludeInFooterColumn1) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                }, {
-                                    field: "IncludeInFooterColumn2",
-                                    title: "@T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn2")",
-                                    width: 150,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(IncludeInFooterColumn2) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                }, {
-                                    field: "IncludeInFooterColumn3",
-                                    title: "@T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3")",
-                                    width: 150,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(IncludeInFooterColumn3) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                }, {
-                                    field: "DisplayOrder",
-                                    title: "@T("Admin.ContentManagement.Topics.Fields.DisplayOrder")",
-                                    width: 100
-                                }, {
-                                    field: "Id",
-                                    title: "@T("Admin.Common.Edit")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'                                }
-                                ]
-                            });
-                        });
-                    </script>
-
-                    <script type="text/javascript">
-                        $(document).ready(function () {
-                            //search button
-                            $('#search-topics').click(function () {
-                                //search
-                                var grid = $('#topics-grid').data('kendoGrid');
-                                grid.dataSource.read();
-                                return false;
-                            });
-                        });
-
-                        function additionalData() {
-                            var data = {
-                                SearchStoreId: $('#SearchStoreId').val()
-                            };
-                            addAntiForgeryToken(data);
-                            return data;
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "topics-grid",
+                        UrlRead = new DataUrl("List", "Topic", null),
+                        SearchButtonId = "search-topics",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.SearchKeywords)),
+                            new FilterParameter(nameof(Model.SearchStoreId))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(TopicModel.SystemName))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.SystemName").Text
+                            },
+                            new ColumnProperty(nameof(TopicModel.Published))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.Published").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.IsPasswordProtected))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.IsPasswordProtected").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.IncludeInSitemap))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInSitemap").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.IncludeInTopMenu))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInTopMenu").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn1))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn2))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn2").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.IncludeInFooterColumn3))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3").Text,
+                                Width = "150",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(TopicModel.DisplayOrder))
+                            {
+                                Title = T("Admin.ContentManagement.Topics.Fields.DisplayOrder").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(TopicModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
                         }
-                    </script>
+                    })
                 </div>
             </div>
         </div>

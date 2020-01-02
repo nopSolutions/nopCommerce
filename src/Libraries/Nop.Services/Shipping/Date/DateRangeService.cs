@@ -22,23 +22,17 @@ namespace Nop.Services.Shipping.Date
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="eventPublisher">Event published</param>
-        /// <param name="deliveryDateRepository">Delivery date repository</param>
-        /// <param name="productAvailabilityRangeRepository">Product availability range repository</param>
         public DateRangeService(IEventPublisher eventPublisher,
             IRepository<DeliveryDate> deliveryDateRepository,
             IRepository<ProductAvailabilityRange> productAvailabilityRangeRepository)
         {
-            this._eventPublisher = eventPublisher;
-            this._deliveryDateRepository = deliveryDateRepository;
-            this._productAvailabilityRangeRepository = productAvailabilityRangeRepository;
+            _eventPublisher = eventPublisher;
+            _deliveryDateRepository = deliveryDateRepository;
+            _productAvailabilityRangeRepository = productAvailabilityRangeRepository;
         }
 
         #endregion
-        
+
         #region Methods
 
         #region Delivery dates

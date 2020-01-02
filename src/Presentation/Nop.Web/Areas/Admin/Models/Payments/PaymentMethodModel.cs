@@ -1,10 +1,15 @@
 ﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Payments
 {
-    public partial class PaymentMethodModel : BaseNopModel
+    /// <summary>
+    /// Represents a payment method model
+    /// </summary>
+    public partial class PaymentMethodModel : BaseNopModel, IPluginModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.Configuration.Payment.Methods.Fields.FriendlyName")]
         public string FriendlyName { get; set; }
 
@@ -37,5 +42,7 @@ namespace Nop.Web.Areas.Admin.Models.Payments
 
         [NopResourceDisplayName("Admin.Configuration.Payment.Methods.Fields.RecurringPaymentType")]
         public string RecurringPaymentType { get; set; }
+
+        #endregion
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
 
@@ -27,8 +27,7 @@ namespace Nop.Web.Models.ShoppingCart
         public bool ShowProductImages { get; set; }
         public bool IsEditable { get; set; }
         public IList<ShoppingCartItemModel> Items { get; set; }
-
-        public string CheckoutAttributeInfo { get; set; }
+        
         public IList<CheckoutAttributeModel> CheckoutAttributes { get; set; }
 
         public IList<string> Warnings { get; set; }
@@ -36,6 +35,7 @@ namespace Nop.Web.Models.ShoppingCart
         public bool DisplayTaxShippingInfo { get; set; }
         public bool TermsOfServiceOnShoppingCartPage { get; set; }
         public bool TermsOfServiceOnOrderConfirmPage { get; set; }
+        public bool TermsOfServicePopup { get; set; }
         public DiscountBoxModel DiscountBox { get; set; }
         public GiftCardBoxModel GiftCardBox { get; set; }
         public OrderReviewDataModel OrderReviewData { get; set; }
@@ -43,6 +43,7 @@ namespace Nop.Web.Models.ShoppingCart
         public IList<string> ButtonPaymentMethodViewComponentNames { get; set; }
 
         public bool HideCheckoutButton { get; set; }
+        public bool ShowVendorName { get; set; }
 
         #region Nested Classes
 
@@ -54,7 +55,10 @@ namespace Nop.Web.Models.ShoppingCart
                 AllowedQuantities = new List<SelectListItem>();
                 Warnings = new List<string>();
             }
+
             public string Sku { get; set; }
+
+            public string VendorName { get; set; }
 
             public PictureModel Picture {get;set;}
 
@@ -85,7 +89,6 @@ namespace Nop.Web.Models.ShoppingCart
             public bool DisableRemoval { get; set; }
 
             public IList<string> Warnings { get; set; }
-
         }
 
         public partial class CheckoutAttributeModel : BaseNopEntityModel
@@ -168,10 +171,10 @@ namespace Nop.Web.Models.ShoppingCart
         {
             public OrderReviewDataModel()
             {
-                this.BillingAddress = new AddressModel();
-                this.ShippingAddress = new AddressModel();
-                this.PickupAddress = new AddressModel();
-                this.CustomValues= new Dictionary<string, object>();
+                BillingAddress = new AddressModel();
+                ShippingAddress = new AddressModel();
+                PickupAddress = new AddressModel();
+                CustomValues= new Dictionary<string, object>();
             }
             public bool Display { get; set; }
 
@@ -179,7 +182,7 @@ namespace Nop.Web.Models.ShoppingCart
 
             public bool IsShippable { get; set; }
             public AddressModel ShippingAddress { get; set; }
-            public bool SelectedPickUpInStore { get; set; }
+            public bool SelectedPickupInStore { get; set; }
             public AddressModel PickupAddress { get; set; }
             public string ShippingMethod { get; set; }
 
@@ -187,6 +190,7 @@ namespace Nop.Web.Models.ShoppingCart
 
             public Dictionary<string, object> CustomValues { get; set; }
         }
+
         #endregion
     }
 }

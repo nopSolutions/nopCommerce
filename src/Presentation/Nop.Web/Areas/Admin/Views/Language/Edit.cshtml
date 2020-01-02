@@ -1,8 +1,8 @@
-﻿@model LanguageModel
+@model LanguageModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Languages.EditLanguageDetails").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Languages.EditLanguageDetails").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Languages");
 }
@@ -38,6 +38,7 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.LanguageDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

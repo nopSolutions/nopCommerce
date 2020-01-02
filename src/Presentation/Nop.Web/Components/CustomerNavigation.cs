@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class CustomerNavigationViewComponent : ViewComponent
+    public class CustomerNavigationViewComponent : NopViewComponent
     {
         private readonly ICustomerModelFactory _customerModelFactory;
 
         public CustomerNavigationViewComponent(ICustomerModelFactory customerModelFactory)
         {
-            this._customerModelFactory = customerModelFactory;
+            _customerModelFactory = customerModelFactory;
         }
 
         public IViewComponentResult Invoke(int selectedTabId = 0)

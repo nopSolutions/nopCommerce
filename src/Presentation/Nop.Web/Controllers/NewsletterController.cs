@@ -11,27 +11,26 @@ namespace Nop.Web.Controllers
 {
     public partial class NewsletterController : BasePublicController
     {
-        private readonly INewsletterModelFactory _newsletterModelFactory;
         private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
+        private readonly INewsletterModelFactory _newsletterModelFactory;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
+        private readonly IWorkflowMessageService _workflowMessageService;
 
-
-        public NewsletterController(INewsletterModelFactory newsletterModelFactory,
-            ILocalizationService localizationService,
-            IWorkContext workContext,
+        public NewsletterController(ILocalizationService localizationService,
+            INewsletterModelFactory newsletterModelFactory,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
-            IWorkflowMessageService workflowMessageService,
-            IStoreContext storeContext)
+            IStoreContext storeContext,
+            IWorkContext workContext,
+            IWorkflowMessageService workflowMessageService)
         {
-            this._newsletterModelFactory = newsletterModelFactory;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._workflowMessageService = workflowMessageService;
-            this._storeContext = storeContext;
+            _localizationService = localizationService;
+            _newsletterModelFactory = newsletterModelFactory;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _storeContext = storeContext;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
         }
 
         //available even when a store is closed
@@ -40,7 +39,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult SubscribeNewsletter(string email, bool subscribe)
         {
             string result;
-            bool success = false;
+            var success = false;
 
             if (!CommonHelper.IsValidEmail(email))
             {
@@ -105,7 +104,7 @@ namespace Nop.Web.Controllers
         {
             var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuid(token);
             if (subscription == null)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (active)
             {

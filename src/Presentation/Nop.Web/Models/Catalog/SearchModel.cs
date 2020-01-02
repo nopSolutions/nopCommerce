@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Catalog
 {
@@ -9,12 +9,12 @@ namespace Nop.Web.Models.Catalog
     {
         public SearchModel()
         {
-            this.PagingFilteringContext = new CatalogPagingFilteringModel();
-            this.Products = new List<ProductOverviewModel>();
+            PagingFilteringContext = new CatalogPagingFilteringModel();
+            Products = new List<ProductOverviewModel>();
 
-            this.AvailableCategories = new List<SelectListItem>();
-            this.AvailableManufacturers = new List<SelectListItem>();
-            this.AvailableVendors = new List<SelectListItem>();
+            AvailableCategories = new List<SelectListItem>();
+            AvailableManufacturers = new List<SelectListItem>();
+            AvailableVendors = new List<SelectListItem>();
         }
 
         public string Warning { get; set; }

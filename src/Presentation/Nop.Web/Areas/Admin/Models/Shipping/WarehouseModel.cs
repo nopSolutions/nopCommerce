@@ -1,18 +1,24 @@
-﻿using FluentValidation.Attributes;
-using Nop.Web.Areas.Admin.Models.Common;
-using Nop.Web.Areas.Admin.Validators.Shipping;
+﻿using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Shipping
 {
-    [Validator(typeof(WarehouseValidator))]
+    /// <summary>
+    /// Represents a warehouse model
+    /// </summary>
     public partial class WarehouseModel : BaseNopEntityModel
     {
+        #region Ctor
+
         public WarehouseModel()
         {
-            this.Address = new AddressModel();
+            Address = new AddressModel();
         }
+
+        #endregion
+
+        #region Properties
 
         [NopResourceDisplayName("Admin.Configuration.Shipping.Warehouses.Fields.Name")]
         public string Name { get; set; }
@@ -22,5 +28,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
 
         [NopResourceDisplayName("Admin.Configuration.Shipping.Warehouses.Fields.Address")]
         public AddressModel Address { get; set; }
+
+        #endregion
     }
 }

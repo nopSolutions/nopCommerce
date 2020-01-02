@@ -1,8 +1,8 @@
-﻿@model CurrencyModel
+@model CurrencyModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Currencies.EditCurrencyDetails").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Currencies.EditCurrencyDetails").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Currencies");
 }
@@ -29,6 +29,7 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CurrencyDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

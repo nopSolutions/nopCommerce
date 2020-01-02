@@ -15,14 +15,20 @@ namespace Nop.Web.Framework.Infrastructure
         /// Add and configure any of the middleware
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        /// <param name="configuration">Configuration root of the application</param>
-        public void ConfigureServices(IServiceCollection services, IConfigurationRoot configuration)
+        /// <param name="configuration">Configuration of the application</param>
+        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             //add MiniProfiler services
-            services.AddMiniProfiler();
+            services.AddNopMiniProfiler();
+
+            //add WebMarkupMin services to the services container
+            services.AddNopWebMarkupMin();
 
             //add and configure MVC feature
             services.AddNopMvc();
+
+            //add custom redirect result executor
+            services.AddNopRedirectResultExecutor();
         }
 
         /// <summary>
@@ -31,8 +37,11 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //add MiniProfiler
+            //use MiniProfiler
             application.UseMiniProfiler();
+
+            //use WebMarkupMin
+            application.UseNopWebMarkupMin();
 
             //MVC routing
             application.UseNopMvc();
@@ -41,10 +50,6 @@ namespace Nop.Web.Framework.Infrastructure
         /// <summary>
         /// Gets order of this startup configuration implementation
         /// </summary>
-        public int Order
-        {
-            //MVC should be loaded last
-            get { return 1000; }
-        }
+        public int Order => 1000; //MVC should be loaded last
     }
 }

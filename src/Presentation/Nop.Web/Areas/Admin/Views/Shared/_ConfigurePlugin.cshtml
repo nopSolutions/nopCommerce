@@ -1,17 +1,17 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Controllers
 @using Nop.Core
-@using Nop.Core.Plugins
 @using Nop.Services.Authentication.External
 @using Nop.Services.Cms
 @using Nop.Services.Common
 @using Nop.Services.Payments
+@using Nop.Services.Plugins
 @using Nop.Services.Shipping
 @using Nop.Services.Shipping.Pickup
 @using Nop.Services.Tax
-@inject IPluginFinder pluginFinder
+@inject IPluginService pluginService
 @inject IWebHelper webHelper
 @{
-    var plugin = PluginManager.FindPlugin((this.ViewContext.ActionDescriptor as ControllerActionDescriptor).ControllerTypeInfo).Instance();
+    var plugin = pluginService.FindPluginByTypeInAssembly((this.ViewContext.ActionDescriptor as ControllerActionDescriptor).ControllerTypeInfo);
 
     //friendly name
     var friendlyName = plugin?.PluginDescriptor.FriendlyName;
@@ -28,7 +28,7 @@
         activeMenuSystemName = "Payment methods";
         configureLocale = "Admin.Configuration.Payment.Methods.Configure";
         backToLocale = "Admin.Configuration.Payment.Methods.BackToList";
-        listActionMethodName = "Methods";
+        listActionMethodName = "PaymentMethods";
         listControllerName = "Payment";
     }
     else if (plugin is IShippingRateComputationMethod)
@@ -55,7 +55,7 @@
         activeMenuSystemName = "Tax providers";
         configureLocale = "Admin.Configuration.Tax.Providers.Configure";
         backToLocale = "Admin.Configuration.Tax.Providers.BackToList";
-        listActionMethodName = "Providers";
+        listActionMethodName = "List";
         listControllerName = "Tax";
     }
     else if (plugin is IExternalAuthenticationMethod)
@@ -88,7 +88,7 @@
 
     Layout = "_AdminLayout";
     //page title
-    ViewBag.Title = T(configureLocale).Text + " - " + friendlyName;
+    ViewBag.PageTitle = T(configureLocale).Text + " - " + friendlyName;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName(activeMenuSystemName);
 

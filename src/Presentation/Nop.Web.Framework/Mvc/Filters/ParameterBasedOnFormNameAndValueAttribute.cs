@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Nop.Web.Framework.Mvc.Filters
@@ -8,6 +9,8 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public class ParameterBasedOnFormNameAndValueAttribute : TypeFilterAttribute
     {
+        #region Ctor
+
         /// <summary>
         /// Create instance of the filter attribute 
         /// </summary>
@@ -17,8 +20,10 @@ namespace Nop.Web.Framework.Mvc.Filters
         public ParameterBasedOnFormNameAndValueAttribute(string formKeyName, string formValue, string actionParameterName) 
             : base(typeof(ParameterBasedOnFormNameAndValueFilter))
         {
-            this.Arguments = new object[] { formKeyName, formValue, actionParameterName };
+            Arguments = new object[] { formKeyName, formValue, actionParameterName };
         }
+
+        #endregion
 
         #region Nested filter
 
@@ -39,9 +44,9 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             public ParameterBasedOnFormNameAndValueFilter(string formKeyName, string formValue, string actionParameterName)
             {
-                this._formKeyName = formKeyName;
-                this._formValue = formValue;
-                this._actionParameterName = actionParameterName;
+                _formKeyName = formKeyName;
+                _formValue = formValue;
+                _actionParameterName = actionParameterName;
             }
 
             #endregion
@@ -54,7 +59,10 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">A context for action filters</param>
             public void OnActionExecuting(ActionExecutingContext context)
             {
-                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
+                if (context == null)
+                    throw new ArgumentNullException(nameof(context));
+
+                if (context.HttpContext.Request == null)
                     return;
 
                 //if form key with '_formKeyName' exists and value of this form parameter equals passed '_formValue', 

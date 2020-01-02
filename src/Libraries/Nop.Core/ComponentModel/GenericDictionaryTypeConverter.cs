@@ -13,12 +13,16 @@ namespace Nop.Core.ComponentModel
     /// <typeparam name="V">Value type (simple)</typeparam>
     public class GenericDictionaryTypeConverter<K, V> : TypeConverter
     {
+        /// <summary>
+        /// Type converter
+        /// </summary>
         protected readonly TypeConverter typeConverterKey;
-        protected readonly TypeConverter typeConverterValue;
 
         /// <summary>
-        /// Ctor
+        /// Type converter
         /// </summary>
+        protected readonly TypeConverter typeConverterValue;
+
         public GenericDictionaryTypeConverter()
         {
             typeConverterKey = TypeDescriptor.GetConverter(typeof(K));
@@ -54,30 +58,29 @@ namespace Nop.Core.ComponentModel
         /// <returns>Result</returns>
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            if (value is string)
+            if (!(value is string))
+                return base.ConvertFrom(context, culture, value);
+
+            var input = (string)value;
+            var items = string.IsNullOrEmpty(input) ? new string[0] : input.Split(';').Select(x => x.Trim()).ToArray();
+
+            var result = new Dictionary<K, V>();
+            Array.ForEach(items, s =>
             {
-                string input = (string)value;
-                string[] items = string.IsNullOrEmpty(input) ? new string[0] : input.Split(';').Select(x => x.Trim()).ToArray();
+                var keyValueStr = string.IsNullOrEmpty(s) ? new string[0] : s.Split(',').Select(x => x.Trim()).ToArray();
+                if (keyValueStr.Length != 2)
+                    return;
 
-                var result = new Dictionary<K,V>();
-                Array.ForEach(items, s =>
-                {
-                    string[] keyValueStr = string.IsNullOrEmpty(s) ? new string[0] : s.Split(',').Select(x => x.Trim()).ToArray();
-                    if (keyValueStr.Length == 2)
-                    {
-                        object dictionaryKey = (K)typeConverterKey.ConvertFromInvariantString(keyValueStr[0]);
-                        object dictionaryValue = (V)typeConverterValue.ConvertFromInvariantString(keyValueStr[1]);
-                        if (dictionaryKey != null && dictionaryValue != null)
-                        {
-                            if (!result.ContainsKey((K)dictionaryKey))
-                                result.Add((K) dictionaryKey, (V) dictionaryValue);
-                        }
-                    }
-                });
+                object dictionaryKey = (K)typeConverterKey.ConvertFromInvariantString(keyValueStr[0]);
+                object dictionaryValue = (V)typeConverterValue.ConvertFromInvariantString(keyValueStr[1]);
+                if (dictionaryKey == null || dictionaryValue == null)
+                    return;
 
-                return result;
-            }
-            return base.ConvertFrom(context, culture, value);
+                if (!result.ContainsKey((K)dictionaryKey))
+                    result.Add((K)dictionaryKey, (V)dictionaryValue);
+            });
+
+            return result;
         }
 
         /// <summary>
@@ -90,27 +93,26 @@ namespace Nop.Core.ComponentModel
         /// <returns>Result</returns>
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
-            if (destinationType == typeof(string))
-            {
-                string result = string.Empty;
-                if (value != null)
-                {
-                    //we don't use string.Join() because it doesn't support invariant culture
-                    int counter = 0;
-                    var dictionary = (IDictionary<K, V>)value;
-                    foreach (var keyValue in dictionary)
-                    {
-                        result += string.Format("{0}, {1}", Convert.ToString(keyValue.Key, CultureInfo.InvariantCulture), Convert.ToString(keyValue.Value, CultureInfo.InvariantCulture));
-                        //don't add ; after the last element
-                        if (counter != dictionary.Count - 1)
-                            result += ";";
-                        counter++;
-                    }
-                }
+            if (destinationType != typeof(string))
+                return base.ConvertTo(context, culture, value, destinationType);
+
+            var result = string.Empty;
+            if (value == null)
                 return result;
+
+            //we don't use string.Join() because it doesn't support invariant culture
+            var counter = 0;
+            var dictionary = (IDictionary<K, V>)value;
+            foreach (var keyValue in dictionary)
+            {
+                result += $"{Convert.ToString(keyValue.Key, CultureInfo.InvariantCulture)}, {Convert.ToString(keyValue.Value, CultureInfo.InvariantCulture)}";
+                //don't add ; after the last element
+                if (counter != dictionary.Count - 1)
+                    result += ";";
+                counter++;
             }
 
-            return base.ConvertTo(context, culture, value, destinationType);
+            return result;
         }
     }
 }

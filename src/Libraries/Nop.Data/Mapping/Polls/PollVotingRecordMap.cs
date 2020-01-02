@@ -1,21 +1,38 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nop.Core.Domain.Polls;
 
 namespace Nop.Data.Mapping.Polls
 {
+    /// <summary>
+    /// Represents a poll voting record mapping configuration
+    /// </summary>
     public partial class PollVotingRecordMap : NopEntityTypeConfiguration<PollVotingRecord>
     {
-        public PollVotingRecordMap()
+        #region Methods
+
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<PollVotingRecord> builder)
         {
-            this.ToTable("PollVotingRecord");
-            this.HasKey(pr => pr.Id);
+            builder.ToTable(nameof(PollVotingRecord));
+            builder.HasKey(record => record.Id);
 
-            this.HasRequired(pvr => pvr.PollAnswer)
-                .WithMany(pa => pa.PollVotingRecords)
-                .HasForeignKey(pvr => pvr.PollAnswerId);
+            builder.HasOne(record => record.PollAnswer)
+                .WithMany(pollAnswer => pollAnswer.PollVotingRecords)
+                .HasForeignKey(record => record.PollAnswerId)
+                .IsRequired();
 
-            this.HasRequired(cc => cc.Customer)
+            builder.HasOne(record => record.Customer)
                 .WithMany()
-                .HasForeignKey(cc => cc.CustomerId);
+                .HasForeignKey(record => record.CustomerId)
+                .IsRequired();
+
+            base.Configure(builder);
         }
+
+        #endregion
     }
 }

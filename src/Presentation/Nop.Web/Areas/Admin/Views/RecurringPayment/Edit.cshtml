@@ -1,8 +1,8 @@
-﻿@model RecurringPaymentModel
+@model RecurringPaymentModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.RecurringPayments.EditPaymentDetails").Text;
+    ViewBag.PageTitle = T("Admin.RecurringPayments.EditPaymentDetails").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Recurring payments");
 }
@@ -29,6 +29,7 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReccuringPaymentDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

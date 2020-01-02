@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION [dbo].[nop_splitstring_to_table]
+﻿CREATE FUNCTION [nop_splitstring_to_table]
 (
     @string NVARCHAR(MAX),
     @delimiter CHAR(1)
@@ -23,61 +23,7 @@ BEGIN
 END
 GO
 
-
-
-CREATE FUNCTION [dbo].[nop_getnotnullnotempty]
-(
-    @p1 nvarchar(max) = null, 
-    @p2 nvarchar(max) = null
-)
-RETURNS nvarchar(max)
-AS
-BEGIN
-    IF @p1 IS NULL
-        return @p2
-    IF @p1 =''
-        return @p2
-
-    return @p1
-END
-GO
-
-
-
-CREATE FUNCTION [dbo].[nop_getprimarykey_indexname]
-(
-    @table_name nvarchar(1000) = null
-)
-RETURNS nvarchar(1000)
-AS
-BEGIN
-	DECLARE @index_name nvarchar(1000)
-
-    SELECT @index_name = i.name
-	FROM sys.tables AS tbl
-	INNER JOIN sys.indexes AS i ON (i.index_id > 0 and i.is_hypothetical = 0) AND (i.object_id=tbl.object_id)
-	WHERE (i.is_unique=1 and i.is_disabled=0) and (tbl.name=@table_name)
-
-    RETURN @index_name
-END
-GO
-
-
-CREATE FUNCTION [dbo].[nop_padright]
-(
-    @source INT, 
-    @symbol NVARCHAR(MAX), 
-    @length INT
-)
-RETURNS NVARCHAR(MAX)
-AS
-BEGIN
-    RETURN RIGHT(REPLICATE(@symbol, @length)+ RTRIM(CAST(@source AS NVARCHAR(MAX))), @length)
-END
-GO
-
-
-CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
+CREATE PROCEDURE [ProductLoadAllPaged]
 (
 	@CategoryIds		nvarchar(MAX) = null,	--a list of category IDs (comma-separated list). e.g. 1,2,3
 	@ManufacturerId		int = 0,
@@ -101,7 +47,7 @@ CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 	@FilteredSpecs		nvarchar(MAX) = null,	--filter by specification attribute options (comma-separated list of IDs). e.g. 14,15,16
 	@LanguageId			int = 0,
 	@OrderBy			int = 0, --0 - position, 5 - Name: A to Z, 6 - Name: Z to A, 10 - Price: Low to High, 11 - Price: High to Low, 15 - creation date
-	@AllowedCustomerRoleIds	nvarchar(MAX) = null,	--a list of customer role IDs (comma-separated list) for which a product should be shown (if a subjet to ACL)
+	@AllowedCustomerRoleIds	nvarchar(MAX) = null,	--a list of customer role IDs (comma-separated list) for which a product should be shown (if a subject to ACL)
 	@PageIndex			int = 0, 
 	@PageSize			int = 2147483644,
 	@ShowHidden			bit = 0,
@@ -384,21 +330,21 @@ BEGIN
 	IF @CategoryIdsCount > 0
 	BEGIN
 		SET @sql = @sql + '
-		LEFT JOIN Product_Category_Mapping pcm with (NOLOCK)
+		INNER JOIN Product_Category_Mapping pcm with (NOLOCK)
 			ON p.Id = pcm.ProductId'
 	END
 	
 	IF @ManufacturerId > 0
 	BEGIN
 		SET @sql = @sql + '
-		LEFT JOIN Product_Manufacturer_Mapping pmm with (NOLOCK)
+		INNER JOIN Product_Manufacturer_Mapping pmm with (NOLOCK)
 			ON p.Id = pmm.ProductId'
 	END
 	
 	IF ISNULL(@ProductTagId, 0) != 0
 	BEGIN
 		SET @sql = @sql + '
-		LEFT JOIN Product_ProductTag_Mapping pptm with (NOLOCK)
+		INNER JOIN Product_ProductTag_Mapping pptm with (NOLOCK)
 			ON p.Id = pptm.Product_Id'
 	END
 	
@@ -418,8 +364,12 @@ BEGIN
 	IF @CategoryIdsCount > 0
 	BEGIN
 		SET @sql = @sql + '
-		AND pcm.CategoryId IN (SELECT CategoryId FROM #FilteredCategoryIds)'
+		AND pcm.CategoryId IN ('
 		
+		SET @sql = @sql + + CAST(@CategoryIds AS nvarchar(max))
+
+		SET @sql = @sql + ')'
+
 		IF @FeaturedProducts IS NOT NULL
 		BEGIN
 			SET @sql = @sql + '
@@ -707,14 +657,26 @@ BEGIN
 END
 GO
 
-
-CREATE PROCEDURE [dbo].[ProductTagCountLoadAll]
+CREATE PROCEDURE [ProductTagCountLoadAll]
 (
-	@StoreId int
+	@StoreId int,
+	@AllowedCustomerRoleIds	nvarchar(MAX) = null	--a list of customer role IDs (comma-separated list) for which a product should be shown (if a subject to ACL)
 )
 AS
 BEGIN
 	SET NOCOUNT ON
+		
+	--filter by customer role IDs (access control list)
+	SET @AllowedCustomerRoleIds = isnull(@AllowedCustomerRoleIds, '')	
+	CREATE TABLE #FilteredCustomerRoleIds
+	(
+		CustomerRoleId int not null
+	)
+		
+	INSERT INTO #FilteredCustomerRoleIds (CustomerRoleId)
+	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@AllowedCustomerRoleIds, ',')
+	DECLARE @FilteredCustomerRoleIdsCount int	
+	SET @FilteredCustomerRoleIdsCount = (SELECT COUNT(1) FROM #FilteredCustomerRoleIds)
 	
 	SELECT pt.Id as [ProductTagId], COUNT(p.Id) as [ProductCount]
 	FROM ProductTag pt with (NOLOCK)
@@ -727,12 +689,21 @@ BEGIN
 			SELECT 1 FROM [StoreMapping] sm with (NOLOCK)
 			WHERE [sm].EntityId = p.Id AND [sm].EntityName = 'Product' and [sm].StoreId=@StoreId
 			)))
+		AND (@FilteredCustomerRoleIdsCount = 0 or (p.SubjectToAcl = 0 OR EXISTS (
+			SELECT 1 FROM #FilteredCustomerRoleIds [fcr]
+			WHERE
+				[fcr].CustomerRoleId IN (
+					SELECT [acl].CustomerRoleId
+					FROM [AclRecord] acl with (NOLOCK)
+					WHERE [acl].EntityId = p.Id AND [acl].EntityName = 'Product'
+				))
+			))
 	GROUP BY pt.Id
 	ORDER BY pt.Id
 END
 GO
 
-CREATE PROCEDURE [dbo].[FullText_IsSupported]
+CREATE PROCEDURE [FullText_IsSupported]
 AS
 BEGIN	
 	EXEC('
@@ -743,45 +714,58 @@ BEGIN
 		ELSE 0
 		END
 	ELSE 0
-	END')
+	END as Value')
 END
 GO
 
 
 
-CREATE PROCEDURE [dbo].[FullText_Enable]
+CREATE PROCEDURE [FullText_Enable]
 AS
 BEGIN
 	--create catalog
 	EXEC('
 	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_catalogs WHERE [name] = ''nopCommerceFullTextCatalog'')
 		CREATE FULLTEXT CATALOG [nopCommerceFullTextCatalog] AS DEFAULT')
+
+	DECLARE @SQL nvarchar(500);
+	DECLARE @index_name nvarchar(1000)
+	DECLARE @ParmDefinition nvarchar(500);
+
+	SELECT @SQL = N'SELECT @index_name_out = i.name FROM sys.tables AS tbl INNER JOIN sys.indexes AS i ON (i.index_id > 0 and i.is_hypothetical = 0) AND (i.object_id=tbl.object_id) WHERE (i.is_unique=1 and i.is_disabled=0) and (tbl.name=@table_name)'
+	SELECT @ParmDefinition = N'@table_name varchar(100), @index_name_out nvarchar(1000) OUTPUT'
+
+	EXEC sp_executesql @SQL, @ParmDefinition, @table_name = 'Product', @index_name_out=@index_name OUTPUT
 	
 	--create indexes
 	DECLARE @create_index_text nvarchar(4000)
 	SET @create_index_text = '
 	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[Product]''))
 		CREATE FULLTEXT INDEX ON [Product]([Name], [ShortDescription], [FullDescription])
-		KEY INDEX [' + dbo.[nop_getprimarykey_indexname] ('Product') +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
+		KEY INDEX [' + @index_name +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
 	EXEC(@create_index_text)
+
+	EXEC sp_executesql @SQL, @ParmDefinition, @table_name = 'LocalizedProperty', @index_name_out=@index_name OUTPUT
 	
 	SET @create_index_text = '
 	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[LocalizedProperty]''))
 		CREATE FULLTEXT INDEX ON [LocalizedProperty]([LocaleValue])
-		KEY INDEX [' + dbo.[nop_getprimarykey_indexname] ('LocalizedProperty') +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
+		KEY INDEX [' + @index_name +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
 	EXEC(@create_index_text)
+
+	EXEC sp_executesql @SQL, @ParmDefinition, @table_name = 'ProductTag', @index_name_out=@index_name OUTPUT
 
 	SET @create_index_text = '
 	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[ProductTag]''))
 		CREATE FULLTEXT INDEX ON [ProductTag]([Name])
-		KEY INDEX [' + dbo.[nop_getprimarykey_indexname] ('ProductTag') +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
+		KEY INDEX [' + @index_name +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
 	EXEC(@create_index_text)
 END
 GO
 
 
 
-CREATE PROCEDURE [dbo].[FullText_Disable]
+CREATE PROCEDURE [FullText_Disable]
 AS
 BEGIN
 	EXEC('
@@ -809,7 +793,7 @@ END
 GO
 
 
-CREATE PROCEDURE [dbo].[LanguagePackImport]
+CREATE PROCEDURE [LanguagePackImport]
 (
 	@LanguageId int,
 	@XmlPackage xml,
@@ -876,7 +860,7 @@ END
 GO
 
 
-CREATE PROCEDURE [dbo].[DeleteGuests]
+CREATE PROCEDURE [DeleteGuests]
 (
 	@OnlyWithoutShoppingCart bit = 1,
 	@CreatedFromUtc datetime,
@@ -888,46 +872,49 @@ BEGIN
 	CREATE TABLE #tmp_guests (CustomerId int)
 		
 	INSERT #tmp_guests (CustomerId)
-	SELECT [Id] FROM [Customer] c with (NOLOCK)
-	WHERE
-	--created from
-	((@CreatedFromUtc is null) OR (c.[CreatedOnUtc] > @CreatedFromUtc))
-	AND
-	--created to
-	((@CreatedToUtc is null) OR (c.[CreatedOnUtc] < @CreatedToUtc))
-	AND
-	--shopping cart items
-	((@OnlyWithoutShoppingCart=0) OR (NOT EXISTS(SELECT 1 FROM [ShoppingCartItem] sci with (NOLOCK) inner join [Customer] with (NOLOCK) on sci.[CustomerId]=c.[Id])))
-	AND
-	--guests only
-	(EXISTS(SELECT 1 FROM [Customer_CustomerRole_Mapping] ccrm with (NOLOCK) inner join [Customer] with (NOLOCK) on ccrm.[Customer_Id]=c.[Id] inner join [CustomerRole] cr with (NOLOCK) on cr.[Id]=ccrm.[CustomerRole_Id] WHERE cr.[SystemName] = N'Guests'))
-	AND
-	--no orders
-	(NOT EXISTS(SELECT 1 FROM [Order] o with (NOLOCK) inner join [Customer] with (NOLOCK) on o.[CustomerId]=c.[Id]))
-	AND
-	--no blog comments
-	(NOT EXISTS(SELECT 1 FROM [BlogComment] bc with (NOLOCK) inner join [Customer] with (NOLOCK) on bc.[CustomerId]=c.[Id]))
-	AND
-	--no news comments
-	(NOT EXISTS(SELECT 1 FROM [NewsComment] nc  with (NOLOCK)inner join [Customer] with (NOLOCK) on nc.[CustomerId]=c.[Id]))
-	AND
-	--no product reviews
-	(NOT EXISTS(SELECT 1 FROM [ProductReview] pr with (NOLOCK) inner join [Customer] with (NOLOCK) on pr.[CustomerId]=c.[Id]))
-	AND
-	--no product reviews helpfulness
-	(NOT EXISTS(SELECT 1 FROM [ProductReviewHelpfulness] prh with (NOLOCK) inner join [Customer] with (NOLOCK) on prh.[CustomerId]=c.[Id]))
-	AND
-	--no poll voting
-	(NOT EXISTS(SELECT 1 FROM [PollVotingRecord] pvr with (NOLOCK) inner join [Customer] with (NOLOCK) on pvr.[CustomerId]=c.[Id]))
-	AND
-	--no forum topics 
-	(NOT EXISTS(SELECT 1 FROM [Forums_Topic] ft with (NOLOCK) inner join [Customer] with (NOLOCK) on ft.[CustomerId]=c.[Id]))
-	AND
-	--no forum posts 
-	(NOT EXISTS(SELECT 1 FROM [Forums_Post] fp with (NOLOCK) inner join [Customer] with (NOLOCK) on fp.[CustomerId]=c.[Id]))
-	AND
-	--no system accounts
-	(c.IsSystemAccount = 0)
+	SELECT c.[Id] 
+	FROM [Customer] c with (NOLOCK)
+		LEFT JOIN [ShoppingCartItem] sci with (NOLOCK) ON sci.[CustomerId] = c.[Id]
+		INNER JOIN (
+			--guests only
+			SELECT ccrm.[Customer_Id] 
+			FROM [Customer_CustomerRole_Mapping] ccrm with (NOLOCK)
+				INNER JOIN [CustomerRole] cr with (NOLOCK) ON cr.[Id] = ccrm.[CustomerRole_Id]
+			WHERE cr.[SystemName] = N'Guests'
+		) g ON g.[Customer_Id] = c.[Id]
+		LEFT JOIN [Order] o with (NOLOCK) ON o.[CustomerId] = c.[Id]
+		LEFT JOIN [BlogComment] bc with (NOLOCK) ON bc.[CustomerId] = c.[Id]
+		LEFT JOIN [NewsComment] nc with (NOLOCK) ON nc.[CustomerId] = c.[Id]
+		LEFT JOIN [ProductReview] pr with (NOLOCK) ON pr.[CustomerId] = c.[Id]
+		LEFT JOIN [ProductReviewHelpfulness] prh with (NOLOCK) ON prh.[CustomerId] = c.[Id]
+		LEFT JOIN [PollVotingRecord] pvr with (NOLOCK) ON pvr.[CustomerId] = c.[Id]
+		LEFT JOIN [Forums_Topic] ft with (NOLOCK) ON ft.[CustomerId] = c.[Id]
+		LEFT JOIN [Forums_Post] fp with (NOLOCK) ON fp.[CustomerId] = c.[Id]
+	WHERE 1 = 1
+		--no orders
+		AND (o.Id is null)
+		--no blog comments
+		AND (bc.Id is null)
+		--no news comments
+		AND (nc.Id is null)
+		--no product reviews
+		AND (pr.Id is null)
+		--no product reviews helpfulness
+		AND (prh.Id is null)
+		--no poll voting
+		AND (pvr.Id is null)
+		--no forum topics
+		AND (ft.Id is null)
+		--no forum topics
+		AND (fp.Id is null)
+		--no system accounts
+		AND (c.IsSystemAccount = 0)
+		--created from
+		AND ((@CreatedFromUtc is null) OR (c.[CreatedOnUtc] > @CreatedFromUtc))
+		--created to
+		AND ((@CreatedToUtc is null) OR (c.[CreatedOnUtc] < @CreatedToUtc))
+		--shopping cart items
+		AND ((@OnlyWithoutShoppingCart = 0) OR (sci.Id is null))
 	
 	--delete guests
 	DELETE [Customer]
@@ -947,7 +934,7 @@ END
 GO
 
 
-CREATE PROCEDURE [dbo].[CategoryLoadAllPaged]
+CREATE PROCEDURE [CategoryLoadAllPaged]
 (
     @ShowHidden         BIT = 0,
     @Name               NVARCHAR(MAX) = NULL,
@@ -984,10 +971,12 @@ BEGIN
 
     --get category tree
     ;WITH [CategoryTree]
-    AS (SELECT [Category].[Id] AS [Id], dbo.[nop_padright] ([Category].[DisplayOrder], '0', @lengthOrder) + '-' + dbo.[nop_padright] ([Category].[Id], '0', @lengthId) AS [Order]
+    AS (SELECT [Category].[Id] AS [Id], 
+		(select RIGHT(REPLICATE('0', @lengthOrder)+ RTRIM(CAST([Category].[DisplayOrder] AS NVARCHAR(MAX))), @lengthOrder)) + '-' + (select RIGHT(REPLICATE('0', @lengthId)+ RTRIM(CAST([Category].[Id] AS NVARCHAR(MAX))), @lengthId))  AS [Order]
         FROM [Category] WHERE [Category].[ParentCategoryId] = 0
         UNION ALL
-        SELECT [Category].[Id] AS [Id], [CategoryTree].[Order] + '|' + dbo.[nop_padright] ([Category].[DisplayOrder], '0', @lengthOrder) + '-' + dbo.[nop_padright] ([Category].[Id], '0', @lengthId) AS [Order]
+        SELECT [Category].[Id] AS [Id], 
+		[CategoryTree].[Order] + '|' + (select RIGHT(REPLICATE('0', @lengthOrder)+ RTRIM(CAST([Category].[DisplayOrder] AS NVARCHAR(MAX))), @lengthOrder)) + '-' + (select RIGHT(REPLICATE('0', @lengthId)+ RTRIM(CAST([Category].[Id] AS NVARCHAR(MAX))), @lengthId))  AS [Order]
         FROM [Category]
         INNER JOIN [CategoryTree] ON [CategoryTree].[Id] = [Category].[ParentCategoryId])
     INSERT INTO #OrderedCategoryIds ([CategoryId])

@@ -22,7 +22,7 @@ namespace Nop.Services.ExportImport
         public decimal PriceAdjustment { get; set; }
         public decimal Cost { get; set; }
         public int DisplayOrder { get; set; }
-
+        public bool PriceAdjustmentUsePercentage { get; set; }
         public static int ProducAttributeCellOffset = 2;
     }
 }

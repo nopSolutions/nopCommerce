@@ -1,19 +1,25 @@
 ﻿using System.Collections.Generic;
-using FluentValidation.Attributes;
-using Nop.Web.Areas.Admin.Validators.Catalog;
-using Nop.Web.Framework.Localization;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
-    [Validator(typeof(ProductTagValidator))]
+    /// <summary>
+    /// Represents a product tag model
+    /// </summary>
     public partial class ProductTagModel : BaseNopEntityModel, ILocalizedModel<ProductTagLocalizedModel>
     {
+        #region Ctor
+
         public ProductTagModel()
         {
             Locales = new List<ProductTagLocalizedModel>();
         }
+        
+        #endregion
+
+        #region Properties
+
         [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.Name")]
         public string Name { get; set; }
 
@@ -21,9 +27,11 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         public int ProductCount { get; set; }
 
         public IList<ProductTagLocalizedModel> Locales { get; set; }
+
+        #endregion
     }
 
-    public partial class ProductTagLocalizedModel : ILocalizedModelLocal
+    public partial class ProductTagLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
 

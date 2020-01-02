@@ -3,6 +3,9 @@ using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Shipping
 {
+    /// <summary>
+    /// Shipping settings
+    /// </summary>
     public class ShippingSettings : ISettings
     {
         public ShippingSettings()
@@ -29,7 +32,7 @@ namespace Nop.Core.Domain.Shipping
         /// <summary>
         /// Gets or sets a value indicating whether customers can choose "Pick Up in Store" option during checkout (displayed on the "billing address" checkout step)
         /// </summary>
-        public bool AllowPickUpInStore { get; set; }
+        public bool AllowPickupInStore { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether display a pickup points in the map
@@ -37,10 +40,15 @@ namespace Nop.Core.Domain.Shipping
         public bool DisplayPickupPointsOnMap { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether ignore additional shipping charge for pick up in store
+        /// </summary>
+        public bool IgnoreAdditionalShippingChargeForPickupInStore { get; set; }
+
+        /// <summary>
         /// Gets or sets Google map API key
         /// </summary>
         public string GoogleMapsApiKey { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether the system should use warehouse location when requesting shipping rates
         /// This is useful when you ship from multiple warehouses
@@ -94,7 +102,7 @@ namespace Nop.Core.Domain.Shipping
         public int ShippingOriginAddressId { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether we should return valid options if there are any (no matter of the errors returned by other shipping rate compuation methods).
+        /// Gets or sets a value indicating whether we should return valid options if there are any (no matter of the errors returned by other shipping rate computation methods).
         /// </summary>
         public bool ReturnValidOptionsIfThereAreAny { get; set; }
 
@@ -112,5 +120,10 @@ namespace Nop.Core.Domain.Shipping
         /// Gets or sets a value indicating whether to consider associated products dimensions and weight on shipping, false if main product includes them
         /// </summary>
         public bool ConsiderAssociatedProductsDimensions { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to send all the items of a product marked as "Ship Separately" separately; if false, all the items of a such product will be shipped in a single box, but separately from the other order items
+        /// </summary>
+        public bool ShipSeparatelyOneItemEach { get; set; }
     }
 }

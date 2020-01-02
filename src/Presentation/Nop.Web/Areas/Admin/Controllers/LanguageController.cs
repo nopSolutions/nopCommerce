@@ -2,108 +2,75 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Core.Domain.Localization;
-using Nop.Services.Directory;
+using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Stores;
-using Nop.Web.Framework.Extensions;
-using Nop.Web.Framework.Kendoui;
+using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
+using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class LanguageController : BaseAdminController
     {
+        #region Const
+
+        private const string FLAGS_PATH = @"images\flags";
+
+        #endregion
+
         #region Fields
 
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly ILanguageModelFactory _languageModelFactory;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
-        private readonly ICurrencyService _currencyService;
-        private readonly IStoreService _storeService;
-        private readonly IStoreMappingService _storeMappingService;
+        private readonly INopFileProvider _fileProvider;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IStoreService _storeService;
 
         #endregion
 
         #region Ctor
 
-        public LanguageController(ILanguageService languageService,
+        public LanguageController(ICustomerActivityService customerActivityService,
+            ILanguageModelFactory languageModelFactory,
+            ILanguageService languageService,
             ILocalizationService localizationService,
-            ICurrencyService currencyService,
-            IStoreService storeService,
-            IStoreMappingService storeMappingService,
+            INopFileProvider fileProvider,
+            INotificationService notificationService,
             IPermissionService permissionService,
-            ICustomerActivityService customerActivityService,
-            IHostingEnvironment hostingEnvironment)
+            IStoreMappingService storeMappingService,
+            IStoreService storeService)
         {
-            this._localizationService = localizationService;
-            this._languageService = languageService;
-            this._currencyService = currencyService;
-            this._storeService = storeService;
-            this._storeMappingService = storeMappingService;
-            this._permissionService = permissionService;
-            this._customerActivityService = customerActivityService;
-            this._hostingEnvironment = hostingEnvironment;
+            _customerActivityService = customerActivityService;
+            _languageModelFactory = languageModelFactory;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _fileProvider = fileProvider;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _storeMappingService = storeMappingService;
+            _storeService = storeService;
         }
 
         #endregion
 
         #region Utilities
-        
-        protected virtual void PrepareStoresMappingModel(LanguageModel model, Language language, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
 
-            if (!excludeProperties && language != null)
-                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(language).ToList();
-
-            var allStores = _storeService.GetAllStores();
-            foreach (var store in allStores)
-            {
-                model.AvailableStores.Add(new SelectListItem
-                {
-                    Text = store.Name,
-                    Value = store.Id.ToString(),
-                    Selected = model.SelectedStoreIds.Contains(store.Id)
-                });
-            }
-        }
-        
-        protected virtual void PrepareCurrenciesModel(LanguageModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //templates
-            model.AvailableCurrencies.Add(new SelectListItem
-            {
-                Text = "---",
-                Value = "0"
-            });
-            var currencies = _currencyService.GetAllCurrencies(true);
-            foreach (var currency in currencies)
-            {
-                model.AvailableCurrencies.Add(new SelectListItem
-                {
-                    Text = currency.Name,
-                    Value = currency.Id.ToString()
-                });
-            }
-        }
-        
         protected virtual void SaveStoreMappings(Language language, LanguageModel model)
         {
             language.LimitedToStores = model.SelectedStoreIds.Any();
@@ -142,23 +109,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-            return View();
+            //prepare model
+            var model = _languageModelFactory.PrepareLanguageSearchModel(new LanguageSearchModel());
+
+            return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(DataSourceRequest command)
+        public virtual IActionResult List(LanguageSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
-            var languages = _languageService.GetAllLanguages(true);
-            var gridModel = new DataSourceResult
-            {
-                Data = languages.Select(x => x.ToModel()),
-                Total = languages.Count()
-            };
+            //prepare model
+            var model = _languageModelFactory.PrepareLanguageListModel(searchModel);
 
-            return Json(gridModel);
+            return Json(model);
         }
 
         public virtual IActionResult Create()
@@ -166,13 +132,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-            var model = new LanguageModel();
-            //Stores
-            PrepareStoresMappingModel(model, null, false);
-            //currencies
-            PrepareCurrenciesModel(model);
-            //default values
-            model.Published = true;
+            //prepare model
+            var model = _languageModelFactory.PrepareLanguageModel(new LanguageModel(), null);
+
             return View(model);
         }
 
@@ -184,34 +146,28 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var language = model.ToEntity();
+                var language = model.ToEntity<Language>();
                 _languageService.InsertLanguage(language);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewLanguage", _localizationService.GetResource("ActivityLog.AddNewLanguage"), language.Id);
+                _customerActivityService.InsertActivity("AddNewLanguage",
+                    string.Format(_localizationService.GetResource("ActivityLog.AddNewLanguage"), language.Id), language);
 
                 //Stores
                 SaveStoreMappings(language, model);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Added"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                if (!continueEditing)
+                    return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new { id = language.Id });
-                }
-                return RedirectToAction("List");
+                return RedirectToAction("Edit", new { id = language.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
+            model = _languageModelFactory.PrepareLanguageModel(model, null, true);
 
-            //Stores
-            PrepareStoresMappingModel(model, null, true);
-            //currencies
-            PrepareCurrenciesModel(model);
-
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -220,16 +176,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-            var language = _languageService.GetLanguageById(id);
+            //try to get a language with the specified id
+            var language = _languageService.GetLanguageById(id, false);
             if (language == null)
-                //No language found with the specified id
                 return RedirectToAction("List");
-            
-            var model = language.ToModel();
-            //Stores
-            PrepareStoresMappingModel(model, language, false);
-            //currencies
-            PrepareCurrenciesModel(model);
+
+            //prepare model
+            var model = _languageModelFactory.PrepareLanguageModel(null, language);
 
             return View(model);
         }
@@ -240,19 +193,18 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-            var language = _languageService.GetLanguageById(model.Id);
+            //try to get a language with the specified id
+            var language = _languageService.GetLanguageById(model.Id, false);
             if (language == null)
-                //No language found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
                 //ensure we have at least one published language
-                var allLanguages = _languageService.GetAllLanguages();
-                if (allLanguages.Count == 1 && allLanguages[0].Id == language.Id &&
-                    !model.Published)
+                var allLanguages = _languageService.GetAllLanguages(loadCacheableCopy: false);
+                if (allLanguages.Count == 1 && allLanguages[0].Id == language.Id && !model.Published)
                 {
-                    ErrorNotification(_localizationService.GetResource("Admin.Configuration.Languages.PublishedLanguageRequired"));
+                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Configuration.Languages.PublishedLanguageRequired"));
                     return RedirectToAction("Edit", new { id = language.Id });
                 }
 
@@ -261,30 +213,25 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _languageService.UpdateLanguage(language);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditLanguage", _localizationService.GetResource("ActivityLog.EditLanguage"), language.Id);
+                _customerActivityService.InsertActivity("EditLanguage",
+                    string.Format(_localizationService.GetResource("ActivityLog.EditLanguage"), language.Id), language);
 
                 //Stores
                 SaveStoreMappings(language, model);
 
                 //notification
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Updated"));
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabName();
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Updated"));
 
-                    return RedirectToAction("Edit", new { id = language.Id });
-                }
-                return RedirectToAction("List");
+                if (!continueEditing)
+                    return RedirectToAction("List");
+
+                return RedirectToAction("Edit", new { id = language.Id });
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
+            model = _languageModelFactory.PrepareLanguageModel(model, language, true);
 
-            //Stores
-            PrepareStoresMappingModel(model, language, true);
-            //currencies
-            PrepareCurrenciesModel(model);
-
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -294,16 +241,16 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-            var language = _languageService.GetLanguageById(id);
+            //try to get a language with the specified id
+            var language = _languageService.GetLanguageById(id, false);
             if (language == null)
-                //No language found with the specified id
                 return RedirectToAction("List");
 
             //ensure we have at least one published language
-            var allLanguages = _languageService.GetAllLanguages();
+            var allLanguages = _languageService.GetAllLanguages(loadCacheableCopy: false);
             if (allLanguages.Count == 1 && allLanguages[0].Id == language.Id)
             {
-                ErrorNotification(_localizationService.GetResource("Admin.Configuration.Languages.PublishedLanguageRequired"));
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Configuration.Languages.PublishedLanguageRequired"));
                 return RedirectToAction("Edit", new { id = language.Id });
             }
 
@@ -311,10 +258,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             _languageService.DeleteLanguage(language);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteLanguage", _localizationService.GetResource("ActivityLog.DeleteLanguage"), language.Id);
+            _customerActivityService.InsertActivity("DeleteLanguage",
+                string.Format(_localizationService.GetResource("ActivityLog.DeleteLanguage"), language.Id), language);
 
             //notification
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Deleted"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Deleted"));
+
             return RedirectToAction("List");
         }
 
@@ -324,9 +273,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return Json("Access denied");
 
-            var flagNames = Directory
-                .EnumerateFiles(Path.Combine(_hostingEnvironment.WebRootPath, "images\\flags"), "*.png", SearchOption.TopDirectoryOnly)
-                .Select(Path.GetFileName)
+            var flagNames = _fileProvider
+                .EnumerateFiles(_fileProvider.GetAbsolutePath(FLAGS_PATH), "*.png")
+                .Select(_fileProvider.GetFileName)
                 .ToList();
 
             var availableFlagFileNames = flagNames.Select(flagName => new SelectListItem
@@ -343,103 +292,91 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Resources
 
         [HttpPost]
-        public virtual IActionResult Resources(int languageId, DataSourceRequest command, LanguageResourcesListModel model)
+        public virtual IActionResult Resources(LocaleResourceSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
-            var query = _localizationService
-                .GetAllResourceValues(languageId)
-                .OrderBy(x => x.Key)
-                .AsQueryable();
+            //try to get a language with the specified id
+            var language = _languageService.GetLanguageById(searchModel.LanguageId, false);
+            if (language == null)
+                return RedirectToAction("List");
 
-            if (!string.IsNullOrEmpty(model.SearchResourceName))
-                query = query.Where(l => l.Key.ToLowerInvariant().Contains(model.SearchResourceName.ToLowerInvariant()));
-            if (!string.IsNullOrEmpty(model.SearchResourceValue))
-                query = query.Where(l => l.Value.Value.ToLowerInvariant().Contains(model.SearchResourceValue.ToLowerInvariant()));
+            //prepare model
+            var model = _languageModelFactory.PrepareLocaleResourceListModel(searchModel, language);
 
-            var resources = query
-                .Select(x => new LanguageResourceModel
-                {
-                    LanguageId = languageId,
-                    Id = x.Value.Key,
-                    Name = x.Key,
-                    Value = x.Value.Value,
-                });
-
-            var gridModel = new DataSourceResult
-            {
-                Data = resources.PagedForCommand(command),
-                Total = resources.Count()
-            };
-
-            return Json(gridModel);
+            return Json(model);
         }
 
+        //ValidateAttribute is used to force model validation
         [HttpPost]
-        public virtual IActionResult ResourceUpdate(LanguageResourceModel model)
+        public virtual IActionResult ResourceUpdate([Validate] LocaleResourceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-            if (model.Name != null)
-                model.Name = model.Name.Trim();
-            if (model.Value != null)
-                model.Value = model.Value.Trim();
+            if (model.ResourceName != null)
+                model.ResourceName = model.ResourceName.Trim();
+            if (model.ResourceValue != null)
+                model.ResourceValue = model.ResourceValue.Trim();
 
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
             }
 
             var resource = _localizationService.GetLocaleStringResourceById(model.Id);
             // if the resourceName changed, ensure it isn't being used by another resource
-            if (!resource.ResourceName.Equals(model.Name, StringComparison.InvariantCultureIgnoreCase))
+            if (!resource.ResourceName.Equals(model.ResourceName, StringComparison.InvariantCultureIgnoreCase))
             {
-                var res = _localizationService.GetLocaleStringResourceByName(model.Name, model.LanguageId, false);
+                var res = _localizationService.GetLocaleStringResourceByName(model.ResourceName, model.LanguageId, false);
                 if (res != null && res.Id != resource.Id)
                 {
-                    return Json(new DataSourceResult { Errors = string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), res.ResourceName) });
+                    return ErrorJson(string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), res.ResourceName));
                 }
             }
 
-            resource.ResourceName = model.Name;
-            resource.ResourceValue = model.Value;
+            //fill entity from model
+            resource = model.ToEntity(resource);
+
             _localizationService.UpdateLocaleStringResource(resource);
 
             return new NullJsonResult();
         }
 
+        //ValidateAttribute is used to force model validation
         [HttpPost]
-        public virtual IActionResult ResourceAdd(int languageId,LanguageResourceModel model)
+        public virtual IActionResult ResourceAdd(int languageId, [Validate] LocaleResourceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-            if (model.Name != null)
-                model.Name = model.Name.Trim();
-            if (model.Value != null)
-                model.Value = model.Value.Trim();
+            if (model.ResourceName != null)
+                model.ResourceName = model.ResourceName.Trim();
+            if (model.ResourceValue != null)
+                model.ResourceValue = model.ResourceValue.Trim();
 
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
             }
 
-            var res = _localizationService.GetLocaleStringResourceByName(model.Name, model.LanguageId, false);
+            var res = _localizationService.GetLocaleStringResourceByName(model.ResourceName, model.LanguageId, false);
             if (res == null)
             {
-                var resource = new LocaleStringResource { LanguageId = languageId };
-                resource.ResourceName = model.Name;
-                resource.ResourceValue = model.Value;
+                //fill entity from model
+                var resource = model.ToEntity<LocaleStringResource>();
+
+                resource.LanguageId = languageId;
+
                 _localizationService.InsertLocaleStringResource(resource);
             }
             else
             {
-                return Json(new DataSourceResult { Errors = string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), model.Name) });
+                return ErrorJson(string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), model.ResourceName));
             }
 
-            return new NullJsonResult();
+            return Json(new { Result = true });
         }
 
         [HttpPost]
@@ -448,9 +385,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-            var resource = _localizationService.GetLocaleStringResourceById(id);
-            if (resource == null)
-                throw new ArgumentException("No resource found with the specified id");
+            //try to get a locale resource with the specified id
+            var resource = _localizationService.GetLocaleStringResourceById(id)
+                ?? throw new ArgumentException("No resource found with the specified id", nameof(id));
+
             _localizationService.DeleteLocaleStringResource(resource);
 
             return new NullJsonResult();
@@ -465,9 +403,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-            var language = _languageService.GetLanguageById(id);
+            //try to get a language with the specified id
+            var language = _languageService.GetLanguageById(id, false);
             if (language == null)
-                //No language found with the specified id
                 return RedirectToAction("List");
 
             try
@@ -477,7 +415,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("List");
             }
         }
@@ -488,9 +426,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-            var language = _languageService.GetLanguageById(id);
+            //try to get a language with the specified id
+            var language = _languageService.GetLanguageById(id, false);
             if (language == null)
-                //No language found with the specified id
                 return RedirectToAction("List");
 
             try
@@ -499,26 +437,23 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     using (var sr = new StreamReader(importxmlfile.OpenReadStream(), Encoding.UTF8))
                     {
-                        string content = sr.ReadToEnd();
-                        _localizationService.ImportResourcesFromXml(language, content);
+                        _localizationService.ImportResourcesFromXml(language, sr);
                     }
-
                 }
                 else
                 {
-                    ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
+                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
                     return RedirectToAction("Edit", new { id = language.Id });
                 }
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Imported"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Imported"));
                 return RedirectToAction("Edit", new { id = language.Id });
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
                 return RedirectToAction("Edit", new { id = language.Id });
             }
-
         }
 
         #endregion

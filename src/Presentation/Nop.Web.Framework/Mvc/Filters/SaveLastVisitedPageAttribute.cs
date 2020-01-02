@@ -14,12 +14,16 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public class SaveLastVisitedPageAttribute : TypeFilterAttribute
     {
+        #region Ctor
+
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         public SaveLastVisitedPageAttribute() : base(typeof(SaveLastVisitedPageFilter))
         {
         }
+
+        #endregion
 
         #region Nested filter
 
@@ -41,13 +45,13 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             public SaveLastVisitedPageFilter(CustomerSettings customerSettings,
                 IGenericAttributeService genericAttributeService,
-                IWebHelper webHelper, 
+                IWebHelper webHelper,
                 IWorkContext workContext)
             {
-                this._customerSettings = customerSettings;
-                this._genericAttributeService = genericAttributeService;
-                this._webHelper = webHelper;
-                this._workContext = workContext;
+                _customerSettings = customerSettings;
+                _genericAttributeService = genericAttributeService;
+                _webHelper = webHelper;
+                _workContext = workContext;
             }
 
             #endregion
@@ -60,14 +64,17 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">A context for action filters</param>
             public void OnActionExecuting(ActionExecutingContext context)
             {
-                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
-                    return;
+                if (context == null)
+                    throw new ArgumentNullException(nameof(context));
 
-                if (!DataSettingsHelper.DatabaseIsInstalled())
+                if (context.HttpContext.Request == null)
                     return;
 
                 //only in GET requests
-                if (context.HttpContext.Request.Method != WebRequestMethods.Http.Get)
+                if (!context.HttpContext.Request.Method.Equals(WebRequestMethods.Http.Get, StringComparison.InvariantCultureIgnoreCase))
+                    return;
+
+                if (!DataSettingsManager.DatabaseIsInstalled)
                     return;
 
                 //check whether we store last visited page URL
@@ -78,14 +85,14 @@ namespace Nop.Web.Framework.Mvc.Filters
                 var pageUrl = _webHelper.GetThisPageUrl(true);
                 if (string.IsNullOrEmpty(pageUrl))
                     return;
-                
+
                 //get previous last page
-                var previousPageUrl = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
+                var previousPageUrl = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer, NopCustomerDefaults.LastVisitedPageAttribute);
 
                 //save new one if don't match
                 if (!pageUrl.Equals(previousPageUrl, StringComparison.InvariantCultureIgnoreCase))
-                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastVisitedPage, pageUrl);
-                
+                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.LastVisitedPageAttribute, pageUrl);
+
             }
 
             /// <summary>

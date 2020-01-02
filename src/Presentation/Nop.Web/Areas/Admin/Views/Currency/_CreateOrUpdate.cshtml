@@ -8,6 +8,7 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CurrencyDetailsTop, additionalData = Model })
             <div class="panel panel-default">
                 <div class="panel-body">
                     @(Html.LocalizedEditor<CurrencyModel, CurrencyLocalizedModel>("currency-info-localized",
@@ -65,7 +66,7 @@
                                     .Select(x => new SelectListItem
                                     {
                                         Value = x.IetfLanguageTag,
-                                        Text = string.Format("{0}. {1}", x.EnglishName, x.IetfLanguageTag)
+                                        Text = $"{x.EnglishName}. {x.IetfLanguageTag}"
                                     })
                                     .ToList();
                                 cultures.Insert(0, new SelectListItem
@@ -100,7 +101,8 @@
                                             var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)')
                                                 .data("kendoMultiSelect");
                                             storesIdsInput.setOptions({
-                                                autoClose: false
+                                                autoClose: false,
+                                                filter: "contains"
                                             });
 
                                             @if (Model.AvailableStores.Count == 0)
@@ -163,6 +165,7 @@
                     }
                 </div>
             </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CurrencyDetailsBottom, additionalData = Model })
         </div>
     </div>
 </div>

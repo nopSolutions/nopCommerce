@@ -1,10 +1,10 @@
-﻿@model PluginModel
+@model PluginModel
 
 @{
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.Title = T("Admin.Configuration.Plugins.EditDetails").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Plugins.EditDetails").Text;
 }
 
 <form asp-controller="Plugin" asp-action="EditPopup"
@@ -20,6 +20,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PluginDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdatePlugin", Model)

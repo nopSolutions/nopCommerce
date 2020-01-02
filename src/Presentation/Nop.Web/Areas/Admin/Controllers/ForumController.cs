@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Models.Forums;
+using Nop.Core.Domain.Forums;
 using Nop.Services.Forums;
-using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Security;
-using Nop.Web.Framework.Kendoui;
+using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
+using Nop.Web.Areas.Admin.Models.Forums;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers
@@ -16,23 +16,27 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
+        private readonly IForumModelFactory _forumModelFactory;
         private readonly IForumService _forumService;
-        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
 
         #endregion
 
         #region Ctor
 
-        public ForumController(IForumService forumService,
-            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
+        public ForumController(IForumModelFactory forumModelFactory,
+            IForumService forumService,
+            ILocalizationService localizationService,
+            INotificationService notificationService,
             IPermissionService permissionService)
         {
-            this._forumService = forumService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
+            _forumModelFactory = forumModelFactory;
+            _forumService = forumService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -51,53 +55,38 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
-            return View();
+            //prepare model
+            var model = _forumModelFactory.PrepareForumGroupSearchModel(new ForumGroupSearchModel());
+
+            return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ForumGroupList(DataSourceRequest command)
+        public virtual IActionResult ForumGroupList(ForumGroupSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
-            var forumGroups = _forumService.GetAllForumGroups();
-            var gridModel = new DataSourceResult
-            {
-                Data = forumGroups.Select(fg =>
-                {
-                    var model = fg.ToModel();
-                    model.CreatedOn = _dateTimeHelper.ConvertToUserTime(fg.CreatedOnUtc, DateTimeKind.Utc);
-                    return model;
-                }),
-                Total = forumGroups.Count
-            };
+            //prepare model
+            var model = _forumModelFactory.PrepareForumGroupListModel(searchModel);
 
-            return Json(gridModel);
+            return Json(model);
         }
 
         [HttpPost]
-        public virtual IActionResult ForumList(int forumGroupId)
+        public virtual IActionResult ForumList(ForumSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
-            var forumGroup = _forumService.GetForumGroupById(forumGroupId);
-            if (forumGroup == null)
-                throw new Exception("Forum group cannot be loaded");
+            //try to get a forum group with the specified id
+            var forumGroup = _forumService.GetForumGroupById(searchModel.ForumGroupId)
+                ?? throw new ArgumentException("No forum group found with the specified id");
 
-            var forums = forumGroup.Forums;
-            var gridModel = new DataSourceResult
-            {
-                Data = forums.Select(f =>
-                {
-                    var forumModel = f.ToModel();
-                    forumModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(f.CreatedOnUtc, DateTimeKind.Utc);
-                    return forumModel;
-                }),
-                Total = forums.Count
-            };
+            //prepare model
+            var model = _forumModelFactory.PrepareForumListModel(searchModel, forumGroup);
 
-            return Json(gridModel);
+            return Json(model);
         }
 
         #endregion
@@ -109,7 +98,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
-            return View(new ForumGroupModel { DisplayOrder = 1 });
+            //prepare model
+            var model = _forumModelFactory.PrepareForumGroupModel(new ForumGroupModel(), null);
+
+            return View(model);
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
@@ -120,16 +112,20 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var forumGroup = model.ToEntity();
+                var forumGroup = model.ToEntity<ForumGroup>();
                 forumGroup.CreatedOnUtc = DateTime.UtcNow;
                 forumGroup.UpdatedOnUtc = DateTime.UtcNow;
                 _forumService.InsertForumGroup(forumGroup);
 
-                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Added"));
+
                 return continueEditing ? RedirectToAction("EditForumGroup", new { forumGroup.Id }) : RedirectToAction("List");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
+            model = _forumModelFactory.PrepareForumGroupModel(model, null, true);
+
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -138,13 +134,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
-            var model = new ForumModel();
-            foreach (var forumGroup in _forumService.GetAllForumGroups())
-            {
-                var forumGroupModel = forumGroup.ToModel();
-                model.ForumGroups.Add(forumGroupModel);
-            }
-            model.DisplayOrder = 1;
+            //prepare model
+            var model = _forumModelFactory.PrepareForumModel(new ForumModel(), null);
+
             return View(model);
         }
 
@@ -156,21 +148,20 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var forum = model.ToEntity();
+                var forum = model.ToEntity<Forum>();
                 forum.CreatedOnUtc = DateTime.UtcNow;
                 forum.UpdatedOnUtc = DateTime.UtcNow;
                 _forumService.InsertForum(forum);
 
-                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Added"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Added"));
+
                 return continueEditing ? RedirectToAction("EditForum", new { forum.Id }) : RedirectToAction("List");
             }
 
-            //If we got this far, something failed, redisplay form
-            foreach (var forumGroup in _forumService.GetAllForumGroups())
-            {
-                var forumGroupModel = forumGroup.ToModel();
-                model.ForumGroups.Add(forumGroupModel);
-            }
+            //prepare model
+            model = _forumModelFactory.PrepareForumModel(model, null, true);
+
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -183,12 +174,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
+            //try to get a forum group with the specified id
             var forumGroup = _forumService.GetForumGroupById(id);
             if (forumGroup == null)
-                //No forum group found with the specified id
                 return RedirectToAction("List");
 
-            var model = forumGroup.ToModel();
+            //prepare model
+            var model = _forumModelFactory.PrepareForumGroupModel(null, forumGroup);
+
             return View(model);
         }
 
@@ -198,9 +191,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
+            //try to get a forum group with the specified id
             var forumGroup = _forumService.GetForumGroupById(model.Id);
             if (forumGroup == null)
-                //No forum group found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
@@ -209,11 +202,15 @@ namespace Nop.Web.Areas.Admin.Controllers
                 forumGroup.UpdatedOnUtc = DateTime.UtcNow;
                 _forumService.UpdateForumGroup(forumGroup);
 
-                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Updated"));
+
                 return continueEditing ? RedirectToAction("EditForumGroup", forumGroup.Id) : RedirectToAction("List");
             }
 
-            //If we got this far, something failed, redisplay form
+            //prepare model
+            model = _forumModelFactory.PrepareForumGroupModel(model, forumGroup, true);
+
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -222,17 +219,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
+            //try to get a forum with the specified id
             var forum = _forumService.GetForumById(id);
             if (forum == null)
-                //No forum found with the specified id
                 return RedirectToAction("List");
 
-            var model = forum.ToModel();
-            foreach (var forumGroup in _forumService.GetAllForumGroups())
-            {
-                var forumGroupModel = forumGroup.ToModel();
-                model.ForumGroups.Add(forumGroupModel);
-            }
+            //prepare model
+            var model = _forumModelFactory.PrepareForumModel(null, forum);
+
             return View(model);
         }
 
@@ -242,9 +236,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
+            //try to get a forum with the specified id
             var forum = _forumService.GetForumById(model.Id);
             if (forum == null)
-                //No forum found with the specified id
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
@@ -253,16 +247,15 @@ namespace Nop.Web.Areas.Admin.Controllers
                 forum.UpdatedOnUtc = DateTime.UtcNow;
                 _forumService.UpdateForum(forum);
 
-                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Updated"));
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Updated"));
+
                 return continueEditing ? RedirectToAction("EditForum", forum.Id) : RedirectToAction("List");
             }
 
-            //If we got this far, something failed, redisplay form
-            foreach (var forumGroup in _forumService.GetAllForumGroups())
-            {
-                var forumGroupModel = forumGroup.ToModel();
-                model.ForumGroups.Add(forumGroupModel);
-            }
+            //prepare model
+            model = _forumModelFactory.PrepareForumModel(model, forum, true);
+
+            //if we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -276,14 +269,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
+            //try to get a forum group with the specified id
             var forumGroup = _forumService.GetForumGroupById(id);
             if (forumGroup == null)
-                //No forum group found with the specified id
                 return RedirectToAction("List");
 
             _forumService.DeleteForumGroup(forumGroup);
 
-            SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Deleted"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Deleted"));
+
             return RedirectToAction("List");
         }
 
@@ -293,14 +287,15 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
+            //try to get a forum with the specified id
             var forum = _forumService.GetForumById(id);
             if (forum == null)
-                //No forum found with the specified id
                 return RedirectToAction("List");
 
             _forumService.DeleteForum(forum);
 
-            SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Deleted"));
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Deleted"));
+
             return RedirectToAction("List");
         }
 

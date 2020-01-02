@@ -1,15 +1,15 @@
-﻿@model OrderModel
+@model OrderModel
 
 @{
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.Title = T("Admin.Orders.Fields.PartialRefund").Text;
+    ViewBag.PageTitle = T("Admin.Orders.Fields.PartialRefund").Text;
 }
 
 @if (ViewBag.RefreshPage == true)
 {
-    <script type="text/javascript">
+    <script>
         try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
         catch (e){}
         window.close();
@@ -27,6 +27,7 @@
         </h1>
         <div class="pull-right">
             &nbsp;
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderPartiallyRefundButtons, additionalData = Model })
         </div>
     </div>
 

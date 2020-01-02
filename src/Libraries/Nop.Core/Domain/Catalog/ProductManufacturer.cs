@@ -35,5 +35,4 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public virtual Product Product { get; set; }
     }
-
 }

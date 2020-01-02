@@ -1,8 +1,8 @@
-﻿@model ShippingMethodModel
+@model ShippingMethodModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Shipping.Methods.EditMethodDetails").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Shipping.Methods.EditMethodDetails").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Shipping providers");
 }
@@ -30,6 +30,7 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShippingMethodDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateMethod", Model)

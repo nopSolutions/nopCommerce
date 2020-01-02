@@ -17,30 +17,24 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
-        private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<Order> _orderRepository;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        
+        private readonly IRepository<Customer> _customerRepository;
+        private readonly IRepository<Order> _orderRepository;
+
         #endregion
 
         #region Ctor
-        
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="customerRepository">Customer repository</param>
-        /// <param name="orderRepository">Order repository</param>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="dateTimeHelper">Date time helper</param>
-        public CustomerReportService(IRepository<Customer> customerRepository,
-            IRepository<Order> orderRepository, ICustomerService customerService,
-            IDateTimeHelper dateTimeHelper)
+
+        public CustomerReportService(ICustomerService customerService,
+            IDateTimeHelper dateTimeHelper,
+            IRepository<Customer> customerRepository,
+            IRepository<Order> orderRepository)
         {
-            this._customerRepository = customerRepository;
-            this._orderRepository = orderRepository;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _customerRepository = customerRepository;
+            _orderRepository = orderRepository;
         }
 
         #endregion
@@ -81,8 +75,8 @@ namespace Nop.Services.Customers
                          (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
                          (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
                          (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
-                         (!o.Deleted) &&
-                         (!c.Deleted)
+                         !o.Deleted &&
+                         !c.Deleted
                          select new { c, o };
 
             var query2 = from co in query1
@@ -96,14 +90,10 @@ namespace Nop.Services.Customers
             switch (orderBy)
             {
                 case 1:
-                    {
-                        query2 = query2.OrderByDescending(x => x.OrderTotal);
-                    }
+                    query2 = query2.OrderByDescending(x => x.OrderTotal);
                     break;
                 case 2:
-                    {
-                        query2 = query2.OrderByDescending(x => x.OrderCount);
-                    }
+                    query2 = query2.OrderByDescending(x => x.OrderCount);
                     break;
                 default:
                     throw new ArgumentException("Wrong orderBy parameter", "orderBy");
@@ -111,11 +101,11 @@ namespace Nop.Services.Customers
 
             var tmp = new PagedList<dynamic>(query2, pageIndex, pageSize);
             return new PagedList<BestCustomerReportLine>(tmp.Select(x => new BestCustomerReportLine
-                {
-                    CustomerId = x.CustomerId,
-                    OrderTotal = x.OrderTotal,
-                    OrderCount = x.OrderCount
-                }),
+            {
+                CustomerId = x.CustomerId,
+                OrderTotal = x.OrderTotal,
+                OrderCount = x.OrderCount
+            }),
                 tmp.PageIndex, tmp.PageSize, tmp.TotalCount);
         }
 
@@ -126,20 +116,21 @@ namespace Nop.Services.Customers
         /// <returns>Number of registered customers</returns>
         public virtual int GetRegisteredCustomersReport(int days)
         {
-            DateTime date = _dateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days);
+            var date = _dateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days);
 
-            var registeredCustomerRole = _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
+            var registeredCustomerRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
             if (registeredCustomerRole == null)
                 return 0;
 
             var query = from c in _customerRepository.Table
-                        from cr in c.CustomerRoles
+                        from mapping in c.CustomerCustomerRoleMappings
                         where !c.Deleted &&
-                        cr.Id == registeredCustomerRole.Id &&
-                        c.CreatedOnUtc >= date 
+                        mapping.CustomerRoleId == registeredCustomerRole.Id &&
+                        c.CreatedOnUtc >= date
                         //&& c.CreatedOnUtc <= DateTime.UtcNow
                         select c;
-            int count = query.Count();
+
+            var count = query.Count();
             return count;
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nop.Core.Configuration;
 
 namespace Nop.Core.Infrastructure
 {
@@ -13,18 +14,13 @@ namespace Nop.Core.Infrastructure
     public interface IEngine
     {
         /// <summary>
-        /// Initialize engine
-        /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        void Initialize(IServiceCollection services);
-
-        /// <summary>
         /// Add and configure services
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        /// <param name="configuration">Configuration root of the application</param>
+        /// <param name="configuration">Configuration of the application</param>
+        /// <param name="nopConfig">Nop configuration parameters</param>
         /// <returns>Service provider</returns>
-        IServiceProvider ConfigureServices(IServiceCollection services, IConfigurationRoot configuration);
+        IServiceProvider ConfigureServices(IServiceCollection services, IConfiguration configuration, NopConfig nopConfig);
 
         /// <summary>
         /// Configure HTTP request pipeline

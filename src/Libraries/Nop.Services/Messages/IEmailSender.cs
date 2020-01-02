@@ -21,10 +21,10 @@ namespace Nop.Services.Messages
         /// <param name="replyToAddress">ReplyTo address</param>
         /// <param name="replyToName">ReplyTo display name</param>
         /// <param name="bcc">BCC addresses list</param>
-        /// <param name="cc">CC addresses ist</param>
+        /// <param name="cc">CC addresses list</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
-        /// <param name="attachedDownloadId">Attachment download ID (another attachedment)</param>
+        /// <param name="attachedDownloadId">Attachment download ID (another attachment)</param>
         /// <param name="headers">Headers</param>
         void SendEmail(EmailAccount emailAccount, string subject, string body,
             string fromAddress, string fromName, string toAddress, string toName,

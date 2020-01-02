@@ -14,23 +14,18 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
 
         #endregion
-        
+
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="categoryTemplateRepository">Category template repository</param>
-        /// <param name="eventPublisher">Event published</param>
-        public CategoryTemplateService(IRepository<CategoryTemplate> categoryTemplateRepository, 
-            IEventPublisher eventPublisher)
+        public CategoryTemplateService(IEventPublisher eventPublisher,
+            IRepository<CategoryTemplate> categoryTemplateRepository)
         {
-            this._categoryTemplateRepository = categoryTemplateRepository;
-            this._eventPublisher = eventPublisher;
+            _eventPublisher = eventPublisher;
+            _categoryTemplateRepository = categoryTemplateRepository;
         }
 
         #endregion
@@ -65,7 +60,7 @@ namespace Nop.Services.Catalog
             var templates = query.ToList();
             return templates;
         }
- 
+
         /// <summary>
         /// Gets a category template
         /// </summary>
@@ -108,7 +103,7 @@ namespace Nop.Services.Catalog
             //event notification
             _eventPublisher.EntityUpdated(categoryTemplate);
         }
-        
+
         #endregion
     }
 }

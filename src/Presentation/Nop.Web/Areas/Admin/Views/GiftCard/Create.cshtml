@@ -1,8 +1,8 @@
-﻿@model GiftCardModel
+@model GiftCardModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.GiftCards.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.GiftCards.AddNew").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Gift cards");
 }
@@ -25,6 +25,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GiftCardDetailsButtons })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

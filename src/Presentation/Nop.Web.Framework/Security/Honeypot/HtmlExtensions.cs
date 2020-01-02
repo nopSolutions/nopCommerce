@@ -7,8 +7,16 @@ using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Security.Honeypot
 {
+    /// <summary>
+    /// HTML extensions
+    /// </summary>
     public static class HtmlExtensions
     {
+        /// <summary>
+        /// Generate honeypot input
+        /// </summary>
+        /// <param name="helper">HTML helper</param>
+        /// <returns>Result</returns>
         public static IHtmlContent GenerateHoneypotInput(this IHtmlHelper helper)
         {
             var sb = new StringBuilder();

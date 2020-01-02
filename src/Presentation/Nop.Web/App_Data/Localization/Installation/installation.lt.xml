@@ -123,7 +123,7 @@
     <Value>Įveskite SQL vartotojo vardą</Value>
   </LocaleResource>
   <LocaleResource Name="SqlStandard">
-    <Value>Naudoti SQL Serverio (arba SQL Express) duomenų bazę?</Value>
+    <Value>Naudoti Microsoft SQL Server (arba SQL Express) duomenų bazę?</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>E-parduotuvės informacija</Value>

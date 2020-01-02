@@ -1,73 +1,34 @@
-﻿@model CustomerModel
-@inject AdminAreaSettings adminAreaSettings
-@{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-}
-<div class="panel-group">
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="activitylog-grid"></div>
+@model CustomerModel
 
-            <script>
-                $(document).ready(function () {
-                    $("#activitylog-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("ListActivityLog", "Customer", new { customerId = Model.Id }))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(defaultGridPageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(gridPageSizes)],
-                            @await Html.PartialAsync("_GridPagerMessages")
-                        },
-                        editable: {
-                            confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "ActivityLogTypeName",
-                            title: "@T("Admin.Customers.Customers.ActivityLog.ActivityLogType")",
-                            width: 300,
-                        }, {
-                            field: "IpAddress",
-                            title: "@T("Admin.Customers.Customers.ActivityLog.IpAddress")",
-                            width: 100
-                        }, {
-                            field: "Comment",
-                            title: "@T("Admin.Customers.Customers.ActivityLog.Comment")"
-                        }, {
-                            field: "CreatedOn",
-                            title: "@T("Admin.Customers.Customers.ActivityLog.CreatedOn")",
-                            width: 200,
-                            type: "date",
-                            format: "{0:G}"
-                        }]
-                    });
-                });
-            </script>
-        </div>
-    </div>
+<div class="panel-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "activitylog-grid",
+        UrlRead = new DataUrl("ListActivityLog", "Customer", new RouteValueDictionary { [nameof(Model.CustomerActivityLogSearchModel.CustomerId)] = Model.CustomerActivityLogSearchModel.CustomerId }),
+        Length = Model.CustomerActivityLogSearchModel.PageSize,
+        LengthMenu = Model.CustomerActivityLogSearchModel.AvailablePageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(CustomerActivityLogModel.ActivityLogTypeName))
+            {
+                Title = T("Admin.Customers.Customers.ActivityLog.ActivityLogType").Text,
+                Width = "300"
+            },
+            new ColumnProperty(nameof(CustomerActivityLogModel.IpAddress))
+            {
+                Title = T("Admin.Customers.Customers.ActivityLog.IpAddress").Text,
+                Width = "100"
+            },
+            new ColumnProperty(nameof(CustomerActivityLogModel.Comment))
+            {
+                Title = T("Admin.Customers.Customers.ActivityLog.Comment").Text
+            },
+            new ColumnProperty(nameof(CustomerActivityLogModel.CreatedOn))
+            {
+                Title = T("Admin.Customers.Customers.ActivityLog.CreatedOn").Text,
+                Width = "200",
+                Render = new RenderDate()
+            }
+        }
+    })   
 </div>

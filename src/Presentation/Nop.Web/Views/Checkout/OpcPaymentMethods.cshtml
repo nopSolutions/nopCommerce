@@ -1,6 +1,6 @@
 ﻿@model CheckoutPaymentMethodModel
 <div class="checkout-data">
-    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_payment_method_top" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutPaymentMethodTop })
     <div class="section payment-method">
         @if (Model.DisplayRewardPoints && Model.PaymentMethods.Count > 0)
         {
@@ -16,7 +16,7 @@
                 <label asp-for="UseRewardPoints">@string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)</label>
                 @if (Model.RewardPointsEnoughToPayForOrder)
                 {
-                    <script type="text/javascript">
+                    <script>
                         $(document).ready(function() {
                             PaymentMethod.toggleUseRewardPoints($('#@Html.IdFor(model => model.UseRewardPoints)'));
                         });
@@ -27,17 +27,17 @@
         @if (Model.PaymentMethods.Count > 0)
         {
             <ul class="method-list" id="payment-method-block">
-                @for (int i = 0; i < Model.PaymentMethods.Count; i++)
+                @for (var i = 0; i < Model.PaymentMethods.Count; i++)
                 {
                     var paymentMethod = Model.PaymentMethods[i];
                     var paymentMethodName = paymentMethod.Name;
-                    if (!String.IsNullOrEmpty(paymentMethod.Fee))
+                    if (!string.IsNullOrEmpty(paymentMethod.Fee))
                     {
                         paymentMethodName = T("Checkout.SelectPaymentMethod.MethodAndFee", paymentMethodName, paymentMethod.Fee).Text;
                     }
                     <li>
                         <div class="method-name">
-                            @if (!String.IsNullOrEmpty(paymentMethod.LogoUrl))
+                            @if (!string.IsNullOrEmpty(paymentMethod.LogoUrl))
                             {
                                 <div class="payment-logo">
                                     <label for="paymentmethod_@(i)">
@@ -65,5 +65,5 @@
             </div>
         }
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_payment_method_bottom" })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutPaymentMethodBottom })
 </div>

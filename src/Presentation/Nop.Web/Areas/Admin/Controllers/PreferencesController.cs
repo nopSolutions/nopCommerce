@@ -19,8 +19,8 @@ namespace Nop.Web.Areas.Admin.Controllers
         public PreferencesController(IGenericAttributeService genericAttributeService,
             IWorkContext workContext)
         {
-            this._genericAttributeService = genericAttributeService;
-            this._workContext = workContext;
+            _genericAttributeService = genericAttributeService;
+            _workContext = workContext;
         }
 
         #endregion

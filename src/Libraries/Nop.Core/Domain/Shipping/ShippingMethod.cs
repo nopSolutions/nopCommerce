@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Shipping
@@ -9,7 +8,7 @@ namespace Nop.Core.Domain.Shipping
     /// </summary>
     public partial class ShippingMethod : BaseEntity, ILocalizedEntity
     {
-        private ICollection<Country> _restrictedCountries;
+        private ICollection<ShippingMethodCountryMapping> _shippingMethodCountryMappings;
 
         /// <summary>
         /// Gets or sets the name
@@ -27,12 +26,12 @@ namespace Nop.Core.Domain.Shipping
         public int DisplayOrder { get; set; }
 
         /// <summary>
-        /// Gets or sets the restricted countries
+        /// Gets or sets the shipping method-country mappings
         /// </summary>
-        public virtual ICollection<Country> RestrictedCountries
+        public virtual ICollection<ShippingMethodCountryMapping> ShippingMethodCountryMappings
         {
-            get { return _restrictedCountries ?? (_restrictedCountries = new List<Country>()); }
-            protected set { _restrictedCountries = value; }
+            get => _shippingMethodCountryMappings ?? (_shippingMethodCountryMappings = new List<ShippingMethodCountryMapping>());
+            protected set => _shippingMethodCountryMappings = value;
         }
     }
 }

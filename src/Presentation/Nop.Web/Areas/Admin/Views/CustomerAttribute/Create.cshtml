@@ -1,8 +1,8 @@
-﻿@model CustomerAttributeModel
+@model CustomerAttributeModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Customers.CustomerAttributes.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.Customers.CustomerAttributes.AddNew").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Customer and user settings");
 }
@@ -25,6 +25,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAttributeDetailsButtons })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

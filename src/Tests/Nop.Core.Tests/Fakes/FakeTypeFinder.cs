@@ -14,16 +14,16 @@ namespace Nop.Core.Tests.Fakes
         public FakeTypeFinder(Assembly assembly, params Type[] types)
         {
             Assemblies = new[] { assembly };
-            this.Types = types;
+            Types = types;
         }
         public FakeTypeFinder(params Type[] types)
         {
             Assemblies = new Assembly[0];
-            this.Types = types;
+            Types = types;
         }
         public FakeTypeFinder(params Assembly[] assemblies)
         {
-            this.Assemblies = assemblies;
+            Assemblies = assemblies;
         }
 
         public IList<Assembly> GetAssemblies()

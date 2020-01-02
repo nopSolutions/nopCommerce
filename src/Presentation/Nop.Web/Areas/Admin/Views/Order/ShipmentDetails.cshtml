@@ -1,8 +1,8 @@
-﻿@model ShipmentModel
+@model ShipmentModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Orders.Shipments.ViewDetails").Text;
+    ViewBag.PageTitle = T("Admin.Orders.Shipments.ViewDetails").Text;
 
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Shipments");
@@ -10,7 +10,7 @@
 
 
 <form asp-controller="Order" asp-action="ShipmentDetails" method="post">
-    <script type="text/javascript">
+    <script>
         $(document).ready(function() {
             toggleShippedDate(false);
             toggleDeliveryDate(false);
@@ -66,6 +66,7 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderShipmentDetailsButtons, additionalData = Model })
         </div>
     </div>
 
@@ -219,7 +220,7 @@
                         @T("Admin.Orders.Shipments.Products")
                     </div>
                     <div class="panel-body">
-                        <table class="table table-hover table-bordered text-center">
+                        <table class="table table-hover table-bordered">
                             <thead>
                                 <tr>
                                     <th>
@@ -246,16 +247,16 @@
                                 @foreach (var item in Model.Items)
                                 {
                                 <tr>
-                                    <td style="width: 40%; text-align: left;">
+                                    <td style="width: 40%;" class="text-left">
                                         <div>
                                             <em><a asp-controller="Product" asp-action="Edit" asp-route-id="@item.ProductId">@item.ProductName</a></em>
-                                            @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                            @if (!string.IsNullOrEmpty(item.AttributeInfo))
                                                 {
                                                 <p>
                                                     @Html.Raw(item.AttributeInfo)
                                                 </p>
                                                 }
-                                            @if (!String.IsNullOrEmpty(item.RentalInfo))
+                                            @if (!string.IsNullOrEmpty(item.RentalInfo))
                                                 {
                                                 <p>
                                                     @Html.Raw(item.RentalInfo)
@@ -263,23 +264,23 @@
                                                 }
                                         </div>
                                     </td>
-                                    <td style="width: 15%;">
+                                    <td style="width: 15%;" class="text-center">
                                         <div>
                                             @item.Sku
                                         </div>
                                     </td>
-                                    <td style="width: 15%;">
+                                    <td style="width: 15%;" class="text-center">
                                         <div>
                                             @item.ShippedFromWarehouse
                                         </div>
                                     </td>
-                                    <td style="width: 10%;">
+                                    <td style="width: 10%;" class="text-center">
                                         @item.ItemWeight
                                     </td>
-                                    <td style="width: 10%;">
+                                    <td style="width: 10%;" class="text-center">
                                         @item.ItemDimensions
                                     </td>
-                                    <td style="width: 10%;">
+                                    <td style="width: 10%;" class="text-center">
                                         @item.QuantityInThisShipment
                                     </td>
                                 </tr>

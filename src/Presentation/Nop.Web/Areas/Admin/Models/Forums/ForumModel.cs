@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using FluentValidation.Attributes;
-using Nop.Web.Areas.Admin.Validators.Forums;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Forums
 {
-    [Validator(typeof(ForumValidator))]
+    /// <summary>
+    /// Represents a forum list model
+    /// </summary>
     public partial class ForumModel : BaseNopEntityModel
     {
+        #region Ctor
+
         public ForumModel()
         {
             ForumGroups = new List<ForumGroupModel>();
         }
+
+        #endregion
+
+        #region Properties
 
         [NopResourceDisplayName("Admin.ContentManagement.Forums.Forum.Fields.ForumGroupId")]
         public int ForumGroupId { get; set; }
@@ -31,5 +37,7 @@ namespace Nop.Web.Areas.Admin.Models.Forums
         public DateTime CreatedOn { get; set; }
 
         public List<ForumGroupModel> ForumGroups { get; set; }
+
+        #endregion
     }
 }

@@ -1,11 +1,12 @@
-﻿@{
+@model StoreSearchModel
+
+@{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Stores").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Stores").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Stores");
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Stores")
@@ -15,6 +16,7 @@
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.StoreListButtons })
     </div>
 </div>
 
@@ -23,67 +25,36 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="stores-grid"></div>
-                    <script>
-                        $(document).ready(function() {
-                            $("#stores-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("List", "Store"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false,
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [
-                                {
-                                    field: "Name",
-                                    title: "@T("Admin.Configuration.Stores.Fields.Name")"
-                                }, {
-                                    field: "Url",
-                                    title: "@T("Admin.Configuration.Stores.Fields.Url")"
-                                }, {
-                                    field: "DisplayOrder",
-                                    title: "@T("Admin.Configuration.Stores.Fields.DisplayOrder")"
-                                }, {
-                                    field: "Id",
-                                    title: "@T("Admin.Common.Edit")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'                                    }
-                                ]
-                            });
-                        });
-                    </script>
+                    @await Html.PartialAsync("Table",new DataTablesModel
+                    {
+                        Name = "stores-grid",
+                        UrlRead = new DataUrl("List", "Store", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(StoreModel.Name))
+                            {
+                                Title = T("Admin.Configuration.Stores.Fields.Name").Text
+                            },
+                            new ColumnProperty(nameof(StoreModel.Url))
+                            {
+                                Title = T("Admin.Configuration.Stores.Fields.Url").Text
+                            },
+                            new ColumnProperty(nameof(StoreModel.DisplayOrder))
+                            {
+                                Title = T("Admin.Configuration.Stores.Fields.DisplayOrder").Text,
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(StoreModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })
                 </div>
             </div>
         </div>

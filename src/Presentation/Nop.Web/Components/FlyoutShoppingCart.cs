@@ -2,10 +2,11 @@
 using Nop.Core.Domain.Orders;
 using Nop.Services.Security;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class FlyoutShoppingCartViewComponent : ViewComponent
+    public class FlyoutShoppingCartViewComponent : NopViewComponent
     {
         private readonly IPermissionService _permissionService;
         private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
@@ -15,9 +16,9 @@ namespace Nop.Web.Components
             IShoppingCartModelFactory shoppingCartModelFactory,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._permissionService = permissionService;
-            this._shoppingCartModelFactory = shoppingCartModelFactory;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _permissionService = permissionService;
+            _shoppingCartModelFactory = shoppingCartModelFactory;
+            _shoppingCartSettings = shoppingCartSettings;
         }
 
         public IViewComponentResult Invoke()

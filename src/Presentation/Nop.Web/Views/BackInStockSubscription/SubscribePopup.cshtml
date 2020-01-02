@@ -40,7 +40,7 @@
             <button type="submit" id="back-in-stock-notify-me" class="button-1 notify-me-button">
                 @(Model.AlreadySubscribed ? @T("BackInStockSubscriptions.Unsubscribe").Text : @T("BackInStockSubscriptions.NotifyMe").Text)
             </button>
-            <script type="text/javascript">
+            <script>
                 $(document).ready(function () {
                     $("#back-in-stock-notify-me").on('click', function () {
                         var subscribeButton = this;
@@ -48,11 +48,13 @@
                             cache: false,
                             type: "POST",
                             url: "@(Url.RouteUrl("BackInStockSubscribeSend"))",
-                            data: { "productId": '@Model.ProductId' },
-                            success: function (data) {
+                            data: {
+                                "productId": '@Model.ProductId'
+                            },
+                            success: function (data, textStatus, jqXHR) {
                                 $(subscribeButton).closest('.ui-dialog-content').dialog('destroy').remove();
                             },
-                            error: function (xhr, ajaxOptions, thrownError) {
+                            error: function (jqXHR, textStatus, errorThrown) {
                                 alert('Failed to change subscription.');
                             }
                         });

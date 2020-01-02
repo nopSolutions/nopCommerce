@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
@@ -12,14 +13,34 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public class ValidateVendorAttribute : TypeFilterAttribute
     {
+        #region Fields
+
+        private readonly bool _ignoreFilter;
+
+        #endregion
+
+        #region Ctor
+
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
         public ValidateVendorAttribute(bool ignore = false) : base(typeof(ValidateVendorFilter))
         {
-            this.Arguments = new object[] { ignore };
+            _ignoreFilter = ignore;
+            Arguments = new object[] { ignore };
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets a value indicating whether to ignore the execution of filter actions
+        /// </summary>
+        public bool IgnoreFilter => _ignoreFilter;
+
+        #endregion
 
         #region Nested filter
 
@@ -39,8 +60,8 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             public ValidateVendorFilter(bool ignoreFilter, IWorkContext workContext)
             {
-                this._ignoreFilter = ignoreFilter;
-                this._workContext = workContext;
+                _ignoreFilter = ignoreFilter;
+                _workContext = workContext;
             }
 
             #endregion
@@ -53,14 +74,19 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="filterContext">Authorization filter context</param>
             public void OnAuthorization(AuthorizationFilterContext filterContext)
             {
-                //ignore filter actions
-                if (_ignoreFilter)
-                    return;
-
                 if (filterContext == null)
                     throw new ArgumentNullException(nameof(filterContext));
 
-                if (!DataSettingsHelper.DatabaseIsInstalled())
+                //check whether this filter has been overridden for the Action
+                var actionFilter = filterContext.ActionDescriptor.FilterDescriptors
+                    .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
+                    .Select(filterDescriptor => filterDescriptor.Filter).OfType<ValidateVendorAttribute>().FirstOrDefault();
+
+                //ignore filter (the action is available even if the current customer isn't a vendor)
+                if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
+                    return;
+
+                if (!DataSettingsManager.DatabaseIsInstalled)
                     return;
 
                 //whether current customer is vendor
@@ -69,7 +95,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //ensure that this user has active vendor record associated
                 if (_workContext.CurrentVendor == null)
-                    filterContext.Result = new UnauthorizedResult();
+                    filterContext.Result = new ChallengeResult();
             }
 
             #endregion

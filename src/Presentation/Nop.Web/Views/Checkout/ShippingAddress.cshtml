@@ -1,4 +1,5 @@
 ﻿@model CheckoutShippingAddressModel
+@using System.Globalization
 @{
     Layout = "_ColumnsOne";
 
@@ -15,24 +16,24 @@
     </div>
     <div class="page-body checkout-data">
         <form asp-route="CheckoutShippingAddress" method="post">
-            @if (Model.AllowPickUpInStore && !Model.PickUpInStoreOnly && Model.PickupPoints.Any())
+            @if (Model.AllowPickupInStore && !Model.PickupInStoreOnly && Model.PickupPoints.Any())
             {
                 <div class="section pickup-in-store">
                     <div class="selector">
-                        <input asp-for="PickUpInStore"/>
-                        <label asp-for="PickUpInStore">@T("Checkout.PickupPoints")</label>
+                        <input asp-for="PickupInStore"/>
+                        <label asp-for="PickupInStore">@T("Checkout.PickupPoints")</label>
                     </div>
                     <div class="description">
                         @T("Checkout.PickupPoints.Description")
                     </div>
-                    <script type="text/javascript">
+                    <script asp-location="Footer">
                         $(document).ready(function() {
-                            $("#@Html.IdFor(model => model.PickUpInStore)").change(togglePickUpInStore);
-                            togglePickUpInStore();
+                            $("#@Html.IdFor(model => model.PickupInStore)").on('change', togglePickupInStore);
+                            togglePickupInStore();
                         });
 
-                        function togglePickUpInStore() {
-                            if ($('#@Html.IdFor(model => model.PickUpInStore)').is(':checked')) {
+                        function togglePickupInStore() {
+                            if ($('#@Html.IdFor(model => model.PickupInStore)').is(':checked')) {
                                 $('#pickup-points-form').show();
                                 $('#shipping-addresses-form').hide();
                             } else {
@@ -44,14 +45,14 @@
                 </div>
             }
 
-            @if (Model.AllowPickUpInStore)
+            @if (Model.AllowPickupInStore)
             {
                 <div class="section pickup-points" id="pickup-points-form">
                     @if (Model.PickupPoints.Any())
                     {
-                        if (Model.PickUpInStoreOnly)
+                        if (Model.PickupInStoreOnly)
                         {
-                            <input asp-for="PickUpInStore" type="hidden"/>
+                            <input asp-for="PickupInStore" type="hidden"/>
                         }
                         <div class="select-pickup-point">
                             @if (Model.PickupPoints.Count == 1)
@@ -60,7 +61,7 @@
                                 <input name="pickup-points-id" id="pickup-points-id" type="hidden" value="@($"{point.Id}___{point.ProviderSystemName}")"/>
                                 <ul>
                                     <li class="single-pickup-point name">@point.Name</li>
-                                    <li class="single-pickup-point address">@(string.Format("{0} {1} {2} {3}", point.Address, point.City, point.StateName, point.CountryName))</li>
+                                    <li class="single-pickup-point address">@($"{point.Address} {point.City} {point.County} {point.StateName} {point.CountryName}")</li>
                                     @if (!string.IsNullOrEmpty(point.PickupFee))
                                     {
                                         <li class="single-pickup-point fee">@point.PickupFee</li>
@@ -85,6 +86,10 @@
                                         {
                                             addressLine.AppendFormat(", {0}", point.City);
                                         }
+                                        if (!string.IsNullOrEmpty(point.County))
+                                        {
+                                            addressLine.AppendFormat(", {0}", point.County);
+                                        }
                                         if (!string.IsNullOrEmpty(point.StateName))
                                         {
                                             addressLine.AppendFormat(", {0}", point.StateName);
@@ -97,108 +102,101 @@
                                         {
                                             addressLine.AppendFormat(", {0}", point.PickupFee);
                                         }
-                                        <option value="@(string.Format("{0}___{1}", point.Id, point.ProviderSystemName))">@(addressLine)</option>
+                                        <option value="@($"{point.Id}___{point.ProviderSystemName}")">@(addressLine)</option>
                                     }
                                 </select>
                             }
                         </div>
                         if (Model.DisplayPickupPointsOnMap)
                         {
-                            var src = string.Format("https://maps.googleapis.com/maps/api/js{0}", string.IsNullOrEmpty(Model.GoogleMapsApiKey) ? string.Empty : string.Format("?key={0}", Model.GoogleMapsApiKey));
+                            var src = $"https://maps.googleapis.com/maps/api/js{(string.IsNullOrEmpty(Model.GoogleMapsApiKey) ? string.Empty : $"?key={Model.GoogleMapsApiKey}")}";
                             <div class="pickup-points-map" id="map">
-                                <script type="text/javascript">
-                    var markers = new Map();
-                    var googleMap = null;
-                    $(document).ready(function() {
-                        $.getScript("@src",
-                            function(data, textStatus, jqxhr) {
-                                google.maps.visualRefresh = true;
-                                googleMap = new google.maps.Map(document.getElementById("map"),
-                                    {
-                                        zoom: 15,
-                                        mapTypeId: google.maps.MapTypeId.ROADMAP
-                                    });
-                                var geocoder = new google.maps.Geocoder();
-                                var infowindow = new google.maps.InfoWindow();
-                                @for (var i = 0; i < Model.PickupPoints.Count; i++)
-                                {
-                                    var point = Model.PickupPoints[i];
-                                    var value = string.Format("{0}___{1}", point.Id, point.ProviderSystemName);
-                                    var pickupPointInfo = Html.Raw(string.Format(@"<div class='pickup-point-info'><ul><li><strong>{0}</strong></li><li>{1}</li><li>{2}</li></ul></div>",
-                                        point.Name, point.OpeningHours, point.PickupFee));
-                                    if (point.Latitude != null && point.Longitude != null)
-                                    {
-                                        <text>
-                                            (function() {
-                                                var marker = new google.maps.Marker({
-                                                    map: googleMap,
-                                                    title: "@point.Name",
-                                                    position: new google.maps.LatLng(@point.Latitude,
-                                                        @point.Longitude),
-                                                    icon:
-                                                        "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-                                                });
-                                                markers.set("@value", marker);
-                                                google.maps.event.addListener(marker,
-                                                    'click',
-                                                    function() {
-                                                        $('#pickup-points-select').val("@value")
-                                                        infowindow.setContent("@pickupPointInfo");
-                                                        infowindow.open(googleMap, marker);
-                                                    });
-                                                @if (i == 0)
+                                <script asp-location="Footer">
+                                    var markers = new Map();
+                                    var googleMap = null;
+                                    $(document).ready(function () {
+                                        $.getScript("@src", function( data, textStatus, jqxhr ) {
+                                            google.maps.visualRefresh = true;
+                                            googleMap = new google.maps.Map(document.getElementById("map"), {
+                                                zoom: 15,
+                                                mapTypeId: google.maps.MapTypeId.ROADMAP
+                                            });
+                                            var geocoder = new google.maps.Geocoder();
+                                            var infowindow = new google.maps.InfoWindow();
+                                            @for (var i = 0; i < Model.PickupPoints.Count; i++)
+                                            {
+                                                var point = Model.PickupPoints[i];
+                                                var value = $"{point.Id}___{point.ProviderSystemName}";
+                                                var pickupPointInfo = Html.Raw($@"<div class='pickup-point-info'><ul><li><strong>{point.Name}</strong></li><li>{point.OpeningHours}</li><li>{point.PickupFee}</li></ul></div>");
+                                                if (point.Latitude != null && point.Longitude != null)
                                                 {
-                                                    <text>googleMap.setCenter(marker.getPosition())</text>
-                                                }
-                                            }());
-                                        </text>
-                                    }
-                                    else
-                                    {
-                                        var address = string.Format("{0} {1} {2} {3}", point.Address, point.City, point.ZipPostalCode, point.CountryName);
-                                        <text>
-                                            geocoder.geocode({ 'address': "@address" },
-                                                function(results, status) {
-                                                    if (status === google.maps.GeocoderStatus.OK) {
-                                                        var marker = new google.maps.Marker({
-                                                            map: googleMap,
-                                                            title: "@point.Name",
-                                                            position: results[0].geometry.location,
-                                                            icon:
-                                                                "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-                                                        });
-                                                        markers.set("@value", marker);
-                                                        google.maps.event.addListener(marker,
-                                                            'click',
-                                                            function() {
-                                                                $('#pickup-points-select').val("@value")
+                                                    var latitude = point.Latitude.Value.ToString(CultureInfo.InvariantCulture);
+                                                    var longitude = point.Longitude.Value.ToString(CultureInfo.InvariantCulture);
+                                                    <text>
+                                                        (function() {
+                                                            var marker = new google.maps.Marker({
+                                                                map: googleMap,
+                                                                title: "@point.Name",
+                                                                position: new google.maps.LatLng(@latitude, @longitude),
+                                                                icon: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                                                            });
+                                                            markers.set("@value", marker);
+                                                            google.maps.event.addListener(marker, 'click', function () {
+                                                                $('#pickup-points-select').val("@value");
+                                                                googleMap.setCenter(this.getPosition());
                                                                 infowindow.setContent("@pickupPointInfo");
                                                                 infowindow.open(googleMap, marker);
                                                             });
-                                                        @if (i == 0)
-                                                        {
-                                                            <text>googleMap.setCenter(marker
-                                                            .getPosition())</text>
-                                                        }
-                                                    };
-                                                });
-                                        </text>
-                                    }
-                                }
+                                                            @if (i == 0) {
+                                                                <text>googleMap.setCenter(marker.getPosition());</text>
+                                                            }
+                                                        }());
+                                                    </text>
+                                                }
+                                                else
+                                                {
+                                                    var address = $"{point.Address} {point.City} {point.ZipPostalCode} {point.CountryName}";
+                                                    <text>
+                                                        var interval_@i = setInterval( function () {
+                                                            geocoder.geocode({ 'address': "@address" }, function(results, status) {
+                                                                if (status === google.maps.GeocoderStatus.OK) {
+                                                                    var marker = new google.maps.Marker({
+                                                                        map: googleMap,
+                                                                        title: "@point.Name",
+                                                                        position: results[0].geometry.location,
+                                                                        icon: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                                                                    });
+                                                                    markers.set("@value", marker);
+                                                                    google.maps.event.addListener(marker, 'click', function () {
+                                                                        $('#pickup-points-select').val("@value");
+                                                                        googleMap.setCenter(this.getPosition());
+                                                                        infowindow.setContent("@pickupPointInfo");
+                                                                        infowindow.open(googleMap, marker);
+                                                                    });
+                                                                    @if (i == 0) {
+                                                                        <text>googleMap.setCenter(marker.getPosition());</text>
+                                                                    }
+                                                                    clearInterval(interval_@i);
+                                                                }
+                                                            })
+                                                        }, 250);
+                                                    </text>
+                                                }
+                                            }
 
-                                $('#pickup-points-select').change(function() {
-                                    new google.maps.event.trigger(markers.get(this.value), 'click');
-                                });
+                                                        $('#pickup-points-select').on('change', function() {
+                                                new google.maps.event.trigger(markers.get(this.value), 'click');
+                                            });
 
-                                $("#@Html.IdFor(model => model.PickUpInStore)").change(function() {
-                                    if ($('#@Html.IdFor(model => model.PickUpInStore)').is(':checked')) {
-                                        var center = googleMap.getCenter();
-                                        google.maps.event.trigger(googleMap, 'resize');
-                                        googleMap.setCenter(center);
-                                    }
-                                })
-                            })
-                    })
+                                            $("#@Html.IdFor(model => model.PickupInStore)").on('change', function() {
+                                                if ($('#@Html.IdFor(model => model.PickupInStore)').is(':checked')) {
+                                                    var center = googleMap.getCenter();
+                                                    google.maps.event.trigger(googleMap, 'resize');
+                                                    googleMap.setCenter(center);
+                                                }
+                                            })
+                                        })
+                                    })
                                 </script>
                             </div>
                         }
@@ -214,16 +212,22 @@
                 </div>
             }
 
-            @if (!Model.PickUpInStoreOnly)
+            @if (!Model.PickupInStoreOnly)
             {
                 <div class="shipping-addresses" id="shipping-addresses-form">
-                    @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_address_top" })
+                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingAddressTop })
                     @if (Model.ExistingAddresses.Count > 0)
                     {
                         <div class="section select-shipping-address">
                             <div class="title">
                                 <strong>@T("Checkout.SelectShippingAddress")</strong>
                             </div>
+                            @if (Model.InvalidExistingAddresses.Count > 0)
+                            {
+                                <label class="min-amount-warning">
+                                    @string.Format(T("Checkout.Addresses.Invalid").Text, Model.InvalidExistingAddresses.Count)
+                                </label>
+                            }
                             <div class="address-grid">
                                 @foreach (var item in Model.ExistingAddresses)
                                 {
@@ -250,7 +254,7 @@
                                                     <span>@item.FaxNumber</span>
                                                 </li>
                                             }
-                                            @if (item.CompanyEnabled && !String.IsNullOrEmpty(item.Company))
+                                            @if (item.CompanyEnabled && !string.IsNullOrEmpty(item.Company))
                                             {
                                                 <li class="company">
                                                     @item.Company
@@ -262,40 +266,58 @@
                                                     @item.Address1
                                                 </li>
                                             }
-                                            @if (item.StreetAddress2Enabled && !String.IsNullOrEmpty(item.Address2))
+                                            @if (item.StreetAddress2Enabled && !string.IsNullOrEmpty(item.Address2))
                                             {
                                                 <li class="address2">
                                                     @item.Address2
                                                 </li>
                                             }
-                                            @if (item.CityEnabled || item.StateProvinceEnabled || item.ZipPostalCodeEnabled)
+                                            @if (item.CityEnabled && !string.IsNullOrEmpty(item.City)|| 
+                                                item.CountyEnabled && !string.IsNullOrEmpty(item.County) || 
+                                                item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) || 
+                                                item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
                                             {
                                                 <li class="city-state-zip">
-                                                    @if (item.CityEnabled)
+                                                    @if (item.CityEnabled && !string.IsNullOrEmpty(item.City))
                                                     {
                                                         @item.City
+                                                        @if (item.CountyEnabled && !string.IsNullOrEmpty(item.County) || 
+                                                            item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) || 
+                                                            item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                                        {
+                                                            <text>,</text>
+                                                        }
                                                     }
-                                                    @if (item.CityEnabled && (item.StateProvinceEnabled || item.ZipPostalCodeEnabled))
+                                                    @if (item.CountyEnabled && !string.IsNullOrEmpty(item.County))
                                                     {
-                                                        <text>,</text>
+                                                        @item.County
+                                                        @if (item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) || 
+                                                            item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                                        {
+                                                            <text>,</text>
+                                                        }
                                                     }
-                                                    @if (item.StateProvinceEnabled)
+                                                    @if (item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName))
                                                     {
                                                         @item.StateProvinceName
+                                                        @if (item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                                        {
+                                                            <text>,</text>
+                                                        }
                                                     }
-                                                    @if (item.ZipPostalCodeEnabled)
+                                                    @if (item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
                                                     {
                                                         @item.ZipPostalCode
                                                     }
                                                 </li>
                                             }
-                                            @if (item.CountryEnabled && !String.IsNullOrEmpty(item.CountryName))
+                                            @if (item.CountryEnabled && !string.IsNullOrEmpty(item.CountryName))
                                             {
                                                 <li class="country">
                                                     @item.CountryName
                                                 </li>
                                             }
-                                            @if (!String.IsNullOrEmpty(item.FormattedCustomAddressAttributes))
+                                            @if (!string.IsNullOrEmpty(item.FormattedCustomAddressAttributes))
                                             {
                                                 <li class="custom-attributes-view">
                                                     @Html.Raw(item.FormattedCustomAddressAttributes)
@@ -310,7 +332,7 @@
                             </div>
                         </div>
                     }
-                    @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_address_middle" })
+                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingAddressMiddle })
                     <div class="section new-shipping-address">
                         <div class="title">
                             @if (Model.ExistingAddresses.Count > 0)
@@ -331,7 +353,7 @@
                             }
                         </div>
                     </div>
-                    @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_address_bottom" })
+                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutShippingAddressBottom })
                 </div>
                                 }
             <div class="buttons">

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core.Data;
@@ -11,14 +12,34 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public class CheckAccessPublicStoreAttribute : TypeFilterAttribute
     {
+        #region Fields
+
+        private readonly bool _ignoreFilter;
+
+        #endregion
+
+        #region Ctor
+
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
         public CheckAccessPublicStoreAttribute(bool ignore = false) : base(typeof(CheckAccessPublicStoreFilter))
         {
-            this.Arguments = new object[] { ignore };
+            _ignoreFilter = ignore;
+            Arguments = new object[] { ignore };
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets a value indicating whether to ignore the execution of filter actions
+        /// </summary>
+        public bool IgnoreFilter => _ignoreFilter;
+
+        #endregion
 
         #region Nested filter
 
@@ -38,8 +59,8 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             public CheckAccessPublicStoreFilter(bool ignoreFilter, IPermissionService permissionService)
             {
-                this._ignoreFilter = ignoreFilter;
-                this._permissionService = permissionService;
+                _ignoreFilter = ignoreFilter;
+                _permissionService = permissionService;
             }
 
             #endregion
@@ -52,14 +73,19 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="filterContext">Authorization filter context</param>
             public void OnAuthorization(AuthorizationFilterContext filterContext)
             {
-                //ignore filter (the action available even when navigation is not allowed)
-                if (_ignoreFilter)
-                    return;
-
                 if (filterContext == null)
                     throw new ArgumentNullException(nameof(filterContext));
 
-                if (!DataSettingsHelper.DatabaseIsInstalled())
+                //check whether this filter has been overridden for the Action
+                var actionFilter = filterContext.ActionDescriptor.FilterDescriptors
+                    .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
+                    .Select(filterDescriptor => filterDescriptor.Filter).OfType<CheckAccessPublicStoreAttribute>().FirstOrDefault();
+
+                //ignore filter (the action is available even if navigation is not allowed)
+                if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
+                    return;
+
+                if (!DataSettingsManager.DatabaseIsInstalled)
                     return;
 
                 //check whether current customer has access to a public store
@@ -67,7 +93,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //customer hasn't access to a public store
-                filterContext.Result = new UnauthorizedResult();
+                filterContext.Result = new ChallengeResult();
             }
 
             #endregion

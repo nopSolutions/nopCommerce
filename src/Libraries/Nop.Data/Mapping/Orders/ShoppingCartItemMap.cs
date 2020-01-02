@@ -1,29 +1,42 @@
-﻿using Nop.Core.Domain.Orders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
+    /// <summary>
+    /// Represents a shopping cart item mapping configuration
+    /// </summary>
     public partial class ShoppingCartItemMap : NopEntityTypeConfiguration<ShoppingCartItem>
     {
-        public ShoppingCartItemMap()
+        #region Methods
+
+        /// <summary>
+        /// Configures the entity
+        /// </summary>
+        /// <param name="builder">The builder to be used to configure the entity</param>
+        public override void Configure(EntityTypeBuilder<ShoppingCartItem> builder)
         {
-            this.ToTable("ShoppingCartItem");
-            this.HasKey(sci => sci.Id);
+            builder.ToTable(nameof(ShoppingCartItem));
+            builder.HasKey(item => item.Id);
 
-            this.Property(sci => sci.CustomerEnteredPrice).HasPrecision(18, 4);
+            builder.Property(item => item.CustomerEnteredPrice).HasColumnType("decimal(18, 4)");
 
-            this.Ignore(sci => sci.ShoppingCartType);
-            this.Ignore(sci => sci.IsFreeShipping);
-            this.Ignore(sci => sci.IsShipEnabled);
-            this.Ignore(sci => sci.AdditionalShippingCharge);
-            this.Ignore(sci => sci.IsTaxExempt);
+            builder.HasOne(item => item.Customer)
+                .WithMany(customer => customer.ShoppingCartItems)
+                .HasForeignKey(item => item.CustomerId)
+                .IsRequired();
 
-            this.HasRequired(sci => sci.Customer)
-                .WithMany(c => c.ShoppingCartItems)
-                .HasForeignKey(sci => sci.CustomerId);
-
-            this.HasRequired(sci => sci.Product)
+            builder.HasOne(item => item.Product)
                 .WithMany()
-                .HasForeignKey(sci => sci.ProductId);
+                .HasForeignKey(item => item.ProductId)
+                .IsRequired();
+
+            builder.Ignore(item => item.ShoppingCartType);
+
+            base.Configure(builder);
         }
+
+        #endregion
     }
 }

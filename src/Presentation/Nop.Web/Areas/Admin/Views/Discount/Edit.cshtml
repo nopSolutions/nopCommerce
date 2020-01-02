@@ -1,8 +1,8 @@
-﻿@model DiscountModel
+@model DiscountModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Promotions.Discounts.EditDiscountDetails").Text;
+    ViewBag.PageTitle = T("Admin.Promotions.Discounts.EditDiscountDetails").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Discounts");
 }
@@ -30,6 +30,7 @@
                 @T("Admin.Common.Delete")
             </span>
         </div>
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DiscountDetailsButtons, additionalData = Model })
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)
 </form>

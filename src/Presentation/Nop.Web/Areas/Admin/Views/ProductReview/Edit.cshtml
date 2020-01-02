@@ -1,8 +1,8 @@
-﻿@model ProductReviewModel
+@model ProductReviewModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Catalog.ProductReviews.EditProductReviewDetails").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.ProductReviews.EditProductReviewDetails").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Product reviews");
 }
@@ -33,6 +33,7 @@
                     @T("Admin.Common.Delete")
                 </span>
             }
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductReviewDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

@@ -1,6 +1,7 @@
 ﻿@model LoginModel
-@using System.Net
 @using Nop.Core
+@using Nop.Core.Domain.Customers
+
 @inject IWebHelper webHelper
 @{
     Layout = "_ColumnsOne";
@@ -11,11 +12,7 @@
     Html.AppendPageCssClassParts("html-login-page");
 
     //register URL with return URL (if specified)
-    var registerUrl = Url.RouteUrl("Register");
-    if (!String.IsNullOrEmpty(this.Context.Request.Query["returnUrl"]))
-    {
-        registerUrl = webHelper.ModifyQueryString(registerUrl, "returnurl=" + WebUtility.UrlEncode(this.Context.Request.Query["returnUrl"]), null);
-    }
+    var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] }, webHelper.CurrentRequestProtocol);
 }
 <div class="page login-page">
     <div class="page-title">
@@ -24,7 +21,18 @@
     @await Html.PartialAsync("_ExternalAuthentication.Errors")
     <div class="page-body">
         <div class="customer-blocks">
-            @if (Model.CheckoutAsGuest)
+            @if (Model.RegistrationType == UserRegistrationType.Disabled)
+            {
+                <div class="new-wrapper">
+                    <div class="title">
+                        @T("Account.Register")
+                    </div>
+                    <div class="text">
+                        @T("Account.Register.Result.Disabled")
+                    </div>
+                </div>
+            }
+            else if (Model.CheckoutAsGuest)
             {
                 <div class="new-wrapper checkout-as-guest-or-register-block">
                     <div class="title">
@@ -54,7 +62,7 @@
                 </div>
             }
             <div class="returning-wrapper fieldset">
-                <form asp-route="Login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
+                <form asp-route="Login" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post" autocomplete="off">
                     <div asp-validation-summary="ModelOnly" class="message-error">@T("Account.Login.Unsuccessful")</div>
                     <div class="title">
                         <strong>@T("Account.Login.ReturningCustomer")</strong>
@@ -63,7 +71,7 @@
                         @if (Model.UsernamesEnabled)
                         {
                             <div class="inputs">
-                                <label asp-for="Username">@T("Account.Login.Fields.UserName"):</label>
+                                <label asp-for="Username" asp-postfix=":"></label>
                                 <input asp-for="Username" class="username" autofocus="autofocus" />
                                 <span asp-validation-for="Username"></span>
                             </div>
@@ -71,19 +79,19 @@
                         else
                         {
                             <div class="inputs">
-                                <label asp-for="Email">@T("Account.Login.Fields.Email"):</label>
+                                <label asp-for="Email" asp-postfix=":"></label>
                                 <input asp-for="Email" class="email" autofocus="autofocus" />
                                 <span asp-validation-for="Email"></span>
                             </div>
                         }
                         <div class="inputs">
-                            <label asp-for="Password">@T("Account.Login.Fields.Password"):</label>
+                            <label asp-for="Password" asp-postfix=":"></label>
                             <input asp-for="Password" class="password" />
                             <span asp-validation-for="Password"></span>
                         </div>
                         <div class="inputs reversed">
                             <input asp-for="RememberMe" />
-                            <label asp-for="RememberMe">@T("Account.Login.Fields.RememberMe")</label>
+                            <label asp-for="RememberMe"></label>
                             <span class="forgot-password">
                                 <a asp-route="PasswordRecovery">@T("Account.Login.ForgotPassword")</a>
                             </span>

@@ -1,19 +1,11 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Blogs
 {
-    public partial class BlogPostListModel : BaseNopModel
+    /// <summary>
+    /// Represents a blog post list model
+    /// </summary>
+    public partial class BlogPostListModel : BasePagedListModel<BlogPostModel>
     {
-        public BlogPostListModel()
-        {
-            AvailableStores = new List<SelectListItem>();
-        }
-
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.List.SearchStore")]
-        public int SearchStoreId { get; set; }
-        public IList<SelectListItem> AvailableStores { get; set; }
     }
 }

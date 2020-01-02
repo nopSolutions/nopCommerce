@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using Nop.Core.Extensions;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Helpers
 {
@@ -14,50 +14,76 @@ namespace Nop.Services.Helpers
     /// </summary>
     public class BrowscapXmlHelper
     {
-        private readonly List<string> _crawlerUserAgentsRegexp;
-       
-        public BrowscapXmlHelper(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath)
+        private Regex _crawlerUserAgentsRegexp;
+        private readonly INopFileProvider _fileProvider;
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="userAgentStringsPath">User agent file path</param>
+        /// <param name="crawlerOnlyUserAgentStringsPath">User agent with crawlers only file path</param>
+        /// <param name="fileProvider">File provider</param>
+        public BrowscapXmlHelper(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath, INopFileProvider fileProvider)
         {
-            _crawlerUserAgentsRegexp = new List<string>();
+            _fileProvider = fileProvider;
 
             Initialize(userAgentStringsPath, crawlerOnlyUserAgentStringsPath);
+        }
+
+        private static bool IsBrowscapItemIsCrawler(XElement browscapItem)
+        {
+            var el = browscapItem.Elements("item").FirstOrDefault(e => e.Attribute("name")?.Value == "Crawler");
+
+            return el != null && el.Attribute("value")?.Value.ToLower() == "true";
+        }
+
+        private static string ToRegexp(string str)
+        {
+            var sb = new StringBuilder(Regex.Escape(str));
+            sb.Replace("&amp;", "&").Replace("\\?", ".").Replace("\\*", ".*?");
+            return $"^{sb}$";
         }
 
         private void Initialize(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath)
         {
             List<XElement> crawlerItems = null;
+            var needSaveCrawlerOnly = false;
 
-            if (!string.IsNullOrEmpty(crawlerOnlyUserAgentStringsPath) && File.Exists(crawlerOnlyUserAgentStringsPath))
+            if (!string.IsNullOrEmpty(crawlerOnlyUserAgentStringsPath) && _fileProvider.FileExists(crawlerOnlyUserAgentStringsPath))
             {
                 //try to load crawler list from crawlers only file
                 using (var sr = new StreamReader(crawlerOnlyUserAgentStringsPath))
                 {
-                    crawlerItems = XDocument.Load(sr).Root.Return(x => x.Elements("browscapitem").ToList(), null);
+                    crawlerItems = XDocument.Load(sr).Root?.Elements("browscapitem").ToList();
                 }
             }
 
-            if (crawlerItems == null)
+            if (crawlerItems == null || !crawlerItems.Any())
             {
                 //try to load crawler list from full user agents file
                 using (var sr = new StreamReader(userAgentStringsPath))
                 {
-                    crawlerItems = XDocument.Load(sr).Root.Return(x => x.Element("browsercapitems"), null)
+                    crawlerItems = XDocument.Load(sr).Root?.Element("browsercapitems")?.Elements("browscapitem")
                         //only crawlers
-                        .Return(x => x.Elements("browscapitem").Where(IsBrowscapItemIsCrawler).ToList(), null);
+                        .Where(IsBrowscapItemIsCrawler).ToList();
+                    needSaveCrawlerOnly = true;
                 }
             }
 
-            if (crawlerItems == null)
+            if (crawlerItems == null || !crawlerItems.Any())
                 throw new Exception("Incorrect file format");
 
-            _crawlerUserAgentsRegexp.AddRange(crawlerItems
+            var crawlerRegexpPattern = string.Join("|",
+                crawlerItems
                 //get only user agent names
                 .Select(e => e.Attribute("name"))
-                .Where(e => e != null && !string.IsNullOrEmpty(e.Value))
+                .Where(e => !string.IsNullOrEmpty(e?.Value))
                 .Select(e => e.Value)
                 .Select(ToRegexp));
 
-            if (string.IsNullOrEmpty(crawlerOnlyUserAgentStringsPath) || File.Exists(crawlerOnlyUserAgentStringsPath))
+            _crawlerUserAgentsRegexp = new Regex(crawlerRegexpPattern);
+
+            if ((string.IsNullOrEmpty(crawlerOnlyUserAgentStringsPath) || _fileProvider.FileExists(crawlerOnlyUserAgentStringsPath)) && !needSaveCrawlerOnly)
                 return;
 
             //try to write crawlers file
@@ -69,31 +95,18 @@ namespace Nop.Services.Helpers
                 {
                     foreach (var element in crawler.Elements().ToList())
                     {
-                        if (element.Attribute("name").Return(x => x.Value.ToLower(), string.Empty) == "crawler")
+                        if ((element.Attribute("name")?.Value.ToLower() ?? string.Empty) == "crawler")
                             continue;
                         element.Remove();
                     }
 
                     root.Add(crawler);
                 }
+
                 root.Save(sw);
             }
         }
-
-        private static bool IsBrowscapItemIsCrawler(XElement browscapItem)
-        {
-            var el = browscapItem.Elements("item").FirstOrDefault(e => e.Attribute("name").Return(a => a.Value, "") == "Crawler");
-
-            return el != null && el.Attribute("value").Return(a => a.Value.ToLower() == "true", false);
-        }
-
-        private static string ToRegexp(string str)
-        {
-            var sb = new StringBuilder(Regex.Escape(str));
-            sb.Replace("&amp;", "&").Replace("\\?", ".").Replace("\\*", ".*?");
-            return string.Format("^{0}$", sb);
-        }
-
+        
         /// <summary>
         /// Determines whether a user agent is a crawler
         /// </summary>
@@ -101,7 +114,7 @@ namespace Nop.Services.Helpers
         /// <returns>True if user agent is a crawler, otherwise - false</returns>
         public bool IsCrawler(string userAgent)
         {
-            return _crawlerUserAgentsRegexp.Any(p => Regex.IsMatch(userAgent, p));
+            return _crawlerUserAgentsRegexp.IsMatch(userAgent);
         }
     }
 }

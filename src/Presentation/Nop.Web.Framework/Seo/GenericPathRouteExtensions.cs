@@ -53,9 +53,9 @@ namespace Nop.Web.Framework.Seo
         }
 
         /// <summary>
-        /// Adds a route to the route builder with the specified name, template, default values, constraints anddata tokens.
+        /// Adds a route to the route builder with the specified name, template, default values, constraints and data tokens.
         /// </summary>
-        //// <param name="routeBuilder">The route builder to add the route to</param>
+        /// <param name="routeBuilder">The route builder to add the route to</param>
         /// <param name="name">The name of the route</param>
         /// <param name="template">The URL pattern of the route</param>
         /// <param name="defaults"> An object that contains default values for route parameters. 

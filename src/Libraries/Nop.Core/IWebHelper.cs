@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace Nop.Core
 {
@@ -23,16 +23,10 @@ namespace Nop.Core
         /// Gets this page URL
         /// </summary>
         /// <param name="includeQueryString">Value indicating whether to include query strings</param>
+        /// <param name="useSsl">Value indicating whether to get SSL secured page URL. Pass null to determine automatically</param>
+        /// <param name="lowercaseUrl">Value indicating whether to lowercase URL</param>
         /// <returns>Page URL</returns>
-        string GetThisPageUrl(bool includeQueryString);
-
-        /// <summary>
-        /// Gets this page URL
-        /// </summary>
-        /// <param name="includeQueryString">Value indicating whether to include query strings</param>
-        /// <param name="useSsl">Value indicating whether to get SSL secured page URL</param>
-        /// <returns>Page URL</returns>
-        string GetThisPageUrl(bool includeQueryString, bool useSsl);
+        string GetThisPageUrl(bool includeQueryString, bool? useSsl = null, bool lowercaseUrl = false);
 
         /// <summary>
         /// Gets a value indicating whether current connection is secured
@@ -50,15 +44,9 @@ namespace Nop.Core
         /// <summary>
         /// Gets store location
         /// </summary>
+        /// <param name="useSsl">Whether to get SSL secured URL; pass null to determine automatically</param>
         /// <returns>Store location</returns>
-        string GetStoreLocation();
-
-        /// <summary>
-        /// Gets store location
-        /// </summary>
-        /// <param name="useSsl">Whether to get SSL secured URL</param>
-        /// <returns>Store location</returns>
-        string GetStoreLocation(bool useSsl);
+        string GetStoreLocation(bool? useSsl = null);
 
         /// <summary>
         /// Returns true if the requested resource is one of the typical resources that needn't be processed by the CMS engine.
@@ -67,21 +55,22 @@ namespace Nop.Core
         bool IsStaticResource();
 
         /// <summary>
-        /// Modifies query string
+        /// Modify query string of the URL
         /// </summary>
-        /// <param name="url">URL to modify</param>
-        /// <param name="queryStringModification">Query string modification</param>
-        /// <param name="anchor">Anchor</param>
-        /// <returns>New URL</returns>
-        string ModifyQueryString(string url, string queryStringModification, string anchor);
+        /// <param name="url">Url to modify</param>
+        /// <param name="key">Query parameter key to add</param>
+        /// <param name="values">Query parameter values to add</param>
+        /// <returns>New URL with passed query parameter</returns>
+        string ModifyQueryString(string url, string key, params string[] values);
 
         /// <summary>
-        /// Remove query string from the URL
+        /// Remove query parameter from the URL
         /// </summary>
-        /// <param name="url">URL to modify</param>
-        /// <param name="queryString">Query string to remove</param>
-        /// <returns>New URL without passed query string</returns>
-        string RemoveQueryString(string url, string queryString);
+        /// <param name="url">Url to modify</param>
+        /// <param name="key">Query parameter key to remove</param>
+        /// <param name="value">Query parameter value to remove; pass null to remove all query parameters with the specified key</param>
+        /// <returns>New URL without passed query parameter</returns>
+        string RemoveQueryString(string url, string key, string value = null);
 
         /// <summary>
         /// Gets query string value by name
@@ -108,6 +97,11 @@ namespace Nop.Core
         bool IsPostBeingDone { get; set; }
 
         /// <summary>
+        /// Gets current HTTP request protocol
+        /// </summary>
+        string CurrentRequestProtocol { get; }
+
+        /// <summary>
         /// Gets whether the specified HTTP request URI references the local host.
         /// </summary>
         /// <param name="req">HTTP request</param>
@@ -120,5 +114,12 @@ namespace Nop.Core
         /// <param name="request">HTTP request</param>
         /// <returns>Raw URL</returns>
         string GetRawUrl(HttpRequest request);
+
+        /// <summary>
+        /// Gets whether the request is made with AJAX 
+        /// </summary>
+        /// <param name="request">HTTP request</param>
+        /// <returns>Result</returns>
+        bool IsAjaxRequest(HttpRequest request);
     }
 }

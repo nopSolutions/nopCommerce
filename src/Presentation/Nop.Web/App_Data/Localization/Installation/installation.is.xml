@@ -123,7 +123,7 @@
     <Value>Slá verður inn nafn SQL notanda</Value>
   </LocaleResource>
   <LocaleResource Name="SqlStandard">
-    <Value>Nota SQL (eða SQL Express) gagnaþjón</Value>
+    <Value>Nota Microsoft SQL Server(eða SQL Express)</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Vista upplýsingar</Value>

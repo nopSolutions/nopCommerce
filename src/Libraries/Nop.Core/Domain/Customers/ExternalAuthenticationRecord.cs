@@ -45,5 +45,4 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual Customer Customer { get; set; }
     }
-
 }

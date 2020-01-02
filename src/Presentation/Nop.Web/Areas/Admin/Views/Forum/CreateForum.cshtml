@@ -1,8 +1,8 @@
-﻿@model ForumModel
+@model ForumModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.ContentManagement.Forums.Forum.CreateForum").Text;
+    ViewBag.PageTitle = T("Admin.ContentManagement.Forums.Forum.CreateForum").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Manage forums");
 }
@@ -25,6 +25,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ForumDetailsButtons })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateForum", Model)

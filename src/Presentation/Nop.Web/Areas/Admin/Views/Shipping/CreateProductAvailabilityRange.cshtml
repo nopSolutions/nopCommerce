@@ -1,8 +1,8 @@
-﻿@model ProductAvailabilityRangeModel
+@model ProductAvailabilityRangeModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Shipping.ProductAvailabilityRanges.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Shipping.ProductAvailabilityRanges.AddNew").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Dates and ranges");
 }
@@ -25,6 +25,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAvailabilityRangeDetailsButtons })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateProductAvailabilityRange", Model)

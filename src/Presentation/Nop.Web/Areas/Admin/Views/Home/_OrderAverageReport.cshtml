@@ -1,10 +1,9 @@
-﻿@using Nop.Core
-@using Nop.Services.Common
+﻿@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject IWorkContext workContext
 @{
     const string panelId = "order-average-report-box";
-    const string hidePanelAttributeName = "HideOrderAverageReportPanel";
-    var hidePanel = workContext.CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
+    const string hidePanelAttributeName = "Reports.HideOrderAverageReportPanel";
+    var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
 }
 
 <div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
@@ -26,74 +25,49 @@
             </button>
         </div>
     </div>
-    <div class="box-body" style="padding-bottom: 22px;">
-        <div id="average-order-report-grid"></div>
-
-        <script>
-            $(document).ready(function () {
-                $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
-                    var collapsed = !$('#@panelId').hasClass('collapsed-box');
-                    saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
-                });
-
-                $("#average-order-report-grid").kendoGrid({
-                    dataSource: {
-                        type: "json",
-                        transport: {
-                            read: {
-                                url: "@Html.Raw(Url.Action("OrderAverageReportList", "Order"))",
-                                type: "POST",
-                                dataType: "json",
-                                data: addAntiForgeryToken
-                            }
-                        },
-                        schema: {
-                            data: "Data",
-                            total: "Total",
-                            errors: "Errors"
-                        },
-                        error: function (e) {
-                            display_kendoui_grid_error(e);
-                            // Cancel the changes
-                            this.cancelChanges();
-                        },
-                        serverPaging: true,
-                        serverFiltering: true,
-                        serverSorting: true
-                    },
-                    pageable: {
-                        refresh: true,
-                        numeric: false,
-                        previousNext: false,
-                        info: false,
-                        @await Html.PartialAsync("_GridPagerMessages")
-                    },
-                    editable: {
-                        confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                        mode: "inline"
-                    },
-                    scrollable: false,
-                    columns: [{
-                        field: "OrderStatus",
-                        title: "@T("Admin.SalesReport.Average.OrderStatus")"
-                    }, {
-                        field: "SumTodayOrders",
-                        title: "@T("Admin.SalesReport.Average.SumTodayOrders")"
-                    }, {
-                        field: "SumThisWeekOrders",
-                        title: "@T("Admin.SalesReport.Average.SumThisWeekOrders")"
-                    }, {
-                        field: "SumThisMonthOrders",
-                        title: "@T("Admin.SalesReport.Average.SumThisMonthOrders")"
-                    }, {
-                        field: "SumThisYearOrders",
-                        title: "@T("Admin.SalesReport.Average.SumThisYearOrders")"
-                    }, {
-                        field: "SumAllTimeOrders",
-                        title: "@T("Admin.SalesReport.Average.SumAllTimeOrders")"
-                    }]
-                });
+    <script>
+        $(document).ready(function () {
+            $('#@panelId').on('click', 'button[data-widget="collapse"]', function () {
+                var collapsed = !$('#@panelId').hasClass('collapsed-box');
+                saveUserPreferences('@(Url.Action("SavePreference", "Preferences"))', '@hidePanelAttributeName', collapsed);
             });
-        </script>
+        });
+    </script>
+    <div class="box-body" style="padding-bottom: 22px;">
+        @await Html.PartialAsync("Table", new DataTablesModel
+        {
+            Name = "average-order-report-grid",
+            UrlRead = new DataUrl("OrderAverageReportList", "Order", null),
+            Length = int.MaxValue,
+            Paging = false,
+            Info = false,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(OrderAverageReportModel.OrderStatus))
+                {
+                    Title = T("Admin.SalesReport.Average.OrderStatus").Text
+                },
+                new ColumnProperty(nameof(OrderAverageReportModel.SumTodayOrders))
+                {
+                    Title = T("Admin.SalesReport.Average.SumTodayOrders").Text
+                },
+                new ColumnProperty(nameof(OrderAverageReportModel.SumThisWeekOrders))
+                {
+                    Title = T("Admin.SalesReport.Average.SumThisWeekOrders").Text
+                },
+                new ColumnProperty(nameof(OrderAverageReportModel.SumThisMonthOrders))
+                {
+                    Title = T("Admin.SalesReport.Average.SumThisMonthOrders").Text
+                },
+                new ColumnProperty(nameof(OrderAverageReportModel.SumThisYearOrders))
+                {
+                    Title = T("Admin.SalesReport.Average.SumThisYearOrders").Text
+                },
+                new ColumnProperty(nameof(OrderAverageReportModel.SumAllTimeOrders))
+                {
+                    Title = T("Admin.SalesReport.Average.SumAllTimeOrders").Text
+                }
+            }
+        })
     </div>
 </div>

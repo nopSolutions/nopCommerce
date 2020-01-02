@@ -1,8 +1,8 @@
-﻿@model CustomerAddressModel
+@model CustomerAddressModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Customers.Customers.Addresses.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.Customers.Customers.Addresses.AddNew").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Customers list");
 }
@@ -20,6 +20,7 @@
             <button type="submit" class="btn bg-blue">
                 @T("Admin.Common.Save")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAddressDetailsButtons })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateAddress", Model)

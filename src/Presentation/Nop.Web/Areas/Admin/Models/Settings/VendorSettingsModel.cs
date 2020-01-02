@@ -1,12 +1,26 @@
 ﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
+using Nop.Web.Areas.Admin.Models.Vendors;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
-    public partial class VendorSettingsModel : BaseNopModel
+    /// <summary>
+    /// Represents a vendor settings model
+    /// </summary>
+    public partial class VendorSettingsModel : BaseNopModel, ISettingsModel
     {
-        public int ActiveStoreScopeConfiguration { get; set; }
+        #region Ctor
 
+        public VendorSettingsModel()
+        {
+            VendorAttributeSearchModel = new VendorAttributeSearchModel();
+        }
+
+        #endregion
+
+        #region Properties
+
+        public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.VendorsBlockItemsToDisplay")]
         public int VendorsBlockItemsToDisplay { get; set; }
@@ -23,6 +37,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.AllowCustomersToApplyForVendorAccount")]
         public bool AllowCustomersToApplyForVendorAccount { get; set; }
         public bool AllowCustomersToApplyForVendorAccount_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.TermsOfServiceEnabled")]
+        public bool TermsOfServiceEnabled { get; set; }
+        public bool TermsOfServiceEnabled_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.AllowSearchByVendor")]
         public bool AllowSearchByVendor { get; set; }
@@ -43,5 +61,13 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.AllowVendorsToImportProducts")]
         public bool AllowVendorsToImportProducts { get; set; }
         public bool AllowVendorsToImportProducts_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.ShowVendorOnOrderDetailsPage")]
+        public bool ShowVendorOnOrderDetailsPage { get; set; }
+        public bool ShowVendorOnOrderDetailsPage_OverrideForStore { get; set; }
+
+        public VendorAttributeSearchModel VendorAttributeSearchModel { get; set; }
+
+        #endregion
     }
 }

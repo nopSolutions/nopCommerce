@@ -6,7 +6,7 @@
     public partial class DiscountRequirementValidationResult
     {
         /// <summary>
-        /// Gets or sets a alue indicating whether discount is valid
+        /// Gets or sets a value indicating whether discount is valid
         /// </summary>
         public bool IsValid { get; set; }
 

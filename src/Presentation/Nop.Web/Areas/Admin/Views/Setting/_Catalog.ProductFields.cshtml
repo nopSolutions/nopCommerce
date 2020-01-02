@@ -1,0 +1,44 @@
+@model CatalogSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowSkuOnProductDetailsPage_OverrideForStore" asp-input="ShowSkuOnProductDetailsPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowSkuOnProductDetailsPage" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowSkuOnProductDetailsPage" />
+            <span asp-validation-for="ShowSkuOnProductDetailsPage"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowSkuOnCatalogPages_OverrideForStore" asp-input="ShowSkuOnCatalogPages" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowSkuOnCatalogPages" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowSkuOnCatalogPages" />
+            <span asp-validation-for="ShowSkuOnCatalogPages"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowGtin_OverrideForStore" asp-input="ShowGtin" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowGtin" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowGtin" />
+            <span asp-validation-for="ShowGtin"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowManufacturerPartNumber_OverrideForStore" asp-input="ShowManufacturerPartNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowManufacturerPartNumber" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowManufacturerPartNumber" />
+            <span asp-validation-for="ShowManufacturerPartNumber"></span>
+        </div>
+    </div>
+</div>

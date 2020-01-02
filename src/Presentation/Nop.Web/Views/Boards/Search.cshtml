@@ -8,10 +8,10 @@
     //page class
     Html.AppendPageCssClassParts("html-forum-search-page");
 }
-<script type="text/javascript">
+<script asp-location="Footer">
     $(document).ready(function () {
         toggleAdvancedSearch();
-        $('#adv').click(function () {
+        $('#adv').on('click', function () {
             toggleAdvancedSearch();
         });
     });
@@ -30,7 +30,7 @@
         <h1>@T("Forum.Search")</h1>
     </div>
     <div class="page-body">
-        @await Component.InvokeAsync("Widget", new { widgetZone = "boards_search_before_searchform" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsSearchBeforeSearchform })
         <div class="search-input">
             <form asp-route="Search" method="get">
                 <div class="fieldset">
@@ -38,7 +38,7 @@
                         <div class="basic-search">
                             <div class="inputs">
                                 <label>@T("Forum.Search.SearchKeyword")</label>
-                                <input type="text" name="searchterms" id="searchterms" class="forum-search-text" value="@Model.SearchTerms"/>
+                                <input type="text" name="searchterms" id="searchterms" class="forum-search-text" value="@Model.SearchTerms" />
                             </div>
                             <div class="inputs reversed">
                                 <input @(Model.ShowAdvancedSearch ? "checked=\"checked\"" : "") id="adv" name="adv" type="checkbox" value="true">
@@ -66,7 +66,7 @@
                 </div>
             </form>
         </div>
-        @await Component.InvokeAsync("Widget", new { widgetZone = "boards_search_after_searchform" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsSearchAfterSearchform })
         <div class="search-error">
             @Model.Error
         </div>
@@ -96,8 +96,8 @@
                     RouteValues = new ForumSearchRouteValues { adv = adv, searchterms = searchterms, forumId = forumId, within = within, limitDays = limitDays },
                 });
             }
-            @await Component.InvokeAsync("Widget", new { widgetZone = "boards_search_before_results" })
-            @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsSearchBeforeResults })
+            @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
             {
                 <div class="pager upper">
                     @pager
@@ -118,7 +118,10 @@
                                 <col width="1" />
                                 <col />
                                 <col width="1" />
-                                <col width="1" />
+                                @if (Model.AllowPostVoting)
+                                {
+                                    <col width="1" />
+                                }
                                 <col width="1" />
                             </colgroup>
                             <thead>
@@ -147,7 +150,7 @@
                                 @foreach (var topic in @Model.ForumTopics)
                                 {
                                     var topicType = "post";
-                                    var topicText = String.Empty;
+                                    var topicText = string.Empty;
                                     switch (topic.ForumTopicType)
                                     {
                                         case ForumTopicType.Normal:
@@ -155,11 +158,11 @@
                                             break;
                                         case ForumTopicType.Sticky:
                                             topicType = "sticky";
-                                            topicText = string.Format("[{0}]", T("Forum.Sticky"));
+                                            topicText = $"[{T("Forum.Sticky")}]";
                                             break;
                                         case ForumTopicType.Announcement:
                                             topicType = "announcement";
-                                            topicText = string.Format("[{0}]", T("Forum.Announcement"));
+                                            topicText = $"[{T("Forum.Announcement")}]";
                                             break;
                                         default:
                                             topicType = "post";
@@ -172,7 +175,7 @@
                                         <td class="topic-details">
                                             <div class="topic-title">
                                                 @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName })
-                                                @if (!String.IsNullOrEmpty(topicText))
+                                                @if (!string.IsNullOrEmpty(topicText))
                                                 {
                                                     <span class="topic-type">@topicText</span>
                                                 }
@@ -220,13 +223,13 @@
                     </div>
                 }
             </div>
-            @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
+            @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
             {
                 <div class="pager lower">
                     @pager
                 </div>
             }
-            @await Component.InvokeAsync("Widget", new { widgetZone = "boards_search_after_results" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsSearchAfterResults })
         </div>
     </div>
 </div>

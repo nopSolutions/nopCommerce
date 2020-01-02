@@ -123,7 +123,7 @@
     <Value>Bắt buộc nhập người dùng SQL</Value>
   </LocaleResource>
   <LocaleResource Name="SqlStandard">
-    <Value>Sử dụng cơ sở dữ liệu SQL Server (hoặc SQL Express)</Value>
+    <Value>Sử dụng cơ sở dữ liệu Microsoft SQL Server (hoặc SQL Express)</Value>
   </LocaleResource>
   <LocaleResource Name="WebsiteInformation">
     <Value>Thông tin website</Value>

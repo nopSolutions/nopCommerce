@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Boards
 {
-    public partial class ForumPageModel
+    public partial class ForumPageModel : BaseNopModel
     {
         public ForumPageModel()
         {
-            this.ForumTopics = new List<ForumTopicRowModel>();
+            ForumTopics = new List<ForumTopicRowModel>();
         }
 
         public int Id { get; set; }

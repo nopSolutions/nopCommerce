@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
-using FluentValidation.Attributes;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Validators.Common;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Common
 {
-    [Validator(typeof(AddressValidator))]
     public partial class AddressModel : BaseNopEntityModel
     {
         public AddressModel()
@@ -24,6 +22,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
         [NopResourceDisplayName("Admin.Address.Fields.LastName")]
         public string LastName { get; set; }
 
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Admin.Address.Fields.Email")]
         public string Email { get; set; }
 
@@ -42,11 +41,14 @@ namespace Nop.Web.Areas.Admin.Models.Common
         [NopResourceDisplayName("Admin.Address.Fields.StateProvince")]
         public string StateProvinceName { get; set; }
 
+        [NopResourceDisplayName("Admin.Address.Fields.Address1")]
+        public string Address1 { get; set; }
+
         [NopResourceDisplayName("Admin.Address.Fields.City")]
         public string City { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.Fields.Address1")]
-        public string Address1 { get; set; }
+        [NopResourceDisplayName("Admin.Address.Fields.County")]
+        public string County { get; set; }
 
         [NopResourceDisplayName("Admin.Address.Fields.Address2")]
         public string Address2 { get; set; }
@@ -54,6 +56,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
         [NopResourceDisplayName("Admin.Address.Fields.ZipPostalCode")]
         public string ZipPostalCode { get; set; }
 
+        [DataType(DataType.PhoneNumber)]
         [NopResourceDisplayName("Admin.Address.Fields.PhoneNumber")]
         public string PhoneNumber { get; set; }
 
@@ -68,11 +71,8 @@ namespace Nop.Web.Areas.Admin.Models.Common
         public string FormattedCustomAddressAttributes { get; set; }
         public IList<AddressAttributeModel> CustomAddressAttributes { get; set; }
 
-
         public IList<SelectListItem> AvailableCountries { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
-
-
 
         public bool FirstNameEnabled { get; set; }
         public bool FirstNameRequired { get; set; }
@@ -87,6 +87,8 @@ namespace Nop.Web.Areas.Admin.Models.Common
         public bool StateProvinceEnabled { get; set; }
         public bool CityEnabled { get; set; }
         public bool CityRequired { get; set; }
+        public bool CountyEnabled { get; set; }
+        public bool CountyRequired { get; set; }
         public bool StreetAddressEnabled { get; set; }
         public bool StreetAddressRequired { get; set; }
         public bool StreetAddress2Enabled { get; set; }
@@ -97,7 +99,6 @@ namespace Nop.Web.Areas.Admin.Models.Common
         public bool PhoneRequired { get; set; }
         public bool FaxEnabled { get; set; }
         public bool FaxRequired { get; set; }
-
 
         #region Nested classes
 

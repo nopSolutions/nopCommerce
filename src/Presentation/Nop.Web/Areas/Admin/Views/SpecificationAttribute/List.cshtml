@@ -1,16 +1,12 @@
-﻿@inject AdminAreaSettings adminAreaSettings
+@model SpecificationAttributeSearchModel
 
 @{
-    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
-    var gridPageSizes = adminAreaSettings.GridPageSizes;
-
     //page title
-    ViewBag.Title = T("Admin.Catalog.Attributes.SpecificationAttributes").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Attributes.SpecificationAttributes").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Specification attributes");
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Catalog.Attributes.SpecificationAttributes")
@@ -20,6 +16,12 @@
             <i class="fa fa-plus-square"></i>
             @T("Admin.Common.AddNew")
         </a>
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeListButtons })
+        <button type="button" id="delete-selected" class="btn bg-red">
+            <i class="fa fa-trash-o"></i>
+            @T("Admin.Common.Delete.Selected")
+        </button>
+        <nop-action-confirmation asp-button-id="delete-selected" />
     </div>
 </div>
 
@@ -30,66 +32,67 @@
                 <p>
                     @T("Admin.Catalog.Attributes.SpecificationAttributes.Description")
                 </p>
-                <div id="specificationattributes-grid"></div>
+                @await Html.PartialAsync("Table", new DataTablesModel
+                {
+                    Name = "specificationattributes-grid",
+                    UrlRead = new DataUrl("List", "SpecificationAttribute", null),
+                    Length = Model.PageSize,
+                    LengthMenu = Model.AvailablePageSizes,
+                    ColumnCollection = new List<ColumnProperty>
+                    {
+                        new ColumnProperty(nameof(SpecificationAttributeModel.Id))
+                        {
+                            IsMasterCheckBox = true,
+                            Render = new RenderCheckBox("checkbox_specificationattributes"),
+                            ClassName =  NopColumnClassDefaults.CenterAll,
+                            Width = "50"
+                        },
+                        new ColumnProperty(nameof(SpecificationAttributeModel.Name))
+                        {
+                            Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name").Text
+                        },
+                        new ColumnProperty(nameof(SpecificationAttributeModel.DisplayOrder))
+                        {
+                            Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder").Text,
+                            Width = "100",
+                            ClassName =  NopColumnClassDefaults.CenterAll
+                        },
+                        new ColumnProperty(nameof(SpecificationAttributeModel.Id))
+                        {
+                            Title = T("Admin.Common.Edit").Text,
+                            Width = "100",
+                            ClassName =  NopColumnClassDefaults.Button,
+                            Render = new RenderButtonEdit(new DataUrl("Edit"))
+                        }
+                    }
+                })
 
                 <script>
-                    $(document).ready(function() {
-                        $("#specificationattributes-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("List", "SpecificationAttribute"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
+                    $(document).ready(function () {
+                        $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                            var postData = {
+                                selectedIds: selectedIds
+                            };
+                            addAntiForgeryToken(postData);
+                            $.ajax({
+                                cache: false,
+                                type: "POST",
+                                url: "@(Url.Action("DeleteSelected", "SpecificationAttribute"))",
+                                data: postData,
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    $('#deleteSelectedFailed-info').text(errorThrown);
+                                    $('#deleteSelectedFailed').click();
                                 },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(defaultGridPageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(gridPageSizes)],
-                                @await Html.PartialAsync("_GridPagerMessages")
-                            },
-                            editable: {
-                                confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [
-                                {
-                                    field: "Name",
-                                    title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name")",
-                                    width: 300
-                                }, {
-                                    field: "DisplayOrder",
-                                    title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder")",
-                                    width: 100
-                                }, {
-                                    field: "Id",
-                                    title: "@T("Admin.Common.Edit")",
-                                    width: 80,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'                                }
-                            ]
+                                complete: function (jqXHR, textStatus) {
+                                    updateTable('#specificationattributes-grid');
+                                }
+                            });
+                            $('#delete-selected-action-confirmation').modal('toggle');
+                            return false;
                         });
                     });
                 </script>
+                <nop-alert asp-alert-id="deleteSelectedFailed" />
             </div>
         </div>
     </div>

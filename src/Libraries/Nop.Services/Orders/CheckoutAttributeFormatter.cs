@@ -18,33 +18,46 @@ namespace Nop.Services.Orders
     /// </summary>
     public partial class CheckoutAttributeFormatter : ICheckoutAttributeFormatter
     {
-        private readonly IWorkContext _workContext;
-        private readonly ICheckoutAttributeService _checkoutAttributeService;
-        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
-        private readonly ICurrencyService _currencyService;
-        private readonly ITaxService _taxService;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IDownloadService _downloadService;
-        private readonly IWebHelper _webHelper;
+        #region Fields
 
-        public CheckoutAttributeFormatter(IWorkContext workContext,
+        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
+        private readonly ICheckoutAttributeService _checkoutAttributeService;
+        private readonly ICurrencyService _currencyService;
+        private readonly IDownloadService _downloadService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IPriceFormatter _priceFormatter;
+        private readonly ITaxService _taxService;
+        private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
+
+        #endregion
+
+        #region Ctor
+
+        public CheckoutAttributeFormatter(ICheckoutAttributeParser checkoutAttributeParser,
             ICheckoutAttributeService checkoutAttributeService,
-            ICheckoutAttributeParser checkoutAttributeParser,
             ICurrencyService currencyService,
-            ITaxService taxService,
-            IPriceFormatter priceFormatter,
             IDownloadService downloadService,
-            IWebHelper webHelper)
+            ILocalizationService localizationService,
+            IPriceFormatter priceFormatter,
+            ITaxService taxService,
+            IWebHelper webHelper,
+            IWorkContext workContext)
         {
-            this._workContext = workContext;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._currencyService = currencyService;
-            this._taxService = taxService;
-            this._priceFormatter = priceFormatter;
-            this._downloadService = downloadService;
-            this._webHelper = webHelper;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _checkoutAttributeService = checkoutAttributeService;
+            _currencyService = currencyService;
+            _downloadService = downloadService;
+            _localizationService = localizationService;
+            _priceFormatter = priceFormatter;
+            _taxService = taxService;
+            _webHelper = webHelper;
+            _workContext = workContext;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Formats attributes
@@ -65,77 +78,75 @@ namespace Nop.Services.Orders
         /// <param name="separator">Separator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <param name="renderPrices">A value indicating whether to render prices</param>
-        /// <param name="allowHyperlinks">A value indicating whether to HTML hyperink tags could be rendered (if required)</param>
+        /// <param name="allowHyperlinks">A value indicating whether to HTML hyperlink tags could be rendered (if required)</param>
         /// <returns>Attributes</returns>
         public virtual string FormatAttributes(string attributesXml,
-            Customer customer, 
-            string separator = "<br />", 
-            bool htmlEncode = true, 
+            Customer customer,
+            string separator = "<br />",
+            bool htmlEncode = true,
             bool renderPrices = true,
             bool allowHyperlinks = true)
         {
             var result = new StringBuilder();
 
             var attributes = _checkoutAttributeParser.ParseCheckoutAttributes(attributesXml);
-            for (int i = 0; i < attributes.Count; i++)
+            for (var i = 0; i < attributes.Count; i++)
             {
                 var attribute = attributes[i];
                 var valuesStr = _checkoutAttributeParser.ParseValues(attributesXml, attribute.Id);
-                for (int j = 0; j < valuesStr.Count; j++)
+                for (var j = 0; j < valuesStr.Count; j++)
                 {
-                    string valueStr = valuesStr[j];
-                    string formattedAttribute = "";
+                    var valueStr = valuesStr[j];
+                    var formattedAttribute = string.Empty;
                     if (!attribute.ShouldHaveValues())
                     {
                         //no values
                         if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
                         {
                             //multiline textbox
-                            var attributeName = attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+                            var attributeName = _localizationService.GetLocalized(attribute, a => a.Name, _workContext.WorkingLanguage.Id);
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = WebUtility.HtmlEncode(attributeName);
-                            formattedAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, false, false, false, false));
+                            formattedAttribute = $"{attributeName}: {HtmlHelper.FormatText(valueStr, false, true, false, false, false, false)}";
                             //we never encode multiline textbox input
                         }
                         else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                         {
                             //file upload
-                            Guid downloadGuid;
-                            Guid.TryParse(valueStr, out downloadGuid);
+                            Guid.TryParse(valueStr, out var downloadGuid);
                             var download = _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
                                 //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
                                 string attributeText;
-                                var fileName = string.Format("{0}{1}",
-                                    download.Filename ?? download.DownloadGuid.ToString(),
-                                    download.Extension);
+                                var fileName = $"{download.Filename ?? download.DownloadGuid.ToString()}{download.Extension}";
                                 //encode (if required)
                                 if (htmlEncode)
                                     fileName = WebUtility.HtmlEncode(fileName);
                                 if (allowHyperlinks)
                                 {
                                     //hyperlinks are allowed
-                                    var downloadLink = string.Format("{0}download/getfileupload/?downloadId={1}", _webHelper.GetStoreLocation(false), download.DownloadGuid);
-                                    attributeText = string.Format("<a href=\"{0}\" class=\"fileuploadattribute\">{1}</a>", downloadLink, fileName);
+                                    var downloadLink = $"{_webHelper.GetStoreLocation(false)}download/getfileupload/?downloadId={download.DownloadGuid}";
+                                    attributeText = $"<a href=\"{downloadLink}\" class=\"fileuploadattribute\">{fileName}</a>";
                                 }
                                 else
                                 {
                                     //hyperlinks aren't allowed
                                     attributeText = fileName;
                                 }
-                                var attributeName = attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+
+                                var attributeName = _localizationService.GetLocalized(attribute, a => a.Name, _workContext.WorkingLanguage.Id);
                                 //encode (if required)
                                 if (htmlEncode)
                                     attributeName = WebUtility.HtmlEncode(attributeName);
-                                formattedAttribute = string.Format("{0}: {1}", attributeName, attributeText);
+                                formattedAttribute = $"{attributeName}: {attributeText}";
                             }
                         }
                         else
                         {
                             //other attributes (textbox, datepicker)
-                            formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), valueStr);
+                            formattedAttribute = $"{_localizationService.GetLocalized(attribute, a => a.Name, _workContext.WorkingLanguage.Id)}: {valueStr}";
                             //encode (if required)
                             if (htmlEncode)
                                 formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
@@ -143,40 +154,45 @@ namespace Nop.Services.Orders
                     }
                     else
                     {
-                        int attributeValueId;
-                        if (int.TryParse(valueStr, out attributeValueId))
+                        if (int.TryParse(valueStr, out var attributeValueId))
                         {
                             var attributeValue = _checkoutAttributeService.GetCheckoutAttributeValueById(attributeValueId);
+
                             if (attributeValue != null)
                             {
-                                formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
+                                formattedAttribute = $"{_localizationService.GetLocalized(attribute, a => a.Name, _workContext.WorkingLanguage.Id)}: {_localizationService.GetLocalized(attributeValue, a => a.Name, _workContext.WorkingLanguage.Id)}";
                                 if (renderPrices)
                                 {
-                                    decimal priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(attributeValue, customer);
-                                    decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
+                                    var priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(attributeValue, customer);
+                                    var priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                                     if (priceAdjustmentBase > 0)
                                     {
-                                        string priceAdjustmentStr = _priceFormatter.FormatPrice(priceAdjustment);
-                                        formattedAttribute += string.Format(" [+{0}]", priceAdjustmentStr);
+                                        formattedAttribute += string.Format(
+                                                _localizationService.GetResource("FormattedAttributes.PriceAdjustment"),
+                                                "+", _priceFormatter.FormatPrice(priceAdjustment), string.Empty);
                                     }
                                 }
                             }
+
                             //encode (if required)
                             if (htmlEncode)
                                 formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
+
                         }
                     }
 
-                    if (!String.IsNullOrEmpty(formattedAttribute))
-                    {
-                        if (i != 0 || j != 0)
-                            result.Append(separator);
-                        result.Append(formattedAttribute);
-                    }
+                    if (string.IsNullOrEmpty(formattedAttribute))
+                        continue;
+
+                    if (i != 0 || j != 0)
+                        result.Append(separator);
+                    result.Append(formattedAttribute);
                 }
             }
 
             return result.ToString();
         }
+
+        #endregion
     }
 }

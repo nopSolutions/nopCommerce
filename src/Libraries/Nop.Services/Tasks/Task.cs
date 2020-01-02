@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
+using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Configuration;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Infrastructure;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 
 namespace Nop.Services.Tasks
@@ -43,9 +45,13 @@ namespace Nop.Services.Tasks
             if (!Enabled)
                 return;
 
-            var type = Type.GetType(ScheduleTask.Type);
+            var type = Type.GetType(ScheduleTask.Type) ??
+                //ensure that it works fine when only the type name is specified (do not require fully qualified names)
+                AppDomain.CurrentDomain.GetAssemblies()
+                .Select(a => a.GetType(ScheduleTask.Type))
+                .FirstOrDefault(t => t != null);
             if (type == null)
-                return;
+                throw new Exception($"Schedule task ({ScheduleTask.Type}) cannot by instantiated");
 
             object instance = null;
             try
@@ -56,14 +62,14 @@ namespace Nop.Services.Tasks
             {
                 //try resolve
             }
+
             if (instance == null)
             {
                 //not resolved
                 instance = EngineContext.Current.ResolveUnregistered(type);
             }
 
-            var task = instance as ITask;
-
+            var task = instance as IScheduleTask;
             if (task == null)
                 return;
 
@@ -76,6 +82,11 @@ namespace Nop.Services.Tasks
             scheduleTaskService.UpdateTask(ScheduleTask);
         }
 
+        /// <summary>
+        /// Is task already running?
+        /// </summary>
+        /// <param name="scheduleTask">Schedule task</param>
+        /// <returns>Result</returns>
         protected virtual bool IsTaskAlreadyRunning(ScheduleTask scheduleTask)
         {
             //task run for the first time
@@ -116,40 +127,38 @@ namespace Nop.Services.Tasks
                     return;
 
                 //validation (so nobody else can invoke this method when he wants)
-                if (ScheduleTask.LastEndUtc.HasValue && (DateTime.UtcNow - ScheduleTask.LastEndUtc).Value.TotalSeconds <
-                    ScheduleTask.Seconds)
+                if (ScheduleTask.LastStartUtc.HasValue && (DateTime.UtcNow - ScheduleTask.LastStartUtc).Value.TotalSeconds < ScheduleTask.Seconds)
                     //too early
                     return;
             }
 
             try
             {
-                var nopConfig = EngineContext.Current.Resolve<NopConfig>();
-                if (nopConfig.RedisCachingEnabled)
-                {
-                    //get expiration time
-                    var expirationInSeconds = ScheduleTask.Seconds <= 300 ? ScheduleTask.Seconds - 1 : 300;
+                //get expiration time
+                var expirationInSeconds = Math.Min(ScheduleTask.Seconds, 300) - 1;
+                var expiration = TimeSpan.FromSeconds(expirationInSeconds);
 
-                    //execute task with lock
-                    var redisWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
-                    redisWrapper.PerformActionWithLock(ScheduleTask.Type, TimeSpan.FromSeconds(expirationInSeconds), ExecuteTask);
-                }
-                else
-                {
-                    ExecuteTask();
-                }
+                //execute task with lock
+                var locker = EngineContext.Current.Resolve<ILocker>();
+                locker.PerformActionWithLock(ScheduleTask.Type, expiration, ExecuteTask);
             }
             catch (Exception exc)
             {
                 var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
+                var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+                var storeContext = EngineContext.Current.Resolve<IStoreContext>();
+                var scheduleTaskUrl = $"{storeContext.CurrentStore.Url}{NopTaskDefaults.ScheduleTaskPath}";
 
                 ScheduleTask.Enabled = !ScheduleTask.StopOnError;
                 ScheduleTask.LastEndUtc = DateTime.UtcNow;
                 scheduleTaskService.UpdateTask(ScheduleTask);
 
+                var message = string.Format(localizationService.GetResource("ScheduleTasks.Error"), ScheduleTask.Name,
+                    exc.Message, ScheduleTask.Type, storeContext.CurrentStore.Name, scheduleTaskUrl);
+
                 //log error
                 var logger = EngineContext.Current.Resolve<ILogger>();
-                logger.Error(string.Format("Error while running the '{0}' schedule task. {1}", ScheduleTask.Name, exc.Message), exc);
+                logger.Error(message, exc);
                 if (throwException)
                     throw;
             }
@@ -176,6 +185,7 @@ namespace Nop.Services.Tasks
 
                     return _enabled.HasValue && _enabled.Value;
             }
+
             set => _enabled = value;
         }
 

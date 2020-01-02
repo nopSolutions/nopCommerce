@@ -1,8 +1,8 @@
-﻿@model CountryModel
+@model CountryModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Countries.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Countries.AddNew").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Countries");
 }
@@ -25,6 +25,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryDetailsButtons })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

@@ -1,11 +1,16 @@
 ﻿using System;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Logging
 {
+    /// <summary>
+    /// Represents a log model
+    /// </summary>
     public partial class LogModel : BaseNopEntityModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.System.Log.Fields.LogLevel")]
         public string LogLevel { get; set; }
 
@@ -20,6 +25,7 @@ namespace Nop.Web.Areas.Admin.Models.Logging
 
         [NopResourceDisplayName("Admin.System.Log.Fields.Customer")]
         public int? CustomerId { get; set; }
+
         [NopResourceDisplayName("Admin.System.Log.Fields.Customer")]
         public string CustomerEmail { get; set; }
 
@@ -31,5 +37,7 @@ namespace Nop.Web.Areas.Admin.Models.Logging
 
         [NopResourceDisplayName("Admin.System.Log.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
+
+        #endregion
     }
 }

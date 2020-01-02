@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Routing;
-using Nop.Core.Configuration;
+using Nop.Core.Data;
+using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc.Routing;
@@ -19,7 +20,7 @@ namespace Nop.Web.Infrastructure
         /// <param name="routeBuilder">Route builder</param>
         public void RegisterRoutes(IRouteBuilder routeBuilder)
         {
-            if (!EngineContext.Current.Resolve<NopConfig>().SupportPreviousNopcommerceVersions)
+            if (DataSettingsManager.DatabaseIsInstalled && !EngineContext.Current.Resolve<CommonSettings>().SupportPreviousNopcommerceVersions)
                 return;
 
             //products
@@ -49,6 +50,10 @@ namespace Nop.Web.Infrastructure
             //vendors
             routeBuilder.MapLocalizedRoute("", "vendor/{vendorId:min(0)}/{SeName?}",
                 new { controller = "BackwardCompatibility2X", action = "RedirectVendorById" });
+
+            //product tags
+            routeBuilder.MapLocalizedRoute("", "producttag/{productTagId:min(0)}/{SeName?}",
+                new { controller = "BackwardCompatibility2X", action = "RedirectProductTagById" });
         }
 
         #endregion
@@ -58,11 +63,7 @@ namespace Nop.Web.Infrastructure
         /// <summary>
         /// Gets a priority of route provider
         /// </summary>
-        public int Priority
-        {
-            //register it after all other IRouteProvider are processed
-            get { return -1000; }
-        }
+        public int Priority => -1000; //register it after all other IRouteProvider are processed
 
         #endregion
     }

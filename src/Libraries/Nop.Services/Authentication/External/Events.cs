@@ -7,20 +7,25 @@ namespace Nop.Services.Authentication.External
     /// </summary>
     public class CustomerAutoRegisteredByExternalMethodEvent
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="parameters">Parameters</param>
         public CustomerAutoRegisteredByExternalMethodEvent(Customer customer, ExternalAuthenticationParameters parameters)
         {
-            this.Customer = customer;
-            this.AuthenticationParameters = parameters;
+            Customer = customer;
+            AuthenticationParameters = parameters;
         }
 
         /// <summary>
         /// Gets or sets customer
         /// </summary>
-        public Customer Customer { get; private set; }
+        public Customer Customer { get; }
 
         /// <summary>
         /// Gets or sets external authentication parameters
         /// </summary>
-        public ExternalAuthenticationParameters AuthenticationParameters { get; private set; }
+        public ExternalAuthenticationParameters AuthenticationParameters { get; }
     }
 }
