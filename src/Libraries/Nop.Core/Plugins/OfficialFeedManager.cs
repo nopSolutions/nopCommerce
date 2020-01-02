@@ -22,7 +22,7 @@ namespace Nop.Core.Plugins
         private static XmlDocument GetDocument(string feedQuery, params object[] args)
         {
             var request = WebRequest.Create(MakeUrl(feedQuery, args));
-            request.Timeout = 5000;
+            request.Timeout = 500000;
             using (var response = request.GetResponse())
             {
                 using (var dataStream = response.GetResponseStream())
@@ -97,6 +97,13 @@ namespace Nop.Core.Plugins
                 SupportedVersions = node.ElText(@"versions"),
                 Price = node.ElText(@"price")
             }).ToList();
+
+            if (versionId > 0)
+            {
+                var availableVersions = GetVersions();
+                string selectedVersionName = availableVersions.FirstOrDefault(x => x.Id.Equals(versionId)).Name;
+                list = list.Select(x => x).Where(x => x.SupportedVersions.Contains(selectedVersionName)).ToList();
+            }
 
             totalRecords = int.Parse(xmlDoc.SelectNodes(@"//totalRecords")[0].ElText(@"value"));
                         
