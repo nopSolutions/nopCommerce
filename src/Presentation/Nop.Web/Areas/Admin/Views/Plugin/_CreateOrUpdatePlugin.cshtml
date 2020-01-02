@@ -1,11 +1,11 @@
-﻿@model PluginModel
+@model PluginModel
 
 <div asp-validation-summary="All"></div>
 <input asp-for="SystemName" type="hidden" />
 
 @if (ViewBag.RefreshPage == true)
 {
-    <script type="text/javascript">
+    <script>
         try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
         catch (e){}
         window.close();
@@ -15,6 +15,7 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PluginDetailsTop, additionalData = Model })
             <div class="panel panel-default panel-popup">
                 <div class="panel-body">
                     @(Html.LocalizedEditor<PluginModel, PluginLocalizedModel>("plugin-localized",
@@ -75,7 +76,8 @@
                                 $(document).ready(function() {
                                     var rolesIdsInput = $('#@Html.IdFor(model => model.SelectedCustomerRoleIds)').data("kendoMultiSelect");
                                     rolesIdsInput.setOptions({
-                                        autoClose: false
+                                        autoClose: false,
+                                        filter: "contains"
                                     });
 
                                     @if (Model.AvailableCustomerRoles.Count == 0)
@@ -105,7 +107,8 @@
                                         $(document).ready(function() {
                                             var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)').data("kendoMultiSelect");
                                             storesIdsInput.setOptions({
-                                                autoClose: false
+                                                autoClose: false,
+                                                filter: "contains"
                                             });
 
                                             @if (Model.AvailableStores.Count == 0)
@@ -130,6 +133,7 @@
                     </div>
                 </div>
             </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.PluginDetailsBottom, additionalData = Model })
         </div>
     </div>
 </div>

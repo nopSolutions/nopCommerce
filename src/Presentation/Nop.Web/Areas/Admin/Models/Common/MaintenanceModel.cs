@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Common
 {
@@ -12,12 +12,17 @@ namespace Nop.Web.Areas.Admin.Models.Common
             DeleteGuests = new DeleteGuestsModel();
             DeleteAbandonedCarts = new DeleteAbandonedCartsModel();
             DeleteExportedFiles = new DeleteExportedFilesModel();
+            BackupFileSearchModel = new BackupFileSearchModel();
         }
 
         public DeleteGuestsModel DeleteGuests { get; set; }
+
         public DeleteAbandonedCartsModel DeleteAbandonedCarts { get; set; }
+
         public DeleteExportedFilesModel DeleteExportedFiles { get; set; }
-        
+
+        public BackupFileSearchModel BackupFileSearchModel { get; set; }
+
         #region Nested classes
 
         public partial class DeleteGuestsModel : BaseNopModel

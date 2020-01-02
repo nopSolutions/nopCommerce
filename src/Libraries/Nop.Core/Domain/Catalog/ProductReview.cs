@@ -11,6 +11,7 @@ namespace Nop.Core.Domain.Catalog
     public partial class ProductReview : BaseEntity
     {
         private ICollection<ProductReviewHelpfulness> _productReviewHelpfulnessEntries;
+        private ICollection<ProductReviewReviewTypeMapping> _productReviewReviewTypeMappingEntries;
 
         /// <summary>
         /// Gets or sets the customer identifier
@@ -46,6 +47,11 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the reply text
         /// </summary>
         public string ReplyText { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value indicating whether the customer is already notified of the reply to review
+        /// </summary>
+        public bool CustomerNotifiedOfReply { get; set; }
 
         /// <summary>
         /// Review rating
@@ -87,8 +93,17 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public virtual ICollection<ProductReviewHelpfulness> ProductReviewHelpfulnessEntries
         {
-            get { return _productReviewHelpfulnessEntries ?? (_productReviewHelpfulnessEntries = new List<ProductReviewHelpfulness>()); }
-            protected set { _productReviewHelpfulnessEntries = value; }
+            get => _productReviewHelpfulnessEntries ?? (_productReviewHelpfulnessEntries = new List<ProductReviewHelpfulness>());
+            protected set => _productReviewHelpfulnessEntries = value;
+        }
+
+        /// <summary>
+        /// Gets the entries of product reviews
+        /// </summary>
+        public virtual ICollection<ProductReviewReviewTypeMapping> ProductReviewReviewTypeMappingEntries
+        {
+            get { return _productReviewReviewTypeMappingEntries ?? (_productReviewReviewTypeMappingEntries = new List<ProductReviewReviewTypeMapping>()); }
+            protected set { _productReviewReviewTypeMappingEntries = value; }
         }
     }
 }

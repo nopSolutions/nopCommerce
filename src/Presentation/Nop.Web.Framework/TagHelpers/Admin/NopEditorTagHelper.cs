@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -9,6 +10,9 @@ using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
+    /// <summary>
+    /// nop-editor tag helper
+    /// </summary>
     [HtmlTargetElement("nop-editor", Attributes = ForAttributeName, TagStructure = TagStructure.WithoutEndTag)]
     public class NopEditorTagHelper : TagHelper
     {
@@ -18,6 +22,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         private const string RenderFormControlClassAttributeName = "asp-render-form-control-class";
         private const string TemplateAttributeName = "asp-template";
         private const string PostfixAttributeName = "asp-postfix";
+        private const string ValueAttributeName = "asp-value";
+        private const string PlaceholderAttributeName = "placeholder";
 
         private readonly IHtmlHelper _htmlHelper;
 
@@ -40,6 +46,12 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         public string IsRequired { set; get; }
 
         /// <summary>
+        /// Placeholder for the field
+        /// </summary>
+        [HtmlAttributeName(PlaceholderAttributeName)]
+        public string Placeholder { set; get; }
+
+        /// <summary>
         /// Indicates whether the "form-control" class shold be added to the input
         /// </summary>
         [HtmlAttributeName(RenderFormControlClassAttributeName)]
@@ -58,17 +70,32 @@ namespace Nop.Web.Framework.TagHelpers.Admin
         public string Postfix { set; get; }
 
         /// <summary>
+        /// The value of the element
+        /// </summary>
+        [HtmlAttributeName(ValueAttributeName)]
+        public string Value { set; get; }
+
+        /// <summary>
         /// ViewContext
         /// </summary>
         [HtmlAttributeNotBound]
         [ViewContext]
         public ViewContext ViewContext { get; set; }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="htmlHelper">HTML helper</param>
         public NopEditorTagHelper(IHtmlHelper htmlHelper)
         {
             _htmlHelper = htmlHelper;
         }
 
+        /// <summary>
+        /// Process
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="output">Output</param>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
@@ -84,12 +111,22 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             //clear the output
             output.SuppressOutput();
 
+            //container for additional attributes
+            var htmlAttributes = new Dictionary<string, object>();
+
+            //set placeholder if exists
+            if (!string.IsNullOrEmpty(Placeholder))
+                htmlAttributes.Add("placeholder", Placeholder);
+
+            //set value if exists
+            if (!string.IsNullOrEmpty(Value))
+                htmlAttributes.Add("value", Value);
+
             //disabled attribute
             bool.TryParse(IsDisabled, out bool disabled);
             if (disabled)
             {
-                var d = new TagHelperAttribute("disabled", "disabled");
-                output.Attributes.Add(d);
+                htmlAttributes.Add("disabled", "disabled");
             }
 
             //required asterisk
@@ -106,10 +143,9 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             //add form-control class
             bool.TryParse(RenderFormControlClass, out bool renderFormControlClass);
-            object htmlAttributes = null;
             if (string.IsNullOrEmpty(RenderFormControlClass) && For.Metadata.ModelType.Name.Equals("String") || renderFormControlClass)
-                htmlAttributes = new {@class = "form-control"};
-            
+                htmlAttributes.Add("class", "form-control");
+
             //generate editor
 
             //we have to invoke strong typed "EditorFor" method of HtmlHelper<TModel>
@@ -132,7 +168,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 For.Name,
                 Template,
                 readOnly: false,
-                additionalViewData: new { htmlAttributes, postfix = this.Postfix });
+                additionalViewData: new { htmlAttributes, postfix = Postfix });
 
             var htmlOutput = templateBuilder.Build();
             output.Content.SetHtmlContent(htmlOutput.RenderHtmlContent());

@@ -1,8 +1,8 @@
-﻿@model ManufacturerModel
+@model ManufacturerModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Catalog.Manufacturers.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Manufacturers.AddNew").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Manufacturers");
 }
@@ -25,6 +25,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerDetailsButtons })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

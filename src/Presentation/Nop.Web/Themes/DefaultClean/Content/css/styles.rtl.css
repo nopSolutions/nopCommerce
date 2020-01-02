@@ -40,9 +40,11 @@ input[type="button"],
 input[type="submit"],
 input[type="reset"],
 input[type="text"],
+input[type="email"],
+input[type="tel"],
 input[type="password"],
 textarea {
-	border-radius: 0;
+    border-radius: 0;
 }
 input[type="button"],
 input[type="submit"],
@@ -84,13 +86,15 @@ table {
 }
 input[type="text"],
 input[type="password"],
+input[type="email"],
+input[type="tel"],
 textarea, select {
-	height: 36px; /*safari padding fix*/
-	border: 1px solid #ddd;
-	padding: 8px;
-	vertical-align: middle;
+    height: 36px; /*safari padding fix*/
+    border: 1px solid #ddd;
+    padding: 8px;
+    vertical-align: middle;
 }
-input, textarea, select {
+input, textarea, select, button {
 	font-size: 14px;
 	font-family: Arial, Helvetica, sans-serif;
 	color: #777;
@@ -104,10 +108,12 @@ select {
 	padding: 6px;
 }
 input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
 input[type="password"]:focus,
 textarea:focus, select:focus {
-	border-color: #ccc;
-	color: #444;
+    border-color: #ccc;
+    color: #444;
 }
 input[type="checkbox"],
 input[type="radio"],
@@ -266,11 +272,13 @@ label, label + * {
 	color: #444;
 }
 .inputs input[type="text"],
+.inputs input[type="email"],
+.inputs input[type="tel"],
 .inputs input[type="password"],
 .inputs select, .inputs textarea {
-	width: 400px;
-	max-width: 100%;
-	background-color: #fff;
+    width: 400px;
+    max-width: 100%;
+    background-color: #fff;
 }
 
 .inputs.custom-attributes {
@@ -342,6 +350,21 @@ label, label + * {
 
 .table-wrapper {
 	overflow-x: auto;
+}
+.data-table .hidden-row {
+	height: 1px;
+  border: none;
+}
+.data-table tr.hidden-row th {
+  padding: 0;
+  border-top: none;
+}
+.data-table tr.hidden-row th > span{
+  height: 1px; 
+  width: 1px; 
+  position: absolute; 
+  overflow: hidden; 
+  top: -10px;
 }
 .cart th,
 .data-table th,
@@ -471,17 +494,15 @@ label, label + * {
 
 
 
-.bar-notification {
-	display: none;
-	position: fixed;
-	top: 0;
-	right: 0;
-	z-index: 1000;
-	width: 100%;
-	padding: 15px 10px 15px 25px;
-	line-height: 16px;
-	color: #fff;
-	opacity: 0.95;
+.bar-notification-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1000;
+    width: 100%;
+    line-height: 16px;
+    color: #fff;
+    opacity: 0.95;
 }
 .bar-notification.success {
 	background-color: #4bb07a;
@@ -491,6 +512,11 @@ label, label + * {
 }
 .bar-notification.warning {
 	background-color: #f39c12;
+}
+.bar-notification {
+    position: relative;
+    display: none;
+    padding: 15px 10px 15px 25px;
 }
 .bar-notification .content {
 	margin: 0 0 0 10px;
@@ -508,6 +534,20 @@ label, label + * {
 	margin: 7px;
 	background: #fff url('../images/close.png') center no-repeat;
 	cursor: pointer;
+}
+.popup-notification {
+    border-radius: 5px;
+    padding: 3px;
+    margin: 5px 0;
+}
+.popup-notification.success {
+    border: 2px rgba( 75,176,122,.5) solid;
+}
+.popup-notification.error {
+    border: 2px rgba( 228,68,76,.5) solid;
+}
+.popup-notification.warning {
+    border: 2px rgba( 243,156,18,.5) solid;
 }
 
 .noscript {
@@ -987,7 +1027,7 @@ label, label + * {
 	display: inline-block;
 	overflow: hidden; 
 }
-.newsletter-email input[type="text"] {
+.newsletter-email input[type="email"] {
 	float: right;
 	width: 180px;
 	height: 36px;
@@ -1474,13 +1514,18 @@ label, label + * {
 	margin: 0 0 10px;
 }
 .item-box .rating {
-	background: url('../images/rating1.png') repeat-x;
-	width: 95px;
+    background: url('../images/rating1.png') repeat-x;
+    width: 95px;
     height: 14px;
+
+    -ms-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
 }
 .item-box .rating div {
 	background: url('../images/rating2.png') repeat-x;
     height: 14px;
+    margin-right: auto;
 }
 .item-box .description {
 	display: none;
@@ -1780,13 +1825,19 @@ label, label + * {
 	margin: 0 0 8px;
 }
 .product-review-box .rating {
-	width: 95px;
-	height: 14px;
-	background: url('../images/rating1.png') repeat-x;
+    width: 95px;
+    height: 14px;
+    background: url('../images/rating1.png') repeat-x;
+
+    -ms-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
 }
+
 .product-review-box .rating div {
 	height: 14px; 
 	background: url('../images/rating2.png') repeat-x;
+    margin-right: auto;
 }
 .product-review-links a {
 	display: inline-block;
@@ -1884,7 +1935,6 @@ label, label + * {
 }
 .overview .delivery,
 .variant-overview .delivery {
-	margin: 25px 0;
 	overflow: hidden;
 }
 .overview .min-qty-notification,
@@ -1895,12 +1945,20 @@ label, label + * {
 }
 .overview .free-shipping,
 .variant-overview .free-shipping {
-	display: inline-block;
-	margin: 0 0 10px;
-	background: url('../images/shipping.png') right center no-repeat;
-	padding: 2px 28px 2px 0;
-	font-weight: bold;
-	color: #444;
+    display: inline-block;
+    margin: 0 0 10px;
+    background: url('../images/shipping.png') right center no-repeat;
+    padding: 2px 28px 2px 0;
+    font-weight: bold;
+    color: #444;
+}
+.overview .free-shipping.invisible,
+.variant-overview .free-shipping.invisible {
+    display: none;
+}
+.overview .delivery-date,
+.variant-overview .delivery-date {
+    margin: 10px 0;
 }
 .overview .download-sample,
 .variant-overview .download-sample {
@@ -2007,6 +2065,13 @@ label, label + * {
 	text-align: center;
     font-size: 15px;
 	color: #444;
+}
+.overview .qty-dropdown,
+.variant-overview .qty-dropdown {
+    height: 43px;
+    padding: 0 12px;
+    font-size: 15px;
+    color: #444;
 }
 .overview .add-to-cart-button,
 .variant-overview .add-to-cart-button {
@@ -2395,36 +2460,59 @@ label, label + * {
 .write-review .fieldset {
 	margin: 0 0 30px;
 }
+
+.tooltip {    
+    position: initial;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+    color: #444;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: auto;
+    background: #f0f0f0 no-repeat 100% 5%;
+    border: #c0c0c0 1px dotted;
+    text-align: right;    
+    padding: 10px 10px 5px 5px;
+    position: absolute;
+    z-index: 1;    
+    left: 10%;    
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;    
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+    cursor: help;
+}
+
 .write-review .review-rating {
-	text-align: center;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 .write-review .review-rating label {
     display: block;
     margin: 0 0 5px;
     font-size: 14px;
 }
-.write-review .review-rating ul {
-    font-size: 0;
-    vertical-align: middle;
-}
-.write-review .review-rating li {
-	display: inline-block;
-	margin: 0 5px;
-	cursor: default;
-    vertical-align: middle;
-    font-size: 14px;
-    height: 17px;
-}
-.write-review .review-rating li.first {
+.write-review .review-rating div.first {
 	color: #e4444c;
 }
-.write-review .review-rating li.rating-options {
+.write-review .review-rating div.rating-options {
     padding-top: 2px;
 }
-.write-review .review-rating li.rating-options input {
+.write-review .review-rating div.rating-options input {
 	vertical-align: baseline;
 }
-.write-review .review-rating li.last {
+.write-review .review-rating div.last {
 	color: #4cb17c;
 }
 .write-review .captcha-box {
@@ -2793,6 +2881,18 @@ label, label + * {
 	color: #4ab2f1;
 }
 
+.apply-vendor-page .terms-of-service {
+    text-align: center;
+}
+.apply-vendor-page .terms-of-service > * {
+    display: inline-block;
+    line-height: 32px;
+}
+.apply-vendor-page .terms-of-service span,
+.apply-vendor-page .terms-of-service a {
+    color: #4ab2f1;
+    cursor: pointer;
+}
 
 /********** REGISTRATION, LOGIN, ACCOUNT PAGES  **********/
 
@@ -2820,6 +2920,9 @@ label, label + * {
 .date-of-birth select + select {
 	margin: 0 10px 0 0;
 }
+.date-of-birth .select-wrapper + .select-wrapper {
+	margin: 0 10px 0 0;
+}
 #check-availability-button {
 	margin: 10px 0 0;
 	border: none;
@@ -2832,17 +2935,23 @@ label, label + * {
 #check-availability-button:hover {
 	background-color: #999;
 }
-.accept-privacy-policy {
-	margin: 0 0 20px;
-	text-align: center;
+.inputs.accept-consent {
+    text-align: center;
 }
-.accept-privacy-policy > * {
-	display: inline-block;
-	line-height: 32px;
+.inputs.accept-consent > * {
+    display: inline-block;
+    line-height: 32px;
 }
-.accept-privacy-policy span {
-	color: #4ab2f1;
-	cursor: pointer;
+.inputs.accept-consent span, 
+.inputs.accept-consent a {
+    color: #4ab2f1;
+    cursor: pointer;
+    font-size: 14px;
+}
+.inputs.accept-consent label {
+    width: auto;
+    margin-right: 10px;
+    margin-bottom: 0;
 }
 .registration-page .button-1,
 .registration-result-page .button-1,
@@ -3022,6 +3131,15 @@ label, label + * {
 	margin: 0 0 30px
 }
 
+.gdpr-tools-page .result {
+    margin: 20px 0;
+    font-size: 13px;
+    color: #e4434b;
+}
+.gdpr-tools-page .buttons {
+    margin-top: 20px;
+}
+
 .address-list-page .info,
 .order-list-page .info {
 	margin: 0 0 10px;
@@ -3198,6 +3316,18 @@ label, label + * {
     margin-top: 15px;
 }
 
+.check-gift-card-balance-page .page-title {
+    margin: 0 0 -1px;
+}
+
+.check-gift-card-balance-page .result,
+.check-gift-card-balance-page .message-error {
+    margin: 20px 0;
+}
+
+.check-gift-card-balance-page .fieldset {
+    margin: 0 0 30px;
+}
 
 /********** SHOPPING CART **********/
 
@@ -3408,6 +3538,14 @@ label, label + * {
 
 .cart-footer .checkout-buttons {
 	padding: 0 10px;
+}
+.cart-footer .checkout-disabled {
+    font-size: 20px;
+    text-align: center;
+    background: #ffa500;
+    border: 1px solid #c3891e;
+    color: #fff;
+    padding: 15px 50px;
 }
 .cart-footer .checkout-button {
 	display: inline-block;
@@ -4057,10 +4195,10 @@ label, label + * {
     padding: 30px 15px;
 	text-align: center;
 }
-.sitemap-page ul {
+.sitemap-page .entity ul {
 	font-size: 0;
 }
-.sitemap-page li {
+.sitemap-page .entity li {
 	display: inline-block;
 	position: relative;
 	margin: 0 8px;
@@ -4068,7 +4206,7 @@ label, label + * {
 	line-height: 50px;
 	font-size: 14px; /*reset zeroing*/
 }
-.sitemap-page li:before {
+.sitemap-page .entity li:before {
 	content: "";
 	position: absolute;
 	top: 23px;
@@ -4077,13 +4215,13 @@ label, label + * {
 	height: 5px;
 	background-color: #ddd;
 }
-.sitemap-page a {
+.sitemap-page .entity a {
 	color: #444;
 }
-.sitemap-page a:hover {
+.sitemap-page .entity a:hover {
 	color: #4ab2f1;
 }
-.sitemap-page a:empty {
+.sitemap-page .entity a:empty {
 	display: none;
 }
 
@@ -4856,6 +4994,9 @@ label, label + * {
 	font: normal 14px Arial, Helvetica, sans-serif;
 	color: #777;
 }
+.ui-widget.ui-widget-content.ui-tabs {
+    border: none;
+}
 .ui-tabs-nav {
 	margin: 0 0 30px;
 	border-bottom: 1px solid #ddd;
@@ -5070,6 +5211,23 @@ pre {
 
 
 
+@media all and (max-width: 769px) {
+
+    .review-rating .name-description {
+        text-align: center;
+        width: 100%;
+        display: block;
+    }
+
+    .write-review .review-rating div {
+        text-align: center;
+        padding-bottom: 10px;
+        display: inline-block;
+    }
+}
+
+
+
 
 
 @media all and (max-width: 1000px) {
@@ -5250,6 +5408,14 @@ pre {
 	float: none;
 	margin: auto !important;
 }
+.write-review .review-rating {
+   text-align: center;
+}
+.write-review .review-rating div.name-description {
+    width: 100%;
+    margin: 0 5px 0 0;
+    text-align: center;
+}
 
 }
 
@@ -5313,7 +5479,7 @@ pre {
 .footer-block {
 	width: 85%;
 }
-.newsletter-email input[type="text"] {
+.newsletter-email input[type="email"] {
 	width: 240px;
 }
 
@@ -5368,7 +5534,7 @@ pre {
     margin: 0 0 15px;
 }
 .item-box .prices {
-    height: 40px;
+    min-height: 40px;
 }
 .item-box .product-title {
     min-height: 42px;
@@ -5679,6 +5845,15 @@ pre {
 }
 .product-review-item .product-review-box {
 	float: left;
+}
+
+.write-review .review-rating div {
+    display: inline-block;
+    margin: 0 0 0 5px;
+    cursor: default;
+    vertical-align: middle;
+    font-size: 14px;
+    height: 17px;
 }
 
 
@@ -6097,9 +6272,11 @@ pre {
 	text-align: left;
 }
 .inputs input[type="text"],
+.inputs input[type="email"],
+.inputs input[type="tel"],
 .inputs input[type="password"],
 .inputs select {
-	min-height: 40px;
+    min-height: 40px;
 }
 .inputs .option-list li {
 	margin: 0 0 0 10px;
@@ -6109,6 +6286,9 @@ pre {
 }
 .center-2 .inputs label {
 	width: 136px;
+}
+.inputs.accept-consent label {
+		width: auto;
 }
 .page-title a + h1 {
 	float: right;
@@ -6429,7 +6609,7 @@ pre {
 .newsletter-email {
 	display: block;
 }
-.newsletter-email input[type="text"] {
+.newsletter-email input[type="email"] {
 	width: 200px;
 }
 .newsletter-email .newsletter-subscribe-button {
@@ -6572,6 +6752,12 @@ pre {
 	max-width: 850px;
 }
 
+.write-review .review-rating div.name-description {
+    width: 265px;
+    margin: 0 5px 0 0;
+    text-align: right
+}
+
 
 /*** WISHLIST & COMPARE LIST ***/
 
@@ -6642,8 +6828,9 @@ pre {
 	width: 110px;
 }
 .login-page .returning-wrapper input[type="text"],
+.login-page .returning-wrapper input[type="email"],
 .login-page .returning-wrapper input[type="password"] {
-	width: 300px;
+    width: 300px;
 }
 
 .address-list-page .section,
@@ -6846,6 +7033,9 @@ pre {
 .center-2 .inputs label {
 	width: 213px;
 }
+.inputs.accept-consent label {
+	width: auto;
+}
 
 
 /*** HEADER ***/
@@ -6894,13 +7084,18 @@ pre {
 	max-width: 1050px;
 }
 
+.write-review .review-rating div.name-description {
+    margin: 0 5px 0 0;
+    min-width: 375px;
+}
 
 /*** REGISTRATION, LOGIN, ACCOUNT ***/
 
 
 .login-page .returning-wrapper input[type="text"],
+.login-page .returning-wrapper input[type="email"],
 .login-page .returning-wrapper input[type="password"] {
-	width: 360px;
+    width: 360px;
 }
 .registration-page .vat-note {
     margin-right: 385px;

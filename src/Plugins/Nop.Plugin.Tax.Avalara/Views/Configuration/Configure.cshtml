@@ -1,0 +1,19 @@
+﻿@model ConfigurationModel
+
+@using Nop.Plugin.Tax.Avalara
+@using Nop.Plugin.Tax.Avalara.Models.Configuration
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+<form asp-controller="AvalaraTax" asp-action="Configure" method="post">
+    <div class="content">
+        <div class="form-horizontal">
+            <nop-panels id="avalara-panels">
+                <nop-panel asp-name="configuration" asp-icon="fa fa-info" asp-title="@T("Plugins.Tax.Avalara.Configuration")" asp-hide-block-attribute-name="@AvalaraTaxDefaults.HideGeneralBlock" asp-hide="@Model.HideGeneralBlock" asp-advanced="false">@await Html.PartialAsync("~/Plugins/Tax.Avalara/Views/Configuration/_Configuration.cshtml", Model)</nop-panel>
+                <nop-panel asp-name="log" asp-icon="fa fa-list" asp-title="@T("Plugins.Tax.Avalara.Log")" asp-hide-block-attribute-name="@AvalaraTaxDefaults.HideLogBlock" asp-hide="@Model.HideLogBlock" asp-advanced="false">@await Html.PartialAsync("~/Plugins/Tax.Avalara/Views/Log/List.cshtml", Model)</nop-panel>
+            </nop-panels>
+        </div>
+    </div>
+</form>

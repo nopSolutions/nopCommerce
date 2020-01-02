@@ -1,0 +1,47 @@
+@model GdprSettingsModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.Gdpr").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("GDPR settings");
+}
+
+@{
+    const string hideCommonBlockAttributeName = "GdprSettingsPage.HideCommonBlock";
+    var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
+
+    const string hideConsentsBlockAttributeName = "GdprSettingsPage.HideConsentsBlock";
+    var hideConsentsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideConsentsBlockAttributeName);
+}
+
+
+<form asp-controller="Setting" asp-action="GDPR" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.GDPR")
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GdprSettingsButtons })
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+            @await Component.InvokeAsync("SettingMode")
+            <div asp-validation-summary="All"></div>
+
+            <nop-panels id="gdprsettings-panels">
+                <nop-panel asp-name="gdprsettings-common" asp-icon="fa fa-info" asp-title="@T("Admin.Configuration.Settings.Gdpr.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Gdpr.Common", Model)</nop-panel>
+                <nop-panel asp-name="gdprsettings-consents" asp-icon="fa fa-thumbs-o-up" asp-title="@T("Admin.Configuration.Settings.Gdpr.BlockTitle.Consents")" asp-hide-block-attribute-name="@hideConsentsBlockAttributeName" asp-hide="@hideConsentsBlock" asp-advanced="true">@await Html.PartialAsync("_Gdpr.Consents", Model)</nop-panel>
+
+                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.GdprSettingsDetailsBlock, additionalData = Model })
+            </nop-panels>
+        </div>
+    </div>
+</form>

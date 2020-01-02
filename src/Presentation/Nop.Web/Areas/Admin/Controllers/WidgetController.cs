@@ -1,49 +1,50 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Areas.Admin.Extensions;
-using Nop.Web.Areas.Admin.Models.Cms;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Cms;
-using Nop.Core.Plugins;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
+using Nop.Services.Events;
+using Nop.Services.Plugins;
 using Nop.Services.Security;
-using Nop.Web.Framework.Kendoui;
+using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Models.Cms;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class WidgetController : BaseAdminController
-	{
-		#region Fields
+    {
+        #region Fields
 
-        private readonly IWidgetService _widgetService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
+        private readonly IWidgetModelFactory _widgetModelFactory;
+        private readonly IWidgetPluginManager _widgetPluginManager;
         private readonly WidgetSettings _widgetSettings;
-	    private readonly IPluginFinder _pluginFinder;
 
         #endregion
 
         #region Ctor
 
-        public WidgetController(IWidgetService widgetService,
+        public WidgetController(IEventPublisher eventPublisher,
             IPermissionService permissionService,
             ISettingService settingService,
-            WidgetSettings widgetSettings,
-            IPluginFinder pluginFinder)
-		{
-            this._widgetService = widgetService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._widgetSettings = widgetSettings;
-            this._pluginFinder = pluginFinder;
+            IWidgetModelFactory widgetModelFactory,
+            IWidgetPluginManager widgetPluginManager,
+            WidgetSettings widgetSettings)
+        {
+            _eventPublisher = eventPublisher;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _widgetModelFactory = widgetModelFactory;
+            _widgetPluginManager = widgetPluginManager;
+            _widgetSettings = widgetSettings;
         }
 
-		#endregion 
-        
+        #endregion
+
         #region Methods
-        
+
         public virtual IActionResult Index()
         {
             return RedirectToAction("List");
@@ -54,32 +55,22 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
-            return View();
+            //prepare model
+            var model = _widgetModelFactory.PrepareWidgetSearchModel(new WidgetSearchModel());
+
+            return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult List(DataSourceRequest command)
+        public virtual IActionResult List(WidgetSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
-            var widgetsModel = new List<WidgetModel>();
-            var widgets = _widgetService.LoadAllWidgets();
-            foreach (var widget in widgets)
-            {
-                var tmp1 = widget.ToModel();
-                tmp1.IsActive = widget.IsWidgetActive(_widgetSettings);
-                tmp1.ConfigurationUrl = widget.GetConfigurationPageUrl();
-                widgetsModel.Add(tmp1);
-            }
-            widgetsModel = widgetsModel.ToList();
-            var gridModel = new DataSourceResult
-            {
-                Data = widgetsModel,
-                Total = widgetsModel.Count()
-            };
+            //prepare model
+            var model = _widgetModelFactory.PrepareWidgetListModel(searchModel);
 
-            return Json(gridModel);
+            return Json(model);
         }
 
         [HttpPost]
@@ -88,8 +79,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
-            var widget = _widgetService.LoadWidgetBySystemName(model.SystemName);
-            if (widget.IsWidgetActive(_widgetSettings))
+            var widget = _widgetPluginManager.LoadPluginBySystemName(model.SystemName);
+            if (_widgetPluginManager.IsPluginActive(widget, _widgetSettings.ActiveWidgetSystemNames))
             {
                 if (!model.IsActive)
                 {
@@ -112,14 +103,16 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //display order
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
-            PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
 
-            //reset plugin cache
-            _pluginFinder.ReloadPlugins();
+            //update the description file
+            pluginDescriptor.Save();
+
+            //raise event
+            _eventPublisher.Publish(new PluginUpdatedEvent(pluginDescriptor));
 
             return new NullJsonResult();
         }
-        
-	    #endregion
+
+        #endregion
     }
 }

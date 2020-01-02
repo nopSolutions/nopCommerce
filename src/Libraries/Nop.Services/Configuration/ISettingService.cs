@@ -48,9 +48,9 @@ namespace Nop.Services.Configuration
         /// <param name="defaultValue">Default value</param>
         /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all stores) value should be loaded if a value specific for a certain is not found</param>
         /// <returns>Setting value</returns>
-        T GetSettingByKey<T>(string key, T defaultValue = default(T), 
+        T GetSettingByKey<T>(string key, T defaultValue = default(T),
             int storeId = 0, bool loadSharedValueIfNotFound = false);
-        
+
         /// <summary>
         /// Set setting value
         /// </summary>
@@ -76,7 +76,7 @@ namespace Nop.Services.Configuration
         /// <param name="keySelector">Key selector</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>true -setting exists; false - does not exist</returns>
-        bool SettingExists<T, TPropType>(T settings, 
+        bool SettingExists<T, TPropType>(T settings,
             Expression<Func<T, TPropType>> keySelector, int storeId = 0)
             where T : ISettings, new();
 
@@ -100,7 +100,7 @@ namespace Nop.Services.Configuration
         /// <param name="storeId">Store identifier</param>
         /// <param name="settings">Setting instance</param>
         void SaveSetting<T>(T settings, int storeId = 0) where T : ISettings, new();
-        
+
         /// <summary>
         /// Save settings object
         /// </summary>
@@ -115,7 +115,7 @@ namespace Nop.Services.Configuration
             int storeId = 0, bool clearCache = true) where T : ISettings, new();
 
         /// <summary>
-        /// Save settings object (per store). If the setting is not overridden per storem then it'll be delete
+        /// Save settings object (per store). If the setting is not overridden per store then it'll be delete
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
         /// <typeparam name="TPropType">Property type</typeparam>
@@ -133,7 +133,7 @@ namespace Nop.Services.Configuration
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         void DeleteSetting<T>() where T : ISettings, new();
-        
+
         /// <summary>
         /// Delete settings object
         /// </summary>
@@ -149,5 +149,16 @@ namespace Nop.Services.Configuration
         /// Clear cache
         /// </summary>
         void ClearCache();
+
+        /// <summary>
+        /// Get setting key (stored into database)
+        /// </summary>
+        /// <typeparam name="TSettings">Type of settings</typeparam>
+        /// <typeparam name="T">Property type</typeparam>
+        /// <param name="settings">Settings</param>
+        /// <param name="keySelector">Key selector</param>
+        /// <returns>Key</returns>
+        string GetSettingKey<TSettings, T>(TSettings settings, Expression<Func<TSettings, T>> keySelector)
+            where TSettings : ISettings, new();
     }
 }

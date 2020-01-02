@@ -1,4 +1,3 @@
-
 namespace Nop.Core.Configuration
 {
     /// <summary>

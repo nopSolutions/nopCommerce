@@ -16,10 +16,7 @@ namespace Nop.Core.Infrastructure
         public static IEngine Create()
         {
             //create NopEngine as engine
-            if (Singleton<IEngine>.Instance == null)
-                Singleton<IEngine>.Instance = new NopEngine();
-
-            return Singleton<IEngine>.Instance;
+            return Singleton<IEngine>.Instance ?? (Singleton<IEngine>.Instance = new NopEngine());
         }
 
         /// <summary>
@@ -48,7 +45,8 @@ namespace Nop.Core.Infrastructure
                     Create();
                 }
 
-                return Singleton<IEngine>.Instance; }
+                return Singleton<IEngine>.Instance;
+            }
         }
 
         #endregion

@@ -1,29 +1,35 @@
 ﻿using System;
-using FluentValidation.Attributes;
-using Nop.Web.Areas.Admin.Validators.Orders;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Orders
 {
-    [Validator(typeof(ReturnRequestValidator))]
+    /// <summary>
+    /// Represents a return request model
+    /// </summary>
     public partial class ReturnRequestModel : BaseNopEntityModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.CustomNumber")]
         public string CustomNumber { get; set; }
         
         public int OrderId { get; set; }
+
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.CustomOrderNumber")]
         public string CustomOrderNumber { get; set; }
 
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.Customer")]
         public int CustomerId { get; set; }
+
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.Customer")]
         public string CustomerInfo { get; set; }
 
         public int ProductId { get; set; }
+
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.Product")]
         public string ProductName { get; set; }
+
         public string AttributeInfo { get; set; }
 
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.Quantity")]
@@ -46,10 +52,13 @@ namespace Nop.Web.Areas.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.Status")]
         public int ReturnRequestStatusId { get; set; }
+
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.Status")]
         public string ReturnRequestStatusStr { get; set; }
 
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
+
+        #endregion
     }
 }

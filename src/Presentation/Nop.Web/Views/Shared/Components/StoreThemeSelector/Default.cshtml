@@ -1,15 +1,14 @@
 ﻿@model StoreThemeSelectorModel
-@using System.Net
-@using Microsoft.AspNetCore.Http
-@using Nop.Core
-@inject IWebHelper webHelper
-@inject IHttpContextAccessor httpContextAccessor
+
+@inject Nop.Core.IWebHelper webHelper
+
 @if (Model.AvailableStoreThemes.Count > 1)
 {
+    var returnUrl = webHelper.GetRawUrl(Context.Request);
     var themes = Model.AvailableStoreThemes.Select(x => new SelectListItem
     {
         Text = x.Title,
-        Value = webHelper.ModifyQueryString(Url.Action("SetStoreTheme", "Common", new { themename = x.Name }), "returnurl=" + WebUtility.UrlEncode(webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)), null),
+        Value = Url.Action("SetStoreTheme", "Common", new { themename = x.Name, returnUrl }, webHelper.CurrentRequestProtocol),
         Selected = x.Name.Equals(Model.CurrentStoreTheme.Name, StringComparison.InvariantCultureIgnoreCase)
     });
     <div class="theme-selector">

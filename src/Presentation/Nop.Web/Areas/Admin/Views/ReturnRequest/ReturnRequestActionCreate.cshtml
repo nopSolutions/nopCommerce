@@ -1,0 +1,37 @@
+@model ReturnRequestActionModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.Order.ReturnRequestActions.AddNew").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Order settings");
+}
+
+<form asp-controller="ReturnRequest" asp-action="ReturnRequestActionCreate" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.Order.ReturnRequestActions.AddNew")
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="ReturnRequestActionList">@T("Admin.Configuration.Settings.Order.ReturnRequestActions.BackToList")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ReturnRequestActionDetailsButtons })
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="form-horizontal">
+            @await Html.PartialAsync("_CreateOrUpdate.ReturnRequestAction", Model)
+        </div>
+    </div>
+</form>

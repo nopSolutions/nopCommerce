@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 
@@ -14,7 +14,13 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
         void DeleteManufacturer(Manufacturer manufacturer);
-        
+
+        /// <summary>
+        /// Delete manufacturers
+        /// </summary>
+        /// <param name="manufacturers">Manufacturers</param>
+        void DeleteManufacturers(IList<Manufacturer> manufacturers);
+
         /// <summary>
         /// Gets all manufacturers
         /// </summary>
@@ -38,6 +44,13 @@ namespace Nop.Services.Catalog
         Manufacturer GetManufacturerById(int manufacturerId);
 
         /// <summary>
+        /// Gets manufacturers by identifier
+        /// </summary>
+        /// <param name="manufacturerIds">manufacturer identifiers</param>
+        /// <returns>Manufacturers</returns>
+        List<Manufacturer> GetManufacturersByIds(int[] manufacturerIds);
+
+        /// <summary>
         /// Inserts a manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
@@ -48,14 +61,13 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
         void UpdateManufacturer(Manufacturer manufacturer);
-        
 
         /// <summary>
         /// Deletes a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
         void DeleteProductManufacturer(ProductManufacturer productManufacturer);
-        
+
         /// <summary>
         /// Gets product manufacturer collection
         /// </summary>
@@ -74,7 +86,7 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer mapping collection</returns>
         IList<ProductManufacturer> GetProductManufacturersByProductId(int productId, bool showHidden = false);
-        
+
         /// <summary>
         /// Gets a product manufacturer mapping 
         /// </summary>
@@ -104,8 +116,17 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Returns a list of names of not existing manufacturers
         /// </summary>
-        /// <param name="manufacturerNames">The names of the manufacturers to check</param>
-        /// <returns>List of names not existing manufacturers</returns>
-        string[] GetNotExistingManufacturers(string[] manufacturerNames);
+        /// <param name="manufacturerIdsNames">The names and/or IDs of the manufacturers to check</param>
+        /// <returns>List of names and/or IDs not existing manufacturers</returns>
+        string[] GetNotExistingManufacturers(string[] manufacturerIdsNames);
+
+        /// <summary>
+        /// Returns a ProductManufacturer that has the specified values
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <param name="productId">Product identifier</param>
+        /// <param name="manufacturerId">Manufacturer identifier</param>
+        /// <returns>A ProductManufacturer that has the specified values; otherwise null</returns>
+        ProductManufacturer FindProductManufacturer(IList<ProductManufacturer> source, int productId, int manufacturerId);
     }
 }

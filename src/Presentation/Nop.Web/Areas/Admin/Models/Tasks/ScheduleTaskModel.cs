@@ -1,13 +1,15 @@
-﻿using FluentValidation.Attributes;
-using Nop.Web.Areas.Admin.Validators.Tasks;
-using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+﻿using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Tasks
 {
-    [Validator(typeof(ScheduleTaskValidator))]
+    /// <summary>
+    /// Represents a schedule task model
+    /// </summary>
     public partial class ScheduleTaskModel : BaseNopEntityModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.System.ScheduleTasks.Name")]
         public string Name { get; set; }
 
@@ -28,5 +30,7 @@ namespace Nop.Web.Areas.Admin.Models.Tasks
 
         [NopResourceDisplayName("Admin.System.ScheduleTasks.LastSuccess")]
         public string LastSuccessUtc { get; set; }
+
+        #endregion
     }
 }

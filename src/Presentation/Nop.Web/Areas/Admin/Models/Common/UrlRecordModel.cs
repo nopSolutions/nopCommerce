@@ -1,10 +1,15 @@
 ﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Common
 {
+    /// <summary>
+    /// Represents an URL record model
+    /// </summary>
     public partial class UrlRecordModel : BaseNopEntityModel
     {
+        #region Properties
+
         [NopResourceDisplayName("Admin.System.SeNames.Name")]
         public string Name { get; set; }
 
@@ -22,5 +27,7 @@ namespace Nop.Web.Areas.Admin.Models.Common
 
         [NopResourceDisplayName("Admin.System.SeNames.Details")]
         public string DetailsUrl { get; set; }
+
+        #endregion
     }
 }

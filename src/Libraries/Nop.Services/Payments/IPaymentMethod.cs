@@ -1,12 +1,12 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Plugins;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Payments
 {
     /// <summary>
-    /// Provides an interface for creating payment gateways & methods
+    /// Provides an interface for creating payment gateways and methods
     /// </summary>
     public partial interface IPaymentMethod : IPlugin
     {
@@ -96,10 +96,10 @@ namespace Nop.Services.Payments
         ProcessPaymentRequest GetPaymentInfo(IFormCollection form);
 
         /// <summary>
-        /// Gets a view component for displaying plugin in public store ("payment info" checkout step)
+        /// Gets a name of a view component for displaying plugin in public store ("payment info" checkout step)
         /// </summary>
-        /// <param name="viewComponentName">View component name</param>
-        void GetPublicViewComponent(out string viewComponentName);
+        /// <returns>View component name</returns>
+        string GetPublicViewComponentName();
 
         #endregion
 

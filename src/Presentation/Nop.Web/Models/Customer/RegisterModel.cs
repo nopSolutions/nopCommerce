@@ -1,33 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
-using Nop.Web.Validators.Customer;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Customer
 {
-    [Validator(typeof(RegisterValidator))]
     public partial class RegisterModel : BaseNopModel
     {
         public RegisterModel()
         {
-            this.AvailableTimeZones = new List<SelectListItem>();
-            this.AvailableCountries = new List<SelectListItem>();
-            this.AvailableStates = new List<SelectListItem>();
-            this.CustomerAttributes = new List<CustomerAttributeModel>();
+            AvailableTimeZones = new List<SelectListItem>();
+            AvailableCountries = new List<SelectListItem>();
+            AvailableStates = new List<SelectListItem>();
+            CustomerAttributes = new List<CustomerAttributeModel>();
+            GdprConsents = new List<GdprConsentModel>();
         }
-
-        //MVC is suppressing further validation if the IFormCollection is passed to a controller method. That's why we add to the model
-        public IFormCollection Form { get; set; }
-
+        
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Account.Fields.Email")]
         public string Email { get; set; }
         
         public bool EnteringEmailTwice { get; set; }
+        [DataType(DataType.EmailAddress)]
         [NopResourceDisplayName("Account.Fields.ConfirmEmail")]
         public string ConfirmEmail { get; set; }
 
@@ -56,7 +52,6 @@ namespace Nop.Web.Models.Customer
         public string FirstName { get; set; }
         [NopResourceDisplayName("Account.Fields.LastName")]
         public string LastName { get; set; }
-
 
         public bool DateOfBirthEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.DateOfBirth")]
@@ -105,6 +100,11 @@ namespace Nop.Web.Models.Customer
         [NopResourceDisplayName("Account.Fields.City")]
         public string City { get; set; }
 
+        public bool CountyEnabled { get; set; }
+        public bool CountyRequired { get; set; }
+        [NopResourceDisplayName("Account.Fields.County")]
+        public string County { get; set; }
+
         public bool CountryEnabled { get; set; }
         public bool CountryRequired { get; set; }
         [NopResourceDisplayName("Account.Fields.Country")]
@@ -119,11 +119,13 @@ namespace Nop.Web.Models.Customer
 
         public bool PhoneEnabled { get; set; }
         public bool PhoneRequired { get; set; }
+        [DataType(DataType.PhoneNumber)]
         [NopResourceDisplayName("Account.Fields.Phone")]
         public string Phone { get; set; }
 
         public bool FaxEnabled { get; set; }
         public bool FaxRequired { get; set; }
+        [DataType(DataType.PhoneNumber)]
         [NopResourceDisplayName("Account.Fields.Fax")]
         public string Fax { get; set; }
         
@@ -132,6 +134,7 @@ namespace Nop.Web.Models.Customer
         public bool Newsletter { get; set; }
         
         public bool AcceptPrivacyPolicyEnabled { get; set; }
+        public bool AcceptPrivacyPolicyPopup { get; set; }
 
         //time zone
         [NopResourceDisplayName("Account.Fields.TimeZone")]
@@ -148,5 +151,7 @@ namespace Nop.Web.Models.Customer
         public bool DisplayCaptcha { get; set; }
 
         public IList<CustomerAttributeModel> CustomerAttributes { get; set; }
+
+        public IList<GdprConsentModel> GdprConsents { get; set; }
     }
 }

@@ -1,10 +1,15 @@
 ﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
-    public partial class NewsSettingsModel : BaseNopModel
+    /// <summary>
+    /// Represents a news settings model
+    /// </summary>
+    public partial class NewsSettingsModel : BaseNopModel, ISettingsModel
     {
+        #region Properties
+
         public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.News.Enabled")]
@@ -41,5 +46,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.News.ShowNewsCommentsPerStore")]
         public bool ShowNewsCommentsPerStore { get; set; }
+
+        #endregion
     }
 }

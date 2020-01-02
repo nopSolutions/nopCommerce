@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Common
 {
@@ -9,8 +9,8 @@ namespace Nop.Web.Areas.Admin.Models.Common
     {
         public SystemInfoModel()
         {
-            this.Headers = new List<HeaderModel>();
-            this.LoadedAssemblies = new List<LoadedAssembly>();
+            Headers = new List<HeaderModel>();
+            LoadedAssemblies = new List<LoadedAssembly>();
         }
 
         [NopResourceDisplayName("Admin.System.SystemInfo.ASPNETInfo")]
@@ -37,6 +37,9 @@ namespace Nop.Web.Areas.Admin.Models.Common
         [NopResourceDisplayName("Admin.System.SystemInfo.CurrentUserTime")]
         public DateTime CurrentUserTime { get; set; }
 
+        [NopResourceDisplayName("Admin.System.SystemInfo.CurrentStaticCacheManager")]
+        public string CurrentStaticCacheManager { get; set; }
+
         [NopResourceDisplayName("Admin.System.SystemInfo.HTTPHOST")]
         public string HttpHost { get; set; }
 
@@ -45,6 +48,21 @@ namespace Nop.Web.Areas.Admin.Models.Common
 
         [NopResourceDisplayName("Admin.System.SystemInfo.LoadedAssemblies")]
         public IList<LoadedAssembly> LoadedAssemblies { get; set; }
+
+        [NopResourceDisplayName("Admin.System.SystemInfo.RedisEnabled")]
+        public bool RedisEnabled { get; set; }
+
+        [NopResourceDisplayName("Admin.System.SystemInfo.UseRedisToStoreDataProtectionKeys")]
+        public bool UseRedisToStoreDataProtectionKeys { get; set; }
+
+        [NopResourceDisplayName("Admin.System.SystemInfo.UseRedisForCaching")]
+        public bool UseRedisForCaching { get; set; }
+
+        [NopResourceDisplayName("Admin.System.SystemInfo.UseRedisToStorePluginsInfo")]
+        public bool UseRedisToStorePluginsInfo { get; set; }
+
+        [NopResourceDisplayName("Admin.System.SystemInfo.AzureBlobStorageEnabled")]
+        public bool AzureBlobStorageEnabled { get; set; }
 
         public partial class HeaderModel : BaseNopModel
         {

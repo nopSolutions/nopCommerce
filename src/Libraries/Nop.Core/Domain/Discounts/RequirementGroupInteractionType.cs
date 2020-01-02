@@ -13,6 +13,6 @@ namespace Nop.Core.Domain.Discounts
         /// <summary>
         /// At least one of the requirements within the group must be met 
         /// </summary>
-        Or = 2,
+        Or = 2
     }
 }

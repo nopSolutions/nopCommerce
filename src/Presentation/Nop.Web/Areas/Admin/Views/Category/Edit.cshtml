@@ -1,7 +1,7 @@
-﻿@model CategoryModel
+@model CategoryModel
 @{
     //page title
-    ViewBag.Title = T("Admin.Catalog.Categories.EditCategoryDetails").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Categories.EditCategoryDetails").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Categories");
 }
@@ -12,7 +12,7 @@
             @T("Admin.Catalog.Categories.EditCategoryDetails") - @Model.Name
             <small>
                 <i class="fa fa-arrow-circle-left"></i>
-                <a asp-action="List">@T("Admin.Catalog.Categories.BackToList")</a>)
+                <a asp-action="List">@T("Admin.Catalog.Categories.BackToList")</a>
             </small>
         </h1>
         <div class="pull-right">
@@ -32,6 +32,7 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

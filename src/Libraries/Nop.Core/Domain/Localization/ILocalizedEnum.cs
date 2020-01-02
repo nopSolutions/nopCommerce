@@ -1,4 +1,3 @@
-
 namespace Nop.Core.Domain.Localization
 {
     /// <summary>
@@ -6,6 +5,5 @@ namespace Nop.Core.Domain.Localization
     /// </summary>
     public interface ILocalizedEnum
     {
-
     }
 }

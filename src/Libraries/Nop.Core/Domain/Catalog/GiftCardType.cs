@@ -9,6 +9,7 @@ namespace Nop.Core.Domain.Catalog
         /// Virtual
         /// </summary>
         Virtual = 0,
+
         /// <summary>
         /// Physical
         /// </summary>

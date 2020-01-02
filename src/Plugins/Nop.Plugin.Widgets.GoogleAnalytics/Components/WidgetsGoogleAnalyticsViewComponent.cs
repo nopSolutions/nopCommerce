@@ -4,51 +4,183 @@ using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Directory;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 {
     [ViewComponent(Name = "WidgetsGoogleAnalytics")]
-    public class WidgetsGoogleAnalyticsViewComponent : ViewComponent
+    public class WidgetsGoogleAnalyticsViewComponent : NopViewComponent
     {
-        private const string ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME = "GoogleAnalytics.OrderAlreadyProcessed";
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
-        private readonly ISettingService _settingService;
-        private readonly IOrderService _orderService;
-        private readonly ILogger _logger;
-        private readonly ICategoryService _categoryService;
-        private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IGenericAttributeService _genericAttributeService;
+        #region Fields
 
-        public WidgetsGoogleAnalyticsViewComponent(
-            IWorkContext workContext,
-            IStoreContext storeContext,
-            ISettingService settingService,
-            IOrderService orderService,
-            ILogger logger,
+        private const string ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME = "GoogleAnalytics.OrderAlreadyProcessed";
+
+        private readonly CurrencySettings _currencySettings;
+        private readonly GoogleAnalyticsSettings _googleAnalyticsSettings;
+        private readonly ICategoryService _categoryService;
+        private readonly ICurrencyService _currencyService;
+        private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILogger _logger;
+        private readonly IOrderService _orderService;
+        private readonly IProductService _productService;
+        private readonly ISettingService _settingService;
+        private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
+
+        #endregion
+
+        #region Ctor
+
+        public WidgetsGoogleAnalyticsViewComponent(CurrencySettings currencySettings,
+            GoogleAnalyticsSettings googleAnalyticsSettings,
             ICategoryService categoryService,
-            IProductAttributeParser productAttributeParser,
-            IGenericAttributeService genericAttributeService)
+            ICurrencyService currencyService,
+            IGenericAttributeService genericAttributeService,
+            ILogger logger,
+            IOrderService orderService,
+            IProductService productService,
+            ISettingService settingService,
+            IStoreContext storeContext,
+            IWorkContext workContext)
         {
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._settingService = settingService;
-            this._orderService = orderService;
-            this._logger = logger;
-            this._categoryService = categoryService;
-            this._productAttributeParser = productAttributeParser;
-            this._genericAttributeService = genericAttributeService;
+            _currencySettings = currencySettings;
+            _googleAnalyticsSettings = googleAnalyticsSettings;
+            _categoryService = categoryService;
+            _currencyService = currencyService;
+            _genericAttributeService = genericAttributeService;
+            _logger = logger;
+            _orderService = orderService;
+            _productService = productService;
+            _settingService = settingService;
+            _storeContext = storeContext;
+            _workContext = workContext;
         }
 
-        public IViewComponentResult Invoke()
+        #endregion
+
+        #region Utilities
+
+        private string FixIllegalJavaScriptChars(string text)
         {
-            string globalScript = "";
+            if (String.IsNullOrEmpty(text))
+                return text;
+
+            //replace ' with \' (http://stackoverflow.com/questions/4292761/need-to-url-encode-labels-when-tracking-events-with-google-analytics)
+            text = text.Replace("'", "\\'");
+            return text;
+        }
+
+        private Order GetLastOrder()
+        {
+            var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
+                customerId: _workContext.CurrentCustomer.Id, pageSize: 1).FirstOrDefault();
+            return order;
+        }
+
+        private string GetEcommerceScript(Order order)
+        {
+            var analyticsTrackingScript = _googleAnalyticsSettings.TrackingScript + "\n";
+            analyticsTrackingScript = analyticsTrackingScript.Replace("{GOOGLEID}", _googleAnalyticsSettings.GoogleId);
+            //remove {ECOMMERCE} (used in previous versions of the plugin)
+            analyticsTrackingScript = analyticsTrackingScript.Replace("{ECOMMERCE}", "");
+            //remove {CustomerID} (used in previous versions of the plugin)
+            analyticsTrackingScript = analyticsTrackingScript.Replace("{CustomerID}", "");
+
+            //whether to include customer identifier
+            var customerIdCode = string.Empty;
+            if (_googleAnalyticsSettings.IncludeCustomerId && !_workContext.CurrentCustomer.IsGuest())
+                customerIdCode = $"gtag('set', {{'user_id': '{_workContext.CurrentCustomer.Id}'}});{Environment.NewLine}";
+            analyticsTrackingScript = analyticsTrackingScript.Replace("{CUSTOMER_TRACKING}", customerIdCode);
+
+            //ecommerce info
+            var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(_storeContext.CurrentStore.Id);
+            //ensure that ecommerce tracking code is renderred only once (avoid duplicated data in Google Analytics)
+            if (order != null && !_genericAttributeService.GetAttribute<bool>(order, ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME))
+            {
+                var usCulture = new CultureInfo("en-US");
+
+                var analyticsEcommerceScript = @"gtag('event', 'purchase', {
+                    'transaction_id': '{ORDERID}',
+                    'affiliation': '{SITE}',
+                    'value': {TOTAL},
+                    'currency': '{CURRENCY}',
+                    'tax': {TAX},
+                    'shipping': {SHIP},
+                    'items': [
+                    {DETAILS}
+                    ]
+                });";
+                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{ORDERID}", FixIllegalJavaScriptChars(order.CustomOrderNumber));
+                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SITE}", FixIllegalJavaScriptChars(_storeContext.CurrentStore.Name));
+                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{TOTAL}", order.OrderTotal.ToString("0.00", usCulture));
+                var currencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{CURRENCY}", currencyCode);
+                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{TAX}", order.OrderTax.ToString("0.00", usCulture));
+                var orderShipping = googleAnalyticsSettings.IncludingTax ? order.OrderShippingInclTax : order.OrderShippingExclTax;
+                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SHIP}", orderShipping.ToString("0.00", usCulture));
+
+                var sb = new StringBuilder();
+                int listingPosition = 1;
+                foreach (var item in order.OrderItems)
+                {
+                    if (!String.IsNullOrEmpty(sb.ToString()))
+                        sb.AppendLine(",");
+
+                    string analyticsEcommerceDetailScript = @"{
+                    'id': '{PRODUCTSKU}',
+                    'name': '{PRODUCTNAME}',
+                    'category': '{CATEGORYNAME}',
+                    'list_position': {LISTPOSITION},
+                    'quantity': {QUANTITY},
+                    'price': '{UNITPRICE}'
+                    }
+                    ";
+                    var sku = _productService.FormatSku(item.Product, item.AttributesXml);
+                    if (String.IsNullOrEmpty(sku))
+                        sku = item.Product.Id.ToString();
+                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTSKU}", FixIllegalJavaScriptChars(sku));
+                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTNAME}", FixIllegalJavaScriptChars(item.Product.Name));
+                    string category = _categoryService.GetProductCategoriesByProductId(item.ProductId).FirstOrDefault()?.Category.Name;
+                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{CATEGORYNAME}", FixIllegalJavaScriptChars(category));
+                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{LISTPOSITION}", listingPosition.ToString());
+                    var unitPrice = googleAnalyticsSettings.IncludingTax ? item.UnitPriceInclTax : item.UnitPriceExclTax;
+                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{QUANTITY}", item.Quantity.ToString());
+                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{UNITPRICE}", unitPrice.ToString("0.00", usCulture));
+                    sb.AppendLine(analyticsEcommerceDetailScript);
+
+                    listingPosition++;
+                }
+
+                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{DETAILS}", sb.ToString());
+
+                analyticsTrackingScript = analyticsTrackingScript.Replace("{ECOMMERCE_TRACKING}", analyticsEcommerceScript);
+
+                _genericAttributeService.SaveAttribute(order, ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME, true);
+            }
+            else
+            {
+                analyticsTrackingScript = analyticsTrackingScript.Replace("{ECOMMERCE_TRACKING}", "");
+            }
+
+            return analyticsTrackingScript;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public IViewComponentResult Invoke(string widgetZone, object additionalData)
+        {
+            string script = "";
             var routeData = Url.ActionContext.RouteData;
 
             try
@@ -60,133 +192,25 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
                     return Content("");
 
                 //Special case, if we are in last step of checkout, we can use order total for conversion value
-                if (controller.ToString().Equals("checkout", StringComparison.InvariantCultureIgnoreCase) &&
-                    action.ToString().Equals("completed", StringComparison.InvariantCultureIgnoreCase))
+                var isOrderCompletedPage = controller.ToString().Equals("checkout", StringComparison.InvariantCultureIgnoreCase) &&
+                    action.ToString().Equals("completed", StringComparison.InvariantCultureIgnoreCase);
+                if (isOrderCompletedPage && _googleAnalyticsSettings.UseJsToSendEcommerceInfo)
                 {
                     var lastOrder = GetLastOrder();
-                    globalScript += GetEcommerceScript(lastOrder);
+                    script += GetEcommerceScript(lastOrder);
                 }
                 else
                 {
-                    globalScript += GetEcommerceScript(null);
+                    script += GetEcommerceScript(null);
                 }
             }
             catch (Exception ex)
             {
-                _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error creating scripts for google ecommerce tracking", ex.ToString());
+                _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error creating scripts for Google eCommerce tracking", ex.ToString());
             }
-            return Content(globalScript);
+            return View("~/Plugins/Widgets.GoogleAnalytics/Views/PublicInfo.cshtml", script);
         }
 
-        private Order GetLastOrder()
-        {
-            var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
-                customerId: _workContext.CurrentCustomer.Id, pageSize: 1).FirstOrDefault();
-            return order;
-        }
-
-        //<script type="text/javascript"> 
-
-        //var _gaq = _gaq || []; 
-        //_gaq.push(['_setAccount', 'UA-XXXXX-X']); 
-        //_gaq.push(['_trackPageview']); 
-        //_gaq.push(['_addTrans', 
-        //'1234',           // order ID - required 
-        //'Acme Clothing',  // affiliation or store name 
-        //'11.99',          // total - required 
-        //'1.29',           // tax 
-        //'5',              // shipping 
-        //'San Jose',       // city 
-        //'California',     // state or province 
-        //'USA'             // country 
-        //]); 
-
-        //// add item might be called for every item in the shopping cart 
-        //// where your ecommerce engine loops through each item in the cart and 
-        //// prints out _addItem for each 
-        //_gaq.push(['_addItem', 
-        //'1234',           // order ID - required 
-        //'DD44',           // SKU/code - required 
-        //'T-Shirt',        // product name 
-        //'Green Medium',   // category or variation 
-        //'11.99',          // unit price - required 
-        //'1'               // quantity - required 
-        //]); 
-        //_gaq.push(['_trackTrans']); //submits transaction to the Analytics servers 
-
-        //(function() { 
-        //var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; 
-        //ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js'; 
-        //var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s); 
-        //})(); 
-
-        //</script>
-
-        private string GetEcommerceScript(Order order)
-        {
-            var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(_storeContext.CurrentStore.Id);
-            var analyticsTrackingScript = googleAnalyticsSettings.TrackingScript + "\n";
-            analyticsTrackingScript = analyticsTrackingScript.Replace("{GOOGLEID}", googleAnalyticsSettings.GoogleId);
-
-            //ensure that ecommerce tracking code is renderred only once (avoid duplicated data in Google Analytics)
-            if (order != null && !order.GetAttribute<bool>(ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME))
-            {
-                var usCulture = new CultureInfo("en-US");
-
-                var analyticsEcommerceScript = googleAnalyticsSettings.EcommerceScript + "\n";
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{GOOGLEID}", googleAnalyticsSettings.GoogleId);
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{ORDERID}", order.Id.ToString());
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SITE}", _storeContext.CurrentStore.Url.Replace("http://", "").Replace("/", ""));
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{TOTAL}", order.OrderTotal.ToString("0.00", usCulture));
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{TAX}", order.OrderTax.ToString("0.00", usCulture));
-                var orderShipping = googleAnalyticsSettings.IncludingTax ? order.OrderShippingInclTax : order.OrderShippingExclTax;
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SHIP}", orderShipping.ToString("0.00", usCulture));
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{CITY}", order.BillingAddress == null ? "" : FixIllegalJavaScriptChars(order.BillingAddress.City));
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{STATEPROVINCE}", order.BillingAddress == null || order.BillingAddress.StateProvince == null ? "" : FixIllegalJavaScriptChars(order.BillingAddress.StateProvince.Name));
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{COUNTRY}", order.BillingAddress == null || order.BillingAddress.Country == null ? "" : FixIllegalJavaScriptChars(order.BillingAddress.Country.Name));
-
-                var sb = new StringBuilder();
-                foreach (var item in order.OrderItems)
-                {
-                    string analyticsEcommerceDetailScript = googleAnalyticsSettings.EcommerceDetailScript;
-                    //get category
-                    string category = "";
-                    var defaultProductCategory = _categoryService.GetProductCategoriesByProductId(item.ProductId).FirstOrDefault();
-                    if (defaultProductCategory != null)
-                        category = defaultProductCategory.Category.Name;
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{ORDERID}", item.OrderId.ToString());
-                    //The SKU code is a required parameter for every item that is added to the transaction
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTSKU}", FixIllegalJavaScriptChars(item.Product.FormatSku(item.AttributesXml, _productAttributeParser)));
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTNAME}", FixIllegalJavaScriptChars(item.Product.Name));
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{CATEGORYNAME}", FixIllegalJavaScriptChars(category));
-                    var unitPrice = googleAnalyticsSettings.IncludingTax ? item.UnitPriceInclTax : item.UnitPriceExclTax;
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{UNITPRICE}", unitPrice.ToString("0.00", usCulture));
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{QUANTITY}", item.Quantity.ToString());
-                    sb.AppendLine(analyticsEcommerceDetailScript);
-                }
-
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{DETAILS}", sb.ToString());
-
-                analyticsTrackingScript = analyticsTrackingScript.Replace("{ECOMMERCE}", analyticsEcommerceScript);
-
-                _genericAttributeService.SaveAttribute(order, ORDER_ALREADY_PROCESSED_ATTRIBUTE_NAME, true);
-            }
-            else
-            {
-                analyticsTrackingScript = analyticsTrackingScript.Replace("{ECOMMERCE}", "");
-            }
-
-            return analyticsTrackingScript;
-        }
-
-        private string FixIllegalJavaScriptChars(string text)
-        {
-            if (String.IsNullOrEmpty(text))
-                return text;
-
-            //replace ' with \' (http://stackoverflow.com/questions/4292761/need-to-url-encode-labels-when-tracking-events-with-google-analytics)
-            text = text.Replace("'", "\\'");
-            return text;
-        }
+        #endregion
     }
 }

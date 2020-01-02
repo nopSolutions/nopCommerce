@@ -1,10 +1,7 @@
-﻿using FluentValidation.Attributes;
-using Nop.Web.Framework.Mvc.Models;
-using Nop.Web.Validators.PrivateMessages;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.PrivateMessages
 {
-    [Validator(typeof(SendPrivateMessageValidator))]
     public partial class SendPrivateMessageModel : BaseNopEntityModel
     {
         public int ToCustomerId { get; set; }

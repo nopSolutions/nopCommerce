@@ -6,7 +6,7 @@ namespace Nop.Core.Domain.Orders
     public partial class OrderByCountryReportLine
     {
         /// <summary>
-        /// Country identifier; null for unknow country
+        /// Country identifier; null for unknown country
         /// </summary>
         public int? CountryId { get; set; }
 

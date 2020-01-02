@@ -1,10 +1,10 @@
-﻿@model StateProvinceModel
+@model StateProvinceModel
 
 @{
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.Title = T("Admin.Configuration.Countries.States.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Countries.States.AddNew").Text;
 }
 
 <form asp-controller="Country" asp-action="StateCreatePopup"
@@ -20,6 +20,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CountryStateDetailsButtons })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateState", Model)

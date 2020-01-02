@@ -1,20 +1,30 @@
-﻿using System;
+﻿using System.Globalization;
+using System.Linq;
+using System.Runtime.ExceptionServices;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
-using Nop.Core.Domain;
-using Nop.Core.Http;
+using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Services.Authentication;
-using Nop.Services.Security;
+using Nop.Services.Common;
+using Nop.Services.Installation;
+using Nop.Services.Localization;
+using Nop.Services.Logging;
+using Nop.Services.Media.RoxyFileman;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
-using StackExchange.Profiling;
-using StackExchange.Profiling.Storage;
+using WebMarkupMin.AspNetCore2;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
 {
@@ -40,7 +50,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             var nopConfig = EngineContext.Current.Resolve<NopConfig>();
             var hostingEnvironment = EngineContext.Current.Resolve<IHostingEnvironment>();
-            bool useDetailedExceptionPage = nopConfig.DisplayFullErrorStack || hostingEnvironment.IsDevelopment();
+            var useDetailedExceptionPage = nopConfig.DisplayFullErrorStack || hostingEnvironment.IsDevelopment();
             if (useDetailedExceptionPage)
             {
                 //get detailed exceptions for developing and testing purposes
@@ -49,8 +59,39 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             else
             {
                 //or use special exception handler
-                application.UseExceptionHandler("/errorpage.htm");
+                application.UseExceptionHandler("/Error/Error");
             }
+
+            //log errors
+            application.UseExceptionHandler(handler =>
+            {
+                handler.Run(context =>
+                {
+                    var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+                    if (exception == null)
+                        return Task.CompletedTask;
+
+                    try
+                    {
+                        //check whether database is installed
+                        if (DataSettingsManager.DatabaseIsInstalled)
+                        {
+                            //get current customer
+                            var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
+
+                            //log error
+                            EngineContext.Current.Resolve<ILogger>().Error(exception.Message, exception, currentCustomer);
+                        }
+                    }
+                    finally
+                    {
+                        //rethrow the exception to show the error page
+                        ExceptionDispatchInfo.Throw(exception);
+                    }
+
+                    return Task.CompletedTask;
+                });
+            });
         }
 
         /// <summary>
@@ -62,7 +103,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             application.UseStatusCodePages(async context =>
             {
                 //handle 404 Not Found
-                if (context.HttpContext.Response.StatusCode == 404)
+                if (context.HttpContext.Response.StatusCode == StatusCodes.Status404NotFound)
                 {
                     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                     if (!webHelper.IsStaticResource())
@@ -72,11 +113,11 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         var originalQueryString = context.HttpContext.Request.QueryString;
 
                         //store the original paths in special feature, so we can use it later
-                        context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(new StatusCodeReExecuteFeature()
+                        context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(new StatusCodeReExecuteFeature
                         {
                             OriginalPathBase = context.HttpContext.Request.PathBase.Value,
                             OriginalPath = originalPath.Value,
-                            OriginalQueryString = originalQueryString.HasValue ? originalQueryString.Value : null,
+                            OriginalQueryString = originalQueryString.HasValue ? originalQueryString.Value : null
                         });
 
                         //get new path
@@ -101,6 +142,130 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
+        /// Adds a special handler that checks for responses with the 400 status code (bad request)
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseBadRequestResult(this IApplicationBuilder application)
+        {
+            application.UseStatusCodePages(context =>
+            {
+                //handle 404 (Bad request)
+                if (context.HttpContext.Response.StatusCode == StatusCodes.Status400BadRequest)
+                {
+                    var logger = EngineContext.Current.Resolve<ILogger>();
+                    var workContext = EngineContext.Current.Resolve<IWorkContext>();
+                    logger.Error("Error 400. Bad request", null, customer: workContext.CurrentCustomer);
+                }
+
+                return Task.CompletedTask;
+            });
+        }
+
+        /// <summary>
+        /// Configure middleware for dynamically compressing HTTP responses
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseNopResponseCompression(this IApplicationBuilder application)
+        {
+            //whether to use compression (gzip by default)
+            if (DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<CommonSettings>().UseResponseCompression)
+                application.UseResponseCompression();
+        }
+
+        /// <summary>
+        /// Configure static file serving
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseNopStaticFiles(this IApplicationBuilder application)
+        {
+            void staticFileResponse(StaticFileResponseContext context)
+            {
+                if (!DataSettingsManager.DatabaseIsInstalled)
+                    return;
+
+                var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
+                if (!string.IsNullOrEmpty(commonSettings.StaticFilesCacheControl))
+                    context.Context.Response.Headers.Append(HeaderNames.CacheControl, commonSettings.StaticFilesCacheControl);
+            }
+
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+
+            //common static files
+            application.UseStaticFiles(new StaticFileOptions { OnPrepareResponse = staticFileResponse });
+
+            //themes static files
+            application.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(fileProvider.MapPath(@"Themes")),
+                RequestPath = new PathString("/Themes"),
+                OnPrepareResponse = staticFileResponse
+            });
+
+            //plugins static files
+            var staticFileOptions = new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(fileProvider.MapPath(@"Plugins")),
+                RequestPath = new PathString("/Plugins"),
+                OnPrepareResponse = staticFileResponse
+            };
+
+            if (DataSettingsManager.DatabaseIsInstalled)
+            {
+                var securitySettings = EngineContext.Current.Resolve<SecuritySettings>();
+                if (!string.IsNullOrEmpty(securitySettings.PluginStaticFileExtensionsBlacklist))
+                {
+                    var fileExtensionContentTypeProvider = new FileExtensionContentTypeProvider();
+
+                    foreach (var ext in securitySettings.PluginStaticFileExtensionsBlacklist
+                        .Split(';', ',')
+                        .Select(e => e.Trim().ToLower())
+                        .Select(e => $"{(e.StartsWith(".") ? string.Empty : ".")}{e}")
+                        .Where(fileExtensionContentTypeProvider.Mappings.ContainsKey))
+                    {
+                        fileExtensionContentTypeProvider.Mappings.Remove(ext);
+                    }
+
+                    staticFileOptions.ContentTypeProvider = fileExtensionContentTypeProvider;
+                }
+            }
+
+            application.UseStaticFiles(staticFileOptions);
+
+            //add support for backups
+            var provider = new FileExtensionContentTypeProvider
+            {
+                Mappings = { [".bak"] = MimeTypes.ApplicationOctetStream }
+            };
+
+            application.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(fileProvider.GetAbsolutePath("db_backups")),
+                RequestPath = new PathString("/db_backups"),
+                ContentTypeProvider = provider
+            });
+
+            //add support for webmanifest files
+            provider.Mappings[".webmanifest"] = MimeTypes.ApplicationManifestJson;
+
+            application.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(fileProvider.GetAbsolutePath("icons")),
+                RequestPath = "/icons",
+                ContentTypeProvider = provider
+            });
+
+            if (DataSettingsManager.DatabaseIsInstalled)
+            {
+                application.UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new RoxyFilemanProvider(fileProvider.GetAbsolutePath(NopRoxyFilemanDefaults.DefaultRootDirectory.TrimStart('/').Split('/'))),
+                    RequestPath = new PathString(NopRoxyFilemanDefaults.DefaultRootDirectory),
+                    OnPrepareResponse = staticFileResponse
+                });
+            }
+        }
+
+        /// <summary>
         /// Configure middleware checking whether requested page is keep alive page
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
@@ -119,51 +284,49 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
+        /// Adds the authentication middleware, which enables authentication capabilities.
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseNopAuthentication(this IApplicationBuilder application)
+        {
+            //check whether database is installed
+            if (!DataSettingsManager.DatabaseIsInstalled)
+                return;
+
+            application.UseMiddleware<AuthenticationMiddleware>();
+        }
+
+        /// <summary>
+        /// Configure the request localization feature
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseNopRequestLocalization(this IApplicationBuilder application)
+        {
+            application.UseRequestLocalization(options =>
+            {
+                if (!DataSettingsManager.DatabaseIsInstalled)
+                    return;
+
+                //prepare supported cultures
+                var cultures = EngineContext.Current.Resolve<ILanguageService>().GetAllLanguages()
+                    .OrderBy(language => language.DisplayOrder)
+                    .Select(language => new CultureInfo(language.LanguageCulture)).ToList();
+                options.SupportedCultures = cultures;
+                options.DefaultRequestCulture = new RequestCulture(cultures.FirstOrDefault());
+            });
+        }
+
+        /// <summary>
         /// Set current culture info
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseCulture(this IApplicationBuilder application)
         {
             //check whether database is installed
-            if (!DataSettingsHelper.DatabaseIsInstalled())
+            if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
             application.UseMiddleware<CultureMiddleware>();
-        }
-
-        /// <summary>
-        /// Congifure authentication
-        /// </summary>
-        /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseAuthentication(this IApplicationBuilder application)
-        {                    
-            //check whether database is installed
-            if (!DataSettingsHelper.DatabaseIsInstalled())
-                return;
-
-            //enable main cookie authentication
-            application.UseCookieAuthentication(new CookieAuthenticationOptions
-            {
-                AuthenticationScheme = NopCookieAuthenticationDefaults.AuthenticationScheme,
-                CookieName = NopCookieAuthenticationDefaults.CookiePrefix + NopCookieAuthenticationDefaults.AuthenticationScheme,
-                LoginPath = NopCookieAuthenticationDefaults.LoginPath,
-                AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath,
-                CookieHttpOnly = true,
-                AutomaticAuthenticate = false,
-                AutomaticChallenge = true
-            });
-
-            //enable external authentication
-            application.UseCookieAuthentication(new CookieAuthenticationOptions
-            {
-                AuthenticationScheme = NopCookieAuthenticationDefaults.ExternalAuthenticationScheme,
-                CookieName = NopCookieAuthenticationDefaults.CookiePrefix + NopCookieAuthenticationDefaults.ExternalAuthenticationScheme,
-                LoginPath = NopCookieAuthenticationDefaults.LoginPath,
-                AccessDeniedPath = NopCookieAuthenticationDefaults.AccessDeniedPath,
-                CookieHttpOnly = true,
-                AutomaticAuthenticate = false,
-                AutomaticChallenge = false
-            });
         }
 
         /// <summary>
@@ -180,29 +343,16 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
-        /// Create and configure MiniProfiler service
+        /// Configure WebMarkupMin
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseMiniProfiler(this IApplicationBuilder application)
+        public static void UseNopWebMarkupMin(this IApplicationBuilder application)
         {
-            //whether database is already installed
-            if (!DataSettingsHelper.DatabaseIsInstalled())
+            //check whether database is installed
+            if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
-            //whether MiniProfiler should be displayed
-            if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
-            {
-                application.UseMiniProfiler(new MiniProfilerOptions
-                {
-                    //use memory cache provider for storing each result
-                    Storage = new MemoryCacheStorage(TimeSpan.FromMinutes(60)),
-
-                    //determine who can access the MiniProfiler results
-                    ResultsAuthorize = request =>
-                        !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerForAdminOnly ||
-                        EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel)
-                });
-            }
+            application.UseWebMarkupMin();
         }
     }
 }

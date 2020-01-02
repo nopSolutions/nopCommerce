@@ -1,17 +1,35 @@
-﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Mvc.ModelBinding;
+using Nop.Web.Framework.Models;
+using Nop.Web.Areas.Admin.Models.Catalog;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
-    public partial class CatalogSettingsModel : BaseNopModel
+    /// <summary>
+    /// Represents a catalog settings model
+    /// </summary>
+    public partial class CatalogSettingsModel : BaseNopModel, ISettingsModel
     {
-        public int ActiveStoreScopeConfiguration { get; set; }
+        #region Ctor
 
+        public CatalogSettingsModel()
+        {
+            AvailableViewModes = new List<SelectListItem>();
+            SortOptionSearchModel = new SortOptionSearchModel();
+            ReviewTypeSearchModel = new ReviewTypeSearchModel();
+        }
+
+        #endregion
+
+        #region Properties
+
+        public int ActiveStoreScopeConfiguration { get; set; }
         
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowViewUnpublishedProductPage")]
         public bool AllowViewUnpublishedProductPage { get; set; }
         public bool AllowViewUnpublishedProductPage_OverrideForStore { get; set; }
-
+        
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.DisplayDiscontinuedMessageForUnpublishedProducts")]
         public bool DisplayDiscontinuedMessageForUnpublishedProducts { get; set; }
         public bool DisplayDiscontinuedMessageForUnpublishedProducts_OverrideForStore { get; set; }
@@ -43,6 +61,11 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowProductViewModeChanging")]
         public bool AllowProductViewModeChanging { get; set; }
         public bool AllowProductViewModeChanging_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.DefaultViewMode")]
+        public string DefaultViewMode { get; set; }
+        public bool DefaultViewMode_OverrideForStore { get; set; }
+        public IList<SelectListItem> AvailableViewModes { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowProductsFromSubcategories")]
         public bool ShowProductsFromSubcategories { get; set; }
@@ -84,6 +107,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool NotifyStoreOwnerAboutNewProductReviews { get; set; }
         public bool NotifyStoreOwnerAboutNewProductReviews_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NotifyCustomerAboutProductReviewReply")]
+        public bool NotifyCustomerAboutProductReviewReply { get; set; }
+        public bool NotifyCustomerAboutProductReviewReply_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore")]
         public bool ShowProductReviewsPerStore { get; set; }
         public bool ShowProductReviewsPerStore_OverrideForStore { get; set; }
@@ -95,6 +122,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductReviewsPageSizeOnAccountPage")]
         public int ProductReviewsPageSizeOnAccountPage { get; set; }
         public bool ProductReviewsPageSizeOnAccountPage_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductReviewsSortByCreatedDateAscending")]
+        public bool ProductReviewsSortByCreatedDateAscending { get; set; }
+        public bool ProductReviewsSortByCreatedDateAscending_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.EmailAFriendEnabled")]
         public bool EmailAFriendEnabled { get; set; }
@@ -155,6 +186,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowProductImagesInSearchAutoComplete")]
         public bool ShowProductImagesInSearchAutoComplete { get; set; }
         public bool ShowProductImagesInSearchAutoComplete_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowLinkToAllResultInSearchAutoComplete")]
+        public bool ShowLinkToAllResultInSearchAutoComplete { get; set; }
+        public bool ShowLinkToAllResultInSearchAutoComplete_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductSearchTermMinimumLength")]
         public int ProductSearchTermMinimumLength { get; set; }
@@ -223,16 +258,62 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportProductAttributes")]
         public bool ExportImportProductAttributes { get; set; }
         public bool ExportImportProductAttributes_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportProductSpecificationAttributes")]
+        public bool ExportImportProductSpecificationAttributes { get; set; }
+        public bool ExportImportProductSpecificationAttributes_OverrideForStore { get; set; }
         
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportProductCategoryBreadcrumb")]
+        public bool ExportImportProductCategoryBreadcrumb { get; set; }
+        public bool ExportImportProductCategoryBreadcrumb_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportCategoriesUsingCategoryName")]
+        public bool ExportImportCategoriesUsingCategoryName { get; set; }
+        public bool ExportImportCategoriesUsingCategoryName_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportAllowDownloadImages")]
+        public bool ExportImportAllowDownloadImages { get; set; }
+        public bool ExportImportAllowDownloadImages_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportSplitProductsFile")]
+        public bool ExportImportSplitProductsFile { get; set; }
+        public bool ExportImportSplitProductsFile_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.RemoveRequiredProducts")]
+        public bool RemoveRequiredProducts { get; set; }
+        public bool RemoveRequiredProducts_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportRelatedEntitiesByName")]
+        public bool ExportImportRelatedEntitiesByName { get; set; }
+        public bool ExportImportRelatedEntitiesByName_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ExportImportProductUseLimitedToStores")]
+        public bool ExportImportProductUseLimitedToStores { get; set; }
+        public bool ExportImportProductUseLimitedToStores_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreDiscounts")]
         public bool IgnoreDiscounts { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreFeaturedProducts")]
         public bool IgnoreFeaturedProducts { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreAcl")]
         public bool IgnoreAcl { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreStoreLimitations")]
         public bool IgnoreStoreLimitations { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.CacheProductPrices")]
         public bool CacheProductPrices { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.DisplayDatePreOrderAvailability")]
+        public bool DisplayDatePreOrderAvailability { get; set; }
+        public bool DisplayDatePreOrderAvailability_OverrideForStore { get; set; }
+
+        public SortOptionSearchModel SortOptionSearchModel { get; set; }
+
+        public ReviewTypeSearchModel ReviewTypeSearchModel { get; set; }
+
+        #endregion
     }
 }

@@ -1,8 +1,8 @@
-﻿@model ShippingMethodRestrictionModel
+@model ShippingMethodRestrictionModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Shipping.Restrictions").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Shipping.Restrictions").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Shipping providers");
 }
@@ -18,6 +18,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ShippingRestrictionListButtons })
         </div>
     </div>
 
@@ -37,7 +38,7 @@
                         }
                         else
                         {
-                            <script type="text/javascript">
+                            <script>
                                 $(document).ready(function () {
                                     @foreach (var sm in Model.AvailableShippingMethods)
                                     {
@@ -51,7 +52,7 @@
                             </script>
 
                             <table class="table table-hover table-bordered">
-                                <tbody>
+                                <thead>
                                     <tr>
                                         <th scope="col">
                                             <strong>@T("Admin.Configuration.Shipping.Restrictions.Country")</strong>
@@ -64,6 +65,8 @@
                                             </th>
                                         }
                                     </tr>
+                                </thead>
+                                <tbody>                                 
                                     @foreach (var c in Model.AvailableCountries)
                                     {
                                         <tr>

@@ -1,11 +1,12 @@
 ﻿@model IList<CustomerModel.CustomerAttributeModel>
+@using Nop.Web.Framework.Controllers;
 
 @using Nop.Core.Domain.Catalog;
 
 @foreach (var attribute in Model)
 {
-    string controlId = string.Format("customer_attribute_{0}", attribute.Id);
-    string textPrompt = attribute.Name;
+    var controlId = $"{NopAttributePrefixDefaults.Customer}{attribute.Id}";
+    var textPrompt = attribute.Name;
     <div class="form-group">
         <div class="col-md-3">
             <div class="label-wrapper">

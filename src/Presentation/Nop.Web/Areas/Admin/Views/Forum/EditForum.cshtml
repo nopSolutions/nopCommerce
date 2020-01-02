@@ -1,8 +1,8 @@
-﻿@model ForumModel
+@model ForumModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.ContentManagement.Forums.Forum.EditForum").Text;
+    ViewBag.PageTitle = T("Admin.ContentManagement.Forums.Forum.EditForum").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Manage forums");
 }
@@ -29,6 +29,7 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ForumDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateForum", Model)

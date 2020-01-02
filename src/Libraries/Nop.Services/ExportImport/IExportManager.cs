@@ -35,7 +35,7 @@ namespace Nop.Services.ExportImport
         /// Export categories to XLSX
         /// </summary>
         /// <param name="categories">Categories</param>
-        byte[] ExportCategoriesToXlsx(IEnumerable<Category> categories);
+        byte[] ExportCategoriesToXlsx(IList<Category> categories);
 
         /// <summary>
         /// Export product list to XML
@@ -89,5 +89,13 @@ namespace Nop.Services.ExportImport
         /// <param name="states">States</param>
         /// <returns>Result in TXT (string) format</returns>
         string ExportStatesToTxt(IList<StateProvince> states);
+
+        /// <summary>
+        /// Export customer info (GDPR request) to XLSX 
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>Customer GDPR info</returns>
+        byte[] ExportCustomerGdprInfoToXlsx(Customer customer, int storeId);
     }
 }

@@ -1,10 +1,10 @@
-﻿@model PredefinedProductAttributeValueModel
+@model PredefinedProductAttributeValueModel
 
 @{
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.Title = T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.EditValueDetails").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.EditValueDetails").Text;
 }
 
 <form asp-controller="ProductAttribute" asp-action="PredefinedProductAttributeValueEditPopup"
@@ -19,6 +19,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributePredefinedValueDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdatePredefinedProductAttributeValue", Model)

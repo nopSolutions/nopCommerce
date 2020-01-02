@@ -34,17 +34,17 @@ namespace Nop.Core.Domain.Forums
         public string Text { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indivating whether message is read
+        /// Gets or sets a value indicating whether message is read
         /// </summary>
         public bool IsRead { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indivating whether message is deleted by author
+        /// Gets or sets a value indicating whether message is deleted by author
         /// </summary>
         public bool IsDeletedByAuthor { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indivating whether message is deleted by recipient
+        /// Gets or sets a value indicating whether message is deleted by recipient
         /// </summary>
         public bool IsDeletedByRecipient { get; set; }
 

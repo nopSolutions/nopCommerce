@@ -1,8 +1,8 @@
-﻿@model DeliveryDateModel
+@model DeliveryDateModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Shipping.DeliveryDates.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Shipping.DeliveryDates.AddNew").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Delivery dates");
 }
@@ -25,6 +25,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.DeliveryDateDetailsButtons })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateDeliveryDate", Model)

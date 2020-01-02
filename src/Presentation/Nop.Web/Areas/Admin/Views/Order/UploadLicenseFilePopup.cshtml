@@ -1,15 +1,15 @@
-﻿@model OrderModel.UploadLicenseModel
+@model UploadLicenseModel
 
 @{
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.Title = T("Admin.Orders.Products.License.UploadFile").Text;
+    ViewBag.PageTitle = T("Admin.Orders.Products.License.UploadFile").Text;
 }
 
 @if (ViewBag.RefreshPage == true)
 {
-    <script type="text/javascript">
+    <script>
         try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
         catch (e){}
         window.close();
@@ -26,6 +26,7 @@
         </h1>
         <div class="pull-right">
             &nbsp;
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.OrderUploadLicenseButtons })
         </div>
     </div>
 

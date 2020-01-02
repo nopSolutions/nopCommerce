@@ -1,0 +1,50 @@
+﻿@model RewardPointsSettingsModel
+
+<div class="panel-body">
+    <p>
+        @T("Admin.Configuration.Settings.RewardPoints.Description")
+    </p>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="Enabled_OverrideForStore" asp-input="Enabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="Enabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Enabled" />
+            <span asp-validation-for="Enabled"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ExchangeRate_OverrideForStore" asp-input="ExchangeRate" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ExchangeRate" />
+        </div>
+        <div class="col-md-9">
+            <div class="form-text-row pull-left margin-r-10">@T("Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2")</div>
+            <div class="pull-left">
+                <nop-editor asp-for="ExchangeRate" asp-postfix="@Model.PrimaryStoreCurrencyCode" />
+                <span asp-validation-for="ExchangeRate"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="MinimumRewardPointsToUse_OverrideForStore" asp-input="MinimumRewardPointsToUse" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="MinimumRewardPointsToUse" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="MinimumRewardPointsToUse" />
+            <span asp-validation-for="MinimumRewardPointsToUse"></span>
+        </div>
+    </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="MaximumRewardPointsToUsePerOrder_OverrideForStore" asp-input="MaximumRewardPointsToUsePerOrder" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="MaximumRewardPointsToUsePerOrder" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="MaximumRewardPointsToUsePerOrder" />
+            <span asp-validation-for="MaximumRewardPointsToUsePerOrder"></span>
+        </div>
+    </div>
+</div>

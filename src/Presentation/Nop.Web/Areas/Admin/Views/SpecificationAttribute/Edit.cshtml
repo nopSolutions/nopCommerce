@@ -1,8 +1,8 @@
-﻿@model SpecificationAttributeModel
+@model SpecificationAttributeModel
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Catalog.Attributes.SpecificationAttributes.EditAttributeDetails").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Attributes.SpecificationAttributes.EditAttributeDetails").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Specification attributes");
 }
@@ -29,6 +29,7 @@
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
             </span>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdate", Model)

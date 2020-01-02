@@ -1,0 +1,37 @@
+@model ProductAttributeMappingModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Catalog.Products.ProductAttributes.Attributes.EditAttributeDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Products");
+}
+
+<form asp-controller="Product" asp-action="ProductAttributeMappingEdit" method="post" id="productattribute-form">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Catalog.Products.ProductAttributes.Attributes.EditAttributeDetails")
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="Edit" asp-route-id="@Model.ProductId">@T("Admin.Catalog.Products.ProductAttributes.Attributes.BackToProduct")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="productattribute-delete" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete")
+            </span>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductAttributeMappingDetailsButtons, additionalData = Model })
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdateProductAttributeMapping", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-action="ProductAttributeMappingDelete" asp-button-id="productattribute-delete" />

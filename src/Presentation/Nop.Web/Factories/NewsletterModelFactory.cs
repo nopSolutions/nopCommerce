@@ -11,18 +11,18 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
-        private readonly ILocalizationService _localizationService;
         private readonly CustomerSettings _customerSettings;
+        private readonly ILocalizationService _localizationService;
 
         #endregion
 
         #region Ctor
 
-        public NewsletterModelFactory(ILocalizationService localizationService,
-            CustomerSettings customerSettings)
+        public NewsletterModelFactory(CustomerSettings customerSettings,
+            ILocalizationService localizationService)
         {
-            this._localizationService = localizationService;
-            this._customerSettings = customerSettings;
+            _customerSettings = customerSettings;
+            _localizationService = localizationService;
         }
 
         #endregion
@@ -49,10 +49,12 @@ namespace Nop.Web.Factories
         /// <returns>Subscription activation model</returns>
         public virtual SubscriptionActivationModel PrepareSubscriptionActivationModel(bool active)
         {
-            var model = new SubscriptionActivationModel();
-            model.Result = active
+            var model = new SubscriptionActivationModel
+            {
+                Result = active
                 ? _localizationService.GetResource("Newsletter.ResultActivated")
-                : _localizationService.GetResource("Newsletter.ResultDeactivated");
+                : _localizationService.GetResource("Newsletter.ResultDeactivated")
+            };
 
             return model;
         }

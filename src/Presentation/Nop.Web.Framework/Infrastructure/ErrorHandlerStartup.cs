@@ -15,8 +15,8 @@ namespace Nop.Web.Framework.Infrastructure
         /// Add and configure any of the middleware
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
-        /// <param name="configuration">Configuration root of the application</param>
-        public void ConfigureServices(IServiceCollection services, IConfigurationRoot configuration)
+        /// <param name="configuration">Configuration of the application</param>
+        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
         }
 
@@ -29,17 +29,16 @@ namespace Nop.Web.Framework.Infrastructure
             //exception handling
             application.UseNopExceptionHandler();
 
-            //handle 404 errors
+            //handle 400 errors (bad request)
+            application.UseBadRequestResult();
+
+            //handle 404 errors (not found)
             application.UsePageNotFound();
         }
 
         /// <summary>
         /// Gets order of this startup configuration implementation
         /// </summary>
-        public int Order
-        {
-            //error handlers should be loaded first
-            get { return 0; }
-        }
+        public int Order => 0; //error handlers should be loaded first
     }
 }

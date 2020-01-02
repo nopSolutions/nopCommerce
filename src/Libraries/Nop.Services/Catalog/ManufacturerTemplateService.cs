@@ -14,23 +14,18 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IRepository<ManufacturerTemplate> _manufacturerTemplateRepository;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<ManufacturerTemplate> _manufacturerTemplateRepository;
 
         #endregion
-        
+
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="manufacturerTemplateRepository">Manufacturer template repository</param>
-        /// <param name="eventPublisher">Event published</param>
-        public ManufacturerTemplateService(IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
-            IEventPublisher eventPublisher)
+        public ManufacturerTemplateService(IEventPublisher eventPublisher,
+            IRepository<ManufacturerTemplate> manufacturerTemplateRepository)
         {
-            this._manufacturerTemplateRepository = manufacturerTemplateRepository;
-            this._eventPublisher = eventPublisher;
+            _eventPublisher = eventPublisher;
+            _manufacturerTemplateRepository = manufacturerTemplateRepository;
         }
 
         #endregion
@@ -108,7 +103,7 @@ namespace Nop.Services.Catalog
             //event notification
             _eventPublisher.EntityUpdated(manufacturerTemplate);
         }
-        
+
         #endregion
     }
 }

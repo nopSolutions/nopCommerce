@@ -1,5 +1,7 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 
 namespace Nop.Services.Media
@@ -9,6 +11,13 @@ namespace Nop.Services.Media
     /// </summary>
     public partial interface IPictureService
     {
+        /// <summary>
+        /// Returns the file extension from mime type.
+        /// </summary>
+        /// <param name="mimeType">Mime type</param>
+        /// <returns>File extension</returns>
+        string GetFileExtensionFromMimeType(string mimeType);
+
         /// <summary>
         /// Gets the loaded picture binary depending on picture storage settings
         /// </summary>
@@ -30,7 +39,7 @@ namespace Nop.Services.Media
         /// <param name="defaultPictureType">Default picture type</param>
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <returns>Picture URL</returns>
-        string GetDefaultPictureUrl(int targetSize = 0, 
+        string GetDefaultPictureUrl(int targetSize = 0,
             PictureType defaultPictureType = PictureType.Entity,
             string storeLocation = null);
 
@@ -43,10 +52,10 @@ namespace Nop.Services.Media
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <returns>Picture URL</returns>
-        string GetPictureUrl(int pictureId, 
+        string GetPictureUrl(int pictureId,
             int targetSize = 0,
-            bool showDefaultPicture = true, 
-            string storeLocation = null, 
+            bool showDefaultPicture = true,
+            string storeLocation = null,
             PictureType defaultPictureType = PictureType.Entity);
 
         /// <summary>
@@ -58,10 +67,10 @@ namespace Nop.Services.Media
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <returns>Picture URL</returns>
-        string GetPictureUrl(Picture picture, 
+        string GetPictureUrl(Picture picture,
             int targetSize = 0,
-            bool showDefaultPicture = true, 
-            string storeLocation = null, 
+            bool showDefaultPicture = true,
+            string storeLocation = null,
             PictureType defaultPictureType = PictureType.Entity);
 
         /// <summary>
@@ -89,10 +98,11 @@ namespace Nop.Services.Media
         /// <summary>
         /// Gets a collection of pictures
         /// </summary>
+        /// <param name="virtualPath">Virtual path</param>
         /// <param name="pageIndex">Current page</param>
         /// <param name="pageSize">Items on each page</param>
         /// <returns>Paged list of pictures</returns>
-        IPagedList<Picture> GetPictures(int pageIndex = 0, int pageSize = int.MaxValue);
+        IPagedList<Picture> GetPictures(string virtualPath = "", int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets pictures by product identifier
@@ -113,9 +123,18 @@ namespace Nop.Services.Media
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <param name="validateBinary">A value indicating whether to validated provided picture binary</param>
         /// <returns>Picture</returns>
-        Picture InsertPicture(byte[] pictureBinary, string mimeType, string seoFilename, 
+        Picture InsertPicture(byte[] pictureBinary, string mimeType, string seoFilename,
             string altAttribute = null, string titleAttribute = null,
             bool isNew = true, bool validateBinary = true);
+
+        /// <summary>
+        /// Inserts a picture
+        /// </summary>
+        /// <param name="formFile">Form file</param>
+        /// <param name="defaultFileName">File name which will be use if IFormFile.FileName not present</param>
+        /// <param name="virtualPath">Virtual path</param>
+        /// <returns>Picture</returns>
+        Picture InsertPicture(IFormFile formFile, string defaultFileName = "", string virtualPath = "");
 
         /// <summary>
         /// Updates the picture
@@ -132,6 +151,13 @@ namespace Nop.Services.Media
         Picture UpdatePicture(int pictureId, byte[] pictureBinary, string mimeType,
             string seoFilename, string altAttribute = null, string titleAttribute = null,
             bool isNew = true, bool validateBinary = true);
+
+        /// <summary>
+        /// Updates the picture
+        /// </summary>
+        /// <param name="picture">The picture to update</param>
+        /// <returns>Picture</returns>
+        Picture UpdatePicture(Picture picture);
 
         /// <summary>
         /// Updates a SEO filename of a picture
@@ -159,6 +185,14 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="picturesIds">Pictures Ids</param>
         /// <returns></returns>
-        IDictionary<int, string> GetPicturesHash(int [] picturesIds);
+        IDictionary<int, string> GetPicturesHash(int[] picturesIds);
+
+        /// <summary>
+        /// Get product picture (for shopping cart and order details pages)
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="attributesXml">Attributes (in XML format)</param>
+        /// <returns>Picture</returns>
+        Picture GetProductPicture(Product product, string attributesXml);
     }
 }

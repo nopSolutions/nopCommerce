@@ -1,18 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Forums;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class ForumLastPostViewComponent : ViewComponent
+    public class ForumLastPostViewComponent : NopViewComponent
     {
-        private readonly IForumService _forumService;
         private readonly IForumModelFactory _forumModelFactory;
+        private readonly IForumService _forumService;
 
-        public ForumLastPostViewComponent(IForumService forumService, IForumModelFactory forumModelFactory)
+        public ForumLastPostViewComponent(IForumModelFactory forumModelFactory, IForumService forumService)
         {
-            this._forumService = forumService;
-            this._forumModelFactory = forumModelFactory;
+            _forumModelFactory = forumModelFactory;
+            _forumService = forumService;
         }
 
         public IViewComponentResult Invoke(int forumPostId, bool showTopic)

@@ -53,14 +53,8 @@ namespace Nop.Core.Domain.Logging
         /// </summary>
         public LogLevel LogLevel
         {
-            get
-            {
-                return (LogLevel)this.LogLevelId;
-            }
-            set
-            {
-                this.LogLevelId = (int)value;
-            }
+            get => (LogLevel)LogLevelId;
+            set => LogLevelId = (int)value;
         }
 
         /// <summary>

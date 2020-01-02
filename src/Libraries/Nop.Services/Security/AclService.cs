@@ -7,6 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
+using Nop.Data.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Security
@@ -16,54 +17,29 @@ namespace Nop.Services.Security
     /// </summary>
     public partial class AclService : IAclService
     {
-        #region Constants
-        
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : entity ID
-        /// {1} : entity name
-        /// </remarks>
-        private const string ACLRECORD_BY_ENTITYID_NAME_KEY = "Nop.aclrecord.entityid-name-{0}-{1}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string ACLRECORD_PATTERN_KEY = "Nop.aclrecord.";
-
-        #endregion
-
         #region Fields
 
-        private readonly IRepository<AclRecord> _aclRecordRepository;
-        private readonly IWorkContext _workContext;
-        private readonly IStaticCacheManager _cacheManager;
-        private readonly IEventPublisher _eventPublisher;
         private readonly CatalogSettings _catalogSettings;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<AclRecord> _aclRecordRepository;
+        private readonly IStaticCacheManager _cacheManager;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Static cache manager</param>
-        /// <param name="workContext">Work context</param>
-        /// <param name="aclRecordRepository">ACL record repository</param>
-        /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event publisher</param>
-        public AclService(IStaticCacheManager cacheManager, 
-            IWorkContext workContext,
-            IRepository<AclRecord> aclRecordRepository,
+        public AclService(CatalogSettings catalogSettings,
             IEventPublisher eventPublisher,
-            CatalogSettings catalogSettings)
+            IRepository<AclRecord> aclRecordRepository,
+            IStaticCacheManager cacheManager,
+            IWorkContext workContext)
         {
-            this._cacheManager = cacheManager;
-            this._workContext = workContext;
-            this._aclRecordRepository = aclRecordRepository;
-            this._eventPublisher = eventPublisher;
-            this._catalogSettings = catalogSettings;
+            _catalogSettings = catalogSettings;
+            _eventPublisher = eventPublisher;
+            _aclRecordRepository = aclRecordRepository;
+            _cacheManager = cacheManager;
+            _workContext = workContext;
         }
 
         #endregion
@@ -82,7 +58,7 @@ namespace Nop.Services.Security
             _aclRecordRepository.Delete(aclRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(NopSecurityDefaults.AclRecordPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(aclRecord);
@@ -112,8 +88,8 @@ namespace Nop.Services.Security
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            int entityId = entity.Id;
-            string entityName = typeof(T).Name;
+            var entityId = entity.Id;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
             var query = from ur in _aclRecordRepository.Table
                         where ur.EntityId == entityId &&
@@ -122,7 +98,6 @@ namespace Nop.Services.Security
             var aclRecords = query.ToList();
             return aclRecords;
         }
-
 
         /// <summary>
         /// Inserts an ACL record
@@ -136,7 +111,7 @@ namespace Nop.Services.Security
             _aclRecordRepository.Insert(aclRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(NopSecurityDefaults.AclRecordPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(aclRecord);
@@ -154,10 +129,10 @@ namespace Nop.Services.Security
                 throw new ArgumentNullException(nameof(entity));
 
             if (customerRoleId == 0)
-                throw new ArgumentOutOfRangeException("customerRoleId");
+                throw new ArgumentOutOfRangeException(nameof(customerRoleId));
 
-            int entityId = entity.Id;
-            string entityName = typeof(T).Name;
+            var entityId = entity.Id;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
             var aclRecord = new AclRecord
             {
@@ -181,7 +156,7 @@ namespace Nop.Services.Security
             _aclRecordRepository.Update(aclRecord);
 
             //cache
-            _cacheManager.RemoveByPattern(ACLRECORD_PATTERN_KEY);
+            _cacheManager.RemoveByPrefix(NopSecurityDefaults.AclRecordPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(aclRecord);
@@ -198,15 +173,15 @@ namespace Nop.Services.Security
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            int entityId = entity.Id;
-            string entityName = typeof(T).Name;
+            var entityId = entity.Id;
+            var entityName = entity.GetUnproxiedEntityType().Name;
 
-            string key = string.Format(ACLRECORD_BY_ENTITYID_NAME_KEY, entityId, entityName);
+            var key = string.Format(NopSecurityDefaults.AclRecordByEntityIdNameCacheKey, entityId, entityName);
             return _cacheManager.Get(key, () =>
             {
                 var query = from ur in _aclRecordRepository.Table
                             where ur.EntityId == entityId &&
-                            ur.EntityName == entityName 
+                            ur.EntityName == entityName
                             select ur.CustomerRoleId;
                 return query.ToArray();
             });
@@ -253,6 +228,7 @@ namespace Nop.Services.Security
             //no permission found
             return false;
         }
+
         #endregion
     }
 }

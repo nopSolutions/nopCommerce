@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 
@@ -26,8 +23,8 @@ namespace Nop.Services.Orders
                 checkoutAttribute.AttributeControlType == AttributeControlType.Datepicker ||
                 checkoutAttribute.AttributeControlType == AttributeControlType.FileUpload)
                 return false;
-            
-            //other attribute controle types support values
+
+            //other attribute control types support values
             return true;
         }
 
@@ -48,21 +45,8 @@ namespace Nop.Services.Orders
                 checkoutAttribute.AttributeControlType == AttributeControlType.FileUpload)
                 return false;
 
-            //other attribute controle types support it
+            //other attribute control types support it
             return true;
-        }
-
-        /// <summary>
-        /// Remove attributes which require shippable products
-        /// </summary>
-        /// <param name="checkoutAttributes">Checkout attributes</param>
-        /// <returns>Result</returns>
-        public static IList<CheckoutAttribute> RemoveShippableAttributes(this IList<CheckoutAttribute> checkoutAttributes)
-        {
-            if (checkoutAttributes == null)
-                throw new ArgumentNullException(nameof(checkoutAttributes));
-
-            return checkoutAttributes.Where(x => !x.ShippableProductRequired).ToList();
         }
     }
 }

@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class TopMenuViewComponent : ViewComponent
+    public class TopMenuViewComponent : NopViewComponent
     {
         private readonly ICatalogModelFactory _catalogModelFactory;
 
         public TopMenuViewComponent(ICatalogModelFactory catalogModelFactory)
         {
-            this._catalogModelFactory = catalogModelFactory;
+            _catalogModelFactory = catalogModelFactory;
         }
 
         public IViewComponentResult Invoke(int? productThumbPictureSize)

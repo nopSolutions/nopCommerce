@@ -3,6 +3,7 @@
 @using Nop.Core.Domain.Media
 @using System.Text
 @using Nop.Services.Media
+@using Nop.Web.Framework.Controllers;
 @inject IDownloadService downloadService
 @inject CatalogSettings catalogSettings
 @if (Model.Count > 0)
@@ -11,9 +12,9 @@
         <dl>
             @foreach (var attribute in Model)
             {
-                string controlId = string.Format("product_attribute_{0}", attribute.Id);
-                string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
-                <dt id="@string.Format("product_attribute_label_{0}", attribute.Id)">
+                var controlId = $"{NopAttributePrefixDefaults.Product}{attribute.Id}";
+                var textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
+                <dt id="@($"{NopAttributePrefixDefaults.Product}label_{attribute.Id}")">
                     <label class="text-prompt">
                         @textPrompt
                     </label>
@@ -28,19 +29,19 @@
                         </div>
                     }
                 </dt>
-                <dd id="@string.Format("product_attribute_input_{0}", attribute.Id)">
+                <dd id="@($"{NopAttributePrefixDefaults.Product}input_{attribute.Id}")">
                     @switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
                             {
-                                <select name="@(controlId)" id="@(controlId)" @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw(string.Format("onchange=\"showHideDropdownQuantity('{0}')\"", controlId)) : null)>
+                                <select name="@(controlId)" id="@(controlId)" @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onchange=\"showHideDropdownQuantity('{controlId}')\"") : null)>
                                     @if (!attribute.IsRequired)
                                     {
                                         <option value="0">---</option>
                                     }
                                     @foreach (var attributeValue in attribute.Values)
                                     {
-                                        var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                        var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
                                                 attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text;
@@ -54,7 +55,7 @@
                                         <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                     </div>
                                 }
-                                <script>
+                                <script asp-location="Footer">
                                     $(document).ready(function() {
                                         showHideDropdownQuantity("@controlId");
                                     });
@@ -66,13 +67,13 @@
                                 <ul class="option-list">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
-                                        var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                        var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
                                                 attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text;
                                         <li>
                                             <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected"
-                                                   @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw(string.Format("onclick=\"showHideRadioQuantity('{0}')\"", controlId)) : null) />
+                                                   @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}')\"") : null)/>
                                             <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
 
                                             @if (attributeValue.CustomerEntersQty)
@@ -85,7 +86,7 @@
                                         </li>
                                     }
                                 </ul>
-                                <script>
+                                <script asp-location="Footer">
                                     $(document).ready(function() {
                                         showHideRadioQuantity("@controlId");
                                     });
@@ -98,13 +99,13 @@
                                 <ul class="option-list">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
-                                        var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                        var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment,
                                                 attributeValue.CustomerEntersQty ? T("Products.ProductAttributes.PriceAdjustment.PerItem").Text : string.Empty).Text;
                                         <li>
                                             <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null)
-                                                   @(attributeValue.CustomerEntersQty ? Html.Raw(string.Format("onchange=\"showHideCheckboxQuantity('{0}_{1}')\"", controlId, attributeValue.Id)) : null) />
+                                                   @(attributeValue.CustomerEntersQty ? Html.Raw($"onchange=\"showHideCheckboxQuantity('{controlId}_{attributeValue.Id}')\"") : null)/>
                                             <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
 
                                             @if (attributeValue.CustomerEntersQty)
@@ -112,7 +113,7 @@
                                                 <div class="qty-box" id="@(controlId)_@(attributeValue.Id)_qty_box" style="display:none">
                                                     <label for="@(controlId)_@(attributeValue.Id)_qty">@(T("Products.ProductAttributes.PriceAdjustment.Quantity").Text)</label>
                                                     <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
-                                                    <script>
+                                                    <script asp-location="Footer">
                                                         $(document).ready(function() {
                                                             showHideCheckboxQuantity('@(controlId)_@(attributeValue.Id)');
                                                         })
@@ -141,7 +142,7 @@
                                     asp-month-name="@(controlId + "_month")" 
                                     asp-year-name="@(controlId + "_year")"
                                     asp-begin-year="@(DateTime.Now.Year)"
-                                    asp-end-year="@(DateTime.Now.Year + 1)"
+                                    asp-end-year="@(DateTime.Now.Year + catalogSettings.CountDisplayedYearsDatePicker)"
                                     asp-selected-day="@attribute.SelectedDay"
                                     asp-selected-month="@attribute.SelectedMonth"
                                     asp-selected-year="@attribute.SelectedYear"
@@ -151,14 +152,14 @@
                         case AttributeControlType.FileUpload:
                             {
                                 Download download = null;
-                                if (!String.IsNullOrEmpty(attribute.DefaultValue))
+                                if (!string.IsNullOrEmpty(attribute.DefaultValue))
                                 {
                                     download = downloadService.GetDownloadByGuid(new Guid(attribute.DefaultValue));
                                 }
 
                                 //register CSS and JS
-                                Html.AddCssFileParts("~/lib/fineuploader/fineuploader-4.2.2.min.css");
-                                Html.AddScriptParts("~/lib/fineuploader/jquery.fineuploader-4.2.2.min.js");
+                                Html.AddCssFileParts(ResourceLocation.Footer, "~/lib/fineuploader/fine-uploader.min.css");
+                                Html.AddScriptParts(ResourceLocation.Footer, "~/lib/fineuploader/jquery.fine-uploader.min.js");
 
                                 //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
                                 var allowedFileExtensions = string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList());
@@ -175,7 +176,7 @@
                                 @*fine uploader container*@
                                 <div id="@(controlId)uploader"></div>
                                 @*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
-                                <script type="text/template" id="@(controlId)-qq-template">
+                                <script type="text/template" asp-location="Footer" id="@(controlId)-qq-template">
                                     <div class="qq-uploader-selector qq-uploader">
                                         <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
                                             <span>@T("Common.FileUploader.DropFiles")</span>
@@ -205,7 +206,7 @@
                                         </ul>
                                     </div>
                                 </script>
-                                <script type="text/javascript">
+                                <script asp-location="Footer">
                                     $(document).ready(function() {
                                         $("#@(controlId)uploader").fineUploader({
                                             request: {
@@ -227,7 +228,7 @@
                                             }
                                         });
 
-                                        $("#@(controlId + "remove")").click(function(e) {
+                                        $("#@(controlId + "remove")").on('click', function(e) {
                                             $("#@(controlId + "downloadurl")").html("");
                                             $("#@(controlId)").val('');
                                             $(this).hide();
@@ -258,7 +259,7 @@
                                 <ul class="option-list attribute-squares color-squares" id="color-squares-@(attribute.Id)">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
-                                        var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                        var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment, string.Empty).Text;
                                         <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
@@ -267,7 +268,7 @@
                                                     <span class="attribute-square" style="background-color:@(attributeValue.ColorSquaresRgb);">&nbsp;</span>
                                                 </span>
                                                 <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected"
-                                                       @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw(string.Format("onclick=\"showHideRadioQuantity('{0}')\"", controlId)) : null) />
+                                                       @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}')\"") : null)/>
                                             </label>
                                         </li>
                                     }
@@ -279,9 +280,9 @@
                                         <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                     </div>
                                 }
-                                <script type="text/javascript">
+                                <script asp-location="Footer">
                                     $(document).ready(function() {
-                                        $('.attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function(event) {
+                                        $('.attributes #color-squares-@(attribute.Id)').on('click', 'input', function(event) {
                                             $('.attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
                                             $(this).closest('li').addClass('selected-value');
                                         });
@@ -295,7 +296,7 @@
                                 <ul class="option-list attribute-squares image-squares" id="image-squares-@(attribute.Id)">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
-                                        var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                        var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment, string.Empty).Text;
                                         <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
@@ -304,7 +305,7 @@
                                                     <span class="attribute-square" style="background: url('@(attributeValue.ImageSquaresPictureModel.ImageUrl)') 50% 50% no-repeat;">&nbsp;</span>
                                                 </span>
                                                 <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected"
-                                                       @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw(string.Format("onclick=\"showHideRadioQuantity('{0}', true)\"", controlId)) : null) />
+                                                       @(attribute.Values.Any(value => value.CustomerEntersQty) ? Html.Raw($"onclick=\"showHideRadioQuantity('{controlId}', true)\"") : null)/>
                                             </label>
                                             <div class="tooltip-container">
                                                 <div class="tooltip-header">@attributeName</div>
@@ -320,9 +321,9 @@
                                         <input type="text" name="@(controlId)_@(attributeValue.Id)_qty" id="@(controlId)_@(attributeValue.Id)_qty" value="@(attributeValue.Quantity)" />
                                     </div>
                                 }
-                                <script type="text/javascript">
+                                <script asp-location="Footer">
                                     $(document).ready(function() {
-                                        $('.attributes #image-squares-@(attribute.Id)').delegate('input', 'click', function(event) {
+                                        $('.attributes #image-squares-@(attribute.Id)').on('click', 'input', function(event) {
                                             $('.attributes #image-squares-@(attribute.Id)').find('li').removeClass('selected-value');
                                             $(this).closest('li').addClass('selected-value');
                                         });
@@ -335,7 +336,7 @@
                 </dd>
             }
         </dl>
-        <script>
+        <script asp-location="Footer">
             function showHideDropdownQuantity(id) {
                 $('select[name=' + id + '] > option').each(function() {
                     $('#' + id + '_' + this.value + '_qty_box').hide();
@@ -358,26 +359,24 @@
             };
         </script>
     </div>
-}
-@if (Model.Count > 0)
-{
+
     //dynamic update support
     var attributesHaveConditions = Model.Any(x => x.HasCondition);
     var attributesHaveAssociatedPictures = Model.Any(x => x.ProductId > 0);
     var attributeChangeScriptsBuilder = new StringBuilder();
     var productId = Model.First().ProductId;
-    var attributeChangeHandlerFuncName = string.Format("attribute_change_handler_{0}", productId);
+    var attributeChangeHandlerFuncName = $"attribute_change_handler_{productId}";
     if (catalogSettings.AjaxProcessAttributeChange)
     {
         //generate change event script
         foreach (var attribute in Model)
         {
-            string controlId = string.Format("product_attribute_{0}", attribute.Id);
+            var controlId = $"{NopAttributePrefixDefaults.Product}{attribute.Id}";
             switch (attribute.AttributeControlType)
             {
                 case AttributeControlType.DropdownList:
                     {
-                        attributeChangeScriptsBuilder.AppendFormat("$('#{0}').change(function(){{{1}();}});\n", controlId, attributeChangeHandlerFuncName);
+                        attributeChangeScriptsBuilder.AppendFormat("$('#{0}').on('change', function(){{{1}();}});\n", controlId, attributeChangeHandlerFuncName);
                     }
                     break;
                 case AttributeControlType.RadioList:
@@ -386,7 +385,7 @@
                     {
                         foreach (var attributeValue in attribute.Values)
                         {
-                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
+                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').on('click', function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
                         }
                     }
                     break;
@@ -395,7 +394,7 @@
                     {
                         foreach (var attributeValue in attribute.Values)
                         {
-                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
+                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').on('click', function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
                         }
                     }
                     break;
@@ -411,16 +410,21 @@
 
         //render scripts
         //almost the same implementation is used in the \Views\Product\_RentalInfo.cshtml file
-        <script type="text/javascript">
+        <script asp-location="Footer">
             function @(attributeChangeHandlerFuncName)() {
                 $.ajax({
                     cache: false,
-                    url: '@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new {productId = productId, validateAttributeConditions = attributesHaveConditions, loadPicture = attributesHaveAssociatedPictures }))',
+                    url: "@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new {productId = productId, validateAttributeConditions = attributesHaveConditions, loadPicture = attributesHaveAssociatedPictures }))",
                     data: $('#product-details-form').serialize(),
-                    type: 'post',
-                    success: function(data) {
+                    type: "POST",
+                    success: function (data, textStatus, jqXHR) {
                         if (data.price) {
                             $('.price-value-@productId').text(data.price);
+                        }
+                        if (data.basepricepangv) {
+                            $('#base-price-pangv-@productId').text(data.basepricepangv);
+                        } else {
+                            $('#base-price-pangv-@productId').hide();
                         }
                         if (data.sku) {
                             $('#sku-@productId').text(data.sku).parent(".sku").show();
@@ -442,14 +446,14 @@
                         }
                         if (data.enabledattributemappingids) {
                             for (var i = 0; i < data.enabledattributemappingids.length; i++) {
-                                $('#product_attribute_label_' + data.enabledattributemappingids[i]).show();
-                                $('#product_attribute_input_' + data.enabledattributemappingids[i]).show();
+                                $('#@(NopAttributePrefixDefaults.Product)label_' + data.enabledattributemappingids[i]).show();
+                                $('#@(NopAttributePrefixDefaults.Product)input_' + data.enabledattributemappingids[i]).show();
                             }
                         }
                         if (data.disabledattributemappingids) {
                             for (var i = 0; i < data.disabledattributemappingids.length; i++) {
-                                $('#product_attribute_label_' + data.disabledattributemappingids[i]).hide();
-                                $('#product_attribute_input_' + data.disabledattributemappingids[i]).hide();
+                                $('#@(NopAttributePrefixDefaults.Product)label_' + data.disabledattributemappingids[i]).hide();
+                                $('#@(NopAttributePrefixDefaults.Product)input_' + data.disabledattributemappingids[i]).hide();
                             }
                         }
                         if (data.pictureDefaultSizeUrl) {
@@ -461,7 +465,7 @@
                         if (data.message) {
                             alert(data.message);
                         }
-                        $.event.trigger({ type: "product_attributes_changed", changedData: data });
+                        $(document).trigger({ type: "product_attributes_changed", changedData: data });
                     }
                 });
             }

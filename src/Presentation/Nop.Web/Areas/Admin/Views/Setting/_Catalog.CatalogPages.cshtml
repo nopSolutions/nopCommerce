@@ -1,0 +1,76 @@
+@model CatalogSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AllowProductViewModeChanging_OverrideForStore" asp-input="AllowProductViewModeChanging" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AllowProductViewModeChanging" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AllowProductViewModeChanging" />
+            <span asp-validation-for="AllowProductViewModeChanging"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="DefaultViewMode_OverrideForStore" asp-input="DefaultViewMode" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="DefaultViewMode" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="DefaultViewMode" asp-items="Model.AvailableViewModes" />
+            <span asp-validation-for="DefaultViewMode"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowProductsFromSubcategories_OverrideForStore" asp-input="ShowProductsFromSubcategories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowProductsFromSubcategories" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowProductsFromSubcategories" />
+            <span asp-validation-for="ShowProductsFromSubcategories"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ShowCategoryProductNumber_OverrideForStore" asp-input="ShowCategoryProductNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ShowCategoryProductNumber" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ShowCategoryProductNumber" />
+            <span asp-validation-for="ShowCategoryProductNumber"></span>
+        </div>
+    </div>
+    <nop-nested-setting asp-for="ShowCategoryProductNumber">
+        <div class="form-group" id="pnlShowCategoryProductNumberIncludingSubcategories">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="ShowCategoryProductNumberIncludingSubcategories_OverrideForStore" asp-input="ShowCategoryProductNumberIncludingSubcategories" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="ShowCategoryProductNumberIncludingSubcategories" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ShowCategoryProductNumberIncludingSubcategories" />
+                <span asp-validation-for="ShowCategoryProductNumberIncludingSubcategories"></span>
+            </div>
+        </div>
+    </nop-nested-setting>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="CategoryBreadcrumbEnabled_OverrideForStore" asp-input="CategoryBreadcrumbEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="CategoryBreadcrumbEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="CategoryBreadcrumbEnabled" />
+            <span asp-validation-for="CategoryBreadcrumbEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ManufacturersBlockItemsToDisplay_OverrideForStore" asp-input="ManufacturersBlockItemsToDisplay" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ManufacturersBlockItemsToDisplay" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ManufacturersBlockItemsToDisplay" />
+            <span asp-validation-for="ManufacturersBlockItemsToDisplay"></span>
+        </div>
+    </div>
+</div>

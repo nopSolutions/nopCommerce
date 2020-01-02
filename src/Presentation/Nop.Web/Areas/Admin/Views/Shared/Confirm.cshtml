@@ -1,5 +1,5 @@
 ﻿@model ActionConfirmationModel
-@using Nop.Web.Framework.Mvc.Models
+
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -7,6 +7,12 @@
             <h4 class="modal-title" id="@(Model.WindowId)-title">@T("Admin.Common.AreYouSure")</h4>
         </div>
         <div class="modal-body">
+            @if (!string.IsNullOrEmpty(Model.AdditonalConfirmText))
+            {
+                <div class="additional-text">
+                    @T(Model.AdditonalConfirmText)
+                </div>
+            }
             @T("Admin.Common.ActionConfirmation")
         </div>
         <div class="modal-footer">

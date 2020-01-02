@@ -1,12 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
-using Nop.Web.Validators.Customer;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Customer
 {
-    [Validator(typeof(ChangePasswordValidator))]
     public partial class ChangePasswordModel : BaseNopModel
     {
         [NoTrim]
@@ -25,6 +22,5 @@ namespace Nop.Web.Models.Customer
         public string ConfirmNewPassword { get; set; }
 
         public string Result { get; set; }
-
     }
 }

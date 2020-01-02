@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Web.Components
 {
-    public class ExternalMethodsViewComponent : ViewComponent
+    public class ExternalMethodsViewComponent : NopViewComponent
     {
         #region Fields
 
@@ -15,7 +16,7 @@ namespace Nop.Web.Components
 
         public ExternalMethodsViewComponent(IExternalAuthenticationModelFactory externalAuthenticationModelFactory)
         {
-            this._externalAuthenticationModelFactory = externalAuthenticationModelFactory;
+            _externalAuthenticationModelFactory = externalAuthenticationModelFactory;
         }
 
         #endregion

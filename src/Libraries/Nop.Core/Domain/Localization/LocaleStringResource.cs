@@ -25,5 +25,4 @@ namespace Nop.Core.Domain.Localization
         /// </summary>
         public virtual Language Language { get; set; }
     }
-
 }

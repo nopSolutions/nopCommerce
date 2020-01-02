@@ -2,6 +2,9 @@
 
 namespace Nop.Core.Domain.Forums
 {
+    /// <summary>
+    /// Forum settings
+    /// </summary>
     public class ForumSettings : ISettings
     {
         /// <summary>
@@ -142,7 +145,7 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the number of items to display for Active Discussions on forums home page
         /// </summary>
-        public int HomePageActiveDiscussionsTopicCount { get; set; }
+        public int HomepageActiveDiscussionsTopicCount { get; set; }
 
         /// <summary>
         /// Gets or sets the number of items to display for Active Discussions RSS Feed

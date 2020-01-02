@@ -1,10 +1,10 @@
-﻿@model CheckoutAttributeValueModel
+@model CheckoutAttributeValueModel
 
 @{
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Values.EditValueDetails").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Attributes.CheckoutAttributes.Values.EditValueDetails").Text;
 }
 
 <form asp-controller="CheckoutAttribute" asp-action="ValueEditPopup"
@@ -19,6 +19,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CheckoutAttributeValueDetailsButtons, additionalData = Model })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateValue", Model)

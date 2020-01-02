@@ -1,11 +1,11 @@
 ﻿@model CheckoutShippingMethodModel
 <div class="checkout-data">
     <div class="section shipping-method">
-        @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_method_top" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingMethodTop })
         @if (Model.Warnings.Count == 0)
         {
             <ul class="method-list">
-                @for (int i = 0; i < Model.ShippingMethods.Count; i++)
+                @for (var i = 0; i < Model.ShippingMethods.Count; i++)
                 {
                     var shippingMethod = Model.ShippingMethods[i];
                     <li>
@@ -13,7 +13,7 @@
                             <input id="shippingoption_@(i)" type="radio" name="shippingoption" value="@(shippingMethod.Name)___@(shippingMethod.ShippingRateComputationMethodSystemName)" checked="@shippingMethod.Selected" />
                             <label for="shippingoption_@(i)">@T("Checkout.SelectShippingMethod.MethodAndFee", shippingMethod.Name, shippingMethod.Fee)</label>
                         </div>
-                        @if (!String.IsNullOrEmpty(shippingMethod.Description))
+                        @if (!string.IsNullOrEmpty(shippingMethod.Description))
                         {
                             <div class="method-description">
                                 @Html.Raw(shippingMethod.Description)
@@ -40,6 +40,6 @@
                 </ul>
             </div>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_method_bottom" })
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutShippingMethodBottom })
     </div>
 </div>

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -9,6 +10,8 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public class ParameterBasedOnFormNameAttribute : TypeFilterAttribute
     {
+        #region Ctor
+
         /// <summary>
         /// Create instance of the filter attribute 
         /// </summary>
@@ -16,8 +19,10 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <param name="actionParameterName">The name of the action parameter to which the result will be passed</param>
         public ParameterBasedOnFormNameAttribute(string formKeyName, string actionParameterName) : base(typeof(ParameterBasedOnFormNameFilter))
         {
-            this.Arguments = new object[] { formKeyName, actionParameterName };
+            Arguments = new object[] { formKeyName, actionParameterName };
         }
+
+        #endregion
 
         #region Nested filter
 
@@ -37,8 +42,8 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             public ParameterBasedOnFormNameFilter(string formKeyName, string actionParameterName)
             {
-                this._formKeyName = formKeyName;
-                this._actionParameterName = actionParameterName;
+                _formKeyName = formKeyName;
+                _actionParameterName = actionParameterName;
             }
 
             #endregion
@@ -51,7 +56,10 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">A context for action filters</param>
             public void OnActionExecuting(ActionExecutingContext context)
             {
-                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
+                if (context == null)
+                    throw new ArgumentNullException(nameof(context));
+
+                if (context.HttpContext.Request == null)
                     return;
 
                 //if form key with '_formKeyName' exists, then set specified '_actionParameterName' to true

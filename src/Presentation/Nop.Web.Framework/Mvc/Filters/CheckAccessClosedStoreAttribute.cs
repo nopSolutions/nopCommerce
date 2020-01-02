@@ -17,14 +17,34 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public class CheckAccessClosedStoreAttribute : TypeFilterAttribute
     {
+        #region Fields
+
+        private readonly bool _ignoreFilter;
+
+        #endregion
+
+        #region Ctor
+
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
         public CheckAccessClosedStoreAttribute(bool ignore = false) : base(typeof(CheckAccessClosedStoreFilter))
         {
-            this.Arguments = new object[] { ignore };
+            _ignoreFilter = ignore;
+            Arguments = new object[] { ignore };
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets a value indicating whether to ignore the execution of filter actions
+        /// </summary>
+        public bool IgnoreFilter => _ignoreFilter;
+
+        #endregion
 
         #region Nested filter
 
@@ -39,6 +59,7 @@ namespace Nop.Web.Framework.Mvc.Filters
             private readonly IPermissionService _permissionService;
             private readonly IStoreContext _storeContext;
             private readonly ITopicService _topicService;
+            private readonly IUrlHelperFactory _urlHelperFactory;
             private readonly StoreInformationSettings _storeInformationSettings;
 
             #endregion
@@ -49,13 +70,15 @@ namespace Nop.Web.Framework.Mvc.Filters
                 IPermissionService permissionService,
                 IStoreContext storeContext,
                 ITopicService topicService,
+                IUrlHelperFactory urlHelperFactory,
                 StoreInformationSettings storeInformationSettings)
             {
-                this._ignoreFilter = ignoreFilter;
-                this._permissionService = permissionService;
-                this._storeContext = storeContext;
-                this._topicService = topicService;
-                this._storeInformationSettings = storeInformationSettings;
+                _ignoreFilter = ignoreFilter;
+                _permissionService = permissionService;
+                _storeContext = storeContext;
+                _topicService = topicService;
+                _urlHelperFactory = urlHelperFactory;
+                _storeInformationSettings = storeInformationSettings;
             }
 
             #endregion
@@ -68,14 +91,19 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">A context for action filters</param>
             public void OnActionExecuting(ActionExecutingContext context)
             {
-                //ignore filter (the action available even when a store is closed)
-                if (_ignoreFilter)
+                if (context == null)
+                    throw new ArgumentNullException(nameof(context));
+
+                //check whether this filter has been overridden for the Action
+                var actionFilter = context.ActionDescriptor.FilterDescriptors
+                    .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
+                    .Select(filterDescriptor => filterDescriptor.Filter).OfType<CheckAccessClosedStoreAttribute>().FirstOrDefault();
+
+                //ignore filter (the action is available even if a store is closed)
+                if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
                     return;
 
-                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
-                    return;
-
-                if (!DataSettingsHelper.DatabaseIsInstalled())
+                if (!DataSettingsManager.DatabaseIsInstalled)
                     return;
 
                 //store isn't closed
@@ -109,7 +137,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                     return;
 
                 //store is closed and no access, so redirect to 'StoreClosed' page
-                var storeClosedUrl = new UrlHelper(context).RouteUrl("StoreClosed");
+                var storeClosedUrl = _urlHelperFactory.GetUrlHelper(context).RouteUrl("StoreClosed");
                 context.Result = new RedirectResult(storeClosedUrl);
             }
 

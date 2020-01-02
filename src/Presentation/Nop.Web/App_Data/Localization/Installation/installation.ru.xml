@@ -123,7 +123,7 @@
     <Value>Введите учетную запись SQL Server</Value>
   </LocaleResource>
   <LocaleResource Name="SqlStandard">
-    <Value>SQL Server или SQL Express</Value>
+    <Value>Microsoft SQL Server или SQL Express</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Информация о магазине</Value>

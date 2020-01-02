@@ -1,6 +1,6 @@
 ﻿using System;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Plugins;
+using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
 
@@ -10,7 +10,7 @@ namespace Nop.Services.Tests.Shipping
     {
         private decimal GetRate()
         {
-            decimal rate = 10M;
+            var rate = 10M;
             return rate;
         }
 

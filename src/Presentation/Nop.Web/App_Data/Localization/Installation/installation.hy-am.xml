@@ -123,7 +123,7 @@
     <Value>Մուտքագրեք SQL Server գաղտնանունը</Value>
   </LocaleResource>
   <LocaleResource Name="SqlStandard">
-    <Value>SQL Server կամ SQL Express</Value>
+    <Value>Microsoft SQL Server կամ SQL Express</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Ինֆորմացիա խանութի մասին</Value>

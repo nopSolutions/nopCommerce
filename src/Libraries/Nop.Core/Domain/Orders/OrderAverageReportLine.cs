@@ -16,6 +16,11 @@ namespace Nop.Core.Domain.Orders
         public decimal SumShippingExclTax { get; set; }
 
         /// <summary>
+        /// Gets or sets the payment fee summary (excluding tax)
+        /// </summary>
+        public decimal OrderPaymentFeeExclTaxSum { get; set; }
+
+        /// <summary>
         /// Gets or sets the tax summary
         /// </summary>
         public decimal SumTax { get; set; }
@@ -24,5 +29,10 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the order total summary
         /// </summary>
         public decimal SumOrders { get; set; }
+
+        /// <summary>
+        /// Gets or sets the refunded amount summary
+        /// </summary>
+        public decimal SumRefundedAmount { get; set; }
     }
 }

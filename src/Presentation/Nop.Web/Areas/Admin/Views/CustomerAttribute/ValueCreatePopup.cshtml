@@ -1,10 +1,10 @@
-﻿@model CustomerAttributeValueModel
+@model CustomerAttributeValueModel
 
 @{
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.Title = T("Admin.Customers.CustomerAttributes.Values.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.Customers.CustomerAttributes.Values.AddNew").Text;
 }
 
 <form asp-controller="CustomerAttribute" asp-action="ValueCreatePopup"
@@ -20,6 +20,7 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.Save")
             </button>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerAttributeValueDetailsButtons })
         </div>
     </div>
     @await Html.PartialAsync("_CreateOrUpdateValue", Model)

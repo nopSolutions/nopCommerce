@@ -1,4 +1,4 @@
-﻿using Nop.Web.Framework.Mvc.Models;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Models.Catalog
 {
@@ -27,5 +27,10 @@ namespace Nop.Web.Models.Catalog
         /// Option color (if specified). Used to display color squares
         /// </summary>
         public string ColorSquaresRgb { get; set; }
+
+        /// <summary>
+        /// Attribyte type ID
+        /// </summary>
+        public int AttributeTypeId { get; set; }
     }
 }

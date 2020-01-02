@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Areas.Admin.Models.ShoppingCart;
-using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Orders;
+using Nop.Core;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
-using Nop.Services.Helpers;
-using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Security;
-using Nop.Services.Stores;
-using Nop.Services.Tax;
-using Nop.Web.Framework.Kendoui;
+using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Models.ShoppingCart;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -21,182 +17,112 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly ICustomerService _customerService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IPriceFormatter _priceFormatter;
-        private readonly IStoreService _storeService;
-        private readonly ITaxService _taxService;
-        private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPermissionService _permissionService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IProductAttributeFormatter _productAttributeFormatter;
-
+        private readonly IProductService _productService;
+        private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IWorkContext _workContext;
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         public ShoppingCartController(ICustomerService customerService,
-            IDateTimeHelper dateTimeHelper,
-            IPriceFormatter priceFormatter,
-            IStoreService storeService,
-            ITaxService taxService, 
-            IPriceCalculationService priceCalculationService,
-            IPermissionService permissionService, 
-            ILocalizationService localizationService,
-            IProductAttributeFormatter productAttributeFormatter)
+            IPermissionService permissionService,
+            IProductService productService,
+            IShoppingCartService shoppingCartService,
+            IShoppingCartModelFactory shoppingCartModelFactory,
+            IWorkContext workContext)
         {
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._priceFormatter = priceFormatter;
-            this._storeService = storeService;
-            this._taxService = taxService;
-            this._priceCalculationService = priceCalculationService;
-            this._permissionService = permissionService;
-            this._localizationService = localizationService;
-            this._productAttributeFormatter = productAttributeFormatter;
+            _customerService = customerService;
+            _permissionService = permissionService;
+            _productService = productService;
+            _shoppingCartModelFactory = shoppingCartModelFactory;
+            _shoppingCartService = shoppingCartService;
+            _workContext = workContext;
         }
 
         #endregion
         
         #region Methods
-
-        //shopping carts
+        
         public virtual IActionResult CurrentCarts()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
 
-            return View();
+            //prepare model
+            var model = _shoppingCartModelFactory.PrepareShoppingCartSearchModel(new ShoppingCartSearchModel());
+
+            return View(model);
         }
 
         [HttpPost]
-        public virtual IActionResult CurrentCarts(DataSourceRequest command)
+        public virtual IActionResult CurrentCarts(ShoppingCartSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
-            var customers = _customerService.GetAllCustomers(
-                loadOnlyWithShoppingCart: true,
-                sct: ShoppingCartType.ShoppingCart,
-                pageIndex: command.Page - 1,
-                pageSize: command.PageSize);
+            //prepare model
+            var model = _shoppingCartModelFactory.PrepareShoppingCartListModel(searchModel);
 
-            var gridModel = new DataSourceResult
+            return Json(model);
+        }
+
+        public virtual IActionResult ProductSearchAutoComplete(string term)
+        {
+            const int searchTermMinimumLength = 3;
+            if (string.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
+                return Content(string.Empty);
+
+            //a vendor should have access only to his products
+            var vendorId = 0;
+            if (_workContext.CurrentVendor != null)
             {
-                Data = customers.Select(x => new ShoppingCartModel
-                {
-                    CustomerId = x.Id,
-                    CustomerEmail = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
-                    TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList().GetTotalProducts()
-                }),
-                Total = customers.TotalCount
-            };
+                vendorId = _workContext.CurrentVendor.Id;
+            }
 
-            return Json(gridModel);
+            //products
+            const int productNumber = 15;
+            var products = _productService.SearchProducts(
+                vendorId: vendorId,
+                keywords: term,
+                pageSize: productNumber,
+                showHidden: true);
+
+            var result = (from p in products
+                select new
+                {
+                    label = p.Name,
+                    productid = p.Id
+                }).ToList();
+            return Json(result);
         }
 
         [HttpPost]
-        public virtual IActionResult GetCartDetails(int customerId)
+        public virtual IActionResult GetCartDetails(ShoppingCartItemSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
-            var customer = _customerService.GetCustomerById(customerId);
-            var cart = customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            //try to get a customer with the specified id
+            var customer = _customerService.GetCustomerById(searchModel.CustomerId)
+                ?? throw new ArgumentException("No customer found with the specified id");
 
-            var gridModel = new DataSourceResult
-            {
-                Data = cart.Select(sci =>
-                {
-                    decimal taxRate;
-                    var store = _storeService.GetStoreById(sci.StoreId); 
-                    var sciModel = new ShoppingCartItemModel
-                    {
-                        Id = sci.Id,
-                        Store = store != null ? store.Name : "Unknown",
-                        ProductId = sci.ProductId,
-                        Quantity = sci.Quantity,
-                        ProductName = sci.Product.Name,
-                        AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml, sci.Customer),
-                        UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci), out taxRate)),
-                        Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci), out taxRate)),
-                        UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
-                    };
-                    return sciModel;
-                }),
-                Total = cart.Count
-            };
+            //prepare model
+            var model = _shoppingCartModelFactory.PrepareShoppingCartItemListModel(searchModel, customer);
 
-            return Json(gridModel);
+            return Json(model);
         }
-
-        //wishlists
-        public virtual IActionResult CurrentWishlists()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
-                return AccessDeniedView();
-
-            return View();
-        }
-
+        
         [HttpPost]
-        public virtual IActionResult CurrentWishlists(DataSourceRequest command)
+        public virtual IActionResult DeleteItem(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
+            
+            _shoppingCartService.DeleteShoppingCartItem(id);
 
-            var customers = _customerService.GetAllCustomers(
-                loadOnlyWithShoppingCart: true,
-                sct: ShoppingCartType.Wishlist,
-                pageIndex: command.Page - 1,
-                pageSize: command.PageSize);
-
-            var gridModel = new DataSourceResult
-            {
-                Data = customers.Select(x => new ShoppingCartModel
-                {
-                    CustomerId = x.Id,
-                    CustomerEmail = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
-                    TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList().GetTotalProducts()
-                }),
-                Total = customers.TotalCount
-            };
-
-            return Json(gridModel);
-        }
-
-        [HttpPost]
-        public virtual IActionResult GetWishlistDetails(int customerId)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
-                return AccessDeniedKendoGridJson();
-
-            var customer = _customerService.GetCustomerById(customerId);
-            var cart = customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
-
-            var gridModel = new DataSourceResult
-            {
-                Data = cart.Select(sci =>
-                {
-                    decimal taxRate;
-                    var store = _storeService.GetStoreById(sci.StoreId); 
-                    var sciModel = new ShoppingCartItemModel
-                    {
-                        Id = sci.Id,
-                        Store = store != null ? store.Name : "Unknown",
-                        ProductId = sci.ProductId,
-                        Quantity = sci.Quantity,
-                        ProductName = sci.Product.Name,
-                        AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml, sci.Customer),
-                        UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci), out taxRate)),
-                        Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci), out taxRate)),
-                        UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
-                    };
-                    return sciModel;
-                }),
-                Total = cart.Count
-            };
-
-            return Json(gridModel);
+            return new NullJsonResult();
         }
 
         #endregion

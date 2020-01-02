@@ -12,11 +12,11 @@ namespace Nop.Web.Controllers
         
         #endregion
         
-        #region Constructors
+        #region Ctor
 
         public CountryController(ICountryModelFactory countryModelFactory)
 		{
-            this._countryModelFactory = countryModelFactory;
+            _countryModelFactory = countryModelFactory;
 		}
         
         #endregion

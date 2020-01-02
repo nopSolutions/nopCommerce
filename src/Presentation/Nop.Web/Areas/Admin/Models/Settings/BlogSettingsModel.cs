@@ -1,10 +1,15 @@
 ﻿using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
 {
-    public partial class BlogSettingsModel : BaseNopModel
+    /// <summary>
+    /// Represents a blog settings model
+    /// </summary>
+    public partial class BlogSettingsModel : BaseNopModel, ISettingsModel
     {
+        #region Properties
+
         public int ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Blog.Enabled")]
@@ -37,5 +42,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Blog.ShowBlogCommentsPerStore")]
         public bool ShowBlogCommentsPerStore { get; set; }
+
+        #endregion
     }
 }

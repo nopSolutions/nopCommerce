@@ -123,7 +123,7 @@
     <Value>L'utente SQL è obbligatorio</Value>
   </LocaleResource>
   <LocaleResource Name="SqlStandard">
-    <Value>Usa il database SQL Server (o SQL Express)</Value>
+    <Value>Usa il database Microsoft SQL Server (o SQL Express)</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Informazioni Negozio</Value>

@@ -1,19 +1,11 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
+﻿using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Messages
 {
-    public partial class MessageTemplateListModel : BaseNopModel
+    /// <summary>
+    /// Represents a message template list model
+    /// </summary>
+    public partial class MessageTemplateListModel : BasePagedListModel<MessageTemplateModel>
     {
-        public MessageTemplateListModel()
-        {
-            AvailableStores = new List<SelectListItem>();
-        }
-
-        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.List.SearchStore")]
-        public int SearchStoreId { get; set; }
-        public IList<SelectListItem> AvailableStores { get; set; }
     }
 }

@@ -9,6 +9,7 @@ namespace Nop.Core.Domain.Catalog
         /// Simple
         /// </summary>
         SimpleProduct = 5,
+
         /// <summary>
         /// Grouped (product with variants)
         /// </summary>

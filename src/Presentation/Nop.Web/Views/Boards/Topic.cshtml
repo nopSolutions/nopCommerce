@@ -10,7 +10,7 @@
 <div class="page forum-topic-page">
     @await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.Id })
     @await Html.PartialAsync("_ForumHeader")
-    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_after_header", additionalData = Model.Id })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicAfterHeader, additionalData = Model })
     <nop-antiforgery-token />
     <div class="topic-name">
         <h1>@Model.Subject</h1>
@@ -24,7 +24,7 @@
             @if (Model.IsCustomerAllowedToDeleteTopic)
             {
                 <a href="#" class="delete-topic-button" onclick="return deletetopic(@(Model.Id))">@T("Forum.DeleteTopic").Text</a>
-                <script type="text/javascript">
+                <script asp-location="Footer">
                     function deletetopic(topicId) {
                         if (confirm('@T("Common.AreYouSure")')) {
                             var postData = {
@@ -33,14 +33,14 @@
                             addAntiForgeryToken(postData);
                             $.ajax({
                                 cache: false,
-                                type: 'POST',
-                                url: '@Url.Action("TopicDelete", "Boards")',
+                                type: "POST",
+                                url: "@Url.Action("TopicDelete", "Boards")",
                                 data: postData,
-                                dataType: 'json',
-                                success: function(data) {
+                                dataType: "json",
+                                success: function (data, textStatus, jqXHR) {
                                     location.href = data.redirect;
                                 },
-                                error: function(xhr, ajaxOptions, thrownError) {
+                                error: function (jqXHR, textStatus, errorThrown) {
                                     alert('Failed to delete');
                                 }
                             });
@@ -57,19 +57,19 @@
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-top">@Model.WatchTopicText</a>
-                <script type="text/javascript">
+                <script asp-location="Footer">
                     $(document).ready(function () {
-                        $('#watch-topic-top').click(function () {
+                        $('#watch-topic-top').on('click', function () {
                             $.ajax({
                                 cache: false,
-                                type: 'POST',
-                                url: '@Url.RouteUrl("TopicWatch", new { id = Model.Id })',
-                                dataType: 'json',
-                                success: function (data) {
+                                type: "POST",
+                                url: "@Url.RouteUrl("TopicWatch", new { id = Model.Id })",
+                                dataType: "json",
+                                success: function (data, textStatus, jqXHR) {
                                     $('#watch-topic-top').text(data.Text);
                                     $('#watch-topic-bottom').text(data.Text);
                                 },
-                                error: function (xhr, ajaxOptions, thrownError) {
+                                error: function (jqXHR, textStatus, errorThrown) {
                                     alert('Failed to watch');
                                 }
                             });
@@ -90,8 +90,8 @@
                 RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
             });
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_top", additionalData = Model.Id })
-        @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicTop, additionalData = Model })
+        @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
         {
             <div class="pager upper">
                 @pager
@@ -112,23 +112,23 @@
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
-                <script type="text/javascript">
+                <script asp-location="Footer">
                     $(document).ready(function() {
-                        $('#watch-topic-bottom').click(function() {
+                        $('#watch-topic-bottom').on('click', function() {
                             var postData = {};
                             addAntiForgeryToken(postData);
 
                             $.ajax({
                                 cache: false,
-                                type: 'POST',
-                                url: '@Url.RouteUrl("TopicWatch", new {id = Model.Id})',
+                                type: "POST",
+                                url: "@Url.RouteUrl("TopicWatch", new {id = Model.Id})",
                                 data: postData,
-                                dataType: 'json',
-                                success: function(data) {
+                                dataType: "json",
+                                success: function (data, textStatus, jqXHR) {
                                     $('#watch-topic-top').text(data.Text);
                                     $('#watch-topic-bottom').text(data.Text);
                                 },
-                                error: function(xhr, ajaxOptions, thrownError) {
+                                error: function (jqXHR, textStatus, errorThrown) {
                                     alert('Failed to watch');
                                 }
                             });
@@ -137,16 +137,16 @@
                 </script>
             }
         </div>
-        @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
+        @if (!string.IsNullOrEmpty(pager.ToHtmlString()))
         {
             <div class="pager lower">
                 @pager
             </div>
         }
     </div>
-    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_bottom", additionalData = Model.Id })
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsTopicBottom, additionalData = Model })
 </div>
-<script type="text/javascript">
+<script asp-location="Footer">
     function deletepost(postId) {
         if (confirm('@T("Common.AreYouSure")')) {
             var postData = {
@@ -155,14 +155,14 @@
             addAntiForgeryToken(postData);
             $.ajax({
                 cache: false,
-                type: 'POST',
-                url: '@Url.Action("PostDelete", "Boards")',
+                type: "POST",
+                url: "@Url.Action("PostDelete", "Boards")",
                 data: postData,
-                dataType: 'json',
-                success: function (data) {
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
                     location.href = data.redirect;
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function (jqXHR, textStatus, errorThrown) {
                     alert('Failed to delete');
                 }
             });

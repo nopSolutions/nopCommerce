@@ -125,7 +125,7 @@
     <Value>SQL - uživatelské jméno je vyžadováno</Value>
   </LocaleResource>
   <LocaleResource Name="SqlStandard">
-    <Value>Užít databázi SQL Serveru (nebo SQL Express)</Value>
+    <Value>Užít databázi Microsoft SQL Server (nebo SQL Express)</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Informaced o obchodu</Value>

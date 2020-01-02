@@ -1,62 +1,46 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Web.Areas.Admin.Models.Tasks;
-using Nop.Core.Domain.Tasks;
-using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Tasks;
-using Nop.Web.Framework.Kendoui;
+using Nop.Web.Areas.Admin.Factories;
+using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
+using Nop.Web.Areas.Admin.Models.Tasks;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
     public partial class ScheduleTaskController : BaseAdminController
-	{
-		#region Fields
+    {
+        #region Fields
 
-        private readonly IScheduleTaskService _scheduleTaskService;
-        private readonly IPermissionService _permissionService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
+        private readonly IPermissionService _permissionService;
+        private readonly IScheduleTaskModelFactory _scheduleTaskModelFactory;
+        private readonly IScheduleTaskService _scheduleTaskService;
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
-        public ScheduleTaskController(IScheduleTaskService scheduleTaskService, 
+        public ScheduleTaskController(ICustomerActivityService customerActivityService,
+            ILocalizationService localizationService,
+            INotificationService notificationService,
             IPermissionService permissionService,
-            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
-            ICustomerActivityService customerActivityService)
+            IScheduleTaskModelFactory scheduleTaskModelFactory,
+            IScheduleTaskService scheduleTaskService)
         {
-            this._scheduleTaskService = scheduleTaskService;
-            this._permissionService = permissionService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._customerActivityService = customerActivityService;
-        }
-
-		#endregion 
-
-        #region Utility
-
-        protected virtual ScheduleTaskModel PrepareScheduleTaskModel(ScheduleTask task)
-        {
-            var model = new ScheduleTaskModel
-                            {
-                                Id = task.Id,
-                                Name = task.Name,
-                                Seconds = task.Seconds,
-                                Enabled = task.Enabled,
-                                StopOnError = task.StopOnError,
-                                LastStartUtc = task.LastStartUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(task.LastStartUtc.Value, DateTimeKind.Utc).ToString("G") : "",
-                                LastEndUtc = task.LastEndUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(task.LastEndUtc.Value, DateTimeKind.Utc).ToString("G") : "",
-                                LastSuccessUtc = task.LastSuccessUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(task.LastSuccessUtc.Value, DateTimeKind.Utc).ToString("G") : "",
-                            };
-            return model;
+            _customerActivityService = customerActivityService;
+            _localizationService = localizationService;
+            _notificationService = notificationService;
+            _permissionService = permissionService;
+            _scheduleTaskModelFactory = scheduleTaskModelFactory;
+            _scheduleTaskService = scheduleTaskService;
         }
 
         #endregion
@@ -73,26 +57,23 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
                 return AccessDeniedView();
 
-            return View();
-		}
+            //prepare model
+            var model = _scheduleTaskModelFactory.PrepareScheduleTaskSearchModel(new ScheduleTaskSearchModel());
 
-		[HttpPost]
-        public virtual IActionResult List(DataSourceRequest command)
+            return View(model);
+        }
+
+        [HttpPost]
+        public virtual IActionResult List(ScheduleTaskSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
-            var models = _scheduleTaskService.GetAllTasks(true)
-                .Select(PrepareScheduleTaskModel)
-                .ToList();
-            var gridModel = new DataSourceResult
-            {
-                Data = models,
-                Total = models.Count
-            };
+            //prepare model
+            var model = _scheduleTaskModelFactory.PrepareScheduleTaskListModel(searchModel);
 
-            return Json(gridModel);
-		}
+            return Json(model);
+        }
 
         [HttpPost]
         public virtual IActionResult TaskUpdate(ScheduleTaskModel model)
@@ -101,22 +82,19 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-            {
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
-            }
+                return ErrorJson(ModelState.SerializeErrors());
 
-            var scheduleTask = _scheduleTaskService.GetTaskById(model.Id);
-            if (scheduleTask == null)
-                return Content("Schedule task cannot be loaded");
+            //try to get a schedule task with the specified id
+            var scheduleTask = _scheduleTaskService.GetTaskById(model.Id)
+                               ?? throw new ArgumentException("Schedule task cannot be loaded");
 
-            scheduleTask.Name = model.Name;
-            scheduleTask.Seconds = model.Seconds;
-            scheduleTask.Enabled = model.Enabled;
-            scheduleTask.StopOnError = model.StopOnError;
+            scheduleTask = model.ToEntity(scheduleTask);
+
             _scheduleTaskService.UpdateTask(scheduleTask);
 
             //activity log
-            _customerActivityService.InsertActivity("EditTask", _localizationService.GetResource("ActivityLog.EditTask"), scheduleTask.Id);
+            _customerActivityService.InsertActivity("EditTask",
+                string.Format(_localizationService.GetResource("ActivityLog.EditTask"), scheduleTask.Id), scheduleTask);
 
             return new NullJsonResult();
         }
@@ -128,22 +106,24 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                var scheduleTask = _scheduleTaskService.GetTaskById(id);
-                if (scheduleTask == null)
-                    throw new Exception("Schedule task cannot be loaded");
-                
-                var task = new Task(scheduleTask) {Enabled = true};
+                //try to get a schedule task with the specified id
+                var scheduleTask = _scheduleTaskService.GetTaskById(id)
+                                   ?? throw new ArgumentException("Schedule task cannot be loaded", nameof(id));
+
                 //ensure that the task is enabled
+                var task = new Task(scheduleTask) { Enabled = true };
                 task.Execute(true, false);
-                SuccessNotification(_localizationService.GetResource("Admin.System.ScheduleTasks.RunNow.Done"));
+
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.ScheduleTasks.RunNow.Done"));
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc);
+                _notificationService.ErrorNotification(exc);
             }
 
             return RedirectToAction("List");
         }
+
         #endregion
     }
 }

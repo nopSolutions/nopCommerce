@@ -2,7 +2,7 @@
 
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             $("#@Html.IdFor(model => model.CountryId)").change(function () {
                 var selectedItem = $(this).val();
@@ -11,15 +11,18 @@
                     cache: false,
                     type: "GET",
                     url: "@(Url.Action("GetStatesByCountryId", "Country"))",
-                    data: { "countryId": selectedItem, "addSelectStateItem": "false" },
-                    success: function (data) {
+                    data: {
+                        "countryId": selectedItem,
+                        "addSelectStateItem": "false"
+                    },
+                    success: function (data, textStatus, jqXHR) {
                         ddlStates.html('');
                         $.each(data, function (id, option) {
                             ddlStates.append($('<option></option>').val(option.id).html(option.name));
                         });
                     },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        alert('Failed to retrieve states.');
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $("#statesAlert").click();
                     }
                 });
             });
@@ -38,6 +41,8 @@
 <input asp-for="CountryEnabled" type="hidden" />
 <input asp-for="CountryRequired" type="hidden" />
 <input asp-for="StateProvinceEnabled" type="hidden" />
+<input asp-for="CountyEnabled" type="hidden" />
+<input asp-for="CountyRequired" type="hidden" />
 <input asp-for="CityEnabled" type="hidden" />
 <input asp-for="CityRequired" type="hidden" />
 <input asp-for="StreetAddressEnabled" type="hidden" />
@@ -122,6 +127,18 @@
         </div>
     </div>
 }
+@if (Model.CountyEnabled)
+{
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-label asp-for="County" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="County" asp-required="@Model.CountyRequired" />
+            <span asp-validation-for="County"></span>
+        </div>
+    </div>
+}
 @if (Model.CityEnabled)
 {
     <div class="form-group">
@@ -198,3 +215,4 @@
 {
     @await Html.PartialAsync("_AddressAttributes", Model.CustomAddressAttributes)
 }
+<nop-alert asp-alert-id="statesAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />

@@ -1,9 +1,9 @@
 ﻿@model TopicModel
 @if (Model.IsPasswordProtected)
 {
-    <script type="text/javascript">
+<script asp-location="Footer">
         $(document).ready(function () {
-            $('#button-password-@Model.Id').click(function() {
+            $('#button-password-@Model.Id').on('click', function() {
                 var postData = {
                     id: $("#topic-@Model.Id").val(),
                     password: $('#password-@Model.Id').val()
@@ -12,11 +12,11 @@
 
                 $.ajax({
                     cache: false,
-                    type: 'POST',
-                    url: '@Url.RouteUrl("TopicAuthenticate")',
+                    type: "POST",
+                    url: "@Url.RouteUrl("TopicAuthenticate")",
                     data: postData,
-                    dataType: 'json',
-                    success: function(data) {
+                    dataType: "json",
+                    success: function (data, textStatus, jqXHR) {
                         if (data.Authenticated) {
                             $('#ph-topic-@Model.Id #ph-title-@Model.Id h2').html(data.Title);
                             if ($('#ph-topic-@Model.Id #ph-title-@Model.Id h2').text().length == 0) {
@@ -41,9 +41,9 @@
             $('#ph-topic-@Model.Id').hide();
             $('#ph-password-@Model.Id #password-@Model.Id').select().focus();
         });
-    </script>
+</script>
     <div class="topic-password" id="ph-password-@Model.Id">
-        <form asp-route="TopicAuthenticate" method="post">
+        <form asp-route="TopicAuthenticate" method="post" autocomplete="off">
             <input asp-for="Id" id="topic-@Model.Id" type="hidden"/>
             <div class="enter-password-title">
                 @T("Topic.EnterPassword")
@@ -67,7 +67,7 @@
 else
 {
     <div class="topic-block">
-        @if (!String.IsNullOrEmpty(Model.Title))
+        @if (!string.IsNullOrEmpty(Model.Title))
         {
             <div class="topic-block-title">
                 <h2>@Model.Title</h2>

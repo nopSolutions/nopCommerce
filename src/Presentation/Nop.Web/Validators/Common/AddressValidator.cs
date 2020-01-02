@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using FluentValidation;
-using FluentValidation.Results;
 using Nop.Core.Domain.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -69,6 +68,10 @@ namespace Nop.Web.Validators.Common
             if (addressSettings.ZipPostalCodeRequired && addressSettings.ZipPostalCodeEnabled)
             {
                 RuleFor(x => x.ZipPostalCode).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.ZipPostalCode.Required"));
+            }
+            if (addressSettings.CountyEnabled && addressSettings.CountyRequired)
+            {
+                RuleFor(x => x.County).NotEmpty().WithMessage(localizationService.GetResource("Address.Fields.County.Required"));
             }
             if (addressSettings.CityRequired && addressSettings.CityEnabled)
             {

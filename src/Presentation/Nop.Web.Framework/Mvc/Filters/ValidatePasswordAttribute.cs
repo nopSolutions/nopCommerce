@@ -14,12 +14,16 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public class ValidatePasswordAttribute : TypeFilterAttribute
     {
+        #region Ctor
+
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         public ValidatePasswordAttribute() : base(typeof(ValidatePasswordFilter))
         {
         }
+
+        #endregion
 
         #region Nested filter
 
@@ -30,15 +34,21 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
+            private readonly ICustomerService _customerService;
+            private readonly IUrlHelperFactory _urlHelperFactory;
             private readonly IWorkContext _workContext;
 
             #endregion
 
             #region Ctor
 
-            public ValidatePasswordFilter(IWorkContext workContext)
+            public ValidatePasswordFilter(ICustomerService customerService,
+                IUrlHelperFactory urlHelperFactory,
+                IWorkContext workContext)
             {
-                this._workContext = workContext;
+                _customerService = customerService;
+                _urlHelperFactory = urlHelperFactory;
+                _workContext = workContext;
             }
 
             #endregion
@@ -51,10 +61,13 @@ namespace Nop.Web.Framework.Mvc.Filters
             /// <param name="context">A context for action filters</param>
             public void OnActionExecuting(ActionExecutingContext context)
             {
-                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
+                if (context == null)
+                    throw new ArgumentNullException(nameof(context));
+
+                if (context.HttpContext.Request == null)
                     return;
 
-                if (!DataSettingsHelper.DatabaseIsInstalled())
+                if (!DataSettingsManager.DatabaseIsInstalled)
                     return;
 
                 //get action and controller names
@@ -64,16 +77,16 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 if (string.IsNullOrEmpty(actionName) || string.IsNullOrEmpty(controllerName))
                     return;
-                
+
                 //don't validate on ChangePassword page
                 if (!(controllerName.Equals("Customer", StringComparison.InvariantCultureIgnoreCase) &&
                     actionName.Equals("ChangePassword", StringComparison.InvariantCultureIgnoreCase)))
                 {
                     //check password expiration
-                    if (_workContext.CurrentCustomer.PasswordIsExpired())
+                    if (_customerService.PasswordIsExpired(_workContext.CurrentCustomer))
                     {
                         //redirect to ChangePassword page if expires
-                        var changePasswordUrl = new UrlHelper(context).RouteUrl("CustomerChangePassword");
+                        var changePasswordUrl = _urlHelperFactory.GetUrlHelper(context).RouteUrl("CustomerChangePassword");
                         context.Result = new RedirectResult(changePasswordUrl);
                     }
                 }

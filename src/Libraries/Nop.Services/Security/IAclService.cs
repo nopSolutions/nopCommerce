@@ -6,7 +6,7 @@ using Nop.Core.Domain.Security;
 namespace Nop.Services.Security
 {
     /// <summary>
-    /// ACL service inerface
+    /// ACL service interface
     /// </summary>
     public partial interface IAclService
     {

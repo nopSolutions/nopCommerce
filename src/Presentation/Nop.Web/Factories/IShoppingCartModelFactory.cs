@@ -58,6 +58,12 @@ namespace Nop.Web.Factories
         MiniShoppingCartModel PrepareMiniShoppingCartModel();
 
         /// <summary>
+        /// Prepare selected checkout attributes
+        /// </summary>
+        /// <returns>Formatted attributes</returns>
+        string FormatSelectedCheckoutAttributes();
+
+        /// <summary>
         /// Prepare the order totals model
         /// </summary>
         /// <param name="cart">List of the shopping cart item</param>

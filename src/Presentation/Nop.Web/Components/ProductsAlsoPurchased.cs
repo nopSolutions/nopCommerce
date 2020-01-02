@@ -8,38 +8,39 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Components;
 using Nop.Web.Infrastructure.Cache;
 
 namespace Nop.Web.Components
 {
-    public class ProductsAlsoPurchasedViewComponent : ViewComponent
+    public class ProductsAlsoPurchasedViewComponent : NopViewComponent
     {
         private readonly CatalogSettings _catalogSettings;
+        private readonly IAclService _aclService;
+        private readonly IOrderReportService _orderReportService;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
-        private readonly IStoreContext _storeContext;
-        private readonly IAclService _aclService;
-        private readonly IStoreMappingService _storeMappingService;
-        private readonly IOrderReportService _orderReportService;
         private readonly IStaticCacheManager _cacheManager;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
 
         public ProductsAlsoPurchasedViewComponent(CatalogSettings catalogSettings,
+            IAclService aclService,
+            IOrderReportService orderReportService,
             IProductModelFactory productModelFactory,
             IProductService productService,
+            IStaticCacheManager cacheManager,
             IStoreContext storeContext,
-            IAclService aclService,
-            IStoreMappingService storeMappingService,
-            IOrderReportService orderReportService,
-            IStaticCacheManager cacheManager)
+            IStoreMappingService storeMappingService)
         {
-            this._catalogSettings = catalogSettings;
-            this._productModelFactory = productModelFactory;
-            this._productService = productService;
-            this._storeContext = storeContext;
-            this._aclService = aclService;
-            this._storeMappingService = storeMappingService;
-            this._orderReportService = orderReportService;
-            this._cacheManager = cacheManager;
+            _catalogSettings = catalogSettings;
+            _aclService = aclService;
+            _orderReportService = orderReportService;
+            _productModelFactory = productModelFactory;
+            _productService = productService;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
         }
 
         public IViewComponentResult Invoke(int productId, int? productThumbPictureSize)
@@ -48,7 +49,7 @@ namespace Nop.Web.Components
                 return Content("");
 
             //load and cache report
-            var productIds = _cacheManager.Get(string.Format(ModelCacheEventConsumer.PRODUCTS_ALSO_PURCHASED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
+            var productIds = _cacheManager.Get(string.Format(NopModelCacheDefaults.ProductsAlsoPurchasedIdsKey, productId, _storeContext.CurrentStore.Id),
                 () => _orderReportService.GetAlsoPurchasedProductsIds(_storeContext.CurrentStore.Id, productId, _catalogSettings.ProductsAlsoPurchasedNumber)
             );
 
@@ -57,7 +58,7 @@ namespace Nop.Web.Components
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
             //availability dates
-            products = products.Where(p => p.IsAvailable()).ToList();
+            products = products.Where(p => _productService.ProductIsAvailable(p)).ToList();
 
             if (!products.Any())
                 return Content("");

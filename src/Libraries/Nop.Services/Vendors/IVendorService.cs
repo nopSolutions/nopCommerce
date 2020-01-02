@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Vendors;
 
@@ -29,8 +30,14 @@ namespace Nop.Services.Vendors
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Vendors</returns>
-        IPagedList<Vendor> GetAllVendors(string name = "", 
-            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
+        IPagedList<Vendor> GetAllVendors(string name = "", int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
+
+        /// <summary>
+        /// Gets vendors
+        /// </summary>
+        /// <param name="vendorIds">Vendor identifiers</param>
+        /// <returns>Vendors</returns>
+        IList<Vendor> GetVendorsByIds(int[] vendorIds);
 
         /// <summary>
         /// Inserts a vendor
@@ -44,10 +51,8 @@ namespace Nop.Services.Vendors
         /// <param name="vendor">Vendor</param>
         void UpdateVendor(Vendor vendor);
 
-
-
         /// <summary>
-        /// Gets a vendor note note
+        /// Gets a vendor note
         /// </summary>
         /// <param name="vendorNoteId">The vendor note identifier</param>
         /// <returns>Vendor note</returns>
@@ -58,5 +63,12 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="vendorNote">The vendor note</param>
         void DeleteVendorNote(VendorNote vendorNote);
+
+        /// <summary>
+        /// Formats the vendor note text
+        /// </summary>
+        /// <param name="vendorNote">Vendor note</param>
+        /// <returns>Formatted text</returns>
+        string FormatVendorNoteText(VendorNote vendorNote);
     }
 }

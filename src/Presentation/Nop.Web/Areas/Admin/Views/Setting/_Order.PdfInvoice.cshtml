@@ -1,0 +1,34 @@
+@model OrderSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore" asp-input="AttachPdfInvoiceToOrderPlacedEmail" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AttachPdfInvoiceToOrderPlacedEmail" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AttachPdfInvoiceToOrderPlacedEmail" />
+            <span asp-validation-for="AttachPdfInvoiceToOrderPlacedEmail"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AttachPdfInvoiceToOrderPaidEmail_OverrideForStore" asp-input="AttachPdfInvoiceToOrderPaidEmail" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AttachPdfInvoiceToOrderPaidEmail" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AttachPdfInvoiceToOrderPaidEmail" />
+            <span asp-validation-for="AttachPdfInvoiceToOrderPaidEmail"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore" asp-input="AttachPdfInvoiceToOrderCompletedEmail" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="AttachPdfInvoiceToOrderCompletedEmail" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AttachPdfInvoiceToOrderCompletedEmail" />
+            <span asp-validation-for="AttachPdfInvoiceToOrderCompletedEmail"></span>
+        </div>
+    </div>
+</div>

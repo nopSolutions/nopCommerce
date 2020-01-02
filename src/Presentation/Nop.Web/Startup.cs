@@ -12,25 +12,19 @@ namespace Nop.Web
     /// </summary>
     public class Startup
     {
-        #region Properties
+        #region Fields
 
-        /// <summary>
-        /// Get configuration root of the application
-        /// </summary>
-        public IConfigurationRoot Configuration { get; }
+        private readonly IConfiguration _configuration;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         #endregion
 
         #region Ctor
 
-        public Startup(IHostingEnvironment environment)
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
-            //create configuration
-            Configuration = new ConfigurationBuilder()
-                .SetBasePath(environment.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddEnvironmentVariables()
-                .Build();
+            _configuration = configuration;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         #endregion
@@ -41,7 +35,7 @@ namespace Nop.Web
         /// <param name="services">Collection of service descriptors</param>
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            return services.ConfigureApplicationServices(Configuration);
+            return services.ConfigureApplicationServices(_configuration, _hostingEnvironment);
         }
 
         /// <summary>

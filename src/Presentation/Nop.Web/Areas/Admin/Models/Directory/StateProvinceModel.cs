@@ -1,19 +1,25 @@
 ﻿using System.Collections.Generic;
-using FluentValidation.Attributes;
-using Nop.Web.Areas.Admin.Validators.Directory;
-using Nop.Web.Framework.Localization;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
-using Nop.Web.Framework.Mvc.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Directory
 {
-    [Validator(typeof(StateProvinceValidator))]
+    /// <summary>
+    /// Represents a state and province model
+    /// </summary>
     public partial class StateProvinceModel : BaseNopEntityModel, ILocalizedModel<StateProvinceLocalizedModel>
     {
+        #region Ctor
+
         public StateProvinceModel()
         {
             Locales = new List<StateProvinceLocalizedModel>();
         }
+
+        #endregion
+
+        #region Properties
+
         public int CountryId { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Countries.States.Fields.Name")]
@@ -29,9 +35,11 @@ namespace Nop.Web.Areas.Admin.Models.Directory
         public int DisplayOrder { get; set; }
 
         public IList<StateProvinceLocalizedModel> Locales { get; set; }
+
+        #endregion
     }
 
-    public partial class StateProvinceLocalizedModel : ILocalizedModelLocal
+    public partial class StateProvinceLocalizedModel : ILocalizedLocaleModel
     {
         public int LanguageId { get; set; }
         

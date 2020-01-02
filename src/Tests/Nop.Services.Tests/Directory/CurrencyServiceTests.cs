@@ -1,30 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Caching;
+using Moq;
+using Nop.Core;
 using Nop.Core.Data;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Plugins;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
+using Nop.Services.Logging;
+using Nop.Services.Plugins;
 using Nop.Services.Stores;
 using Nop.Tests;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Directory
 {
     [TestFixture]
     public class CurrencyServiceTests : ServiceTest
     {
-        private IRepository<Currency> _currencyRepository;
-        private IStoreMappingService _storeMappingService;
+        private Mock<IRepository<Currency>> _currencyRepository;
+        private Mock<IStoreMappingService> _storeMappingService;
         private CurrencySettings _currencySettings;
-        private IEventPublisher _eventPublisher;
+        private Mock<IEventPublisher> _eventPublisher;
         private ICurrencyService _currencyService;
+        private IExchangeRatePluginManager _exchangeRatePluginManager;
+        private CatalogSettings _catalogSettings;
 
         private Currency currencyUSD, currencyRUR, currencyEUR;
-        
+
         [SetUp]
         public new void SetUp()
         {
@@ -70,48 +75,59 @@ namespace Nop.Services.Tests.Directory
                 UpdatedOnUtc = DateTime.UtcNow,
                 RoundingType = RoundingType.Rounding001
             };
-            _currencyRepository = MockRepository.GenerateMock<IRepository<Currency>>();
-            _currencyRepository.Expect(x => x.Table).Return(new List<Currency> { currencyUSD, currencyEUR, currencyRUR }.AsQueryable());
-            _currencyRepository.Expect(x => x.GetById(currencyUSD.Id)).Return(currencyUSD);
-            _currencyRepository.Expect(x => x.GetById(currencyEUR.Id)).Return(currencyEUR);
-            _currencyRepository.Expect(x => x.GetById(currencyRUR.Id)).Return(currencyRUR);
+            _currencyRepository = new Mock<IRepository<Currency>>();
+            _currencyRepository.Setup(x => x.Table).Returns(new List<Currency> { currencyUSD, currencyEUR, currencyRUR }.AsQueryable());
+            _currencyRepository.Setup(x => x.GetById(currencyUSD.Id)).Returns(currencyUSD);
+            _currencyRepository.Setup(x => x.GetById(currencyEUR.Id)).Returns(currencyEUR);
+            _currencyRepository.Setup(x => x.GetById(currencyRUR.Id)).Returns(currencyRUR);
 
-            _storeMappingService = MockRepository.GenerateMock<IStoreMappingService>();
+            _storeMappingService = new Mock<IStoreMappingService>();
 
-            var cacheManager = new NopNullCache();
-            
-            _currencySettings = new CurrencySettings();
-            _currencySettings.PrimaryStoreCurrencyId = currencyUSD.Id;
-            _currencySettings.PrimaryExchangeRateCurrencyId = currencyEUR.Id;
+            var cacheManager = new TestCacheManager();
 
-            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
-            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
-            
-            var pluginFinder = new PluginFinder();
-            _currencyService = new CurrencyService(cacheManager,
-                _currencyRepository, _storeMappingService, 
-                _currencySettings, pluginFinder, _eventPublisher);
+            _currencySettings = new CurrencySettings
+            {
+                PrimaryStoreCurrencyId = currencyUSD.Id,
+                PrimaryExchangeRateCurrencyId = currencyEUR.Id
+            };
+
+            _eventPublisher = new Mock<IEventPublisher>();
+            _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
+
+            var customerService = new Mock<ICustomerService>();
+            var loger = new Mock<ILogger>();
+            var webHelper = new Mock<IWebHelper>();
+
+            _catalogSettings = new CatalogSettings();
+            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+            _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, pluginService);
+            _currencyService = new CurrencyService(_currencySettings,
+                _eventPublisher.Object,
+                _exchangeRatePluginManager,
+                _currencyRepository.Object,
+                cacheManager,
+                _storeMappingService.Object);
         }
-        
+
         [Test]
         public void Can_load_exchangeRateProviders()
         {
-            var providers = _currencyService.LoadAllExchangeRateProviders();
+            var providers = _exchangeRatePluginManager.LoadAllPlugins();
             providers.ShouldNotBeNull();
-            (providers.Any()).ShouldBeTrue();
+            providers.Any().ShouldBeTrue();
         }
 
         [Test]
         public void Can_load_exchangeRateProvider_by_systemKeyword()
         {
-            var provider = _currencyService.LoadExchangeRateProviderBySystemName("CurrencyExchange.TestProvider");
+            var provider = _exchangeRatePluginManager.LoadPluginBySystemName("CurrencyExchange.TestProvider");
             provider.ShouldNotBeNull();
         }
 
         [Test]
         public void Can_load_active_exchangeRateProvider()
         {
-            var provider = _currencyService.LoadActiveExchangeRateProvider();
+            var provider = _exchangeRatePluginManager.LoadPrimaryPlugin();
             provider.ShouldNotBeNull();
         }
 

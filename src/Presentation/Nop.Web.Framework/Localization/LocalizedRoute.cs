@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
+using Nop.Services.Localization;
 
 namespace Nop.Web.Framework.Localization
 {
@@ -22,6 +23,16 @@ namespace Nop.Web.Framework.Localization
 
         #region Ctor
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="target">Target</param>
+        /// <param name="routeName">Route name</param>
+        /// <param name="routeTemplate">Route template</param>
+        /// <param name="defaults">Defaults</param>
+        /// <param name="constraints">Constraints</param>
+        /// <param name="dataTokens">Data tokens</param>
+        /// <param name="inlineConstraintResolver">Inline constraint resolver</param>
         public LocalizedRoute(IRouter target, string routeName, string routeTemplate, RouteValueDictionary defaults, 
             IDictionary<string, object> constraints, RouteValueDictionary dataTokens, IInlineConstraintResolver inlineConstraintResolver)
             : base(target, routeName, routeTemplate, defaults, constraints, dataTokens, inlineConstraintResolver)
@@ -45,7 +56,7 @@ namespace Nop.Web.Framework.Localization
             if (data == null)
                 return null;
 
-            if (!DataSettingsHelper.DatabaseIsInstalled() || !SeoFriendlyUrlsForLanguagesEnabled)
+            if (!DataSettingsManager.DatabaseIsInstalled || !SeoFriendlyUrlsForLanguagesEnabled)
                 return data;
 
             //add language code to page URL in case if it's localized URL
@@ -63,12 +74,12 @@ namespace Nop.Web.Framework.Localization
         /// <returns>Task of the routing</returns>
         public override Task RouteAsync(RouteContext context)
         {
-            if (!DataSettingsHelper.DatabaseIsInstalled() || !SeoFriendlyUrlsForLanguagesEnabled)
+            if (!DataSettingsManager.DatabaseIsInstalled || !SeoFriendlyUrlsForLanguagesEnabled)
                 return base.RouteAsync(context);
 
             //if path isn't localized, no special action required
             var path = context.HttpContext.Request.Path.Value;
-            if (!path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language language))
+            if (!path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language _))
                 return base.RouteAsync(context);
 
             //remove language code and application path from the path

@@ -1,56 +1,68 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache;
 using Nop.Plugin.Widgets.NivoSlider.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Media;
+using Nop.Web.Framework.Components;
 
 namespace Nop.Plugin.Widgets.NivoSlider.Components
 {
     [ViewComponent(Name = "WidgetsNivoSlider")]
-    public class WidgetsNivoSliderViewComponent : ViewComponent
+    public class WidgetsNivoSliderViewComponent : NopViewComponent
     {
         private readonly IStoreContext _storeContext;
         private readonly IStaticCacheManager _cacheManager;
         private readonly ISettingService _settingService;
         private readonly IPictureService _pictureService;
+        private readonly IWebHelper _webHelper;
 
         public WidgetsNivoSliderViewComponent(IStoreContext storeContext, 
             IStaticCacheManager cacheManager, 
             ISettingService settingService, 
-            IPictureService pictureService)
+            IPictureService pictureService,
+            IWebHelper webHelper)
         {
-            this._storeContext = storeContext;
-            this._cacheManager = cacheManager;
-            this._settingService = settingService;
-            this._pictureService = pictureService;
+            _storeContext = storeContext;
+            _cacheManager = cacheManager;
+            _settingService = settingService;
+            _pictureService = pictureService;
+            _webHelper = webHelper;
         }
 
-        public IViewComponentResult Invoke()
+        public IViewComponentResult Invoke(string widgetZone, object additionalData)
         {
             var nivoSliderSettings = _settingService.LoadSetting<NivoSliderSettings>(_storeContext.CurrentStore.Id);
 
-            var model = new PublicInfoModel();
-            model.Picture1Url = GetPictureUrl(nivoSliderSettings.Picture1Id);
-            model.Text1 = nivoSliderSettings.Text1;
-            model.Link1 = nivoSliderSettings.Link1;
+            var model = new PublicInfoModel
+            {
+                Picture1Url = GetPictureUrl(nivoSliderSettings.Picture1Id),
+                Text1 = nivoSliderSettings.Text1,
+                Link1 = nivoSliderSettings.Link1,
+                AltText1 = nivoSliderSettings.AltText1,
 
-            model.Picture2Url = GetPictureUrl(nivoSliderSettings.Picture2Id);
-            model.Text2 = nivoSliderSettings.Text2;
-            model.Link2 = nivoSliderSettings.Link2;
+                Picture2Url = GetPictureUrl(nivoSliderSettings.Picture2Id),
+                Text2 = nivoSliderSettings.Text2,
+                Link2 = nivoSliderSettings.Link2,
+                AltText2 = nivoSliderSettings.AltText2,
 
-            model.Picture3Url = GetPictureUrl(nivoSliderSettings.Picture3Id);
-            model.Text3 = nivoSliderSettings.Text3;
-            model.Link3 = nivoSliderSettings.Link3;
+                Picture3Url = GetPictureUrl(nivoSliderSettings.Picture3Id),
+                Text3 = nivoSliderSettings.Text3,
+                Link3 = nivoSliderSettings.Link3,
+                AltText3 = nivoSliderSettings.AltText3,
 
-            model.Picture4Url = GetPictureUrl(nivoSliderSettings.Picture4Id);
-            model.Text4 = nivoSliderSettings.Text4;
-            model.Link4 = nivoSliderSettings.Link4;
+                Picture4Url = GetPictureUrl(nivoSliderSettings.Picture4Id),
+                Text4 = nivoSliderSettings.Text4,
+                Link4 = nivoSliderSettings.Link4,
+                AltText4 = nivoSliderSettings.AltText4,
 
-            model.Picture5Url = GetPictureUrl(nivoSliderSettings.Picture5Id);
-            model.Text5 = nivoSliderSettings.Text5;
-            model.Link5 = nivoSliderSettings.Link5;
+                Picture5Url = GetPictureUrl(nivoSliderSettings.Picture5Id),
+                Text5 = nivoSliderSettings.Text5,
+                Link5 = nivoSliderSettings.Link5,
+                AltText5 = nivoSliderSettings.AltText5
+            };
 
             if (string.IsNullOrEmpty(model.Picture1Url) && string.IsNullOrEmpty(model.Picture2Url) &&
                 string.IsNullOrEmpty(model.Picture3Url) && string.IsNullOrEmpty(model.Picture4Url) &&
@@ -63,7 +75,9 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
 
         protected string GetPictureUrl(int pictureId)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY, pictureId);
+            var cacheKey = string.Format(ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY, 
+                pictureId, _webHelper.IsCurrentConnectionSecured() ? Uri.UriSchemeHttps : Uri.UriSchemeHttp);
+
             return _cacheManager.Get(cacheKey, () =>
             {
                 //little hack here. nulls aren't cacheable so set it to ""

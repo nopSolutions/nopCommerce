@@ -21,58 +21,57 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly IPrivateMessagesModelFactory _privateMessagesModelFactory;
-        private readonly IForumService _forumService;
-        private readonly ICustomerService _customerService;
-        private readonly ICustomerActivityService _customerActivityService;
-        private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
         private readonly ForumSettings _forumSettings;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerService _customerService;
+        private readonly IForumService _forumService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IPrivateMessagesModelFactory _privateMessagesModelFactory;
+        private readonly IStoreContext _storeContext;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
-        #region Constructors
+        #region Ctor
 
-        public PrivateMessagesController(IPrivateMessagesModelFactory privateMessagesModelFactory,
-            IForumService forumService,
-            ICustomerService customerService,
+        public PrivateMessagesController(ForumSettings forumSettings,
             ICustomerActivityService customerActivityService,
+            ICustomerService customerService,
+            IForumService forumService,
             ILocalizationService localizationService,
-            IWorkContext workContext, 
+            IPrivateMessagesModelFactory privateMessagesModelFactory,
             IStoreContext storeContext,
-            ForumSettings forumSettings)
+            IWorkContext workContext)
         {
-            this._privateMessagesModelFactory = privateMessagesModelFactory;
-            this._forumService = forumService;
-            this._customerService = customerService;
-            this._customerActivityService = customerActivityService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._forumSettings = forumSettings;
+            _forumSettings = forumSettings;
+            _customerActivityService = customerActivityService;
+            _customerService = customerService;
+            _forumService = forumService;
+            _localizationService = localizationService;
+            _privateMessagesModelFactory = privateMessagesModelFactory;
+            _storeContext = storeContext;
+            _workContext = workContext;
         }
 
         #endregion
         
         #region Methods
 
-        public virtual IActionResult Index(int? page, string tab)
+        public virtual IActionResult Index(int? pageNumber, string tab)
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                return new UnauthorizedResult();
+                return Challenge();
             }
 
-            var model = _privateMessagesModelFactory.PreparePrivateMessageIndexModel(page, tab);
+            var model = _privateMessagesModelFactory.PreparePrivateMessageIndexModel(pageNumber, tab);
             return View(model);
         }
-
         
         [HttpPost, FormValueRequired("delete-inbox"), ActionName("InboxUpdate")]
         [PublicAntiForgery]
@@ -85,8 +84,7 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("pm", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("pm", "").Trim();
-                    int privateMessageId;
-                    if (Int32.TryParse(id, out privateMessageId))
+                    if (int.TryParse(id, out int privateMessageId))
                     {
                         var pm = _forumService.GetPrivateMessageById(privateMessageId);
                         if (pm != null)
@@ -114,8 +112,7 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("pm", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("pm", "").Trim();
-                    int privateMessageId;
-                    if (Int32.TryParse(id, out privateMessageId))
+                    if (int.TryParse(id, out int privateMessageId))
                     {
                         var pm = _forumService.GetPrivateMessageById(privateMessageId);
                         if (pm != null)
@@ -144,10 +141,9 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("si", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("si", "").Trim();
-                    int privateMessageId;
-                    if (Int32.TryParse(id, out privateMessageId))
+                    if (int.TryParse(id, out int privateMessageId))
                     {
-                        PrivateMessage pm = _forumService.GetPrivateMessageById(privateMessageId);
+                        var pm = _forumService.GetPrivateMessageById(privateMessageId);
                         if (pm != null)
                         {
                             if (pm.FromCustomerId == _workContext.CurrentCustomer.Id)
@@ -158,7 +154,6 @@ namespace Nop.Web.Controllers
                         }
                     }
                 }
-
             }
             return RedirectToRoute("PrivateMessages", new {tab = "sent"});
         }
@@ -166,10 +161,10 @@ namespace Nop.Web.Controllers
         public virtual IActionResult SendPM(int toCustomerId, int? replyToMessageId)
         {
             if (!_forumSettings.AllowPrivateMessages)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             if (_workContext.CurrentCustomer.IsGuest())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var customerTo = _customerService.GetCustomerById(toCustomerId);
             if (customerTo == null || customerTo.IsGuest())
@@ -192,15 +187,15 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                return new UnauthorizedResult();
+                return Challenge();
             }
 
-            Customer toCustomer = null;
+            Customer toCustomer;
             var replyToPM = _forumService.GetPrivateMessageById(model.ReplyToMessageId);
             if (replyToPM != null)
             {
@@ -232,7 +227,7 @@ namespace Nop.Web.Controllers
             {
                 try
                 {
-                    string subject = model.Subject;
+                    var subject = model.Subject;
                     if (_forumSettings.PMSubjectMaxLength > 0 && subject.Length > _forumSettings.PMSubjectMaxLength)
                     {
                         subject = subject.Substring(0, _forumSettings.PMSubjectMaxLength);
@@ -262,7 +257,8 @@ namespace Nop.Web.Controllers
                     _forumService.InsertPrivateMessage(privateMessage);
 
                     //activity log
-                    _customerActivityService.InsertActivity("PublicStore.SendPM", _localizationService.GetResource("ActivityLog.PublicStore.SendPM"), toCustomer.Email);
+                    _customerActivityService.InsertActivity("PublicStore.SendPM",
+                        string.Format(_localizationService.GetResource("ActivityLog.PublicStore.SendPM"), toCustomer.Email), toCustomer);
 
                     return RedirectToRoute("PrivateMessages", new { tab = "sent" });
                 }
@@ -280,12 +276,12 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                return new UnauthorizedResult();
+                return Challenge();
             }
 
             var pm = _forumService.GetPrivateMessageById(privateMessageId);
@@ -315,12 +311,12 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                return new UnauthorizedResult();
+                return Challenge();
             }
 
             var pm = _forumService.GetPrivateMessageById(privateMessageId);

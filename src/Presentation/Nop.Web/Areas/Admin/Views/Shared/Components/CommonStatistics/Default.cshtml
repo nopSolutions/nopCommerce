@@ -1,11 +1,11 @@
 ﻿@model CommonStatisticsModel
 @using Nop.Core
-@using Nop.Services.Common
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject IWorkContext workContext
 @{
     const string panelId = "nopcommerce-common-statistics-box";
     const string hidePanelAttributeName = "HideCommonStatisticsPanel";
-    var hidePanel = workContext.CurrentCustomer.GetAttribute<bool>(hidePanelAttributeName);
+    var hidePanel = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hidePanelAttributeName);
 }
 
 <div class="box box-info @if(hidePanel){<text>collapsed-box</text>}" id="@panelId">
@@ -82,7 +82,7 @@
                 <div class="icon">
                     <i class="ion ion-pie-graph"></i>
                 </div>
-                <a asp-controller="Product" asp-action="LowStockReport" class="small-box-footer">
+                <a asp-controller="Report" asp-action="LowStock" class="small-box-footer">
                     @T("Admin.Dashboard.MoreInfo")
                     <i class="fa fa-arrow-circle-right"></i>
                 </a>

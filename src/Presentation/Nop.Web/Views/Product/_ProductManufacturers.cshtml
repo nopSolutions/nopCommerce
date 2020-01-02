@@ -11,7 +11,7 @@
             <span class="label">@T("Products.Manufacturers"):</span>
         }
         <span class="value">
-            @for (int i = 0; i < Model.Count; i++)
+            @for (var i = 0; i < Model.Count; i++)
             {
                 var item = Model[i];
                 <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })">@item.Name</a>

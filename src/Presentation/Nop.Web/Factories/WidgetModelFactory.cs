@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -14,29 +15,29 @@ namespace Nop.Web.Factories
     /// </summary>
     public partial class WidgetModelFactory : IWidgetModelFactory
     {
-		#region Fields
+        #region Fields
 
-        private readonly IWidgetService _widgetService;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IThemeContext _themeContext;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IWidgetPluginManager _widgetPluginManager;
         private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
-        public WidgetModelFactory(IWidgetService widgetService, 
+        public WidgetModelFactory(IStaticCacheManager cacheManager,
             IStoreContext storeContext,
             IThemeContext themeContext,
-            IStaticCacheManager cacheManager,
+            IWidgetPluginManager widgetPluginManager,
             IWorkContext workContext)
         {
-            this._widgetService = widgetService;
-            this._storeContext = storeContext;
-            this._themeContext = themeContext;
-            this._cacheManager = cacheManager;
-            this._workContext = workContext;
+            _cacheManager = cacheManager;
+            _storeContext = storeContext;
+            _themeContext = themeContext;
+            _widgetPluginManager = widgetPluginManager;
+            _workContext = workContext;
         }
 
         #endregion
@@ -51,55 +52,26 @@ namespace Nop.Web.Factories
         /// <returns>List of the render widget models</returns>
         public virtual List<RenderWidgetModel> PrepareRenderWidgetModel(string widgetZone, object additionalData = null)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.WIDGET_MODEL_KEY,
+            var cacheKey = string.Format(NopModelCacheDefaults.WidgetModelKey,
                 _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, widgetZone, _themeContext.WorkingThemeName);
 
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
-            {
-                //model
-                var model = new List<RenderWidgetModel>();
-
-                var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
-                foreach (var widget in widgets)
+            var cachedModels = _cacheManager.Get(cacheKey, () =>
+                _widgetPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id, widgetZone)
+                .Select(widget => new RenderWidgetModel
                 {
-                    widget.GetPublicViewComponent(out string viewComponentName);
-
-                    var widgetModel = new RenderWidgetModel
-                    {
-                        WidgetViewComponentName = viewComponentName
-                    };
-
-                    model.Add(widgetModel);
-                }
-                return model;
-            });
+                    WidgetViewComponentName = widget.GetWidgetViewComponentName(widgetZone),
+                    WidgetViewComponentArguments = new RouteValueDictionary { ["widgetZone"] = widgetZone }
+                }));
 
             //"WidgetViewComponentArguments" property of widget models depends on "additionalData".
             //We need to clone the cached model before modifications (the updated one should not be cached)
-            var clonedModel = new List<RenderWidgetModel>();
-
-            foreach (var widgetModel in cachedModel)
+            var models = cachedModels.Select(renderModel => new RenderWidgetModel
             {
-                var clonedWidgetModel = new RenderWidgetModel
-                {
-                    WidgetViewComponentName = widgetModel.WidgetViewComponentName
-                };
+                WidgetViewComponentName = renderModel.WidgetViewComponentName,
+                WidgetViewComponentArguments = new RouteValueDictionary { ["widgetZone"] = widgetZone, ["additionalData"] = additionalData }
+            }).ToList();
 
-                if (widgetModel.WidgetViewComponentArguments != null)
-                    clonedWidgetModel.WidgetViewComponentArguments = new RouteValueDictionary(widgetModel.WidgetViewComponentArguments);
-
-                if (additionalData != null)
-                {
-                    if (clonedWidgetModel.WidgetViewComponentArguments == null)
-                        clonedWidgetModel.WidgetViewComponentArguments = new RouteValueDictionary();
-
-                    clonedWidgetModel.WidgetViewComponentArguments = additionalData;
-                }
-
-                clonedModel.Add(clonedWidgetModel);
-            }
-
-            return clonedModel;
+            return models;
         }
 
         #endregion
