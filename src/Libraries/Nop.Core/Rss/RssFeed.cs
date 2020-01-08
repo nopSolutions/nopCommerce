@@ -38,6 +38,14 @@ namespace Nop.Core.Rss
         {
         }
 
+        /// <summary>
+        /// Constructor for JSON deserialization.
+        /// </summary>
+        public RssFeed() : this(null)
+        {
+
+        }
+
         #endregion
 
         #region Properties

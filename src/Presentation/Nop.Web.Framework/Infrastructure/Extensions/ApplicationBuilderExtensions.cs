@@ -18,6 +18,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Authentication;
+using Nop.Services.Caching;
 using Nop.Services.Common;
 using Nop.Services.Installation;
 using Nop.Services.Localization;
@@ -325,6 +326,25 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 return;
 
             application.UseMiddleware<AuthenticationMiddleware>();
+        }
+
+        /// <summary>
+        /// Adds the Cache Synchronization middleware.
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseCacheSynchronization(this IApplicationBuilder application)
+        {
+            var nopConfig = EngineContext.Current.Resolve<NopConfig>();
+
+            if (nopConfig.DistributedCacheEnabled)
+            {
+                // create a listening server for cache update messages.
+                var server = EngineContext.Current.Resolve<CacheSynchronizationServer>();
+                server.Initialize();
+
+                // add middleware that processes the cache queues after a request.
+                application.UseMiddleware<CacheSynchronizationMiddleWare>();
+            }
         }
 
         /// <summary>

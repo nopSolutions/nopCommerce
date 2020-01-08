@@ -107,12 +107,29 @@ namespace Nop.Web.Framework.Infrastructure
             {
                 builder.RegisterType<RedisCacheManager>().As<IStaticCacheManager>().InstancePerLifetimeScope();
             }
+            else if (config.DistributedCacheEnabled)
+            {
+                builder.Register(c => new DistributedMemoryCacheManager(c.Resolve<NopConfig>(), s => EngineContext.Current.Resolve<ILogger>().Warning(s)))
+                    .As<ICacheMessageQueueProvider>()
+                    .As<IStaticCacheManager>()
+                    .As<IDistributedCacheManager>()
+                    .SingleInstance();
+
+                builder.RegisterType<CacheSynchronizationServer>()
+                    .AsSelf()
+                    .SingleInstance();
+            }
             else
             {
                 builder.RegisterType<MemoryCacheManager>()
                     .As<ILocker>()
                     .As<IStaticCacheManager>()
                     .SingleInstance();
+            }
+
+            if (config.SqlLockerEnabled)
+            {
+                builder.RegisterType<SQlServerLocker>().As<ILocker>().SingleInstance();
             }
 
             //work context

@@ -78,6 +78,36 @@ namespace Nop.Core.Configuration
         public bool UseRedisToStorePluginsInfo { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the distributed memory cache should be enabled.
+        /// </summary>
+        public bool DistributedCacheEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of peers to communicate with.
+        /// </summary>
+        public string DistributedCachePeers { get; set; }
+
+        /// <summary>
+        /// Gets or sets the port the distributed cache listens on.
+        /// </summary>
+        public int DistributedCachePort { get; set; }
+
+        /// <summary>
+        /// Gets or sets the synchronization interval for the Distributed Cache in seconds.
+        /// </summary>
+        public int DistributedCacheSyncInterval { get; set; }
+
+        /// <summary>
+        /// Gets or sets the synchronization interval for the Distributed Cache in seconds.
+        /// </summary>
+        public int DistributedExpirationScanInterval { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the distributed sql server locker should be enabled.
+        /// </summary>
+        public bool SqlLockerEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets path to database with user agent strings
         /// </summary>
         public string UserAgentStringsPath { get; set; }

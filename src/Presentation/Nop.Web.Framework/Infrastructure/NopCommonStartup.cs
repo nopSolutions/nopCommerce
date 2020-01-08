@@ -77,6 +77,9 @@ namespace Nop.Web.Framework.Infrastructure
 
             //set request culture
             application.UseCulture();
+
+            //use cache synchronization.
+            application.UseCacheSynchronization();
         }
 
         /// <summary>
