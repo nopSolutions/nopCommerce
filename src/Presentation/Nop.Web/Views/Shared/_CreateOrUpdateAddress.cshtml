@@ -50,7 +50,9 @@
     {
         <div class="inputs">
             <label asp-for="StateProvinceId" asp-postfix=":"></label>
-            <select asp-for="StateProvinceId" asp-items="Model.AvailableStates"></select>
+            <select asp-for="StateProvinceId" asp-items="Model.AvailableStates"
+                    data-trigger="state-select">
+            </select>
             <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
             <span asp-validation-for="StateProvinceId"></span>
         </div>

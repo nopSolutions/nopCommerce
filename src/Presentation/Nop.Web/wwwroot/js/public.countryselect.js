@@ -30,8 +30,10 @@
             error: function (jqXHR, textStatus, errorThrown) {
                 alert('Failed to retrieve states.');
             },
-            complete: function (jqXHR, textStatus) {
-                loading.hide();
+            complete: function(jqXHR, textStatus) {
+              //stateProvince.trigger('change');
+              $(`#${stateProvince[0].id} option[value=${Billing.selectedStateId}]`).prop('selected', true);
+              loading.hide();
             }
         });
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -1161,7 +1162,7 @@ namespace Nop.Web.Controllers
                 {
                     //existing address
                     var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == billingAddressId)
-                        ?? throw new Exception("Address can't be loaded");
+                                  ?? throw new Exception("Address can't be loaded");
 
                     _workContext.CurrentCustomer.BillingAddress = address;
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -1764,6 +1765,56 @@ namespace Nop.Web.Controllers
             {
                 _logger.Warning(exc.Message, exc, _workContext.CurrentCustomer);
                 return Content(exc.Message);
+            }
+        }
+
+        public virtual IActionResult GetAddressById(int addressId)
+        {
+            var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == addressId);
+            if (address == null)
+                throw new ArgumentNullException(nameof(address));
+
+            var json = JsonConvert.SerializeObject(address, Formatting.Indented,
+                new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                });
+
+            return Content(json, "application/json");
+        }
+
+        public virtual IActionResult SaveEditAddress(CheckoutBillingAddressModel model)
+        {
+            try
+            {
+                var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+                if (!cart.Any())
+                    throw new Exception("Your cart is empty");
+
+                var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == model.BillingNewAddress.Id);
+                if (address == null)
+                    throw new Exception("Address can't be loaded");
+
+                address = model.BillingNewAddress.ToEntity(address);
+
+                _workContext.CurrentCustomer.BillingAddress = address;
+                _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
+                var billingAddressModel = _checkoutModelFactory.PrepareBillingAddressModel(cart, address.CountryId);
+                return Json(new
+                {
+                    selected_id = model.BillingNewAddress.Id,
+                    update_section = new UpdateSectionJsonModel
+                    {
+                        name = "billing",
+                        html = RenderPartialViewToString("OpcBillingAddress", billingAddressModel)
+                    }
+                });
+            }
+            catch (Exception exc)
+            {
+                _logger.Warning(exc.Message, exc, _workContext.CurrentCustomer);
+                return Json(new { error = 1, message = exc.Message });
             }
         }
 
