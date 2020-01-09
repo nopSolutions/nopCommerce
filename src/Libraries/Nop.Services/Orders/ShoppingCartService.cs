@@ -1494,8 +1494,9 @@ namespace Nop.Services.Orders
                 shoppingCartItem.AttributesXml = attributesXml;
                 shoppingCartItem.Quantity = newQuantity;
                 shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
-                _customerService.UpdateCustomer(customer);
 
+                _sciRepository.Update(shoppingCartItem);
+                
                 //event notification
                 _eventPublisher.EntityUpdated(shoppingCartItem);
             }
