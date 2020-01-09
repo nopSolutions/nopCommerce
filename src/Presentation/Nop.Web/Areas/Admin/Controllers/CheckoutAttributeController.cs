@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
@@ -347,6 +348,28 @@ namespace Nop.Web.Areas.Admin.Controllers
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Deleted"));
 
             return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public virtual IActionResult DeleteSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                var checkoutAttributes = _checkoutAttributeService.GetCheckoutAttributeByIds(selectedIds.ToArray());
+                _checkoutAttributeService.DeleteCheckoutAttributes(checkoutAttributes);
+
+                foreach (var checkoutAttribute in checkoutAttributes)
+                {
+                    //activity log
+                    _customerActivityService.InsertActivity("DeleteCheckoutAttribute",
+                        string.Format(_localizationService.GetResource("ActivityLog.DeleteCheckoutAttribute"), checkoutAttribute.Name), checkoutAttribute);
+                }
+            }
+
+            return Json(new { Result = true });
         }
 
         #endregion

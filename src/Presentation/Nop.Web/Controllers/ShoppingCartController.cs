@@ -1337,11 +1337,11 @@ namespace Nop.Web.Controllers
                     cartItem.Item.RentalStartDateUtc, cartItem.Item.RentalEndDateUtc, cartItem.NewQuantity, true)
             }).ToList();
 
-            //parse and save checkout attributes
-            ParseAndSaveCheckoutAttributes(cart, form);
-
             //updated cart
             cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+
+            //parse and save checkout attributes
+            ParseAndSaveCheckoutAttributes(cart, form);
 
             //prepare model
             var model = new ShoppingCartModel();
