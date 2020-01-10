@@ -18,7 +18,11 @@ namespace Nop.Services.Caching.CacheEventConsumers
             _cacheManager = EngineContext.Current.Resolve<ICacheManager>();
         }
 
-        public virtual void ClearCache(TEntity entity)
+        protected virtual void ClearCache(TEntity entity, EntityEventType entityEventType)
+        {
+        }
+
+        protected virtual void ClearCache(TEntity entity)
         {
         }
 
@@ -41,7 +45,7 @@ namespace Nop.Services.Caching.CacheEventConsumers
         public virtual void HandleEvent(EntityInsertedEvent<TEntity> eventMessage)
         {
             var entity = eventMessage.Entity;
-            ClearCache(entity);
+            ClearCache(entity, EntityEventType.Inserte);
         }
 
         public virtual void HandleEvent(EntityUpdatedEvent<TEntity> eventMessage)
@@ -49,7 +53,7 @@ namespace Nop.Services.Caching.CacheEventConsumers
             var entity = eventMessage.Entity;
 
             _staticCacheManager.Remove(string.Format(NopCachingDefaults.NopEntityCacheKey, typeof(TEntity).Name, entity.Id));
-            ClearCache(eventMessage.Entity);
+            ClearCache(eventMessage.Entity, EntityEventType.Update);
         }
 
         public virtual void HandleEvent(EntityDeletedEvent<TEntity> eventMessage)
@@ -57,7 +61,14 @@ namespace Nop.Services.Caching.CacheEventConsumers
             var entity = eventMessage.Entity;
 
             _staticCacheManager.Remove(string.Format(NopCachingDefaults.NopEntityCacheKey, typeof(TEntity).Name, entity.Id));
-            ClearCache(eventMessage.Entity);
+            ClearCache(eventMessage.Entity, EntityEventType.Delete);
+        }
+
+        protected enum EntityEventType
+        {
+            Inserte,
+            Update,
+            Delete
         }
     }
 }

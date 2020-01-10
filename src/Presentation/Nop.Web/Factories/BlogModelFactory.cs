@@ -137,9 +137,8 @@ namespace Nop.Web.Factories
 
             //number of blog comments
             var storeId = _blogSettings.ShowBlogCommentsPerStore ? _storeContext.CurrentStore.Id : 0;
-
-            var cacheKey = string.Format(NopModelCacheDefaults.BlogCommentsNumberKey, blogPost.Id, storeId, true);
-            model.NumberOfComments = _cacheManager.Get(cacheKey, () => _blogService.GetBlogCommentsCount(blogPost, storeId, true));
+            
+            model.NumberOfComments = _blogService.GetBlogCommentsCount(blogPost, storeId, true);
 
             if (prepareComments)
             {                
@@ -148,7 +147,7 @@ namespace Nop.Web.Factories
                     approved: true,
                     storeId: storeId);
 
-                foreach (var bc in blogComments.OrderBy(comment => comment.CreatedOnUtc))
+                foreach (var bc in blogComments)
                 {
                     var commentModel = PrepareBlogPostCommentModel(bc);
                     model.Comments.Add(commentModel);
@@ -267,7 +266,6 @@ namespace Nop.Web.Factories
                         first = first.AddMonths(1);
                     }
 
-
                     var current = 0;
                     foreach (var kvp in months)
                     {
@@ -294,8 +292,10 @@ namespace Nop.Web.Factories
                         current = date.Year;
                     }
                 }
+
                 return model;
             });
+
             return cachedModel;
         }
 

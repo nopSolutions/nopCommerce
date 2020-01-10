@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Customers
 {
     public partial class CustomerAttributeValueCacheEventConsumer : CacheEventConsumer<CustomerAttributeValue>
     {
-        public override void ClearCache(CustomerAttributeValue entity)
+        protected override void ClearCache(CustomerAttributeValue entity)
         {
             RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerAttributesPrefixCacheKey);
             RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerAttributeValuesPrefixCacheKey);

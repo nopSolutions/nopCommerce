@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Vendors
 {
     public partial class VendorAttributeValueCacheEventConsumer : CacheEventConsumer<VendorAttributeValue>
     {
-        public override void ClearCache(VendorAttributeValue entity)
+        protected override void ClearCache(VendorAttributeValue entity)
         {
             RemoveByPrefix(NopVendorsServiceCachingDefaults.VendorAttributesPrefixCacheKey);
             RemoveByPrefix(NopVendorsServiceCachingDefaults.VendorAttributeValuesPrefixCacheKey);

@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Shipping
 {
     public partial class WarehouseCacheEventConsumer : CacheEventConsumer<Warehouse>
     {
-        public override void ClearCache(Warehouse entity)
+        protected override void ClearCache(Warehouse entity)
         {
             RemoveByPrefix(NopShippingCachingDefaults.WarehousesPrefixCacheKey);
         }

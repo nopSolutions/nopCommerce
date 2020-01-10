@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
 {
     public partial class ProductWarehouseInventoryCacheEventConsumer : CacheEventConsumer<ProductWarehouseInventory>
     {
-        public override void ClearCache(ProductWarehouseInventory entity)
+        protected override void ClearCache(ProductWarehouseInventory entity)
         {
             RemoveByPrefix(NopCatalogCachingDefaults.ProductsPrefixCacheKey);
         }

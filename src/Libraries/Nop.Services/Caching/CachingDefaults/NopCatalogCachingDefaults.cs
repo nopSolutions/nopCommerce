@@ -35,9 +35,10 @@
         /// Gets a key for caching
         /// </summary>
         /// <remarks>
-        /// {0} : show hidden records?
+        /// {0} : current store ID
+        /// {1} : roles of the current user
         /// </remarks>
-        public static string CategoriesDisplayedOnHomepageWithoutHiddenCacheKey => "Nop.category.homepage.withouthidden";
+        public static string CategoriesDisplayedOnHomepageWithoutHiddenCacheKey => "Nop.category.homepage.withouthidden-{0}-{1}";
 
         /// <summary>
         /// Gets a key for caching
@@ -84,6 +85,17 @@
         /// </remarks>
         public static string ProductCategoriesAllByProductIdCacheKey => "Nop.productcategory.allbyproductid-{0}-{1}-{2}-{3}";
 
+        /// <summary>
+        /// Key for caching of category breadcrumb
+        /// </summary>
+        /// <remarks>
+        /// {0} : category id
+        /// {1} : roles of the current user
+        /// {2} : current store ID
+        /// {3} : language ID
+        /// </remarks>
+        public static string CategoryBreadcrumbKey => "Nop.category.breadcrumb-{0}-{1}-{2}-{3}";
+        
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
@@ -389,10 +401,15 @@
         public static string ProductSpecificationAttributeAllByProductIdCacheKey => "Nop.productspecificationattribute.allbyproductid-{0}-{1}-{2}-{3}";
 
         /// <summary>
+        /// Key for specification attributes caching (product details page)
+        /// </summary>
+        public static string SpecAttributesWithOptionsKey => "Nop.productspecificationattribute.with.options";
+
+        /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
         public static string ProductSpecificationAttributePrefixCacheKey => "Nop.productspecificationattribute.";
-
+        
         #endregion
     }
 }

@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Directory
 {
     public partial class CurrencyCacheEventConsumer : CacheEventConsumer<Currency>
     {
-        public override void ClearCache(Currency entity)
+        protected override void ClearCache(Currency entity)
         {
             RemoveByPrefix(NopDirectoryCachingDefaults.CurrenciesPrefixCacheKey);
         }

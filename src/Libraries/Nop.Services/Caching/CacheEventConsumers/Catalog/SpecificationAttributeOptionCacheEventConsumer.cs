@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
 {
     public partial class SpecificationAttributeOptionCacheEventConsumer : CacheEventConsumer<SpecificationAttributeOption>
     {
-        public override void ClearCache(SpecificationAttributeOption entity)
+        protected override void ClearCache(SpecificationAttributeOption entity)
         {
             RemoveByPrefix(NopCatalogCachingDefaults.ProductSpecificationAttributePrefixCacheKey);
         }

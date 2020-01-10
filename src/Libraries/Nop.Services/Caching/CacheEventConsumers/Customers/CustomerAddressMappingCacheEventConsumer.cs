@@ -8,7 +8,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Customers
     /// </summary>
     public partial class CustomerAddressMappingCacheEventConsumer : CacheEventConsumer<CustomerAddressMapping>
     {
-        public override void ClearCache(CustomerAddressMapping entity)
+        protected override void ClearCache(CustomerAddressMapping entity)
         {
             RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerAddressesPrefixCacheKey, false);
         }

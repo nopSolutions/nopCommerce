@@ -18,11 +18,11 @@ namespace Nop.Services.Caching.CacheEventConsumers.Customers
             Remove(string.Format(NopCustomerServiceCachingDefaults.CustomerPasswordLifetimeCacheKey, eventMessage.Password.CustomerId));
         }
 
-        public override void ClearCache(Customer entity)
+        protected override void ClearCache(Customer entity)
         {
             RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerCustomerRolesPrefixCacheKey, false);
             RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerAddressesPrefixCacheKey, false);
-            RemoveByPrefix(NopOrderCachingDefaults.ShoppingCartPrefixCacheKey, false);
+            RemoveByPrefix(NopNewsCachingDefaults.ShoppingCartPrefixCacheKey, false);
         }
 
         #endregion

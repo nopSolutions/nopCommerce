@@ -19,9 +19,10 @@
         /// Gets a key for caching
         /// </summary>
         /// <remarks>
-        /// {0} : show hidden records?
+        /// {0} : store ID
+        /// {1} : show hidden records?
         /// </remarks>
-        public static string LanguagesAllCacheKey => "Nop.language.all-{0}";
+        public static string LanguagesAllCacheKey => "Nop.language.all-{0}-{1}";
 
         /// <summary>
         /// Gets a key pattern to clear cache

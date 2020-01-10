@@ -48,5 +48,12 @@ namespace Nop.Services.Caching.Extensions
                 ? query.Any()
                 : CacheManager.Get(cacheKey, query.Any);
         }
+
+        public static int ToCachedCount<T>(this IQueryable<T> query, string cacheKey)
+        {
+            return string.IsNullOrEmpty(cacheKey)
+                ? query.Count()
+                : CacheManager.Get(cacheKey, query.Count);
+        }
     }
 }

@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Localization
 {
     public partial class LanguageCacheEventConsumer : CacheEventConsumer<Language>
     {
-        public override void ClearCache(Language entity)
+        protected override void ClearCache(Language entity)
         {
             RemoveByPrefix(NopLocalizationCachingDefaults.LanguagesPrefixCacheKey);
         }

@@ -164,18 +164,18 @@ namespace Nop.Web.Factories
 
                 productReview = _cacheManager.Get(cacheKey, () =>
                 {
+                    var productReviews = _productService.GetAllProductReviews(productId: product.Id, approved: true, storeId: _storeContext.CurrentStore.Id);
+                    
                     return new ProductReviewOverviewModel
                     {
-                        RatingSum = _productService.GetAllProductReviews(productId: product.Id, approved: true, storeId: _storeContext.CurrentStore.Id)
-                                .Sum(pr => pr.Rating),
-                        TotalReviews = _productService.GetAllProductReviews(approved: true, productId: product.Id, storeId: _storeContext.CurrentStore.Id)
-                                .Count()
+                        RatingSum = productReviews.Sum(pr => pr.Rating),
+                        TotalReviews = productReviews.Count
                     };
                 });
             }
             else
             {
-                productReview = new ProductReviewOverviewModel()
+                productReview = new ProductReviewOverviewModel
                 {
                     RatingSum = product.ApprovedRatingSum,
                     TotalReviews = product.ApprovedTotalReviews
@@ -540,8 +540,7 @@ namespace Nop.Web.Factories
                     Name = _localizationService.GetLocalized(x, y => y.Name),
                     SeName = _urlRecordService.GetSeName(x),
                     ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
-                })
-                .ToList());
+                }).ToList());
 
             return model;
         }
@@ -801,6 +800,7 @@ namespace Nop.Web.Factories
                             valueModel.ImageSquaresPictureModel = _cacheManager.Get(productAttributeImageSquarePictureCacheKey, () =>
                             {
                                 var imageSquaresPicture = _pictureService.GetPictureById(attributeValue.ImageSquaresPictureId);
+
                                 if (imageSquaresPicture != null)
                                 {
                                     return new PictureModel
@@ -809,6 +809,7 @@ namespace Nop.Web.Factories
                                         ImageUrl = _pictureService.GetPictureUrl(imageSquaresPicture, _mediaSettings.ImageSquarePictureSize)
                                     };
                                 }
+
                                 return new PictureModel();
                             });
                         }
@@ -971,6 +972,7 @@ namespace Nop.Web.Factories
                             Name = _localizationService.GetLocalized(manufacturer, x => x.Name),
                             SeName = _urlRecordService.GetSeName(manufacturer)
                         };
+
                         return modelMan;
                     })
                     .ToList()
@@ -1066,11 +1068,12 @@ namespace Nop.Web.Factories
             var templateCacheKey = string.Format(NopModelCacheDefaults.ProductTemplateModelKey, product.ProductTemplateId);
             var productTemplateViewPath = _cacheManager.Get(templateCacheKey, () =>
             {
-                var template = _productTemplateService.GetProductTemplateById(product.ProductTemplateId);
-                if (template == null)
-                    template = _productTemplateService.GetAllProductTemplates().FirstOrDefault();
+                var template = _productTemplateService.GetProductTemplateById(product.ProductTemplateId) ??
+                               _productTemplateService.GetAllProductTemplates().FirstOrDefault();
+
                 if (template == null)
                     throw new Exception("No default template could be loaded");
+
                 return template.ViewPath;
             });
 

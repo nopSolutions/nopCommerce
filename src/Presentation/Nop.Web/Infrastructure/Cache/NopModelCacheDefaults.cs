@@ -74,19 +74,7 @@
         /// </remarks>
         public static string CategoryHasFeaturedProductsKey => "Nop.pres.category.hasfeaturedproducts-{0}-{1}-{2}";
         public static string CategoryHasFeaturedProductsPrefixCacheKeyById => "Nop.pres.category.hasfeaturedproducts-{0}-";
-
-        /// <summary>
-        /// Key for caching of category breadcrumb
-        /// </summary>
-        /// <remarks>
-        /// {0} : category id
-        /// {1} : roles of the current user
-        /// {2} : current store ID
-        /// {3} : language ID
-        /// </remarks>
-        public static string CategoryBreadcrumbKey => "Nop.pres.category.breadcrumb-{0}-{1}-{2}-{3}";
-        public static string CategoryBreadcrumbPrefixCacheKey => "Nop.pres.category.breadcrumb";
-
+        
         /// <summary>
         /// Key for caching of subcategories of certain category
         /// </summary>
@@ -104,12 +92,11 @@
         /// Key for caching of categories displayed on home page
         /// </summary>
         /// <remarks>
-        /// {0} : roles of the current user
-        /// {1} : current store ID
-        /// {2} : language ID
-        /// {3} : is connection SSL secured (included in a category picture URL)
+        /// {0} : picture size
+        /// {1} : language ID
+        /// {2} : is connection SSL secured (included in a category picture URL)
         /// </remarks>
-        public static string CategoryHomepageKey => "Nop.pres.category.homepage-{0}-{1}-{2}-{3}-{4}";
+        public static string CategoryHomepageKey => "Nop.pres.category.homepage-{0}-{1}-{2}";
         public static string CategoryHomepagePrefixCacheKey => "Nop.pres.category.homepage";
 
         /// <summary>
@@ -238,19 +225,15 @@
         /// </summary>
         /// <remarks>
         /// {0} : language id
-        /// {1} : current store ID
-        /// {2} : comma separated list of customer roles
         /// </remarks>
-        public static string TopicTopMenuModelKey => "Nop.pres.topic.topmenu-{0}-{1}-{2}";
+        public static string TopicTopMenuModelKey => "Nop.pres.topic.topmenu-{0}";
         /// <summary>
         /// Key for TopMenuModel caching
         /// </summary>
         /// <remarks>
         /// {0} : language id
-        /// {1} : current store ID
-        /// {2} : comma separated list of customer roles
         /// </remarks>
-        public static string TopicFooterModelKey => "Nop.pres.topic.footer-{0}-{1}-{2}";
+        public static string TopicFooterModelKey => "Nop.pres.topic.footer-{0}";
         public static string TopicPrefixCacheKey => "Nop.pres.topic";
 
         /// <summary>
@@ -478,17 +461,7 @@
         /// </remarks>
         public static string BlogMonthsModelKey => "Nop.pres.blog.months-{0}-{1}";
         public static string BlogPrefixCacheKey => "Nop.pres.blog";
-        /// <summary>
-        /// Key for number of blog comments
-        /// </summary>
-        /// <remarks>
-        /// {0} : blog post ID
-        /// {1} : store ID
-        /// {2} : are only approved comments?
-        /// </remarks>
-        public static string BlogCommentsNumberKey => "Nop.pres.blog.comments.number-{0}-{1}-{2}";
-        public static string BlogCommentsPrefixCacheKey => "Nop.pres.blog.comments";
-
+        
         /// <summary>
         /// Key for home page news
         /// </summary>
@@ -498,17 +471,7 @@
         /// </remarks>
         public static string HomepageNewsModelKey => "Nop.pres.news.homepage-{0}-{1}";
         public static string NewsPrefixCacheKey => "Nop.pres.news";
-        /// <summary>
-        /// Key for number of news comments
-        /// </summary>
-        /// <remarks>
-        /// {0} : news item ID
-        /// {1} : store ID
-        /// {2} : are only approved comments?
-        /// </remarks>
-        public static string NewsCommentsNumberKey => "Nop.pres.news.comments.number-{0}-{1}-{2}";
-        public static string NewsCommentsPrefixCacheKey => "Nop.pres.news.comments";
-
+        
         /// <summary>
         /// Key for states by country id
         /// </summary>
@@ -550,15 +513,6 @@
         public static string StoreLogoPathPrefixCacheKey => "Nop.pres.logo";
 
         /// <summary>
-        /// Key for available languages
-        /// </summary>
-        /// <remarks>
-        /// {0} : current store ID
-        /// </remarks>
-        public static string AvailableLanguagesModelKey => "Nop.pres.languages.all-{0}";
-        public static string AvailableLanguagesPrefixCacheKey => "Nop.pres.languages";
-
-        /// <summary>
         /// Key for available currencies
         /// </summary>
         /// <remarks>
@@ -567,17 +521,7 @@
         /// </remarks>
         public static string AvailableCurrenciesModelKey => "Nop.pres.currencies.all-{0}-{1}";
         public static string AvailableCurrenciesPrefixCacheKey => "Nop.pres.currencies";
-
-        /// <summary>
-        /// Key for caching of a value indicating whether we have checkout attributes
-        /// </summary>
-        /// <remarks>
-        /// {0} : current store ID
-        /// {1} : true - all attributes, false - only shippable attributes
-        /// </remarks>
-        public static string CheckoutAttributesExistKey => "Nop.pres.checkoutattributes.exist-{0}-{1}";
-        public static string CheckoutAttributesPrefixCacheKey => "Nop.pres.checkoutattributes";
-
+       
         /// <summary>
         /// Key for sitemap on the sitemap page
         /// </summary>

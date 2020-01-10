@@ -131,16 +131,21 @@ namespace Nop.Services.Topics
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="ignorAcl">A value indicating whether to ignore ACL rules</param>
         /// <param name="showHidden">A value indicating whether to show hidden topics</param>
+        /// <param name="onlyIncludedInTopMenu">A value indicating whether to show only topics which include on the top menu</param>
         /// <returns>Topics</returns>
-        public virtual IList<Topic> GetAllTopics(int storeId, bool ignorAcl = false, bool showHidden = false)
+        public virtual IList<Topic> GetAllTopics(int storeId, bool ignorAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false)
         {
-            var key = string.Format(NopTopicCachingDefaults.TopicsAllCacheKey, storeId, ignorAcl, showHidden);
+            var key = ignorAcl ? string.Format(NopTopicCachingDefaults.TopicsAllCacheKey, storeId, showHidden, onlyIncludedInTopMenu) :
+                string.Format(NopTopicCachingDefaults.TopicsAllWithACLCacheKey, storeId, showHidden, onlyIncludedInTopMenu, string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)));
 
             var query = _topicRepository.Table;
             query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
 
             if (!showHidden)
                 query = query.Where(t => t.Published);
+
+            if (onlyIncludedInTopMenu)
+                query = query.Where(t => t.IncludeInTopMenu);
 
             if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) ||
                 (!ignorAcl && !_catalogSettings.IgnoreAcl))

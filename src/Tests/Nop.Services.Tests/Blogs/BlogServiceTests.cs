@@ -15,7 +15,7 @@ namespace Nop.Services.Tests.Blogs
         [SetUp]
         public void SetUp()
         {
-            _blogService = new BlogService(new CatalogSettings(), null, null, null, null);
+            _blogService = new BlogService(new CatalogSettings(), null, null, null, null, new TestCacheManager());
         }
 
         [Test]

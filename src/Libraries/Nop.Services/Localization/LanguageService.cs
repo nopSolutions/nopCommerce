@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
 using Nop.Services.Caching.CachingDefaults;
@@ -22,6 +23,7 @@ namespace Nop.Services.Localization
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Language> _languageRepository;
         private readonly ISettingService _settingService;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreMappingService _storeMappingService;
         private readonly LocalizationSettings _localizationSettings;
 
@@ -32,12 +34,14 @@ namespace Nop.Services.Localization
         public LanguageService(IEventPublisher eventPublisher,
             IRepository<Language> languageRepository,
             ISettingService settingService,
+            IStaticCacheManager cacheManager,
             IStoreMappingService storeMappingService,
             LocalizationSettings localizationSettings)
         {
             _eventPublisher = eventPublisher;
             _languageRepository = languageRepository;
             _settingService = settingService;
+            _cacheManager = cacheManager;
             _storeMappingService = storeMappingService;
             _localizationSettings = localizationSettings;
         }
@@ -90,17 +94,24 @@ namespace Nop.Services.Localization
             query = query.OrderBy(l => l.DisplayOrder).ThenBy(l => l.Id);
 
             //cacheable copy
-            var key = string.Format(NopLocalizationCachingDefaults.LanguagesAllCacheKey, showHidden);
+            var key = string.Format(NopLocalizationCachingDefaults.LanguagesAllCacheKey, storeId, showHidden);
 
-            var languages = loadCacheableCopy ? query.ToCachedList(key) : query.ToList();
-
-            //store mapping
-            if (storeId > 0)
+            IList<Language> getLanguages()
             {
-                languages = languages
-                    .Where(l => _storeMappingService.Authorize(l, storeId))
-                    .ToList();
+                var allLanguages = query.ToList();
+
+                //store mapping
+                if (storeId > 0)
+                {
+                    allLanguages = allLanguages
+                        .Where(l => _storeMappingService.Authorize(l, storeId))
+                        .ToList();
+                }
+
+                return allLanguages;
             }
+
+            var languages = loadCacheableCopy ? _cacheManager.Get(key, getLanguages) : query.ToList();
 
             return languages;
         }

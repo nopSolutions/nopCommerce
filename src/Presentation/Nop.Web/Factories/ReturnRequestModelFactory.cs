@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -137,28 +136,25 @@ namespace Nop.Web.Factories
             model.AvailableReturnReasons = _cacheManager.Get(string.Format(NopModelCacheDefaults.ReturnRequestReasonsModelKey, _workContext.WorkingLanguage.Id),
                 () =>
                 {
-                    var reasons = new List<SubmitReturnRequestModel.ReturnRequestReasonModel>();
-                    foreach (var rrr in _returnRequestService.GetAllReturnRequestReasons())
-                        reasons.Add(new SubmitReturnRequestModel.ReturnRequestReasonModel
+                    return _returnRequestService.GetAllReturnRequestReasons()
+                        .Select(rrr => new SubmitReturnRequestModel.ReturnRequestReasonModel
                         {
                             Id = rrr.Id,
                             Name = _localizationService.GetLocalized(rrr, x => x.Name)
-                        });
-                    return reasons;
+                        }).ToList();
                 });
 
             //return actions
             model.AvailableReturnActions = _cacheManager.Get(string.Format(NopModelCacheDefaults.ReturnRequestActionsModelKey, _workContext.WorkingLanguage.Id),
                 () =>
                 {
-                    var actions = new List<SubmitReturnRequestModel.ReturnRequestActionModel>();
-                    foreach (var rra in _returnRequestService.GetAllReturnRequestActions())
-                        actions.Add(new SubmitReturnRequestModel.ReturnRequestActionModel
+                    return _returnRequestService.GetAllReturnRequestActions()
+                        .Select(rra => new SubmitReturnRequestModel.ReturnRequestActionModel
                         {
                             Id = rra.Id,
                             Name = _localizationService.GetLocalized(rra, x => x.Name)
-                        });
-                    return actions;
+                        })
+                        .ToList();
                 });
 
             //returnable products

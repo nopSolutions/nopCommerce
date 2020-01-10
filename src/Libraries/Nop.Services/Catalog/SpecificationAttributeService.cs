@@ -97,9 +97,11 @@ namespace Nop.Services.Catalog
         /// <returns>Specification attributes that have available options</returns>
         public virtual IList<SpecificationAttribute> GetSpecificationAttributesWithOptions()
         {
-            return (from sa in _specificationAttributeRepository.Table
-                    join sao in _specificationAttributeOptionRepository.Table on sa.Id equals sao.SpecificationAttributeId
-                    select sa).ToList();
+            var query = from sa in _specificationAttributeRepository.Table
+                join sao in _specificationAttributeOptionRepository.Table on sa.Id equals sao.SpecificationAttributeId
+                select sa;
+
+            return query.ToCachedList(NopCatalogCachingDefaults.SpecAttributesWithOptionsKey);
         }
 
         /// <summary>

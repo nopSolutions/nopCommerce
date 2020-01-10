@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Domain.Blogs;
+using Nop.Services.Caching.CachingDefaults;
 
 namespace Nop.Services.Caching.CacheEventConsumers.Blogs
 {
@@ -7,5 +8,9 @@ namespace Nop.Services.Caching.CacheEventConsumers.Blogs
     /// </summary>
     public partial class BlogCommentCacheEventConsumer : CacheEventConsumer<BlogComment>
     {
+        protected override void ClearCache(BlogComment entity)
+        {
+            RemoveByPrefix(NopBlogsCachingDefaults.BlogCommentsPrefixCacheKey);
+        }
     }
 }

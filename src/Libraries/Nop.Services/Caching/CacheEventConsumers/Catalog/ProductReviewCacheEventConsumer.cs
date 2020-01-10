@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
 {
     public partial class ProductReviewCacheEventConsumer : CacheEventConsumer<ProductReview>
     {
-        public override void ClearCache(ProductReview entity)
+        protected override void ClearCache(ProductReview entity)
         {
             RemoveByPrefix(NopCatalogCachingDefaults.ProductsPrefixCacheKey);
         }

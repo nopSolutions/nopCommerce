@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -23,6 +25,7 @@ namespace Nop.Services.Blogs
         private readonly IRepository<BlogComment> _blogCommentRepository;
         private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly IStaticCacheManager _cacheManager;
 
         #endregion
 
@@ -32,13 +35,15 @@ namespace Nop.Services.Blogs
             IEventPublisher eventPublisher,
             IRepository<BlogComment> blogCommentRepository,
             IRepository<BlogPost> blogPostRepository,
-            IRepository<StoreMapping> storeMappingRepository)
+            IRepository<StoreMapping> storeMappingRepository,
+            IStaticCacheManager cacheManager)
         {
             _catalogSettings = catalogSettings;
             _eventPublisher = eventPublisher;
             _blogCommentRepository = blogCommentRepository;
             _blogPostRepository = blogPostRepository;
             _storeMappingRepository = storeMappingRepository;
+            _cacheManager = cacheManager;
         }
 
         #endregion
@@ -196,7 +201,9 @@ namespace Nop.Services.Blogs
                 }
             }
 
-            return blogPostTags;
+            var cacheKey = string.Format(NopBlogsCachingDefaults.BlogTagsModelKey, languageId, storeId);
+
+            return _cacheManager.Get(cacheKey, () => blogPostTags);
         }
 
         /// <summary>
@@ -260,7 +267,7 @@ namespace Nop.Services.Blogs
                 return new List<string>();
 
             var tags = blogPost.Tags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(tag => tag?.Trim())
+                .Select(tag => tag.Trim())
                 .Where(tag => !string.IsNullOrEmpty(tag)).ToList();
 
             return tags;
@@ -388,7 +395,9 @@ namespace Nop.Services.Blogs
             if (isApproved.HasValue)
                 query = query.Where(comment => comment.IsApproved == isApproved.Value);
 
-            return query.Count();
+            var cacheKey = string.Format(NopBlogsCachingDefaults.BlogCommentsNumberKey, blogPost.Id, storeId, true);
+            
+            return _cacheManager.Get(cacheKey, () => query.Count());
         }
 
         /// <summary>

@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Localization
 {
     public partial class LocalizedPropertyCacheEventConsumer : CacheEventConsumer<LocalizedProperty>
     {
-        public override void ClearCache(LocalizedProperty entity)
+        protected override void ClearCache(LocalizedProperty entity)
         {
             RemoveByPrefix(NopLocalizationCachingDefaults.LocalizedPropertyPrefixCacheKey);
         }

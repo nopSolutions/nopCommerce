@@ -60,7 +60,7 @@ namespace Nop.Services.Caching.CachingDefaults
             if (!_cachingSettings.CachingShoppingCartEnabled)
                 return null;
 
-            return CreateCacheKey(NopOrderCachingDefaults.ShoppingCartCacheKey, keyObjects);
+            return CreateCacheKey(NopNewsCachingDefaults.ShoppingCartCacheKey, keyObjects);
         }
 
         public virtual string GetIdsHash(IEnumerable<int> ids)

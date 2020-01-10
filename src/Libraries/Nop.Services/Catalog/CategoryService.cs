@@ -349,15 +349,20 @@ namespace Nop.Services.Catalog
 
             var categories = query.ToCachedList(NopCatalogCachingDefaults.CategoriesAllDisplayedOnHomepageCacheKey);
 
-            if (!showHidden)
+            if (showHidden)
+                return categories;
+
+            var cacheKey =
+                string.Format(NopCatalogCachingDefaults.CategoriesDisplayedOnHomepageWithoutHiddenCacheKey,
+                    _storeContext.CurrentStore.Id,
+                    string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)));
+                
+            categories = _staticCacheManager.Get(cacheKey, () =>
             {
-                categories = _staticCacheManager.Get(NopCatalogCachingDefaults.CategoriesDisplayedOnHomepageWithoutHiddenCacheKey, () =>
-                {
-                    return categories
-                        .Where(c => _aclService.Authorize(c) && _storeMappingService.Authorize(c))
-                        .ToList();
-                });
-            }
+                return categories
+                    .Where(c => _aclService.Authorize(c) && _storeMappingService.Authorize(c))
+                    .ToList();
+            });
 
             return categories;
         }
@@ -883,28 +888,39 @@ namespace Nop.Services.Catalog
             if (category == null)
                 throw new ArgumentNullException(nameof(category));
 
-            var result = new List<Category>();
+            var breadcrumbCacheKey = string.Format(NopCatalogCachingDefaults.CategoryBreadcrumbKey,
+                category.Id,
+                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
+                _storeContext.CurrentStore.Id,
+                _workContext.WorkingLanguage.Id);
 
-            //used to prevent circular references
-            var alreadyProcessedCategoryIds = new List<int>();
-
-            while (category != null && //not null
-                !category.Deleted && //not deleted
-                (showHidden || category.Published) && //published
-                (showHidden || _aclService.Authorize(category)) && //ACL
-                (showHidden || _storeMappingService.Authorize(category)) && //Store mapping
-                !alreadyProcessedCategoryIds.Contains(category.Id)) //prevent circular references
+            return _staticCacheManager.Get(breadcrumbCacheKey, () =>
             {
-                result.Add(category);
+                var result = new List<Category>();
 
-                alreadyProcessedCategoryIds.Add(category.Id);
+                //used to prevent circular references
+                var alreadyProcessedCategoryIds = new List<int>();
 
-                category = allCategories != null ? allCategories.FirstOrDefault(c => c.Id == category.ParentCategoryId)
-                    : GetCategoryById(category.ParentCategoryId);
-            }
+                while (category != null && //not null
+                       !category.Deleted && //not deleted
+                       (showHidden || category.Published) && //published
+                       (showHidden || _aclService.Authorize(category)) && //ACL
+                       (showHidden || _storeMappingService.Authorize(category)) && //Store mapping
+                       !alreadyProcessedCategoryIds.Contains(category.Id)) //prevent circular references
+                {
+                    result.Add(category);
 
-            result.Reverse();
-            return result;
+                    alreadyProcessedCategoryIds.Add(category.Id);
+
+                    category = allCategories != null
+                        ? allCategories.FirstOrDefault(c => c.Id == category.ParentCategoryId)
+                        : GetCategoryById(category.ParentCategoryId);
+                }
+
+                result.Reverse();
+
+                return result;
+            });
         }
 
         #endregion

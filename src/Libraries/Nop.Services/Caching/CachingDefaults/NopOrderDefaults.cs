@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents default values related to orders services
     /// </summary>
-    public static partial class NopOrderCachingDefaults
+    public static partial class NopNewsCachingDefaults
     {
         #region Checkout attributes
 

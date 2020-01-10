@@ -5,7 +5,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Customers
 {
     public partial class CustomerRoleCacheEventConsumer : CacheEventConsumer<CustomerRole>
     {
-        public override void ClearCache(CustomerRole entity)
+        protected override void ClearCache(CustomerRole entity)
         {
             RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerRolesPrefixCacheKey);
             RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerCustomerRolesPrefixCacheKey, false);
