@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using LinqToDB;
 using LinqToDB.Data;
@@ -146,9 +147,9 @@ namespace Nop.Data
         /// <param name="storeProcedureName">Store procedure name</param>
         /// <param name="dataParameters">Command parameters</param>
         /// <returns>Collection of query result records</returns>
-        public virtual IEnumerable<TEntity> EntityFromSql(string storeProcedureName, params object[] dataParameters)
+        public virtual IList<TEntity> EntityFromSql(string storeProcedureName, params DataParameter[] dataParameters)
         {
-            return _dataConnection.QueryProc<TEntity>(storeProcedureName, dataParameters?.Select(param => param as DataParameter).ToArray());
+            return _dataConnection.ExecuteStoredProcedure<TEntity>(storeProcedureName, dataParameters?.ToArray());
         }
 
         /// <summary>

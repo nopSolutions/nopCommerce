@@ -141,7 +141,7 @@ namespace Nop.Data
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Returns collection of query result records</returns>
-        IEnumerable<T> QueryProc<T>(string procedureName, params DataParameter[] parameters);
+        IList<T> QueryProc<T>(string procedureName, params DataParameter[] parameters);
 
         /// <summary>
         /// Executes command and returns results as collection of values of specified type
