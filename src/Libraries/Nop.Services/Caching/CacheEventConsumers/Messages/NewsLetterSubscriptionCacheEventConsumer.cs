@@ -3,7 +3,7 @@
 namespace Nop.Services.Caching.CacheEventConsumers.Messages
 {
     /// <summary>
-    /// Represents NewsLetterSubscription entity
+    /// Represents news letter subscription cache event consumer
     /// </summary>
     public partial class NewsLetterSubscriptionCacheEventConsumer : CacheEventConsumer<NewsLetterSubscription>
     {    

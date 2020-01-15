@@ -2,68 +2,36 @@
 using System.Linq;
 using System.Text;
 using Nop.Core.Caching;
-using Nop.Core.Domain;
 using Nop.Services.Security;
 
 namespace Nop.Services.Caching.CachingDefaults
 {
     public partial class CacheKeyFactory : ICacheKeyFactory
     {
-        private readonly CachingSettings _cachingSettings;
         private readonly IEncryptionService _encryptionService;
 
-        public CacheKeyFactory(CachingSettings cachingSettings, IEncryptionService encryptionService)
+        public CacheKeyFactory(IEncryptionService encryptionService)
         {
-            _cachingSettings = cachingSettings;
             _encryptionService = encryptionService;
         }
 
-        protected virtual string CreateCacheKey(string keyFormater, params object[] keyObjects)
+        /// <summary>
+        /// Creates the cache key
+        /// </summary>
+        /// <param name="keyFormater">Key formater string</param>
+        /// <param name="keyObjects">Parameters to create cache key</param>
+        /// <returns></returns>
+        public virtual string CreateCacheKey(string keyFormater, params object[] keyObjects)
         {
             return keyObjects.Any() ? string.Format(keyFormater, keyObjects) : keyFormater;
         }
 
-        public virtual string GetCustomerRoleIdsCacheKey(params object[] keyObjects)
-        {
-            if (!_cachingSettings.CachingCustomerRolesEnabled)
-                return null;
-
-            return CreateCacheKey(NopCustomerServiceCachingDefaults.CustomerRoleIdsCacheKey, keyObjects);
-        }
-
-        public virtual string GetCustomerRolesCacheKey(params object[] keyObjects)
-        {
-            if (!_cachingSettings.CachingCustomerRolesEnabled)
-                return null;
-
-            return CreateCacheKey(NopCustomerServiceCachingDefaults.CustomerRolesCacheKey, keyObjects);
-        }
-
-        public virtual string GetAddressesByCustomerIdCacheKey(params object[] keyObjects)
-        {
-            if (!_cachingSettings.CachingCustomerAddressEnabled)
-                return null;
-
-            return CreateCacheKey(NopCustomerServiceCachingDefaults.CustomerAddressesByCustomerIdCacheKey, keyObjects);
-        }
-
-        public virtual string GetCustomerAddressCacheKey(params object[] keyObjects)
-        {
-            if (!_cachingSettings.CachingCustomerAddressEnabled)
-                return null;
-
-            return CreateCacheKey(NopCustomerServiceCachingDefaults.CustomerAddressCacheKeyCacheKey, keyObjects);
-        }
-
-        public virtual string GetShoppingCartCacheKey(params object[] keyObjects)
-        {
-            if (!_cachingSettings.CachingShoppingCartEnabled)
-                return null;
-
-            return CreateCacheKey(NopNewsCachingDefaults.ShoppingCartCacheKey, keyObjects);
-        }
-
-        public virtual string GetIdsHash(IEnumerable<int> ids)
+        /// <summary>
+        /// Creates the hash sum of identifiers list
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public virtual string CreateIdsHash(IEnumerable<int> ids)
         {
             return _encryptionService.CreateHash(Encoding.UTF8.GetBytes(string.Join(", ", ids.OrderBy(id => id))),
                 NopCustomerServiceDefaults.DefaultHashedPasswordFormat);

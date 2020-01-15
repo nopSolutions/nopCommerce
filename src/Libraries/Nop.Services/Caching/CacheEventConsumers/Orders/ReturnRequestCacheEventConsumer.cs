@@ -3,7 +3,7 @@
 namespace Nop.Services.Caching.CacheEventConsumers.Orders
 {
     /// <summary>
-    /// Represents a return request
+    /// Represents a return request cache event consumer
     /// </summary>
     public partial class ReturnRequestCacheEventConsumer : CacheEventConsumer<ReturnRequest>
     {

@@ -3,7 +3,7 @@
 namespace Nop.Services.Caching.CacheEventConsumers.Catalog
 {
     /// <summary>
-    /// Represents a stock quantity change entry
+    /// Represents a stock quantity change entry cache event consumer
     /// </summary>
     public partial class StockQuantityHistoryCacheEventConsumer : CacheEventConsumer<StockQuantityHistory>
     {

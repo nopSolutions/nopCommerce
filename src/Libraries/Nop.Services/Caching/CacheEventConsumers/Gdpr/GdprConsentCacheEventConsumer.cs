@@ -3,7 +3,7 @@
 namespace Nop.Services.Caching.CacheEventConsumers.Gdpr
 {
     /// <summary>
-    /// Represents a GDPR consent
+    /// Represents a GDPR consent cache event consumer
     /// </summary>
     public partial class GdprConsentCacheEventConsumer : CacheEventConsumer<GdprConsent>
     {

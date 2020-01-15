@@ -657,7 +657,7 @@ namespace Nop.Services.Orders
             if (createdToUtc.HasValue)
                 items = items.Where(item => createdToUtc.Value >= item.CreatedOnUtc);
 
-            var key = _cacheKeyFactory.GetShoppingCartCacheKey(customer.Id, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
+            var key = _cacheKeyFactory.CreateCacheKey(NopNewsCachingDefaults.ShoppingCartCacheKey, customer.Id, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
 
             if (string.IsNullOrEmpty(key))
                 return items.ToList();

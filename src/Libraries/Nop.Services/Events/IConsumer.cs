@@ -1,4 +1,4 @@
-﻿namespace Nop.Core.Events
+﻿namespace Nop.Services.Events
 {
     /// <summary>
     /// Consumer interface

@@ -385,7 +385,7 @@ namespace Nop.Services.Catalog
             if (productIds == null || productIds.Length == 0)
                 return new List<Product>();
 
-            var key = string.Format(NopCatalogCachingDefaults.ProductsByIdsCacheKey, _cacheKeyFactory.GetIdsHash(productIds));
+            var key = string.Format(NopCatalogCachingDefaults.ProductsByIdsCacheKey, _cacheKeyFactory.CreateIdsHash(productIds));
 
             var query = from p in _productRepository.Table
                         where productIds.Contains(p.Id) && !p.Deleted

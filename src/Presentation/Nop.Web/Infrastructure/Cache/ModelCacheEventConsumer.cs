@@ -12,6 +12,7 @@ using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
 using Nop.Services.Cms;
+using Nop.Services.Events;
 using Nop.Services.Plugins;
 
 namespace Nop.Web.Infrastructure.Cache

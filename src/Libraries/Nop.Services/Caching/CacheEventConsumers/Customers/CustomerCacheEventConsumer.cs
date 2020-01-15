@@ -1,23 +1,29 @@
-﻿using Nop.Core.Caching;
-using Nop.Core.Domain.Customers;
-using Nop.Core.Events;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Events;
 
 namespace Nop.Services.Caching.CacheEventConsumers.Customers
 {
     /// <summary>
-    /// Customer cache event consumer (used for caching of current customer password)
+    /// Represents a customer cache event consumer
     /// </summary>
     public partial class CustomerCacheEventConsumer : CacheEventConsumer<Customer>, IConsumer<CustomerPasswordChangedEvent>
     {
         #region Methods
 
-        //password changed
+        /// <summary>
+        /// Handle password changed event
+        /// </summary>
+        /// <param name="eventMessage">Event message</param>
         public void HandleEvent(CustomerPasswordChangedEvent eventMessage)
         {
             Remove(string.Format(NopCustomerServiceCachingDefaults.CustomerPasswordLifetimeCacheKey, eventMessage.Password.CustomerId));
         }
 
+        /// <summary>
+        /// Clear cache data
+        /// </summary>
+        /// <param name="entity">Entity</param>
         protected override void ClearCache(Customer entity)
         {
             RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerCustomerRolesPrefixCacheKey, false);

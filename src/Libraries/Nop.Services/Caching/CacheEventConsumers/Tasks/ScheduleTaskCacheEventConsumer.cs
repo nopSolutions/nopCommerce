@@ -3,7 +3,7 @@
 namespace Nop.Services.Caching.CacheEventConsumers.Tasks
 {
     /// <summary>
-    /// Schedule task
+    /// Represents a schedule task cache event consumer
     /// </summary>
     public partial class ScheduleTaskCacheEventConsumer : CacheEventConsumer<ScheduleTask>
     {

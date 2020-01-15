@@ -3,7 +3,7 @@
 namespace Nop.Services.Caching.CacheEventConsumers.Affiliates
 {
     /// <summary>
-    /// Represents an affiliate
+    /// Represents an affiliate cache event consumer
     /// </summary>
     public partial class AffiliateCacheEventConsumer : CacheEventConsumer<Affiliate>
     {

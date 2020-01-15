@@ -1160,7 +1160,7 @@ namespace Nop.Services.Seo
             var query = _urlRecordRepository.Table;
 
             var key = string.Format(NopSeoCachingDefaults.UrlRecordByIdsCacheKey,
-                _cacheKeyFactory.GetIdsHash(urlRecordIds));
+                _cacheKeyFactory.CreateIdsHash(urlRecordIds));
 
             return query.Where(p => urlRecordIds.Contains(p.Id)).ToCachedList(key);
         }

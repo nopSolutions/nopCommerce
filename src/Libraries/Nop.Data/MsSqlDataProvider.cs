@@ -174,7 +174,7 @@ namespace Nop.Data
         {
             var sqlCommands = GetCommandsFromScript(sql);
             foreach (var command in sqlCommands)
-                _dataConnection.Execute(command);
+                CurrentConnection.Execute(command);
         }
 
         /// <summary>
@@ -197,9 +197,9 @@ namespace Nop.Data
         /// <returns>Integer identity; null if cannot get the result</returns>
         public virtual int? GetTableIdent<T>() where T : BaseEntity
         {
-            var tableName = _dataConnection.GetTable<T>().TableName;
+            var tableName = CurrentConnection.GetTable<T>().TableName;
 
-            var result = _dataConnection.Query<decimal?>($"SELECT IDENT_CURRENT('[{tableName}]') as Value")
+            var result = CurrentConnection.Query<decimal?>($"SELECT IDENT_CURRENT('[{tableName}]') as Value")
                 .FirstOrDefault();
 
             return result.HasValue ? Convert.ToInt32(result) : 1;
@@ -216,9 +216,9 @@ namespace Nop.Data
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
-            var tableName = _dataConnection.GetTable<T>().TableName;
+            var tableName = CurrentConnection.GetTable<T>().TableName;
 
-            _dataConnection.Execute($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
+            CurrentConnection.Execute($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
         }
 
         /// <summary>
@@ -229,8 +229,8 @@ namespace Nop.Data
             CheckBackupSupported();
             //var fileName = _fileProvider.Combine(GetBackupDirectoryPath(), $"database_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(10)}.{NopCommonDefaults.DbBackupFileExtension}");
 
-            var commandText = $"BACKUP DATABASE [{_dataConnection.Connection.Database}] TO DISK = '{fileName}' WITH FORMAT";
-            _dataConnection.Execute(commandText);
+            var commandText = $"BACKUP DATABASE [{CurrentConnection.Connection.Database}] TO DISK = '{fileName}' WITH FORMAT";
+            CurrentConnection.Execute(commandText);
         }
 
         /// <summary>
@@ -255,10 +255,10 @@ namespace Nop.Data
                 "BEGIN\n" +
                 "RAISERROR (@ErrorMessage, 16, 1)\n" +
                 "END",
-                _dataConnection.Connection.Database,
+                CurrentConnection.Connection.Database,
                 backupFileName);
 
-            _dataConnection.Execute(commandText);
+            CurrentConnection.Execute(commandText);
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace Nop.Data
                         DECLARE @TableName sysname 
                         DECLARE cur_reindex CURSOR FOR
                         SELECT table_name
-                        FROM [{_dataConnection.Connection.Database}].information_schema.tables
+                        FROM [{CurrentConnection.Connection.Database}].information_schema.tables
                         WHERE table_type = 'base table'
                         OPEN cur_reindex
                         FETCH NEXT FROM cur_reindex INTO @TableName
@@ -282,7 +282,7 @@ namespace Nop.Data
                         CLOSE cur_reindex
                         DEALLOCATE cur_reindex";
 
-            _dataConnection.Execute(commandText);
+            CurrentConnection.Execute(commandText);
         }
 
         public virtual string BuildConnectionString(INopConnectionStringInfo nopConnectionString)

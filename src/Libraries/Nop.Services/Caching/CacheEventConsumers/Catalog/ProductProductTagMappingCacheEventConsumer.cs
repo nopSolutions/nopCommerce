@@ -3,7 +3,7 @@
 namespace Nop.Services.Caching.CacheEventConsumers.Catalog
 {
     /// <summary>
-    /// Represents a product-product tag mapping class
+    /// Represents a product-product tag mapping  cache event consumer
     /// </summary>
     public partial class ProductProductTagMappingCacheEventConsumer : CacheEventConsumer<ProductProductTagMapping>
     {
