@@ -299,15 +299,7 @@
         /// {0} : product ID
         /// </remarks>
         public static string ProductAttributeCombinationsAllCacheKey => "Nop.productattributecombination.all-{0}";
-
-        /// <summary>
-        /// Key for caching of a value indicating whether a product has product attributes
-        /// </summary>
-        /// <remarks>
-        /// {0} : product id
-        /// </remarks>
-        public static string ProductHasProductAttributesCacheKey => "Nop.productattribute.producthasattributes.id-{0}";
-
+        
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
