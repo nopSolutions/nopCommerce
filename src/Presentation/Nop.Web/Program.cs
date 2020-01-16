@@ -1,18 +1,25 @@
-﻿using Microsoft.AspNetCore;
+﻿using System.Threading.Tasks;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace Nop.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            var host = WebHost.CreateDefaultBuilder(args)
-                .UseKestrel(options => options.AddServerHeader = false)
-                .UseStartup<Startup>()
+            var host = Host.CreateDefaultBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseIISIntegration();
+                })
+                // Add a new service provider configuration
                 .Build();
 
-            host.Run();
+            await host.RunAsync();
         }
     }
 }

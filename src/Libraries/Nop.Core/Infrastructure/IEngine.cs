@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Autofac;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Configuration;
@@ -19,8 +21,7 @@ namespace Nop.Core.Infrastructure
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration of the application</param>
         /// <param name="nopConfig">Nop configuration parameters</param>
-        /// <returns>Service provider</returns>
-        IServiceProvider ConfigureServices(IServiceCollection services, IConfiguration configuration, NopConfig nopConfig);
+        void ConfigureServices(IServiceCollection services, IConfiguration configuration, NopConfig nopConfig);
 
         /// <summary>
         /// Configure HTTP request pipeline
@@ -55,5 +56,12 @@ namespace Nop.Core.Infrastructure
         /// <param name="type">Type of service</param>
         /// <returns>Resolved service</returns>
         object ResolveUnregistered(Type type);
+
+        /// <summary>
+        /// Register dependencies
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        /// <param name="nopConfig">Nop configuration parameters</param>
+        void RegisterDependencies(ContainerBuilder containerBuilder, NopConfig nopConfig);
     }
 }

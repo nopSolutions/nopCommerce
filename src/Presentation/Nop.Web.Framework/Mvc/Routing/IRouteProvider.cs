@@ -10,8 +10,8 @@ namespace Nop.Web.Framework.Mvc.Routing
         /// <summary>
         /// Register routes
         /// </summary>
-        /// <param name="routeBuilder">Route builder</param>
-        void RegisterRoutes(IRouteBuilder routeBuilder);
+        /// <param name="endpointRoute">Route builder</param>
+        void RegisterRoutes(IEndpointRouteBuilder endpointRoute);
 
         /// <summary>
         /// Gets a priority of route provider

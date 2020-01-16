@@ -61,7 +61,7 @@ namespace Nop.Web.Factories
                 {
                     WidgetViewComponentName = widget.GetWidgetViewComponentName(widgetZone),
                     WidgetViewComponentArguments = new RouteValueDictionary { ["widgetZone"] = widgetZone }
-                }));
+                }).ToList());
 
             //"WidgetViewComponentArguments" property of widget models depends on "additionalData".
             //We need to clone the cached model before modifications (the updated one should not be cached)

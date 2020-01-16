@@ -62,6 +62,7 @@ namespace Nop.Services.Authentication
                 }
                 catch
                 {
+                    Schemes.RemoveScheme(scheme.Name);
                     // ignored
                 }
             }

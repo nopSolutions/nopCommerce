@@ -53,8 +53,13 @@ namespace Nop.Services.Tasks
             if (Seconds <= 0)
                 return;
 
+            if (IsRunning)
+                return;
+
             StartedUtc = DateTime.UtcNow;
             IsRunning = true;
+
+            HttpClient client = null;
 
             foreach (var taskName in _tasks.Keys)
             {
@@ -62,7 +67,7 @@ namespace Nop.Services.Tasks
                 try
                 {
                     //create and configure client
-                    var client = EngineContext.Current.Resolve<IHttpClientFactory>().CreateClient(NopHttpDefaults.DefaultHttpClient);
+                    client = EngineContext.Current.Resolve<IHttpClientFactory>().CreateClient(NopHttpDefaults.DefaultHttpClient);
                     if (_timeout.HasValue)
                         client.Timeout = TimeSpan.FromMilliseconds(_timeout.Value);
 
@@ -72,8 +77,8 @@ namespace Nop.Services.Tasks
                 }
                 catch (Exception ex)
                 {
-                    var _serviceScopeFactory = EngineContext.Current.Resolve<IServiceScopeFactory>();
-                    using (var scope = _serviceScopeFactory.CreateScope())
+                    var serviceScopeFactory = EngineContext.Current.Resolve<IServiceScopeFactory>();
+                    using (var scope = serviceScopeFactory.CreateScope())
                     {
                         // Resolve
                         var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
@@ -82,10 +87,17 @@ namespace Nop.Services.Tasks
 
                         var message = ex.InnerException?.GetType() == typeof(TaskCanceledException) ? localizationService.GetResource("ScheduleTasks.TimeoutError") : ex.Message;
 
-                        message = string.Format(localizationService.GetResource("ScheduleTasks.Error"), taskName,
-                            message, taskType, storeContext.CurrentStore.Name, _scheduleTaskUrl);
+                        message = string.Format(localizationService.GetResource("ScheduleTasks.Error"), taskName, message, taskType, storeContext.CurrentStore.Name, _scheduleTaskUrl);
 
                         logger.Error(message, ex);
+                    }
+                }
+                finally
+                {
+                    if (client != null)
+                    {
+                        client.Dispose();
+                        client = null;
                     }
                 }
             }

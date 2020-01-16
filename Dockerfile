@@ -1,16 +1,16 @@
-# create the build instance 
-FROM microsoft/dotnet:2.2-sdk AS build
+# create the build instance
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine AS build
 
-WORKDIR /src                                                                    
+WORKDIR /src
 COPY ./src ./
 
 # restore solution
 RUN dotnet restore NopCommerce.sln
 
-WORKDIR /src/Presentation/Nop.Web   
+WORKDIR /src/Presentation/Nop.Web
 
-# build project   
-RUN dotnet build Nop.Web.csproj -c Release
+# build project
+RUN dotnet build Nop.Web.csproj --no-restore -c Release
 
 # build plugins
 WORKDIR /src/Plugins/Nop.Plugin.DiscountRules.CustomerRoles
@@ -47,20 +47,20 @@ WORKDIR /src/Plugins/Nop.Plugin.Widgets.NivoSlider
 RUN dotnet build Nop.Plugin.Widgets.NivoSlider.csproj
 
 # publish project
-WORKDIR /src/Presentation/Nop.Web   
-RUN dotnet publish Nop.Web.csproj -c Release -o /app/published
+WORKDIR /src/Presentation/Nop.Web
+RUN dotnet publish Nop.Web.csproj --no-restore --no-build -c Release -o /app/published
 
-# create the runtime instance 
-FROM microsoft/dotnet:2.2-aspnetcore-runtime-alpine AS runtime 
+# create the runtime instance
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine AS runtime
 
 # add globalization support
 RUN apk add --no-cache icu-libs
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
-WORKDIR /app        
+WORKDIR /app
 RUN mkdir bin
-RUN mkdir logs  
-                                                            
+RUN mkdir logs
+
 COPY --from=build /app/published .
-                            
+
 ENTRYPOINT ["dotnet", "Nop.Web.dll"]

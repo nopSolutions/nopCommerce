@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Hosting;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
@@ -30,7 +31,7 @@ namespace Nop.Web.Framework.UI
         private readonly BundleFileProcessor _processor;
         private readonly CommonSettings _commonSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly INopFileProvider _fileProvider;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IUrlHelperFactory _urlHelperFactory;
@@ -59,7 +60,7 @@ namespace Nop.Web.Framework.UI
         public PageHeadBuilder(
             CommonSettings commonSettings,
             IActionContextAccessor actionContextAccessor,
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             INopFileProvider fileProvider,
             IStaticCacheManager cacheManager,
             IUrlHelperFactory urlHelperFactory,
@@ -156,8 +157,8 @@ namespace Nop.Web.Framework.UI
         /// <returns>Generated string</returns>
         public virtual string GenerateTitle(bool addDefaultTitle)
         {
-            var result = "";
             var specificTitle = string.Join(_seoSettings.PageTitleSeparator, _titleParts.AsEnumerable().Reverse().ToArray());
+            string result;
             if (!string.IsNullOrEmpty(specificTitle))
             {
                 if (addDefaultTitle)
@@ -166,16 +167,16 @@ namespace Nop.Web.Framework.UI
                     switch (_seoSettings.PageTitleSeoAdjustment)
                     {
                         case PageTitleSeoAdjustment.PagenameAfterStorename:
-                            {
-                                result = string.Join(_seoSettings.PageTitleSeparator, _seoSettings.DefaultTitle, specificTitle);
-                            }
-                            break;
+                        {
+                            result = string.Join(_seoSettings.PageTitleSeparator, _seoSettings.DefaultTitle, specificTitle);
+                        }
+                        break;
                         case PageTitleSeoAdjustment.StorenameAfterPagename:
                         default:
-                            {
-                                result = string.Join(_seoSettings.PageTitleSeparator, specificTitle, _seoSettings.DefaultTitle);
-                            }
-                            break;
+                        {
+                            result = string.Join(_seoSettings.PageTitleSeparator, specificTitle, _seoSettings.DefaultTitle);
+                        }
+                        break;
 
                     }
                 }
@@ -190,6 +191,7 @@ namespace Nop.Web.Framework.UI
                 //store name only
                 result = _seoSettings.DefaultTitle;
             }
+
             return result;
         }
 
@@ -360,7 +362,7 @@ namespace Nop.Web.Framework.UI
                     foreach (var item in partsToBundle)
                     {
                         new PathString(urlHelper.Content(debugModel ? item.DebugSrc : item.Src))
-                            .StartsWithSegments(urlHelper.ActionContext.HttpContext.Request.PathBase, out PathString path);
+                            .StartsWithSegments(urlHelper.ActionContext.HttpContext.Request.PathBase, out var path);
                         var src = path.Value.TrimStart('/');
 
                         //check whether this file exists, if not it should be stored into /wwwroot directory

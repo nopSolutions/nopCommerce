@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Configuration;
@@ -22,6 +23,7 @@ using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media.RoxyFileman;
+using Nop.Services.Plugins;
 using Nop.Web.Framework.Globalization;
 using Nop.Web.Framework.Mvc.Routing;
 using WebMarkupMin.AspNetCore2;
@@ -42,6 +44,25 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             EngineContext.Current.ConfigureRequestPipeline(application);
         }
 
+        public static void StartEngine(this IApplicationBuilder application)
+        {
+            var engine = EngineContext.Current;
+
+            //further actions are performed only when the database is installed
+            if (DataSettingsManager.DatabaseIsInstalled)
+            {
+                //initialize and start schedule tasks
+                Services.Tasks.TaskManager.Instance.Initialize();
+                Services.Tasks.TaskManager.Instance.Start();
+            }
+
+            //log application start
+            engine.Resolve<ILogger>().Information("Application started");
+
+            //install plugins
+            engine.Resolve<IPluginService>().InstallPlugins();
+        }
+
         /// <summary>
         /// Add exception handling
         /// </summary>
@@ -49,7 +70,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static void UseNopExceptionHandler(this IApplicationBuilder application)
         {
             var nopConfig = EngineContext.Current.Resolve<NopConfig>();
-            var hostingEnvironment = EngineContext.Current.Resolve<IHostingEnvironment>();
+            var hostingEnvironment = EngineContext.Current.Resolve<IWebHostEnvironment>();
             var useDetailedExceptionPage = nopConfig.DisplayFullErrorStack || hostingEnvironment.IsDevelopment();
             if (useDetailedExceptionPage)
             {
@@ -178,7 +199,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseNopStaticFiles(this IApplicationBuilder application)
         {
-            void staticFileResponse(StaticFileResponseContext context)
+            static void staticFileResponse(StaticFileResponseContext context)
             {
                 if (!DataSettingsManager.DatabaseIsInstalled)
                     return;
@@ -335,10 +356,14 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseNopMvc(this IApplicationBuilder application)
         {
-            application.UseMvc(routeBuilder =>
+            //add routing
+            application.UseRouting();
+
+            //add new endpoint routing features
+            application.UseEndpoints(endpoints =>
             {
                 //register all routes
-                EngineContext.Current.Resolve<IRoutePublisher>().RegisterRoutes(routeBuilder);
+                EngineContext.Current.Resolve<IRoutePublisher>().RegisterRoutes(endpoints);
             });
         }
 

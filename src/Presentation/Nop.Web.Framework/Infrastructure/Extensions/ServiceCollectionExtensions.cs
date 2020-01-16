@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
-using EasyCaching.Core;
-using EasyCaching.InMemory;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -16,6 +14,7 @@ using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.WindowsAzure.Storage;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using Nop.Core;
 using Nop.Core.Configuration;
@@ -56,8 +55,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         /// <param name="configuration">Configuration of the application</param>
         /// <param name="hostingEnvironment">Hosting environment</param>
         /// <returns>Configured service provider</returns>
-        public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services,
-            IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        public static (IEngine, NopConfig) ConfigureApplicationServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             //most of API providers require TLS 1.2 nowadays
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -80,22 +78,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             //create engine and configure service provider
             var engine = EngineContext.Create();
-            var serviceProvider = engine.ConfigureServices(services, configuration, nopConfig);
-            
-            //initialize and start schedule tasks
-            TaskManager.Instance.Initialize();
-            TaskManager.Instance.Start();
+            engine.ConfigureServices(services, configuration, nopConfig);
 
-            if (!DataSettingsManager.DatabaseIsInstalled)
-                return serviceProvider;
-
-            //log application start
-            engine.Resolve<ILogger>().Information("Application started");
-
-            //install plugins
-            engine.Resolve<IPluginService>().InstallPlugins();
-
-            return serviceProvider;
+            return (engine, nopConfig);
         }
 
         /// <summary>
@@ -286,13 +271,14 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static IMvcBuilder AddNopMvc(this IServiceCollection services)
         {
             //add basic MVC feature
-            var mvcBuilder = services.AddMvc();
+            var mvcBuilder = services.AddControllersWithViews();
 
-            //we use legacy (from previous versions) routing logic
-            mvcBuilder.AddMvcOptions(options => options.EnableEndpointRouting = false);
+            //sets the default value of settings on MvcOptions to match the behavior of asp.net core mvc 3.1
+            mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Latest);
 
-            //sets the default value of settings on MvcOptions to match the behavior of asp.net core mvc 2.2
-            mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+#if DEBUG
+            mvcBuilder.AddRazorRuntimeCompilation();
+#endif
 
             var nopConfig = services.BuildServiceProvider().GetRequiredService<NopConfig>();
             if (nopConfig.UseSessionStateTempDataProvider)
@@ -313,8 +299,11 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 });
             }
 
+            services.AddRazorPages();
+
+            //add Newtonsoft.Json for mvc serializer/deserializer provider
             //MVC now serializes JSON with camel case names by default, use this code to avoid it
-            mvcBuilder.AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+            mvcBuilder.AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
             //add custom display metadata provider
             mvcBuilder.AddMvcOptions(options => options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider()));

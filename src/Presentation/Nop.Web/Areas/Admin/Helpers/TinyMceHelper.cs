@@ -20,7 +20,7 @@ namespace Nop.Web.Areas.Admin.Helpers
             //Additional languages can be downloaded from the website TinyMCE(https://www.tinymce.com/download/language-packages/)
 
             var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            var hostingEnvironment = EngineContext.Current.Resolve<IHostingEnvironment>();
+            var hostingEnvironment = EngineContext.Current.Resolve<IWebHostEnvironment>();
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
 
             var languageCulture = workContext.WorkingLanguage.LanguageCulture;

@@ -11,30 +11,30 @@
     var attributeChangeScriptsBuilder = new StringBuilder();
     <div class="checkout-attributes">
         <dl>
-            @foreach (var attribute in Model.CheckoutAttributes)
+            @foreach (var attr in Model.CheckoutAttributes)
             {
-                var controlId = $"checkout_attribute_{attribute.Id}";
-                var textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
-                <dt id="@($"checkout_attribute_label_{attribute.Id}")">
+                var controlId = $"checkout_attribute_{attr.Id}";
+                var textPrompt = !string.IsNullOrEmpty(attr.TextPrompt) ? attr.TextPrompt : attr.Name;
+                <dt id="@($"checkout_attribute_label_{attr.Id}")">
                     <label class="text-prompt">
                         @textPrompt
                     </label>
-                    @if (attribute.IsRequired)
+                    @if (attr.IsRequired)
                     {
                         <span class="required">*</span>
                     }
                 </dt>
-                <dd id="@($"checkout_attribute_input_{attribute.Id}")">
-                    @switch (attribute.AttributeControlType)
+                <dd id="@($"checkout_attribute_input_{attr.Id}")">
+                    @switch (attr.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
                             {
                         <select name="@(controlId)" id="@(controlId)">
-                            @if (!attribute.IsRequired)
+                            @if (!attr.IsRequired)
                             {
                                 <option value="0">---</option>
                             }
-                            @foreach (var attributeValue in attribute.Values)
+                            @foreach (var attributeValue in attr.Values)
                             {
                                 var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                     attributeValue.Name :
@@ -48,7 +48,7 @@
                         case AttributeControlType.RadioList:
                             {
                         <ul class="option-list">
-                            @foreach (var attributeValue in attribute.Values)
+                            @foreach (var attributeValue in attr.Values)
                             {
                                 var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                     attributeValue.Name :
@@ -66,13 +66,13 @@
                         case AttributeControlType.ReadonlyCheckboxes:
                             {
                         <ul class="option-list">
-                            @foreach (var attributeValue in attribute.Values)
+                            @foreach (var attributeValue in attr.Values)
                             {
                                 var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                     attributeValue.Name :
                                     T("ShoppingCart.CheckoutAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text; 
                                 <li>
-                                    <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                                    <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attr.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
                                     <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
                                 </li>
                                 attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').on('click', function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
@@ -82,12 +82,12 @@
                             break;
                         case AttributeControlType.TextBox:
                             {
-                                <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" value="@attribute.DefaultValue" />
+                                <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" value="@attr.DefaultValue" />
                             }
                             break;
                         case AttributeControlType.MultilineTextbox:
                             {
-                                <textarea id="@(controlId)" name="@(controlId)">@attribute.DefaultValue</textarea>
+                                <textarea id="@(controlId)" name="@(controlId)">@attr.DefaultValue</textarea>
                             }
                             break;
                         case AttributeControlType.Datepicker:
@@ -98,18 +98,18 @@
                                     asp-year-name="@(controlId + "_year")"
                                     asp-begin-year="@(DateTime.Now.Year)"
                                     asp-end-year="@(DateTime.Now.Year + catalogSettings.CountDisplayedYearsDatePicker)"
-                                    asp-selected-day="@attribute.SelectedDay"
-                                    asp-selected-month="@attribute.SelectedMonth"
-                                    asp-selected-year="@attribute.SelectedYear"
+                                    asp-selected-day="@attr.SelectedDay"
+                                    asp-selected-month="@attr.SelectedMonth"
+                                    asp-selected-year="@attr.SelectedYear"
                                 />
                             }
                             break;
                         case AttributeControlType.FileUpload:
                             {
                                 Download download = null;
-                                if (!string.IsNullOrEmpty(attribute.DefaultValue))
+                                if (!string.IsNullOrEmpty(attr.DefaultValue))
                                 {
-                                    download = downloadService.GetDownloadByGuid(new Guid(attribute.DefaultValue));
+                                    download = downloadService.GetDownloadByGuid(new Guid(attr.DefaultValue));
                                 }
 
                                 //register CSS and JS
@@ -117,7 +117,7 @@
                                 Html.AddScriptParts(ResourceLocation.Footer, "~/lib/fineuploader/jquery.fine-uploader.min.js");
 
                                 //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
-                                var allowedFileExtensions = string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList());
+                                var allowedFileExtensions = string.Join(", ", attr.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList());
 
                                 if (download != null)
                                 {
@@ -165,7 +165,7 @@
                                     $(document).ready(function() {
                                         $("#@(controlId)uploader").fineUploader({
                                             request: {
-                                                endpoint: '@(Url.RouteUrl("UploadFileCheckoutAttribute", new {attributeId = attribute.Id}))'
+                                                endpoint: '@(Url.RouteUrl("UploadFileCheckoutAttribute", new {attributeId = attr.Id}))'
                                             },
                                             template: "@(controlId)-qq-template",
                                             multiple: false,
@@ -210,19 +210,19 @@
                             break;
                         case AttributeControlType.ColorSquares:
                             {
-                                <ul class="option-list attribute-squares color-squares" id="color-squares-@(attribute.Id)">
-                                    @foreach (var attributeValue in attribute.Values)
+                                <ul class="option-list attr-squares color-squares" id="color-squares-@(attr.Id)">
+                                    @foreach (var attributeValue in attr.Values)
                                     {
                                         var attributeName = string.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("ShoppingCart.CheckoutAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text; 
                                         <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
                                             <label for="@(controlId)_@(attributeValue.Id)">
-                                                <span class="attribute-square-container" title="@attributeName">
-                                                    <span class="attribute-square" style="background-color:@(attributeValue.ColorSquaresRgb);">&nbsp;</span>
+                                                <span class="attr-square-container" title="@attributeName">
+                                                    <span class="attr-square" style="background-color:@(attributeValue.ColorSquaresRgb);">&nbsp;</span>
                                                 </span>
                                                 <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
-                                                @*uncomment below to display attribute value name*@
+                                                @*uncomment below to display attr value name*@
                                                 @*<span class="name">@attributeName</span>*@
                                             </label>
                                         </li>
@@ -231,8 +231,8 @@
                                 </ul>
                                 <script asp-location="Footer">
                                     $(document).ready(function() {
-                                        $('.checkout-attributes #color-squares-@(attribute.Id)').on('click', 'input', function (event) {
-                                            $('.checkout-attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
+                                        $('.checkout-attributes #color-squares-@(attr.Id)').on('click', 'input', function (event) {
+                                            $('.checkout-attributes #color-squares-@(attr.Id)').find('li').removeClass('selected-value');
                                             $(this).closest('li').addClass('selected-value');
                                         });
                                    });
@@ -241,7 +241,7 @@
                             break;
                         case AttributeControlType.ImageSquares:
                             {
-                                //not support attribute type
+                                //not support attr type
                             }
                             break;
                     }

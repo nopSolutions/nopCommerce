@@ -1,24 +1,24 @@
 ﻿@model IList<CustomerAttributeModel>
 @using Nop.Core.Domain.Catalog
 @using Nop.Web.Framework.Controllers;
-@foreach (var attribute in Model)
+@foreach (var attr in Model)
 {
-    var controlId = $"{NopAttributePrefixDefaults.Customer}{attribute.Id}";
-    var textPrompt = attribute.Name;
+    var controlId = $"{NopAttributePrefixDefaults.Customer}{attr.Id}";
+    var textPrompt = attr.Name;
 
     <div class="inputs custom-attributes">
         <label>@textPrompt:</label>
         
-        @switch (attribute.AttributeControlType)
+        @switch (attr.AttributeControlType)
         {
             case AttributeControlType.DropdownList:
             {
             <select name="@(controlId)" id="@(controlId)">
-                @if (!attribute.IsRequired)
+                @if (!attr.IsRequired)
                     {
                     <option value="0">---</option>
                     }
-                @foreach (var attributeValue in attribute.Values)
+                @foreach (var attributeValue in attr.Values)
                     {
                     <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeValue.Name</option>
                     }
@@ -28,7 +28,7 @@
             case AttributeControlType.RadioList:
             {
             <ul class="option-list">
-                @foreach (var attributeValue in attribute.Values)
+                @foreach (var attributeValue in attr.Values)
                     {
                     <li>
                         <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
@@ -42,10 +42,10 @@
             case AttributeControlType.ReadonlyCheckboxes:
             {
             <ul class="option-list">
-                @foreach (var attributeValue in attribute.Values)
+                @foreach (var attributeValue in attr.Values)
                     {
                     <li>
-                        <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                        <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attr.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
                         <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
                     </li>
                     }
@@ -54,12 +54,12 @@
             break;
             case AttributeControlType.TextBox:
             {
-                <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" value="@attribute.DefaultValue" />
+                <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" value="@attr.DefaultValue" />
             }
             break;
             case AttributeControlType.MultilineTextbox:
             {
-            <textarea id="@(controlId)" name="@(controlId)">@attribute.DefaultValue</textarea>
+            <textarea id="@(controlId)" name="@(controlId)">@attr.DefaultValue</textarea>
                 }
                 break;
             case AttributeControlType.Datepicker:
@@ -67,11 +67,11 @@
             case AttributeControlType.ColorSquares:
             case AttributeControlType.ImageSquares:
                 {
-                    //not support attribute type
+                    //not support attr type
                 }
                 break;
         }
-        @if (attribute.IsRequired)
+        @if (attr.IsRequired)
         {
             <nop-required />
         }

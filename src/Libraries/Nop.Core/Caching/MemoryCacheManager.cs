@@ -42,7 +42,7 @@ namespace Nop.Core.Caching
             if (cacheTime <= 0)
                 return acquire();
 
-            return _provider.Get(key, acquire, TimeSpan.FromMinutes(cacheTime ?? NopCachingDefaults.CacheTime))
+            return _provider.Get(key, () => CheckEnumerable(key, acquire()), TimeSpan.FromMinutes(cacheTime ?? NopCachingDefaults.CacheTime))
                 .Value;
         }
 
@@ -59,7 +59,7 @@ namespace Nop.Core.Caching
             if (cacheTime <= 0)
                 return await acquire();
 
-            var t = await _provider.GetAsync(key, acquire, TimeSpan.FromMinutes(cacheTime ?? NopCachingDefaults.CacheTime));
+            var t = await _provider.GetAsync(key, async () => CheckEnumerable(key, await acquire()), TimeSpan.FromMinutes(cacheTime ?? NopCachingDefaults.CacheTime));
             return t.Value;
         }
 
@@ -74,7 +74,7 @@ namespace Nop.Core.Caching
             if (cacheTime <= 0)
                 return;
 
-            _provider.Set(key, data, TimeSpan.FromMinutes(cacheTime));
+            _provider.Set(key, CheckEnumerable(key, data), TimeSpan.FromMinutes(cacheTime));
         }
 
         /// <summary>
@@ -165,6 +165,24 @@ namespace Nop.Core.Caching
             _disposed = true;
         }
 
+        /// <summary>
+        /// Determines whether an entry is an enumerable extension method.
+        /// </summary>
+        /// <param name="key">The key of the entry.</param>
+        /// <param name="value">The value to test.</param>
+        /// <returns>True when it is an extension method. False otherwise.</returns>
+        private T CheckEnumerable<T>(string key, T value)
+        {
+            if (value != null && value.GetType().IsGenericType)
+            {
+                var genericType = value.GetType().GetGenericTypeDefinition();
+                if (genericType.FullName.StartsWith("System.Linq.Enumerable"))
+                {
+                    throw new InvalidOperationException($"The cache entry with key {key} is of type {value.GetType()}, it's a Function call. It is not serializable and might reference a DbContext (not thread safe). Cache it as a list.");
+                }
+            }
+            return value;
+        }
         #endregion
     }
 }

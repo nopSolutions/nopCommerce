@@ -19,7 +19,7 @@ namespace Nop.Core.Infrastructure
         /// Initializes a new instance of a NopFileProvider
         /// </summary>
         /// <param name="hostingEnvironment">Hosting environment</param>
-        public NopFileProvider(IHostingEnvironment hostingEnvironment)
+        public NopFileProvider(IWebHostEnvironment hostingEnvironment)
             : base(File.Exists(hostingEnvironment.WebRootPath) ? Path.GetDirectoryName(hostingEnvironment.WebRootPath) : hostingEnvironment.WebRootPath)
         {
             var path = hostingEnvironment.ContentRootPath ?? string.Empty;

@@ -255,6 +255,11 @@ namespace Nop.Web.Controllers
                 var productUrl = Url.RouteUrl("Product", new { SeName = _urlRecordService.GetSeName(product) }, _webHelper.CurrentRequestProtocol);
                 var productName = _localizationService.GetLocalized(product, x => x.Name);
                 var productDescription = _localizationService.GetLocalized(product, x => x.ShortDescription);
+
+                // Demo database from nopcommerce does not fill these values !
+                if (product.CreatedOnUtc == DateTime.MinValue)
+                    product.CreatedOnUtc = DateTime.UtcNow;
+
                 var item = new RssItem(productName, productDescription, new Uri(productUrl), $"urn:store:{_storeContext.CurrentStore.Id}:newProducts:product:{product.Id}", product.CreatedOnUtc);
                 items.Add(item);
                 //uncomment below if you want to add RSS enclosure for pictures

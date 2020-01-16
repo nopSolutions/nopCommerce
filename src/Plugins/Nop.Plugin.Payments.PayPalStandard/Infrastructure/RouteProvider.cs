@@ -9,19 +9,19 @@ namespace Nop.Plugin.Payments.PayPalStandard.Infrastructure
         /// <summary>
         /// Register routes
         /// </summary>
-        /// <param name="routeBuilder">Route builder</param>
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        /// <param name="endpointRoute">Route builder</param>
+        public void RegisterRoutes(IEndpointRouteBuilder endpointRoute)
         {
             //PDT
-            routeBuilder.MapRoute("Plugin.Payments.PayPalStandard.PDTHandler", "Plugins/PaymentPayPalStandard/PDTHandler",
+            endpointRoute.MapControllerRoute("Plugin.Payments.PayPalStandard.PDTHandler", "Plugins/PaymentPayPalStandard/PDTHandler",
                  new { controller = "PaymentPayPalStandard", action = "PDTHandler" });
 
             //IPN
-            routeBuilder.MapRoute("Plugin.Payments.PayPalStandard.IPNHandler", "Plugins/PaymentPayPalStandard/IPNHandler",
+            endpointRoute.MapControllerRoute("Plugin.Payments.PayPalStandard.IPNHandler", "Plugins/PaymentPayPalStandard/IPNHandler",
                  new { controller = "PaymentPayPalStandard", action = "IPNHandler" });
 
             //Cancel
-            routeBuilder.MapRoute("Plugin.Payments.PayPalStandard.CancelOrder", "Plugins/PaymentPayPalStandard/CancelOrder",
+            endpointRoute.MapControllerRoute("Plugin.Payments.PayPalStandard.CancelOrder", "Plugins/PaymentPayPalStandard/CancelOrder",
                  new { controller = "PaymentPayPalStandard", action = "CancelOrder" });
         }
 

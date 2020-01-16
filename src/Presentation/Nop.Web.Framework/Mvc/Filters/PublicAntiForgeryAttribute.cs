@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Nop.Core.Domain.Security;
 
 namespace Nop.Web.Framework.Mvc.Filters
@@ -49,12 +49,13 @@ namespace Nop.Web.Framework.Mvc.Filters
         /// <summary>
         /// Represents a filter that enables anti-forgery feature for the public store
         /// </summary>
-        private class PublicAntiForgeryFilter : ValidateAntiforgeryTokenAuthorizationFilter
+        private class PublicAntiForgeryFilter : IAsyncAuthorizationFilter, IAntiforgeryPolicy
         {
             #region Fields
 
             private readonly bool _ignoreFilter;
             private readonly SecuritySettings _securitySettings;
+            private readonly IAntiforgery _antiforgery;
 
             #endregion
 
@@ -62,25 +63,50 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             public PublicAntiForgeryFilter(bool ignoreFilter,
                 SecuritySettings securitySettings,
-                IAntiforgery antiforgery,
-                ILoggerFactory loggerFactory) : base(antiforgery, loggerFactory)
+                IAntiforgery antiforgery)
             {
                 _ignoreFilter = ignoreFilter;
                 _securitySettings = securitySettings;
+                _antiforgery = antiforgery;
             }
 
             #endregion
 
             #region Methods
 
+            public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
+            {
+                if (context == null)
+                {
+                    throw new ArgumentNullException(nameof(context));
+                }
+
+                if (!context.IsEffectivePolicy<IAntiforgeryPolicy>(this))
+                {
+                    return;
+                }
+
+                if (ShouldValidate(context))
+                {
+                    try
+                    {
+                        await _antiforgery.ValidateRequestAsync(context.HttpContext);
+                    }
+                    catch
+                    {
+                        context.Result = new AntiforgeryValidationFailedResult();
+                    }
+                }
+            }
+
             /// <summary>
             /// Check whether the action should be validated
             /// </summary>
             /// <param name="context">Authorization filter context</param>
             /// <returns>True if the action should be validated; otherwise false</returns>
-            protected override bool ShouldValidate(AuthorizationFilterContext context)
+            protected virtual bool ShouldValidate(AuthorizationFilterContext context)
             {
-                if (!base.ShouldValidate(context))
+                if (context == null)
                     return false;
 
                 if (context.HttpContext.Request == null)

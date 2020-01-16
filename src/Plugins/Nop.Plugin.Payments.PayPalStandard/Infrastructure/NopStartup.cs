@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
@@ -17,6 +18,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Infrastructure
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration of the application</param>
+        /// <param name="environment">Environment of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             //client to request PayPal services

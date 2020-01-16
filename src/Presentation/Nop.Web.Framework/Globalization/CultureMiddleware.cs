@@ -70,7 +70,7 @@ namespace Nop.Web.Framework.Globalization
         /// <param name="webHelper">Web helper</param>
         /// <param name="workContext">Work context</param>
         /// <returns>Task</returns>
-        public Task Invoke(Microsoft.AspNetCore.Http.HttpContext context, IWebHelper webHelper, IWorkContext workContext)
+        public Task Invoke(HttpContext context, IWebHelper webHelper, IWorkContext workContext)
         {
             //set culture
             SetWorkingCulture(webHelper, workContext);

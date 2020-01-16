@@ -37,7 +37,7 @@ namespace Nop.Web.Areas.Admin.Helpers
                 {
                     Text = categoryService.GetFormattedBreadCrumb(c, categories),
                     Value = c.Id.ToString()
-                });
+                }).ToList();
             });
 
             var result = new List<SelectListItem>();
@@ -77,7 +77,7 @@ namespace Nop.Web.Areas.Admin.Helpers
                 {
                     Text = m.Name,
                     Value = m.Id.ToString()
-                });
+                }).ToList();
             });
 
             var result = new List<SelectListItem>();
@@ -117,7 +117,7 @@ namespace Nop.Web.Areas.Admin.Helpers
                 {
                     Text = v.Name,
                     Value = v.Id.ToString()
-                });
+                }).ToList();
             });
 
             var result = new List<SelectListItem>();

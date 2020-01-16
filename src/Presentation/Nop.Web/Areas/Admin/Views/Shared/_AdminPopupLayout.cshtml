@@ -3,12 +3,12 @@
 @inject CommonSettings commonSettings
 @inject IEventPublisher eventPublisher
 @inject INopFileProvider fileProvider;
-@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment HostingEnvironment
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment HostingEnvironment
 @using System.Globalization
 @using Nop.Web.Framework.UI;
 @using Nop.Core;
 @using Nop.Core.Domain.Localization
-@using Nop.Services.Common
+@using Nop.Core.Caching
 @inject Nop.Services.Localization.ILanguageService languageService
 @{
     //Kendo UI

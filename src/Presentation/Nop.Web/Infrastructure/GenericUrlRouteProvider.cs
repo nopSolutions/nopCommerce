@@ -16,40 +16,39 @@ namespace Nop.Web.Infrastructure
         /// <summary>
         /// Register routes
         /// </summary>
-        /// <param name="routeBuilder">Route builder</param>
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        /// <param name="endpointRoute">Route builder</param>
+        public void RegisterRoutes(IEndpointRouteBuilder endpointRoute)
         {
             //and default one
-            routeBuilder.MapRoute("Default", "{controller}/{action}/{id?}");
+            endpointRoute.MapDefaultControllerRoute();
 
             //generic URLs
-            routeBuilder.MapGenericPathRoute("GenericUrl", "{GenericSeName}",
-                new { controller = "Common", action = "GenericUrl" });
+            endpointRoute.MapDynamicControllerRoute<GenericRouteTransformer>("{GenericSeName}");
 
             //define this routes to use in UI views (in case if you want to customize some of them later)
-            routeBuilder.MapLocalizedRoute("Product", "{SeName}", 
+            endpointRoute.MapControllerRoute("Product", "{SeName}",
                 new { controller = "Product", action = "ProductDetails" });
 
-            routeBuilder.MapLocalizedRoute("Category", "{SeName}", 
+            endpointRoute.MapControllerRoute("Category", "{SeName}",
                 new { controller = "Catalog", action = "Category" });
 
-            routeBuilder.MapLocalizedRoute("Manufacturer", "{SeName}", 
+            endpointRoute.MapControllerRoute("Manufacturer", "{SeName}",
                 new { controller = "Catalog", action = "Manufacturer" });
 
-            routeBuilder.MapLocalizedRoute("Vendor", "{SeName}", 
+            endpointRoute.MapControllerRoute("Vendor", "{SeName}",
                 new { controller = "Catalog", action = "Vendor" });
-            
-            routeBuilder.MapLocalizedRoute("NewsItem", "{SeName}", 
+
+            endpointRoute.MapControllerRoute("NewsItem", "{SeName}",
                 new { controller = "News", action = "NewsItem" });
 
-            routeBuilder.MapLocalizedRoute("BlogPost", "{SeName}", 
+            endpointRoute.MapControllerRoute("BlogPost", "{SeName}",
                 new { controller = "Blog", action = "BlogPost" });
 
-            routeBuilder.MapLocalizedRoute("Topic", "{SeName}", 
+            endpointRoute.MapControllerRoute("Topic", "{SeName}",
                 new { controller = "Topic", action = "TopicDetails" });
 
             //product tags
-            routeBuilder.MapLocalizedRoute("ProductsByTag", "{SeName}",
+            endpointRoute.MapControllerRoute("ProductsByTag", "{SeName}",
                 new { controller = "Catalog", action = "ProductsByTag" });
         }
 
@@ -59,12 +58,9 @@ namespace Nop.Web.Infrastructure
 
         /// <summary>
         /// Gets a priority of route provider
+        /// It should be the last route. we do not set it to -int.MaxValue so it could be overridden (if required)
         /// </summary>
-        public int Priority
-        {
-            //it should be the last route. we do not set it to -int.MaxValue so it could be overridden (if required)
-            get { return -1000000; }
-        }
+        public int Priority => -1000000;
 
         #endregion
     }
