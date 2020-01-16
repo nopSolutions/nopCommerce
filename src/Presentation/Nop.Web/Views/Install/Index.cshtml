@@ -87,6 +87,20 @@
                         toggleCollation();
                     });
 
+                    $(document).ready(function () {
+                        $('#@Html.IdFor(m => m.DataProvider)').on('change', function() {
+                            var integratedSecurityProviders = ['@(DataProviderType.SqlServer.ToString())']
+                            if(!integratedSecurityProviders.includes($(this).val())) {
+                                $('#@Html.IdFor(x => x.IntegratedSecurity)').prop('checked', false);
+                                $('#@Html.IdFor(x => x.IntegratedSecurity)').prop('disabled', true)
+                                
+                                toggleSqlAuthenticationType();
+                            } else {
+                                $('#@Html.IdFor(x => x.IntegratedSecurity)').prop('disabled', false)
+                            }
+                        });
+                    });
+
                     function toggleSqlConnectionInfo() {
                         var connectionStringRaw = $("#@Html.IdFor(x => x.ConnectionStringRaw)").is(':checked');
                         if (connectionStringRaw) {
@@ -182,7 +196,7 @@
                                     </label>
                                 </div>
                                 <div class="col-xs-7">
-                                    <nop-select asp-for="DataProvider" asp-items="Model.AvailableDataProviders" id="dataProviderSwitcher" />
+                                    <nop-select asp-for="DataProvider" asp-items="Model.AvailableDataProviders" />
                                 </div>
                             </div>
                             <div class="form-group">

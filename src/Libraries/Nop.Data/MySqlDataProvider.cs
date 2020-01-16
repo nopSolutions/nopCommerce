@@ -241,11 +241,7 @@ namespace Nop.Data
         /// </summary>
         public virtual void BackupDatabase(string fileName)
         {
-            CheckBackupSupported();
-            //var fileName = _fileProvider.Combine(GetBackupDirectoryPath(), $"database_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(10)}.{NopCommonDefaults.DbBackupFileExtension}");
-
-            //var commandText = $"BACKUP DATABASE [{_dataConnection.Connection.Database}] TO DISK = '{fileName}' WITH FORMAT";
-            //_dataConnection.Execute(commandText);
+            //nothing
         }
 
         /// <summary>
@@ -254,26 +250,7 @@ namespace Nop.Data
         /// <param name="backupFileName">The name of the backup file</param>
         public virtual void RestoreDatabase(string backupFileName)
         {
-            CheckBackupSupported();
-
-            //var commandText = string.Format(
-            //    "DECLARE @ErrorMessage NVARCHAR(4000)\n" +
-            //    "ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE\n" +
-            //    "BEGIN TRY\n" +
-            //    "RESTORE DATABASE [{0}] FROM DISK = '{1}' WITH REPLACE\n" +
-            //    "END TRY\n" +
-            //    "BEGIN CATCH\n" +
-            //    "SET @ErrorMessage = ERROR_MESSAGE()\n" +
-            //    "END CATCH\n" +
-            //    "ALTER DATABASE [{0}] SET MULTI_USER WITH ROLLBACK IMMEDIATE\n" +
-            //    "IF (@ErrorMessage is not NULL)\n" +
-            //    "BEGIN\n" +
-            //    "RAISERROR (@ErrorMessage, 16, 1)\n" +
-            //    "END",
-            //    _dataConnection.Connection.Database,
-            //    backupFileName);
-
-            //_dataConnection.Execute(commandText);
+            //nothing
         }
 
         /// <summary>
@@ -281,23 +258,14 @@ namespace Nop.Data
         /// </summary>
         public virtual void ReIndexTables()
         {
-            var commandText = $@"
-                        DECLARE @TableName sysname 
-                        DECLARE cur_reindex CURSOR FOR
-                        SELECT table_name
-                        FROM [{_dataConnection.Connection.Database}].information_schema.tables
-                        WHERE table_type = 'base table'
-                        OPEN cur_reindex
-                        FETCH NEXT FROM cur_reindex INTO @TableName
-                        WHILE @@FETCH_STATUS = 0
-                            BEGIN
-                                exec('ALTER INDEX ALL ON [' + @TableName + '] REBUILD')
-                                        FETCH NEXT FROM cur_reindex INTO @TableName
-                            END
-                        CLOSE cur_reindex
-                        DEALLOCATE cur_reindex";
+            var tables = _dataConnection.Query<string>($"SHOW TABLES FROM `{_dataConnection.Connection.Database}`").ToList();
+            
+            if(tables?.Count > 0)
+            {
+                _dataConnection.Execute($"OPTIMIZE TABLE {string.Join(',', tables)}");
+            }
 
-            _dataConnection.Execute(commandText);
+            
         }
 
         public virtual string BuildConnectionString(INopConnectionStringInfo nopConnectionString)
@@ -305,20 +273,17 @@ namespace Nop.Data
             if (nopConnectionString is null)
                 throw new ArgumentNullException(nameof(nopConnectionString));
 
+            if(nopConnectionString.IntegratedSecurity)
+                throw new NopException("Data provider supports connection only with login and password");
+
             var builder = new MySqlConnectionStringBuilder
             {
                 Server = nopConnectionString.ServerName,
                 Database = nopConnectionString.DatabaseName,
-                PersistSecurityInfo = false,
                 AllowUserVariables = true,
-                IntegratedSecurity = nopConnectionString.IntegratedSecurity
+                UserID = nopConnectionString.Username,
+                Password = nopConnectionString.Password,
             };
-
-            if (!nopConnectionString.IntegratedSecurity)
-            {
-                builder.UserID = nopConnectionString.Username;
-                builder.Password = nopConnectionString.Password;
-            }
 
             return builder.ConnectionString;
         }
