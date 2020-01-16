@@ -150,7 +150,7 @@ namespace Nop.Data
         /// <param name="sql">Command text</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Returns collection of query result records</returns>
-        IEnumerable<T> Query<T>(string sql, params DataParameter[] parameters);
+        IList<T> Query<T>(string sql, params DataParameter[] parameters);
 
         #endregion
     }

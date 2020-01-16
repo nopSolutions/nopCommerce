@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using LinqToDB;
 using LinqToDB.Data;
@@ -12,26 +11,11 @@ namespace Nop.Data
     /// Represents the Entity repository
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
-    public partial class EntityRepository<TEntity> : IRepository<TEntity>, IDisposable where TEntity : BaseEntity
+    public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
     {
         #region Fields
 
-        private readonly NopDataConnection _dataConnection;
         private ITable<TEntity> _entities;
-
-        #endregion
-
-        #region Ctor
-
-        public EntityRepository()
-        {
-            _dataConnection = new NopDataConnection();
-        }
-
-        public void Dispose()
-        {
-            _dataConnection.Dispose();
-        }
 
         #endregion
 
@@ -56,7 +40,10 @@ namespace Nop.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            entity.Id = _dataConnection.InsertWithInt32Identity(entity);
+            using (var _dataConnection = new NopDataConnection())
+            {
+                entity.Id = _dataConnection.InsertWithInt32Identity(entity);
+            }
         }
 
         /// <summary>
@@ -67,22 +54,24 @@ namespace Nop.Data
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
-
-            _dataConnection.BeginTransaction();
-
-            try
+            using (var _dataConnection = new NopDataConnection())
             {
-                foreach (var entity in entities)
+                _dataConnection.BeginTransaction();
+
+                try
                 {
-                    Insert(entity);
-                }
+                    foreach (var entity in entities)
+                    {
+                        Insert(entity);
+                    }
 
-                _dataConnection.CommitTransaction();
-            }
-            catch
-            {
-                _dataConnection.RollbackTransaction();
-                throw;
+                    _dataConnection.CommitTransaction();
+                }
+                catch
+                {
+                    _dataConnection.RollbackTransaction();
+                    throw;
+                }
             }
         }
 
@@ -95,7 +84,10 @@ namespace Nop.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            _dataConnection.Update(entity);
+            using (var _dataConnection = new NopDataConnection())
+            {
+                _dataConnection.Update(entity);
+            }
         }
 
         /// <summary>
@@ -122,7 +114,10 @@ namespace Nop.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            _dataConnection.Delete(entity);
+            using (var _dataConnection = new NopDataConnection())
+            {
+                _dataConnection.Delete(entity);
+            }
         }
 
         /// <summary>
@@ -149,7 +144,10 @@ namespace Nop.Data
         /// <returns>Collection of query result records</returns>
         public virtual IList<TEntity> EntityFromSql(string storeProcedureName, params DataParameter[] dataParameters)
         {
-            return _dataConnection.ExecuteStoredProcedure<TEntity>(storeProcedureName, dataParameters?.ToArray());
+            using (var _dataConnection = new NopDataConnection())
+            {
+                return _dataConnection.ExecuteStoredProcedure<TEntity>(storeProcedureName, dataParameters?.ToArray());
+            }
         }
 
         /// <summary>
@@ -158,7 +156,10 @@ namespace Nop.Data
         /// <param name="resetIdentity">Performs reset identity column</param>
         public virtual void Truncate(bool resetIdentity = false)
         {
-            _dataConnection.GetTable<TEntity>().Truncate(resetIdentity);
+            using (var _dataConnection = new NopDataConnection())
+            {
+                _dataConnection.GetTable<TEntity>().Truncate(resetIdentity);
+            }
         }
 
         #endregion
@@ -173,7 +174,10 @@ namespace Nop.Data
         /// <summary>
         /// Gets an entity set
         /// </summary>
-        protected virtual ITable<TEntity> Entities => _entities ?? (_entities = _dataConnection.GetTable<TEntity>());
+        protected virtual ITable<TEntity> Entities => _entities ?? (_entities = new DataContext
+        {
+            MappingSchema = NopDataConnection.AdditionalSchema
+        }.GetTable<TEntity>());
 
         #endregion
     }

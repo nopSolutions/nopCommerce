@@ -173,8 +173,11 @@ namespace Nop.Data
         public void ExecuteSqlScript(string sql)
         {
             var sqlCommands = GetCommandsFromScript(sql);
-            foreach (var command in sqlCommands)
-                CurrentConnection.Execute(command);
+            using (var currentConnection = new NopDataConnection())
+            {
+                foreach (var command in sqlCommands)
+                    currentConnection.Execute(command);
+            }
         }
 
         /// <summary>
@@ -197,12 +200,15 @@ namespace Nop.Data
         /// <returns>Integer identity; null if cannot get the result</returns>
         public virtual int? GetTableIdent<T>() where T : BaseEntity
         {
-            var tableName = CurrentConnection.GetTable<T>().TableName;
+            using (var currentConnection = new NopDataConnection())
+            {
+                var tableName = currentConnection.GetTable<T>().TableName;
 
-            var result = CurrentConnection.Query<decimal?>($"SELECT IDENT_CURRENT('[{tableName}]') as Value")
-                .FirstOrDefault();
+                var result = currentConnection.Query<decimal?>($"SELECT IDENT_CURRENT('[{tableName}]') as Value")
+                    .FirstOrDefault();
 
-            return result.HasValue ? Convert.ToInt32(result) : 1;
+                return result.HasValue ? Convert.ToInt32(result) : 1;
+            }
         }
 
         /// <summary>
@@ -212,13 +218,16 @@ namespace Nop.Data
         /// <param name="ident">Identity value</param>
         public virtual void SetTableIdent<T>(int ident) where T : BaseEntity
         {
-            var currentIdent = GetTableIdent<T>();
-            if (!currentIdent.HasValue || ident <= currentIdent.Value)
-                return;
+            using (var currentConnection = new NopDataConnection())
+            {
+                var currentIdent = GetTableIdent<T>();
+                if (!currentIdent.HasValue || ident <= currentIdent.Value)
+                    return;
 
-            var tableName = CurrentConnection.GetTable<T>().TableName;
+                var tableName = currentConnection.GetTable<T>().TableName;
 
-            CurrentConnection.Execute($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
+                currentConnection.Execute($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
+            }
         }
 
         /// <summary>
@@ -229,8 +238,11 @@ namespace Nop.Data
             CheckBackupSupported();
             //var fileName = _fileProvider.Combine(GetBackupDirectoryPath(), $"database_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(10)}.{NopCommonDefaults.DbBackupFileExtension}");
 
-            var commandText = $"BACKUP DATABASE [{CurrentConnection.Connection.Database}] TO DISK = '{fileName}' WITH FORMAT";
-            CurrentConnection.Execute(commandText);
+            using (var currentConnection = new NopDataConnection())
+            {
+                var commandText = $"BACKUP DATABASE [{currentConnection.Connection.Database}] TO DISK = '{fileName}' WITH FORMAT";
+                currentConnection.Execute(commandText);
+            }
         }
 
         /// <summary>
@@ -241,24 +253,27 @@ namespace Nop.Data
         {
             CheckBackupSupported();
 
-            var commandText = string.Format(
-                "DECLARE @ErrorMessage NVARCHAR(4000)\n" +
-                "ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE\n" +
-                "BEGIN TRY\n" +
-                "RESTORE DATABASE [{0}] FROM DISK = '{1}' WITH REPLACE\n" +
-                "END TRY\n" +
-                "BEGIN CATCH\n" +
-                "SET @ErrorMessage = ERROR_MESSAGE()\n" +
-                "END CATCH\n" +
-                "ALTER DATABASE [{0}] SET MULTI_USER WITH ROLLBACK IMMEDIATE\n" +
-                "IF (@ErrorMessage is not NULL)\n" +
-                "BEGIN\n" +
-                "RAISERROR (@ErrorMessage, 16, 1)\n" +
-                "END",
-                CurrentConnection.Connection.Database,
-                backupFileName);
+            using (var currentConnection = new NopDataConnection())
+            {
+                var commandText = string.Format(
+                    "DECLARE @ErrorMessage NVARCHAR(4000)\n" +
+                    "ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE\n" +
+                    "BEGIN TRY\n" +
+                    "RESTORE DATABASE [{0}] FROM DISK = '{1}' WITH REPLACE\n" +
+                    "END TRY\n" +
+                    "BEGIN CATCH\n" +
+                    "SET @ErrorMessage = ERROR_MESSAGE()\n" +
+                    "END CATCH\n" +
+                    "ALTER DATABASE [{0}] SET MULTI_USER WITH ROLLBACK IMMEDIATE\n" +
+                    "IF (@ErrorMessage is not NULL)\n" +
+                    "BEGIN\n" +
+                    "RAISERROR (@ErrorMessage, 16, 1)\n" +
+                    "END",
+                    currentConnection.Connection.Database,
+                    backupFileName);
 
-            CurrentConnection.Execute(commandText);
+                currentConnection.Execute(commandText);
+            }
         }
 
         /// <summary>
@@ -266,11 +281,13 @@ namespace Nop.Data
         /// </summary>
         public virtual void ReIndexTables()
         {
-            var commandText = $@"
+            using (var currentConnection = new NopDataConnection())
+            {
+                var commandText = $@"
                         DECLARE @TableName sysname 
                         DECLARE cur_reindex CURSOR FOR
                         SELECT table_name
-                        FROM [{CurrentConnection.Connection.Database}].information_schema.tables
+                        FROM [{currentConnection.Connection.Database}].information_schema.tables
                         WHERE table_type = 'base table'
                         OPEN cur_reindex
                         FETCH NEXT FROM cur_reindex INTO @TableName
@@ -282,7 +299,8 @@ namespace Nop.Data
                         CLOSE cur_reindex
                         DEALLOCATE cur_reindex";
 
-            CurrentConnection.Execute(commandText);
+                currentConnection.Execute(commandText);
+            }
         }
 
         public virtual string BuildConnectionString(INopConnectionStringInfo nopConnectionString)
