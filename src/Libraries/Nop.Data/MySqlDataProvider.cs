@@ -29,8 +29,8 @@ namespace Nop.Data
         protected override void ConfigureDataContext(IDataContext dataContext)
         {
             dataContext.MappingSchema.SetDataType(
-               typeof(string),
-               new SqlDataType(DataType.Text, typeof(string)));
+                typeof(string),
+                new SqlDataType(DataType.Text, typeof(string)));
 
             dataContext.MappingSchema.SetDataType(
                 typeof(Guid),
@@ -129,35 +129,24 @@ namespace Nop.Data
         private static IList<string> GetCommandsFromScript(string sql)
         {
             var commands = new List<string>();
+            
+            var batches = Regex.Split(sql, @"DELIMITER \;", RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
-            //origin from the Microsoft.EntityFrameworkCore.Migrations.SqlServerMigrationsSqlGenerator.Generate method
-            sql = Regex.Replace(sql, @"\\\r?\n", string.Empty);
-            var batches = Regex.Split(sql, @"^\s*(GO[ \t]+[0-9]+|GO)(?:\s+|$)", RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-            for (var i = 0; i < batches.Length; i++)
+            if(batches?.Length > 0)
             {
-                if (string.IsNullOrWhiteSpace(batches[i]) || batches[i].StartsWith("GO", StringComparison.OrdinalIgnoreCase))
-                    continue;
-
-                var count = 1;
-                if (i != batches.Length - 1 && batches[i + 1].StartsWith("GO", StringComparison.OrdinalIgnoreCase))
-                {
-                    var match = Regex.Match(batches[i + 1], "([0-9]+)");
-                    if (match.Success)
-                        count = int.Parse(match.Value);
-                }
-
-                var builder = new StringBuilder();
-                for (var j = 0; j < count; j++)
-                {
-                    builder.Append(batches[i]);
-                    if (i == batches.Length - 1)
-                        builder.AppendLine();
-                }
-
-                commands.Add(builder.ToString());
+                commands.AddRange(
+                    batches
+                        .Where(b => !string.IsNullOrWhiteSpace(b))
+                        .Select(b => {
+                            b = Regex.Replace(b, @"(DELIMITER )?\$\$", string.Empty); 
+                            b = Regex.Replace(b, @"#(.*?)\r?\n", "/* $1 */"); 
+                            b = Regex.Replace(b, @"(\r?\n)|(\t)", " ");
+                            return b;
+                        }
+                    )
+                    
+                );
             }
-
             return commands;
         }
 
@@ -286,8 +275,8 @@ namespace Nop.Data
                         FETCH NEXT FROM cur_reindex INTO @TableName
                         WHILE @@FETCH_STATUS = 0
                             BEGIN
-                          exec('ALTER INDEX ALL ON [' + @TableName + '] REBUILD')
-                                FETCH NEXT FROM cur_reindex INTO @TableName
+                                exec('ALTER INDEX ALL ON [' + @TableName + '] REBUILD')
+                                        FETCH NEXT FROM cur_reindex INTO @TableName
                             END
                         CLOSE cur_reindex
                         DEALLOCATE cur_reindex";
@@ -305,6 +294,7 @@ namespace Nop.Data
                 Server = nopConnectionString.ServerName,
                 Database = nopConnectionString.DatabaseName,
                 PersistSecurityInfo = false,
+                AllowUserVariables = true,
                 IntegratedSecurity = nopConnectionString.IntegratedSecurity
             };
 
