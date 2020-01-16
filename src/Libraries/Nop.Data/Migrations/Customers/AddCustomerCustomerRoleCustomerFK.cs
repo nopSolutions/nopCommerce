@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Customers
         
         public override void Up()
         {
-            this.AddForeignKey(NopMappingDefaults.CustomerCustomerRoleTable
-                , "Customer_Id"
-                , nameof(Customer)
-                , nameof(Customer.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(NopMappingDefaults.CustomerCustomerRoleTable,
+                "Customer_Id",
+                nameof(Customer),
+                nameof(Customer.Id),
+                Rule.Cascade);
         }
 
         #endregion

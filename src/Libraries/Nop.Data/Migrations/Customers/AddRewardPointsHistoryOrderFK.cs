@@ -13,11 +13,11 @@ namespace Nop.Data.Migrations.Customers
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(RewardPointsHistory)
-                , nameof(RewardPointsHistory.OrderId)
-                , nameof(Order)
-                , nameof(Order.Id)
-                , Rule.SetNull);
+            this.AddForeignKey(nameof(RewardPointsHistory),
+                nameof(RewardPointsHistory.OrderId),
+                nameof(Order),
+                nameof(Order.Id),
+                Rule.SetNull);
         }
 
         #endregion

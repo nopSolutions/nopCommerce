@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Localization
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(LocaleStringResource)
-                , nameof(LocaleStringResource.LanguageId)
-                , nameof(Language)
-                , nameof(Language.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(LocaleStringResource),
+                nameof(LocaleStringResource.LanguageId),
+                nameof(Language),
+                nameof(Language.Id),
+                Rule.Cascade);
         }
 
         #endregion

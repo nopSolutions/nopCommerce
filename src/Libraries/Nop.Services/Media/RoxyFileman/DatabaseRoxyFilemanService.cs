@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Nop.Core;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -32,7 +33,6 @@ namespace Nop.Services.Media.RoxyFileman
 
         private readonly IPictureService _pictureService;
         private readonly IRepository<Picture> _pictureRepository;
-        private readonly MediaSettings _mediaSettings;
 
         #endregion
 
@@ -43,11 +43,12 @@ namespace Nop.Services.Media.RoxyFileman
             IHostingEnvironment hostingEnvironment,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
-            MediaSettings mediaSettings) : base(hostingEnvironment, httpContextAccessor, fileProvider)
+            IWebHelper webHelper,
+            IWorkContext workContext,
+            MediaSettings mediaSettings) : base(hostingEnvironment, httpContextAccessor, fileProvider, webHelper, workContext, mediaSettings)
         {
             _pictureService = pictureService;
             _pictureRepository = pictureRepository;
-            _mediaSettings = mediaSettings;
         }
 
         #endregion
@@ -109,21 +110,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>List of paths to the files</returns>
         protected override List<string> GetFiles(string directoryPath, string type)
         {
-            if (type == "#")
-                type = string.Empty;
-
-            var files = new List<string>();
-
             //store files on disk if needed
             FlushImagesOnDisk(directoryPath);
 
-            foreach (var fileName in _fileProvider.GetFiles(_fileProvider.DirectoryExists(directoryPath) ? directoryPath : GetFullPath(directoryPath)))
-            {
-                if (string.IsNullOrEmpty(type) || GetFileType(_fileProvider.GetFileExtension(fileName)) == type)
-                    files.Add(fileName);
-            }
-
-            return files;
+            return base.GetFiles(directoryPath, type);
         }
 
         /// <summary>
@@ -239,7 +229,7 @@ namespace Nop.Services.Media.RoxyFileman
             if (height < 1)
                 height = 1;
 
-            //we invoke Math.Round to ensure that no white background is rendered - https://www.nopcommerce.com/boards/t/40616/image-resizing-bug.aspx
+            //we invoke Math.Round to ensure that no white background is rendered - https://www.nopcommerce.com/boards/topic/40616/image-resizing-bug
             return new Size((int)Math.Round(width), (int)Math.Round(height));
         }
 
@@ -356,6 +346,8 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         public override void Configure()
         {
+            base.Configure();
+
             foreach (var filePath in _fileProvider.GetFiles(_fileProvider.GetAbsolutePath(NopRoxyFilemanDefaults.DefaultRootDirectory.Split('/')), topDirectoryOnly: false))
             {
                 var uniqueFileName = GetUniqueFileName(filePath, _fileProvider.GetFileNameWithoutExtension(filePath));
@@ -367,7 +359,7 @@ namespace Nop.Services.Media.RoxyFileman
                 };
 
                 _pictureService.InsertPicture(
-                    new RoxyFilemanFormFile(picture, new PictureBinary{ BinaryData = _fileProvider.ReadAllBytes(filePath) },  _fileProvider.GetFileExtension(filePath)),
+                    new RoxyFilemanFormFile(picture, new PictureBinary { BinaryData = _fileProvider.ReadAllBytes(filePath) },  _fileProvider.GetFileExtension(filePath)),
                     string.Empty, _fileProvider.GetVirtualPath(filePath));
             }
         }
@@ -520,6 +512,10 @@ namespace Nop.Services.Media.RoxyFileman
             try
             {
                 var fullPath = GetFullPath(GetVirtualPath(directoryPath));
+
+                if (!IsPathAllowed(fullPath))
+                    throw new Exception(GetLanguageResource("E_UploadNotAll"));
+
                 foreach (var formFile in GetHttpContext().Request.Form.Files)
                 {
                     var fileName = formFile.FileName;

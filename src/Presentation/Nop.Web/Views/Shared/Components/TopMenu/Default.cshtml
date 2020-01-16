@@ -113,8 +113,10 @@
             $('.menu-toggle').on('click', function () {
                 $(this).siblings('.top-menu.mobile').slideToggle('slow');
             });
-
-            mainMenu.init('@Url.Action("GetCatalogRoot", "Catalog")', '@Url.Action("GetCatalogSubCategories", "Catalog")', 'ul.top-menu.notmobile', 'ul.top-menu.mobile');
+            var localized_data = {
+                AjaxFailure: "@T("MainMenu.AjaxFailure")"
+            };
+            mainMenu.init('@Url.Action("GetCatalogRoot", "Catalog")', '@Url.Action("GetCatalogSubCategories", "Catalog")', 'ul.top-menu.notmobile', 'ul.top-menu.mobile', localized_data);
         });
         </script>
 

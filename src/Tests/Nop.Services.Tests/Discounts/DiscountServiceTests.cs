@@ -8,6 +8,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
@@ -77,8 +78,6 @@ namespace Nop.Services.Tests.Discounts
             
             var pluginService = new FakePluginService();
 
-            var discountMappingRepo = new Mock<IRepository<DiscountMapping>>();
-
             _discountPluginManager = new DiscountPluginManager(pluginService);
             _discountService = new DiscountService(
                 _customerService.Object,
@@ -87,7 +86,6 @@ namespace Nop.Services.Tests.Discounts
                 _localizationService.Object,
                 _productService.Object,
                 _discountRepo.Object,
-                discountMappingRepo.Object,
                 _discountRequirementRepo.Object,
                 _discountUsageHistoryRepo.Object,
                 _orderRepo.Object,
@@ -98,9 +96,12 @@ namespace Nop.Services.Tests.Discounts
         [Test]
         public void Can_get_all_discount()
         {
-            var discounts = _discountService.GetAllDiscounts();
-            discounts.ShouldNotBeNull();
-            discounts.Any().ShouldBeTrue();
+            RunWithTestServiceProvider(() =>
+            {
+                var discounts = _discountService.GetAllDiscounts();
+                discounts.ShouldNotBeNull();
+                discounts.Any().ShouldBeTrue();
+            });
         }
 
         [Test]
@@ -114,6 +115,7 @@ namespace Nop.Services.Tests.Discounts
         [Test]
         public void Can_load_discountRequirementRuleBySystemKeyword()
         {
+            EngineContext.Replace(null);
             var rule = _discountPluginManager.LoadPluginBySystemName("TestDiscountRequirementRule");
             rule.ShouldNotBeNull();
         }
@@ -269,7 +271,7 @@ namespace Nop.Services.Tests.Discounts
 
         static DiscountExtensions()
         {
-            _discountService = new DiscountService(null, null, null, null,
+            _discountService = new DiscountService(null, null, null,
                 null, null, null, null, null, null, null, null);
         }
 
@@ -278,7 +280,7 @@ namespace Nop.Services.Tests.Discounts
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            return _discountService.GetDiscountAmount(_discountService.MapDiscount(discount), amount);
+            return _discountService.GetDiscountAmount(discount, amount);
         }
     }
 }

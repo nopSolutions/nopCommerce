@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Plugin.Payments.Square.Domain;
+using Nop.Services.Configuration;
 using Nop.Services.Logging;
 using Square.Connect.Api;
 using Square.Connect.Client;
@@ -22,7 +23,8 @@ namespace Nop.Plugin.Payments.Square.Services
         private readonly ILogger _logger;
         private readonly IWorkContext _workContext;
         private readonly SquareAuthorizationHttpClient _squareAuthorizationHttpClient;
-        private readonly SquarePaymentSettings _squarePaymentSettings;
+        private readonly ISettingService _settingService;
+        private readonly IStoreContext _storeContext;
 
         #endregion
 
@@ -31,12 +33,14 @@ namespace Nop.Plugin.Payments.Square.Services
         public SquarePaymentManager(ILogger logger,
             IWorkContext workContext,
             SquareAuthorizationHttpClient squareAuthorizationHttpClient,
-            SquarePaymentSettings squarePaymentSettings)
+            ISettingService settingService,
+            IStoreContext storeContext)
         {
             _logger = logger;
             _workContext = workContext;
             _squareAuthorizationHttpClient = squareAuthorizationHttpClient;
-            _squarePaymentSettings = squarePaymentSettings;
+            _settingService = settingService;
+            _storeContext = storeContext;
         }
 
         #endregion
@@ -46,23 +50,25 @@ namespace Nop.Plugin.Payments.Square.Services
         /// <summary>
         /// Create the API configuration
         /// </summary>
+        /// <param name="storeId">Store identifier for which configuration should be loaded</param>
         /// <returns>The API Configuration</returns>
-        private Configuration CreateApiConfiguration()
+        private Configuration CreateApiConfiguration(int storeId)
         {
+            var settings = _settingService.LoadSetting<SquarePaymentSettings>(storeId);
+
             //validate access token
-            if (_squarePaymentSettings.UseSandbox &&
-                (string.IsNullOrEmpty(_squarePaymentSettings.AccessToken) ||
-                    !_squarePaymentSettings.AccessToken.StartsWith(SquarePaymentDefaults.SandboxCredentialsPrefix, StringComparison.InvariantCultureIgnoreCase)))
+            if (settings.UseSandbox && string.IsNullOrEmpty(settings.AccessToken))
+                throw new NopException("Sandbox access token should not be empty");
 
+            var config = new Configuration
             {
-                throw new NopException($"Sandbox access token should start with '{SquarePaymentDefaults.SandboxCredentialsPrefix}'");
-            }
-
-            return new Configuration
-            {
-                AccessToken = _squarePaymentSettings.AccessToken,
+                AccessToken = settings.AccessToken,
                 UserAgent = SquarePaymentDefaults.UserAgent
             };
+            if (settings.UseSandbox)
+                config.setApiClientUsingDefault(new ApiClient(SquarePaymentDefaults.SandboxBaseUrl));
+
+            return config;
         }
 
         #endregion
@@ -74,13 +80,14 @@ namespace Nop.Plugin.Payments.Square.Services
         /// <summary>
         /// Get active business locations
         /// </summary>
+        /// <param name="storeId">Store identifier for which locations should be loaded</param>
         /// <returns>List of location</returns>
-        public IList<Location> GetActiveLocations()
+        public IList<Location> GetActiveLocations(int storeId)
         {
             try
             {
                 //create location API
-                var configuration = CreateApiConfiguration();
+                var configuration = CreateApiConfiguration(storeId);
                 var locationsApi = new LocationsApi(configuration);
 
                 //get list of all locations
@@ -96,8 +103,8 @@ namespace Nop.Plugin.Payments.Square.Services
                 }
 
                 //filter active locations and locations that can process credit cards
-                var activeLocations = listLocationsResponse.Locations?.Where(location => location?.Status == Location.StatusEnum.ACTIVE
-                    && (location.Capabilities?.Contains(Location.CapabilitiesEnum.PROCESSING) ?? false)).ToList();
+                var activeLocations = listLocationsResponse.Locations?.Where(location => location?.Status == SquarePaymentDefaults.LOCATION_STATUS_ACTIVE
+                    && (location.Capabilities?.Contains(SquarePaymentDefaults.LOCATION_CAPABILITIES_PROCESSING) ?? false)).ToList();
                 if (!activeLocations?.Any() ?? true)
                     throw new NopException("There are no active locations for the account");
 
@@ -116,8 +123,9 @@ namespace Nop.Plugin.Payments.Square.Services
         /// Get customer by identifier
         /// </summary>
         /// <param name="customerId">Customer ID</param>
+        /// <param name="storeId">Store identifier for which customer should be loaded</param>
         /// <returns>Customer</returns>
-        public Customer GetCustomer(string customerId)
+        public Customer GetCustomer(string customerId, int storeId)
         {
             try
             {
@@ -126,7 +134,7 @@ namespace Nop.Plugin.Payments.Square.Services
                     return null;
 
                 //create customer API
-                var configuration = CreateApiConfiguration();
+                var configuration = CreateApiConfiguration(storeId);
                 var customersApi = new CustomersApi(configuration);
 
                 //get customer by identifier
@@ -156,13 +164,14 @@ namespace Nop.Plugin.Payments.Square.Services
         /// Create the new customer
         /// </summary>
         /// <param name="customerRequest">Request parameters to create customer</param>
+        /// <param name="storeId">Store identifier for which customer should be created</param>
         /// <returns>Customer</returns>
-        public Customer CreateCustomer(CreateCustomerRequest customerRequest)
+        public Customer CreateCustomer(CreateCustomerRequest customerRequest, int storeId)
         {
             try
             {
                 //create customer API
-                var configuration = CreateApiConfiguration();
+                var configuration = CreateApiConfiguration(storeId);
                 var customersApi = new CustomersApi(configuration);
 
                 //create the new customer
@@ -193,13 +202,14 @@ namespace Nop.Plugin.Payments.Square.Services
         /// </summary>
         /// <param name="customerId">Customer ID</param>
         /// <param name="cardRequest">Request parameters to create card of the customer</param>
+        /// <param name="storeId">Store identifier for which customer card should be created</param>
         /// <returns>Card</returns>
-        public Card CreateCustomerCard(string customerId, CreateCustomerCardRequest cardRequest)
+        public Card CreateCustomerCard(string customerId, CreateCustomerCardRequest cardRequest, int storeId)
         {
             try
             {
                 //create customer API
-                var configuration = CreateApiConfiguration();
+                var configuration = CreateApiConfiguration(storeId);
                 var customersApi = new CustomersApi(configuration);
 
                 //create the new card of the customer
@@ -233,18 +243,21 @@ namespace Nop.Plugin.Payments.Square.Services
         /// Get transaction by transaction identifier
         /// </summary>
         /// <param name="transactionId">Transaction ID</param>
+        /// <param name="storeId">Store identifier for which transaction should be loaded</param>
         /// <returns>Transaction and/or errors if exist</returns>
-        public (Transaction, string) GetTransaction(string transactionId)
+        public (Transaction, string) GetTransaction(string transactionId, int storeId)
         {
             try
             {
+                var settings = _settingService.LoadSetting<SquarePaymentSettings>(storeId);
+
                 //try to get the selected location
-                var selectedLocation = GetActiveLocations().FirstOrDefault(location => location.Id.Equals(_squarePaymentSettings.LocationId));
+                var selectedLocation = GetActiveLocations(storeId).FirstOrDefault(location => location.Id.Equals(settings.LocationId));
                 if (selectedLocation == null)
                     throw new NopException("Location is a required parameter for payment requests");
 
                 //create transaction API
-                var configuration = CreateApiConfiguration();
+                var configuration = CreateApiConfiguration(storeId);
                 var transactionsApi = new TransactionsApi(configuration);
 
                 //get transaction by identifier
@@ -283,18 +296,21 @@ namespace Nop.Plugin.Payments.Square.Services
         /// Charge transaction
         /// </summary>
         /// <param name="chargeRequest">Request parameters to charge transaction</param>
+        /// <param name="storeId">Store identifier for which charge request should be created</param>
         /// <returns>Transaction and/or errors if exist</returns>
-        public (Transaction, string) Charge(ExtendedChargeRequest chargeRequest)
+        public (Transaction, string) Charge(ExtendedChargeRequest chargeRequest, int storeId)
         {
             try
             {
+                var settings = _settingService.LoadSetting<SquarePaymentSettings>(storeId);
+                
                 //try to get the selected location
-                var selectedLocation = GetActiveLocations().FirstOrDefault(location => location.Id.Equals(_squarePaymentSettings.LocationId));
+                var selectedLocation = GetActiveLocations(storeId).FirstOrDefault(location => location.Id.Equals(settings.LocationId));
                 if (selectedLocation == null)
                     throw new NopException("Location is a required parameter for payment requests");
 
                 //create transaction API
-                var configuration = CreateApiConfiguration();
+                var configuration = CreateApiConfiguration(storeId);
                 var transactionsApi = new TransactionsApi(configuration);
 
                 //create charge transaction
@@ -333,18 +349,21 @@ namespace Nop.Plugin.Payments.Square.Services
         /// Capture authorized transaction
         /// </summary>
         /// <param name="transactionId">Transaction ID</param>
+        /// <param name="storeId">Store identifier for which transaction should be captured</param>
         /// <returns>True if the transaction successfully captured; otherwise false. And/or errors if exist</returns>
-        public (bool, string) CaptureTransaction(string transactionId)
+        public (bool, string) CaptureTransaction(string transactionId, int storeId)
         {
             try
             {
+                var settings = _settingService.LoadSetting<SquarePaymentSettings>(storeId);
+
                 //try to get the selected location
-                var selectedLocation = GetActiveLocations().FirstOrDefault(location => location.Id.Equals(_squarePaymentSettings.LocationId));
+                var selectedLocation = GetActiveLocations(storeId).FirstOrDefault(location => location.Id.Equals(settings.LocationId));
                 if (selectedLocation == null)
                     throw new NopException("Location is a required parameter for payment requests");
 
                 //create transaction API
-                var configuration = CreateApiConfiguration();
+                var configuration = CreateApiConfiguration(storeId);
                 var transactionsApi = new TransactionsApi(configuration);
 
                 //capture transaction by identifier
@@ -384,18 +403,21 @@ namespace Nop.Plugin.Payments.Square.Services
         /// Void authorized transaction
         /// </summary>
         /// <param name="transactionId">Transaction ID</param>
+        /// <param name="storeId">Store identifier for which transaction should be voided</param>
         /// <returns>True if the transaction successfully voided; otherwise false. And/or errors if exist</returns>
-        public (bool, string) VoidTransaction(string transactionId)
+        public (bool, string) VoidTransaction(string transactionId, int storeId)
         {
             try
             {
+                var settings = _settingService.LoadSetting<SquarePaymentSettings>(storeId);
+
                 //try to get the selected location
-                var selectedLocation = GetActiveLocations().FirstOrDefault(location => location.Id.Equals(_squarePaymentSettings.LocationId));
+                var selectedLocation = GetActiveLocations(storeId).FirstOrDefault(location => location.Id.Equals(settings.LocationId));
                 if (selectedLocation == null)
                     throw new NopException("Location is a required parameter for payment requests");
 
                 //create transaction API
-                var configuration = CreateApiConfiguration();
+                var configuration = CreateApiConfiguration(storeId);
                 var transactionsApi = new TransactionsApi(configuration);
 
                 //void transaction by identifier
@@ -436,18 +458,21 @@ namespace Nop.Plugin.Payments.Square.Services
         /// </summary>
         /// <param name="transactionId">Transaction ID</param>
         /// <param name="refundRequest">Request parameters to create refund</param>
+        /// <param name="storeId">Store identifier for which refund should be created</param>
         /// <returns>Refund and/or errors if exist</returns>
-        public (Refund, string) CreateRefund(string transactionId, CreateRefundRequest refundRequest)
+        public (Refund, string) CreateRefund(string transactionId, CreateRefundRequest refundRequest, int storeId)
         {
             try
             {
+                var settings = _settingService.LoadSetting<SquarePaymentSettings>(storeId);
+
                 //try to get the selected location
-                var selectedLocation = GetActiveLocations().FirstOrDefault(location => location.Id.Equals(_squarePaymentSettings.LocationId));
+                var selectedLocation = GetActiveLocations(storeId).FirstOrDefault(location => location.Id.Equals(settings.LocationId));
                 if (selectedLocation == null)
                     throw new NopException("Location is a required parameter for payment requests");
 
                 //create transaction API
-                var configuration = CreateApiConfiguration();
+                var configuration = CreateApiConfiguration(storeId);
                 var transactionsApi = new TransactionsApi(configuration);
 
                 //create refund
@@ -489,8 +514,9 @@ namespace Nop.Plugin.Payments.Square.Services
         /// <summary>
         /// Generate URL for the authorization permissions page
         /// </summary>
+        /// <param name="storeId">Store identifier for which authorization url should be created</param>
         /// <returns>URL</returns>
-        public string GenerateAuthorizeUrl()
+        public string GenerateAuthorizeUrl(int storeId)
         {
             var serviceUrl = $"{_squareAuthorizationHttpClient.BaseAddress}authorize";
 
@@ -546,11 +572,13 @@ namespace Nop.Plugin.Payments.Square.Services
             //request all of the permissions
             var requestingPermissions = string.Join(" ", permissionScopes);
 
+            var settings = _settingService.LoadSetting<SquarePaymentSettings>(storeId);
+
             //create query parameters for the request
             var queryParameters = new Dictionary<string, string>
             {
                 //The application ID.
-                ["client_id"] = _squarePaymentSettings.ApplicationId,
+                ["client_id"] = settings.ApplicationId,
 
                 //Indicates whether you want to receive an authorization code ("code") or an access token ("token").
                 ["response_type"] = "code",
@@ -565,7 +593,7 @@ namespace Nop.Plugin.Payments.Square.Services
                 ["session"] = "false",
 
                 //Include this parameter and verify its value to help protect against cross-site request forgery.
-                ["state"] = _squarePaymentSettings.AccessTokenVerificationString,
+                ["state"] = settings.AccessTokenVerificationString,
 
                 //The ID of the subscription plan to direct the merchant to sign up for, if any.
                 //You can provide this parameter with no value to give a merchant the option to cancel an active subscription.
@@ -580,28 +608,31 @@ namespace Nop.Plugin.Payments.Square.Services
         /// Exchange the authorization code for an access token
         /// </summary>
         /// <param name="authorizationCode">Authorization code</param>
+        /// <param name="storeId">Store identifier for which access token should be obtained</param>
         /// <returns>Access and refresh tokens</returns>
-        public (string AccessToken, string RefreshToken) ObtainAccessToken(string authorizationCode)
+        public (string AccessToken, string RefreshToken) ObtainAccessToken(string authorizationCode, int storeId)
         {
-            return _squareAuthorizationHttpClient.ObtainAccessTokenAsync(authorizationCode).Result;
+            return _squareAuthorizationHttpClient.ObtainAccessTokenAsync(authorizationCode, storeId).Result;
         }
 
         /// <summary>
         /// Renew the expired access token
         /// </summary>
+        /// <param name="storeId">Store identifier for which access token should be updated</param>
         /// <returns>Access and refresh tokens</returns>
-        public (string AccessToken, string RefreshToken) RenewAccessToken()
+        public (string AccessToken, string RefreshToken) RenewAccessToken(int storeId)
         {
-            return _squareAuthorizationHttpClient.RenewAccessTokenAsync().Result;
+            return _squareAuthorizationHttpClient.RenewAccessTokenAsync(storeId).Result;
         }
 
         /// <summary>
         /// Revoke all access tokens
         /// </summary>
+        /// <param name="storeId">Store identifier for which access token should be revoked</param>
         /// <returns>True if tokens were successfully revoked; otherwise false</returns>
-        public bool RevokeAccessTokens()
+        public bool RevokeAccessTokens(int storeId)
         {
-            return _squareAuthorizationHttpClient.RevokeAccessTokensAsync().Result;
+            return _squareAuthorizationHttpClient.RevokeAccessTokensAsync(storeId).Result;
         }
 
         #endregion

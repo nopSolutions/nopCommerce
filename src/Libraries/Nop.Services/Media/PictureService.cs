@@ -9,6 +9,8 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
@@ -23,6 +25,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 using static SixLabors.ImageSharp.Configuration;
+using NopMediaDefaults = Nop.Services.Defaults.NopMediaDefaults;
 
 namespace Nop.Services.Media
 {
@@ -134,7 +137,7 @@ namespace Nop.Services.Media
             if (height < 1)
                 height = 1;
 
-            //we invoke Math.Round to ensure that no white background is rendered - https://www.nopcommerce.com/boards/t/40616/image-resizing-bug.aspx
+            //we invoke Math.Round to ensure that no white background is rendered - https://www.nopcommerce.com/boards/topic/40616/image-resizing-bug
             return new Size((int)Math.Round(width), (int)Math.Round(height));
         }
 
@@ -663,7 +666,7 @@ namespace Nop.Services.Media
             if (pictureId == 0)
                 return null;
 
-            return _pictureRepository.GetById(pictureId);
+            return _pictureRepository.ToCachedGetById(pictureId);
         }
 
         /// <summary>
@@ -689,7 +692,6 @@ namespace Nop.Services.Media
             _eventPublisher.EntityDeleted(picture);
         }
 
-
         /// <summary>
         /// Gets a collection of pictures
         /// </summary>
@@ -706,7 +708,10 @@ namespace Nop.Services.Media
 
             query = query.OrderByDescending(p => p.Id);
 
-            var pics = new PagedList<Picture>(query, pageIndex, pageSize);
+            var key = string.Format(NopMediaCachingDefaults.PicturesByVirtualPathCacheKey, virtualPath);
+
+            var pics = query.ToCachedPagedList(key, pageIndex, pageSize);
+
             return pics;
         }
 

@@ -3,7 +3,6 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
-using Nop.Services.Discounts;
 
 namespace Nop.Services.Catalog
 {
@@ -31,6 +30,12 @@ namespace Nop.Services.Catalog
         void DeleteManufacturer(Manufacturer manufacturer);
 
         /// <summary>
+        /// Delete manufacturers
+        /// </summary>
+        /// <param name="manufacturers">Manufacturers</param>
+        void DeleteManufacturers(IList<Manufacturer> manufacturers);
+
+        /// <summary>
         /// Gets all manufacturers
         /// </summary>
         /// <param name="manufacturerName">Manufacturer name</param>
@@ -48,10 +53,10 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Get manufacturer identifiers to which a discount is applied
         /// </summary>
-        /// <param name="discountId">Discount</param>
+        /// <param name="discount">Discount</param>
         /// <param name="customer">Customer</param>
         /// <returns>Manufacturer identifiers</returns>
-        IList<int> GetAppliedManufacturerIds(DiscountForCaching discount, Customer customer);
+        IList<int> GetAppliedManufacturerIds(Discount discount, Customer customer);
 
         /// <summary>
         /// Gets a manufacturer
@@ -59,6 +64,13 @@ namespace Nop.Services.Catalog
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>Manufacturer</returns>
         Manufacturer GetManufacturerById(int manufacturerId);
+
+        /// <summary>
+        /// Gets manufacturers by identifier
+        /// </summary>
+        /// <param name="manufacturerIds">manufacturer identifiers</param>
+        /// <returns>Manufacturers</returns>
+        List<Manufacturer> GetManufacturersByIds(int[] manufacturerIds);
 
         /// <summary>
         /// Get manufacturers for which a discount is applied

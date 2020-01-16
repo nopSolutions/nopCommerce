@@ -9,7 +9,10 @@
     @await Component.InvokeAsync("AdminHeaderLinks")
     @await Html.PartialAsync("_Header")
     <script asp-location="Footer">
-        AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
+        var localized_data = {
+            AjaxCartFailure: "@T("AjaxCart.Failure")"
+        };
+        AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart', localized_data);
     </script>
     <div class="header-menu">
         @await Component.InvokeAsync("TopMenu")

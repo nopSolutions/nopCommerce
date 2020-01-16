@@ -9,6 +9,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Html;
 using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 using Nop.Services.Shipping;
 
@@ -78,7 +79,7 @@ namespace Nop.Services.Orders
             if (orderId == 0)
                 return null;
 
-            return _orderRepository.GetById(orderId);
+            return _orderRepository.ToCachedGetById(orderId);
         }
 
         /// <summary>
@@ -458,7 +459,7 @@ namespace Nop.Services.Orders
             if (orderItemId == 0)
                 return null;
 
-            return _orderItemRepository.GetById(orderItemId);
+            return _orderItemRepository.ToCachedGetById(orderItemId);
         }
 
         /// <summary>
@@ -736,7 +737,7 @@ namespace Nop.Services.Orders
             if (orderNoteId == 0)
                 return null;
 
-            return _orderNoteRepository.GetById(orderNoteId);
+            return _orderNoteRepository.ToCachedGetById(orderNoteId);
         }
 
         /// <summary>
@@ -840,7 +841,7 @@ namespace Nop.Services.Orders
             if (recurringPaymentId == 0)
                 return null;
 
-            return _recurringPaymentRepository.GetById(recurringPaymentId);
+            return _recurringPaymentRepository.ToCachedGetById(recurringPaymentId);
         }
 
         /// <summary>

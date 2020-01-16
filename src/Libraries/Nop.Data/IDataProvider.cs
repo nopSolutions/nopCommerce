@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
-using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
 using Nop.Core;
@@ -14,6 +13,11 @@ namespace Nop.Data
     {
         #region Methods
 
+        /// <summary>
+        /// Create the database
+        /// </summary>
+        /// <param name="collation">Collation</param>
+        /// <param name="triesToConnect">Count of tries to connect to the database after creating; set 0 if no need to connect after creating</param>
         void CreateDatabase(string collation, int triesToConnect = 10);
 
         /// <summary>
@@ -21,13 +25,33 @@ namespace Nop.Data
         /// </summary>
         void InitializeDatabase();
 
+        /// <summary>
+        /// Executes all found (and unapplied) migrations
+        /// </summary>
+        /// <param name="assembly">Assembly to find the migration;
+        /// leave null to search migration on the whole application pull</param>
         void ApplyUpMigrations(Assembly assembly);
 
+        /// <summary>
+        /// Executes an Down migration
+        /// </summary>
+        /// <param name="assembly">Assembly to find the migration;
+        /// leave null to search migration on the whole application pull</param>
         void ApplyDownMigrations(Assembly assembly);
 
+        /// <summary>
+        /// Create database schema if it not exists
+        /// </summary>
+        /// <param name="assembly">Assembly to find the mapping configurations classes;
+        /// leave null to search mapping configurations classes on the whole application pull</param>
         void CreateDatabaseSchemaIfNotExists(Assembly assembly);
 
-        void DeleteDatabaseSchemaIfNotExists(Assembly assembly);
+        /// <summary>
+        /// Delete database schema if it exists
+        /// </summary>
+        /// <param name="assembly">Assembly to find the mapping configurations classes;
+        /// leave null to search mapping configurations classes on the whole application pull</param>
+        void DeleteDatabaseSchemaIfExists(Assembly assembly);
 
         /// <summary>
         /// Checks if the specified database exists, returns true if database exists
@@ -88,8 +112,18 @@ namespace Nop.Data
         /// <param name="entities">Collection of Entities</param>
         void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity;
 
+		/// <summary>
+        /// Returns mapped entity descriptor
+        /// </summary>
+        /// <typeparam name="TEntity">Type of entity</typeparam>
+        /// <returns>Mapped entity descriptor</returns>
         EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity;
 
+        /// <summary>
+        /// Build the connection string
+        /// </summary>
+        /// <param name="nopConnectionString">Connection string info</param>
+        /// <returns>Connection string</returns>
         string BuildConnectionString(INopConnectionStringInfo nopConnectionString);
 
         string GetForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn, bool isShort = true);
@@ -118,7 +152,7 @@ namespace Nop.Data
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Returns collection of query result records</returns>
-        IEnumerable<T> QueryProc<T>(string procedureName, params DataParameter[] parameters);
+        IList<T> QueryProc<T>(string procedureName, params DataParameter[] parameters);
 
         /// <summary>
         /// Executes command and returns results as collection of values of specified type
@@ -127,7 +161,7 @@ namespace Nop.Data
         /// <param name="sql">Command text</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Returns collection of query result records</returns>
-        IEnumerable<T> Query<T>(string sql, params DataParameter[] parameters);
+        IList<T> Query<T>(string sql, params DataParameter[] parameters);
 
         #endregion
     }

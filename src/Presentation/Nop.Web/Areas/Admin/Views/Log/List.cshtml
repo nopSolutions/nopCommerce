@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.System.Log").Text;
+    ViewBag.PageTitle = T("Admin.System.Log").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Log");
 }
@@ -118,7 +118,7 @@
                                     IsMasterCheckBox = true,
                                     Render = new RenderCheckBox("checkbox_log"),
                                     ClassName =  NopColumnClassDefaults.CenterAll,
-                                    Width = "50",
+                                    Width = "50"
                                 },
                                 new ColumnProperty(nameof(LogModel.LogLevel))
                                 {

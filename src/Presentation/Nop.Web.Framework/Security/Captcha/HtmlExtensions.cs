@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
+using Nop.Services.Defaults;
 using Nop.Services.Localization;
-using Nop.Services.Security;
 using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Security.Captcha
@@ -73,7 +73,7 @@ namespace Nop.Web.Framework.Security.Captcha
             var captchaTag = new TagBuilder("div") { TagRenderMode = TagRenderMode.Normal };
             captchaTag.Attributes.Add("id", id);
 
-            var url = string.Format($"{NopSecurityDefaults.RecaptchaApiUrl}{NopSecurityDefaults.RecaptchaScriptPath}", id,
+            var url = string.Format($"{captchaSettings.ReCaptchaApiUrl}{NopSecurityDefaults.RecaptchaScriptPath}", id,
                 !string.IsNullOrEmpty(language) ? $"&hl={language}" : string.Empty);
             var scriptLoadApiTag = new TagBuilder("script") { TagRenderMode = TagRenderMode.Normal };
             scriptLoadApiTag.Attributes.Add("src", url);

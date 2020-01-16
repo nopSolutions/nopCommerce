@@ -33,7 +33,6 @@ namespace Nop.Services.Tax
         private readonly IGeoLookupService _geoLookupService;
         private readonly ILogger _logger;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly ITaxPluginManager _taxPluginManager;
         private readonly IWebHelper _webHelper;
@@ -54,7 +53,6 @@ namespace Nop.Services.Tax
             IGeoLookupService geoLookupService,
             ILogger logger,
             IStateProvinceService stateProvinceService,
-            IStaticCacheManager cacheManager,
             IStoreContext storeContext,
             ITaxPluginManager taxPluginManager,
             IWebHelper webHelper,
@@ -71,7 +69,6 @@ namespace Nop.Services.Tax
             _geoLookupService = geoLookupService;
             _logger = logger;
             _stateProvinceService = stateProvinceService;
-            _cacheManager = cacheManager;
             _storeContext = storeContext;
             _taxPluginManager = taxPluginManager;
             _webHelper = webHelper;
@@ -138,16 +135,11 @@ namespace Nop.Services.Tax
         /// Gets a default tax address
         /// </summary>
         /// <returns>Address</returns>
-        protected virtual CalculateTaxRequest.TaxAddress LoadDefaultTaxAddress()
+        protected virtual Address LoadDefaultTaxAddress()
         {
             var addressId = _taxSettings.DefaultTaxAddressId;
 
-            //cache result so this address is not loaded for each HTTP request
-            var cacheKey = string.Format(NopTaxDefaults.TaxAddressByAddressIdCacheKey, addressId);
-            return _cacheManager.Get(cacheKey, () =>
-            {
-                return PrepareTaxAddress(_addressService.GetAddressById(addressId));
-            });
+            return _addressService.GetAddressById(addressId);
         }
 
         /// <summary>
@@ -155,7 +147,7 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="pickupPoint">Pickup point</param>
         /// <returns>Address</returns>
-        protected virtual CalculateTaxRequest.TaxAddress LoadPickupPointTaxAddress(PickupPoint pickupPoint)
+        protected virtual Address LoadPickupPointTaxAddress(PickupPoint pickupPoint)
         {
             if (pickupPoint == null)
                 throw new ArgumentNullException(nameof(pickupPoint));
@@ -163,7 +155,7 @@ namespace Nop.Services.Tax
             var country = _countryService.GetCountryByTwoLetterIsoCode(pickupPoint.CountryCode);
             var state = _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation, country?.Id);
 
-            return new CalculateTaxRequest.TaxAddress
+            return new Address
             {
                 CountryId = country?.Id ?? 0,
                 StateProvinceId = state?.Id ?? 0,
@@ -171,29 +163,6 @@ namespace Nop.Services.Tax
                 City = pickupPoint.City,
                 Address1 = pickupPoint.Address,
                 ZipPostalCode = pickupPoint.ZipPostalCode
-            };
-        }
-
-        /// <summary>
-        /// Prepare TaxAddress object based on a specific address
-        /// </summary>
-        /// <param name="address">Address</param>
-        /// <returns>Address</returns>
-        protected virtual CalculateTaxRequest.TaxAddress PrepareTaxAddress(Address address)
-        {
-            if (address == null)
-                return null;
-
-            return new CalculateTaxRequest.TaxAddress
-            {
-                AddressId = address.Id,
-                CountryId = address.CountryId,
-                StateProvinceId = address.StateProvinceId,
-                County = address.County,
-                City = address.City,
-                Address1 = address.Address1,
-                Address2 = address.Address2,
-                ZipPostalCode = address.ZipPostalCode
             };
         }
         
@@ -261,11 +230,11 @@ namespace Nop.Services.Tax
             {
                 case TaxBasedOn.BillingAddress:
                     var billingAddress = _customerService.GetCustomerBillingAddress(customer);
-                    calculateTaxRequest.Address = PrepareTaxAddress(billingAddress);
+                    calculateTaxRequest.Address = billingAddress;
                     break;
                 case TaxBasedOn.ShippingAddress:
                     var shippingAddress = _customerService.GetCustomerShippingAddress(customer);
-                    calculateTaxRequest.Address = PrepareTaxAddress(shippingAddress);
+                    calculateTaxRequest.Address = shippingAddress;
                     break;
                 case TaxBasedOn.DefaultAddress:
                 default:
@@ -835,7 +804,7 @@ namespace Nop.Services.Tax
         /// <param name="address">Address</param>
         /// <param name="customer">Customer</param>
         /// <returns>Result</returns>
-        public virtual bool IsVatExempt(CalculateTaxRequest.TaxAddress address, Customer customer)
+        public virtual bool IsVatExempt(Address address, Customer customer)
         {
             if (!_taxSettings.EuVatEnabled)
                 return false;

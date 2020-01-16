@@ -2262,13 +2262,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     warehouseId = product.WarehouseId;
                 }
 
-                foreach (var formKey in form.Keys)
-                    if (formKey.Equals($"qtyToAdd{orderItem.Id}", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        int.TryParse(form[formKey], out qtyToAdd);
-                        break;
-                    }
-
                 //validate quantity
                 if (qtyToAdd <= 0)
                     continue;

@@ -17,7 +17,7 @@ namespace Nop.Core.Caching
 
         #region Ctor
 
-        public MemoryCacheManager(IEasyCachingProvider  provider)
+        public MemoryCacheManager(IEasyCachingProvider provider)
         {
             _provider = provider;
         }
@@ -36,7 +36,7 @@ namespace Nop.Core.Caching
         /// <returns>The cached value associated with the specified key</returns>
         public T Get<T>(string key, Func<T> acquire, int? cacheTime = null)
         {
-            if(cacheTime <= 0)
+            if (cacheTime <= 0)
                 return acquire();
 
             return _provider.Get(key, acquire, TimeSpan.FromMinutes(cacheTime ?? NopCachingDefaults.CacheTime))
@@ -68,7 +68,7 @@ namespace Nop.Core.Caching
         /// <param name="cacheTime">Cache time in minutes</param>
         public void Set(string key, object data, int cacheTime)
         {
-            if(cacheTime <= 0)
+            if (cacheTime <= 0)
                 return;
 
             _provider.Set(key, data, TimeSpan.FromMinutes(cacheTime));

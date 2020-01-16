@@ -13,11 +13,11 @@ namespace Nop.Data.Migrations.News
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(NewsComment)
-                , nameof(NewsComment.StoreId)
-                , nameof(Store)
-                , nameof(Store.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(NewsComment),
+                nameof(NewsComment.StoreId),
+                nameof(Store),
+                nameof(Store.Id),
+                Rule.Cascade);
         }
 
         #endregion

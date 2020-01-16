@@ -165,17 +165,20 @@ namespace Nop.Services.Tests.Orders
             //custom text
             attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca3, "Some custom text goes here");
 
-            var parsed_attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes);
-            parsed_attributeValues.SelectMany(x => x.values).Contains(cav1_1).ShouldEqual(true);
-            parsed_attributeValues.SelectMany(x => x.values).Contains(cav1_2).ShouldEqual(false);
-            parsed_attributeValues.SelectMany(x => x.values).Contains(cav2_1).ShouldEqual(true);
-            parsed_attributeValues.SelectMany(x => x.values).Contains(cav2_2).ShouldEqual(true);
-            parsed_attributeValues.SelectMany(x => x.values).Contains(cav2_2).ShouldEqual(true);
+            RunWithTestServiceProvider(() =>
+            {
+                var parsedAttributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes).ToList();
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav1_1).ShouldEqual(true);
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav1_2).ShouldEqual(false);
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav2_1).ShouldEqual(true);
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav2_2).ShouldEqual(true);
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav2_2).ShouldEqual(true);
 
-            var parsedValues = _checkoutAttributeParser.ParseValues(attributes, ca3.Id);
-            parsedValues.Count.ShouldEqual(1);
-            parsedValues.Contains("Some custom text goes here").ShouldEqual(true);
-            parsedValues.Contains("Some other custom text").ShouldEqual(false);
+                var parsedValues = _checkoutAttributeParser.ParseValues(attributes, ca3.Id);
+                parsedValues.Count.ShouldEqual(1);
+                parsedValues.Contains("Some custom text goes here").ShouldEqual(true);
+                parsedValues.Contains("Some other custom text").ShouldEqual(false);
+            });
         }
 
         [Test]
@@ -189,11 +192,15 @@ namespace Nop.Services.Tests.Orders
             attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca2, cav2_2.Id.ToString());
             //custom text
             attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca3, "Some custom text goes here");
-
-
+            
             var customer = new Customer();
-            var formattedAttributes = _checkoutAttributeFormatter.FormatAttributes(attributes, customer, "<br />", false, false);
-            formattedAttributes.ShouldEqual("Color: Green<br />Custom option: Option 1<br />Custom option: Option 2<br />Custom text: Some custom text goes here");
+            RunWithTestServiceProvider(() =>
+            {
+                var formattedAttributes =
+                    _checkoutAttributeFormatter.FormatAttributes(attributes, customer, "<br />", false, false);
+                formattedAttributes.ShouldEqual(
+                    "Color: Green<br />Custom option: Option 1<br />Custom option: Option 2<br />Custom text: Some custom text goes here");
+            });
         }
 
         [Test]
@@ -210,16 +217,18 @@ namespace Nop.Services.Tests.Orders
             //delete some of them
             attributes = _checkoutAttributeParser.RemoveCheckoutAttribute(attributes, ca2);
             attributes = _checkoutAttributeParser.RemoveCheckoutAttribute(attributes, ca3);
+            RunWithTestServiceProvider(() =>
+            {
+                var parsedAttributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes).ToList();
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav1_1).ShouldEqual(true);
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav1_2).ShouldEqual(false);
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav2_1).ShouldEqual(false);
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav2_2).ShouldEqual(false);
+                parsedAttributeValues.SelectMany(x => x.values).Contains(cav2_2).ShouldEqual(false);
 
-            var parsed_attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes);
-            parsed_attributeValues.SelectMany(x => x.values).Contains(cav1_1).ShouldEqual(true);
-            parsed_attributeValues.SelectMany(x => x.values).Contains(cav1_2).ShouldEqual(false);
-            parsed_attributeValues.SelectMany(x => x.values).Contains(cav2_1).ShouldEqual(false);
-            parsed_attributeValues.SelectMany(x => x.values).Contains(cav2_2).ShouldEqual(false);
-            parsed_attributeValues.SelectMany(x => x.values).Contains(cav2_2).ShouldEqual(false);
-
-            var parsedValues = _checkoutAttributeParser.ParseValues(attributes, ca3.Id);
-            parsedValues.Count.ShouldEqual(0);
+                var parsedValues = _checkoutAttributeParser.ParseValues(attributes, ca3.Id);
+                parsedValues.Count.ShouldEqual(0);
+            });
         }
     }
 }

@@ -159,7 +159,7 @@ namespace Nop.Services.Plugins
             var assembly = Assembly.GetAssembly(pluginType);
 
             _dataProvider.ApplyDownMigrations(assembly);
-            _dataProvider.DeleteDatabaseSchemaIfNotExists(assembly);
+            _dataProvider.DeleteDatabaseSchemaIfExists(assembly);
         }
 
         protected virtual void InsertPluginData(Type pluginType)
@@ -346,7 +346,7 @@ namespace Nop.Services.Plugins
                 {
                     if (!_pluginsInfo.InstalledPluginNames.Contains(dependentPlugin.SystemName))
                         continue;
-                    if(_pluginsInfo.PluginNamesToUninstall.Contains(dependentPlugin.SystemName))
+                    if (_pluginsInfo.PluginNamesToUninstall.Contains(dependentPlugin.SystemName))
                         continue;
 
                     dependsOn.Add(string.IsNullOrEmpty(dependentPlugin.FriendlyName)

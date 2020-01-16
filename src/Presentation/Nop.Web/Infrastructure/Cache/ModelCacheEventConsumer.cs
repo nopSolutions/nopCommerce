@@ -101,14 +101,10 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInsertedEvent<BlogPost>>,
         IConsumer<EntityUpdatedEvent<BlogPost>>,
         IConsumer<EntityDeletedEvent<BlogPost>>,
-        //blog comments
-        IConsumer<EntityDeletedEvent<BlogComment>>,
         //news items
         IConsumer<EntityInsertedEvent<NewsItem>>,
         IConsumer<EntityUpdatedEvent<NewsItem>>,
         IConsumer<EntityDeletedEvent<NewsItem>>,
-        //news comments
-        IConsumer<EntityDeletedEvent<NewsComment>>,
         //states/province
         IConsumer<EntityInsertedEvent<StateProvince>>,
         IConsumer<EntityUpdatedEvent<StateProvince>>,
@@ -133,10 +129,6 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInsertedEvent<TopicTemplate>>,
         IConsumer<EntityUpdatedEvent<TopicTemplate>>,
         IConsumer<EntityDeletedEvent<TopicTemplate>>,
-        //checkout attributes
-        IConsumer<EntityInsertedEvent<CheckoutAttribute>>,
-        IConsumer<EntityUpdatedEvent<CheckoutAttribute>>,
-        IConsumer<EntityDeletedEvent<CheckoutAttribute>>,
         //shopping cart items
         IConsumer<EntityUpdatedEvent<ShoppingCartItem>>,
         //plugins
@@ -175,7 +167,6 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductManufacturersPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.StateProvincesPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.AvailableLanguagesPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.AvailableCurrenciesPrefixCacheKey);
         }
         public void HandleEvent(EntityUpdatedEvent<Language> eventMessage)
@@ -191,7 +182,6 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductManufacturersPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.StateProvincesPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.AvailableLanguagesPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.AvailableCurrenciesPrefixCacheKey);
         }
         public void HandleEvent(EntityDeletedEvent<Language> eventMessage)
@@ -207,7 +197,6 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductManufacturersPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.StateProvincesPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.AvailableLanguagesPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.AvailableCurrenciesPrefixCacheKey);
         }
 
@@ -313,7 +302,6 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductBreadcrumbPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryBreadcrumbPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CategorySubcategoriesPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryHomepagePrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
@@ -325,7 +313,6 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.ProductBreadcrumbPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryAllPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryBreadcrumbPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CategorySubcategoriesPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryHomepagePrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
@@ -584,12 +571,6 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
 
-        //Blog comments
-        public void HandleEvent(EntityDeletedEvent<BlogComment> eventMessage)
-        {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.BlogCommentsPrefixCacheKey);
-        }
-
         //News items
         public void HandleEvent(EntityInsertedEvent<NewsItem> eventMessage)
         {
@@ -606,12 +587,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.NewsPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.SitemapPrefixCacheKey);
         }
-        //News comments
-        public void HandleEvent(EntityDeletedEvent<NewsComment> eventMessage)
-        {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.NewsCommentsPrefixCacheKey);
-        }
-
+       
         //State/province
         public void HandleEvent(EntityInsertedEvent<StateProvince> eventMessage)
         {
@@ -700,20 +676,6 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityDeletedEvent<TopicTemplate> eventMessage)
         {
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.TopicTemplatePrefixCacheKey);
-        }
-
-        //checkout attributes
-        public void HandleEvent(EntityInsertedEvent<CheckoutAttribute> eventMessage)
-        {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CheckoutAttributesPrefixCacheKey);
-        }
-        public void HandleEvent(EntityUpdatedEvent<CheckoutAttribute> eventMessage)
-        {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CheckoutAttributesPrefixCacheKey);
-        }
-        public void HandleEvent(EntityDeletedEvent<CheckoutAttribute> eventMessage)
-        {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CheckoutAttributesPrefixCacheKey);
         }
 
         //shopping cart items

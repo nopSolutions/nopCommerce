@@ -13,11 +13,11 @@ namespace Nop.Data.Migrations.News
 
         public override void Up()
         {
-            this.AddForeignKey(NopMappingDefaults.NewsItemTable
-                , nameof(NewsItem.LanguageId)
-                , nameof(Language)
-                , nameof(Language.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(NopMappingDefaults.NewsItemTable,
+                nameof(NewsItem.LanguageId),
+                nameof(Language),
+                nameof(Language.Id),
+                Rule.Cascade);
         }
 
         #endregion

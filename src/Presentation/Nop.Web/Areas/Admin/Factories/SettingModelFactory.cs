@@ -436,7 +436,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 TwitterMetaTags = seoSettings.TwitterMetaTags,
                 OpenGraphMetaTags = seoSettings.OpenGraphMetaTags,
-                CustomHeadTags = seoSettings.CustomHeadTags
+                CustomHeadTags = seoSettings.CustomHeadTags,
+                MicrodataEnabled = seoSettings.MicrodataEnabled
             };
 
             if (storeId <= 0)
@@ -455,6 +456,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.TwitterMetaTags_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.TwitterMetaTags, storeId);
             model.OpenGraphMetaTags_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.OpenGraphMetaTags, storeId);
             model.CustomHeadTags_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.CustomHeadTags, storeId);
+            model.MicrodataEnabled_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.MicrodataEnabled, storeId);
 
             return model;
         }

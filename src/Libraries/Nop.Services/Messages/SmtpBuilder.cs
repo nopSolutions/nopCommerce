@@ -51,8 +51,7 @@ namespace Nop.Services.Messages
                 client.Connect(
                      emailAccount.Host,
                      emailAccount.Port,
-                     emailAccount.EnableSsl ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.StartTlsWhenAvailable
-                 );
+                     emailAccount.EnableSsl ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.StartTlsWhenAvailable);
 
                 client.Authenticate(emailAccount.UseDefaultCredentials ?
                         CredentialCache.DefaultNetworkCredentials :

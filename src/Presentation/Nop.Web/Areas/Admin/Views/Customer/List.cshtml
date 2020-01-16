@@ -7,7 +7,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Customers.Customers").Text;
+    ViewBag.PageTitle = T("Admin.Customers.Customers").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Customers list");
 }
@@ -63,8 +63,8 @@
                         </button>
                     </li>
                 </ul>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerListButtons })
             </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerListButtons })
         </div>
     </div>
 
@@ -268,12 +268,11 @@
                                 IsMasterCheckBox = true,
                                 Render = new RenderCheckBox("checkbox_customers"),
                                 ClassName = NopColumnClassDefaults.CenterAll,
-                                Width = "50",
+                                Width = "50"
                             });
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Email))
                             {
-                                Title = T("Admin.Customers.Customers.Fields.Email").Text,
-                                Width = "200"
+                                Title = T("Admin.Customers.Customers.Fields.Email").Text
                             });
                             if (Model.AvatarEnabled)
                             {

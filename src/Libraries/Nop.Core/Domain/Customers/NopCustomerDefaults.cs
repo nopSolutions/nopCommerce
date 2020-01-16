@@ -1,5 +1,4 @@
-
-namespace Nop.Core.Domain.Customers
+﻿namespace Nop.Core.Domain.Customers
 {
     /// <summary>
     /// Represents default values related to customers data

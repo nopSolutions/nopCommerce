@@ -1,6 +1,5 @@
 ﻿using System;
 
-
 namespace Nop.Core.Domain.Discounts
 {
     /// <summary>
@@ -12,6 +11,11 @@ namespace Nop.Core.Domain.Discounts
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the admin comment
+        /// </summary>
+        public string AdminComment { get; set; }
 
         /// <summary>
         /// Gets or sets the discount type identifier
@@ -88,7 +92,6 @@ namespace Nop.Core.Domain.Discounts
         /// <summary>
         /// Gets or sets the discount type
         /// </summary>
-        
         public DiscountType DiscountType
         {
             get => (DiscountType)DiscountTypeId;
@@ -98,7 +101,6 @@ namespace Nop.Core.Domain.Discounts
         /// <summary>
         /// Gets or sets the discount limitation
         /// </summary>
-        
         public DiscountLimitationType DiscountLimitation
         {
             get => (DiscountLimitationType)DiscountLimitationId;

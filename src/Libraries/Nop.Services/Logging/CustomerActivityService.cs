@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching.Extensions;
 
 namespace Nop.Services.Logging
 {
@@ -18,7 +19,6 @@ namespace Nop.Services.Logging
         
         private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
-        private readonly IStaticCacheManager _cacheManager;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
 
@@ -28,81 +28,17 @@ namespace Nop.Services.Logging
 
         public CustomerActivityService(IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
-            IStaticCacheManager cacheManager,
             IWebHelper webHelper,
             IWorkContext workContext)
         {
             _activityLogRepository = activityLogRepository;
             _activityLogTypeRepository = activityLogTypeRepository;
-            _cacheManager = cacheManager;
             _webHelper = webHelper;
             _workContext = workContext;
         }
 
         #endregion
-
-        #region Nested classes
-
-        /// <summary>
-        /// Activity log type for caching
-        /// </summary>
-        [Serializable]
-        public class ActivityLogTypeForCaching
-        {
-            /// <summary>
-            /// Identifier
-            /// </summary>
-            public int Id { get; set; }
-
-            /// <summary>
-            /// System keyword
-            /// </summary>
-            public string SystemKeyword { get; set; }
-
-            /// <summary>
-            /// Name
-            /// </summary>
-            public string Name { get; set; }
-
-            /// <summary>
-            /// Enabled
-            /// </summary>
-            public bool Enabled { get; set; }
-        }
-
-        #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Gets all activity log types (class for caching)
-        /// </summary>
-        /// <returns>Activity log types</returns>
-        protected virtual IList<ActivityLogTypeForCaching> GetAllActivityTypesCached()
-        {
-            //cache
-            return _cacheManager.Get(NopLoggingDefaults.ActivityTypeAllCacheKey, () =>
-            {
-                var result = new List<ActivityLogTypeForCaching>();
-                var activityLogTypes = GetAllActivityTypes();
-                foreach (var alt in activityLogTypes)
-                {
-                    var altForCaching = new ActivityLogTypeForCaching
-                    {
-                        Id = alt.Id,
-                        SystemKeyword = alt.SystemKeyword,
-                        Name = alt.Name,
-                        Enabled = alt.Enabled
-                    };
-                    result.Add(altForCaching);
-                }
-
-                return result;
-            });
-        }
-
-        #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -115,7 +51,6 @@ namespace Nop.Services.Logging
                 throw new ArgumentNullException(nameof(activityLogType));
 
             _activityLogTypeRepository.Insert(activityLogType);
-            _cacheManager.RemoveByPrefix(NopLoggingDefaults.ActivityTypePrefixCacheKey);
         }
 
         /// <summary>
@@ -128,7 +63,6 @@ namespace Nop.Services.Logging
                 throw new ArgumentNullException(nameof(activityLogType));
 
             _activityLogTypeRepository.Update(activityLogType);
-            _cacheManager.RemoveByPrefix(NopLoggingDefaults.ActivityTypePrefixCacheKey);
         }
 
         /// <summary>
@@ -141,7 +75,6 @@ namespace Nop.Services.Logging
                 throw new ArgumentNullException(nameof(activityLogType));
 
             _activityLogTypeRepository.Delete(activityLogType);
-            _cacheManager.RemoveByPrefix(NopLoggingDefaults.ActivityTypePrefixCacheKey);
         }
 
         /// <summary>
@@ -153,7 +86,8 @@ namespace Nop.Services.Logging
             var query = from alt in _activityLogTypeRepository.Table
                         orderby alt.Name
                         select alt;
-            var activityLogTypes = query.ToList();
+            var activityLogTypes = query.ToCachedList(NopLoggingCachingDefaults.ActivityTypeAllCacheKey);
+
             return activityLogTypes;
         }
 
@@ -167,7 +101,7 @@ namespace Nop.Services.Logging
             if (activityLogTypeId == 0)
                 return null;
 
-            return _activityLogTypeRepository.GetById(activityLogTypeId);
+            return _activityLogTypeRepository.ToCachedGetById(activityLogTypeId);
         }
 
         /// <summary>
@@ -196,7 +130,7 @@ namespace Nop.Services.Logging
                 return null;
 
             //try to get activity log type by passed system keyword
-            var activityLogType = GetAllActivityTypesCached().FirstOrDefault(type => type.SystemKeyword.Equals(systemKeyword));
+            var activityLogType = GetAllActivityTypes().FirstOrDefault(type => type.SystemKeyword.Equals(systemKeyword));
             if (!activityLogType?.Enabled ?? true)
                 return null;
 
@@ -286,7 +220,7 @@ namespace Nop.Services.Logging
             if (activityLogId == 0)
                 return null;
 
-            return _activityLogRepository.GetById(activityLogId);
+            return _activityLogRepository.ToCachedGetById(activityLogId);
         }
 
         /// <summary>

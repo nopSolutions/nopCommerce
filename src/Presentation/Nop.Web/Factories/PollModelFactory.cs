@@ -101,6 +101,7 @@ namespace Nop.Web.Factories
 
                 return PreparePollModel(poll, false);
             });
+
             if ((cachedModel?.Id ?? 0) == 0)
                 return null;
 

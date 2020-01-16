@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Orders
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(CheckoutAttributeValue)
-                , nameof(CheckoutAttributeValue.CheckoutAttributeId)
-                , nameof(CheckoutAttribute)
-                , nameof(CheckoutAttribute.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(CheckoutAttributeValue),
+                nameof(CheckoutAttributeValue.CheckoutAttributeId),
+                nameof(CheckoutAttribute),
+                nameof(CheckoutAttribute.Id),
+                Rule.Cascade);
         }
 
         #endregion

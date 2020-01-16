@@ -13,11 +13,11 @@ namespace Nop.Data.Migrations.Catalog
 
         public override void Up()
         {
-            this.AddForeignKey(NopMappingDefaults.ProductPictureTable
-                , nameof(ProductPicture.PictureId)
-                , nameof(Picture)
-                , nameof(Picture.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(NopMappingDefaults.ProductPictureTable,
+                nameof(ProductPicture.PictureId),
+                nameof(Picture),
+                nameof(Picture.Id),
+                Rule.Cascade);
         }
 
         #endregion

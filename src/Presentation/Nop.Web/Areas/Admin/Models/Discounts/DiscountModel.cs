@@ -31,6 +31,9 @@ namespace Nop.Web.Areas.Admin.Models.Discounts
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.Name")]
         public string Name { get; set; }
 
+        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.AdminComment")]
+        public string AdminComment { get; set; }
+
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.DiscountType")]
         public int DiscountTypeId { get; set; }
 

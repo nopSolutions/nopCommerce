@@ -1,6 +1,5 @@
 ﻿using System;
 
-
 namespace Nop.Core.Domain.Logging
 {
     /// <summary>
@@ -51,7 +50,6 @@ namespace Nop.Core.Domain.Logging
         /// <summary>
         /// Gets or sets the log level
         /// </summary>
-        
         public LogLevel LogLevel
         {
             get => (LogLevel)LogLevelId;

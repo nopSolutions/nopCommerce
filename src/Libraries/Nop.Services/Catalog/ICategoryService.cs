@@ -66,7 +66,7 @@ namespace Nop.Services.Catalog
         /// <param name="discount">Discount</param>
         /// <param name="customer">Customer</param>
         /// <returns>Category identifiers</returns>
-        IList<int> GetAppliedCategoryIds(DiscountForCaching discount, Customer customer);
+        IList<int> GetAppliedCategoryIds(Discount discount, Customer customer);
 
         /// <summary>
         /// Gets child category identifiers
@@ -106,6 +106,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="category">Category</param>
         void UpdateCategory(Category category);
+
+        /// <summary>
+        /// Delete a list of categories
+        /// </summary>
+        /// <param name="categories">Categories</param>
+        void DeleteCategories(IList<Category> categories);
 
         /// <summary>
         /// Deletes a product category mapping

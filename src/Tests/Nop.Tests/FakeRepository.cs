@@ -77,9 +77,9 @@ namespace Nop.Tests
             }
         }
 
-        protected T GetById(int id)
+        private T GetById(object id)
         {
-            return _table.FirstOrDefault(x => x.Id == id);
+            return _table.FirstOrDefault(x => x.Id == Convert.ToInt32(id));
         }
 
         protected void SetupGRUD()

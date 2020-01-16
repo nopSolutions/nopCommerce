@@ -4,7 +4,7 @@
 @using Nop.Services.Stores
 @{
     //page title
-    ViewBag.Title = T("Admin.ContentManagement.News.Comments").Text;
+    ViewBag.PageTitle = T("Admin.ContentManagement.News.Comments").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("News comments");
 }
@@ -14,7 +14,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.News.Comments")
@@ -124,7 +123,7 @@
                                 IsMasterCheckBox = true,
                                 Render = new RenderCheckBox("checkbox_comments"),
                                 ClassName =  NopColumnClassDefaults.CenterAll,
-                                Width = "50",
+                                Width = "50"
                             },
                             new ColumnProperty(nameof(NewsCommentModel.NewsItemTitle))
                             {
@@ -152,7 +151,6 @@
                             new ColumnProperty(nameof(NewsCommentModel.CommentText))
                             {
                                 Title = T("Admin.ContentManagement.News.Comments.Fields.CommentText").Text,
-                                Width = "200",
                                 Encode = false
                             },
                             new ColumnProperty(nameof(NewsCommentModel.IsApproved))
@@ -167,14 +165,14 @@
                             new ColumnProperty(nameof(NewsCommentModel.CreatedOn))
                             {
                                 Title = T("Admin.ContentManagement.News.Comments.Fields.CreatedOn").Text,
-                                Width = "200",
+                                Width = "120",
                                 ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(NewsCommentModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
-                                Width = "200",
+                                Width = "100",
                                 ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonsInlineEdit()
                             },

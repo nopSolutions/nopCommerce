@@ -137,8 +137,8 @@ namespace Nop.Web.Factories
 
             //number of news comments
             var storeId = _newsSettings.ShowNewsCommentsPerStore ? _storeContext.CurrentStore.Id : 0;
-            var cacheKey = string.Format(NopModelCacheDefaults.NewsCommentsNumberKey, newsItem.Id, storeId, true);
-            model.NumberOfComments = _cacheManager.Get(cacheKey, () => _newsService.GetNewsCommentsCount(newsItem, storeId, true));
+            
+            model.NumberOfComments = _newsService.GetNewsCommentsCount(newsItem, storeId, true);
 
             if (prepareComments)
             {
@@ -176,8 +176,7 @@ namespace Nop.Web.Factories
                             var newsModel = new NewsItemModel();
                             PrepareNewsItemModel(newsModel, x, false);
                             return newsModel;
-                        })
-                        .ToList()
+                        }).ToList()
                 };
             });
 
@@ -187,6 +186,7 @@ namespace Nop.Web.Factories
             var model = (HomepageNewsItemsModel)cachedModel.Clone();
             foreach (var newsItemModel in model.NewsItems)
                 newsItemModel.Comments.Clear();
+
             return model;
         }
 
@@ -217,8 +217,7 @@ namespace Nop.Web.Factories
                     var newsModel = new NewsItemModel();
                     PrepareNewsItemModel(newsModel, x, false);
                     return newsModel;
-                })
-                .ToList();
+                }).ToList();
 
             return model;
         }

@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.ContentManagement.Topics").Text;
+    ViewBag.PageTitle = T("Admin.ContentManagement.Topics").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Topics");
 }
@@ -12,7 +12,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.Topics")

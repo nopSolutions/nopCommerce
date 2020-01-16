@@ -1,5 +1,4 @@
-﻿
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -86,7 +85,6 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the attribute value type
         /// </summary>
-        
         public AttributeValueType AttributeValueType
         {
             get => (AttributeValueType)AttributeValueTypeId;

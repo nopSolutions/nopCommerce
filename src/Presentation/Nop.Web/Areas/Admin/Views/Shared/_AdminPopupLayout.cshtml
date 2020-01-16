@@ -7,7 +7,9 @@
 @using Nop.Core.Domain.Localization
 @inject Nop.Services.Localization.ILanguageService languageService
 @{
-    var kendoVersion = "2014.1.318";
+    var kendoVersion = "2019.2.619";
+    var jQueryUI = "1.10.3";
+
     var supportRtl = workContext.WorkingLanguage.Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
 
     //CSS resources
@@ -31,7 +33,7 @@
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.rtl.min.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.default.min.css");
     Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.common.min.css");
-    Html.AppendCssFileParts("~/lib/jquery-ui/jquery-ui-1.10.3/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
+    Html.AppendCssFileParts($"~/lib/jquery-ui/jquery-ui-{jQueryUI}/jquery-ui-themes/smoothness/jquery-ui-{jQueryUI}.custom.min.css");
     Html.AppendCssFileParts("~/lib/fontAwesome/css/font-awesome.min.css");
     Html.AppendCssFileParts("~/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css");
     //AdminLTE Skins (choose a skin from the css/skins)
@@ -44,19 +46,20 @@
     Html.AppendScriptParts($"~/lib/datatables/datatables.min.js");
     Html.AppendScriptParts($"~/lib/datatables/js/dataTables.bootstrap.min.js");
     Html.AppendScriptParts($"~/lib/datatables/js/jquery.dataTables.min.js");
-    Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/kendo.web.min.js");
+    Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/kendo.ui.core.min.js");
+
     Html.AppendScriptParts("~/js/admin.common.js");
-    Html.AppendScriptParts("~/lib/jquery-migrate/jquery-migrate-1.2.1.min.js");
-    Html.AppendScriptParts("~/lib/jquery-ui/jquery-ui-1.10.3/jquery-ui-1.10.3.custom.min.js");
-    Html.AppendScriptParts("~/lib/jquery-validate/jquery.validate.unobtrusive/jquery.validate.unobtrusive.min.js");
-    Html.AppendScriptParts("~/lib/jquery-validate/jquery.validate-v1.11.1/jquery.validate.min.js");
+    Html.AppendScriptParts("~/lib/jquery-migrate/jquery-migrate-3.1.0.min.js");
+    Html.AppendScriptParts($"~/lib/jquery-ui/jquery-ui-{jQueryUI}/jquery-ui-{jQueryUI}.custom.min.js");
+    Html.AppendScriptParts("~/lib/jquery-validate/jquery.validate.unobtrusive-v3.2.11/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts("~/lib/jquery-validate/jquery.validate-v1.19.1/jquery.validate.min.js");
     Html.AppendScriptParts("~/lib/adminLTE/js/adminlte.min.js");
     Html.AppendScriptParts("~/lib/bootstrap/js/bootstrap.min.js");
     Html.AppendScriptParts("~/lib/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js");
-    Html.AppendScriptParts("~/lib/jquery/jquery-1.10.2.min.js");
+    Html.AppendScriptParts("~/lib/jquery/jquery-3.4.1.min.js");
 
     //page title
-    string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.Title) ? ViewBag.Title + " / " : "";
+    string adminPageTitle = !string.IsNullOrWhiteSpace(ViewBag.PageTitle) ? ViewBag.PageTitle + " / " : "";
     adminPageTitle += T("Admin.PageTitle").Text;
 
     //X-UA-Compatible tag

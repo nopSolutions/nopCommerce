@@ -229,7 +229,28 @@ columns: [
             @if (column.Encode && column.Render == null)
             {
                 <text>
-                render: $.fn.dataTable.render.text(),
+                render: function (data, type, row, meta) {
+                    var entityMap = {
+                        '&': '&amp;',
+                        '<': '&lt;',
+                        '>': '&gt;',
+                        '"': '&quot;',
+                        "'": '&#39;',
+                        '/': '&#x2F;',
+                        '`': '&#x60;',
+                        '=': '&#x3D;'
+                    };
+
+                    function escapeHtml (string) {
+                        if (string == null) {
+                            return '';
+                        }
+                        return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+                            return entityMap[s];
+                        });
+                    }
+                    return escapeHtml(data)
+                },
                 </text>
             }
             @switch (column.Render)
@@ -334,16 +355,14 @@ columns: [
                 case RenderCheckBox checkBox:
                     <text>
                     render: function (data, type, row, meta) {
-                        return (data === 'true')
-                            ? '<input name="@checkBox.Name" value="' + row.Id + '" type="checkbox" class="checkboxGroups" checked="checked" />'
-                            : '<input name="@checkBox.Name" value="' + row.Id + '" type="checkbox" class="checkboxGroups" />';
+                        return '<input name="@checkBox.Name" value="' + row.@checkBox.PropertyKeyName + '" type="checkbox" class="checkboxGroups" />';
                     },
                     </text>
                     break;
                 case RenderBoolean renderBoolean:
                     <text>
                     render: function (data, type, row) {
-                        return (data == true)
+                        return data
                             ? '<i class="fa fa-check true-icon" nop-value="true"></i>'
                             : '<i class="fa fa-close false-icon" nop-value="false"></i>';
                     },

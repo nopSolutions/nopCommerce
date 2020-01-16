@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using Newtonsoft.Json;
-using Nop.Core;
-using Nop.Core.Infrastructure;
 using Nop.Services.Media.RoxyFileman;
 using Nop.Services.Security;
 using Nop.Web.Framework.Mvc.Filters;
@@ -21,25 +17,19 @@ namespace Nop.Web.Areas.Admin.Controllers
     {
         #region Fields
 
-        private readonly INopFileProvider _fileProvider;
         private readonly IPermissionService _permissionService;
         private readonly IRoxyFilemanService _roxyFilemanService;
-        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
         public RoxyFilemanController(
-            INopFileProvider fileProvider,
             IPermissionService permissionService,
-            IRoxyFilemanService roxyFilemanService,
-            IWorkContext workContext)
+            IRoxyFilemanService roxyFilemanService)
         {
-            _fileProvider = fileProvider;
             _permissionService = permissionService;
             _roxyFilemanService = roxyFilemanService;
-            _workContext = workContext;
         }
 
         #endregion
@@ -51,100 +41,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         /// </summary>
         public virtual void CreateConfiguration()
         {
-            var filePath = _roxyFilemanService.GetConfigurationFilePath();
-
-            //create file if not exists
-            _fileProvider.CreateFile(filePath);
-
-            //try to read existing configuration
-            var existingText = _fileProvider.ReadAllText(filePath, Encoding.UTF8);
-            var existingConfiguration = JsonConvert.DeserializeAnonymousType(existingText, new
-            {
-                FILES_ROOT = string.Empty,
-                SESSION_PATH_KEY = string.Empty,
-                THUMBS_VIEW_WIDTH = string.Empty,
-                THUMBS_VIEW_HEIGHT = string.Empty,
-                PREVIEW_THUMB_WIDTH = string.Empty,
-                PREVIEW_THUMB_HEIGHT = string.Empty,
-                MAX_IMAGE_WIDTH = string.Empty,
-                MAX_IMAGE_HEIGHT = string.Empty,
-                DEFAULTVIEW = string.Empty,
-                FORBIDDEN_UPLOADS = string.Empty,
-                ALLOWED_UPLOADS = string.Empty,
-                FILEPERMISSIONS = string.Empty,
-                DIRPERMISSIONS = string.Empty,
-                LANG = string.Empty,
-                DATEFORMAT = string.Empty,
-                OPEN_LAST_DIR = string.Empty,
-                INTEGRATION = string.Empty,
-                RETURN_URL_PREFIX = string.Empty,
-                DIRLIST = string.Empty,
-                CREATEDIR = string.Empty,
-                DELETEDIR = string.Empty,
-                MOVEDIR = string.Empty,
-                COPYDIR = string.Empty,
-                RENAMEDIR = string.Empty,
-                FILESLIST = string.Empty,
-                UPLOAD = string.Empty,
-                DOWNLOAD = string.Empty,
-                DOWNLOADDIR = string.Empty,
-                DELETEFILE = string.Empty,
-                MOVEFILE = string.Empty,
-                COPYFILE = string.Empty,
-                RENAMEFILE = string.Empty,
-                GENERATETHUMB = string.Empty
-            });
-
-            //check whether the path base has changed, otherwise there is no need to overwrite the configuration file
-            var currentPathBase = HttpContext.Request.PathBase.ToString();
-            if (existingConfiguration?.RETURN_URL_PREFIX?.Equals(currentPathBase) ?? false)
-                return;
-
-            //create configuration
-            var configuration = new
-            {
-                FILES_ROOT = existingConfiguration?.FILES_ROOT ?? NopRoxyFilemanDefaults.DefaultRootDirectory,
-                SESSION_PATH_KEY = existingConfiguration?.SESSION_PATH_KEY ?? string.Empty,
-                THUMBS_VIEW_WIDTH = existingConfiguration?.THUMBS_VIEW_WIDTH ?? "140",
-                THUMBS_VIEW_HEIGHT = existingConfiguration?.THUMBS_VIEW_HEIGHT ?? "120",
-                PREVIEW_THUMB_WIDTH = existingConfiguration?.PREVIEW_THUMB_WIDTH ?? "300",
-                PREVIEW_THUMB_HEIGHT = existingConfiguration?.PREVIEW_THUMB_HEIGHT ?? "200",
-                MAX_IMAGE_WIDTH = existingConfiguration?.MAX_IMAGE_WIDTH ?? "1000",
-                MAX_IMAGE_HEIGHT = existingConfiguration?.MAX_IMAGE_HEIGHT ?? "1000",
-                DEFAULTVIEW = existingConfiguration?.DEFAULTVIEW ?? "list",
-                FORBIDDEN_UPLOADS = existingConfiguration?.FORBIDDEN_UPLOADS ?? "zip js jsp jsb mhtml mht xhtml xht php phtml " +
-                    "php3 php4 php5 phps shtml jhtml pl sh py cgi exe application gadget hta cpl msc jar vb jse ws wsf wsc wsh " +
-                    "ps1 ps2 psc1 psc2 msh msh1 msh2 inf reg scf msp scr dll msi vbs bat com pif cmd vxd cpl htpasswd htaccess",
-                ALLOWED_UPLOADS = existingConfiguration?.ALLOWED_UPLOADS ?? string.Empty,
-                FILEPERMISSIONS = existingConfiguration?.FILEPERMISSIONS ?? "0644",
-                DIRPERMISSIONS = existingConfiguration?.DIRPERMISSIONS ?? "0755",
-                LANG = existingConfiguration?.LANG ?? _workContext.WorkingLanguage.UniqueSeoCode,
-                DATEFORMAT = existingConfiguration?.DATEFORMAT ?? "dd/MM/yyyy HH:mm",
-                OPEN_LAST_DIR = existingConfiguration?.OPEN_LAST_DIR ?? "yes",
-
-                //no need user to configure
-                INTEGRATION = "tinymce4",
-                RETURN_URL_PREFIX = currentPathBase,
-                DIRLIST = $"{HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DIRLIST",
-                CREATEDIR = $"{HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=CREATEDIR",
-                DELETEDIR = $"{HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DELETEDIR",
-                MOVEDIR = $"{HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=MOVEDIR",
-                COPYDIR = $"{HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=COPYDIR",
-                RENAMEDIR = $"{HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=RENAMEDIR",
-                FILESLIST = $"{HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=FILESLIST",
-                UPLOAD = $"{HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=UPLOAD",
-                DOWNLOAD = $"{HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DOWNLOAD",
-                DOWNLOADDIR = $"{HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DOWNLOADDIR",
-                DELETEFILE = $"{HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=DELETEFILE",
-                MOVEFILE = $"{HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=MOVEFILE",
-                COPYFILE = $"{HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=COPYFILE",
-                RENAMEFILE = $"{HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=RENAMEFILE",
-                GENERATETHUMB = $"{HttpContext.Request.PathBase}/Admin/RoxyFileman/ProcessRequest?a=GENERATETHUMB"
-            };
-
-            //save the file
-            var text = JsonConvert.SerializeObject(configuration, Formatting.Indented);
-            _fileProvider.WriteAllText(filePath, text, Encoding.UTF8);
+            _roxyFilemanService.CreateConfiguration();
         }
 
         /// <summary>

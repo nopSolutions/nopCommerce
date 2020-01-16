@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Reports.Customers.BestBy.BestByOrderTotal").Text;
+    ViewBag.PageTitle = T("Admin.Reports.Customers.BestBy.BestByOrderTotal").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Customers by order total");
 }
@@ -11,8 +11,6 @@
     const string hideSearchBlockAttributeName = "CustomersBestByOrderTotalPage.HideSearchBlock";
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
-
-<nop-antiforgery-token />
 
 <div class="content-header clearfix">
     <h1 class="pull-left">

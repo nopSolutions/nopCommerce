@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -14,6 +13,8 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -34,7 +35,7 @@ namespace Nop.Services.Catalog
         protected readonly CatalogSettings _catalogSettings;
         protected readonly CommonSettings _commonSettings;
         protected readonly IAclService _aclService;
-        protected readonly ICacheManager _cacheManager;
+        protected readonly ICacheKeyFactory _cacheKeyFactory;
         protected readonly ICustomerService _customerService;
         protected readonly IDataProvider _dataProvider;
         protected readonly IDateRangeService _dateRangeService;
@@ -72,7 +73,7 @@ namespace Nop.Services.Catalog
         public ProductService(CatalogSettings catalogSettings,
             CommonSettings commonSettings,
             IAclService aclService,
-            ICacheManager cacheManager,
+            ICacheKeyFactory cacheKeyFactory,
             ICustomerService customerService,
             IDataProvider dataProvider,
             IDateRangeService dateRangeService,
@@ -106,7 +107,7 @@ namespace Nop.Services.Catalog
             _catalogSettings = catalogSettings;
             _commonSettings = commonSettings;
             _aclService = aclService;
-            _cacheManager = cacheManager;
+            _cacheKeyFactory = cacheKeyFactory;
             _customerService = customerService;
             _dataProvider = dataProvider;
             _dateRangeService = dateRangeService;
@@ -354,7 +355,9 @@ namespace Nop.Services.Catalog
                         !p.Deleted &&
                         p.ShowOnHomepage
                         select p;
-            var products = query.ToList();
+
+            var products = query.ToCachedList(NopCatalogCachingDefaults.ProductsAllDisplayedOnHomepageCacheKey);
+
             return products;
         }
 
@@ -368,8 +371,8 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return null;
 
-            var key = string.Format(NopCatalogDefaults.ProductsByIdCacheKey, productId);
-            return _cacheManager.Get(key, () => _productRepository.GetById(productId));
+            var key = string.Format(NopCatalogCachingDefaults.ProductsByIdCacheKey, productId);
+            return _productRepository.ToCachedGetById(productId, key);
         }
 
         /// <summary>
@@ -382,15 +385,19 @@ namespace Nop.Services.Catalog
             if (productIds == null || productIds.Length == 0)
                 return new List<Product>();
 
+            var key = string.Format(NopCatalogCachingDefaults.ProductsByIdsCacheKey, _cacheKeyFactory.CreateIdsHash(productIds));
+
             var query = from p in _productRepository.Table
                         where productIds.Contains(p.Id) && !p.Deleted
                         select p;
-            var products = query.ToList();
+
+            var products = query.ToCachedList(key);
+
             //sort by passed identifiers
             var sortedProducts = new List<Product>();
             foreach (var id in productIds)
             {
-                var product = products.Find(x => x.Id == id);
+                var product = products.FirstOrDefault(x => x.Id == id);
                 if (product != null)
                     sortedProducts.Add(product);
             }
@@ -409,10 +416,7 @@ namespace Nop.Services.Catalog
 
             //insert
             _productRepository.Insert(product);
-
-            //clear cache
-            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityInserted(product);
         }
@@ -428,10 +432,7 @@ namespace Nop.Services.Catalog
 
             //update
             _productRepository.Update(product);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityUpdated(product);
         }
@@ -447,10 +448,7 @@ namespace Nop.Services.Catalog
 
             //update
             _productRepository.Update(products);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
-
+            
             //event notification
             foreach (var product in products)
             {
@@ -749,6 +747,7 @@ namespace Nop.Services.Catalog
                 pLoadFilterableSpecificationAttributeOptionIds,
                 pFilterableSpecificationAttributeOptionIds,
                 pTotalRecords).ToList();
+
             //get filterable specification attribute option identifier
             var filterableSpecificationAttributeOptionIdsStr =
                 pFilterableSpecificationAttributeOptionIds.Value != DBNull.Value
@@ -786,7 +785,10 @@ namespace Nop.Services.Catalog
                 orderby p.Name
                 select p;
 
-            var products = new PagedList<Product>(query, pageIndex, pageSize);
+            var key = string.Format(NopCatalogCachingDefaults.ProductsByProductAtributeCacheKey, productAttributeId);
+
+            var products = query.ToCachedPagedList(key, pageIndex, pageSize);
+
             return products;
         }
 
@@ -1696,7 +1698,7 @@ namespace Nop.Services.Catalog
             if (pwi == null)
                 return 0;
             
-            var shipment = _shipmentRepository.GetById(shipmentItem.ShipmentId);
+            var shipment = _shipmentRepository.ToCachedGetById(shipmentItem.ShipmentId);
 
             //not shipped yet? hence "BookReservedInventory" method was not invoked
             if (!shipment.ShippedDateUtc.HasValue)
@@ -1766,7 +1768,7 @@ namespace Nop.Services.Catalog
             if (relatedProductId == 0)
                 return null;
 
-            return _relatedProductRepository.GetById(relatedProductId);
+            return _relatedProductRepository.ToCachedGetById(relatedProductId);
         }
 
         /// <summary>
@@ -1876,7 +1878,7 @@ namespace Nop.Services.Catalog
             if (crossSellProductId == 0)
                 return null;
 
-            return _crossSellProductRepository.GetById(crossSellProductId);
+            return _crossSellProductRepository.ToCachedGetById(crossSellProductId);
         }
 
         /// <summary>
@@ -2030,9 +2032,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(tierPrice));
 
             _tierPriceRepository.Delete(tierPrice);
-
-            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityDeleted(tierPrice);
         }
@@ -2047,7 +2047,7 @@ namespace Nop.Services.Catalog
             if (tierPriceId == 0)
                 return null;
 
-            return _tierPriceRepository.GetById(tierPriceId);
+            return _tierPriceRepository.ToCachedGetById(tierPriceId);
         }
 
         /// <summary>
@@ -2060,9 +2060,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(tierPrice));
 
             _tierPriceRepository.Insert(tierPrice);
-
-            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityInserted(tierPrice);
         }
@@ -2077,9 +2075,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(tierPrice));
 
             _tierPriceRepository.Update(tierPrice);
-
-            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityUpdated(tierPrice);
         }
@@ -2151,7 +2147,7 @@ namespace Nop.Services.Catalog
             if (productPictureId == 0)
                 return null;
 
-            return _productPictureRepository.GetById(productPictureId);
+            return _productPictureRepository.ToCachedGetById(productPictureId);
         }
 
         /// <summary>
@@ -2249,17 +2245,26 @@ namespace Nop.Services.Catalog
         {
             var query = _productReviewRepository.Table;
 
+            if (approved.HasValue)
+                query = query.Where(pr => pr.IsApproved == approved);
+            if (customerId > 0)
+                query = query.Where(pr => pr.CustomerId == customerId);
+            if (fromUtc.HasValue)
+                query = query.Where(pr => fromUtc.Value <= pr.CreatedOnUtc);
+            if (toUtc.HasValue)
+                query = query.Where(pr => toUtc.Value >= pr.CreatedOnUtc);
+            if (!string.IsNullOrEmpty(message))
+                query = query.Where(pr => pr.Title.Contains(message) || pr.ReviewText.Contains(message));
+            if (storeId > 0 && (showHidden || _catalogSettings.ShowProductReviewsPerStore))
+                query = query.Where(pr => pr.StoreId == storeId);
+            if (productId > 0)
+                query = query.Where(pr => pr.ProductId == productId);
+            
             query = from productReview in query
                 join product in _productRepository.Table on productReview.ProductId equals product.Id
                 where
-                    approved == null || productReview.IsApproved == approved &&
-                    customerId == 0 || productReview.CustomerId == customerId &&
-                    fromUtc == null || fromUtc.Value <= productReview.CreatedOnUtc &&
-                    toUtc == null || toUtc.Value >= productReview.CreatedOnUtc &&
-                    string.IsNullOrEmpty(message) || (productReview.Title.Contains(message) || productReview.ReviewText.Contains(message)) &&
-                    (storeId == 0 && !(showHidden || _catalogSettings.ShowProductReviewsPerStore)) || productReview.StoreId == storeId &&
-                    productId == 0 || productReview.ProductId == productId &&
-                    (vendorId == 0) || product.VendorId == vendorId &&
+                    (vendorId == 0 || product.VendorId == vendorId) &&
+                    //ignore deleted products
                     !product.Deleted
                 select productReview;
 
@@ -2295,7 +2300,7 @@ namespace Nop.Services.Catalog
             if (productReviewId == 0)
                 return null;
 
-            return _productReviewRepository.GetById(productReviewId);
+            return _productReviewRepository.ToCachedGetById(productReviewId);
         }
 
         /// <summary>
@@ -2350,7 +2355,6 @@ namespace Nop.Services.Catalog
 
             _productReviewRepository.Delete(productReview);
 
-            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
             //event notification
             _eventPublisher.EntityDeleted(productReview);
         }
@@ -2366,7 +2370,6 @@ namespace Nop.Services.Catalog
 
             _productReviewRepository.Delete(productReviews);
 
-            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
             //event notification
             foreach (var productReview in productReviews)
             {
@@ -2452,10 +2455,7 @@ namespace Nop.Services.Catalog
 
             //update
             _productReviewRepository.Update(productReview);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityUpdated(productReview);
         }
@@ -2501,7 +2501,7 @@ namespace Nop.Services.Catalog
             if (warehouseId == 0)
                 return null;
 
-            return _warehouseRepository.GetById(warehouseId);
+            return _warehouseRepository.ToCachedGetById(warehouseId);
         }
 
         /// <summary>
@@ -2527,9 +2527,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(pwi));
 
             _productWarehouseInventoryRepository.Delete(pwi);
-
-            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
-
+            
             _eventPublisher.EntityDeleted(pwi);
         }
 
@@ -2544,8 +2542,6 @@ namespace Nop.Services.Catalog
 
             _productWarehouseInventoryRepository.Insert(pwi);
 
-            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
-
             _eventPublisher.EntityInserted(pwi);
         }
 
@@ -2559,9 +2555,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(pwi));
 
             _productWarehouseInventoryRepository.Update(pwi);
-
-            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
-
+            
             _eventPublisher.EntityUpdated(pwi);
         }
 
@@ -2578,9 +2572,7 @@ namespace Nop.Services.Catalog
                 return;
 
             _productWarehouseInventoryRepository.Update(pwis);
-
-            _cacheManager.RemoveByPrefix(NopCatalogDefaults.ProductsPrefixCacheKey);
-
+            
             foreach (var pwi in pwis)
             {
                 _eventPublisher.EntityUpdated(pwi);

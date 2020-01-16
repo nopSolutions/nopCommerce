@@ -6,10 +6,13 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using Nop.Core;
+using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Media.RoxyFileman
@@ -19,12 +22,22 @@ namespace Nop.Services.Media.RoxyFileman
     /// </summary>
     public class FileRoxyFilemanService : BaseRoxyFilemanService, IRoxyFilemanService
     {
+        #region Fields
+
+        protected string _fileRootPath;
+
+        #endregion
+
         #region Ctor
 
         public FileRoxyFilemanService(IHostingEnvironment hostingEnvironment,
             IHttpContextAccessor httpContextAccessor,
-            INopFileProvider fileProvider) : base(hostingEnvironment, httpContextAccessor, fileProvider)
+            INopFileProvider fileProvider,
+            IWebHelper webHelper,
+            IWorkContext workContext,
+            MediaSettings mediaSettings) : base(hostingEnvironment, httpContextAccessor, fileProvider, webHelper, workContext, mediaSettings)
         {
+            _fileRootPath = null;
         }
 
         #endregion
@@ -66,6 +79,9 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>List of paths to the files</returns>
         protected virtual List<string> GetFiles(string directoryPath, string type)
         {
+            if (!IsPathAllowed(directoryPath))
+                return new List<string>();
+
             if (type == "#")
                 type = string.Empty;
 
@@ -157,6 +173,21 @@ namespace Nop.Services.Media.RoxyFileman
             }
         }
 
+        /// <summary>
+        /// Checks if the path is allowed to work on
+        /// </summary>
+        /// <param name="path">Path to check</param>
+        /// <returns></returns>
+        protected virtual bool IsPathAllowed(string path)
+        {
+            var absp = _fileProvider.GetAbsolutePath(path);
+
+            if (string.IsNullOrEmpty(_fileRootPath))
+                Configure();
+
+            return new DirectoryInfo(absp).FullName.StartsWith(_fileRootPath);
+        }
+
         #endregion
 
         #region Methods
@@ -168,7 +199,11 @@ namespace Nop.Services.Media.RoxyFileman
         /// </summary>
         public virtual void Configure()
         {
-            //do nothing
+            CreateConfiguration();
+
+            var existingText = _fileProvider.ReadAllText(GetConfigurationFilePath(), Encoding.UTF8);
+            var config = JsonConvert.DeserializeObject<Dictionary<string, string>>(existingText);
+            _fileRootPath = _fileProvider.GetAbsolutePath(config["FILES_ROOT"]);
         }
 
         #endregion
@@ -193,6 +228,9 @@ namespace Nop.Services.Media.RoxyFileman
             if (_fileProvider.DirectoryExists(newDirectoryPath))
                 throw new Exception(GetLanguageResource("E_DirAlreadyExists"));
 
+            if (!IsPathAllowed(directoryPath) || !IsPathAllowed(newDirectoryPath))
+                throw new Exception(GetLanguageResource("E_CopyDirInvalidPath"));
+
             CopyDirectory(directoryPath, newDirectoryPath);
 
             await GetHttpContext().Response.WriteAsync(GetSuccessResponse());
@@ -208,6 +246,9 @@ namespace Nop.Services.Media.RoxyFileman
         {
             parentDirectoryPath = GetFullPath(GetVirtualPath(parentDirectoryPath));
             if (!_fileProvider.DirectoryExists(parentDirectoryPath))
+                throw new Exception(GetLanguageResource("E_CreateDirInvalidPath"));
+
+            if (!IsPathAllowed(parentDirectoryPath))
                 throw new Exception(GetLanguageResource("E_CreateDirInvalidPath"));
 
             try
@@ -241,6 +282,9 @@ namespace Nop.Services.Media.RoxyFileman
             if (_fileProvider.GetDirectories(path).Length > 0 || _fileProvider.GetFiles(path).Length > 0)
                 throw new Exception(GetLanguageResource("E_DeleteNonEmpty"));
 
+            if (!IsPathAllowed(path))
+                throw new Exception(GetLanguageResource("E_DeleteDirInvalidPath"));
+
             try
             {
                 _fileProvider.DeleteDirectory(path);
@@ -262,6 +306,9 @@ namespace Nop.Services.Media.RoxyFileman
             path = GetVirtualPath(path).TrimEnd('/');
             var fullPath = GetFullPath(path);
             if (!_fileProvider.DirectoryExists(fullPath))
+                throw new Exception(GetLanguageResource("E_CreateArchive"));
+
+            if (!IsPathAllowed(fullPath))
                 throw new Exception(GetLanguageResource("E_CreateArchive"));
 
             var zipName = _fileProvider.GetFileName(fullPath) + ".zip";
@@ -332,6 +379,9 @@ namespace Nop.Services.Media.RoxyFileman
             if (_fileProvider.DirectoryExists(destinationPath))
                 throw new Exception(GetLanguageResource("E_DirAlreadyExists"));
 
+            if (!IsPathAllowed(fullSourcePath) || !IsPathAllowed(destinationPath))
+                throw new Exception(GetLanguageResource("E_MoveDirInvalisPath"));
+
             try
             {
                 _fileProvider.DirectoryMove(fullSourcePath, destinationPath);
@@ -353,6 +403,9 @@ namespace Nop.Services.Media.RoxyFileman
         {
             var fullSourcePath = GetFullPath(GetVirtualPath(sourcePath));
 
+            if (!IsPathAllowed(fullSourcePath))
+                throw new Exception(GetLanguageResource("E_RenameDirInvalidPath"));
+
             var destinationDirectory = _fileProvider.Combine(_fileProvider.GetParentDirectory(fullSourcePath), newName);
 
             if (GetVirtualPath(sourcePath) == GetRootDirectory())
@@ -363,6 +416,9 @@ namespace Nop.Services.Media.RoxyFileman
 
             if (_fileProvider.DirectoryExists(destinationDirectory))
                 throw new Exception(GetLanguageResource("E_DirAlreadyExists"));
+
+            if (!IsPathAllowed(destinationDirectory))
+                throw new Exception(GetLanguageResource("E_RenameDirInvalidPath"));
 
             try
             {
@@ -393,6 +449,10 @@ namespace Nop.Services.Media.RoxyFileman
                 throw new Exception(GetLanguageResource("E_CopyFileInvalisPath"));
 
             destinationPath = GetFullPath(GetVirtualPath(destinationPath));
+
+            if (!IsPathAllowed(filePath) || !IsPathAllowed(destinationPath))
+                throw new Exception(GetLanguageResource("E_CopyFileInvalisPath"));
+
             var newFileName = GetUniqueFileName(destinationPath, _fileProvider.GetFileName(filePath));
             try
             {
@@ -416,6 +476,9 @@ namespace Nop.Services.Media.RoxyFileman
             if (!_fileProvider.FileExists(path))
                 throw new Exception(GetLanguageResource("E_DeleteFileInvalidPath"));
 
+            if (!IsPathAllowed(path))
+                throw new Exception(GetLanguageResource("E_DeleteFileInvalidPath"));
+
             try
             {
                 _fileProvider.DeleteFile(path);
@@ -435,6 +498,10 @@ namespace Nop.Services.Media.RoxyFileman
         public virtual async Task DownloadFileAsync(string path)
         {
             var filePath = GetFullPath(GetVirtualPath(path));
+
+            if (!IsPathAllowed(path))
+                throw new Exception(GetLanguageResource("E_ActionDisabled"));
+
             if (_fileProvider.FileExists(filePath))
             {
                 GetHttpContext().Response.Clear();
@@ -504,6 +571,9 @@ namespace Nop.Services.Media.RoxyFileman
             if (!CanHandleFile(_fileProvider.GetFileName(destinationPath)))
                 throw new Exception(GetLanguageResource("E_FileExtensionForbidden"));
 
+            if (!IsPathAllowed(fullSourcePath) || !IsPathAllowed(destinationPath))
+                throw new Exception(GetLanguageResource("E_MoveFileInvalisPath"));
+
             try
             {
                 _fileProvider.FileMove(fullSourcePath, destinationPath);
@@ -530,9 +600,13 @@ namespace Nop.Services.Media.RoxyFileman
             if (!CanHandleFile(newName))
                 throw new Exception(GetLanguageResource("E_FileExtensionForbidden"));
 
+            var destinationPath = _fileProvider.Combine(_fileProvider.GetDirectoryName(fullSourcePath), newName);
+
+            if (!IsPathAllowed(fullSourcePath) || !IsPathAllowed(destinationPath))
+                throw new Exception(GetLanguageResource("E_RenameFileInvalidPath"));
+
             try
             {
-                var destinationPath = _fileProvider.Combine(_fileProvider.GetDirectoryName(fullSourcePath), newName);
                 _fileProvider.FileMove(fullSourcePath, destinationPath);
 
                 await GetHttpContext().Response.WriteAsync(GetSuccessResponse());
@@ -552,9 +626,14 @@ namespace Nop.Services.Media.RoxyFileman
         {
             var result = GetSuccessResponse();
             var hasErrors = false;
+
+            directoryPath = GetFullPath(GetVirtualPath(directoryPath));
+
+            if (!IsPathAllowed(directoryPath))
+                throw new Exception(GetLanguageResource("E_UploadNotAll"));
+
             try
             {
-                directoryPath = GetFullPath(GetVirtualPath(directoryPath));
                 foreach (var formFile in GetHttpContext().Request.Form.Files)
                 {
                     var fileName = formFile.FileName;

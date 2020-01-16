@@ -6,6 +6,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Html;
 using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Vendors
@@ -51,7 +52,7 @@ namespace Nop.Services.Vendors
             if (vendorId == 0)
                 return null;
 
-            return _vendorRepository.GetById(vendorId);
+            return _vendorRepository.ToCachedGetById(vendorId);
         }
 
         /// <summary>
@@ -179,7 +180,7 @@ namespace Nop.Services.Vendors
             if (vendorNoteId == 0)
                 return null;
 
-            return _vendorNoteRepository.GetById(vendorNoteId);
+            return _vendorNoteRepository.ToCachedGetById(vendorNoteId);
         }
 
         /// <summary>

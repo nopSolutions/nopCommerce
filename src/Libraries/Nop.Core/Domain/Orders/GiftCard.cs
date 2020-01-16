@@ -1,5 +1,4 @@
 ﻿using System;
-
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Core.Domain.Orders
@@ -72,7 +71,6 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the gift card type
         /// </summary>
-        
         public GiftCardType GiftCardType
         {
             get => (GiftCardType)GiftCardTypeId;

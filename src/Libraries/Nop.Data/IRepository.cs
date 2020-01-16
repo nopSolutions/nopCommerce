@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using LinqToDB.Data;
 using Nop.Core;
 
 namespace Nop.Data
@@ -62,7 +63,7 @@ namespace Nop.Data
         /// <param name="storeProcedureName">Store procedure name</param>
         /// <param name="dataParameters">Command parameters</param>
         /// <returns>Collection of query result records</returns>
-        IEnumerable<TEntity> EntityFromSql(string storeProcedureName, params object[] dataParameters);
+        IList<TEntity> EntityFromSql(string storeProcedureName, params DataParameter[] dataParameters);
 
         /// <summary>
         /// Truncates database table

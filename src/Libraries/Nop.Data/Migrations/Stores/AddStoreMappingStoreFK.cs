@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Stores
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(StoreMapping)
-                , nameof(StoreMapping.StoreId)
-                , nameof(Store)
-                , nameof(Store.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(StoreMapping),
+                nameof(StoreMapping.StoreId),
+                nameof(Store),
+                nameof(Store.Id),
+                Rule.Cascade);
         }
 
         #endregion

@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Orders.Shipments.List").Text;
+    ViewBag.PageTitle = T("Admin.Orders.Shipments.List").Text;
 
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Shipments");
@@ -98,6 +98,14 @@
                                             <nop-select asp-for="WarehouseId" asp-items="Model.AvailableWarehouses" />
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="LoadNotDelivered" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="LoadNotDelivered" />
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-7">
                                     <div class="form-group">
@@ -174,7 +182,8 @@
                             new FilterParameter(nameof(Model.County)),
                             new FilterParameter(nameof(Model.City)),
                             new FilterParameter(nameof(Model.WarehouseId)),
-                            new FilterParameter(nameof(Model.LoadNotShipped), typeof(bool))
+                            new FilterParameter(nameof(Model.LoadNotShipped), typeof(bool)),
+                            new FilterParameter(nameof(Model.LoadNotDelivered),typeof(bool))
                         },
                         ColumnCollection = new List<ColumnProperty>
                         {
@@ -190,12 +199,13 @@
                                 IsMasterCheckBox = true,
                                 Render = new RenderCheckBox("checkbox_shipments"),
                                 Searchable = false,
-                                Width = "10",
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Width = "50"
                             },
                             new ColumnProperty(nameof(ShipmentModel.Id))
                             {
                                 Title = T("Admin.Orders.Shipments.ID").Text,
-                                Width = "50"
+                                Width = "80"
                             },
                             new ColumnProperty(nameof(ShipmentModel.CustomOrderNumber))
                             {
@@ -204,8 +214,7 @@
                             },
                             new ColumnProperty(nameof(ShipmentModel.TrackingNumber))
                             {
-                                Title = T("Admin.Orders.Shipments.TrackingNumber").Text,
-                                Width = "100"
+                                Title = T("Admin.Orders.Shipments.TrackingNumber").Text
                             },
                             new ColumnProperty(nameof(ShipmentModel.TotalWeight))
                             {
@@ -215,17 +224,17 @@
                             new ColumnProperty(nameof(ShipmentModel.ShippedDate))
                             {
                                 Title = T("Admin.Orders.Shipments.ShippedDate").Text,
-                                Width = "200"
+                                Width = "150"
                             },
                             new ColumnProperty(nameof(ShipmentModel.DeliveryDate))
                             {
                                 Title = T("Admin.Orders.Shipments.DeliveryDate").Text,
-                                Width = "200"
+                                Width = "150"
                             },
                             new ColumnProperty(nameof(OrderModel.Id))
                             {
                                 Title = T("Admin.Common.View").Text,
-                                Width = "50",
+                                Width = "100",
                                 ClassName = NopColumnClassDefaults.Button,
                                 Render = new RenderButtonView(new DataUrl("~/Admin/Order/ShipmentDetails/"))
                             }

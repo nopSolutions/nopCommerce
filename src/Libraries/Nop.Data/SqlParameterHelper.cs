@@ -5,6 +5,9 @@ using LinqToDB.Data;
 
 namespace Nop.Data
 {
+    /// <summary>
+    /// Helper class to use SqlParameter
+    /// </summary>
     public static partial class SqlParameterHelper
     {
         #region Utilities

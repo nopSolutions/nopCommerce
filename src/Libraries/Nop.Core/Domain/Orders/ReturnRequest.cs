@@ -1,6 +1,5 @@
 ﻿using System;
 
-
 namespace Nop.Core.Domain.Orders
 {
     /// <summary>
@@ -76,7 +75,6 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the return status
         /// </summary>
-        
         public ReturnRequestStatus ReturnRequestStatus
         {
             get => (ReturnRequestStatus)ReturnRequestStatusId;

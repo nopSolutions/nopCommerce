@@ -4,7 +4,7 @@
 @using Nop.Services.Stores
 @{
     //page title
-    ViewBag.Title = T("Admin.ContentManagement.Blog.Comments").Text;
+    ViewBag.PageTitle = T("Admin.ContentManagement.Blog.Comments").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Blog comments");
 }
@@ -14,7 +14,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.Blog.Comments")
@@ -124,12 +123,11 @@
                                 IsMasterCheckBox = true,
                                 Render = new RenderCheckBox("checkbox_comments"),
                                 ClassName =  NopColumnClassDefaults.CenterAll,
-                                Width = "50",
+                                Width = "50"
                             },
                             new ColumnProperty(nameof(BlogCommentModel.BlogPostTitle))
                             {
                                 Title = T("Admin.ContentManagement.Blog.Comments.Fields.BlogPost").Text,
-                                Width = "200",
                                 Render = new RenderLink(new DataUrl("~/Admin/Blog/BlogPostEdit/", nameof(BlogCommentModel.BlogPostId)))
                             },
                             new ColumnProperty(nameof(BlogCommentModel.StoreName))
@@ -147,13 +145,13 @@
                             new ColumnProperty(nameof(BlogCommentModel.Comment))
                             {
                                 Title = T("Admin.ContentManagement.Blog.Comments.Fields.Comment").Text,
-                                Width = "200",
+                                Width = "300",
                                 Encode = false
                             },
                             new ColumnProperty(nameof(BlogCommentModel.IsApproved))
                             {
                                 Title = T("Admin.ContentManagement.Blog.Comments.Fields.IsApproved").Text,
-                                Width = "100",
+                                Width = "80",
                                 ClassName = NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean(),
                                 Editable = true,
@@ -162,14 +160,14 @@
                             new ColumnProperty(nameof(BlogCommentModel.CreatedOn))
                             {
                                 Title = T("Admin.ContentManagement.Blog.Comments.Fields.CreatedOn").Text,
-                                Width = "200",
+                                Width = "150",
                                 ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(BlogCommentModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
-                                Width = "200",
+                                Width = "100",
                                 ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonsInlineEdit()
                             },

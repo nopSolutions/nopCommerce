@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Messages
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(QueuedEmail)
-                , nameof(QueuedEmail.EmailAccountId)
-                , nameof(EmailAccount)
-                , nameof(EmailAccount.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(QueuedEmail),
+                nameof(QueuedEmail.EmailAccountId),
+                nameof(EmailAccount),
+                nameof(EmailAccount.Id),
+                Rule.Cascade);
         }
 
         #endregion

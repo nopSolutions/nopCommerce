@@ -454,9 +454,9 @@ namespace Nop.Core.Infrastructure
             if (!IsDirectory(path) && FileExists(path))
                 path = new FileInfo(path).DirectoryName;
 
-            path = path?.Replace(Root, "").Replace('\\', '/').Trim('/').TrimStart('~', '/');
+            path = path?.Replace(Root, string.Empty).Replace('\\', '/').Trim('/').TrimStart('~', '/');
 
-            return $"~/{path ?? ""}";
+            return $"~/{path ?? string.Empty}";
         }
 
         /// <summary>

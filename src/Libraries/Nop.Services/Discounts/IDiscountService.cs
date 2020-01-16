@@ -65,30 +65,12 @@ namespace Nop.Services.Discounts
         #region Discounts (caching)
 
         /// <summary>
-        /// Gets all discounts (cacheable models)
-        /// </summary>
-        /// <param name="discountType">Discount type; pass null to load all records</param>
-        /// <param name="couponCode">Coupon code to find (exact match); pass null or empty to load all records</param>
-        /// <param name="discountName">Discount name; pass null or empty to load all records</param>
-        /// <param name="showHidden">A value indicating whether to show expired and not started discounts</param>
-        /// <returns>Discounts</returns>
-        IList<DiscountForCaching> GetAllDiscountsForCaching(DiscountType? discountType = null,
-            string couponCode = null, string discountName = null, bool showHidden = false);
-
-        /// <summary>
-        /// Map a discount to the same class for caching
-        /// </summary>
-        /// <param name="discount">Discount</param>
-        /// <returns>Result</returns>
-        DiscountForCaching MapDiscount(Discount discount);
-
-        /// <summary>
         /// Gets the discount amount for the specified value
         /// </summary>
         /// <param name="discount">Discount</param>
         /// <param name="amount">Amount</param>
         /// <returns>The discount amount</returns>
-        decimal GetDiscountAmount(DiscountForCaching discount, decimal amount);
+        decimal GetDiscountAmount(Discount discount, decimal amount);
 
         /// <summary>
         /// Get preferred discount (with maximum discount value)
@@ -97,7 +79,7 @@ namespace Nop.Services.Discounts
         /// <param name="amount">Amount (initial value)</param>
         /// <param name="discountAmount">Discount amount</param>
         /// <returns>Preferred discount</returns>
-        List<DiscountForCaching> GetPreferredDiscount(IList<DiscountForCaching> discounts,
+        List<Discount> GetPreferredDiscount(IList<Discount> discounts,
             decimal amount, out decimal discountAmount);
 
         /// <summary>
@@ -106,7 +88,7 @@ namespace Nop.Services.Discounts
         /// <param name="discounts">A list of discounts</param>
         /// <param name="discount">Discount to check</param>
         /// <returns>Result</returns>
-        bool ContainsDiscount(IList<DiscountForCaching> discounts, DiscountForCaching discount);
+        bool ContainsDiscount(IList<Discount> discounts, Discount discount);
 
         #endregion
 
@@ -171,23 +153,6 @@ namespace Nop.Services.Discounts
         /// <param name="couponCodesToValidate">Coupon codes to validate</param>
         /// <returns>Discount validation result</returns>
         DiscountValidationResult ValidateDiscount(Discount discount, Customer customer, string[] couponCodesToValidate);
-
-        /// <summary>
-        /// Validate discount
-        /// </summary>
-        /// <param name="discount">Discount</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Discount validation result</returns>
-        DiscountValidationResult ValidateDiscount(DiscountForCaching discount, Customer customer);
-
-        /// <summary>
-        /// Validate discount
-        /// </summary>
-        /// <param name="discount">Discount</param>
-        /// <param name="customer">Customer</param>
-        /// <param name="couponCodesToValidate">Coupon codes to validate</param>
-        /// <returns>Discount validation result</returns>
-        DiscountValidationResult ValidateDiscount(DiscountForCaching discount, Customer customer, string[] couponCodesToValidate);
 
         #endregion
 

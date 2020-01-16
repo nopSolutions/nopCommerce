@@ -17,7 +17,7 @@ namespace Nop.Data.Mapping.Discounts
         public override void Configure(EntityMappingBuilder<DiscountCategoryMapping> builder)
         {
             builder.HasTableName(NopMappingDefaults.DiscountAppliedToCategoriesTable);
-            builder.HasPrimaryKey(mapping => new { mapping.DiscountId, mapping.EntityId});
+            builder.HasPrimaryKey(mapping => new { mapping.DiscountId, mapping.EntityId });
 
             builder.Property(mapping => mapping.DiscountId).HasColumnName("Discount_Id");
             builder.Property(mapping => mapping.EntityId).HasColumnName("Category_Id");

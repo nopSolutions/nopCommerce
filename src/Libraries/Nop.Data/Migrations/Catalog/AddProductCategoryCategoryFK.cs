@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Catalog
 
         public override void Up()
         {
-            this.AddForeignKey(NopMappingDefaults.ProductCategoryTable
-                , nameof(ProductCategory.CategoryId)
-                , nameof(Category)
-                , nameof(Category.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(NopMappingDefaults.ProductCategoryTable,
+                nameof(ProductCategory.CategoryId),
+                nameof(Category),
+                nameof(Category.Id),
+                Rule.Cascade);
         }
         
         #endregion

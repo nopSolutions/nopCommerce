@@ -3,7 +3,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Plugins.Local").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Plugins.Local").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Local plugins");
 }
@@ -13,7 +13,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <form asp-controller="Plugin" asp-action="List" id="plugins-form-local">
     <div class="content-header clearfix">
         <h1 class="pull-left">

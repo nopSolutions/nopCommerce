@@ -1,6 +1,5 @@
 ﻿using Moq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -9,6 +8,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
+using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -25,7 +25,7 @@ namespace Nop.Services.Tests
         public FakeProductService(CatalogSettings catalogSettings = null,
             CommonSettings commonSettings = null,
             IAclService aclService = null,
-            ICacheManager cacheManager = null,
+            ICacheKeyFactory cacheKeyFactory = null,
             ICustomerService customerService = null,
             IDataProvider dataProvider = null,
             IDateRangeService dateRangeService = null,
@@ -58,7 +58,7 @@ namespace Nop.Services.Tests
                 catalogSettings ?? new CatalogSettings(),
                 commonSettings ?? new CommonSettings(),
                 aclService ?? new Mock<IAclService>().Object,
-                cacheManager ?? new TestCacheManager(),
+                cacheKeyFactory ?? new Mock<ICacheKeyFactory>().Object,
                 customerService ?? new Mock<ICustomerService>().Object,
                 dataProvider ?? new Mock<IDataProvider>().Object,
                 dateRangeService ?? new Mock<IDateRangeService>().Object,

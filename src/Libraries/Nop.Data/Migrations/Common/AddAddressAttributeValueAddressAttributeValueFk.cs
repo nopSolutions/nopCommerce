@@ -14,11 +14,11 @@ namespace Nop.Data.Migrations.Common
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(AddressAttributeValue)
-                , nameof(AddressAttributeValue.AddressAttributeId)
-                , nameof(AddressAttribute)
-                , nameof(AddressAttribute.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(AddressAttributeValue),
+                nameof(AddressAttributeValue.AddressAttributeId),
+                nameof(AddressAttribute),
+                nameof(AddressAttribute.Id),
+                Rule.Cascade);
         }
 
         #endregion

@@ -121,7 +121,8 @@ namespace Nop.Web.Framework
             var options = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = cookieExpiresDate
+                Expires = cookieExpiresDate,
+                Secure = _httpContextAccessor.HttpContext.Request.IsHttps
             };
             _httpContextAccessor.HttpContext.Response.Cookies.Append(cookieName, customerGuid.ToString(), options);
         }

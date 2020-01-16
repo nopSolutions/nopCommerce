@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Media
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(PictureBinary)
-                , nameof(PictureBinary.PictureId)
-                , nameof(Picture)
-                , nameof(Picture.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(PictureBinary),
+                nameof(PictureBinary.PictureId),
+                nameof(Picture),
+                nameof(Picture.Id),
+                Rule.Cascade);
         }
 
         #endregion

@@ -1,5 +1,4 @@
-﻿
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.Messages
@@ -62,7 +61,6 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the period of message delay
         /// </summary>
-        
         public MessageDelayPeriod DelayPeriod
         {
             get => (MessageDelayPeriod)DelayPeriodId;

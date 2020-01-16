@@ -70,7 +70,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly IStoreService _storeService;
         private readonly IUrlRecordService _urlRecordService;
@@ -111,7 +110,6 @@ namespace Nop.Web.Areas.Admin.Factories
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             ISpecificationAttributeService specificationAttributeService,
-            IStaticCacheManager cacheManager,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             IStoreService storeService,
             IUrlRecordService urlRecordService,
@@ -125,7 +123,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _aclSupportedModelFactory = aclSupportedModelFactory;
             _addressService = addressService;
             _baseAdminModelFactory = baseAdminModelFactory;
-            _cacheManager = cacheManager;
             _categoryService = categoryService;
             _currencyService = currencyService;
             _customerService = customerService;
@@ -823,12 +820,8 @@ namespace Nop.Web.Areas.Admin.Factories
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
             model.BaseDimensionIn = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId).Name;
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-            model.HasAvailableSpecificationAttributes = _cacheManager.Get(NopModelCacheDefaults.SpecAttributesModelKey, () =>
-            {
-                return _specificationAttributeService.GetSpecificationAttributesWithOptions()
-                    .Select(attributeWithOption => new SelectListItem(attributeWithOption.Name, attributeWithOption.Id.ToString()))
-                    .ToList();
-            }).Any();
+            model.HasAvailableSpecificationAttributes =
+                _specificationAttributeService.GetSpecificationAttributesWithOptions().Any();
 
             //prepare localized models
             if (!excludeProperties)
@@ -1431,12 +1424,9 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 return new AddSpecificationAttributeModel
                 {
-                    AvailableAttributes = _cacheManager.Get(NopModelCacheDefaults.SpecAttributesModelKey, () =>
-                    {
-                        return _specificationAttributeService.GetSpecificationAttributesWithOptions()
-                            .Select(attributeWithOption => new SelectListItem(attributeWithOption.Name, attributeWithOption.Id.ToString()))
-                            .ToList();
-                    }),
+                    AvailableAttributes = _specificationAttributeService.GetSpecificationAttributesWithOptions()
+                        .Select(attributeWithOption => new SelectListItem(attributeWithOption.Name, attributeWithOption.Id.ToString()))
+                        .ToList(),
                     ProductId = productId,
                     Locales = _localizedModelFactory.PrepareLocalizedModels<AddSpecificationAttributeLocalizedModel>()
                 };
@@ -1462,12 +1452,9 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AttributeTypeName = _localizationService.GetLocalizedEnum(attribute.AttributeType);
             model.AttributeName = specAttribute.Name;
 
-            model.AvailableAttributes = _cacheManager.Get(NopModelCacheDefaults.SpecAttributesModelKey, () =>
-            {
-                return _specificationAttributeService.GetSpecificationAttributesWithOptions()
-                    .Select(attributeWithOption => new SelectListItem(attributeWithOption.Name, attributeWithOption.Id.ToString()))
-                    .ToList();
-            });
+            model.AvailableAttributes = _specificationAttributeService.GetSpecificationAttributesWithOptions()
+                .Select(attributeWithOption => new SelectListItem(attributeWithOption.Name, attributeWithOption.Id.ToString()))
+                .ToList();
 
             model.AvailableOptions = _specificationAttributeService
                 .GetSpecificationAttributeOptionsBySpecificationAttribute(model.AttributeId)

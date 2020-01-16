@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Security
 
         public override void Up()
         {
-            this.AddForeignKey(NopMappingDefaults.PermissionRecordRoleTable
-                , "PermissionRecord_Id"
-                , nameof(PermissionRecord)
-                , nameof(PermissionRecord.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(NopMappingDefaults.PermissionRecordRoleTable,
+                "PermissionRecord_Id",
+                nameof(PermissionRecord),
+                nameof(PermissionRecord.Id),
+                Rule.Cascade);
         }
 
         #endregion

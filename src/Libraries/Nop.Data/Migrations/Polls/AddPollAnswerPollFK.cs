@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Polls
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(PollAnswer)
-                , nameof(PollAnswer.PollId)
-                , nameof(Poll)
-                , nameof(Poll.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(PollAnswer),
+                nameof(PollAnswer.PollId),
+                nameof(Poll),
+                nameof(Poll.Id),
+                Rule.Cascade);
         }
 
         #endregion

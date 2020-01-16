@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Discounts
 
         public override void Up()
         {
-            this.AddForeignKey(NopMappingDefaults.DiscountAppliedToCategoriesTable
-                , "Category_Id"
-                , nameof(Category)
-                , nameof(Category.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(NopMappingDefaults.DiscountAppliedToCategoriesTable,
+                "Category_Id",
+                nameof(Category),
+                nameof(Category.Id),
+                Rule.Cascade);
         }
 
         #endregion

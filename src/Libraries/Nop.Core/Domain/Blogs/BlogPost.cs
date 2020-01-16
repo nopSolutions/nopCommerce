@@ -9,7 +9,6 @@ namespace Nop.Core.Domain.Blogs
     /// </summary>
     public partial class BlogPost : BaseEntity, ISlugSupported, IStoreMappingSupported
     {
-
         /// <summary>
         /// Gets or sets the language identifier
         /// </summary>

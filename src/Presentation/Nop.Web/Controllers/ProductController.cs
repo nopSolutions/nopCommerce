@@ -143,7 +143,7 @@ namespace Nop.Web.Controllers
                 if (parentGroupedProduct == null)
                     return RedirectToRoute("Homepage");
 
-                return RedirectToRoute("Product", new { SeName = _urlRecordService.GetSeName(parentGroupedProduct) });
+                return RedirectToRoutePermanent("Product", new { SeName = _urlRecordService.GetSeName(parentGroupedProduct) });
             }
 
             //update existing shopping cart or wishlist  item?

@@ -2,8 +2,8 @@
 using Nop.Web.Areas.Admin.Models.Vendors;
 using Nop.Core.Domain.Vendors;
 using Nop.Data;
+using Nop.Services.Defaults;
 using Nop.Services.Localization;
-using Nop.Services.Seo;
 using Nop.Web.Framework.Validators;
 
 namespace Nop.Web.Areas.Admin.Validators.Vendors

@@ -385,7 +385,6 @@ namespace Nop.Web.Models.Catalog
 
                 var allOptions = specificationAttributeService.GetSpecificationAttributeOptionsByIds(filterableSpecificationAttributeOptionIds);
                 var allFilters = cacheManager.Get(cacheKey, () => allOptions.Select(sao =>
-
                 {
                     var specAttribute = specificationAttributeService.GetSpecificationAttributeById(sao.SpecificationAttributeId);
 

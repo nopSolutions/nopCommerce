@@ -1,5 +1,4 @@
 ﻿using System;
-
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -300,7 +299,6 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the order status
         /// </summary>
-        
         public OrderStatus OrderStatus
         {
             get => (OrderStatus)OrderStatusId;
@@ -310,7 +308,6 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the payment status
         /// </summary>
-        
         public PaymentStatus PaymentStatus
         {
             get => (PaymentStatus)PaymentStatusId;
@@ -320,7 +317,6 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the shipping status
         /// </summary>
-        
         public ShippingStatus ShippingStatus
         {
             get => (ShippingStatus)ShippingStatusId;
@@ -330,7 +326,6 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the customer tax display type
         /// </summary>
-        
         public TaxDisplayType CustomerTaxDisplayType
         {
             get => (TaxDisplayType)CustomerTaxDisplayTypeId;

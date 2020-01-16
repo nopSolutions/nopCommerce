@@ -10,6 +10,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
@@ -978,14 +979,13 @@ namespace Nop.Web.Controllers
             if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices) && !product.CustomerEntersPrice)
             {
                 //we do not calculate price of "customer enters price" option is enabled
-                List<DiscountForCaching> scDiscounts;
                 var finalPrice = _shoppingCartService.GetUnitPrice(product,
                     _workContext.CurrentCustomer,
                     ShoppingCartType.ShoppingCart,
                     1, attributeXml, 0,
                     rentalStartDate, rentalEndDate,
-                    true, out decimal _, out scDiscounts);
-                var finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out decimal _);
+                    true, out decimal _, out _);
+                var finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out var _);
                 var finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
                 price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
                 basepricepangv = _priceFormatter.FormatBasePrice(product, finalPriceWithDiscountBase, totalWeight);
@@ -1333,11 +1333,11 @@ namespace Nop.Web.Controllers
                     cartItem.Item.RentalStartDateUtc, cartItem.Item.RentalEndDateUtc, cartItem.NewQuantity, true)
             }).ToList();
 
-            //parse and save checkout attributes
-            ParseAndSaveCheckoutAttributes(cart, form);
-
             //updated cart
             cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+
+            //parse and save checkout attributes
+            ParseAndSaveCheckoutAttributes(cart, form);
 
             //prepare model
             var model = new ShoppingCartModel();
@@ -1425,7 +1425,7 @@ namespace Nop.Web.Controllers
             if (!string.IsNullOrWhiteSpace(discountcouponcode))
             {
                 //we find even hidden records here. this way we can display a user-friendly message if it's expired
-                var discounts = _discountService.GetAllDiscountsForCaching(couponCode: discountcouponcode, showHidden: true)
+                var discounts = _discountService.GetAllDiscounts(couponCode: discountcouponcode, showHidden: true)
                     .Where(d => d.RequiresCouponCode)
                     .ToList();
                 if (discounts.Any())
@@ -1458,11 +1458,11 @@ namespace Nop.Web.Controllers
                 }
                 else
                     //discount cannot be found
-                    model.DiscountBox.Messages.Add(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount"));
+                    model.DiscountBox.Messages.Add(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.CannotBeFound"));
             }
             else
                 //empty coupon code
-                model.DiscountBox.Messages.Add(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount"));
+                model.DiscountBox.Messages.Add(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.Empty"));
 
             model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
 

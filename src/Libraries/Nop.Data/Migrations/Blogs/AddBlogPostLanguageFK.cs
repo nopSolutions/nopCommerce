@@ -13,11 +13,11 @@ namespace Nop.Data.Migrations.Blogs
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(BlogPost)
-                , nameof(BlogPost.LanguageId)
-                , nameof(Language)
-                , nameof(Language.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(BlogPost), 
+                nameof(BlogPost.LanguageId), 
+                nameof(Language),
+                nameof(Language.Id), 
+                Rule.Cascade);
         }
 
         #endregion

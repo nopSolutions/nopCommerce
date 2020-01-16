@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 
@@ -19,7 +20,6 @@ namespace Nop.Services.Common
         private readonly AddressSettings _addressSettings;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
-        private readonly ICacheManager _cacheManager;
         private readonly ICountryService _countryService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Address> _addressRepository;
@@ -32,7 +32,6 @@ namespace Nop.Services.Common
         public AddressService(AddressSettings addressSettings,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
-            ICacheManager cacheManager,
             ICountryService countryService,
             IEventPublisher eventPublisher,
             IRepository<Address> addressRepository,
@@ -41,7 +40,6 @@ namespace Nop.Services.Common
             _addressSettings = addressSettings;
             _addressAttributeParser = addressAttributeParser;
             _addressAttributeService = addressAttributeService;
-            _cacheManager = cacheManager;
             _countryService = countryService;
             _eventPublisher = eventPublisher;
             _addressRepository = addressRepository;
@@ -62,10 +60,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(address));
 
             _addressRepository.Delete(address);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressesPrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityDeleted(address);
         }
@@ -83,6 +78,7 @@ namespace Nop.Services.Common
             var query = from a in _addressRepository.Table
                         where a.CountryId == countryId
                         select a;
+
             return query.Count();
         }
 
@@ -112,8 +108,9 @@ namespace Nop.Services.Common
             if (addressId == 0)
                 return null;
 
-            var key = string.Format(NopCommonDefaults.AddressesByIdCacheKey, addressId);
-            return _cacheManager.Get(key, () => _addressRepository.GetById(addressId));
+            var key = string.Format(NopCommonCachingDefaults.AddressesByIdCacheKey, addressId);
+
+            return _addressRepository.ToCachedGetById(addressId, key);
         }
 
         /// <summary>
@@ -134,10 +131,7 @@ namespace Nop.Services.Common
                 address.StateProvinceId = null;
 
             _addressRepository.Insert(address);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressesPrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityInserted(address);
         }
@@ -158,10 +152,7 @@ namespace Nop.Services.Common
                 address.StateProvinceId = null;
 
             _addressRepository.Update(address);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressesPrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityUpdated(address);
         }
@@ -252,7 +243,7 @@ namespace Nop.Services.Common
             {
                 var value = _addressAttributeParser.ParseValues(address.CustomAttributes, requiredAttribute.Id);
 
-                if (!value.Any() || (string.IsNullOrEmpty(value[0])))
+                if (!value.Any() || string.IsNullOrEmpty(value[0]))
                     return false;
             }
 

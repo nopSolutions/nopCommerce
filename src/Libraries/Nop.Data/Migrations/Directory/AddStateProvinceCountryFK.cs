@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Directory
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(StateProvince)
-                , nameof(StateProvince.CountryId)
-                , nameof(Country)
-                , nameof(Country.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(StateProvince),
+                nameof(StateProvince.CountryId),
+                nameof(Country),
+                nameof(Country.Id),
+                Rule.Cascade);
         }
 
         #endregion

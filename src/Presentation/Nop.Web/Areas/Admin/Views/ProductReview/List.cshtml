@@ -3,7 +3,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Catalog.ProductReviews").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.ProductReviews").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Product reviews");
 }
@@ -14,7 +14,6 @@
 }
 @inject IStoreService storeService
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Catalog.ProductReviews")
@@ -174,7 +173,7 @@
                                 Render = new RenderCheckBox("checkbox_product_reviews"),
                                 Visible = !Model.IsLoggedInAsVendor,
                                 ClassName =  NopColumnClassDefaults.CenterAll,
-                                Width = "50",
+                                Width = "50"
                             },
                             new ColumnProperty(nameof(ProductReviewModel.StoreName))
                             {
@@ -202,19 +201,17 @@
                             new ColumnProperty(nameof(ProductReviewModel.ReviewText))
                             {
                                 Title = T("Admin.Catalog.ProductReviews.Fields.ReviewText").Text,
-                                Width = "400",
                                 Encode = false
                             },
                             new ColumnProperty(nameof(ProductReviewModel.ReplyText))
                             {
                                 Title = T("Admin.Catalog.ProductReviews.Fields.ReplyText").Text,
-                                Width = "400",
                                 Encode = false
                             },
                             new ColumnProperty(nameof(ProductReviewModel.Rating))
                             {
                                 Title = T("Admin.Catalog.ProductReviews.Fields.Rating").Text,
-                                Width = "100",
+                                Width = "50",
                                 ClassName =  NopColumnClassDefaults.CenterAll
                             },
                             new ColumnProperty(nameof(ProductReviewModel.IsApproved))
@@ -227,7 +224,7 @@
                             new ColumnProperty(nameof(ProductReviewModel.CreatedOn))
                             {
                                 Title = T("Admin.Catalog.ProductReviews.Fields.CreatedOn").Text,
-                                Width = "200",
+                                Width = "150",
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(ProductReviewModel.Id))

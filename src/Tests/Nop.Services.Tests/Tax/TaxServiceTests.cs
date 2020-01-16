@@ -2,6 +2,7 @@
 using System.Linq;
 using Moq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -9,6 +10,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
+using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -101,10 +103,9 @@ namespace Nop.Services.Tests.Tax
             var pluginService = new FakePluginService();
             _taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
 
-            var cacheManager = new TestCacheManager();
-
             _customerService = new CustomerService(new CustomerSettings(),
-                new TestCacheManager(),
+                new Mock<ICacheKeyFactory>().Object,
+                new Mock<ICacheManager>().Object,
                 null,
                 _eventPublisher.Object,
                 _genericAttributeService.Object,
@@ -128,7 +129,6 @@ namespace Nop.Services.Tests.Tax
                 _geoLookupService.Object,
                 _logger.Object,
                 _stateProvinceService.Object,
-                cacheManager,
                 _storeContext.Object,
                 _taxPluginManager,
                 _webHelper.Object,

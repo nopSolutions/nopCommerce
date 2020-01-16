@@ -13,11 +13,11 @@ namespace Nop.Data.Migrations.Logging
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(ActivityLog)
-                , nameof(ActivityLog.CustomerId)
-                , nameof(Customer)
-                , nameof(Customer.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(ActivityLog),
+                nameof(ActivityLog.CustomerId),
+                nameof(Customer),
+                nameof(Customer.Id),
+                Rule.Cascade);
         }
 
         #endregion

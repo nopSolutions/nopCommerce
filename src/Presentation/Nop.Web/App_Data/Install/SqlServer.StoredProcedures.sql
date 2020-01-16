@@ -872,46 +872,49 @@ BEGIN
 	CREATE TABLE #tmp_guests (CustomerId int)
 		
 	INSERT #tmp_guests (CustomerId)
-	SELECT [Id] FROM [Customer] c with (NOLOCK)
-	WHERE
-	--created from
-	((@CreatedFromUtc is null) OR (c.[CreatedOnUtc] > @CreatedFromUtc))
-	AND
-	--created to
-	((@CreatedToUtc is null) OR (c.[CreatedOnUtc] < @CreatedToUtc))
-	AND
-	--shopping cart items
-	((@OnlyWithoutShoppingCart=0) OR (NOT EXISTS(SELECT 1 FROM [ShoppingCartItem] sci with (NOLOCK) inner join [Customer] with (NOLOCK) on sci.[CustomerId]=c.[Id])))
-	AND
-	--guests only
-	(EXISTS(SELECT 1 FROM [Customer_CustomerRole_Mapping] ccrm with (NOLOCK) inner join [Customer] with (NOLOCK) on ccrm.[Customer_Id]=c.[Id] inner join [CustomerRole] cr with (NOLOCK) on cr.[Id]=ccrm.[CustomerRole_Id] WHERE cr.[SystemName] = N'Guests'))
-	AND
-	--no orders
-	(NOT EXISTS(SELECT 1 FROM [Order] o with (NOLOCK) inner join [Customer] with (NOLOCK) on o.[CustomerId]=c.[Id]))
-	AND
-	--no blog comments
-	(NOT EXISTS(SELECT 1 FROM [BlogComment] bc with (NOLOCK) inner join [Customer] with (NOLOCK) on bc.[CustomerId]=c.[Id]))
-	AND
-	--no news comments
-	(NOT EXISTS(SELECT 1 FROM [NewsComment] nc  with (NOLOCK)inner join [Customer] with (NOLOCK) on nc.[CustomerId]=c.[Id]))
-	AND
-	--no product reviews
-	(NOT EXISTS(SELECT 1 FROM [ProductReview] pr with (NOLOCK) inner join [Customer] with (NOLOCK) on pr.[CustomerId]=c.[Id]))
-	AND
-	--no product reviews helpfulness
-	(NOT EXISTS(SELECT 1 FROM [ProductReviewHelpfulness] prh with (NOLOCK) inner join [Customer] with (NOLOCK) on prh.[CustomerId]=c.[Id]))
-	AND
-	--no poll voting
-	(NOT EXISTS(SELECT 1 FROM [PollVotingRecord] pvr with (NOLOCK) inner join [Customer] with (NOLOCK) on pvr.[CustomerId]=c.[Id]))
-	AND
-	--no forum topics 
-	(NOT EXISTS(SELECT 1 FROM [Forums_Topic] ft with (NOLOCK) inner join [Customer] with (NOLOCK) on ft.[CustomerId]=c.[Id]))
-	AND
-	--no forum posts 
-	(NOT EXISTS(SELECT 1 FROM [Forums_Post] fp with (NOLOCK) inner join [Customer] with (NOLOCK) on fp.[CustomerId]=c.[Id]))
-	AND
-	--no system accounts
-	(c.IsSystemAccount = 0)
+	SELECT c.[Id] 
+	FROM [Customer] c with (NOLOCK)
+		LEFT JOIN [ShoppingCartItem] sci with (NOLOCK) ON sci.[CustomerId] = c.[Id]
+		INNER JOIN (
+			--guests only
+			SELECT ccrm.[Customer_Id] 
+			FROM [Customer_CustomerRole_Mapping] ccrm with (NOLOCK)
+				INNER JOIN [CustomerRole] cr with (NOLOCK) ON cr.[Id] = ccrm.[CustomerRole_Id]
+			WHERE cr.[SystemName] = N'Guests'
+		) g ON g.[Customer_Id] = c.[Id]
+		LEFT JOIN [Order] o with (NOLOCK) ON o.[CustomerId] = c.[Id]
+		LEFT JOIN [BlogComment] bc with (NOLOCK) ON bc.[CustomerId] = c.[Id]
+		LEFT JOIN [NewsComment] nc with (NOLOCK) ON nc.[CustomerId] = c.[Id]
+		LEFT JOIN [ProductReview] pr with (NOLOCK) ON pr.[CustomerId] = c.[Id]
+		LEFT JOIN [ProductReviewHelpfulness] prh with (NOLOCK) ON prh.[CustomerId] = c.[Id]
+		LEFT JOIN [PollVotingRecord] pvr with (NOLOCK) ON pvr.[CustomerId] = c.[Id]
+		LEFT JOIN [Forums_Topic] ft with (NOLOCK) ON ft.[CustomerId] = c.[Id]
+		LEFT JOIN [Forums_Post] fp with (NOLOCK) ON fp.[CustomerId] = c.[Id]
+	WHERE 1 = 1
+		--no orders
+		AND (o.Id is null)
+		--no blog comments
+		AND (bc.Id is null)
+		--no news comments
+		AND (nc.Id is null)
+		--no product reviews
+		AND (pr.Id is null)
+		--no product reviews helpfulness
+		AND (prh.Id is null)
+		--no poll voting
+		AND (pvr.Id is null)
+		--no forum topics
+		AND (ft.Id is null)
+		--no forum topics
+		AND (fp.Id is null)
+		--no system accounts
+		AND (c.IsSystemAccount = 0)
+		--created from
+		AND ((@CreatedFromUtc is null) OR (c.[CreatedOnUtc] > @CreatedFromUtc))
+		--created to
+		AND ((@CreatedToUtc is null) OR (c.[CreatedOnUtc] < @CreatedToUtc))
+		--shopping cart items
+		AND ((@OnlyWithoutShoppingCart = 0) OR (sci.Id is null))
 	
 	--delete guests
 	DELETE [Customer]

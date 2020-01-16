@@ -13,11 +13,11 @@ namespace Nop.Data.Migrations.Security
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(AclRecord)
-                , nameof(AclRecord.CustomerRoleId)
-                , nameof(CustomerRole)
-                , nameof(CustomerRole.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(AclRecord),
+                nameof(AclRecord.CustomerRoleId),
+                nameof(CustomerRole),
+                nameof(CustomerRole.Id),
+                Rule.Cascade);
         }
 
         #endregion

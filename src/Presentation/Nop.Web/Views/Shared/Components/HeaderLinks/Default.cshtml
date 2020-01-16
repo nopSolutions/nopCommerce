@@ -11,7 +11,7 @@
         }
         else
         {
-            var returnUrl = webHelper.GetRawUrl(Context.Request);
+            var returnUrl = this.Context.Request.Query["returnUrl"];
 
             <li><a href="@Url.RouteUrl("Register", new { returnUrl })" class="ico-register">@T("Account.Register")</a></li>
             <li><a href="@Url.RouteUrl("Login", new { returnUrl })" class="ico-login">@T("Account.Login")</a></li>

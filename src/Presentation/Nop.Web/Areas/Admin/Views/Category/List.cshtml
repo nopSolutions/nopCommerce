@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Catalog.Categories").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Categories").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Categories");
 }
@@ -11,7 +11,6 @@
     const string hideSearchBlockAttributeName = "CategoryPage.HideSearchBlock";
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Catalog.Categories")
@@ -50,6 +49,11 @@
             @T("Admin.Common.Import")
         </button>
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CategoryListButtons })
+        <button type="button" id="delete-selected" class="btn bg-red">
+            <i class="fa fa-trash-o"></i>
+            @T("Admin.Common.Delete.Selected")
+        </button>
+        <nop-action-confirmation asp-button-id="delete-selected" />
     </div>
 </div>
 
@@ -110,6 +114,13 @@
                         },
                         ColumnCollection = new List<ColumnProperty>
                         {
+                            new ColumnProperty(nameof(CategoryModel.Id))
+                            {
+                                IsMasterCheckBox = true,
+                                Render = new RenderCheckBox("checkbox_categories"),
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Width = "50"
+                            },
                             new ColumnProperty(nameof(CategoryModel.Breadcrumb))
                             {
                                 Title = T("Admin.Catalog.Categories.Fields.Name").Text
@@ -136,6 +147,34 @@
                             }
                         }
                     })
+
+                    <script>
+                        $(document).ready(function () {
+                            $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                                var postData = {
+                                    selectedIds: selectedIds
+                                };
+                                addAntiForgeryToken(postData);
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@(Url.Action("DeleteSelected", "Category"))",
+                                    data: postData,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#deleteSelectedFailed-info').text(errorThrown);
+                                        $('#deleteSelectedFailed').click();
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                        updateTable('#categories-grid');
+                                    }
+                                });
+                                $('#delete-selected-action-confirmation').modal('toggle');
+                                return false;
+                            });
+                        });
+
+                </script>
+                <nop-alert asp-alert-id="deleteSelectedFailed" />
                 </div>
             </div>
         </div>

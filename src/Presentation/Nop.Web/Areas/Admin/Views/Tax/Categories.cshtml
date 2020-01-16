@@ -2,18 +2,16 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Tax.Categories").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Tax.Categories").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Tax categories");
 }
 
-<nop-antiforgery-token />
-
-    <div class="content-header clearfix">
-        <h1 class="pull-left">
-            @T("Admin.Configuration.Tax.Categories")
-        </h1>
-    </div>
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Configuration.Tax.Categories")
+    </h1>
+</div>
 
 <div class="content">
     <div class="form-horizontal">

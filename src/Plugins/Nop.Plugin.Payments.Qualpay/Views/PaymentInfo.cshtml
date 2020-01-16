@@ -193,4 +193,7 @@
     }
 </table>
 
-@Html.NopInlineScripts(ResourceLocation.Footer)
+@if (orderSettings.OnePageCheckoutEnabled)
+{
+    @Html.NopInlineScripts(ResourceLocation.Footer)
+}

@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 
@@ -23,7 +24,6 @@ namespace Nop.Services.Security
         private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<AclRecord> _aclRecordRepository;
-        private readonly IStaticCacheManager _cacheManager;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -34,14 +34,12 @@ namespace Nop.Services.Security
             ICustomerService customerService,
             IEventPublisher eventPublisher,
             IRepository<AclRecord> aclRecordRepository,
-            IStaticCacheManager cacheManager,
             IWorkContext workContext)
         {
             _catalogSettings = catalogSettings;
             _customerService = customerService;
             _eventPublisher = eventPublisher;
             _aclRecordRepository = aclRecordRepository;
-            _cacheManager = cacheManager;
             _workContext = workContext;
         }
 
@@ -60,9 +58,6 @@ namespace Nop.Services.Security
 
             _aclRecordRepository.Delete(aclRecord);
 
-            //cache
-            _cacheManager.RemoveByPrefix(NopSecurityDefaults.AclRecordPrefixCacheKey);
-
             //event notification
             _eventPublisher.EntityDeleted(aclRecord);
         }
@@ -77,7 +72,7 @@ namespace Nop.Services.Security
             if (aclRecordId == 0)
                 return null;
 
-            return _aclRecordRepository.GetById(aclRecordId);
+            return _aclRecordRepository.ToCachedGetById(aclRecordId);
         }
 
         /// <summary>
@@ -112,9 +107,6 @@ namespace Nop.Services.Security
                 throw new ArgumentNullException(nameof(aclRecord));
 
             _aclRecordRepository.Insert(aclRecord);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopSecurityDefaults.AclRecordPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(aclRecord);
@@ -158,9 +150,6 @@ namespace Nop.Services.Security
 
             _aclRecordRepository.Update(aclRecord);
 
-            //cache
-            _cacheManager.RemoveByPrefix(NopSecurityDefaults.AclRecordPrefixCacheKey);
-
             //event notification
             _eventPublisher.EntityUpdated(aclRecord);
         }
@@ -179,15 +168,14 @@ namespace Nop.Services.Security
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
 
-            var key = string.Format(NopSecurityDefaults.AclRecordByEntityIdNameCacheKey, entityId, entityName);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from ur in _aclRecordRepository.Table
-                            where ur.EntityId == entityId &&
-                            ur.EntityName == entityName
-                            select ur.CustomerRoleId;
-                return query.ToArray();
-            });
+            var key = string.Format(NopSecurityCachingDefaults.AclRecordByEntityIdNameCacheKey, entityId, entityName);
+
+            var query = from ur in _aclRecordRepository.Table
+                where ur.EntityId == entityId &&
+                      ur.EntityName == entityName
+                select ur.CustomerRoleId;
+
+            return query.ToCachedArray(key);
         }
 
         /// <summary>

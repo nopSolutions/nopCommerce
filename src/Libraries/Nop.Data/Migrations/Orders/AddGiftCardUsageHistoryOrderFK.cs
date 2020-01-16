@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Orders
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(GiftCardUsageHistory)
-                , nameof(GiftCardUsageHistory.UsedWithOrderId)
-                , nameof(Order)
-                , nameof(Order.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(GiftCardUsageHistory),
+                nameof(GiftCardUsageHistory.UsedWithOrderId),
+                nameof(Order),
+                nameof(Order.Id),
+                Rule.Cascade);
         }
 
         #endregion

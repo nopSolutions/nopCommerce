@@ -3,7 +3,6 @@ using System.Linq;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
-using LinqToDB.SqlQuery;
 using Nop.Core;
 
 namespace Nop.Data
@@ -54,11 +53,6 @@ namespace Nop.Data
             }
             catch (System.Data.Common.DbException)
             {
-            }
-            catch (Exception ex)
-            {
-                //Debug
-                throw ex;
             }
         }
 

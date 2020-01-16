@@ -11,6 +11,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
@@ -210,7 +211,7 @@ namespace Nop.Services.Media
             }
             while (continuationToken != null);
 
-            _cacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopMediaCachingDefaults.ThumbsPrefixCacheKey);
         }
 
         /// <summary>
@@ -223,7 +224,7 @@ namespace Nop.Services.Media
         {
             try
             {
-                var key = string.Format(NopMediaDefaults.ThumbExistsCacheKey, thumbFileName);
+                var key = string.Format(NopMediaCachingDefaults.ThumbExistsCacheKey, thumbFileName);
                 return await _cacheManager.GetAsync(key, async () =>
                 {
                     //GetBlockBlobReference doesn't need to be async since it doesn't contact the server yet
@@ -260,7 +261,7 @@ namespace Nop.Services.Media
 
             await blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length);
 
-            _cacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopMediaCachingDefaults.ThumbsPrefixCacheKey);
         }
 
         #endregion

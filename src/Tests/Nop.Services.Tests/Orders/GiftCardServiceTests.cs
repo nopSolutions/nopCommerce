@@ -63,6 +63,7 @@ namespace Nop.Services.Tests.Orders
         [Test]
         public void Can_validate_giftCard()
         {
+            RunWithTestServiceProvider(()=>{
             var gc = _giftCardService.GetGiftCardById(1);
 
             _giftCardService.InsertGiftCardUsageHistory(
@@ -107,11 +108,13 @@ namespace Nop.Services.Tests.Orders
                 });
 
             _giftCardService.IsGiftCardValid(gc).ShouldEqual(false);
+            });
         }
 
         [Test]
         public void Can_calculate_giftCard_remainingAmount()
         {
+            RunWithTestServiceProvider(()=>{
             var gc = _giftCardService.GetGiftCardById(2);
 
             _giftCardService.InsertGiftCardUsageHistory(
@@ -136,6 +139,7 @@ namespace Nop.Services.Tests.Orders
                 });
 
             _giftCardService.GetGiftCardRemainingAmount(gc).ShouldEqual(45);
+            });
         }
     }
 }

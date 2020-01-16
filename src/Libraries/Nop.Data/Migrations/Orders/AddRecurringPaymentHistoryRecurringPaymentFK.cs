@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Orders
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(RecurringPaymentHistory)
-                , nameof(RecurringPaymentHistory.RecurringPaymentId)
-                , nameof(RecurringPayment)
-                , nameof(RecurringPayment.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(RecurringPaymentHistory),
+                nameof(RecurringPaymentHistory.RecurringPaymentId),
+                nameof(RecurringPayment),
+                nameof(RecurringPayment.Id),
+                Rule.Cascade);
         }
 
         #endregion

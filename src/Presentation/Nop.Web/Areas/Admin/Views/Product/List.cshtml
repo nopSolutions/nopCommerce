@@ -4,7 +4,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Catalog.Products").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Products").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Products");
 }
@@ -227,7 +227,7 @@
                                     IsMasterCheckBox = true,
                                     Render = new RenderCheckBox("checkbox_products"),
                                     ClassName =  NopColumnClassDefaults.CenterAll,
-                                    Width = "50",
+                                    Width = "50"
                                 },
                                 new ColumnProperty(nameof(ProductModel.PictureThumbnailUrl))
                                 {
@@ -237,8 +237,7 @@
                                 },
                                 new ColumnProperty(nameof(ProductModel.Name))
                                 {
-                                    Title = T("Admin.Catalog.Products.Fields.Name").Text,
-                                    Width = "300"
+                                    Title = T("Admin.Catalog.Products.Fields.Name").Text
                                 },
                                 new ColumnProperty(nameof(ProductModel.Sku))
                                 {

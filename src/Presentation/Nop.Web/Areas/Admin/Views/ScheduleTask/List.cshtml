@@ -2,12 +2,11 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.System.ScheduleTasks").Text;
+    ViewBag.PageTitle = T("Admin.System.ScheduleTasks").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Schedule tasks");
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.System.ScheduleTasks")

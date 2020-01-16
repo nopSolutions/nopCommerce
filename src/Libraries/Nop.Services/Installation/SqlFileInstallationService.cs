@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Stores;
@@ -21,7 +22,6 @@ namespace Nop.Services.Installation
     {
         #region Fields
 
-        
         private readonly INopFileProvider _fileProvider;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Language> _languageRepository;

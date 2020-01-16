@@ -25,7 +25,27 @@ namespace Nop.Plugin.Payments.Square.Models
 
         public string CardNonce { get; set; }
 
+        public string Token { get; set; }
+
         public string Errors { get; set; }
+
+        public decimal OrderTotal { get; set; }
+
+        public string Currency { get; set; }
+
+        public string BillingFirstName { get; set; }
+
+        public string BillingLastName { get; set; }
+
+        public string BillingEmail { get; set; }
+
+        public string BillingPostalCode { get; set; }
+
+        public string BillingCountry { get; set; }
+
+        public string BillingState { get; set; }
+
+        public string BillingCity { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.PostalCode")]
         public string PostalCode { get; set; }

@@ -6,7 +6,7 @@
     {
         <div class="sku" @(string.IsNullOrWhiteSpace(Model.Sku) ? Html.Raw("style=\"display:none\"") : null)>
             <span class="label">@T("Products.Sku"):</span>
-            <span class="value" itemprop="sku" id="sku-@Model.Id">@Model.Sku</span>
+            <span class="value" id="sku-@Model.Id">@Model.Sku</span>
         </div>
     }
     @*Manufacturer part number*@

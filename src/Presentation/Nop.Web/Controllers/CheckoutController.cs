@@ -980,7 +980,7 @@ namespace Nop.Web.Controllers
                     if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
                     {
                         //redirection or POST has been done in PostProcessPayment
-                        return Content("Redirected");
+                        return Content(_localizationService.GetResource("Checkout.RedirectMessage"));
                     }
 
                     return RedirectToRoute("CheckoutCompleted", new { orderId = placeOrderResult.PlacedOrder.Id });
@@ -1762,7 +1762,7 @@ namespace Nop.Web.Controllers
                 if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
                 {
                     //redirection or POST has been done in PostProcessPayment
-                    return Content("Redirected");
+                    return Content(_localizationService.GetResource("Checkout.RedirectMessage"));
                 }
 
                 //if no redirection has been done (to a third-party payment page)

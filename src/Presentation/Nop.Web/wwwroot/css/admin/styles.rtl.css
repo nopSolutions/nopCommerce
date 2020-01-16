@@ -778,6 +778,9 @@ td.k-state-focused.k-state-selected {
     border-radius: 0;
     background: #3c8dbc;
 }
+input[type="text"].k-input {
+  box-sizing: content-box;
+}
 
 /* HEADER */
 .main-header {
@@ -964,10 +967,6 @@ div.dataTables_wrapper div.dataTables_processing .fa {
 }
 .form-horizontal .label-wrapper i.fa {
     width: 16px;
-}
-.form-horizontal .label-wrapper i.fa:before {
-    position: absolute;
-    top: 9px;
 }
 .form-horizontal span.required {
     color: #ff2e2e;

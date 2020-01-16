@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Catalog
 
         public override void Up()
         {
-            this.AddForeignKey(NopMappingDefaults.ProductReviewReviewTypeTable
-                , nameof(ProductReviewReviewTypeMapping.ProductReviewId)
-                , nameof(ProductReview)
-                , nameof(ProductReview.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(NopMappingDefaults.ProductReviewReviewTypeTable, 
+                nameof(ProductReviewReviewTypeMapping.ProductReviewId), 
+                nameof(ProductReview), 
+                nameof(ProductReview.Id), 
+                Rule.Cascade);
         }
 
         #endregion

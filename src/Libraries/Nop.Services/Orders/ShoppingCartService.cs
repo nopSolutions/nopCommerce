@@ -6,15 +6,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -36,6 +39,8 @@ namespace Nop.Services.Orders
         private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly ICacheKeyFactory _cacheKeyFactory;
+        private readonly ICacheManager _cacheManager; 
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICurrencyService _currencyService;
@@ -68,6 +73,8 @@ namespace Nop.Services.Orders
         public ShoppingCartService(CatalogSettings catalogSettings,
             IAclService aclService,
             IActionContextAccessor actionContextAccessor,
+            ICacheKeyFactory cacheKeyFactory,
+            ICacheManager cacheManager,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICheckoutAttributeService checkoutAttributeService,
             ICurrencyService currencyService,
@@ -96,6 +103,8 @@ namespace Nop.Services.Orders
             _catalogSettings = catalogSettings;
             _aclService = aclService;
             _actionContextAccessor = actionContextAccessor;
+            _cacheKeyFactory = cacheKeyFactory;
+            _cacheManager = cacheManager;
             _checkoutAttributeParser = checkoutAttributeParser;
             _checkoutAttributeService = checkoutAttributeService;
             _currencyService = currencyService;
@@ -648,7 +657,12 @@ namespace Nop.Services.Orders
             if (createdToUtc.HasValue)
                 items = items.Where(item => createdToUtc.Value >= item.CreatedOnUtc);
 
-            return items.ToList();
+            var key = _cacheKeyFactory.CreateCacheKey(NopNewsCachingDefaults.ShoppingCartCacheKey, customer.Id, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
+
+            if (string.IsNullOrEmpty(key))
+                return items.ToList();
+
+            return _cacheManager.Get(key, () => items.ToList());
         }
 
         /// <summary>
@@ -1173,7 +1187,7 @@ namespace Nop.Services.Orders
         public virtual decimal GetSubTotal(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts,
+            out List<Discount> appliedDiscounts,
             out int? maximumDiscountQty)
         {
             if (shoppingCartItem == null)
@@ -1190,7 +1204,7 @@ namespace Nop.Services.Orders
             if (appliedDiscounts.Any())
             {
                 //we can properly use "MaximumDiscountedQuantity" property only for one discount (not cumulative ones)
-                DiscountForCaching oneAndOnlyDiscount = null;
+                Discount oneAndOnlyDiscount = null;
                 if (appliedDiscounts.Count == 1)
                     oneAndOnlyDiscount = appliedDiscounts.First();
 
@@ -1249,7 +1263,7 @@ namespace Nop.Services.Orders
         public virtual decimal GetUnitPrice(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts)
+            out List<Discount> appliedDiscounts)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException(nameof(shoppingCartItem));
@@ -1294,7 +1308,7 @@ namespace Nop.Services.Orders
             DateTime? rentalStartDate, DateTime? rentalEndDate,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts)
+            out List<Discount> appliedDiscounts)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -1303,7 +1317,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(customer));
 
             discountAmount = decimal.Zero;
-            appliedDiscounts = new List<DiscountForCaching>();
+            appliedDiscounts = new List<Discount>();
 
             decimal finalPrice;
 
@@ -1480,8 +1494,9 @@ namespace Nop.Services.Orders
                 shoppingCartItem.AttributesXml = attributesXml;
                 shoppingCartItem.Quantity = newQuantity;
                 shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
-                _customerService.UpdateCustomer(customer);
 
+                _sciRepository.Update(shoppingCartItem);
+                
                 //event notification
                 _eventPublisher.EntityUpdated(shoppingCartItem);
             }
@@ -1572,7 +1587,7 @@ namespace Nop.Services.Orders
 
             var warnings = new List<string>();
 
-            var shoppingCartItem = _sciRepository.GetById(shoppingCartItemId);
+            var shoppingCartItem = _sciRepository.ToCachedGetById(shoppingCartItemId);
 
             if (shoppingCartItem == null || shoppingCartItem.CustomerId != customer.Id)
                 return warnings;
@@ -1602,6 +1617,8 @@ namespace Nop.Services.Orders
                 shoppingCartItem.RentalStartDateUtc = rentalStartDate;
                 shoppingCartItem.RentalEndDateUtc = rentalEndDate;
                 shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
+
+                _sciRepository.Update(shoppingCartItem);
                 _customerService.UpdateCustomer(customer);
 
                 //event notification

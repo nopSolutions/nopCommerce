@@ -187,8 +187,11 @@ namespace Nop.Data
         public void ExecuteSqlScript(string sql)
         {
             var sqlCommands = GetCommandsFromScript(sql);
-            foreach (var command in sqlCommands)
-                _dataConnection.Execute(command);
+            using (var currentConnection = new NopDataConnection())
+            {
+                foreach (var command in sqlCommands)
+                    currentConnection.Execute(command);
+            }
         }
 
         /// <summary>
@@ -211,13 +214,16 @@ namespace Nop.Data
         /// <returns>Integer identity; null if cannot get the result</returns>
         public virtual int? GetTableIdent<T>() where T : BaseEntity
         {
-            var tableName = _dataConnection.GetTable<T>().TableName;
-            var databaseName = _dataConnection.Connection.Database;
+            using (var currentConnection = new NopDataConnection())
+            {
+                var tableName = currentConnection.GetTable<T>().TableName;
+                var databaseName = currentConnection.Connection.Database;
 
-            var result = _dataConnection.Query<decimal?>($"SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = '{databaseName}' AND TABLE_NAME = '{tableName}'")
-                .FirstOrDefault();
+                var result = currentConnection.Query<decimal?>($"SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = '{databaseName}' AND TABLE_NAME = '{tableName}'")
+                    .FirstOrDefault();
 
-            return result.HasValue ? Convert.ToInt32(result) : 1;
+                return result.HasValue ? Convert.ToInt32(result) : 1;
+            }
         }
 
         /// <summary>
@@ -231,9 +237,12 @@ namespace Nop.Data
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
-            var tableName = _dataConnection.GetTable<T>().TableName;
+            using (var currentConnection = new NopDataConnection())
+            {
+                var tableName = currentConnection.GetTable<T>().TableName;
 
-            _dataConnection.Execute($"ALTER TABLE '{tableName}' AUTO_INCREMENT = {ident}");
+                currentConnection.Execute($"ALTER TABLE '{tableName}' AUTO_INCREMENT = {ident}");
+            }
         }
 
         /// <summary>
@@ -258,14 +267,15 @@ namespace Nop.Data
         /// </summary>
         public virtual void ReIndexTables()
         {
-            var tables = _dataConnection.Query<string>($"SHOW TABLES FROM `{_dataConnection.Connection.Database}`").ToList();
-            
-            if(tables?.Count > 0)
+            using (var currentConnection = new NopDataConnection())
             {
-                _dataConnection.Execute($"OPTIMIZE TABLE {string.Join(',', tables)}");
-            }
+                var tables = currentConnection.Query<string>($"SHOW TABLES FROM `{currentConnection.Connection.Database}`").ToList();
 
-            
+                if (tables?.Count > 0)
+                {
+                    currentConnection.Execute($"OPTIMIZE TABLE {string.Join(',', tables)}");
+                }
+            }
         }
 
         public virtual string BuildConnectionString(INopConnectionStringInfo nopConnectionString)
@@ -273,7 +283,7 @@ namespace Nop.Data
             if (nopConnectionString is null)
                 throw new ArgumentNullException(nameof(nopConnectionString));
 
-            if(nopConnectionString.IntegratedSecurity)
+            if (nopConnectionString.IntegratedSecurity)
                 throw new NopException("Data provider supports connection only with login and password");
 
             var builder = new MySqlConnectionStringBuilder

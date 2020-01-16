@@ -12,11 +12,11 @@ namespace Nop.Data.Migrations.Customers
 
         public override void Up()
         {
-            this.AddForeignKey(nameof(CustomerAttributeValue)
-                , nameof(CustomerAttributeValue.CustomerAttributeId)
-                , nameof(CustomerAttribute)
-                , nameof(CustomerAttribute.Id)
-                , Rule.Cascade);
+            this.AddForeignKey(nameof(CustomerAttributeValue),
+                nameof(CustomerAttributeValue.CustomerAttributeId),
+                nameof(CustomerAttribute),
+                nameof(CustomerAttribute.Id),
+                Rule.Cascade);
         }
 
         #endregion

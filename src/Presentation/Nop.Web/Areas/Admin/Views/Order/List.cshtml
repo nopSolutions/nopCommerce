@@ -5,7 +5,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Orders").Text;
+    ViewBag.PageTitle = T("Admin.Orders").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Orders");
 }
@@ -291,39 +291,39 @@
                                 FooterCallback = !Model.IsLoggedInAsVendor ? "ordersfootercallback" : null,
                                 FooterColumns = !Model.IsLoggedInAsVendor ? 10 : 0,
                                 Filters = new List<FilterParameter>
-                                                {
-                                                    new FilterParameter(nameof(Model.StartDate)),
-                                                    new FilterParameter(nameof(Model.EndDate)),
-                                                    new FilterParameter(nameof(Model.OrderStatusIds)),
-                                                    new FilterParameter(nameof(Model.PaymentStatusIds)),
-                                                    new FilterParameter(nameof(Model.ShippingStatusIds)),
-                                                    new FilterParameter(nameof(Model.StoreId)),
-                                                    new FilterParameter(nameof(Model.VendorId)),
-                                                    new FilterParameter(nameof(Model.WarehouseId)),
-                                                    new FilterParameter(nameof(Model.BillingEmail)),
-                                                    new FilterParameter(nameof(Model.BillingPhone)),
-                                                    new FilterParameter(nameof(Model.BillingLastName)),
-                                                    new FilterParameter(nameof(Model.BillingCountryId)),
-                                                    new FilterParameter(nameof(Model.PaymentMethodSystemName)),
-                                                    new FilterParameter(nameof(Model.ProductId)),
-                                                    new FilterParameter(nameof(Model.OrderNotes))
-                                                }
+                                {
+                                    new FilterParameter(nameof(Model.StartDate)),
+                                    new FilterParameter(nameof(Model.EndDate)),
+                                    new FilterParameter(nameof(Model.OrderStatusIds)),
+                                    new FilterParameter(nameof(Model.PaymentStatusIds)),
+                                    new FilterParameter(nameof(Model.ShippingStatusIds)),
+                                    new FilterParameter(nameof(Model.StoreId)),
+                                    new FilterParameter(nameof(Model.VendorId)),
+                                    new FilterParameter(nameof(Model.WarehouseId)),
+                                    new FilterParameter(nameof(Model.BillingEmail)),
+                                    new FilterParameter(nameof(Model.BillingPhone)),
+                                    new FilterParameter(nameof(Model.BillingLastName)),
+                                    new FilterParameter(nameof(Model.BillingCountryId)),
+                                    new FilterParameter(nameof(Model.PaymentMethodSystemName)),
+                                    new FilterParameter(nameof(Model.ProductId)),
+                                    new FilterParameter(nameof(Model.OrderNotes))
+                                }
                             };
                             gridModel.ColumnCollection = new List<ColumnProperty>
-                                            {
-                                                new ColumnProperty(nameof(OrderModel.Id))
-                                                {
-                                                    IsMasterCheckBox = true,
-                                                    Render = new RenderCheckBox("checkbox_orders"),
-                                                    ClassName =  NopColumnClassDefaults.CenterAll,
-                                                    Width = "50",
-                                                },
-                                                new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
-                                                {
-                                                    Title = T("Admin.Orders.Fields.CustomOrderNumber").Text,
-                                                    Width = "80"
-                                                }
-                                            };
+                            {
+                                new ColumnProperty(nameof(OrderModel.Id))
+                                {
+                                    IsMasterCheckBox = true,
+                                    Render = new RenderCheckBox("checkbox_orders"),
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Width = "50"
+                                },
+                                new ColumnProperty(nameof(OrderModel.CustomOrderNumber))
+                                {
+                                    Title = T("Admin.Orders.Fields.CustomOrderNumber").Text,
+                                    Width = "80"
+                                }
+                            };
                             //a vendor does not have access to this functionality
                             if (!Model.IsLoggedInAsVendor)
                             {
@@ -351,7 +351,6 @@
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CustomerEmail))
                             {
                                 Title = T("Admin.Orders.Fields.Customer").Text,
-                                Width = "250",
                                 Render = new RenderLink(new DataUrl("~/Admin/Customer/Edit", nameof(OrderModel.CustomerId)))
                             });
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.StoreName))
@@ -363,7 +362,7 @@
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(OrderModel.CreatedOn))
                             {
                                 Title = T("Admin.Orders.Fields.CreatedOn").Text,
-                                Width = "100",
+                                Width = "120",
                                 Render = new RenderDate()
                             });
                             //a vendor does not have access to this functionality

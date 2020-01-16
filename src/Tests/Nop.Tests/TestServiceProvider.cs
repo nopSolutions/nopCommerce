@@ -2,10 +2,13 @@
 using Microsoft.AspNetCore.Http;
 using Moq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
+using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -23,6 +26,10 @@ namespace Nop.Tests
             LocalizationService = new Mock<ILocalizationService>();
             GenericAttributeService = new Mock<IGenericAttributeService>();
             WorkContext = new Mock<IWorkContext>();
+            
+            DiscountCategoryMappingRepository = new Mock<IRepository<DiscountCategoryMapping>>();
+            DiscountManufacturerMappingRepository = new Mock<IRepository<DiscountManufacturerMapping>>();
+            DiscountProductMappingRepository = new Mock<IRepository<DiscountProductMapping>>();
 
             PriceCalculationService = new PriceCalculationService(new CatalogSettings(), new CurrencySettings(), 
                 new Mock<ICategoryService>().Object, new Mock<ICurrencyService>().Object, new Mock<ICustomerService>().Object, new Mock<IDiscountService>().Object,
@@ -52,6 +59,10 @@ namespace Nop.Tests
         public IPriceCalculationService PriceCalculationService { get; }
         public Mock<ICurrencyService> CurrencyService { get; }
 
+        public Mock<IRepository<DiscountCategoryMapping>> DiscountCategoryMappingRepository { get; }
+        public Mock<IRepository<DiscountManufacturerMapping>> DiscountManufacturerMappingRepository { get; }
+        public Mock<IRepository<DiscountProductMapping>> DiscountProductMappingRepository { get; }
+
         public virtual object GetService(Type serviceType)
         {
             if (serviceType == typeof(IHttpContextAccessor))
@@ -80,6 +91,18 @@ namespace Nop.Tests
 
             if (serviceType == typeof(IPriceCalculationService))
                 return PriceCalculationService;
+
+            if (serviceType == typeof(IStaticCacheManager))
+                return new TestCacheManager();
+
+            if(serviceType == typeof(IRepository<DiscountCategoryMapping>))
+                return DiscountCategoryMappingRepository.Object;
+
+            if (serviceType == typeof(IRepository<DiscountManufacturerMapping>))
+                return DiscountManufacturerMappingRepository.Object;
+
+            if (serviceType == typeof(IRepository<DiscountProductMapping>))
+                return DiscountProductMappingRepository.Object;
 
             return null;
         }

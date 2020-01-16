@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
-using Nop.Services.Discounts;
 
 namespace Nop.Services.Orders
 {
@@ -184,7 +184,7 @@ namespace Nop.Services.Orders
         decimal GetUnitPrice(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts);
+            out List<Discount> appliedDiscounts);
 
         /// <summary>
         /// Gets the shopping cart unit price (one item)
@@ -210,7 +210,7 @@ namespace Nop.Services.Orders
             DateTime? rentalStartDate, DateTime? rentalEndDate,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts);
+            out List<Discount> appliedDiscounts);
 
         /// <summary>
         /// Gets the shopping cart item sub total
@@ -233,7 +233,7 @@ namespace Nop.Services.Orders
         decimal GetSubTotal(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts,
             out decimal discountAmount,
-            out List<DiscountForCaching> appliedDiscounts,
+            out List<Discount> appliedDiscounts,
             out int? maximumDiscountQty);
 
         /// <summary>

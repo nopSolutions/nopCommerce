@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Xml;
-using LinqToDB.Data;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
@@ -13,6 +12,8 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -27,9 +28,9 @@ namespace Nop.Services.Customers
         #region Fields
 
         private readonly CustomerSettings _customerSettings;
+        private readonly ICacheKeyFactory _cacheKeyFactory;
         private readonly ICacheManager _cacheManager;
         private readonly IDataProvider _dataProvider;
-        
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IRepository<Address> _customerAddressRepository;
@@ -48,6 +49,7 @@ namespace Nop.Services.Customers
         #region Ctor
 
         public CustomerService(CustomerSettings customerSettings,
+            ICacheKeyFactory cacheKeyFactory,
             ICacheManager cacheManager,
             IDataProvider dataProvider,
             IEventPublisher eventPublisher,
@@ -64,9 +66,9 @@ namespace Nop.Services.Customers
             ShoppingCartSettings shoppingCartSettings)
         {
             _customerSettings = customerSettings;
+            _cacheKeyFactory = cacheKeyFactory;
             _cacheManager = cacheManager;
             _dataProvider = dataProvider;
-
             _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _customerAddressRepository = customerAddressRepository;
@@ -266,6 +268,7 @@ namespace Nop.Services.Customers
 
             query = query.OrderByDescending(c => c.LastActivityDateUtc);
             var customers = new PagedList<Customer>(query, pageIndex, pageSize);
+
             return customers;
         }
 
@@ -317,15 +320,12 @@ namespace Nop.Services.Customers
                     where a.CountryId == countryId
                     select c;
 
-            //get customers with shopping carts
-            var customersWithCarts = items.GroupBy(item => item.CustomerId)
-                .Select(cart => new { CustomerId = cart.Key, CreatedOnUtc = cart.Max(item => item.CreatedOnUtc) })
-                .OrderByDescending(cart => cart.CreatedOnUtc)
-                .Select(cart => cart.CustomerId)
-                .ToList() //currently GroupBy and Join (when used together) are incorrectly translated from LINQ to SQL, see https://github.com/aspnet/EntityFrameworkCore/issues/12826, so we continue execution on the server side
-                .Join(customers, id => id, customer => customer.Id, (id, customer) => customer);
+            var customersWithCarts = from c in customers
+                join item in items on c.Id equals item.CustomerId
+                orderby c.Id
+                select c;
 
-            return new PagedList<Customer>(customersWithCarts.ToList(), pageIndex, pageSize);
+            return new PagedList<Customer>(customersWithCarts.Distinct(), pageIndex, pageSize);
         }
 
         /// <summary>
@@ -337,10 +337,7 @@ namespace Nop.Services.Customers
         {
             var customerId = shoppingCart.FirstOrDefault()?.CustomerId;
 
-            if ((customerId ?? 0) == 0)
-                return null;
-
-            return GetCustomerById(customerId.Value);
+            return customerId.HasValue && customerId != 0 ? GetCustomerById(customerId.Value) : null;
         }
 
         /// <summary>
@@ -381,7 +378,7 @@ namespace Nop.Services.Customers
             if (customerId == 0)
                 return null;
 
-            return _customerRepository.GetById(customerId);
+            return _customerRepository.ToCachedGetById(customerId);
         }
 
         /// <summary>
@@ -1014,8 +1011,6 @@ namespace Nop.Services.Customers
 
             _customerRoleRepository.Delete(customerRole);
 
-            _cacheManager.RemoveByPrefix(NopCustomerServiceDefaults.CustomerRolesPrefixCacheKey);
-
             //event notification
             _eventPublisher.EntityDeleted(customerRole);
         }
@@ -1030,7 +1025,7 @@ namespace Nop.Services.Customers
             if (customerRoleId == 0)
                 return null;
 
-            return _customerRoleRepository.GetById(customerRoleId);
+            return _customerRoleRepository.ToCachedGetById(customerRoleId);
         }
 
         /// <summary>
@@ -1043,16 +1038,15 @@ namespace Nop.Services.Customers
             if (string.IsNullOrWhiteSpace(systemName))
                 return null;
 
-            var key = string.Format(NopCustomerServiceDefaults.CustomerRolesBySystemNameCacheKey, systemName);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from cr in _customerRoleRepository.Table
-                            orderby cr.Id
-                            where cr.SystemName == systemName
-                            select cr;
-                var customerRole = query.FirstOrDefault();
-                return customerRole;
-            });
+            var key = string.Format(NopCustomerServiceCachingDefaults.CustomerRolesBySystemNameCacheKey, systemName);
+
+            var query = from cr in _customerRoleRepository.Table
+                orderby cr.Id
+                where cr.SystemName == systemName
+                select cr;
+            var customerRole = query.ToCachedFirstOrDefault(key);
+
+            return customerRole;
         }
 
         /// <summary>
@@ -1072,7 +1066,9 @@ namespace Nop.Services.Customers
                         (showHidden || cr.Active)
                         select cr.Id;
 
-            return query.ToArray();
+            var key = _cacheKeyFactory.CreateCacheKey(NopCustomerServiceCachingDefaults.CustomerRoleIdsCacheKey, customer.Id, showHidden);
+
+            return string.IsNullOrEmpty(key) ? query.ToArray() : _cacheManager.Get(key, () => query.ToArray());
         }
 
         /// <summary>
@@ -1092,7 +1088,9 @@ namespace Nop.Services.Customers
                         (showHidden || cr.Active)
                         select cr;
 
-            return query.ToList();
+            var key = _cacheKeyFactory.CreateCacheKey(NopCustomerServiceCachingDefaults.CustomerRolesCacheKey, customer.Id, showHidden);
+
+            return string.IsNullOrEmpty(key) ? query.ToList() : _cacheManager.Get(key, () => query.ToList());
         }
 
         /// <summary>
@@ -1102,16 +1100,16 @@ namespace Nop.Services.Customers
         /// <returns>Customer roles</returns>
         public virtual IList<CustomerRole> GetAllCustomerRoles(bool showHidden = false)
         {
-            var key = string.Format(NopCustomerServiceDefaults.CustomerRolesAllCacheKey, showHidden);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from cr in _customerRoleRepository.Table
-                            orderby cr.Name
-                            where showHidden || cr.Active
-                            select cr;
-                var customerRoles = query.ToList();
-                return customerRoles;
-            });
+            var key = string.Format(NopCustomerServiceCachingDefaults.CustomerRolesAllCacheKey, showHidden);
+
+            var query = from cr in _customerRoleRepository.Table
+                orderby cr.Name
+                where showHidden || cr.Active
+                select cr;
+
+            var customerRoles = query.ToCachedList(key);
+
+            return customerRoles;
         }
 
         /// <summary>
@@ -1124,8 +1122,6 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException(nameof(customerRole));
 
             _customerRoleRepository.Insert(customerRole);
-
-            _cacheManager.RemoveByPrefix(NopCustomerServiceDefaults.CustomerRolesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(customerRole);
@@ -1147,15 +1143,9 @@ namespace Nop.Services.Customers
             if (string.IsNullOrEmpty(customerRoleSystemName))
                 throw new ArgumentNullException(nameof(customerRoleSystemName));
 
-            var query = from cr in _customerRoleRepository.Table
-                join crm in _customerCustomerRoleMappingRepository.Table on cr.Id equals crm.CustomerRoleId
-                where
-                    crm.CustomerId == customer.Id &&
-                    cr.SystemName == customerRoleSystemName &&
-                    (!onlyActiveCustomerRoles || cr.Active)
-                select cr;
+            var customerRoles = GetCustomerRoles(customer, !onlyActiveCustomerRoles);
 
-            return query.Any();
+            return customerRoles.Any(cr => cr.SystemName == customerRoleSystemName);
         }
 
         /// <summary>
@@ -1223,8 +1213,6 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException(nameof(customerRole));
 
             _customerRoleRepository.Update(customerRole);
-
-            _cacheManager.RemoveByPrefix(NopCustomerServiceDefaults.CustomerRolesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(customerRole);
@@ -1306,32 +1294,6 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
-        /// Gets a value indicating whether customer is in a certain customer role
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="customerRoleSystemName">Customer role system name</param>
-        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
-        /// <returns>Result</returns>
-        public bool IsInCustomerRole(int customerId,
-            string customerRoleSystemName, bool onlyActiveCustomerRoles = true)
-        {
-            var customer = GetCustomerById(customerId);
-
-            if (customer == null)
-                throw new ArgumentException(nameof(customerId));
-
-            if (string.IsNullOrEmpty(customerRoleSystemName))
-                throw new ArgumentNullException(nameof(customerRoleSystemName));
-
-            return (from cr in _customerRoleRepository.Table
-                    join ccrm in _customerCustomerRoleMappingRepository.Table on cr.Id equals ccrm.CustomerRoleId
-                    where ccrm.CustomerId == customerId &&
-                       !onlyActiveCustomerRoles || cr.Active &&
-                       cr.SystemName == customerRoleSystemName
-                    select cr).Any();
-        }
-
-        /// <summary>
         /// Check whether password recovery token is valid
         /// </summary>
         /// <param name="customer">Customer</param>
@@ -1399,7 +1361,7 @@ namespace Nop.Services.Customers
                 return false;
 
             //cache result between HTTP requests
-            var cacheKey = string.Format(NopCustomerServiceDefaults.CustomerPasswordLifetimeCacheKey, customer.Id);
+            var cacheKey = string.Format(NopCustomerServiceCachingDefaults.CustomerPasswordLifetimeCacheKey, customer.Id);
 
             //get current password usage time
             var currentLifetime = _staticCacheManager.Get(cacheKey, () =>
@@ -1481,7 +1443,9 @@ namespace Nop.Services.Customers
                 where cam.CustomerId == customerId
                 select address;
 
-            return query.ToList();
+            var key = _cacheKeyFactory.CreateCacheKey(NopCustomerServiceCachingDefaults.CustomerAddressesByCustomerIdCacheKey, customerId);
+
+            return string.IsNullOrEmpty(key) ? query.ToList() : _cacheManager.Get(key, () => query.ToList());
         }
 
         /// <summary>
@@ -1500,7 +1464,9 @@ namespace Nop.Services.Customers
                 where cam.CustomerId == customerId && address.Id == addressId
                 select address;
 
-            return query.Single();
+            var key = _cacheKeyFactory.CreateCacheKey(NopCustomerServiceCachingDefaults.CustomerAddressCacheKeyCacheKey, customerId, addressId);
+
+            return string.IsNullOrEmpty(key) ? query.Single() : _cacheManager.Get(key, () => query.Single());
         }
 
         /// <summary>

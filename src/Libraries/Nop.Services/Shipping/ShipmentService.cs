@@ -7,6 +7,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Shipping.Tracking;
@@ -85,6 +86,7 @@ namespace Nop.Services.Shipping
         /// <param name="shippingCity">Shipping city; null to load all records</param>
         /// <param name="trackingNumber">Search by tracking number</param>
         /// <param name="loadNotShipped">A value indicating whether we should load only not shipped shipments</param>
+        /// <param name="loadNotDelivered">A value indicating whether we should load only not delivered shipments</param>
         /// <param name="orderId">Order identifier; 0 to load all records</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
@@ -98,6 +100,7 @@ namespace Nop.Services.Shipping
             string shippingCity = null,
             string trackingNumber = null,
             bool loadNotShipped = false,
+            bool loadNotDelivered = false,
             int orderId = 0,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
@@ -140,6 +143,9 @@ namespace Nop.Services.Shipping
 
             if (loadNotShipped)
                 query = query.Where(s => !s.ShippedDateUtc.HasValue);
+
+            if (loadNotDelivered)
+                query = query.Where(s => !s.DeliveryDateUtc.HasValue);
 
             if (createdFromUtc.HasValue)
                 query = query.Where(s => createdFromUtc.Value <= s.CreatedOnUtc);
@@ -221,7 +227,7 @@ namespace Nop.Services.Shipping
             if (shipmentId == 0)
                 return null;
 
-            return _shipmentRepository.GetById(shipmentId);
+            return _shipmentRepository.ToCachedGetById(shipmentId);
         }
 
         /// <summary>
@@ -314,7 +320,7 @@ namespace Nop.Services.Shipping
             if (shipmentItemId == 0)
                 return null;
 
-            return _siRepository.GetById(shipmentItemId);
+            return _siRepository.ToCachedGetById(shipmentItemId);
         }
 
         /// <summary>
@@ -416,7 +422,7 @@ namespace Nop.Services.Shipping
         /// <returns>Shipment tracker</returns>
         public virtual IShipmentTracker GetShipmentTracker(Shipment shipment)
         {
-            var order = _orderRepository.GetById(shipment.OrderId);
+            var order = _orderRepository.ToCachedGetById(shipment.OrderId);
 
             if (!order.PickupInStore)
             {
