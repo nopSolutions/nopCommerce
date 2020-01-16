@@ -277,7 +277,7 @@ namespace Nop.Data
                         FETCH NEXT FROM cur_reindex INTO @TableName
                         WHILE @@FETCH_STATUS = 0
                             BEGIN
-                          exec('ALTER INDEX ALL ON [' + @TableName + '] REBUILD')
+                                exec('ALTER INDEX ALL ON [' + @TableName + '] REBUILD')
                                 FETCH NEXT FROM cur_reindex INTO @TableName
                             END
                         CLOSE cur_reindex

@@ -41,6 +41,21 @@ namespace Nop.Data
                 new SqlDataType(new DbDataType(typeof(byte[]), DataType.Blob)));
         }
 
+        protected virtual void EnsureDatabaseAfterInit()
+        {
+            var builder = GetConnectionStringBuilder();
+            using (var connection = new MySqlConnection(builder.ConnectionString))
+            {
+                var query = @"ALTER TABLE `picturebinary` 
+                            CHANGE COLUMN `BinaryData` `BinaryData` LONGBLOB NULL DEFAULT NULL ;";
+                var command = new MySqlCommand(query, connection);
+                command.Connection.Open();
+
+                command.ExecuteNonQuery();
+
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -129,22 +144,23 @@ namespace Nop.Data
         private static IList<string> GetCommandsFromScript(string sql)
         {
             var commands = new List<string>();
-            
+
             var batches = Regex.Split(sql, @"DELIMITER \;", RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
-            if(batches?.Length > 0)
+            if (batches?.Length > 0)
             {
                 commands.AddRange(
                     batches
                         .Where(b => !string.IsNullOrWhiteSpace(b))
-                        .Select(b => {
-                            b = Regex.Replace(b, @"(DELIMITER )?\$\$", string.Empty); 
-                            b = Regex.Replace(b, @"#(.*?)\r?\n", "/* $1 */"); 
+                        .Select(b =>
+                        {
+                            b = Regex.Replace(b, @"(DELIMITER )?\$\$", string.Empty);
+                            b = Regex.Replace(b, @"#(.*?)\r?\n", "/* $1 */");
                             b = Regex.Replace(b, @"(\r?\n)|(\t)", " ");
                             return b;
                         }
                     )
-                    
+
                 );
             }
             return commands;
@@ -181,9 +197,9 @@ namespace Nop.Data
         public void InitializeDatabase()
         {
             CreateDatabaseSchemaIfNotExists();
-
+            EnsureDatabaseAfterInit();
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-            
+
             //create stored procedures 
             ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.MySQLStoredProceduresFilePath);
         }
