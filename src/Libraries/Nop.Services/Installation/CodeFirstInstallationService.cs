@@ -6344,9 +6344,9 @@ namespace Nop.Services.Installation
                 DisplayMiniProfilerInPublicStore = false,
                 DisplayMiniProfilerForAdminOnly = false,
                 DisplayEuCookieLawWarning = false,
-                FacebookLink = "http://www.facebook.com/nopCommerce",
+                FacebookLink = "https://www.facebook.com/nopCommerce",
                 TwitterLink = "https://twitter.com/nopCommerce",
-                YoutubeLink = "http://www.youtube.com/user/nopCommerce",
+                YoutubeLink = "https://www.youtube.com/user/nopCommerce",
                 HidePoweredByNopCommerce = false
             });
 
