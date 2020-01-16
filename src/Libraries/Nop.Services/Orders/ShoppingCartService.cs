@@ -1617,6 +1617,8 @@ namespace Nop.Services.Orders
                 shoppingCartItem.RentalStartDateUtc = rentalStartDate;
                 shoppingCartItem.RentalEndDateUtc = rentalEndDate;
                 shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
+
+                _sciRepository.Update(shoppingCartItem);
                 _customerService.UpdateCustomer(customer);
 
                 //event notification

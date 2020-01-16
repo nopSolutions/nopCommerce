@@ -26,6 +26,7 @@ namespace Nop.Services.Caching.CacheEventConsumers
         /// <param name="entityEventType">Entity event type</param>
         protected virtual void ClearCache(TEntity entity, EntityEventType entityEventType)
         {
+            ClearCache(entity);
         }
 
         /// <summary>
