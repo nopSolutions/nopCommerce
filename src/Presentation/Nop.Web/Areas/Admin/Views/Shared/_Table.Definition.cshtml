@@ -242,8 +242,11 @@ columns: [
                     };
 
                     function escapeHtml (string) {
+                        if (string == null) {
+                            return '';
+                        }
                         return String(string).replace(/[&<>"'`=\/]/g, function (s) {
-                        return entityMap[s];
+                            return entityMap[s];
                         });
                     }
                     return escapeHtml(data)
