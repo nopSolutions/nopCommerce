@@ -33,8 +33,8 @@ namespace Nop.Core.Tests.Caching
             _cacheManager.Set("some_key_1", 3, int.MaxValue);
             _cacheManager.Set("some_key_2", 4, int.MaxValue);
 
-            _cacheManager.IsSet("some_key_1").Should().Be(true);
-            _cacheManager.IsSet("some_key_3").Should().Be(false);
+            _cacheManager.IsSet("some_key_1").Should().BeTrue();
+            _cacheManager.IsSet("some_key_3").Should().BeFalse();
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace Nop.Core.Tests.Caching
 
             _cacheManager.Clear();
 
-            _cacheManager.IsSet("some_key_1").Should().Be(false);
+            _cacheManager.IsSet("some_key_1").Should().BeFalse();
         }
 
         [Test]

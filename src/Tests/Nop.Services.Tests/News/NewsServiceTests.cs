@@ -25,7 +25,7 @@ namespace Nop.Services.Tests.News
                 StartDateUtc = null
             };
 
-            _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 03)).Should().Be(true);
+            _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 03)).Should().BeTrue();
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace Nop.Services.Tests.News
                 StartDateUtc = new DateTime(2010, 01, 02)
             };
 
-            _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 03)).Should().Be(true);
+            _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 03)).Should().BeTrue();
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace Nop.Services.Tests.News
                 StartDateUtc = new DateTime(2010, 01, 02)
             };
 
-            _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 01)).Should().Be(false);
+            _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 01)).Should().BeFalse();
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace Nop.Services.Tests.News
                 EndDateUtc = null
             };
 
-            _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 03)).Should().Be(true);
+            _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 03)).Should().BeTrue();
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace Nop.Services.Tests.News
                 EndDateUtc = new DateTime(2010, 01, 02)
             };
 
-            _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 01)).Should().Be(true);
+            _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 01)).Should().BeTrue();
         }
 
         [Test]
@@ -80,7 +80,7 @@ namespace Nop.Services.Tests.News
                 EndDateUtc = new DateTime(2010, 01, 02)
             };
 
-            _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 03)).Should().Be(false);
+            _newsService.IsNewsAvailable(newsItem, new DateTime(2010, 01, 03)).Should().BeFalse();
         }
     }
 }

@@ -266,11 +266,11 @@ namespace Nop.Services.Tests.Customers
         {
             var request = new ChangePasswordRequest("registered@test.com", true, PasswordFormat.Clear, "password", "password");
             var result = _customerRegistrationService.ChangePassword(request);
-            result.Success.Should().Be(false);
+            result.Success.Should().BeFalse();
 
             request = new ChangePasswordRequest("registered@test.com", true, PasswordFormat.Hashed, "newpassword", "password");
             result = _customerRegistrationService.ChangePassword(request);
-            result.Success.Should().Be(true);
+            result.Success.Should().BeTrue();
 
             //request = new ChangePasswordRequest("registered@test.com", true, PasswordFormat.Encrypted, "password", "newpassword");
             //result = _customerRegistrationService.ChangePassword(request);

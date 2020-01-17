@@ -524,7 +524,7 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-            _orderTotalCalcService.IsFreeShipping(cart).Should().Be(true);
+            _orderTotalCalcService.IsFreeShipping(cart).Should().BeTrue();
         }
 
         [Test]
@@ -563,7 +563,7 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-            _orderTotalCalcService.IsFreeShipping(cart).Should().Be(false);
+            _orderTotalCalcService.IsFreeShipping(cart).Should().BeFalse();
         }
 
         [Test]
@@ -614,7 +614,7 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-            _orderTotalCalcService.IsFreeShipping(cart).Should().Be(true);
+            _orderTotalCalcService.IsFreeShipping(cart).Should().BeTrue();
         }
 
         [Test]
@@ -1291,15 +1291,15 @@ namespace Nop.Services.Tests.Orders
             _rewardPointsSettings.Enabled = true;
             _rewardPointsSettings.MinimumRewardPointsToUse = 0;
 
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(0).Should().Be(true);
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(1).Should().Be(true);
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(10).Should().Be(true);
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(0).Should().BeTrue();
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(1).Should().BeTrue();
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(10).Should().BeTrue();
 
             _rewardPointsSettings.MinimumRewardPointsToUse = 2;
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(0).Should().Be(false);
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(1).Should().Be(false);
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(2).Should().Be(true);
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(10).Should().Be(true);
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(0).Should().BeFalse();
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(1).Should().BeFalse();
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(2).Should().BeTrue();
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(10).Should().BeTrue();
         }
     }
 }

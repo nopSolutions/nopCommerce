@@ -51,22 +51,22 @@ namespace Nop.Services.Tests.Orders
                 );
 
             //valid
-            _giftCardService.IsGiftCardValid(gc).Should().Be(true);
+            _giftCardService.IsGiftCardValid(gc).Should().BeTrue();
 
             //mark as not active
             gc.IsGiftCardActivated = false;
-            _giftCardService.IsGiftCardValid(gc).Should().Be(false);
+            _giftCardService.IsGiftCardValid(gc).Should().BeFalse();
 
             //again active
             gc.IsGiftCardActivated = true;
-            _giftCardService.IsGiftCardValid(gc).Should().Be(true);
+            _giftCardService.IsGiftCardValid(gc).Should().BeTrue();
 
             //add usage history record
             gc.GiftCardUsageHistory.Add(new GiftCardUsageHistory
             {
                 UsedValue = 1000
             });
-            _giftCardService.IsGiftCardValid(gc).Should().Be(false);
+            _giftCardService.IsGiftCardValid(gc).Should().BeFalse();
         }
 
         [Test]

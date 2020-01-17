@@ -168,7 +168,7 @@ namespace Nop.Services.Tests.Discounts
             //we cannot inject it because DiscountService already has "per-request" cache manager injected 
             //EngineContext.Initialize(false);
 
-            _discountService.ValidateDiscount(discount, customer, new[] { "CouponCode 1" }).IsValid.Should().Be(true);
+            _discountService.ValidateDiscount(discount, customer, new[] { "CouponCode 1" }).IsValid.Should().BeTrue();
         }
 
 
@@ -196,7 +196,7 @@ namespace Nop.Services.Tests.Discounts
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
             };
-            _discountService.ValidateDiscount(discount, customer, new[] { "CouponCode 2" }).IsValid.Should().Be(false);
+            _discountService.ValidateDiscount(discount, customer, new[] { "CouponCode 2" }).IsValid.Should().BeFalse();
         }
 
         [Test]
@@ -224,10 +224,10 @@ namespace Nop.Services.Tests.Discounts
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
             };
-            _discountService.ValidateDiscount(discount, customer, null).IsValid.Should().Be(true);
+            _discountService.ValidateDiscount(discount, customer, null).IsValid.Should().BeTrue();
 
             discount.StartDateUtc = DateTime.UtcNow.AddDays(1);
-            _discountService.ValidateDiscount(discount, customer, null).IsValid.Should().Be(false);
+            _discountService.ValidateDiscount(discount, customer, null).IsValid.Should().BeFalse();
         }
 
         [Test]

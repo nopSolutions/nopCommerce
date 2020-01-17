@@ -38,12 +38,12 @@ namespace Nop.Services.Tests.Stores
                 Hosts = "yourstore.com, www.yourstore.com, "
             };
 
-            _storeService.ContainsHostValue(store, null).Should().Be(false);
-            _storeService.ContainsHostValue(store, "").Should().Be(false);
-            _storeService.ContainsHostValue(store, "store.com").Should().Be(false);
-            _storeService.ContainsHostValue(store, "yourstore.com").Should().Be(true);
-            _storeService.ContainsHostValue(store, "yoursTore.com").Should().Be(true);
-            _storeService.ContainsHostValue(store, "www.yourstore.com").Should().Be(true);
+            _storeService.ContainsHostValue(store, null).Should().BeFalse();
+            _storeService.ContainsHostValue(store, "").Should().BeFalse();
+            _storeService.ContainsHostValue(store, "store.com").Should().BeFalse();
+            _storeService.ContainsHostValue(store, "yourstore.com").Should().BeTrue();
+            _storeService.ContainsHostValue(store, "yoursTore.com").Should().BeTrue();
+            _storeService.ContainsHostValue(store, "www.yourstore.com").Should().BeTrue();
         }
     }
 }

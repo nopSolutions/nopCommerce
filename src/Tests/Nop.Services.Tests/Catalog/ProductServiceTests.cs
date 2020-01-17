@@ -45,7 +45,7 @@ namespace Nop.Services.Tests.Catalog
                 AvailableStartDateTimeUtc = null
             };
 
-            _productService.ProductIsAvailable(product, new DateTime(2010, 01, 03)).Should().Be(true);
+            _productService.ProductIsAvailable(product, new DateTime(2010, 01, 03)).Should().BeTrue();
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace Nop.Services.Tests.Catalog
                 AvailableStartDateTimeUtc = new DateTime(2010, 01, 02)
             };
 
-            _productService.ProductIsAvailable(product, new DateTime(2010, 01, 03)).Should().Be(true);
+            _productService.ProductIsAvailable(product, new DateTime(2010, 01, 03)).Should().BeTrue();
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace Nop.Services.Tests.Catalog
                 AvailableStartDateTimeUtc = new DateTime(2010, 01, 02)
             };
 
-            _productService.ProductIsAvailable(product, new DateTime(2010, 01, 01)).Should().Be(false);
+            _productService.ProductIsAvailable(product, new DateTime(2010, 01, 01)).Should().BeFalse();
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace Nop.Services.Tests.Catalog
                 AvailableEndDateTimeUtc = null
             };
 
-            _productService.ProductIsAvailable(product, new DateTime(2010, 01, 03)).Should().Be(true);
+            _productService.ProductIsAvailable(product, new DateTime(2010, 01, 03)).Should().BeTrue();
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace Nop.Services.Tests.Catalog
                 AvailableEndDateTimeUtc = new DateTime(2010, 01, 02)
             };
 
-            _productService.ProductIsAvailable(product, new DateTime(2010, 01, 01)).Should().Be(true);
+            _productService.ProductIsAvailable(product, new DateTime(2010, 01, 01)).Should().BeTrue();
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace Nop.Services.Tests.Catalog
                 AvailableEndDateTimeUtc = new DateTime(2010, 01, 02)
             };
 
-            _productService.ProductIsAvailable(product, new DateTime(2010, 01, 03)).Should().Be(false);
+            _productService.ProductIsAvailable(product, new DateTime(2010, 01, 03)).Should().BeFalse();
         }
 
         [Test]

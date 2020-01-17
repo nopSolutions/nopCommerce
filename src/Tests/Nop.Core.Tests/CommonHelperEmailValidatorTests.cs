@@ -11,7 +11,7 @@ namespace Nop.Core.Tests
         {
             var email = "testperson@gmail.com";
             var result = CommonHelper.IsValidEmail(email);
-            result.Should().Be(true);
+            result.Should().BeTrue();
         }
 
         [Test]
@@ -19,7 +19,7 @@ namespace Nop.Core.Tests
         {
             var email = "testperson+label@gmail.com";
             var result = CommonHelper.IsValidEmail(email);
-            result.Should().Be(true);
+            result.Should().BeTrue();
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace Nop.Core.Tests
         {
             string email = null;
             var result = CommonHelper.IsValidEmail(email);
-            result.Should().Be(false);
+            result.Should().BeFalse();
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace Nop.Core.Tests
         {
             var email = string.Empty;
             var result = CommonHelper.IsValidEmail(email);
-            result.Should().Be(false);
+            result.Should().BeFalse();
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace Nop.Core.Tests
         {
             var email = "testperso";
             var result = CommonHelper.IsValidEmail(email);
-            result.Should().Be(false);
+            result.Should().BeFalse();
         }
 
 
@@ -52,7 +52,7 @@ namespace Nop.Core.Tests
         {
             var email = "thisisaverylongstringcodeplex.com";
             var result = CommonHelper.IsValidEmail(email);
-            result.Should().Be(false);
+            result.Should().BeFalse();
         }
 
         [Test]
@@ -60,11 +60,11 @@ namespace Nop.Core.Tests
         {
             var email = "testperson@gmail.com";
             var result = CommonHelper.IsValidEmail(email);
-            result.Should().Be(true);
+            result.Should().BeTrue();
 
             email = "TestPerson@gmail.com";
             result = CommonHelper.IsValidEmail(email);
-            result.Should().Be(true);
+            result.Should().BeTrue();
         }
     }
 }

@@ -126,17 +126,17 @@ namespace Nop.Services.Tests.Payments
             deserialized.Should().NotBeNull();
             deserialized.Count.Should().Be(4);
 
-            deserialized.ContainsKey("key1").Should().Be(true);
+            deserialized.ContainsKey("key1").Should().BeTrue();
             deserialized["key1"].Should().Be("value1");
 
-            deserialized.ContainsKey("key2").Should().Be(true);
+            deserialized.ContainsKey("key2").Should().BeTrue();
             //deserialized["key2"].Should().Be(null);
             deserialized["key2"].Should().Be("");
 
-            deserialized.ContainsKey("key3").Should().Be(true);
+            deserialized.ContainsKey("key3").Should().BeTrue();
             deserialized["key3"].Should().Be("3");
 
-            deserialized.ContainsKey("<test key4>").Should().Be(true);
+            deserialized.ContainsKey("<test key4>").Should().BeTrue();
             deserialized["<test key4>"].Should().Be("<test value 4>");
         }
     }

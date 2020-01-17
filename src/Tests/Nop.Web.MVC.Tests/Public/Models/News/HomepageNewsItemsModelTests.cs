@@ -57,7 +57,7 @@ namespace Nop.Web.MVC.Tests.Public.Models.News
             newsItemModel2.Title.Should().Be("Title 1");
             newsItemModel2.Short.Should().Be("Short 1");
             newsItemModel2.Full.Should().Be("Full 1");
-            newsItemModel2.AllowComments.Should().Be(true);
+            newsItemModel2.AllowComments.Should().BeTrue();
             newsItemModel2.NumberOfComments.Should().Be(2);
             newsItemModel2.CreatedOn.Should().Be(new DateTime(2010, 01, 01));
             newsItemModel2.Comments.Should().NotBeNull();
@@ -69,11 +69,11 @@ namespace Nop.Web.MVC.Tests.Public.Models.News
             newsItemModel2.Comments[0].CommentTitle.Should().Be("CommentTitle 1");
             newsItemModel2.Comments[0].CommentText.Should().Be("CommentText 1");
             newsItemModel2.Comments[0].CreatedOn.Should().Be(new DateTime(2010, 01, 02));
-            newsItemModel2.Comments[0].AllowViewingProfiles.Should().Be(true);
+            newsItemModel2.Comments[0].AllowViewingProfiles.Should().BeTrue();
             newsItemModel2.AddNewComment.Should().NotBeNull();
             newsItemModel2.AddNewComment.CommentTitle.Should().Be("CommentTitle 1");
             newsItemModel2.AddNewComment.CommentText.Should().Be("CommentText 1");
-            newsItemModel2.AddNewComment.DisplayCaptcha.Should().Be(true);
+            newsItemModel2.AddNewComment.DisplayCaptcha.Should().BeTrue();
         }
     }
 }

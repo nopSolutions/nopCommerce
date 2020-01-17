@@ -174,16 +174,16 @@ namespace Nop.Services.Tests.Orders
             attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca3, "Some custom text goes here");
 
             var parsed_attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes);
-            parsed_attributeValues.Contains(cav1_1).Should().Be(true);
-            parsed_attributeValues.Contains(cav1_2).Should().Be(false);
-            parsed_attributeValues.Contains(cav2_1).Should().Be(true);
-            parsed_attributeValues.Contains(cav2_2).Should().Be(true);
-            parsed_attributeValues.Contains(cav2_2).Should().Be(true);
+            parsed_attributeValues.Contains(cav1_1).Should().BeTrue();
+            parsed_attributeValues.Contains(cav1_2).Should().BeFalse();
+            parsed_attributeValues.Contains(cav2_1).Should().BeTrue();
+            parsed_attributeValues.Contains(cav2_2).Should().BeTrue();
+            parsed_attributeValues.Contains(cav2_2).Should().BeTrue();
 
             var parsedValues = _checkoutAttributeParser.ParseValues(attributes, ca3.Id);
             parsedValues.Count.Should().Be(1);
-            parsedValues.Contains("Some custom text goes here").Should().Be(true);
-            parsedValues.Contains("Some other custom text").Should().Be(false);
+            parsedValues.Contains("Some custom text goes here").Should().BeTrue();
+            parsedValues.Contains("Some other custom text").Should().BeFalse();
         }
 
         [Test]
@@ -220,11 +220,11 @@ namespace Nop.Services.Tests.Orders
             attributes = _checkoutAttributeParser.RemoveCheckoutAttribute(attributes, ca3);
 
             var parsed_attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes);
-            parsed_attributeValues.Contains(cav1_1).Should().Be(true);
-            parsed_attributeValues.Contains(cav1_2).Should().Be(false);
-            parsed_attributeValues.Contains(cav2_1).Should().Be(false);
-            parsed_attributeValues.Contains(cav2_2).Should().Be(false);
-            parsed_attributeValues.Contains(cav2_2).Should().Be(false);
+            parsed_attributeValues.Contains(cav1_1).Should().BeTrue();
+            parsed_attributeValues.Contains(cav1_2).Should().BeFalse();
+            parsed_attributeValues.Contains(cav2_1).Should().BeFalse();
+            parsed_attributeValues.Contains(cav2_2).Should().BeFalse();
+            parsed_attributeValues.Contains(cav2_2).Should().BeFalse();
 
             var parsedValues = _checkoutAttributeParser.ParseValues(attributes, ca3.Id);
             parsedValues.Count.Should().Be(0);

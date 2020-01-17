@@ -30,7 +30,7 @@ namespace Nop.Web.MVC.Tests.Public.Models.Polls
             var model2 = (PollModel)model1.Clone();
             model2.Id.Should().Be(1);
             model2.Name.Should().Be("Name 1");
-            model2.AlreadyVoted.Should().Be(true);
+            model2.AlreadyVoted.Should().BeTrue();
             model2.TotalVotes.Should().Be(2);
             model2.Answers.Should().NotBeNull();
             model2.Answers.Count.Should().Be(1);

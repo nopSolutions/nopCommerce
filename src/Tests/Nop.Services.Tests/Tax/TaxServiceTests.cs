@@ -126,9 +126,9 @@ namespace Nop.Services.Tests.Tax
             {
                 IsTaxExempt = true
             };
-            _taxService.IsTaxExempt(product, null).Should().Be(true);
+            _taxService.IsTaxExempt(product, null).Should().BeTrue();
             product.IsTaxExempt = false;
-            _taxService.IsTaxExempt(product, null).Should().Be(false);
+            _taxService.IsTaxExempt(product, null).Should().BeFalse();
         }
 
         [Test]
@@ -138,9 +138,9 @@ namespace Nop.Services.Tests.Tax
             {
                 IsTaxExempt = true
             };
-            _taxService.IsTaxExempt(null, customer).Should().Be(true);
+            _taxService.IsTaxExempt(null, customer).Should().BeTrue();
             customer.IsTaxExempt = false;
-            _taxService.IsTaxExempt(null, customer).Should().Be(false);
+            _taxService.IsTaxExempt(null, customer).Should().BeFalse();
         }
 
         [Test]
@@ -150,7 +150,7 @@ namespace Nop.Services.Tests.Tax
             {
                 IsTaxExempt = false
             };
-            _taxService.IsTaxExempt(null, customer).Should().Be(false);
+            _taxService.IsTaxExempt(null, customer).Should().BeFalse();
 
             var customerRole = new CustomerRole
             {
@@ -158,13 +158,13 @@ namespace Nop.Services.Tests.Tax
                 Active = true
             };
             customer.CustomerRoles.Add(customerRole);
-            _taxService.IsTaxExempt(null, customer).Should().Be(true);
+            _taxService.IsTaxExempt(null, customer).Should().BeTrue();
             customerRole.TaxExempt = false;
-            _taxService.IsTaxExempt(null, customer).Should().Be(false);
+            _taxService.IsTaxExempt(null, customer).Should().BeFalse();
 
             //if role is not active, we should ignore 'TaxExempt' property
             customerRole.Active = false;
-            _taxService.IsTaxExempt(null, customer).Should().Be(false);
+            _taxService.IsTaxExempt(null, customer).Should().BeFalse();
         }
 
         [Test]

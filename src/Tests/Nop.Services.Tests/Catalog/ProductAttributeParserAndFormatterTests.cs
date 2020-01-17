@@ -255,16 +255,16 @@ namespace Nop.Services.Tests.Catalog
             attributes = _productAttributeParser.AddProductAttribute(attributes, pam3_1, "Some custom text goes here");
 
             var parsed_attributeValues = _productAttributeParser.ParseProductAttributeValues(attributes);
-            parsed_attributeValues.Contains(pav1_1).Should().Be(true);
-            parsed_attributeValues.Contains(pav1_2).Should().Be(false);
-            parsed_attributeValues.Contains(pav2_1).Should().Be(true);
-            parsed_attributeValues.Contains(pav2_2).Should().Be(true);
-            parsed_attributeValues.Contains(pav2_2).Should().Be(true);
+            parsed_attributeValues.Contains(pav1_1).Should().BeTrue();
+            parsed_attributeValues.Contains(pav1_2).Should().BeFalse();
+            parsed_attributeValues.Contains(pav2_1).Should().BeTrue();
+            parsed_attributeValues.Contains(pav2_2).Should().BeTrue();
+            parsed_attributeValues.Contains(pav2_2).Should().BeTrue();
 
             var parsedValues = _productAttributeParser.ParseValues(attributes, pam3_1.Id);
             parsedValues.Count.Should().Be(1);
-            parsedValues.Contains("Some custom text goes here").Should().Be(true);
-            parsedValues.Contains("Some other custom text").Should().Be(false);
+            parsedValues.Contains("Some custom text goes here").Should().BeTrue();
+            parsedValues.Contains("Some other custom text").Should().BeFalse();
         }
 
         [Test]
@@ -283,11 +283,11 @@ namespace Nop.Services.Tests.Catalog
             attributes = _productAttributeParser.RemoveProductAttribute(attributes, pam3_1);
 
             var parsed_attributeValues = _productAttributeParser.ParseProductAttributeValues(attributes);
-            parsed_attributeValues.Contains(pav1_1).Should().Be(true);
-            parsed_attributeValues.Contains(pav1_2).Should().Be(false);
-            parsed_attributeValues.Contains(pav2_1).Should().Be(false);
-            parsed_attributeValues.Contains(pav2_2).Should().Be(false);
-            parsed_attributeValues.Contains(pav2_2).Should().Be(false);
+            parsed_attributeValues.Contains(pav1_1).Should().BeTrue();
+            parsed_attributeValues.Contains(pav1_2).Should().BeFalse();
+            parsed_attributeValues.Contains(pav2_1).Should().BeFalse();
+            parsed_attributeValues.Contains(pav2_2).Should().BeFalse();
+            parsed_attributeValues.Contains(pav2_2).Should().BeFalse();
 
             var parsedValues = _productAttributeParser.ParseValues(attributes, pam3_1.Id);
             parsedValues.Count.Should().Be(0);

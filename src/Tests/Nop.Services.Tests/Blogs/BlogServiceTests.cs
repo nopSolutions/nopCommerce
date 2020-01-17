@@ -41,7 +41,7 @@ namespace Nop.Services.Tests.Blogs
                 StartDateUtc = null
             };
 
-            _blogService.BlogPostIsAvailable(blogPost, new DateTime(2010, 01, 03)).Should().Be(true);
+            _blogService.BlogPostIsAvailable(blogPost, new DateTime(2010, 01, 03)).Should().BeTrue();
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace Nop.Services.Tests.Blogs
                 StartDateUtc = new DateTime(2010, 01, 02)
             };
 
-            _blogService.BlogPostIsAvailable(blogPost, new DateTime(2010, 01, 03)).Should().Be(true);
+            _blogService.BlogPostIsAvailable(blogPost, new DateTime(2010, 01, 03)).Should().BeTrue();
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace Nop.Services.Tests.Blogs
                 StartDateUtc = new DateTime(2010, 01, 02)
             };
 
-            _blogService.BlogPostIsAvailable(blogPost, new DateTime(2010, 01, 01)).Should().Be(false);
+            _blogService.BlogPostIsAvailable(blogPost, new DateTime(2010, 01, 01)).Should().BeFalse();
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace Nop.Services.Tests.Blogs
                 EndDateUtc = null
             };
 
-            _blogService.BlogPostIsAvailable(blogPost, new DateTime(2010, 01, 03)).Should().Be(true);
+            _blogService.BlogPostIsAvailable(blogPost, new DateTime(2010, 01, 03)).Should().BeTrue();
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace Nop.Services.Tests.Blogs
                 EndDateUtc = new DateTime(2010, 01, 02)
             };
 
-            _blogService.BlogPostIsAvailable(blogPost, new DateTime(2010, 01, 01)).Should().Be(true);
+            _blogService.BlogPostIsAvailable(blogPost, new DateTime(2010, 01, 01)).Should().BeTrue();
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace Nop.Services.Tests.Blogs
                 EndDateUtc = new DateTime(2010, 01, 02)
             };
 
-            _blogService.BlogPostIsAvailable(blogPost, new DateTime(2010, 01, 03)).Should().Be(false);
+            _blogService.BlogPostIsAvailable(blogPost, new DateTime(2010, 01, 03)).Should().BeFalse();
         }
     }
 }
