@@ -229,26 +229,7 @@ columns: [
             @if (column.Encode && column.Render == null)
             {
                 <text>
-                render: function (data, type, row, meta) {
-                    var entityMap = {
-                        '&': '&amp;',
-                        '<': '&lt;',
-                        '>': '&gt;',
-                        '"': '&quot;',
-                        "'": '&#39;',
-                        '/': '&#x2F;',
-                        '`': '&#x60;',
-                        '=': '&#x3D;'
-                    };
-
-                    function escapeHtml (string) {
-                        if (string == null) {
-                            return '';
-                        }
-                        return String(string).replace(/[&<>"'`=\/]/g, function (s) {
-                            return entityMap[s];
-                        });
-                    }
+                render: function (data, type, row, meta) {                    
                     return escapeHtml(data)
                 },
                 </text>
