@@ -32,7 +32,7 @@ namespace Nop.Core.Configuration
         public bool AzureBlobStorageAppendContainerName { get; set; }
 
         /// <summary>
-        /// Gets or sets whether to store Data Protection Keys in Azure Blob Storage
+        /// Gets or sets whether to store Data Protection Keys in Azure Blob Storage (the UseRedisToStoreDataProtectionKeys option should be disabled)
         /// </summary>
         public bool UseAzureBlobStorageToStoreDataProtectionKeys { get; set; }
         /// <summary>

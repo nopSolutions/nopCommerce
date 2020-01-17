@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Nop.Core.Configuration;
 using Nop.Core.Redis;
+using Nop.Core.Security;
 using StackExchange.Redis;
 
 namespace Nop.Core.Caching
@@ -61,7 +62,7 @@ namespace Nop.Core.Caching
             var keys = server.Keys(_db.Database, string.IsNullOrEmpty(prefix) ? null : $"{prefix}*");
 
             //we should always persist the data protection key list
-            keys = keys.Where(key => !key.ToString().Equals(NopCachingDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase));
+            keys = keys.Where(key => !key.ToString().Equals(NopDataProtectionDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase));
 
             return keys;
         }
@@ -259,7 +260,7 @@ namespace Nop.Core.Caching
         public virtual void Remove(string key)
         {
             //we should always persist the data protection key list
-            if (key.Equals(NopCachingDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase))
+            if (key.Equals(NopDataProtectionDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase))
                 return;
 
             //remove item from caches
