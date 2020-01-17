@@ -258,10 +258,10 @@
         function checkoutAttributeChange() {
             $.ajax({
                 cache: false,
-                url: '@Html.Raw(Url.Action("checkoutattributechange", "shoppingcart", new { isEditable = Model.IsEditable }))',
+                url: "@Html.Raw(Url.Action("checkoutattributechange", "shoppingcart", new { isEditable = Model.IsEditable }))",
                 data: $('#shopping-cart-form').serialize(),
-                type: 'post',
-                success: function(data) {
+                type: "POST",
+                success: function (data, textStatus, jqXHR) {
                     if (data.ordetotalssectionhtml) {
                         $('.total-info').replaceWith(data.ordetotalssectionhtml);
                     }

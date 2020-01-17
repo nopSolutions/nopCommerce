@@ -19,6 +19,11 @@ namespace Nop.Core.Domain.Discounts
         public string Name { get; set; }
 
         /// <summary>
+        /// Gets or sets the admin comment
+        /// </summary>
+        public string AdminComment { get; set; }
+
+        /// <summary>
         /// Gets or sets the discount type identifier
         /// </summary>
         public int DiscountTypeId { get; set; }

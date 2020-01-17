@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.ContentManagement.News.NewsItems").Text;
+    ViewBag.PageTitle = T("Admin.ContentManagement.News.NewsItems").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("News items");
 }
@@ -12,7 +12,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.News.NewsItems")
@@ -91,7 +90,7 @@
                             {
                                 Title = T("Admin.ContentManagement.News.NewsItems.Fields.Comments").Text,
                                 Width = "200",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderCustom("renderColumnComments")
                             },
                             new ColumnProperty(nameof(NewsItemModel.StartDateUtc))
@@ -110,7 +109,7 @@
                             {
                                 Title = T("Admin.ContentManagement.News.NewsItems.Fields.Published").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.CenterAll,
+                                ClassName =  NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(NewsItemModel.CreatedOn))
@@ -123,7 +122,7 @@
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("NewsItemEdit"))
                             }
                         }

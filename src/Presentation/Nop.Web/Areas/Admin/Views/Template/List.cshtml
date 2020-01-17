@@ -4,7 +4,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.System.Templates").Text;
+    ViewBag.PageTitle = T("Admin.System.Templates").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Templates");
 }
@@ -22,8 +22,6 @@
     const string hideTopicBlockAttributeName = "Templates.HideTopicBlock";
     var hideTopicBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideTopicBlockAttributeName);
 }
-
-<nop-antiforgery-token />
 
 <div class="content">
     <div class="form-horizontal">

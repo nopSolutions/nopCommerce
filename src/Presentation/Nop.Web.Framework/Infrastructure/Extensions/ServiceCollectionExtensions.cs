@@ -13,11 +13,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json.Serialization;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Domain;
@@ -26,6 +28,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Core.Redis;
+using Nop.Core.Security;
 using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
@@ -39,8 +42,6 @@ using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
 using StackExchange.Profiling.Storage;
-using WebMarkupMin.AspNet.Brotli;
-using WebMarkupMin.AspNet.Common.Compressors;
 using WebMarkupMin.AspNetCore2;
 using WebMarkupMin.NUglify;
 
@@ -201,12 +202,29 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 services.AddDataProtection().PersistKeysToRedis(() =>
                 {
                     var redisConnectionWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
-                    return redisConnectionWrapper.GetDatabase(RedisDatabaseNumber.DataProtectionKeys);
-                }, NopCachingDefaults.RedisDataProtectionKey);
+                    return redisConnectionWrapper.GetDatabase(nopConfig.RedisDatabaseId ?? (int)RedisDatabaseNumber.DataProtectionKeys);
+                }, NopDataProtectionDefaults.RedisDataProtectionKey);
+            }
+            else if (nopConfig.AzureBlobStorageEnabled && nopConfig.UseAzureBlobStorageToStoreDataProtectionKeys)
+            {
+                var cloudStorageAccount = CloudStorageAccount.Parse(nopConfig.AzureBlobStorageConnectionString);
+
+                var client = cloudStorageAccount.CreateCloudBlobClient();
+                var container = client.GetContainerReference(nopConfig.AzureBlobStorageContainerNameForDataProtectionKeys);
+
+                var dataProtectionBuilder = services.AddDataProtection().PersistKeysToAzureBlobStorage(container, NopDataProtectionDefaults.AzureDataProtectionKeyFile);
+
+                if (!nopConfig.EncryptDataProtectionKeysWithAzureKeyVault)
+                    return;
+
+                var tokenProvider = new AzureServiceTokenProvider();
+                var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(tokenProvider.KeyVaultTokenCallback));
+                    
+                dataProtectionBuilder.ProtectKeysWithAzureKeyVault(keyVaultClient, nopConfig.AzureKeyVaultIdForDataProtectionKeys);
             }
             else
             {
-                var dataProtectionKeysPath = CommonHelper.DefaultFileProvider.MapPath("~/App_Data/DataProtectionKeys");
+                var dataProtectionKeysPath = CommonHelper.DefaultFileProvider.MapPath(NopDataProtectionDefaults.DataProtectionKeysPath);
                 var dataProtectionKeysFolder = new System.IO.DirectoryInfo(dataProtectionKeysPath);
 
                 //configure the data protection system to persist keys to the specified directory
@@ -392,14 +410,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     options.AllowMinificationInDevelopmentEnvironment = true;
                     options.AllowCompressionInDevelopmentEnvironment = true;
                     options.DisableMinification = !EngineContext.Current.Resolve<CommonSettings>().EnableHtmlMinification;
-                    options.DisableCompression = options.DisableMinification;
+                    options.DisableCompression = true;
                     options.DisablePoweredByHttpHeaders = true;
                 })
                 .AddHtmlMinification(options =>
                 {
                     var settings = options.MinificationSettings;
-                    settings.RemoveHttpProtocolFromAttributes = true;
-                    settings.RemoveHttpsProtocolFromAttributes = true;
 
                     options.CssMinifierFactory = new NUglifyCssMinifierFactory();
                     options.JsMinifierFactory = new NUglifyJsMinifierFactory();
@@ -409,15 +425,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     var settings = options.MinificationSettings;
                     settings.RenderEmptyTagsWithSpace = true;
                     settings.CollapseTagsWithoutContent = true;
-                })
-                .AddHttpCompression(options =>
-                {
-                    options.CompressorFactories = new List<ICompressorFactory>
-                    {
-                        new BrotliCompressorFactory(new BrotliCompressionSettings { Level = 1 }),
-                        new DeflateCompressorFactory(new DeflateCompressionSettings { Level = CompressionLevel.Fastest }),
-                        new GZipCompressorFactory(new GZipCompressionSettings { Level = CompressionLevel.Fastest })
-                    };
                 });
         }
 

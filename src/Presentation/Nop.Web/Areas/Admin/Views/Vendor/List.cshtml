@@ -3,7 +3,7 @@
 @using Nop.Core.Domain.Common
 @{
     //page title
-    ViewBag.Title = T("Admin.Vendors").Text;
+    ViewBag.PageTitle = T("Admin.Vendors").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Vendors");
 }
@@ -13,7 +13,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Vendors")
@@ -92,14 +91,14 @@
                             {
                                 Title = T("Admin.Vendors.Fields.Active").Text,
                                 Width = "50",
-                                ClassName =  StyleColumn.CenterAll,
+                                ClassName =  NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(VendorModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "50",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             }
                         }

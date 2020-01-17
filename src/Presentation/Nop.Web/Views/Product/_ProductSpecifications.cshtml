@@ -6,21 +6,23 @@
         <div class="title">
             <strong>@T("Products.Specs")</strong>
         </div>
-        <div role="table" class="table-wrapper">
-            <table role="presentation" class="data-table">
-                <colgroup role="row">
-                    <col role="columnheader" width="25%" />
-                    <col role="columnheader" />
-                </colgroup>
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr class="hidden-row">
+                        <th width="25%"><span>@T("Products.Specs.AttributeName")</span></th>
+                        <th><span>@T("Products.Specs.AttributeValue")</span></th>
+                    </tr>
+                </thead>
                 <tbody>
                     @for (var i = 0; i < Model.Count; i++)
                     {
                         var item = Model[i];
-                        <tr role="row" @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                            <td role="cell" class="spec-name">
+                        <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                            <td class="spec-name">
                                 @item.SpecificationAttributeName
                             </td>
-                            <td role="cell" class="spec-value">
+                            <td class="spec-value">
                                 @if (!string.IsNullOrEmpty(item.ColorSquaresRgb) && (item.AttributeTypeId == (int)SpecificationAttributeType.Option) )
                                 {
                                     <div class="attribute-squares color-squares">

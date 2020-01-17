@@ -3,7 +3,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.ActivityLog.ActivityLogType").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.ActivityLog.ActivityLogType").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Activity types");
 }
@@ -43,7 +43,7 @@
                             IsMasterCheckBox = true,
                             Title = T("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Enabled").Text,
                             Width = "100",
-                            ClassName = StyleColumn.CenterAll,
+                            ClassName = NopColumnClassDefaults.CenterAll,
                             Render = new RenderCheckBox("checkbox_activity_types")
                         }
                     },

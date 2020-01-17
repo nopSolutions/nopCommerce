@@ -125,16 +125,15 @@ function saveUserPreferences(url, name, value) {
     $.ajax({
         cache: false,
         url: url,
-        type: 'post',
+        type: "POST",
         data: postData,
-        dataType: 'json',
-        success: function() {
-          $("#ajaxBusy span").removeClass("no-ajax-loader");
-        },
-        error: function(xhr, ajaxOptions, thrownError) {
+        dataType: "json",
+        error: function (jqXHR, textStatus, errorThrown) {
           alert('Failed to save preferences.');
+        },
+        complete: function (jqXHR, textStatus) {
           $("#ajaxBusy span").removeClass("no-ajax-loader");
-        }
+        }        
   });
 
 };
@@ -153,10 +152,10 @@ function warningValidation(validationUrl, warningElementName, passedParameters) 
     $.ajax({
         cache: false,
         url: validationUrl,
-        type: 'post',
+        type: "POST",
         dataType: "json",
         data: passedParameters,
-        success: function (data) {
+        success: function (data, textStatus, jqXHR) {
             if (data.Result) {
                 messageElement.addClass("warning");
                 messageElement.html(data.Result);
@@ -165,7 +164,7 @@ function warningValidation(validationUrl, warningElementName, passedParameters) 
                 messageElement.html('');
             }
         },
-        error: function () {
+        error: function (jqXHR, textStatus, errorThrown) {
             messageElement.removeClass("warning");
             messageElement.html('');
         }
@@ -279,6 +278,19 @@ function ensureDataTablesRendered() {
   $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
 }
 
+function reloadAllDataTables(itemCount) {
+  //depending on the number of elements, the time for animation of opening the menu should increase
+  var timePause = 300;
+  if (itemCount) {
+    timePause = itemCount * 100;
+  }
+  $('table[class^="table"]').each(function () {
+  setTimeout(function () {
+    ensureDataTablesRendered();
+  }, timePause);
+  });
+}
+
 //scrolling and hidden DataTables issue workaround
 //More info - https://datatables.net/examples/api/tabs_and_scrolling.html
 $(document).ready(function () {
@@ -290,5 +302,19 @@ $(document).ready(function () {
   });
   $('#advanced-settings-mode').on('click', function (e) {
     ensureDataTablesRendered();
+  });
+});
+
+//Recalculate the column widths
+$(document).ready(function () {
+  // when menu item click
+  $('.treeview').on('click', function (e) {
+    var itemCount = $(e.currentTarget).find('ul').children('li:not([class])').length;
+       
+    reloadAllDataTables(itemCount);
+  });
+  //when sidebar-toggle click
+  $('#nopSideBarPusher').on('click', function (e) {
+    reloadAllDataTables();
   });
 });

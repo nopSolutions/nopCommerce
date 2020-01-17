@@ -437,7 +437,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     using (var sr = new StreamReader(importxmlfile.OpenReadStream(), Encoding.UTF8))
                     {
-                        _localizationService.ImportResourcesFromXml(language, sr.ReadToEnd());
+                        _localizationService.ImportResourcesFromXml(language, sr);
                     }
                 }
                 else

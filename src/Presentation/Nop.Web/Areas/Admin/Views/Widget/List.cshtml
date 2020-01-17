@@ -2,12 +2,11 @@
 
 @{    
     //page title
-    ViewBag.Title = T("Admin.ContentManagement.Widgets").Text;
+    ViewBag.PageTitle = T("Admin.ContentManagement.Widgets").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Widgets");
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.Widgets")
@@ -46,7 +45,7 @@
                                 {
                                     Title = T("Admin.ContentManagement.Widgets.Fields.DisplayOrder").Text,
                                     Width = "100",
-                                    ClassName = StyleColumn.CenterAll,
+                                    ClassName = NopColumnClassDefaults.CenterAll,
                                     Editable = true,
                                     EditType = EditType.Number
                                 },
@@ -54,7 +53,7 @@
                                 {
                                     Title = T("Admin.ContentManagement.Widgets.Fields.IsActive").Text,
                                     Width = "100",
-                                    ClassName = StyleColumn.CenterAll,
+                                    ClassName = NopColumnClassDefaults.CenterAll,
                                     Render = new RenderBoolean(),
                                     Editable = true,
                                     EditType = EditType.Checkbox
@@ -63,14 +62,14 @@
                                 {
                                     Title = T("Admin.ContentManagement.Widgets.Configure").Text,
                                     Width = "150",
-                                    ClassName =  StyleColumn.ButtonStyle,
+                                    ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderCustom("renderColumnConfigure")
                                 },
                                 new ColumnProperty(nameof(WidgetModel.SystemName))
                                 {
                                     Title = T("Admin.Common.Edit").Text,
                                     Width = "200",
-                                    ClassName =  StyleColumn.ButtonStyle,
+                                    ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderButtonsInlineEdit()
                                 }
                             }

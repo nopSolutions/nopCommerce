@@ -21,6 +21,7 @@ namespace Nop.Plugin.Payments.Square.Services
         private readonly ISettingService _settingService;
         private readonly SquarePaymentManager _squarePaymentManager;
         private readonly SquarePaymentSettings _squarePaymentSettings;
+        private readonly IStoreContext _storeContext;
 
         #endregion
 
@@ -31,7 +32,8 @@ namespace Nop.Plugin.Payments.Square.Services
             IPaymentPluginManager paymentPluginManager,
             ISettingService settingService,
             SquarePaymentManager squarePaymentManager,
-            SquarePaymentSettings squarePaymentSettings)
+            SquarePaymentSettings squarePaymentSettings,
+            IStoreContext storeContext)
         {
             _localizationService = localizationService;
             _logger = logger;
@@ -39,6 +41,7 @@ namespace Nop.Plugin.Payments.Square.Services
             _settingService = settingService;
             _squarePaymentManager = squarePaymentManager;
             _squarePaymentSettings = squarePaymentSettings;
+            _storeContext = storeContext;
         }
 
         #endregion
@@ -60,15 +63,21 @@ namespace Nop.Plugin.Payments.Square.Services
 
             try
             {
+                var storeId = _storeContext.CurrentStore.Id;
+
                 //get the new access token
-                var (newAccessToken, refreshToken) = _squarePaymentManager.RenewAccessToken();
+                var (newAccessToken, refreshToken) = _squarePaymentManager.RenewAccessToken(storeId);
                 if (string.IsNullOrEmpty(newAccessToken) || string.IsNullOrEmpty(refreshToken))
                     throw new NopException("No service response");
 
                 //if access token successfully received, save it for the further usage
                 _squarePaymentSettings.AccessToken = newAccessToken;
                 _squarePaymentSettings.RefreshToken = refreshToken;
-                _settingService.SaveSetting(_squarePaymentSettings);
+
+                _settingService.SaveSetting(_squarePaymentSettings, x => x.AccessToken, storeId, false);
+                _settingService.SaveSetting(_squarePaymentSettings, x => x.RefreshToken, storeId, false);
+
+                _settingService.ClearCache();
 
                 //log information about the successful renew of the access token
                 _logger.Information(_localizationService.GetResource("Plugins.Payments.Square.RenewAccessToken.Success"));

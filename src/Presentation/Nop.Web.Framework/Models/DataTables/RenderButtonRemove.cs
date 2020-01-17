@@ -14,6 +14,7 @@
         public RenderButtonRemove(string title)
         {
             Title = title;
+            ClassName = NopButtonClassDefaults.Default;
         }
 
         #endregion
@@ -26,9 +27,9 @@
         public string Title { get; set; }
 
         /// <summary>
-        /// Gets or sets button style
+        /// Gets or sets button class name
         /// </summary>
-        public StyleButton Style { get; set; }
+        public string ClassName { get; set; }
 
         #endregion
     }

@@ -2,12 +2,11 @@
 
 @{    
     //page title
-    ViewBag.Title = T("Admin.Configuration.Shipping.Warehouses").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Shipping.Warehouses").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Warehouses");
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Shipping.Warehouses")
@@ -43,7 +42,7 @@
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("EditWarehouse"))
                             }
                         }

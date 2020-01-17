@@ -48,13 +48,13 @@
                 Title = T("Admin.Orders.Fields.CreatedOn").Text,
                 Width = "200",
                 Render = new RenderDate(),
-                ClassName = StyleColumn.CenterAll
+                ClassName = NopColumnClassDefaults.CenterAll
             });
             columns.Add(new ColumnProperty(nameof(OrderModel.Id))
             {
                 Title = T("Admin.Common.View").Text,
                 Width = "100",
-                ClassName = StyleColumn.ButtonStyle,
+                ClassName = NopColumnClassDefaults.Button,
                 Render = new RenderButtonView(new DataUrl("~/Admin/Order/Edit/"))
             });
 

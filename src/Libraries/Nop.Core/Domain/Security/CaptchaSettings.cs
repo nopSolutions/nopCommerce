@@ -52,6 +52,14 @@ namespace Nop.Core.Domain.Security
         /// </summary>
         public bool ShowOnForgotPasswordPage { get; set; }
         /// <summary>
+        /// A value indicating whether CAPTCHA should be displayed on the Forum
+        /// </summary>
+        public bool ShowOnForum { get; set; }
+        /// <summary>
+        /// The base reCAPTCHA API URL
+        /// </summary>
+        public string ReCaptchaApiUrl { get; set; }
+        /// <summary>
         /// reCAPTCHA public key
         /// </summary>
         public string ReCaptchaPublicKey { get; set; }
@@ -63,6 +71,10 @@ namespace Nop.Core.Domain.Security
         /// reCAPTCHA theme
         /// </summary>
         public string ReCaptchaTheme { get; set; }
+        /// <summary>
+        /// The length of time, in seconds, before the reCAPTCHA request times out
+        /// </summary>
+        public int? ReCaptchaRequestTimeout { get; set; }
         /// <summary>
         /// reCAPTCHA default language
         /// </summary>

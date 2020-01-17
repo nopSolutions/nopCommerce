@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Plugins.OfficialFeed").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Plugins.OfficialFeed").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("All plugins and themes");
 }
@@ -12,7 +12,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <form asp-controller="Plugin" asp-action="OfficialFeed" id="plugins-form-official-feed">
     <div class="content-header clearfix">
         <h1 class="pull-left">
@@ -123,7 +122,7 @@
                                 {
                                     Title = T("Admin.Configuration.Plugins.OfficialFeed.Download").Text,
                                     Width = "150",
-                                    ClassName =  StyleColumn.ButtonStyle,
+                                    ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderCustom("renderColumnUrl")
                                 },
                                 new ColumnProperty(nameof(OfficialFeedPluginModel.CategoryName))
@@ -152,7 +151,7 @@
                             $(document).ready(function () {
                                 $('#btnRefresh').click(function () {
                                     //refresh grid
-                                    $('#plugins-grid').DataTable().ajax.reload();
+                                    updateTable('#plugins-grid');
                                     //return false to don't reload a page
                                     return false;
                                 });

@@ -48,6 +48,15 @@
         }
         </text>
     }
+
+    function updateTable(tableSelector) {
+        $(tableSelector).DataTable().ajax.reload();
+        if (@isMasterCheckBoxUsed.ToString().ToLower()) {
+            $('#mastercheckbox').attr('checked', false).change();
+            selectedIds = [];
+        }            
+    }
+
     $(document).ready(function () {
         $('#@Model.Name').DataTable({
              @await Html.PartialAsync("_Table.Definition", Model)
@@ -112,20 +121,20 @@
                 addAntiForgeryToken(postData);
 
                 $.ajax({
-                    url: '@Html.Raw(GetUrl((Model.ChildTable?.UrlDelete != null) ? Model.ChildTable?.UrlDelete : Model.UrlDelete))',
-                    type: '@WebRequestMethods.Http.Post',
-                    dataType: 'json',
+                    url: "@Html.Raw(GetUrl((Model.ChildTable?.UrlDelete != null) ? Model.ChildTable?.UrlDelete : Model.UrlDelete))",
+                    type: "@WebRequestMethods.Http.Post",
+                    dataType: "json",
                     data: postData,
-                    success: function (result) {
+                    success: function (data, textStatus, jqXHR) {
                         //display error if returned
-                        if (result) {
-                            display_nop_error(result);
+                        if (data) {
+                            display_nop_error(data);
                         }
                         //refresh grid
                         $('#@Model.Name').DataTable().draw(false);
                     },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        alert(thrownError);
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(errorThrown);
                     }
                 });
             }
@@ -183,6 +192,12 @@
             }
         }
 
+        function escapeQuotHtml (value) {
+            return String(value).replace(/["]/g, function (s) {
+                return '&quot;';
+            });
+        }
+
         function setEditStateValue_@(model_name)(curRow) {
             for (var cellName in editRowData_@(model_name)) {
                 var columnType = 'string';
@@ -206,7 +221,8 @@
                     }
                 }
                 if (columnType == 'string') {
-                    $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + editRowData_@(model_name)[cellName] + '" class="userinput"  style="width: 99% " />');
+                    var strValue = editRowData_@(model_name)[cellName];
+                    $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + escapeQuotHtml(strValue) + '" class="userinput"  style="width: 99% " />');
                 }
             }
         }
@@ -254,20 +270,20 @@
             addAntiForgeryToken(postData);
 
             $.ajax({
-                url: '@Html.Raw(GetUrl((Model.ChildTable?.UrlUpdate != null) ? Model.ChildTable?.UrlUpdate : Model.UrlUpdate))',
-                type: 'POST',
-                dataType: 'json',
+                url: "@Html.Raw(GetUrl((Model.ChildTable?.UrlUpdate != null) ? Model.ChildTable?.UrlUpdate : Model.UrlUpdate))",
+                type: "POST",
+                dataType: "json",
                 data: postData,
-                success: function (result) {
+                success: function (data, textStatus, jqXHR) {
                     //display error if returned
-                    if (result) {
-                        display_nop_error(result);
+                    if (data) {
+                        display_nop_error(data);
                     }
                     //refresh grid
                      $('#@Model.Name').DataTable().draw(false);
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    alert(thrownError);
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
                 }
             });
         }

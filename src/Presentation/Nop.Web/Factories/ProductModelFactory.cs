@@ -1179,7 +1179,8 @@ namespace Nop.Web.Factories
                 ManageInventoryMethod = product.ManageInventoryMethod,
                 StockAvailability = _productService.FormatStockMessage(product, ""),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
-                DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts
+                DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts,
+                AvailableEndDate = product.AvailableEndDateTimeUtc
             };
 
             //automatically generate product description?
@@ -1318,11 +1319,7 @@ namespace Nop.Web.Factories
             }
 
             //manufacturers
-            //do not prepare this model for the associated products. anyway it's not used
-            if (!isAssociatedProduct)
-            {
-                model.ProductManufacturers = PrepareProductManufacturerModels(product);
-            }
+            model.ProductManufacturers = PrepareProductManufacturerModels(product);
 
             //rental products
             if (product.IsRental)

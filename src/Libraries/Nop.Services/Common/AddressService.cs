@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
@@ -295,7 +295,7 @@ namespace Nop.Services.Common
             ((string.IsNullOrEmpty(a.Address2) && string.IsNullOrEmpty(address2)) || a.Address2 == address2) &&
             ((string.IsNullOrEmpty(a.City) && string.IsNullOrEmpty(city)) || a.City == city) &&
             ((string.IsNullOrEmpty(a.County) && string.IsNullOrEmpty(county)) || a.County == county) &&
-            ((a.StateProvinceId == null && stateProvinceId == null) || (a.StateProvinceId != null && a.StateProvinceId == stateProvinceId)) &&
+            ((a.StateProvinceId == null && (stateProvinceId == null || stateProvinceId == 0)) || (a.StateProvinceId != null && a.StateProvinceId == stateProvinceId)) &&
             ((string.IsNullOrEmpty(a.ZipPostalCode) && string.IsNullOrEmpty(zipPostalCode)) || a.ZipPostalCode == zipPostalCode) &&
             ((a.CountryId == null && countryId == null) || (a.CountryId !=null && a.CountryId == countryId)) &&
             //actually we should parse custom address attribute (in case if "Display order" is changed) and then compare

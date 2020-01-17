@@ -38,7 +38,6 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
-using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Validators;
 using Nop.Web.Models.Customer;
 
@@ -512,7 +511,9 @@ namespace Nop.Web.Controllers
         [CheckAccessPublicStore(true)]
         public virtual IActionResult PasswordRecovery()
         {
-            var model = _customerModelFactory.PreparePasswordRecoveryModel();
+            var model = new PasswordRecoveryModel();
+            model = _customerModelFactory.PreparePasswordRecoveryModel(model);
+
             return View(model);
         }
 
@@ -553,20 +554,22 @@ namespace Nop.Web.Controllers
                 {
                     model.Result = _localizationService.GetResource("Account.PasswordRecovery.EmailNotFound");
                 }
-
-                return View(model);
             }
 
-            //If we got this far, something failed, redisplay form
+            model = _customerModelFactory.PreparePasswordRecoveryModel(model);
             return View(model);
         }
 
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult PasswordRecoveryConfirm(string token, string email)
+        public virtual IActionResult PasswordRecoveryConfirm(string token, string email, Guid guid)
         {
+            //For backward compatibility with previous versions where email was used as a parameter in the URL
             var customer = _customerService.GetCustomerByEmail(email);
+            if (customer == null)
+                customer = _customerService.GetCustomerByGuid(guid);
+
             if (customer == null)
                 return RedirectToRoute("Homepage");
 
@@ -603,9 +606,13 @@ namespace Nop.Web.Controllers
         [FormValueRequired("set-password")]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult PasswordRecoveryConfirmPOST(string token, string email, PasswordRecoveryConfirmModel model)
+        public virtual IActionResult PasswordRecoveryConfirmPOST(string token, string email, Guid guid, PasswordRecoveryConfirmModel model)
         {
+            //For backward compatibility with previous versions where email was used as a parameter in the URL
             var customer = _customerService.GetCustomerByEmail(email);
+            if (customer == null)
+                customer = _customerService.GetCustomerByGuid(guid);
+
             if (customer == null)
                 return RedirectToRoute("Homepage");
 
@@ -627,7 +634,7 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var response = _customerRegistrationService.ChangePassword(new ChangePasswordRequest(email,
+                var response = _customerRegistrationService.ChangePassword(new ChangePasswordRequest(customer.Email,
                     false, _customerSettings.DefaultPasswordFormat, model.NewPassword));
                 if (response.Success)
                 {
@@ -735,7 +742,7 @@ namespace Nop.Web.Controllers
                     {
                         _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.VatNumberAttribute, model.VatNumber);
 
-                        var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out string _, out string vatAddress);
+                        var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out _, out var vatAddress);
                         _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.VatNumberStatusIdAttribute, (int)vatNumberStatus);
                         //send VAT number admin notification
                         if (!string.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
@@ -925,6 +932,9 @@ namespace Nop.Web.Controllers
                                 //send customer welcome message
                                 _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
 
+                                //raise event       
+                                _eventPublisher.Publish(new CustomerActivatedEvent(customer));
+
                                 var redirectUrl = Url.RouteUrl("RegisterResult",
                                     new { resultId = (int)UserRegistrationType.Standard, returnUrl }, _webHelper.CurrentRequestProtocol);
                                 return Redirect(redirectUrl);
@@ -1003,9 +1013,13 @@ namespace Nop.Web.Controllers
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult AccountActivation(string token, string email)
+        public virtual IActionResult AccountActivation(string token, string email, Guid guid)
         {
+            //For backward compatibility with previous versions where email was used as a parameter in the URL
             var customer = _customerService.GetCustomerByEmail(email);
+            if (customer == null)
+                customer = _customerService.GetCustomerByGuid(guid);
+
             if (customer == null)
                 return RedirectToRoute("Homepage");
 
@@ -1026,6 +1040,9 @@ namespace Nop.Web.Controllers
             _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.AccountActivationTokenAttribute, "");
             //send welcome message
             _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
+
+            //raise event       
+            _eventPublisher.Publish(new CustomerActivatedEvent(customer));
 
             var model = new AccountActivationModel
             {
@@ -1123,7 +1140,7 @@ namespace Nop.Web.Controllers
                             model.VatNumber);
                         if (prevVatNumber != model.VatNumber)
                         {
-                            var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out string _, out string vatAddress);
+                            var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out _, out var vatAddress);
                             _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.VatNumberStatusIdAttribute, (int)vatNumberStatus);
                             //send VAT number admin notification
                             if (!string.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
@@ -1250,9 +1267,13 @@ namespace Nop.Web.Controllers
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult EmailRevalidation(string token, string email)
+        public virtual IActionResult EmailRevalidation(string token, string email, Guid guid)
         {
+            //For backward compatibility with previous versions where email was used as a parameter in the URL
             var customer = _customerService.GetCustomerByEmail(email);
+            if (customer == null)
+                customer = _customerService.GetCustomerByGuid(guid);
+
             if (customer == null)
                 return RedirectToRoute("Homepage");
 

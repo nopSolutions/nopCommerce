@@ -4,7 +4,7 @@
     Layout = "_AdminPopupLayout";
     
     //page title
-    ViewBag.Title = T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Choose").Text;
+    ViewBag.PageTitle = T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Choose").Text;
 }
 
 <form asp-controller="CustomerRole" asp-action="AssociateProductToCustomerRolePopup"
@@ -129,7 +129,7 @@
                                     {
                                         Title = T("Admin.Common.Select").Text,
                                         Render = new RenderCustom("renderColumnSelectProduct"),
-                                        ClassName =  StyleColumn.ButtonStyle,
+                                        ClassName =  NopColumnClassDefaults.Button,
                                         Width = "50",
                                     },
                                     new ColumnProperty(nameof(ProductModel.Name))
@@ -140,7 +140,7 @@
                                     {
                                         Title = T("Admin.Catalog.Products.Fields.Published").Text,
                                         Width = "100",
-                                        ClassName = StyleColumn.CenterAll,
+                                        ClassName = NopColumnClassDefaults.CenterAll,
                                         Render = new RenderBoolean()
                                     }
                                 }

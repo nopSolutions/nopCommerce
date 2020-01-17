@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.System.SeNames").Text;
+    ViewBag.PageTitle = T("Admin.System.SeNames").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Search engine friendly names");
 }
@@ -12,7 +12,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.System.SeNames")
@@ -80,24 +79,23 @@
                             {
                                 IsMasterCheckBox = true,
                                 Render = new RenderCheckBox("checkbox_senames"),
-                                ClassName = StyleColumn.CenterAll,
+                                ClassName = NopColumnClassDefaults.CenterAll,
                                 Width = "50"
                             },
                             new ColumnProperty(nameof(UrlRecordModel.Id))
                             {
                                 Title = T("Admin.System.SeNames.Id").Text,
-                                ClassName = StyleColumn.CenterAll,
+                                ClassName = NopColumnClassDefaults.CenterAll,
                                 Width = "50"
                             },
                             new ColumnProperty(nameof(UrlRecordModel.Name))
                             {
-                                Title = T("Admin.System.SeNames.Name").Text,
-                                Width = "300"
+                                Title = T("Admin.System.SeNames.Name").Text
                             },
                             new ColumnProperty(nameof(UrlRecordModel.EntityId))
                             {
                                 Title = T("Admin.System.SeNames.EntityId").Text,
-                                Width = "50"
+                                Width = "80"
                             },
                             new ColumnProperty(nameof(UrlRecordModel.EntityName))
                             {
@@ -107,8 +105,8 @@
                             new ColumnProperty(nameof(UrlRecordModel.IsActive))
                             {
                                 Title = T("Admin.System.SeNames.IsActive").Text,
-                                Width = "50",
-                                ClassName = StyleColumn.CenterAll,
+                                Width = "80",
+                                ClassName = NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(UrlRecordModel.Language))
@@ -120,7 +118,7 @@
                             {
                                 Title = T("Admin.System.SeNames.Details").Text,
                                 Width = "100",
-                                ClassName = StyleColumn.ButtonStyle,
+                                ClassName = NopColumnClassDefaults.Button,
                                 Render = new RenderCustom("renderColumnDetailsUrl")
                             }
                         }
@@ -154,15 +152,14 @@
                 type: "POST",
                 url: "@(Url.Action("DeleteSelectedSeNames", "Common"))",
                 data: postData,
-                complete: function (data) {
-                    $('#sename-grid').DataTable().ajax.reload();
-                    selectedIds = [];
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    $('#deleteSelectedSeNamesFailed-info').text(thrownError);
+                traditional: true,
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('#deleteSelectedSeNamesFailed-info').text(errorThrown);
                     $("#deleteSelectedSeNamesFailed").click();
                 },
-                traditional: true
+                complete: function (jqXHR, textStatus) {
+                    updateTable('#sename-grid');
+                }
             });
             $('#delete-selected-action-confirmation').modal('toggle');
             return false;

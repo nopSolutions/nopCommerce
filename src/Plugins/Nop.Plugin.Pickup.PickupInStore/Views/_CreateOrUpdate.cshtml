@@ -24,14 +24,16 @@
                         cache: false,
                         type: "GET",
                         url: "@(Url.Action("GetStatesByCountryId", "Country"))",
-                        data: { "countryId": selectedItem},
-                        success: function(data) {
+                        data: {
+                            "countryId": selectedItem
+                        },
+                        success: function (data, textStatus, jqXHR) {
                             ddlStates.html('');
                             $.each(data, function(id, option) {
                                 ddlStates.append($('<option></option>').val(option.id).html(option.name));
                             });
                         },
-                        error: function(xhr, ajaxOptions, thrownError) {
+                        error: function (jqXHR, textStatus, errorThrown) {
                             $("#getStatesByCountryIdAlert").click();
                         }
                     });
@@ -161,6 +163,24 @@
                 <div class="col-sm-9">
                     <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
                     <span asp-validation-for="StoreId"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    <nop-label asp-for="Latitude" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="Latitude" asp-render-form-control-class="true"/>
+                    <span asp-validation-for="Latitude"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    <nop-label asp-for="Longitude" />
+                </div>
+                <div class="col-sm-9">
+                    <nop-editor asp-for="Longitude" asp-render-form-control-class="true"/>
+                    <span asp-validation-for="Longitude"></span>
                 </div>
             </div>
         </div>

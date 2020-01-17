@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId);
+    ViewBag.PageTitle = string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId);
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Orders");
 }
@@ -12,7 +12,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId)
@@ -108,7 +107,7 @@
                             {
                                 Title = T("Admin.Common.Select").Text,
                                 Render = new RenderCustom("renderColumnSelectProduct"),
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Width = "50",
                             },
                             new ColumnProperty(nameof(ProductModel.Name))

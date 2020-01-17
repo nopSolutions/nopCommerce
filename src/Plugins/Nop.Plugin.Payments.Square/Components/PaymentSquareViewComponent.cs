@@ -4,10 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Orders;
 using Nop.Plugin.Payments.Square.Models;
 using Nop.Plugin.Payments.Square.Services;
 using Nop.Services.Common;
+using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 
 namespace Nop.Plugin.Payments.Square.Components
 {
@@ -19,24 +23,42 @@ namespace Nop.Plugin.Payments.Square.Components
     {
         #region Fields
 
+        private readonly CurrencySettings _currencySettings;
+        private readonly ICurrencyService _currencyService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
         private readonly SquarePaymentManager _squarePaymentManager;
+        private readonly SquarePaymentSettings _squarePaymentSettings;
 
         #endregion
 
         #region Ctor
 
-        public PaymentSquareViewComponent(IGenericAttributeService genericAttributeService,
+        public PaymentSquareViewComponent(CurrencySettings currencySettings,
+            ICurrencyService currencyService,
+            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
+            IOrderTotalCalculationService orderTotalCalculationService,
+            IShoppingCartService shoppingCartService,
+            IStoreContext storeContext,
             IWorkContext workContext,
-            SquarePaymentManager squarePaymentManager)
+            SquarePaymentManager squarePaymentManager,
+            SquarePaymentSettings squarePaymentSettings)
         {
+            _currencySettings = currencySettings;
+            _currencyService = currencyService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _shoppingCartService = shoppingCartService;
+            _storeContext = storeContext;
             _workContext = workContext;
             _squarePaymentManager = squarePaymentManager;
+            _squarePaymentSettings = squarePaymentSettings;
         }
 
         #endregion
@@ -61,10 +83,11 @@ namespace Nop.Plugin.Payments.Square.Components
                     ?? _workContext.CurrentCustomer.ShippingAddress?.ZipPostalCode
             };
 
-            //whether customer already has stored cards
+            //whether customer already has stored cards in current store
+            var storeId = _storeContext.CurrentStore.Id;
             var customerId = _genericAttributeService
                 .GetAttribute<string>(_workContext.CurrentCustomer, SquarePaymentDefaults.CustomerIdAttribute) ?? string.Empty;
-            var customer = _squarePaymentManager.GetCustomer(customerId);
+            var customer = _squarePaymentManager.GetCustomer(customerId, storeId);
             if (customer?.Cards != null)
             {
                 var cardNumberMask = _localizationService.GetResource("Plugins.Payments.Square.Fields.StoredCard.Mask");
@@ -78,6 +101,26 @@ namespace Nop.Plugin.Payments.Square.Components
             {
                 var selectCardText = _localizationService.GetResource("Plugins.Payments.Square.Fields.StoredCard.SelectCard");
                 model.StoredCards.Insert(0, new SelectListItem { Text = selectCardText, Value = Guid.Empty.ToString() });
+            }
+
+            //set verfication details
+            if (_squarePaymentSettings.Use3ds)
+            {
+                var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer,
+                    ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+                model.OrderTotal = _orderTotalCalculationService.GetShoppingCartTotal(cart, false, false) ?? decimal.Zero;
+
+                var currency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+                model.Currency = currency?.CurrencyCode;
+
+                model.BillingFirstName = _workContext.CurrentCustomer.BillingAddress?.FirstName;
+                model.BillingLastName = _workContext.CurrentCustomer.BillingAddress?.LastName;
+                model.BillingEmail = _workContext.CurrentCustomer.BillingAddress?.Email;
+                model.BillingCountry = _workContext.CurrentCustomer.BillingAddress?.Country?.TwoLetterIsoCode;
+                model.BillingState = _workContext.CurrentCustomer.BillingAddress?.StateProvince?.Name;
+                model.BillingCity = _workContext.CurrentCustomer.BillingAddress?.City;
+                model.BillingPostalCode = _workContext.CurrentCustomer.BillingAddress?.ZipPostalCode;
+
             }
 
             return View("~/Plugins/Payments.Square/Views/PaymentInfo.cshtml", model);

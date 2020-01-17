@@ -24,14 +24,17 @@
                 cache: false,
                 type: "GET",
                 url: "@(Url.Action("GetStatesByCountryId", "Country"))",
-                data: { "countryId": selectedItem, "addAsterisk": "true" },
-                success: function (data) {
+                data: {
+                    "countryId": selectedItem,
+                    "addAsterisk": "true"
+                },
+                success: function (data, textStatus, jqXHR) {
                     ddlStates.html('');
                     $.each(data, function (id, option) {
                         ddlStates.append($('<option></option>').val(option.id).html(option.name));
                     });
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function (jqXHR, textStatus, errorThrown) {
                     $("#getStatesByCountryIdAlert").click();
                 }
             });
@@ -182,15 +185,15 @@
                             new ColumnProperty(nameof(ShippingByWeightByTotalModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
-                                ClassName = StyleColumn.ButtonStyle,
+                                ClassName = NopColumnClassDefaults.Button,
                                 Width = "100",
                                 Render = new RenderCustom("renderColumnEdit")
                             },
                             new ColumnProperty(nameof(ShippingByWeightByTotalModel.Id))
                             {
                                 Title = T("Admin.Common.Delete").Text,
-                                ClassName = StyleColumn.ButtonStyle,
-                                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text) { Style = StyleButton.Default },
+                                ClassName = NopColumnClassDefaults.Button,
+                                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
                                 Width = "100"
                             }
                         }
@@ -234,14 +237,14 @@
 
                                         $.ajax({
                                             cache: false,
-                                            type: 'POST',
-                                            url: '@Url.Action("Configure", "FixedByWeightByTotal")',
+                                            type: "POST",
+                                            url: "@Url.Action("Configure", "FixedByWeightByTotal")",
                                             data: postData,
-                                            dataType: 'json',
-                                            success: function(data) {
+                                            dataType: "json",
+                                            success: function (data, textStatus, jqXHR) {
                                                 $("#savegeneralsettingsOk").click();
                                             },
-                                            error: function(xhr, ajaxOptions, thrownError) {
+                                            error: function (jqXHR, textStatus, errorThrown) {
                                                 $("#savegeneralsettingsError").click();
                                             }
                                         });
@@ -261,7 +264,7 @@
                 $('#btnRefresh')
                     .click(function () {
                         //refresh grid
-                        $('#shipping-byweight-grid').DataTable().ajax.reload();
+                        updateTable('#shipping-byweight-grid');
 
                         //return false to don't reload a page
                         return false;

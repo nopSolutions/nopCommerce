@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Nop.Core.Configuration;
 using Nop.Core.Redis;
+using Nop.Core.Security;
 using StackExchange.Redis;
 
 namespace Nop.Core.Caching
@@ -38,7 +39,7 @@ namespace Nop.Core.Caching
             // ConnectionMultiplexer.Connect should only be called once and shared between callers
             _connectionWrapper = connectionWrapper;
 
-            _db = _connectionWrapper.GetDatabase(RedisDatabaseNumber.Cache);
+            _db = _connectionWrapper.GetDatabase(config.RedisDatabaseId ?? (int)RedisDatabaseNumber.Cache);
         }
 
         #endregion
@@ -59,6 +60,9 @@ namespace Nop.Core.Caching
             //server.FlushDatabase();
 
             var keys = server.Keys(_db.Database, string.IsNullOrEmpty(prefix) ? null : $"{prefix}*");
+
+            //we should always persist the data protection key list
+            keys = keys.Where(key => !key.ToString().Equals(NopDataProtectionDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase));
 
             return keys;
         }
@@ -255,6 +259,10 @@ namespace Nop.Core.Caching
         /// <param name="key">Key of cached item</param>
         public virtual void Remove(string key)
         {
+            //we should always persist the data protection key list
+            if (key.Equals(NopDataProtectionDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase))
+                return;
+
             //remove item from caches
             _db.KeyDelete(key);
             _perRequestCacheManager.Remove(key);

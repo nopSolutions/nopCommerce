@@ -2,12 +2,11 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Shipping.Methods").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Shipping.Methods").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Shipping providers");
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Shipping.Methods")
@@ -59,13 +58,13 @@
                             {
                                 Title = T("Admin.Configuration.Shipping.Methods.Fields.DisplayOrder").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.CenterAll
+                                ClassName =  NopColumnClassDefaults.CenterAll
                             },
                             new ColumnProperty(nameof(ShippingMethodModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("EditMethod"))
                             }
                         }

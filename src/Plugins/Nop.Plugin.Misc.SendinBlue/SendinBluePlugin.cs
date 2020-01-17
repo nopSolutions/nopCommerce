@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Nop.Core;
+using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Tasks;
 using Nop.Services.Cms;
 using Nop.Services.Common;
@@ -28,6 +29,7 @@ namespace Nop.Plugin.Misc.SendinBlue
         private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
         private readonly IWebHelper _webHelper;
+        private readonly WidgetSettings _widgetSettings;
 
         #endregion
 
@@ -40,7 +42,8 @@ namespace Nop.Plugin.Misc.SendinBlue
             IScheduleTaskService scheduleTaskService,
             ISettingService settingService,
             IStoreService storeService,
-            IWebHelper webHelper)
+            IWebHelper webHelper,
+            WidgetSettings widgetSettings)
         {
             _emailAccountService = emailAccountService;
             _genericAttributeService = genericAttributeService;
@@ -50,6 +53,7 @@ namespace Nop.Plugin.Misc.SendinBlue
             _settingService = settingService;
             _storeService = storeService;
             _webHelper = webHelper;
+            _widgetSettings = widgetSettings;
         }
 
         #endregion
@@ -101,6 +105,12 @@ namespace Nop.Plugin.Misc.SendinBlue
                     }})();
                 </script>"
             });
+
+            if (!_widgetSettings.ActiveWidgetSystemNames.Contains(SendinBlueDefaults.SystemName))
+            {
+                _widgetSettings.ActiveWidgetSystemNames.Add(SendinBlueDefaults.SystemName);
+                _settingService.SaveSetting(_widgetSettings);
+            }
 
             //install synchronization task
             if (_scheduleTaskService.GetTaskByType(SendinBlueDefaults.SynchronizationTask) == null)
@@ -189,6 +199,11 @@ namespace Nop.Plugin.Misc.SendinBlue
             }
 
             //settings
+            if (_widgetSettings.ActiveWidgetSystemNames.Contains(SendinBlueDefaults.SystemName))
+            {
+                _widgetSettings.ActiveWidgetSystemNames.Remove(SendinBlueDefaults.SystemName);
+                _settingService.SaveSetting(_widgetSettings);
+            }
             _settingService.DeleteSetting<SendinBlueSettings>();
 
             //generic attributes
@@ -274,5 +289,10 @@ namespace Nop.Plugin.Misc.SendinBlue
         }
 
         #endregion
+
+        /// <summary>
+        /// Gets a value indicating whether to hide this plugin on the widget list page in the admin area
+        /// </summary>
+        public bool HideInWidgetList => true;
     }
 }

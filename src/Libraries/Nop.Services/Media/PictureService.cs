@@ -138,7 +138,7 @@ namespace Nop.Services.Media
             if (height < 1)
                 height = 1;
 
-            //we invoke Math.Round to ensure that no white background is rendered - https://www.nopcommerce.com/boards/t/40616/image-resizing-bug.aspx
+            //we invoke Math.Round to ensure that no white background is rendered - https://www.nopcommerce.com/boards/topic/40616/image-resizing-bug
             return new Size((int)Math.Round(width), (int)Math.Round(height));
         }
 
@@ -373,7 +373,7 @@ namespace Nop.Services.Media
                 switch (imageEncoder)
                 {
                     case JpegEncoder jpegEncoder:
-                        jpegEncoder.IgnoreMetadata = true;
+                        jpegEncoder.Subsample = JpegSubsample.Ratio444;
                         jpegEncoder.Quality = quality ?? _mediaSettings.DefaultImageQuality;
                         jpegEncoder.Encode(image, stream);
                         break;
@@ -389,7 +389,6 @@ namespace Nop.Services.Media
                         break;
 
                     case GifEncoder gifEncoder:
-                        gifEncoder.IgnoreMetadata = true;
                         gifEncoder.Encode(image, stream);
                         break;
 

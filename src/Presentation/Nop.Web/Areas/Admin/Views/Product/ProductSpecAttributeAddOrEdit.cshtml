@@ -154,9 +154,8 @@
                                             data: {
                                                 "attributeId": selectedAttributeId
                                             },
-                                            success: function(data) {
-                                                var ddlSpecOptions =
-                                                    $("#@Html.IdFor(model => model.SpecificationAttributeOptionId)");
+                                            success: function (data, textStatus, jqXHR) {
+                                                var ddlSpecOptions = $("#@Html.IdFor(model => model.SpecificationAttributeOptionId)");
                                                 ddlSpecOptions.html('');
                                                 $.each(data,
                                                     function(id, option) {
@@ -164,7 +163,7 @@
                                                             .html(option.name));
                                                     });
                                             },
-                                            error: function(xhr, ajaxOptions, thrownError) {
+                                            error: function (jqXHR, textStatus, errorThrown) {
                                                 $("#getOptionsByAttributeIdAlert").click();
                                             }
                                         });

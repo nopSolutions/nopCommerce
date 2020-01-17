@@ -52,11 +52,6 @@
         #region reCAPTCHA
 
         /// <summary>
-        /// Gets a base reCAPTCHA API URL
-        /// </summary>
-        public static string RecaptchaApiUrl => "https://www.google.com/recaptcha/";
-
-        /// <summary>
         /// Gets a reCAPTCHA script URL
         /// </summary>
         /// <remarks>

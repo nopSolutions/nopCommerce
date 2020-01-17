@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Promotions.Discounts").Text;
+    ViewBag.PageTitle = T("Admin.Promotions.Discounts").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Discounts");
 }
@@ -12,7 +12,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Promotions.Discounts")
@@ -149,13 +148,13 @@
                             {
                                 Title = T("Admin.Promotions.Discounts.Fields.TimesUsed").Text,
                                 Width = "200",
-                                ClassName =  StyleColumn.CenterAll
+                                ClassName =  NopColumnClassDefaults.CenterAll
                             },
                             new ColumnProperty(nameof(DiscountModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             }
                         }

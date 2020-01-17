@@ -163,7 +163,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            model.Message = _localizationService.GetResource("Admin.Customers.Customers.SomeComment");
+            model.Message = string.Empty;
             model.ActivatePointsImmediately = true;
             model.StoreId = _storeContext.CurrentStore.Id;
 

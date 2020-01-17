@@ -85,7 +85,8 @@ namespace Nop.Services.Plugins
             using (var archive = ZipFile.OpenRead(archivePath))
             {
                 //the archive should contain only one root directory (the plugin one or the theme one)
-                var rootDirectories = archive.Entries.Where(entry => entry.FullName.Count(ch => ch == '/') == 1 && entry.FullName.EndsWith("/")).ToList();
+                var rootDirectories = archive.Entries.Select(p => p.FullName.Split('/')[0]).Distinct().ToList();
+
                 if (rootDirectories.Count != 1)
                 {
                     throw new Exception("The archive should contain only one root plugin or theme directory. " +
@@ -94,7 +95,7 @@ namespace Nop.Services.Plugins
                 }
 
                 //get directory name (remove the ending /)
-                uploadedItemDirectoryName = rootDirectories.First().FullName.TrimEnd('/');
+                uploadedItemDirectoryName = rootDirectories.First();
 
                 //try to get descriptor of the uploaded item
                 foreach (var entry in archive.Entries)
@@ -242,8 +243,16 @@ namespace Nop.Services.Plugins
                         var fileName = entry.FullName.Substring(itemPath.Length);
                         if (string.IsNullOrEmpty(fileName))
                             continue;
+                        
+                        var filePath = _fileProvider.Combine(pathToUpload, fileName);
 
-                        var filePath = _fileProvider.Combine(pathToUpload, fileName.Replace("/", "\\"));
+                        //if it's a folder, we need to create it
+                        if (string.IsNullOrEmpty(entry.Name) && !_fileProvider.DirectoryExists(filePath))
+                        {
+                            _fileProvider.CreateDirectory(filePath);
+                            continue;
+                        }
+
                         var directoryPath = _fileProvider.GetDirectoryName(filePath);
 
                         //whether the file directory is already exists, otherwise create the new one

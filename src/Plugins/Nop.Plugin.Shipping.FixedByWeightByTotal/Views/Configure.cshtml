@@ -48,11 +48,13 @@
                     checkAdvancedSettingsMode($(this).is(':checked'));
                     $.ajax({
                         cache: false,
-                        url: '@Url.Action("SaveMode", "FixedByWeightByTotal")',
-                        type: 'post',
-                        data: { value: $(this).is(':checked') },
-                        dataType: 'json',
-                        error: function(xhr, ajaxOptions, thrownError) {
+                        url: "@Url.Action("SaveMode", "FixedByWeightByTotal")",
+                        type: "POST",
+                        data: {
+                            value: $(this).is(':checked')
+                        },
+                        dataType: "json",
+                        error: function (jqXHR, textStatus, errorThrown) {
                             $("#saveModeAlert").click();
                         }
                     });

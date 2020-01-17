@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
@@ -64,6 +64,21 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Deletes checkout attributes
+        /// </summary>
+        /// <param name="checkoutAttributes">Checkout attributes</param>
+        public virtual void DeleteCheckoutAttributes(IList<CheckoutAttribute> checkoutAttributes)
+        {
+            if (checkoutAttributes == null)
+                throw new ArgumentNullException(nameof(checkoutAttributes));
+
+            foreach (var checkoutAttribute in checkoutAttributes)
+            {
+                DeleteCheckoutAttribute(checkoutAttribute);
+            }
+        }
+
+        /// <summary>
         /// Gets all checkout attributes
         /// </summary>
         /// <param name="storeId">Store identifier</param>
@@ -106,6 +121,23 @@ namespace Nop.Services.Orders
 
             var key = string.Format(NopOrderDefaults.CheckoutAttributesByIdCacheKey, checkoutAttributeId);
             return _cacheManager.Get(key, () => _checkoutAttributeRepository.GetById(checkoutAttributeId));
+        }
+
+        /// <summary>
+        /// Gets checkout attributes 
+        /// </summary>
+        /// <param name="checkoutAttributeIds">Checkout attribute identifiers</param>
+        /// <returns>Checkout attributes</returns>
+        public virtual IList<CheckoutAttribute> GetCheckoutAttributeByIds(int[] checkoutAttributeIds)
+        {
+            if (checkoutAttributeIds == null || checkoutAttributeIds.Length == 0)
+                return new List<CheckoutAttribute>();
+
+            var query = from p in _checkoutAttributeRepository.Table
+                        where checkoutAttributeIds.Contains(p.Id)
+                        select p;
+
+            return query.ToList();
         }
 
         /// <summary>

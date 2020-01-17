@@ -4,7 +4,7 @@
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.Title = T("Admin.Catalog.Products.CrossSells.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Products.CrossSells.AddNew").Text;
 }
 
 @if (ViewBag.RefreshPage == true)
@@ -122,8 +122,8 @@ else
                                     {
                                         IsMasterCheckBox = true,
                                         Render = new RenderCheckBox(nameof(AddCrossSellProductModel.SelectedProductIds)),
-                                        ClassName =  StyleColumn.CenterAll,
-                                        Width = "50",
+                                        ClassName =  NopColumnClassDefaults.CenterAll,
+                                        Width = "50"
                                     },
                                     new ColumnProperty(nameof(ProductModel.Name))
                                     {
@@ -133,7 +133,7 @@ else
                                     {
                                         Title = T("Admin.Catalog.Products.Fields.Published").Text,
                                         Width = "100",
-                                        ClassName = StyleColumn.CenterAll,
+                                        ClassName = NopColumnClassDefaults.CenterAll,
                                         Render = new RenderBoolean()
                                     }
                                 }

@@ -520,6 +520,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ProductAttributeValueSearchModel, options => options.Ignore());
             CreateMap<ProductAttributeMappingModel, ProductAttributeMapping>()
                 .ForMember(entity => entity.ConditionAttributeXml, options => options.Ignore())
+                .ForMember(entity => entity.ProductAttribute, options => options.Ignore())
                 .ForMember(entity => entity.Product, options => options.Ignore())
                 .ForMember(entity => entity.ProductAttributeValues, options => options.Ignore())
                 .ForMember(entity => entity.AttributeControlType, options => options.Ignore());
@@ -608,6 +609,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.CustomerRole, options => options.Ignore());
             CreateMap<TierPriceModel, TierPrice>()
                 .ForMember(entity => entity.CustomerRoleId, options => options.Ignore())
+                .ForMember(entity => entity.CustomerRole, options => options.Ignore())
                 .ForMember(entity => entity.ProductId, options => options.Ignore())
                 .ForMember(entity => entity.Product, options => options.Ignore());
         }
@@ -1423,11 +1425,14 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ShowOnNewsCommentPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnProductReviewPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnRegistrationPage_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.ShowOnForgotPasswordPage_OverrideForStore, options => options.Ignore());
+                .ForMember(model => model.ShowOnForgotPasswordPage_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.ShowOnForum_OverrideForStore, options => options.Ignore());
             CreateMap<CaptchaSettingsModel, CaptchaSettings>()
                 .ForMember(settings => settings.AutomaticallyChooseLanguage, options => options.Ignore())
                 .ForMember(settings => settings.ReCaptchaDefaultLanguage, options => options.Ignore())
-                .ForMember(settings => settings.ReCaptchaTheme, options => options.Ignore());
+                .ForMember(settings => settings.ReCaptchaRequestTimeout, options => options.Ignore())
+                .ForMember(settings => settings.ReCaptchaTheme, options => options.Ignore())
+                .ForMember(settings => settings.ReCaptchaApiUrl, options => options.Ignore());
         }
 
         /// <summary>

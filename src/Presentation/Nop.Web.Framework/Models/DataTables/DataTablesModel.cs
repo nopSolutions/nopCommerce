@@ -9,7 +9,7 @@ namespace Nop.Web.Framework.Models.DataTables
     {
         #region Const
 
-        protected const string DEFAULT_PAGING_TYPE = "full_numbers";
+        protected const string DEFAULT_PAGING_TYPE = "simple_numbers";
 
         #endregion
 
@@ -22,6 +22,7 @@ namespace Nop.Web.Framework.Models.DataTables
         {
             //set default values
             Info = true;
+            RefreshButton = true;
             ServerSide = true;
             Processing = true;
             Paging = true;
@@ -76,7 +77,7 @@ namespace Nop.Web.Framework.Models.DataTables
         public bool Processing { get; set; }
 
         /// <summary>
-        /// Feature control DataTables' server-side processing mode.
+        /// Feature control DataTables' server-side processing mode
         /// </summary>
         public bool ServerSide { get; set; }
 
@@ -91,29 +92,34 @@ namespace Nop.Web.Framework.Models.DataTables
         public bool Info { get; set; }
 
         /// <summary>
+        /// Enable or disable refresh button
+        /// </summary>
+        public bool RefreshButton { get; set; }
+
+        /// <summary>
         /// Pagination button display options.
         /// </summary>
         public string PagingType { get; set; }
 
         /// <summary>
-        /// Number of rows to display on a single page when using pagination.
+        /// Number of rows to display on a single page when using pagination
         /// </summary>
         public int Length { get; set; }
 
         /// <summary>
-        /// This parameter allows you to readily specify the entries in the length drop down select list that DataTables shows when pagination is enabled.
+        /// This parameter allows you to readily specify the entries in the length drop down select list that DataTables shows when pagination is enabled
         /// </summary>
         public string LengthMenu { get; set; }
 
         /// <summary>
-        /// Feature control ordering (sorting) abilities in DataTables.
+        /// Indicates where particular features appears in the DOM
         /// </summary>
-        public bool Ordering { get; set; }
+        public string Dom { get; set; }
 
         /// <summary>
-        /// Determines whether the table header should be fixed when scrolling
+        /// Feature control ordering (sorting) abilities in DataTables
         /// </summary>
-        public bool FixedHeader { get; set; }
+        public bool Ordering { get; set; }
 
         /// <summary>
         /// Gets or sets custom render header function name(js)

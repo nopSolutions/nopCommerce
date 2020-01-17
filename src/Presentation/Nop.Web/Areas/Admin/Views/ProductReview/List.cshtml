@@ -3,7 +3,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Catalog.ProductReviews").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.ProductReviews").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Product reviews");
 }
@@ -14,7 +14,6 @@
 }
 @inject IStoreService storeService
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Catalog.ProductReviews")
@@ -173,8 +172,8 @@
                                 IsMasterCheckBox = true,
                                 Render = new RenderCheckBox("checkbox_product_reviews"),
                                 Visible = !Model.IsLoggedInAsVendor,
-                                ClassName =  StyleColumn.CenterAll,
-                                Width = "50",
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Width = "50"
                             },
                             new ColumnProperty(nameof(ProductReviewModel.StoreName))
                             {
@@ -202,39 +201,37 @@
                             new ColumnProperty(nameof(ProductReviewModel.ReviewText))
                             {
                                 Title = T("Admin.Catalog.ProductReviews.Fields.ReviewText").Text,
-                                Width = "400",
                                 Encode = false
                             },
                             new ColumnProperty(nameof(ProductReviewModel.ReplyText))
                             {
                                 Title = T("Admin.Catalog.ProductReviews.Fields.ReplyText").Text,
-                                Width = "400",
                                 Encode = false
                             },
                             new ColumnProperty(nameof(ProductReviewModel.Rating))
                             {
                                 Title = T("Admin.Catalog.ProductReviews.Fields.Rating").Text,
-                                Width = "100",
-                                ClassName =  StyleColumn.CenterAll
+                                Width = "50",
+                                ClassName =  NopColumnClassDefaults.CenterAll
                             },
                             new ColumnProperty(nameof(ProductReviewModel.IsApproved))
                             {
                                 Title = T("Admin.Catalog.ProductReviews.Fields.IsApproved").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.CenterAll,
+                                ClassName =  NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(ProductReviewModel.CreatedOn))
                             {
                                 Title = T("Admin.Catalog.ProductReviews.Fields.CreatedOn").Text,
-                                Width = "200",
+                                Width = "150",
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(ProductReviewModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             }
                         }
@@ -257,16 +254,14 @@
                                     type: "POST",
                                     url: "@(Url.Action("ApproveSelected", "ProductReview"))",
                                     data: postData,
-                                    complete: function(data) {
-                                        //reload grid
-                                        $('#productreviews-grid').DataTable().ajax.reload();
-                                        selectedIds = [];
-                                    },
-                                    error: function(xhr, ajaxOptions, thrownError) {
-                                        $('#approveSelectedFailed-info').text(thrownError);
+                                    traditional: true,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#approveSelectedFailed-info').text(errorThrown);
                                         $("#approveSelectedFailed").click();
                                     },
-                                    traditional: true
+                                    complete: function (jqXHR, textStatus) {
+                                        updateTable('#productreviews-grid');
+                                    }
                                 });
                                 return false;
                             });
@@ -285,16 +280,14 @@
                                     type: "POST",
                                     url: "@(Url.Action("DisapproveSelected", "ProductReview"))",
                                     data: postData,
-                                    complete: function(data) {
-                                        //reload grid
-                                        $('#productreviews-grid').DataTable().ajax.reload();
-                                        selectedIds = [];
-                                    },
-                                    error: function(xhr, ajaxOptions, thrownError) {
-                                        $('#disapproveSelectedFailed-info').text(thrownError);
+                                    traditional: true,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#disapproveSelectedFailed-info').text(errorThrown);
                                         $("#disapproveSelectedFailed").click();
                                     },
-                                    traditional: true
+                                    complete: function (jqXHR, textStatus) {
+                                        updateTable('#productreviews-grid');
+                                    }
                                 });
                                 return false;
                             });
@@ -310,14 +303,12 @@
                                     type: "POST",
                                     url: "@(Url.Action("DeleteSelected", "ProductReview"))",
                                     data: postData,
-                                    complete: function (data) {
-                                        //reload grid
-                                        $('#productreviews-grid').DataTable().ajax.reload();
-                                        selectedIds = [];
-                                    },
-                                    error: function (xhr, ajaxOptions, thrownError) {
-                                        $('#deleteSelectedFailed-info').text(thrownError);
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#deleteSelectedFailed-info').text(errorThrown);
                                         $("#deleteSelectedFailed").click();
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                        updateTable('#productreviews-grid');
                                     }
                                 });
                                 $('#delete-selected-action-confirmation').modal('toggle');

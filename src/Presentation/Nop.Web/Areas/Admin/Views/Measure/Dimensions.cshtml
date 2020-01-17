@@ -46,28 +46,31 @@
                 {
                     Title = T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.IsPrimaryDimension").Text,
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  NopColumnClassDefaults.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(MeasureDimensionModel.Id))
                 {
                     Title = T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.MarkAsPrimaryDimension").Text,
                     Width = "150",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderButtonCustom(StyleButton.Olive, "markAsPrimaryDimension", T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.MarkAsPrimaryDimension").Text)
+                    ClassName =  NopColumnClassDefaults.CenterAll,
+                    Render = new RenderButtonCustom(NopButtonClassDefaults.Olive, T("Admin.Configuration.Shipping.Measures.Dimensions.Fields.MarkAsPrimaryDimension").Text)
+                    {
+                        OnClickFunctionName = "markAsPrimaryDimension"
+                    }
                 },
                 new ColumnProperty(nameof(MeasureDimensionModel.Id))
                 {
                     Title = T("Admin.Common.Edit").Text,
                     Width = "200",
-                    ClassName =  StyleColumn.ButtonStyle,
+                    ClassName =  NopColumnClassDefaults.Button,
                     Render = new RenderButtonsInlineEdit()
                 },
                 new ColumnProperty(nameof(MeasureDimensionModel.Id))
                 {
                     Title = T("Admin.Common.Delete").Text,
                     Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
+                    ClassName =  NopColumnClassDefaults.Button,
                     Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
                 }
             }
@@ -94,10 +97,10 @@
                         type: "POST",
                         url: "@(Url.Action("MarkAsPrimaryDimension", "Measure"))",
                         data: postData,
-                        success: function (data) {
-                            $('#measuredimension-grid').DataTable().ajax.reload();
+                        success: function (data, textStatus, jqXHR) {
+                            updateTable('#measuredimension-grid');
                         },
-                        error: function (xhr, ajaxOptions, thrownError) {
+                        error: function (jqXHR, textStatus, errorThrown) {
                             $("#markAsPrimaryDimensionAlert").click();
                         }
                     });
@@ -166,23 +169,27 @@
                         addAntiForgeryToken(postData);
 
                         $.ajax({
-                            cache:false,
+                            cache: false,
                             type: "POST",
                             url: "@Html.Raw(Url.Action("DimensionAdd", "Measure", null))",
                             data: postData,
-                            success: function (data) {
+                            success: function (data, textStatus, jqXHR) {
                                 if (data.Result) {
                                     //reload grid
-                                    $('#measuredimension-grid').DataTable().ajax.reload();
+                                    updateTable('#measuredimension-grid');
+
+                                    //clear input value
+                                    $("#@Html.IdFor(model => model.AddMeasureDimension.Name)").val('');
+                                    $("#@Html.IdFor(model => model.AddMeasureDimension.SystemKeyword)").val('');
+                                    $("#@Html.IdFor(model => model.AddMeasureDimension.Ratio)").val('');
+                                    $("#@Html.IdFor(model => model.AddMeasureDimension.DisplayOrder)").val('');
 
                                 } else {
                                     //display errors if returned
                                     display_nop_error(data);
                                 }
-
-                                $('#addMeasureDimension').attr('disabled', false);
                             },
-                            error:function (xhr, ajaxOptions, thrownError){
+                            complete: function (jqXHR, textStatus) {
                                 $('#addMeasureDimension').attr('disabled', false);
                             }
                         });

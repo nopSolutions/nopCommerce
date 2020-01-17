@@ -4,11 +4,9 @@
     Layout = "_AdminPopupLayout";
     
     //page title
-    ViewBag.Title = T("Admin.Catalog.Products.Fields.RequiredProductIds.Choose").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Products.Fields.RequiredProductIds.Choose").Text;
 }
 
-
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Catalog.Products.Fields.RequiredProductIds.Choose")
@@ -112,7 +110,7 @@
                         {
                             Title = T("Admin.Common.Select").Text,
                             Render = new RenderCustom("renderColumnSelectProduct"),
-                            ClassName =  StyleColumn.ButtonStyle,
+                            ClassName =  NopColumnClassDefaults.Button,
                             Width = "50",
                         },
                         new ColumnProperty(nameof(ProductModel.Name))
@@ -123,7 +121,7 @@
                         {
                             Title = T("Admin.Catalog.Products.Fields.Published").Text,
                             Width = "100",
-                            ClassName = StyleColumn.CenterAll,
+                            ClassName = NopColumnClassDefaults.CenterAll,
                             Render = new RenderBoolean()
                         }
                     }

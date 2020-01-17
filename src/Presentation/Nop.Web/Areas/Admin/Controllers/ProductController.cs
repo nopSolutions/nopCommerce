@@ -1979,6 +1979,21 @@ namespace Nop.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [HttpPost]
+        public virtual IActionResult ProductTagsDelete(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                var tags = _productTagService.GetProductTagsByIds(selectedIds.ToArray());
+                _productTagService.DeleteProductTags(tags);
+            }
+
+            return Json(new { Result = true });
+        }
+
         public virtual IActionResult EditProductTag(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
@@ -3086,6 +3101,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             var warnings = new List<string>();
             var attributesXml = GetAttributesXmlForProductAttributeCombination(form, warnings, product.Id);
 
+            //check whether the attribute value is specified
+            if (string.IsNullOrEmpty(attributesXml))
+                warnings.Add(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Alert.FailedValue"));                
+
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
                 ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
 
@@ -3228,6 +3247,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             //attributes
             var warnings = new List<string>();
             var attributesXml = GetAttributesXmlForProductAttributeCombination(form, warnings, product.Id);
+
+            //check whether the attribute value is specified
+            if (string.IsNullOrEmpty(attributesXml))
+                warnings.Add(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Alert.FailedValue"));
 
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
                 ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));

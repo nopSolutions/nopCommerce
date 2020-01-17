@@ -75,7 +75,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
                 Picture1Id = _pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "banner1.jpg")), MimeTypes.ImagePJpeg, "banner_1").Id,
                 Text1 = "",
                 Link1 = _webHelper.GetStoreLocation(false),
-                Picture2Id = _pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath,"banner2.jpg")), MimeTypes.ImagePJpeg, "banner_2").Id,
+                Picture2Id = _pictureService.InsertPicture(_fileProvider.ReadAllBytes(_fileProvider.Combine(sampleImagesPath, "banner2.jpg")), MimeTypes.ImagePJpeg, "banner_2").Id,
                 Text2 = "",
                 Link2 = _webHelper.GetStoreLocation(false)
                 //Picture3Id = _pictureService.InsertPicture(File.ReadAllBytes(_fileProvider.Combine(sampleImagesPath,"banner3.jpg")), MimeTypes.ImagePJpeg, "banner_3").Id,
@@ -127,5 +127,10 @@ namespace Nop.Plugin.Widgets.NivoSlider
 
             base.Uninstall();
         }
+
+        /// <summary>
+        /// Gets a value indicating whether to hide this plugin on the widget list page in the admin area
+        /// </summary>
+        public bool HideInWidgetList => false;
     }
 }

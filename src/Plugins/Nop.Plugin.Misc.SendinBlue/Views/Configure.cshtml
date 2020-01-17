@@ -109,7 +109,7 @@
                                             <i>Visit <a href="https://www.nopcommerce.com/boards/" target="_blank">nopCommerce forums</a>. They are free and mostly provided by nopCommerce community (sometimes by nopCommerce team).</i>
                                         </li>
                                         <li>
-                                            <i><a href="https://www.nopcommerce.com/p/541/nopcommerce-premium-support-services.aspx" target="_blank">nopCommerce premium support services</a>. Paid, fast and provided by nopCommerce team.</i>
+                                            <i><a href="https://www.nopcommerce.com/nopcommerce-premium-support-services" target="_blank">nopCommerce premium support services</a>. Paid, fast and provided by nopCommerce team.</i>
                                         </li>
                                         <li>
                                             <i>Post the issue on nopCommerce <a href="https://github.com/nopSolutions/sendinblue-plugin-for-nopcommerce/issues" target="_blank">plugin repository</a>.</i>
@@ -270,7 +270,7 @@
                                         {
                                             Title = T("Admin.ContentManagement.MessageTemplates.Fields.IsActive").Text,
                                             Width = "100",
-                                            ClassName = StyleColumn.CenterAll,
+                                            ClassName = NopColumnClassDefaults.CenterAll,
                                             Render = new RenderBoolean(),
                                             Editable = true,
                                             EditType = EditType.Checkbox
@@ -283,7 +283,7 @@
                                         {
                                             Title = T("Plugins.Misc.SendinBlue.UseSendinBlueTemplate").Text,
                                             Width = "100",
-                                            ClassName = StyleColumn.CenterAll,
+                                            ClassName = NopColumnClassDefaults.CenterAll,
                                             Render = new RenderBoolean(),
                                             Editable = true,
                                             EditType = EditType.Checkbox
@@ -301,7 +301,7 @@
                                         {
                                             Title = T("Admin.Common.Edit").Text,
                                             Width = "200",
-                                            ClassName =  StyleColumn.ButtonStyle,
+                                            ClassName =  NopColumnClassDefaults.Button,
                                             Render = new RenderButtonsInlineEdit()
                                         }
                                     }
@@ -409,7 +409,7 @@
                                         {
                                             Title = T("Admin.Common.Delete").Text,
                                             Width = "100",
-                                            ClassName =  StyleColumn.ButtonStyle,
+                                            ClassName =  NopColumnClassDefaults.Button,
                                             Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
                                         }
                                     }
@@ -463,19 +463,24 @@
                                                 };
                                                 addAntiForgeryToken(postData);
                                                 $.ajax({
-                                                    cache:false,
+                                                    cache: false,
                                                     type: "POST",
                                                     url: "@Html.Raw(Url.Action("SMSAdd", "SendinBlue"))",
                                                     data: postData,
-                                                    success: function (data) {
+                                                    success: function (data, textStatus, jqXHR) {
                                                         if (data.Result) {
-                                                            $('#sms-grid').DataTable().ajax.reload();
+                                                            updateTable('#sms-grid');
+
+                                                            //clear input value
+                                                            $("#@Html.IdFor(model => model.AddSms.MessageId)").val('');
+                                                            $("#@Html.IdFor(model => model.AddSms.PhoneTypeId)").val('');
+                                                            $("#@Html.IdFor(model => model.AddSms.Text)").val('');
+
                                                         } else {
                                                             display_nop_error(data);
                                                         }
-                                                        $('#addSms').attr('disabled', false);
                                                     },
-                                                    error:function (xhr, ajaxOptions, thrownError){
+                                                    complete: function (jqXHR, textStatus) {
                                                         $('#addSms').attr('disabled', false);
                                                     }
                                                 });
@@ -545,7 +550,6 @@
                             {
                                 <p>
                                     Automate your marketing - send a series of emails or SMS once a visitor has signed up, a prospect has abandoned their cart, a customer has made a purchase, etc. The plugin will automatically track the activity of shoppers for you to set up workflows to recover lost sales.<br />
-                                    In order for the tracking script to work, make sure that the SendinBlue widget is activated on the page <a href="@Url.Content("~/Admin/Widget/List/")">Widgets.</a>
                                 </p>
                             }
                             <div class="form-group">

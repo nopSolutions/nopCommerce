@@ -5,6 +5,7 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Logging;
 using Nop.Web.Areas.Admin.Infrastructure.Cache;
 using Nop.Web.Areas.Admin.Models.Home;
 
@@ -19,6 +20,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         private readonly AdminAreaSettings _adminAreaSettings;
         private readonly ICommonModelFactory _commonModelFactory;
+        private readonly ILogger _logger;
         private readonly IOrderModelFactory _orderModelFactory;
         private readonly ISettingService _settingService;
         private readonly IStaticCacheManager _cacheManager;
@@ -31,6 +33,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public HomeModelFactory(AdminAreaSettings adminAreaSettings,
             ICommonModelFactory commonModelFactory,
+            ILogger logger,
             IOrderModelFactory orderModelFactory,
             ISettingService settingService,
             IStaticCacheManager cacheManager,
@@ -39,6 +42,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             _adminAreaSettings = adminAreaSettings;
             _commonModelFactory = commonModelFactory;
+            _logger = logger;
             _orderModelFactory = orderModelFactory;
             _settingService = settingService;
             _cacheManager = cacheManager;
@@ -81,36 +85,55 @@ namespace Nop.Web.Areas.Admin.Factories
                 HideAdvertisements = _adminAreaSettings.HideAdvertisementsOnAdminArea
             };
 
-            var rssData = _cacheManager.Get(NopModelCacheDefaults.OfficialNewsModelKey, () => _nopHttpClient.GetNewsRssAsync().Result);
-
-            for (var i = 0; i < rssData.Items.Count; i++)
+            try
             {
-                var item = rssData.Items.ElementAt(i);
-                var newsItem = new NopCommerceNewsDetailsModel
+                //try to get news RSS feed
+                var rssData = _cacheManager.Get(NopModelCacheDefaults.OfficialNewsModelKey, () =>
                 {
-                    Title = item.TitleText,
-                    Summary = item.ContentText,
-                    Url = item.Url.OriginalString,
-                    PublishDate = item.PublishDate
-                };
-                model.Items.Add(newsItem);
-
-                //has new items?
-                if (i == 0)
-                {
-                    var firstRequest = string.IsNullOrEmpty(_adminAreaSettings.LastNewsTitleAdminArea);
-                    if (_adminAreaSettings.LastNewsTitleAdminArea != newsItem.Title)
+                    try
                     {
-                        _adminAreaSettings.LastNewsTitleAdminArea = newsItem.Title;
-                        _settingService.SaveSetting(_adminAreaSettings);
+                        return _nopHttpClient.GetNewsRssAsync().Result;
+                    }
+                    catch (AggregateException exception)
+                    {
+                        //rethrow actual excepion
+                        throw exception.InnerException;
+                    }
+                });
 
-                        if (!firstRequest)
+                for (var i = 0; i < rssData.Items.Count; i++)
+                {
+                    var item = rssData.Items.ElementAt(i);
+                    var newsItem = new NopCommerceNewsDetailsModel
+                    {
+                        Title = item.TitleText,
+                        Summary = item.ContentText,
+                        Url = item.Url.OriginalString,
+                        PublishDate = item.PublishDate
+                    };
+                    model.Items.Add(newsItem);
+
+                    //has new items?
+                    if (i == 0)
+                    {
+                        var firstRequest = string.IsNullOrEmpty(_adminAreaSettings.LastNewsTitleAdminArea);
+                        if (_adminAreaSettings.LastNewsTitleAdminArea != newsItem.Title)
                         {
-                            //new item
-                            model.HasNewItems = true;
+                            _adminAreaSettings.LastNewsTitleAdminArea = newsItem.Title;
+                            _settingService.SaveSetting(_adminAreaSettings);
+
+                            if (!firstRequest)
+                            {
+                                //new item
+                                model.HasNewItems = true;
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("No access to the news. Website www.nopcommerce.com is not available.", ex);
             }
 
             return model;

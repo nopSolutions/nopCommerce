@@ -45,28 +45,31 @@
                 {
                     Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.IsPrimaryWeight").Text,
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  NopColumnClassDefaults.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(MeasureWeightModel.Id))
                 {
                     Title = T("Admin.Configuration.Shipping.Measures.Weights.Fields.MarkAsPrimaryWeight").Text,
                     Width = "150",
-                    ClassName =  StyleColumn.CenterAll,
-                    Render = new RenderButtonCustom(StyleButton.Olive, "markAsPrimaryWeight", T("Admin.Configuration.Shipping.Measures.Weights.Fields.MarkAsPrimaryWeight").Text)
+                    ClassName =  NopColumnClassDefaults.CenterAll,
+                    Render = new RenderButtonCustom(NopButtonClassDefaults.Olive, T("Admin.Configuration.Shipping.Measures.Weights.Fields.MarkAsPrimaryWeight").Text)
+                    {
+                        OnClickFunctionName = "markAsPrimaryWeight"
+                    }
                 },
                 new ColumnProperty(nameof(MeasureWeightModel.Id))
                 {
                     Title = T("Admin.Common.Edit").Text,
                     Width = "200",
-                    ClassName =  StyleColumn.ButtonStyle,
+                    ClassName =  NopColumnClassDefaults.Button,
                     Render = new RenderButtonsInlineEdit()
                 },
                 new ColumnProperty(nameof(MeasureWeightModel.Id))
                 {
                     Title = T("Admin.Common.Delete").Text,
                     Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
+                    ClassName =  NopColumnClassDefaults.Button,
                     Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
                 }
             }
@@ -92,10 +95,10 @@
                         type: "POST",
                         url: "@(Url.Action("MarkAsPrimaryWeight", "Measure"))",
                         data: postData,
-                        success: function (data) {
-                            $('#measureweight-grid').DataTable().ajax.reload();
+                        success: function (data, textStatus, jqXHR) {
+                            updateTable('#measureweight-grid');
                         },
-                        error: function (xhr, ajaxOptions, thrownError) {
+                        error: function (jqXHR, textStatus, errorThrown) {
                             $("#markAsPrimaryWeightAlert").click();
                         }
                     });
@@ -164,23 +167,27 @@
                         addAntiForgeryToken(postData);
 
                         $.ajax({
-                            cache:false,
+                            cache: false,
                             type: "POST",
                             url: "@Html.Raw(Url.Action("WeightAdd", "Measure", null))",
                             data: postData,
-                            success: function (data) {
+                            success: function (data, textStatus, jqXHR) {
                                 if (data.Result) {
                                     //reload grid
-                                    $('#measureweight-grid').DataTable().ajax.reload();
+                                    updateTable('#measureweight-grid');
+
+                                    //clear input value
+                                    $("#@Html.IdFor(model => model.AddMeasureWeight.Name)").val('');
+                                    $("#@Html.IdFor(model => model.AddMeasureWeight.SystemKeyword)").val('');
+                                    $("#@Html.IdFor(model => model.AddMeasureWeight.Ratio)").val('');
+                                    $("#@Html.IdFor(model => model.AddMeasureWeight.DisplayOrder)").val('');
 
                                 } else {
                                     //display errors if returned
                                     display_nop_error(data);
                                 }
-
-                                $('#addMeasureWeight').attr('disabled', false);
                             },
-                            error:function (xhr, ajaxOptions, thrownError){
+                            complete: function (jqXHR, textStatus) {
                                 $('#addMeasureWeight').attr('disabled', false);
                             }
                         });

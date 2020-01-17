@@ -4,7 +4,7 @@
 @using Nop.Services.Stores
 @{
     //page title
-    ViewBag.Title = T("Admin.ContentManagement.Blog.Comments").Text;
+    ViewBag.PageTitle = T("Admin.ContentManagement.Blog.Comments").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Blog comments");
 }
@@ -14,7 +14,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.Blog.Comments")
@@ -123,13 +122,12 @@
                             {
                                 IsMasterCheckBox = true,
                                 Render = new RenderCheckBox("checkbox_comments"),
-                                ClassName =  StyleColumn.CenterAll,
-                                Width = "50",
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Width = "50"
                             },
                             new ColumnProperty(nameof(BlogCommentModel.BlogPostTitle))
                             {
                                 Title = T("Admin.ContentManagement.Blog.Comments.Fields.BlogPost").Text,
-                                Width = "200",
                                 Render = new RenderLink(new DataUrl("~/Admin/Blog/BlogPostEdit/", nameof(BlogCommentModel.BlogPostId)))
                             },
                             new ColumnProperty(nameof(BlogCommentModel.StoreName))
@@ -147,14 +145,14 @@
                             new ColumnProperty(nameof(BlogCommentModel.Comment))
                             {
                                 Title = T("Admin.ContentManagement.Blog.Comments.Fields.Comment").Text,
-                                Width = "200",
+                                Width = "300",
                                 Encode = false
                             },
                             new ColumnProperty(nameof(BlogCommentModel.IsApproved))
                             {
                                 Title = T("Admin.ContentManagement.Blog.Comments.Fields.IsApproved").Text,
-                                Width = "100",
-                                ClassName = StyleColumn.CenterAll,
+                                Width = "80",
+                                ClassName = NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean(),
                                 Editable = true,
                                 EditType = EditType.Checkbox
@@ -162,23 +160,23 @@
                             new ColumnProperty(nameof(BlogCommentModel.CreatedOn))
                             {
                                 Title = T("Admin.ContentManagement.Blog.Comments.Fields.CreatedOn").Text,
-                                Width = "200",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                Width = "150",
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderDate()
                             },
                             new ColumnProperty(nameof(BlogCommentModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
-                                Width = "200",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonsInlineEdit()
                             },
                             new ColumnProperty(nameof(BlogCommentModel.Id))
                             {
                                 Title = T("Admin.Common.Delete").Text,
                                 Width = "100",
-                                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text){ Style = StyleButton.Default },
-                                ClassName = StyleColumn.ButtonStyle
+                                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                ClassName = NopColumnClassDefaults.Button
                             }
                         }
                     })
@@ -196,14 +194,12 @@
                                     type: "POST",
                                     url: "@(Url.Action("DeleteSelectedComments", "Blog"))",
                                     data: postData,
-                                    complete: function (data) {
-                                        //reload grid
-                                        $('#comments-grid').DataTable().ajax.reload();
-                                        selectedIds = [];
-                                    },
-                                    error: function (xhr, ajaxOptions, thrownError) {
-                                        $('#deleteSelectedCommentsFailed-info').text(thrownError);
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#deleteSelectedCommentsFailed-info').text(errorThrown);
                                         $("#deleteSelectedCommentsFailed").click();
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                        updateTable('#comments-grid');
                                     }
                                 });
                                 $('#delete-selected-action-confirmation').modal('toggle');
@@ -224,16 +220,14 @@
                                         type: "POST",
                                         url: "@(Url.Action("ApproveSelected", "Blog"))",
                                         data: postData,
-                                        complete: function(data) {
-                                            //reload grid
-                                            $('#comments-grid').DataTable().ajax.reload();
-                                            selectedIds = [];
-                                        },
-                                        error: function(xhr, ajaxOptions, thrownError) {
-                                            $('#approveSelectedFailed-info').text(thrownError);
+                                        traditional: true,
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            $('#approveSelectedFailed-info').text(errorThrown);
                                             $("#approveSelectedFailed").click();
                                         },
-                                        traditional: true
+                                        complete: function (jqXHR, textStatus) {
+                                            updateTable('#comments-grid');
+                                        }
                                     });
                                     return false;
                                 });
@@ -252,16 +246,14 @@
                                         type: "POST",
                                         url: "@(Url.Action("DisapproveSelected", "Blog"))",
                                         data: postData,
-                                        complete: function(data) {
-                                            //reload grid
-                                            $('#comments-grid').DataTable().ajax.reload();
-                                            selectedIds = [];
-                                        },
-                                        error: function(xhr, ajaxOptions, thrownError) {
-                                            $('#disapproveSelectedFailed-info').text(thrownError);
+                                        traditional: true,
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            $('#disapproveSelectedFailed-info').text(errorThrown);
                                             $("#disapproveSelectedFailed").click();
                                         },
-                                        traditional: true
+                                        complete: function (jqXHR, textStatus) {
+                                            updateTable('#comments-grid');
+                                        }
                                     });
                                     return false;
                                 });

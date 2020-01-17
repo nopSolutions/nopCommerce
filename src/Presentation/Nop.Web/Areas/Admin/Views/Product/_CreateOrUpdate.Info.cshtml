@@ -190,17 +190,18 @@
 
             $.ajax({
                 cache: false,
-                type: 'POST',
-                url: '@Url.Action("LoadProductFriendlyNames", "Product")',
+                type: "POST",
+                url: "@Url.Action("LoadProductFriendlyNames", "Product")",
                 data: postData,
-                dataType: 'json',
-                success: function(data) {
-                    $('#required-products-check-progress').hide();
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
                     $('#required-product-names').text(data.Text);
                 },
-                failure: function() {
-                    $('#required-products-check-progress').hide();
+                error: function (jqXHR, textStatus, errorThrown) {
                     $('#required-product-names').text('');
+                },
+                complete: function (jqXHR, textStatus) {
+                    $('#required-products-check-progress').hide();
                 }
             });
         } else {
@@ -459,7 +460,7 @@
                         {
                             Title = T("Admin.Catalog.Products.AssociatedProducts.Fields.DisplayOrder").Text,
                             Width = "150",
-                            ClassName = StyleColumn.CenterAll,
+                            ClassName = NopColumnClassDefaults.CenterAll,
                             Editable = true,
                             EditType = EditType.Number
                         },
@@ -467,22 +468,22 @@
                         {
                             Title = T("Admin.Common.View").Text,
                             Width = "150",
-                            ClassName = StyleColumn.ButtonStyle,
+                            ClassName = NopColumnClassDefaults.Button,
                             Render = new RenderButtonView(new DataUrl("~/Admin/Product/Edit/", nameof(AssociatedProductModel.Id)))
                         },
                         new ColumnProperty(nameof(AssociatedProductModel.Id))
                         {
                             Title = T("Admin.Common.Edit").Text,
                             Width = "200",
-                            ClassName =  StyleColumn.ButtonStyle,
+                            ClassName =  NopColumnClassDefaults.Button,
                             Render = new RenderButtonsInlineEdit()
                         },
                         new ColumnProperty(nameof(AssociatedProductModel.Id))
                         {
                             Title = T("Admin.Common.Delete").Text,
                             Width = "100",
-                            Render = new RenderButtonRemove(T("Admin.Common.Delete").Text){ Style = StyleButton.Default },
-                            ClassName = StyleColumn.ButtonStyle
+                            Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                            ClassName = NopColumnClassDefaults.Button
                         }
                     }
             })
@@ -496,7 +497,7 @@
                     $(document).ready(function () {
                         $('#btnRefreshAssociatedProducts').click(function () {
                             //refresh grid
-                            $('#associatedproducts-grid').DataTable().ajax.reload();
+                            updateTable('#associatedproducts-grid');
 
                             //return false to don't reload a page
                             return false;

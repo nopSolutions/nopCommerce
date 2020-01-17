@@ -3,7 +3,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Affiliates").Text;
+    ViewBag.PageTitle = T("Admin.Affiliates").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Affiliates");
 }
@@ -13,7 +13,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Affiliates")
@@ -161,14 +160,14 @@
                             {
                                 Title = T("Admin.Affiliates.Fields.Active").Text,
                                 Width = "100",
-                                ClassName = StyleColumn.CenterAll,
+                                ClassName = NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(AffiliateModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName = StyleColumn.ButtonStyle,
+                                ClassName = NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             }
                         }

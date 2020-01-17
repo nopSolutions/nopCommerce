@@ -123,7 +123,7 @@
     <Value>SQL korisničko ime je obavezno</Value>
   </LocaleResource>
   <LocaleResource Name="SqlStandard">
-    <Value>Koristi SQL Server (ili SQL Express) bazu podataka</Value>
+    <Value>Koristi Microsoft SQL Server (ili SQL Express) bazu podataka</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Informacije o prodavnici</Value>

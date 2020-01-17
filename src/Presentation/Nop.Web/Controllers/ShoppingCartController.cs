@@ -1337,11 +1337,11 @@ namespace Nop.Web.Controllers
                     cartItem.Item.RentalStartDateUtc, cartItem.Item.RentalEndDateUtc, cartItem.NewQuantity, true)
             }).ToList();
 
-            //parse and save checkout attributes
-            ParseAndSaveCheckoutAttributes(cart, form);
-
             //updated cart
             cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+
+            //parse and save checkout attributes
+            ParseAndSaveCheckoutAttributes(cart, form);
 
             //prepare model
             var model = new ShoppingCartModel();
@@ -1461,11 +1461,11 @@ namespace Nop.Web.Controllers
                 }
                 else
                     //discount cannot be found
-                    model.DiscountBox.Messages.Add(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount"));
+                    model.DiscountBox.Messages.Add(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.CannotBeFound"));
             }
             else
                 //empty coupon code
-                model.DiscountBox.Messages.Add(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount"));
+                model.DiscountBox.Messages.Add(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.Empty"));
 
             model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
 

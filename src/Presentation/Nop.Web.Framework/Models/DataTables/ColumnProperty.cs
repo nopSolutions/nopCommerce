@@ -57,7 +57,7 @@
         /// <summary>
         /// Class to assign to each cell in the column.
         /// </summary>
-        public StyleColumn? ClassName { get; set; }
+        public string ClassName { get; set; }
 
         /// <summary>
         /// Enable or disable the display of this column.

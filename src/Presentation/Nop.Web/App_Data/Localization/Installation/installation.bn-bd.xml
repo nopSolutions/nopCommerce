@@ -123,7 +123,7 @@
     <Value>SQL ব্যবহারকারীর নাম প্রয়োজনীয়</Value>
   </LocaleResource>
   <LocaleResource Name="SqlStandard">
-    <Value>SQL সার্ভার (অথবা SQL এক্সপ্রেস) ডাটাবেস ব্যবহার করুন</Value>
+    <Value>Microsoft SQL Server (অথবা SQL Express) ডাটাবেস ব্যবহার করুন</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>দোকানের তথ্য</Value>

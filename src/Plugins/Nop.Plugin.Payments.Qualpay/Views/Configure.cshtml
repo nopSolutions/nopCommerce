@@ -32,22 +32,31 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <p>
-                    For plugin configuration follow these steps:<br />
+                    To configure the Qualpay plugin for nopCommerce.<br />
                     <br />
-                    1. <a href="http://www.qualpay.com/nopcommerce" target="_blank">Create Qualpay account</a><br />
-                    2. Log in at the <a href="https://app.qualpay.com/" target="_blank">production service</a>
-                    or at the <a href="https://app-test.qualpay.com/" target="_blank"> sandbox service</a><br />
-                    3. Go to the 'Administration' -> 'API Security Keys' and find Security Key<br />
-                    4. Fill in your Qualpay Payment Gateway credentials below<br />
-                    5. Save<br />
-                    6. Ensure you enable access to the appropriate API in your Qualpay account -> 'Administration' -> 'API Security Keys' -> Manage Access<br />
-                    <em>Note: For Recurring Billing feature you need to enable access to Customer Vault API, Recurring Billing API and Webhook API</em><br />
-                    7. Fill in the remaining fields and save to complete the configuration<br />
-                    <br />
-                    <em>Note: Qualpay Payment Gateway supports only USD currency, so ensure that you have configured the USD as your primary store currency.</em><br />
+                    1. Decide if you'd like to run Sandbox (test) or Production (live) transactions.<br />
+                    2. If you don't have a Qualpay account, use the links below to create one.<br />
+                        &emsp;a. <a href="https://app-test.qualpay.com/login/signup" target="_blank">Sign up for a Qualpay sandbox account</a>.<br />
+                        &emsp;b. <a href="https://www.qualpay.com/get-started/nopcommerce " target="_blank">Apply for a Qualpay production account</a>.<br />
+                    3. Log into either the <a href="https://app-test.qualpay.com" target="_blank">Qualpay sandbox</a> or <a href="https://app.qualpay.com" target="_blank">Qualpay production</a> environment to retrieve your security keys.<br />
+                    4. On the main menu to the left, select "Administration" then "API Security Keys".<br />
+                    5. In the "Key Detail" section, locate your Merchant ID and click the clipboard icon to copy your merchant ID.<br />
+                    6. Paste your Merchant ID below in the Merchant ID field.<br />
+                    7. In "Manage Access" enable the following API's<br />
+                        &emsp;a. Payment Gateway API<br />
+                        &emsp;b. Embedded Fields API<br />
+                        &emsp;c. Customer Vault API<br />
+                        &emsp;d. Recurring Billing API<br />
+                        &emsp;e. Webhook API<br />
+                    8. Click "Generate".<br />
+                    9. Click on the clipboard icon to copy your Security Key.<br />
+                    10. Paste your Security Key below.<br />
+                    11. Save the configuration.<br />
                 </p>
                 <p>
-                    To display Customer Vault info on a customer details page, make sure that the Qualpay widget is activated on the <a href="@Url.Content("~/Admin/Widget/List/")">Widgets page</a>
+                    <em>Notes:</em><br />
+                    For this plugin to work properly ensure that you have set your primary store currency to USD.<br />
+                    Qualpay Sandbox (test) or Production (live) are unique. For example, you may not use a Sandbox (test) Merchant ID and Security Key to run Production (live) transactions.<br />
                 </p>
                 <div class="form-group">
                     <div class="col-md-3">

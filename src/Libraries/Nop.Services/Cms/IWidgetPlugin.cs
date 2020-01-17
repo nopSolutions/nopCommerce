@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Cms
@@ -8,6 +8,11 @@ namespace Nop.Services.Cms
     /// </summary>
     public partial interface IWidgetPlugin : IPlugin
     {
+        /// <summary>
+        /// Gets a value indicating whether to hide this plugin on the widget list page in the admin area
+        /// </summary>
+        bool HideInWidgetList { get; }
+
         /// <summary>
         /// Gets widget zones where this widget should be rendered
         /// </summary>

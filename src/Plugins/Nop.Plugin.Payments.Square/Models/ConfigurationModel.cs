@@ -22,6 +22,8 @@ namespace Nop.Plugin.Payments.Square.Models
 
         #region Properties
 
+        public int ActiveStoreScopeConfiguration { get; set; }
+
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.ApplicationId")]
         public string ApplicationId { get; set; }
 
@@ -45,19 +47,28 @@ namespace Nop.Plugin.Payments.Square.Models
 
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.UseSandbox")]
         public bool UseSandbox { get; set; }
+        public bool UseSandbox_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payments.Square.Fields.Use3ds")]
+        public bool Use3ds { get; set; }
+        public bool Use3ds_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.TransactionMode")]
         public int TransactionModeId { get; set; }
+        public bool TransactionModeId_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.Location")]
         public string LocationId { get; set; }
+        public bool LocationId_OverrideForStore { get; set; }
         public IList<SelectListItem> Locations { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.AdditionalFee")]
         public decimal AdditionalFee { get; set; }
+        public bool AdditionalFee_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.Square.Fields.AdditionalFeePercentage")]
         public bool AdditionalFeePercentage { get; set; }
+        public bool AdditionalFeePercentage_OverrideForStore { get; set; }
 
         #endregion
     }

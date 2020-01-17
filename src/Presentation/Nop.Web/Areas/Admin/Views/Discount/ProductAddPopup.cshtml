@@ -4,7 +4,7 @@
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.Title = T("Admin.Promotions.Discounts.AppliedToProducts.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.Promotions.Discounts.AppliedToProducts.AddNew").Text;
 }
 
 @if (ViewBag.RefreshPage == true)
@@ -125,7 +125,7 @@ else
                                     {
                                         IsMasterCheckBox = true,
                                         Render = new RenderCheckBox(nameof(AddProductToDiscountModel.SelectedProductIds)),
-                                        ClassName =  StyleColumn.CenterAll,
+                                        ClassName =  NopColumnClassDefaults.CenterAll,
                                         Width = "50"
                                     },
                                     new ColumnProperty(nameof(ProductModel.Name))
@@ -136,7 +136,7 @@ else
                                     {
                                         Title = T("Admin.Catalog.Products.Fields.Published").Text,
                                         Width = "100",
-                                        ClassName = StyleColumn.CenterAll,
+                                        ClassName = NopColumnClassDefaults.CenterAll,
                                         Render = new RenderBoolean()
                                     }
                                 }

@@ -350,6 +350,21 @@ label, label + * {
 .table-wrapper {
 	overflow-x: auto;
 }
+.data-table .hidden-row {
+	height: 1px;
+  border: none;
+}
+.data-table tr.hidden-row th {
+  padding: 0;
+  border-top: none;
+}
+.data-table tr.hidden-row th > span{
+  height: 1px; 
+  width: 1px; 
+  position: absolute; 
+  overflow: hidden; 
+  top: -10px;
+}
 .cart th,
 .data-table th,
 .forum-table th {
@@ -5020,9 +5035,13 @@ label, label + * {
 	margin: 0 auto 3px;
 	font-size: 15px; /*reset zeroing*/
 }
+.private-messages-page .no-items {
+  padding: 20px;
+  text-align: center;
+}
 
 .private-message-view-page .view-message {
-	margin: 0 0 30px;
+  margin: 0 0 30px;
 }
 .private-message-view-page .message-head {
 	margin: 0 0 20px;

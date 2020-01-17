@@ -115,7 +115,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get blog posts
-            var blogPosts = _blogService.GetAllBlogPosts(searchModel.SearchStoreId, showHidden: true,
+            var blogPosts = _blogService.GetAllBlogPosts(storeId: searchModel.SearchStoreId, showHidden: true,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model

@@ -2,7 +2,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.GiftCards").Text;
+    ViewBag.PageTitle = T("Admin.GiftCards").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Gift cards");
 }
@@ -12,7 +12,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.GiftCards")
@@ -118,7 +117,7 @@
                             {
                                 Title = T("Admin.GiftCards.Fields.IsGiftCardActivated").Text,
                                 Width = "200",
-                                ClassName =  StyleColumn.CenterAll,
+                                ClassName =  NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },
                             new ColumnProperty(nameof(GiftCardModel.CreatedOn))
@@ -131,7 +130,7 @@
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             }
                         }

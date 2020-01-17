@@ -124,7 +124,7 @@
     <Value>Nama user SQL diperlukan</Value>
   </LocaleResource>
   <LocaleResource Name="SqlStandard">
-    <Value>Gunakan database SQL Server (or SQL Express)</Value>
+    <Value>Gunakan database Microsoft SQL Server (or SQL Express)</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Informasi Toko</Value>

@@ -123,7 +123,7 @@
     <Value>请输入SQL Server用户名</Value>
   </LocaleResource>
   <LocaleResource Name="SqlStandard">
-    <Value>使用SQL Server(或SQL Express)数据库</Value>
+    <Value>使用Microsoft SQL Server(或SQL Express)数据库</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>商店信息</Value>

@@ -1,4 +1,5 @@
 ﻿@model CheckoutShippingAddressModel
+@using System.Globalization
 @using System.Text
 <div class="checkout-data">
     @if (Model.AllowPickupInStore && !Model.PickupInStoreOnly && Model.PickupPoints.Any())
@@ -103,12 +104,14 @@
                                         var pickupPointInfo = Html.Raw($@"<div class='pickup-point-info'><ul><li><strong>{point.Name}</strong></li><li>{point.OpeningHours}</li><li>{point.PickupFee}</li></ul></div>");
                                         if (point.Latitude != null && point.Longitude != null)
                                         {
+                                            var latitude = point.Latitude.Value.ToString(CultureInfo.InvariantCulture);
+                                            var longitude = point.Longitude.Value.ToString(CultureInfo.InvariantCulture);
                                             <text>
                                                 (function() {
                                                     var marker = new google.maps.Marker({
                                                         map: googleMap,
                                                         title: "@point.Name",
-                                                        position: new google.maps.LatLng(@point.Latitude, @point.Longitude),
+                                                        position: new google.maps.LatLng(@latitude, @longitude),
                                                         icon: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png"
                                                     });
                                                     markers.set("@value", marker);

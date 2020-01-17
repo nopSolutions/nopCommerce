@@ -123,7 +123,7 @@
     <Value>Entre com o usuário SQL</Value>
   </LocaleResource>
   <LocaleResource Name="SqlStandard">
-    <Value>Use um banco de dados de servidor SQL (ou SQL Express)</Value>
+    <Value>Use um banco de dados de Microsoft SQL Server (ou SQL Express)</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Guardar informação</Value>

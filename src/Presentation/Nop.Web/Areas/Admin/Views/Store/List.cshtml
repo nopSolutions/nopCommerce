@@ -2,12 +2,11 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Stores").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Stores").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Stores");
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Stores")
@@ -45,13 +44,13 @@
                             new ColumnProperty(nameof(StoreModel.DisplayOrder))
                             {
                                 Title = T("Admin.Configuration.Stores.Fields.DisplayOrder").Text,
-                                ClassName =  StyleColumn.CenterAll
+                                ClassName =  NopColumnClassDefaults.CenterAll
                             },
                             new ColumnProperty(nameof(StoreModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName =  StyleColumn.ButtonStyle,
+                                ClassName =  NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             }
                         }

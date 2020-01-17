@@ -71,7 +71,7 @@
                     <nop-label asp-for="@Model.AddRewardPoints.Message" />
                 </div>
                 <div class="col-md-9">
-                    <nop-editor asp-for="@Model.AddRewardPoints.Message" />
+                    <nop-editor asp-for="@Model.AddRewardPoints.Message" placeholder="@T("Admin.Customers.Customers.SomeComment")"/>
                     <span asp-validation-for="@Model.AddRewardPoints.Message"></span>
                 </div>
             </div>
@@ -135,14 +135,14 @@
                 addAntiForgeryToken(postData);
 
                 $.ajax({
-                    cache:false,
+                    cache: false,
                     type: "POST",
                     url: "@(Url.Action("RewardPointsHistoryAdd", "Customer"))",
                     data: postData,
-                    success: function (data) {
+                    success: function (data, textStatus, jqXHR) {
                         if (data.Result) {
                             //reload grid
-                            $('#customer-rewardpoints-grid').DataTable().ajax.reload();
+                            updateTable('#customer-rewardpoints-grid');
 
                             $("#@Html.IdFor(model => model.AddRewardPoints.Points)").val(0);
                             $("#@Html.IdFor(model => model.AddRewardPoints.Message)").val('@JavaScriptEncoder.Default.Encode(Model.AddRewardPoints.Message)');
@@ -157,10 +157,8 @@
                             //display errors if returned
                             display_nop_error(data);
                         }
-
-                        $('#addRewardPoints').attr('disabled', false);
                     },
-                    error:function (xhr, ajaxOptions, thrownError){
+                    complete: function (jqXHR, textStatus) {
                         $('#addRewardPoints').attr('disabled', false);
                     }
                 });

@@ -145,10 +145,22 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Utilities
 
-        protected virtual string ValidateCustomerRoles(IList<CustomerRole> customerRoles)
+        protected virtual string ValidateCustomerRoles(IList<CustomerRole> customerRoles, IList<CustomerRole> existingCustomerRoles)
         {
             if (customerRoles == null)
                 throw new ArgumentNullException(nameof(customerRoles));
+
+            if (existingCustomerRoles == null)
+                throw new ArgumentNullException(nameof(existingCustomerRoles));
+
+            //check ACL permission to manage customer roles
+            var rolesToAdd = customerRoles.Except(existingCustomerRoles);
+            var rolesToDelete = existingCustomerRoles.Except(customerRoles);
+            if (rolesToAdd.Where(role => role.SystemName != NopCustomerDefaults.RegisteredRoleName).Any() || rolesToDelete.Any())
+            {
+                if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
+                    return _localizationService.GetResource("Admin.Customers.Customers.CustomerRolesManagingError");
+            }
 
             //ensure a customer is not added to both 'Guests' and 'Registered' customer roles
             //ensure that a customer is in at least one required role ('Guests' and 'Registered')
@@ -313,7 +325,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var customerRole in allCustomerRoles)
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                     newCustomerRoles.Add(customerRole);
-            var customerRolesError = ValidateCustomerRoles(newCustomerRoles);
+            var customerRolesError = ValidateCustomerRoles(newCustomerRoles, new List<CustomerRole>());
             if (!string.IsNullOrEmpty(customerRolesError))
             {
                 ModelState.AddModelError(string.Empty, customerRolesError);
@@ -476,7 +488,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-                
+
                 return RedirectToAction("Edit", new { id = customer.Id });
             }
 
@@ -521,7 +533,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var customerRole in allCustomerRoles)
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                     newCustomerRoles.Add(customerRole);
-            var customerRolesError = ValidateCustomerRoles(newCustomerRoles);
+            var customerRolesError = ValidateCustomerRoles(newCustomerRoles, customer.CustomerRoles);
             if (!string.IsNullOrEmpty(customerRolesError))
             {
                 ModelState.AddModelError(string.Empty, customerRolesError);
@@ -737,7 +749,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     if (!continueEditing)
                         return RedirectToAction("List");
-                    
+
                     return RedirectToAction("Edit", new { id = customer.Id });
                 }
                 catch (Exception exc)
@@ -1064,7 +1076,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 };
 
                 _forumService.InsertPrivateMessage(privateMessage);
-                
+
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendPM.Sent"));
             }
             catch (Exception exc)

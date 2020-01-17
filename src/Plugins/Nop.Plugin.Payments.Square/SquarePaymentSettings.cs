@@ -29,6 +29,11 @@ namespace Nop.Plugin.Payments.Square
         public bool UseSandbox { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to use 3D-Secure
+        /// </summary>
+        public bool Use3ds { get; set; }
+
+        /// <summary>
         /// Gets or sets access token verification string
         /// </summary>
         public string AccessTokenVerificationString { get; set; }

@@ -7,7 +7,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Customers.Customers").Text;
+    ViewBag.PageTitle = T("Admin.Customers.Customers").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Customers list");
 }
@@ -63,8 +63,8 @@
                         </button>
                     </li>
                 </ul>
-                @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerListButtons })
             </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.CustomerListButtons })
         </div>
     </div>
 
@@ -267,13 +267,12 @@
                             {
                                 IsMasterCheckBox = true,
                                 Render = new RenderCheckBox("checkbox_customers"),
-                                ClassName = StyleColumn.CenterAll,
-                                Width = "50",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Width = "50"
                             });
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Email))
                             {
-                                Title = T("Admin.Customers.Customers.Fields.Email").Text,
-                                Width = "200"
+                                Title = T("Admin.Customers.Customers.Fields.Email").Text
                             });
                             if (Model.AvatarEnabled)
                             {
@@ -330,7 +329,7 @@
                             {
                                 Title = T("Admin.Customers.Customers.Fields.Active").Text,
                                 Width = "100",
-                                ClassName = StyleColumn.CenterAll,
+                                ClassName = NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             });
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.CreatedOn))
@@ -349,7 +348,7 @@
                             {
                                 Title = T("Admin.Common.Edit").Text,
                                 Width = "100",
-                                ClassName = StyleColumn.ButtonStyle,
+                                ClassName = NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             });
                         }
@@ -372,6 +371,7 @@
             var ids = selectedIds.join(",");
             $('#export-xml-selected-form #selectedIds').val(ids);
             $('#export-xml-selected-form').submit();
+            updateTable('#customers-grid');
             return false;
         });
     });
@@ -388,6 +388,7 @@
             var ids = selectedIds.join(",");
             $('#export-excel-selected-form #selectedIds').val(ids);
             $('#export-excel-selected-form').submit();
+            updateTable('#customers-grid');
             return false;
         });
     });

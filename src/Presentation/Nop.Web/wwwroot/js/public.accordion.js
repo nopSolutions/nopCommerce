@@ -37,6 +37,7 @@ var Accordion = {
             $('#' + this.currentSectionId).addClass('active');
             var contents = section.children('.a-item');
             $(contents[0]).show();
+            location.hash = section.attr('id');
 
             $(document).trigger({ type: "accordion_section_opened", previousSectionId: previousSectionId, currentSectionId: this.currentSectionId });
             
@@ -73,6 +74,7 @@ var Accordion = {
     showSection: function (section) {
         var section = $(section);
         section.show();
+        location.hash = section.attr('id');
 
         $(document).trigger({ type: "accordion_section_shown", sectionId: section.attr('id') });  
     },

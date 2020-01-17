@@ -487,6 +487,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare billing address
             model.BillingAddress = order.BillingAddress.ToModel(model.BillingAddress);
+            model.BillingAddress.CountryName = order.BillingAddress.Country?.Name;
+            model.BillingAddress.StateProvinceName = order.BillingAddress.StateProvince?.Name;
             PrepareAddressModel(model.BillingAddress, order.BillingAddress);
 
             if (order.AllowStoringCreditCardNumber)
@@ -568,6 +570,8 @@ namespace Nop.Web.Areas.Admin.Factories
             if (!order.PickupInStore)
             {
                 model.ShippingAddress = order.ShippingAddress.ToModel(model.ShippingAddress);
+                model.ShippingAddress.CountryName = order.ShippingAddress.Country?.Name;
+                model.ShippingAddress.StateProvinceName = order.ShippingAddress.StateProvince?.Name;
                 PrepareAddressModel(model.ShippingAddress, order.ShippingAddress);
                 model.ShippingAddressGoogleMapsUrl = $"https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={WebUtility.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : ""))}";
             }
@@ -1043,7 +1047,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 {
                     Id = order.Id,
                     OrderStatusId = order.OrderStatusId,
-                    CustomerId = order.CustomerId,
                     VatNumber = order.VatNumber,
                     CheckoutAttributeInfo = order.CheckoutAttributeDescription
                 };
@@ -1051,6 +1054,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.OrderGuid = order.OrderGuid;
                 model.CustomOrderNumber = order.CustomOrderNumber;
                 model.CustomerIp = order.CustomerIp;
+                model.CustomerId = order.CustomerId;
                 model.OrderStatus = _localizationService.GetLocalizedEnum(order.OrderStatus);
                 model.StoreName = _storeService.GetStoreById(order.StoreId)?.Name ?? "Deleted";
                 model.CustomerInfo = order.Customer.IsRegistered() ? order.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
@@ -1317,6 +1321,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 searchModel.City,
                 searchModel.TrackingNumber,
                 searchModel.LoadNotShipped,
+                searchModel.LoadNotDelivered,
                 startDateValue,
                 endDateValue,
                 searchModel.Page - 1,

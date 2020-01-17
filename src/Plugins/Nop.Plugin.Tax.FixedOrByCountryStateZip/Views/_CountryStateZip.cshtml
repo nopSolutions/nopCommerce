@@ -59,14 +59,14 @@
                    {
                        Title = T("Admin.Common.Edit").Text,
                        Width = "200",
-                       ClassName =  StyleColumn.ButtonStyle,
+                       ClassName =  NopColumnClassDefaults.Button,
                        Render = new RenderButtonsInlineEdit()
                    },
                    new ColumnProperty(nameof(CountryStateZipModel.Id))
                    {
                        Title = T("Admin.Common.Delete").Text,
-                       ClassName = StyleColumn.ButtonStyle,
-                       Render = new RenderButtonRemove(T("Admin.Common.Delete").Text) { Style = StyleButton.Default },
+                       ClassName = NopColumnClassDefaults.Button,
+                       Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
                        Width = "100"
                    }
                }
@@ -92,10 +92,12 @@
                                     $.ajax({
                                         cache: false,
                                         type: "GET",
-                                        url:
-                                            "@(Url.Action("GetStatesByCountryId", "Country"))",
-                                        data: { "countryId": selectedItem, "addAsterisk": "true" },
-                                        success: function(data) {
+                                        url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                                        data: {
+                                            "countryId": selectedItem,
+                                            "addAsterisk": "true"
+                                        },
+                                        success: function (data, textStatus, jqXHR) {
                                             ddlStates.html('');
                                             $.each(data,
                                                 function(id, option) {
@@ -104,7 +106,7 @@
                                                             .html(option.name));
                                                 });
                                         },
-                                        error: function(xhr, ajaxOptions, thrownError) {
+                                        error: function (jqXHR, textStatus, errorThrown) {
                                             $("#getStatesByCountryIdAlert").click();
                                         }
                                     });
@@ -182,15 +184,14 @@
 
                                             $.ajax({
                                                 cache: false,
-                                                type: 'POST',
-                                                url:
-                                                    '@Url.Action("AddRateByCountryStateZip", "FixedOrByCountryStateZip")',
+                                                type: "POST",
+                                                url: "@Url.Action("AddRateByCountryStateZip", "FixedOrByCountryStateZip")",
                                                 data: postData,
-                                                dataType: 'json',
-                                                success: function(data) {
-                                                    $('#tax-countrystatezip-grid').DataTable().ajax.reload();
+                                                dataType: "json",
+                                                success: function (data, textStatus, jqXHR) {
+                                                    updateTable('#tax-countrystatezip-grid');
                                                 },
-                                                error: function(xhr, ajaxOptions, thrownError) {
+                                                error: function (jqXHR, textStatus, errorThrown) {
                                                     $("#addRateByCountryStateZipAlert").click();
                                                 }
                                             });

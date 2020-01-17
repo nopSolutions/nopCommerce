@@ -30,20 +30,20 @@
                 {
                     Title = T("Admin.Customers.CustomerAttributes.Fields.IsRequired").Text,
                     Width = "200",
-                    ClassName =  StyleColumn.CenterAll,
+                    ClassName =  NopColumnClassDefaults.CenterAll,
                     Render = new RenderBoolean()
                 },
                 new ColumnProperty(nameof(CustomerAttributeModel.DisplayOrder))
                 {
                     Title = T("Admin.Customers.CustomerAttributes.Fields.DisplayOrder").Text,
                     Width = "100",
-                    ClassName =  StyleColumn.CenterAll
+                    ClassName =  NopColumnClassDefaults.CenterAll
                 },
                 new ColumnProperty(nameof(CustomerAttributeModel.Id))
                 {
                     Title = T("Admin.Common.Edit").Text,
                     Width = "100",
-                    ClassName =  StyleColumn.ButtonStyle,
+                    ClassName =  NopColumnClassDefaults.Button,
                     Render = new RenderButtonEdit(new DataUrl("~/Admin/CustomerAttribute/Edit/"))
                 }
             }

@@ -22,14 +22,17 @@
                 cache: false,
                 type: "GET",
                 url: "@(Url.Action("GetStatesByCountryId", "Country"))",
-                data: { "countryId": selectedItem, "addAsterisk": "true" },
-                success: function (data) {
+                data: {
+                    "countryId": selectedItem,
+                    "addAsterisk": "true"
+                },
+                success: function (data, textStatus, jqXHR) {
                     ddlStates.html('');
                     $.each(data, function (id, option) {
                         ddlStates.append($('<option></option>').val(option.id).html(option.name));
                     });
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function (jqXHR, textStatus, errorThrown) {
                     $("#getStatesByCountryIdAlert").click();
                 }
             });

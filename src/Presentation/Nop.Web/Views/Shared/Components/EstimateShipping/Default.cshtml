@@ -10,13 +10,14 @@
                     type: "POST",
                     url: "@(Url.RouteUrl("EstimateShipping"))",
                     data: $("#shopping-cart-form").serialize(),
-                    success: function(data) {
-                        displayAjaxLoading();
+                    success: function (data, textStatus, jqXHR) {
                         $('.estimate-shipping-result').html(data);
                     },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        displayAjaxLoading();
+                    error: function (jqXHR, textStatus, errorThrown) {
                         alert('Failed to retrieve estimate shipping.');
+                    },
+                    complete: function (jqXHR, textStatus) {
+                        displayAjaxLoading();
                     }
                 });
             });
