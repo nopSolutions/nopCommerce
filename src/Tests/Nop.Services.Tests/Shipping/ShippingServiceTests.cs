@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Moq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -111,23 +112,23 @@ namespace Nop.Services.Tests.Shipping
         public void Can_load_shippingRateComputationMethods()
         {
             var srcm = _shippingPluginManager.LoadAllPlugins();
-            srcm.ShouldNotBeNull();
-            srcm.Any().ShouldBeTrue();
+            srcm.Should().NotBeNull();
+            srcm.Any().Should().BeTrue();
         }
 
         [Test]
         public void Can_load_shippingRateComputationMethod_by_systemKeyword()
         {
             var srcm = _shippingPluginManager.LoadPluginBySystemName("FixedRateTestShippingRateComputationMethod");
-            srcm.ShouldNotBeNull();
+            srcm.Should().NotBeNull();
         }
 
         [Test]
         public void Can_load_active_shippingRateComputationMethods()
         {
             var srcm = _shippingPluginManager.LoadActivePlugins(_shippingSettings.ActiveShippingRateComputationMethodSystemNames);
-            srcm.ShouldNotBeNull();
-            srcm.Any().ShouldBeTrue();
+            srcm.Should().NotBeNull();
+            srcm.Any().Should().BeTrue();
         }
 
         [Test]
@@ -163,7 +164,7 @@ namespace Nop.Services.Tests.Shipping
                     })
                 }
             };
-            _shippingService.GetTotalWeight(request).ShouldEqual(50.5M);
+            _shippingService.GetTotalWeight(request).Should().Be(50.5M);
         }
     }
 }

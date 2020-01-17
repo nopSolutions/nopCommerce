@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using FluentAssertions;
 using Moq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -221,7 +222,7 @@ namespace Nop.Services.Tests.ExportImport
                     objectPropertyValue = ((DateTime?)objectPropertyValue).Value.ToOADate();
                 }
 
-                Assert.AreEqual(objectPropertyValue, property.PropertyValue, $"The property \"{typeof(T).Name}.{property.PropertyName}\" of these objects is not equal");
+                property.PropertyValue.Should().Be(objectPropertyValue, $"The property \"{typeof(T).Name}.{property.PropertyName}\" of these objects is not equal");
             }
 
             return actual;
@@ -466,12 +467,12 @@ namespace Nop.Services.Tests.ExportImport
             const string billingPatern = "Billing";
             replacePairse = addressFilds.ToDictionary(p => billingPatern + p, p => p);
             PropertiesShouldEqual(billingAddress, manager, replacePairse, "CreatedOnUtc", "BillingCountry");
-            manager.GetProperties.First(p => p.PropertyName == "BillingCountry").PropertyValue.ShouldEqual(billingAddress.Country.Name);
+            manager.GetProperties.First(p => p.PropertyName == "BillingCountry").PropertyValue.Should().Be(billingAddress.Country.Name);
 
             const string shippingPatern = "Shipping";
             replacePairse = addressFilds.ToDictionary(p => shippingPatern + p, p => p);
             PropertiesShouldEqual(shippingAddress, manager, replacePairse, "CreatedOnUtc", "ShippingCountry");
-            manager.GetProperties.First(p => p.PropertyName == "ShippingCountry").PropertyValue.ShouldEqual(shippingAddress.Country.Name);
+            manager.GetProperties.First(p => p.PropertyName == "ShippingCountry").PropertyValue.Should().Be(shippingAddress.Country.Name);
         }
 
         [Test]
@@ -511,7 +512,7 @@ namespace Nop.Services.Tests.ExportImport
             AreAllObjectPropertiesPresent(manufacturer, manager, ignore.ToArray());
             PropertiesShouldEqual(manufacturer, manager, new Dictionary<string, string>());
 
-            manager.GetProperties.First(p => p.PropertyName == "Picture").PropertyValue.ShouldEqual(@"c:\temp\picture.png");
+            manager.GetProperties.First(p => p.PropertyName == "Picture").PropertyValue.Should().Be(@"c:\temp\picture.png");
         }
 
         [Test]
@@ -589,7 +590,7 @@ namespace Nop.Services.Tests.ExportImport
             AreAllObjectPropertiesPresent(category, manager, ignore.ToArray());
             PropertiesShouldEqual(category, manager, new Dictionary<string, string>());
 
-            manager.GetProperties.First(p => p.PropertyName == "Picture").PropertyValue.ShouldEqual(@"c:\temp\picture.png");
+            manager.GetProperties.First(p => p.PropertyName == "Picture").PropertyValue.Should().Be(@"c:\temp\picture.png");
         }
 
         [Test]

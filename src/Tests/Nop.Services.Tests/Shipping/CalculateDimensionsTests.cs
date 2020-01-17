@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using Moq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -125,9 +126,9 @@ namespace Nop.Services.Tests.Shipping
             };
 
             _shippingService.GetDimensions(items, out var width, out var length, out var height);
-            length.ShouldEqual(0);
-            width.ShouldEqual(0);
-            height.ShouldEqual(0);
+            length.Should().Be(0);
+            width.Should().Be(0);
+            height.Should().Be(0);
 
             items = new List<GetShippingOptionRequest.PackageItem>
             {
@@ -144,9 +145,9 @@ namespace Nop.Services.Tests.Shipping
             };
 
             _shippingService.GetDimensions(items, out width, out length, out height);
-            length.ShouldEqual(0);
-            width.ShouldEqual(0);
-            height.ShouldEqual(0);
+            length.Should().Be(0);
+            width.Should().Be(0);
+            height.Should().Be(0);
         }
 
         [Test]
@@ -167,9 +168,9 @@ namespace Nop.Services.Tests.Shipping
             };
 
             _shippingService.GetDimensions(items, out var width, out var length, out var height);
-            length.ShouldEqual(2);
-            width.ShouldEqual(3);
-            height.ShouldEqual(4);
+            length.Should().Be(2);
+            width.Should().Be(3);
+            height.Should().Be(4);
         }
 
         [Test]
@@ -190,9 +191,9 @@ namespace Nop.Services.Tests.Shipping
             };
 
             _shippingService.GetDimensions(items, out var width, out var length, out var height);
-            length.ShouldEqual(4);
-            width.ShouldEqual(4);
-            height.ShouldEqual(4);
+            length.Should().Be(4);
+            width.Should().Be(4);
+            height.Should().Be(4);
         }
 
         [Test]
@@ -213,9 +214,9 @@ namespace Nop.Services.Tests.Shipping
             };
 
             _shippingService.GetDimensions(items, out var width, out var length, out var height);
-            Math.Round(length, 2).ShouldEqual(2.88);
-            Math.Round(width, 2).ShouldEqual(2.88);
-            Math.Round(height, 2).ShouldEqual(2.88);
+            Math.Round(length, 2).Should().Be(2.88M);
+            Math.Round(width, 2).Should().Be(2.88M);
+            Math.Round(height, 2).Should().Be(2.88M);
         }
 
         [Test]
@@ -246,9 +247,9 @@ namespace Nop.Services.Tests.Shipping
             };
 
             _shippingService.GetDimensions(items, out var width, out var length, out var height);
-            Math.Round(length, 2).ShouldEqual(3.78);
-            Math.Round(width, 2).ShouldEqual(5);    //preserve max width
-            Math.Round(height, 2).ShouldEqual(3.78);
+            Math.Round(length, 2).Should().Be(3.78M);
+            Math.Round(width, 2).Should().Be(5);    //preserve max width
+            Math.Round(height, 2).Should().Be(3.78M);
         }
 
         [Test]
@@ -269,9 +270,9 @@ namespace Nop.Services.Tests.Shipping
                 }));
 
             _shippingService.GetDimensions(items, out var width, out var length, out var height);
-            Math.Round(length, 2).ShouldEqual(2);
-            Math.Round(width, 2).ShouldEqual(2);
-            Math.Round(height, 2).ShouldEqual(2);
+            Math.Round(length, 2).Should().Be(2);
+            Math.Round(width, 2).Should().Be(2);
+            Math.Round(height, 2).Should().Be(2);
         }
     }
 }

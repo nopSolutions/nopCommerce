@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Moq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -259,13 +260,13 @@ namespace Nop.Services.Tests.Orders
             _orderTotalCalcService.GetShoppingCartSubTotal(cart, false,
                 out var discountAmount, out var appliedDiscounts,
                 out var subTotalWithoutDiscount, out var subTotalWithDiscount, out var taxRates);
-            discountAmount.ShouldEqual(0);
-            appliedDiscounts.Count.ShouldEqual(0);
-            subTotalWithoutDiscount.ShouldEqual(89.39);
-            subTotalWithDiscount.ShouldEqual(89.39);
-            taxRates.Count.ShouldEqual(1);
-            taxRates.ContainsKey(10).ShouldBeTrue();
-            taxRates[10].ShouldEqual(8.939);
+            discountAmount.Should().Be(0);
+            appliedDiscounts.Count.Should().Be(0);
+            subTotalWithoutDiscount.Should().Be(89.39M);
+            subTotalWithDiscount.Should().Be(89.39M);
+            taxRates.Count.Should().Be(1);
+            taxRates.ContainsKey(10).Should().BeTrue();
+            taxRates[10].Should().Be(8.939M);
         }
 
         [Test]
@@ -311,13 +312,13 @@ namespace Nop.Services.Tests.Orders
             _orderTotalCalcService.GetShoppingCartSubTotal(cart, true,
                 out var discountAmount, out var appliedDiscounts,
                 out var subTotalWithoutDiscount, out var subTotalWithDiscount, out var taxRates);
-            discountAmount.ShouldEqual(0);
-            appliedDiscounts.Count.ShouldEqual(0);
-            subTotalWithoutDiscount.ShouldEqual(98.329);
-            subTotalWithDiscount.ShouldEqual(98.329);
-            taxRates.Count.ShouldEqual(1);
-            taxRates.ContainsKey(10).ShouldBeTrue();
-            taxRates[10].ShouldEqual(8.939);
+            discountAmount.Should().Be(0);
+            appliedDiscounts.Count.Should().Be(0);
+            subTotalWithoutDiscount.Should().Be(98.329M);
+            subTotalWithDiscount.Should().Be(98.329M);
+            taxRates.Count.Should().Be(1);
+            taxRates.ContainsKey(10).Should().BeTrue();
+            taxRates[10].Should().Be(8.939M);
         }
 
         [Test]
@@ -366,14 +367,14 @@ namespace Nop.Services.Tests.Orders
             _orderTotalCalcService.GetShoppingCartSubTotal(cart, false,
                 out var discountAmount, out var appliedDiscounts,
                 out var subTotalWithoutDiscount, out var subTotalWithDiscount, out var taxRates);
-            discountAmount.ShouldEqual(3);
-            appliedDiscounts.Count.ShouldEqual(1);
-            appliedDiscounts.First().Name.ShouldEqual("Discount 1");
-            subTotalWithoutDiscount.ShouldEqual(89.39);
-            subTotalWithDiscount.ShouldEqual(86.39);
-            taxRates.Count.ShouldEqual(1);
-            taxRates.ContainsKey(10).ShouldBeTrue();
-            taxRates[10].ShouldEqual(8.639);
+            discountAmount.Should().Be(3);
+            appliedDiscounts.Count.Should().Be(1);
+            appliedDiscounts.First().Name.Should().Be("Discount 1");
+            subTotalWithoutDiscount.Should().Be(89.39M);
+            subTotalWithDiscount.Should().Be(86.39M);
+            taxRates.Count.Should().Be(1);
+            taxRates.ContainsKey(10).Should().BeTrue();
+            taxRates[10].Should().Be(8.639M);
         }
 
         [Test]
@@ -425,14 +426,14 @@ namespace Nop.Services.Tests.Orders
 
             //The comparison test failed before, because of a very tiny number difference.
             //discountAmount.ShouldEqual(3.3);
-            (System.Math.Round(discountAmount, 10) == 3.3M).ShouldBeTrue();
-            appliedDiscounts.Count.ShouldEqual(1);
-            appliedDiscounts.First().Name.ShouldEqual("Discount 1");
-            subTotalWithoutDiscount.ShouldEqual(98.329);
-            subTotalWithDiscount.ShouldEqual(95.029);
-            taxRates.Count.ShouldEqual(1);
-            taxRates.ContainsKey(10).ShouldBeTrue();
-            taxRates[10].ShouldEqual(8.639);
+            (System.Math.Round(discountAmount, 10) == 3.3M).Should().BeTrue();
+            appliedDiscounts.Count.Should().Be(1);
+            appliedDiscounts.First().Name.Should().Be("Discount 1");
+            subTotalWithoutDiscount.Should().Be(98.329M);
+            subTotalWithDiscount.Should().Be(95.029M);
+            taxRates.Count.Should().Be(1);
+            taxRates.ContainsKey(10).Should().BeTrue();
+            taxRates[10].Should().Be(8.639M);
         }
 
         [Test]
@@ -484,7 +485,7 @@ namespace Nop.Services.Tests.Orders
             };
 
             var cart = new List<ShoppingCartItem> { sci1, sci2, sci3 };
-            _orderTotalCalcService.GetShoppingCartAdditionalShippingCharge(cart).ShouldEqual(42.5M);
+            _orderTotalCalcService.GetShoppingCartAdditionalShippingCharge(cart).Should().Be(42.5M);
         }
 
         [Test]
@@ -523,7 +524,7 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-            _orderTotalCalcService.IsFreeShipping(cart).ShouldEqual(true);
+            _orderTotalCalcService.IsFreeShipping(cart).Should().Be(true);
         }
 
         [Test]
@@ -562,7 +563,7 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-            _orderTotalCalcService.IsFreeShipping(cart).ShouldEqual(false);
+            _orderTotalCalcService.IsFreeShipping(cart).Should().Be(false);
         }
 
         [Test]
@@ -613,7 +614,7 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-            _orderTotalCalcService.IsFreeShipping(cart).ShouldEqual(true);
+            _orderTotalCalcService.IsFreeShipping(cart).Should().Be(true);
         }
 
         [Test]
@@ -678,12 +679,12 @@ namespace Nop.Services.Tests.Orders
             var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins(_shippingSettings.ActiveShippingRateComputationMethodSystemNames, _workContext.Object.CurrentCustomer, _storeContext.Object.CurrentStore.Id);
 
             var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, false, shippingRateComputationMethods, out var taxRate, out var appliedDiscounts);
-            shipping.ShouldNotBeNull();
+            shipping.Should().NotBeNull();
             //10 - default fixed shipping rate, 42.5 - additional shipping change
-            shipping.ShouldEqual(52.5);
-            appliedDiscounts.Count.ShouldEqual(0);
+            shipping.Should().Be(52.5M);
+            appliedDiscounts.Count.Should().Be(0);
             //10 - default fixed tax rate
-            taxRate.ShouldEqual(10);
+            taxRate.Should().Be(10);
         }
 
         [Test]
@@ -748,12 +749,12 @@ namespace Nop.Services.Tests.Orders
             var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins(_shippingSettings.ActiveShippingRateComputationMethodSystemNames, _workContext.Object.CurrentCustomer, _storeContext.Object.CurrentStore.Id);
 
             var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, true, shippingRateComputationMethods, out var taxRate, out var appliedDiscounts);
-            shipping.ShouldNotBeNull();
+            shipping.Should().NotBeNull();
             //10 - default fixed shipping rate, 42.5 - additional shipping change
-            shipping.ShouldEqual(57.75);
-            appliedDiscounts.Count.ShouldEqual(0);
+            shipping.Should().Be(57.75M);
+            appliedDiscounts.Count.Should().Be(0);
             //10 - default fixed tax rate
-            taxRate.ShouldEqual(10);
+            taxRate.Should().Be(10);
         }
 
         [Test]
@@ -820,13 +821,13 @@ namespace Nop.Services.Tests.Orders
             var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins(_shippingSettings.ActiveShippingRateComputationMethodSystemNames, _workContext.Object.CurrentCustomer, _storeContext.Object.CurrentStore.Id);
 
             var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, false, shippingRateComputationMethods, out var taxRate, out var appliedDiscounts);
-            appliedDiscounts.Count.ShouldEqual(1);
-            appliedDiscounts.First().Name.ShouldEqual("Discount 1");
-            shipping.ShouldNotBeNull();
+            appliedDiscounts.Count.Should().Be(1);
+            appliedDiscounts.First().Name.Should().Be("Discount 1");
+            shipping.Should().NotBeNull();
             //10 - default fixed shipping rate, 42.5 - additional shipping change, -3 - discount
-            shipping.ShouldEqual(49.5);
+            shipping.Should().Be(49.5M);
             //10 - default fixed tax rate
-            taxRate.ShouldEqual(10);
+            taxRate.Should().Be(10);
         }
 
         [Test]
@@ -893,13 +894,13 @@ namespace Nop.Services.Tests.Orders
             var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins(_shippingSettings.ActiveShippingRateComputationMethodSystemNames, _workContext.Object.CurrentCustomer, _storeContext.Object.CurrentStore.Id);
 
             var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, true, shippingRateComputationMethods, out var taxRate, out var appliedDiscounts);
-            appliedDiscounts.Count.ShouldEqual(1);
-            appliedDiscounts.First().Name.ShouldEqual("Discount 1");
-            shipping.ShouldNotBeNull();
+            appliedDiscounts.Count.Should().Be(1);
+            appliedDiscounts.First().Name.Should().Be("Discount 1");
+            shipping.Should().NotBeNull();
             //10 - default fixed shipping rate, 42.5 - additional shipping change, -3 - discount
-            shipping.ShouldEqual(54.45);
+            shipping.Should().Be(54.45M);
             //10 - default fixed tax rate
-            taxRate.ShouldEqual(10);
+            taxRate.Should().Be(10);
         }
 
         [Test]
@@ -959,38 +960,38 @@ namespace Nop.Services.Tests.Orders
             //1. shipping is taxable, payment fee is taxable
             _taxSettings.ShippingIsTaxable = true;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
-            _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out var taxRates).ShouldEqual(8.6);
-            taxRates.ShouldNotBeNull();
-            taxRates.Count.ShouldEqual(1);
-            taxRates.ContainsKey(10).ShouldBeTrue();
-            taxRates[10].ShouldEqual(8.6);
+            _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out var taxRates).Should().Be(8.6M);
+            taxRates.Should().NotBeNull();
+            taxRates.Count.Should().Be(1);
+            taxRates.ContainsKey(10).Should().BeTrue();
+            taxRates[10].Should().Be(8.6M);
 
             //2. shipping is taxable, payment fee is not taxable
             _taxSettings.ShippingIsTaxable = true;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = false;
-            _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out taxRates).ShouldEqual(6.6);
-            taxRates.ShouldNotBeNull();
-            taxRates.Count.ShouldEqual(1);
-            taxRates.ContainsKey(10).ShouldBeTrue();
-            taxRates[10].ShouldEqual(6.6);
+            _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out taxRates).Should().Be(6.6M);
+            taxRates.Should().NotBeNull();
+            taxRates.Count.Should().Be(1);
+            taxRates.ContainsKey(10).Should().BeTrue();
+            taxRates[10].Should().Be(6.6M);
 
             //3. shipping is not taxable, payment fee is taxable
             _taxSettings.ShippingIsTaxable = false;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
-            _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out taxRates).ShouldEqual(7.6);
-            taxRates.ShouldNotBeNull();
-            taxRates.Count.ShouldEqual(1);
-            taxRates.ContainsKey(10).ShouldBeTrue();
-            taxRates[10].ShouldEqual(7.6);
+            _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out taxRates).Should().Be(7.6M);
+            taxRates.Should().NotBeNull();
+            taxRates.Count.Should().Be(1);
+            taxRates.ContainsKey(10).Should().BeTrue();
+            taxRates[10].Should().Be(7.6M);
 
             //3. shipping is not taxable, payment fee is not taxable
             _taxSettings.ShippingIsTaxable = false;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = false;
-            _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out taxRates).ShouldEqual(5.6);
-            taxRates.ShouldNotBeNull();
-            taxRates.Count.ShouldEqual(1);
-            taxRates.ContainsKey(10).ShouldBeTrue();
-            taxRates[10].ShouldEqual(5.6);
+            _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out taxRates).Should().Be(5.6M);
+            taxRates.Should().NotBeNull();
+            taxRates.Count.Should().Be(1);
+            taxRates.ContainsKey(10).Should().BeTrue();
+            taxRates[10].Should().Be(5.6M);
         }
 
         [Test]
@@ -1047,7 +1048,7 @@ namespace Nop.Services.Tests.Orders
 
             //56 - items, 20 - payment fee, 7.6 - tax
             _orderTotalCalcService.GetShoppingCartTotal(cart, out _, out _, out _, out _, out _)
-                .ShouldEqual(83.6M);
+                .Should().Be(83.6M);
         }
 
         [Test]
@@ -1104,7 +1105,7 @@ namespace Nop.Services.Tests.Orders
 
             //56 - items, 10 - shipping (fixed), 20 - payment fee, 8.6 - tax
             _orderTotalCalcService.GetShoppingCartTotal(cart, out _, out _, out _, out _, out _)
-                .ShouldEqual(94.6M);
+                .Should().Be(94.6M);
         }
 
         /*TODO temporary disabled
@@ -1199,7 +1200,7 @@ namespace Nop.Services.Tests.Orders
             //56 - items, 10 - shipping (fixed), 20 - payment fee, 8.6 - tax, -30 (reward points)
              _orderTotalCalcService.GetShoppingCartTotal(cart, out discountAmount, out appliedDiscount,
                 out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount)
-                .ShouldEqual(64.6M);
+                .Should().Be(64.6M);
         }*/
 
         [Test]
@@ -1259,10 +1260,10 @@ namespace Nop.Services.Tests.Orders
 
             //56 - items, 10 - shipping (fixed), 20 - payment fee, 8.6 - tax, [-3] - discount
             _orderTotalCalcService.GetShoppingCartTotal(cart, out var discountAmount, out var appliedDiscounts, out _, out _, out _)
-                .ShouldEqual(91.6M);
-            discountAmount.ShouldEqual(3);
-            appliedDiscounts.Count.ShouldEqual(1);
-            appliedDiscounts.First().Name.ShouldEqual("Discount 1");
+                .Should().Be(91.6M);
+            discountAmount.Should().Be(3);
+            appliedDiscounts.Count.Should().Be(1);
+            appliedDiscounts.First().Name.Should().Be("Discount 1");
         }
 
         [Test]
@@ -1271,7 +1272,7 @@ namespace Nop.Services.Tests.Orders
             _rewardPointsSettings.Enabled = true;
             _rewardPointsSettings.ExchangeRate = 15M;
 
-            _orderTotalCalcService.ConvertRewardPointsToAmount(100).ShouldEqual(1500);
+            _orderTotalCalcService.ConvertRewardPointsToAmount(100).Should().Be(1500);
         }
 
         [Test]
@@ -1281,7 +1282,7 @@ namespace Nop.Services.Tests.Orders
             _rewardPointsSettings.ExchangeRate = 15M;
 
             //we calculate ceiling for reward points
-            _orderTotalCalcService.ConvertAmountToRewardPoints(100).ShouldEqual(7);
+            _orderTotalCalcService.ConvertAmountToRewardPoints(100).Should().Be(7);
         }
 
         [Test]
@@ -1290,15 +1291,15 @@ namespace Nop.Services.Tests.Orders
             _rewardPointsSettings.Enabled = true;
             _rewardPointsSettings.MinimumRewardPointsToUse = 0;
 
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(0).ShouldEqual(true);
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(1).ShouldEqual(true);
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(10).ShouldEqual(true);
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(0).Should().Be(true);
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(1).Should().Be(true);
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(10).Should().Be(true);
 
             _rewardPointsSettings.MinimumRewardPointsToUse = 2;
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(0).ShouldEqual(false);
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(1).ShouldEqual(false);
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(2).ShouldEqual(true);
-            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(10).ShouldEqual(true);
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(0).Should().Be(false);
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(1).Should().Be(false);
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(2).Should().Be(true);
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(10).Should().Be(true);
         }
     }
 }

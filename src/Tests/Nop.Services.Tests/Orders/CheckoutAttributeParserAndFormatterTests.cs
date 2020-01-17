@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Moq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -173,16 +174,16 @@ namespace Nop.Services.Tests.Orders
             attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca3, "Some custom text goes here");
 
             var parsed_attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes);
-            parsed_attributeValues.Contains(cav1_1).ShouldEqual(true);
-            parsed_attributeValues.Contains(cav1_2).ShouldEqual(false);
-            parsed_attributeValues.Contains(cav2_1).ShouldEqual(true);
-            parsed_attributeValues.Contains(cav2_2).ShouldEqual(true);
-            parsed_attributeValues.Contains(cav2_2).ShouldEqual(true);
+            parsed_attributeValues.Contains(cav1_1).Should().Be(true);
+            parsed_attributeValues.Contains(cav1_2).Should().Be(false);
+            parsed_attributeValues.Contains(cav2_1).Should().Be(true);
+            parsed_attributeValues.Contains(cav2_2).Should().Be(true);
+            parsed_attributeValues.Contains(cav2_2).Should().Be(true);
 
             var parsedValues = _checkoutAttributeParser.ParseValues(attributes, ca3.Id);
-            parsedValues.Count.ShouldEqual(1);
-            parsedValues.Contains("Some custom text goes here").ShouldEqual(true);
-            parsedValues.Contains("Some other custom text").ShouldEqual(false);
+            parsedValues.Count.Should().Be(1);
+            parsedValues.Contains("Some custom text goes here").Should().Be(true);
+            parsedValues.Contains("Some other custom text").Should().Be(false);
         }
 
         [Test]
@@ -200,7 +201,7 @@ namespace Nop.Services.Tests.Orders
 
             var customer = new Customer();
             var formattedAttributes = _checkoutAttributeFormatter.FormatAttributes(attributes, customer, "<br />", false, false);
-            formattedAttributes.ShouldEqual("Color: Green<br />Custom option: Option 1<br />Custom option: Option 2<br />Custom text: Some custom text goes here");
+            formattedAttributes.Should().Be("Color: Green<br />Custom option: Option 1<br />Custom option: Option 2<br />Custom text: Some custom text goes here");
         }
 
         [Test]
@@ -219,14 +220,14 @@ namespace Nop.Services.Tests.Orders
             attributes = _checkoutAttributeParser.RemoveCheckoutAttribute(attributes, ca3);
 
             var parsed_attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes);
-            parsed_attributeValues.Contains(cav1_1).ShouldEqual(true);
-            parsed_attributeValues.Contains(cav1_2).ShouldEqual(false);
-            parsed_attributeValues.Contains(cav2_1).ShouldEqual(false);
-            parsed_attributeValues.Contains(cav2_2).ShouldEqual(false);
-            parsed_attributeValues.Contains(cav2_2).ShouldEqual(false);
+            parsed_attributeValues.Contains(cav1_1).Should().Be(true);
+            parsed_attributeValues.Contains(cav1_2).Should().Be(false);
+            parsed_attributeValues.Contains(cav2_1).Should().Be(false);
+            parsed_attributeValues.Contains(cav2_2).Should().Be(false);
+            parsed_attributeValues.Contains(cav2_2).Should().Be(false);
 
             var parsedValues = _checkoutAttributeParser.ParseValues(attributes, ca3.Id);
-            parsedValues.Count.ShouldEqual(0);
+            parsedValues.Count.Should().Be(0);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -84,13 +85,13 @@ namespace Nop.Services.Tests.Logging
         public void Can_Find_Activities()
         {
             var activities = _customerActivityService.GetAllActivities(customerId: 1, pageSize: 10);
-            activities.Contains(_activity1).ShouldBeTrue();
+            activities.Contains(_activity1).Should().BeTrue();
 
             activities = _customerActivityService.GetAllActivities(customerId: 2, pageSize: 10);
-            activities.Contains(_activity1).ShouldBeFalse();
+            activities.Contains(_activity1).Should().BeFalse();
 
             activities = _customerActivityService.GetAllActivities(customerId: 2, pageSize: 10);
-            activities.Contains(_activity2).ShouldBeTrue();
+            activities.Contains(_activity2).Should().BeTrue();
         }
     }
 }
