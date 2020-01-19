@@ -707,7 +707,9 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.SelectedCustomerRoleIds = customer.CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRoleId).ToList();
                     model.RegisteredInStore = _storeService.GetAllStores()
                         .FirstOrDefault(store => store.Id == customer.RegisteredInStoreId)?.Name ?? string.Empty;
-
+                    model.DisplayRegisteredInStore = model.Id > 0 && !string.IsNullOrEmpty(model.RegisteredInStore) &&
+                        _storeService.GetAllStores().Select(x => x.Id).Count() > 1;
+                   
                     //prepare model affiliate
                     var affiliate = _affiliateService.GetAffiliateById(customer.AffiliateId);
                     if (affiliate != null)

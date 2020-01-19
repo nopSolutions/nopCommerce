@@ -786,6 +786,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.Fax, options => options.Ignore())
                 .ForMember(model => model.CustomerAttributes, options => options.Ignore())
                 .ForMember(model => model.RegisteredInStore, options => options.Ignore())
+                .ForMember(model => model.DisplayRegisteredInStore, options => options.Ignore())
                 .ForMember(model => model.AffiliateName, options => options.Ignore())
                 .ForMember(model => model.TimeZoneId, options => options.Ignore())
                 .ForMember(model => model.AllowCustomersToSetTimeZone, options => options.Ignore())
