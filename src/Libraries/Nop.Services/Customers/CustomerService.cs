@@ -605,8 +605,7 @@ namespace Nop.Services.Customers
             var pTotalRecordsDeleted = SqlParameterHelper.GetOutputInt32Parameter("TotalRecordsDeleted");
 
             //invoke stored procedure
-            _dataProvider.Query<object>("EXEC DeleteGuests @OnlyWithoutShoppingCart, @CreatedFromUtc, @CreatedToUtc, @TotalRecordsDeleted OUTPUT",
-                pOnlyWithoutShoppingCart,
+            _customerRepository.EntityFromSql("DeleteGuests", pOnlyWithoutShoppingCart,
                 pCreatedFromUtc,
                 pCreatedToUtc,
                 pTotalRecordsDeleted);
