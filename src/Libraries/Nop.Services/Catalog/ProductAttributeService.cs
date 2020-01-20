@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
 using Nop.Services.Caching.CachingDefaults;
@@ -24,7 +23,6 @@ namespace Nop.Services.Catalog
         private readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
         private readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
         private readonly IRepository<ProductAttributeValue> _productAttributeValueRepository;
-        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -35,8 +33,7 @@ namespace Nop.Services.Catalog
             IRepository<ProductAttribute> productAttributeRepository,
             IRepository<ProductAttributeCombination> productAttributeCombinationRepository,
             IRepository<ProductAttributeMapping> productAttributeMappingRepository,
-            IRepository<ProductAttributeValue> productAttributeValueRepository,
-            IStaticCacheManager staticCacheManager)
+            IRepository<ProductAttributeValue> productAttributeValueRepository)
         {
             _eventPublisher = eventPublisher;
             _predefinedProductAttributeValueRepository = predefinedProductAttributeValueRepository;
@@ -44,7 +41,6 @@ namespace Nop.Services.Catalog
             _productAttributeCombinationRepository = productAttributeCombinationRepository;
             _productAttributeMappingRepository = productAttributeMappingRepository;
             _productAttributeValueRepository = productAttributeValueRepository;
-            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -205,46 +201,14 @@ namespace Nop.Services.Catalog
         /// <returns>Product attribute mapping collection</returns>
         public virtual IList<ProductAttributeMapping> GetProductAttributeMappingsByProductId(int productId)
         {
-            IList<ProductAttributeMapping> attributes = null;
+            var allCacheKey = string.Format(NopCatalogCachingDefaults.ProductAttributeMappingsAllCacheKey, productId);
 
-            //function to load attributes
-            IList<ProductAttributeMapping> loadAttributesFunc()
-            {
-                var allCacheKey = string.Format(NopCatalogCachingDefaults.ProductAttributeMappingsAllCacheKey, productId);
+            var query = from pam in _productAttributeMappingRepository.Table
+                orderby pam.DisplayOrder, pam.Id
+                where pam.ProductId == productId
+                select pam;
 
-                var query = from pam in _productAttributeMappingRepository.Table
-                    orderby pam.DisplayOrder, pam.Id
-                    where pam.ProductId == productId
-                    select pam;
-
-                var productAttributeMappings = query.ToCachedList(allCacheKey);
-
-                return productAttributeMappings;
-            }
-
-            //perfomance optimization
-            //We cache a value indicating whether a product has attributes.
-            //This way we don't load attributes with each HTTP request
-            var hasAttributesCacheKey = string.Format(NopCatalogCachingDefaults.ProductHasProductAttributesCacheKey, productId);
-
-            var hasAttributes = _staticCacheManager.Get(hasAttributesCacheKey, () =>
-            {
-                //no value in the cache yet
-                //let's load attributes and cache the result (true/false)
-                attributes = loadAttributesFunc();
-
-                return attributes.Any();
-            });
-
-            if (hasAttributes && attributes == null)
-            {
-                //cache indicates that a product has attributes
-                //let's load them
-                attributes = loadAttributesFunc();
-            }
-
-            if (attributes == null)
-                attributes = new List<ProductAttributeMapping>();
+            var attributes = query.ToCachedList(allCacheKey) ?? new List<ProductAttributeMapping>();
 
             return attributes;
         }
