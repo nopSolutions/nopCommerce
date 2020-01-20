@@ -132,7 +132,7 @@ namespace Nop.Services.Localization
                                     {
                                         if (lrReader.ReadToFollowing("Value") && lrReader.NodeType == XmlNodeType.Element)
                                         {
-                                            result.Add((name, lrReader.ReadInnerXml()));
+                                            result.Add((name, lrReader.ReadString()));
                                         } 
                                     }
                                 }
