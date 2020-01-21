@@ -86,21 +86,6 @@ namespace Nop.Data
                 new SqlDataType(new DbDataType(typeof(byte[]), DataType.Blob)));
         }
 
-        protected virtual void EnsureDatabaseAfterInit()
-        {
-            var builder = GetConnectionStringBuilder();
-            using (var connection = new MySqlConnection(builder.ConnectionString))
-            {
-                var query = @"ALTER TABLE `picturebinary` 
-                            CHANGE COLUMN `BinaryData` `BinaryData` LONGBLOB NULL DEFAULT NULL ;";
-                var command = new MySqlCommand(query, connection);
-                command.Connection.Open();
-
-                command.ExecuteNonQuery();
-
-            }
-        }
-
         /// <summary>
         /// Execute commands from a file with SQL script against the context database
         /// </summary>
@@ -211,8 +196,6 @@ namespace Nop.Data
         public void InitializeDatabase()
         {
             CreateDatabaseSchemaIfNotExists();
-
-            EnsureDatabaseAfterInit();
             
             ApplyUpMigrations(Assembly.GetExecutingAssembly());
 
