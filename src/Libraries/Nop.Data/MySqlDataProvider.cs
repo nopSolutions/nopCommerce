@@ -270,7 +270,7 @@ namespace Nop.Data
 
                 if (tables?.Count > 0)
                 {
-                    currentConnection.Execute($"OPTIMIZE TABLE {string.Join(',', tables)}");
+                    currentConnection.Execute($"OPTIMIZE TABLE `{string.Join("`, `", tables)}`");
                 }
             }
         }
