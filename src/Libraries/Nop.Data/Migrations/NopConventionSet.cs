@@ -5,6 +5,9 @@ using FluentMigrator.Runner.Conventions;
 
 namespace Nop.Data.Migrations
 {
+    /// <summary>
+    /// A set conventions to be applied to expressions
+    /// </summary>
     public class NopConventionSet : IConventionSet
     {
         public NopConventionSet(IDataProvider dataProvider, IMigrationContext context)

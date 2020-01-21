@@ -13,10 +13,6 @@ namespace Nop.Data.Migrations
 
         public MigrationVersionInfo()
         {
-            var dataConnection = new NopDataConnection();
-
-            var table = dataConnection.GetTable<MigrationVersionInfo>();
-            SchemaName = table.SchemaName;
             TableName = nameof(MigrationVersionInfo);
             ColumnName = nameof(Version);
             DescriptionColumnName = nameof(Description);
@@ -48,7 +44,7 @@ namespace Nop.Data.Migrations
 
         public bool OwnsSchema { get; } = true;
 
-        public string SchemaName { get; }
+        public string SchemaName { get; } = string.Empty;
 
         public string TableName { get; }
 

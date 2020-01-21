@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Conventions;
+using FluentMigrator.Runner.Initialization;
+using FluentMigrator.Runner.Processors;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
@@ -39,28 +40,28 @@ namespace Nop.Data
                 mappingConfiguration.ApplyConfiguration(mappingBuilder);
             }
 
+            services
+                // add common FluentMigrator services
+                .AddFluentMigratorCore()
+                .AddScoped<IProcessorAccessor, NopProcessorAccessor>()
+                // set accessor for the connection string
+                .AddScoped<IConnectionStringAccessor>(x => DataSettingsManager.LoadSettings())
+                .AddSingleton<IConventionSet, NopConventionSet>()
+                .ConfigureRunner(rb => 
+                    rb.SetServers()
+                    .WithVersionTable(new MigrationVersionInfo())
+                    // define the assembly containing the migrations
+                    .ScanIn(typeConfigurations.Select(p => p.Assembly).Distinct().ToArray()).For.Migrations());
+
             //further actions are performed only when the database is installed
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
-            var dataSettings = Singleton<DataSettings>.Instance;
-
-            DataConnection.DefaultSettings = dataSettings;
+            DataConnection.DefaultSettings = Singleton<DataSettings>.Instance;
 
             //TODO: 
             MappingSchema.Default.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
 
-            services
-                // add common FluentMigrator services
-                .AddFluentMigratorCore()
-                .AddSingleton<IConventionSet, NopConventionSet>()
-                .ConfigureRunner(rb => 
-                    rb.SetServer(dataSettings)
-                    // set the connection string
-                    .WithGlobalConnectionString(dataSettings.ConnectionString)
-                    .WithVersionTable(new MigrationVersionInfo())
-                    // define the assembly containing the migrations
-                    .ScanIn(typeConfigurations.Select(p => p.Assembly).Distinct().ToArray()).For.Migrations());
         }
 
         /// <summary>
@@ -69,11 +70,7 @@ namespace Nop.Data
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //further actions are performed only when the database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
-                return;
-
-            EngineContext.Current.Resolve<IDataProvider>().ApplyUpMigrations(Assembly.GetExecutingAssembly());
+            
         }
 
         /// <summary>

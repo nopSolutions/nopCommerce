@@ -1,6 +1,4 @@
-﻿using System;
-using FluentMigrator.Runner;
-using Nop.Core.Infrastructure;
+﻿using FluentMigrator.Runner;
 
 namespace Nop.Data.Extensions
 {
@@ -16,22 +14,11 @@ namespace Nop.Data.Extensions
         /// </summary>
         /// <param name="builder">Configuring migration runner services</param>
         /// <returns></returns>
-        public static IMigrationRunnerBuilder SetServer(this IMigrationRunnerBuilder builder, DataSettings dataSettings)
-        {
-            if (dataSettings is null)
-                throw new ArgumentNullException(nameof(dataSettings));
-
-            switch (dataSettings.DataProvider)
-            {
-                case DataProviderType.SqlServer:
-                    builder.AddSqlServer();
-                    break;
-                case DataProviderType.MySql:
-                    builder.AddMySql5();
-                    break;
-            }
-
-            return builder;
+        public static IMigrationRunnerBuilder SetServers(this IMigrationRunnerBuilder builder)
+        {   
+            return builder
+                .AddSqlServer()
+                .AddMySql5();
         }
 
         #endregion

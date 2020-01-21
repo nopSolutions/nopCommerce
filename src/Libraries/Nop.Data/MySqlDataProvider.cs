@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -19,6 +20,15 @@ namespace Nop.Data
     {
         #region Utils
 
+        /// <summary>
+        /// Check whether backups are supported
+        /// </summary>
+        protected void CheckBackupSupported()
+        {
+            if (!BackupSupported)
+                throw new DataException("This database does not support backup");
+        }
+
         protected MySqlConnectionStringBuilder GetConnectionStringBuilder()
         {
             var connectionString = DataSettingsManager.LoadSettings().ConnectionString;
@@ -26,6 +36,41 @@ namespace Nop.Data
             return new MySqlConnectionStringBuilder(connectionString);
         }
 
+        /// <summary>
+        /// Get SQL commands from the script
+        /// </summary>
+        /// <param name="sql">SQL script</param>
+        /// <returns>List of commands</returns>
+        private static IList<string> GetCommandsFromScript(string sql)
+        {
+            var commands = new List<string>();
+
+            var batches = Regex.Split(sql, @"DELIMITER \;", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+
+            if (batches?.Length > 0)
+            {
+                commands.AddRange(
+                    batches
+                        .Where(b => !string.IsNullOrWhiteSpace(b))
+                        .Select(b =>
+                        {
+                            b = Regex.Replace(b, @"(DELIMITER )?\$\$", string.Empty);
+                            b = Regex.Replace(b, @"#(.*?)\r?\n", "/* $1 */");
+                            b = Regex.Replace(b, @"(\r?\n)|(\t)", " ");
+                            return b;
+                        }
+                    )
+
+                );
+            }
+            return commands;
+        }
+
+
+        /// <summary>
+        /// Configure DataContext before using (e.g Type mapping, Converters)
+        /// </summary>
+        /// <param name="dataContext"></param>
         protected override void ConfigureDataContext(IDataContext dataContext)
         {
             dataContext.MappingSchema.SetDataType(
@@ -56,10 +101,29 @@ namespace Nop.Data
             }
         }
 
+        /// <summary>
+        /// Execute commands from a file with SQL script against the context database
+        /// </summary>
+        /// <param name="fileProvider">File provider</param>
+        /// <param name="filePath">Path to the file</param>
+        protected void ExecuteSqlScriptFromFile(INopFileProvider fileProvider, string filePath)
+        {
+            filePath = fileProvider.MapPath(filePath);
+            if (!fileProvider.FileExists(filePath))
+                return;
+
+            ExecuteSqlScript(fileProvider.ReadAllText(filePath, Encoding.Default));
+        }
+
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Creates the database by using the loaded connection string
+        /// </summary>
+        /// <param name="collation"></param>
+        /// <param name="triesToConnect"></param>
         public void CreateDatabase(string collation, int triesToConnect = 10)
         {
             if (IsDatabaseExists())
@@ -128,59 +192,6 @@ namespace Nop.Data
         }
 
         /// <summary>
-        /// Check whether backups are supported
-        /// </summary>
-        protected void CheckBackupSupported()
-        {
-            if (!BackupSupported)
-                throw new DataException("This database does not support backup");
-        }
-
-        /// <summary>
-        /// Get SQL commands from the script
-        /// </summary>
-        /// <param name="sql">SQL script</param>
-        /// <returns>List of commands</returns>
-        private static IList<string> GetCommandsFromScript(string sql)
-        {
-            var commands = new List<string>();
-
-            var batches = Regex.Split(sql, @"DELIMITER \;", RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-            if (batches?.Length > 0)
-            {
-                commands.AddRange(
-                    batches
-                        .Where(b => !string.IsNullOrWhiteSpace(b))
-                        .Select(b =>
-                        {
-                            b = Regex.Replace(b, @"(DELIMITER )?\$\$", string.Empty);
-                            b = Regex.Replace(b, @"#(.*?)\r?\n", "/* $1 */");
-                            b = Regex.Replace(b, @"(\r?\n)|(\t)", " ");
-                            return b;
-                        }
-                    )
-
-                );
-            }
-            return commands;
-        }
-
-        /// <summary>
-        /// Execute commands from a file with SQL script against the context database
-        /// </summary>
-        /// <param name="fileProvider">File provider</param>
-        /// <param name="filePath">Path to the file</param>
-        protected void ExecuteSqlScriptFromFile(INopFileProvider fileProvider, string filePath)
-        {
-            filePath = fileProvider.MapPath(filePath);
-            if (!fileProvider.FileExists(filePath))
-                return;
-
-            ExecuteSqlScript(fileProvider.ReadAllText(filePath, Encoding.Default));
-        }
-
-        /// <summary>
         /// Execute commands from the SQL script
         /// </summary>
         /// <param name="sql">SQL script</param>
@@ -200,10 +211,13 @@ namespace Nop.Data
         public void InitializeDatabase()
         {
             CreateDatabaseSchemaIfNotExists();
+
             EnsureDatabaseAfterInit();
-            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+            
+            ApplyUpMigrations(Assembly.GetExecutingAssembly());
 
             //create stored procedures 
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
             ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.MySQLStoredProceduresFilePath);
         }
 

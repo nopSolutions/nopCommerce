@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentMigrator.Runner.Initialization;
 using LinqToDB.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -10,7 +11,7 @@ namespace Nop.Data
     /// <summary>
     /// Represents the data settings
     /// </summary>
-    public partial class DataSettings : IConnectionStringSettings, ILinqToDBSettings
+    public partial class DataSettings : IConnectionStringSettings, ILinqToDBSettings, IConnectionStringAccessor
     {
         #region Ctor
 
