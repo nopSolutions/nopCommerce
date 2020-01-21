@@ -197,8 +197,6 @@ namespace Nop.Data
         {
             CreateDatabaseSchemaIfNotExists();
             
-            ApplyUpMigrations(Assembly.GetExecutingAssembly());
-
             //create stored procedures 
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
             ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.MySQLStoredProceduresFilePath);

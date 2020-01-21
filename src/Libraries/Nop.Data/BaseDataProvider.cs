@@ -58,6 +58,9 @@ namespace Nop.Data
                     mappingConfiguration.CreateTableIfNotExists(currentConnection);
                 }
             }
+
+            //complete creating scheme
+            ApplyUpMigrations(assembly);
         }
 
         /// <summary>
