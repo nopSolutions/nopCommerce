@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Directory
 {
     public partial class MeasureDimensionValidator : BaseNopValidator<MeasureDimensionModel>
     {
-        public MeasureDimensionValidator(IDataProvider dataProvider, ILocalizationService localizationService)
+        public MeasureDimensionValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Shipping.Measures.Dimensions.Fields.Name.Required"));
             RuleFor(x => x.SystemKeyword).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Shipping.Measures.Dimensions.Fields.SystemKeyword.Required"));

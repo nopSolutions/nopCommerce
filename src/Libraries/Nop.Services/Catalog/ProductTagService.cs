@@ -22,7 +22,7 @@ namespace Nop.Services.Catalog
 
         private readonly CatalogSettings _catalogSettings;
         private readonly ICustomerService _customerService;
-        private readonly IDataProvider _dataProvider;
+        private readonly INopDataProvider _dataProvider;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
@@ -36,7 +36,7 @@ namespace Nop.Services.Catalog
 
         public ProductTagService(CatalogSettings catalogSettings,
             ICustomerService customerService,
-            IDataProvider dataProvider,
+            INopDataProvider dataProvider,
             IEventPublisher eventPublisher,
             IRepository<ProductProductTagMapping> productProductTagMappingRepository,
             IRepository<ProductTag> productTagRepository,
@@ -94,25 +94,28 @@ namespace Nop.Services.Catalog
             }
 
             var key = string.Format(NopCatalogCachingDefaults.ProductTagCountCacheKey, storeId, allowedCustomerRolesIds, showHidden);
-           
+
             return _staticCacheManager.Get(key, () =>
             {
                 //prepare input parameters
                 var pStoreId = SqlParameterHelper.GetInt32Parameter("StoreId", storeId);
                 var pAllowedCustomerRoleIds = SqlParameterHelper.GetStringParameter("AllowedCustomerRoleIds", allowedCustomerRolesIds);
 
-                //invoke stored procedure
-                return _dataProvider.QueryProc<ProductTagWithCount>("ProductTagCountLoadAll",
+                using (var dataContext = _dataProvider.CreateDataContext())
+                {
+                    //invoke stored procedure
+                    return dataContext.QueryProc<ProductTagWithCount>("ProductTagCountLoadAll",
                         pStoreId,
                         pAllowedCustomerRoleIds)
-                    .ToDictionary(item => item.ProductTagId, item => item.ProductCount);
+                        .ToDictionary(item => item.ProductTagId, item => item.ProductCount);
+                }
             });
         }
 
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         /// Delete a product tag
         /// </summary>
@@ -123,7 +126,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productTag));
 
             _productTagRepository.Delete(productTag);
-            
+
             //event notification
             _eventPublisher.EntityDeleted(productTag);
         }
@@ -164,10 +167,10 @@ namespace Nop.Services.Catalog
             var key = string.Format(NopCatalogCachingDefaults.ProductTagAllByProductIdCacheKey, productId);
 
             var query = from pt in _productTagRepository.Table
-                join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId
-                where ppt.ProductId == productId
-                orderby pt.Id
-                select pt;
+                        join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId
+                        where ppt.ProductId == productId
+                        orderby pt.Id
+                        select pt;
 
             var productTags = query.ToCachedList(key);
 
@@ -243,7 +246,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productTag));
 
             _productTagRepository.Insert(productTag);
-            
+
             //event notification
             _eventPublisher.EntityInserted(productTag);
         }
@@ -275,7 +278,7 @@ namespace Nop.Services.Catalog
 
             var seName = _urlRecordService.ValidateSeName(productTag, string.Empty, productTag.Name, true);
             _urlRecordService.SaveSlug(productTag, seName, 0);
-            
+
             //event notification
             _eventPublisher.EntityUpdated(productTag);
         }

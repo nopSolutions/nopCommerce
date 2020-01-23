@@ -54,7 +54,7 @@ namespace Nop.Services.ExportImport
         private readonly ICategoryService _categoryService;
         private readonly ICountryService _countryService;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IDataProvider _dataProvider;
+        private readonly INopDataProvider _dataProvider;
         private readonly IDateRangeService _dateRangeService;
         private readonly IEncryptionService _encryptionService;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -91,7 +91,7 @@ namespace Nop.Services.ExportImport
             ICategoryService categoryService,
             ICountryService countryService,
             ICustomerActivityService customerActivityService,
-            IDataProvider dataProvider,
+            INopDataProvider dataProvider,
             IDateRangeService dateRangeService,
             IEncryptionService encryptionService,
             IHttpClientFactory httpClientFactory,

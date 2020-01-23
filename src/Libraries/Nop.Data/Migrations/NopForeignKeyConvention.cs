@@ -7,10 +7,10 @@ namespace Nop.Data.Migrations
 {
     public class NopForeignKeyConvention : IForeignKeyConvention
     {
-        private readonly IDataProvider _dataProvider;
+        private readonly INopDataProvider _dataProvider;
         private readonly IMigrationContext _context;
 
-        public NopForeignKeyConvention(IDataProvider dataProvider, IMigrationContext context)
+        public NopForeignKeyConvention(INopDataProvider dataProvider, IMigrationContext context)
         {
             _dataProvider = dataProvider;
             _context = context;

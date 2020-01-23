@@ -9,9 +9,9 @@ namespace Nop.Data.Migrations
     public class NopIndexConvention : IIndexConvention
     {
 
-        private readonly IDataProvider _dataProvider;
+        private readonly INopDataProvider _dataProvider;
 
-        public NopIndexConvention(IDataProvider dataProvider)
+        public NopIndexConvention(INopDataProvider dataProvider)
         {
             _dataProvider = dataProvider;
         }

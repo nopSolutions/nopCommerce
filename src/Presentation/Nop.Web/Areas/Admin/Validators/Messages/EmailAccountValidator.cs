@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Messages
 {
     public partial class EmailAccountValidator : BaseNopValidator<EmailAccountModel>
     {
-        public EmailAccountValidator(IDataProvider dataProvider, ILocalizationService localizationService)
+        public EmailAccountValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Email).NotEmpty();
             RuleFor(x => x.Email).EmailAddress().WithMessage(localizationService.GetResource("Admin.Common.WrongEmail"));

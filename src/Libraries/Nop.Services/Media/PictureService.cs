@@ -9,6 +9,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
@@ -36,7 +37,7 @@ namespace Nop.Services.Media
     {
         #region Fields
 
-        private readonly IDataProvider _dataProvider;
+        private readonly INopDataProvider _dataProvider;
         private readonly IDownloadService _downloadService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -54,7 +55,7 @@ namespace Nop.Services.Media
 
         #region Ctor
 
-        public PictureService(IDataProvider dataProvider,
+        public PictureService(INopDataProvider dataProvider,
             IDownloadService downloadService,
             IEventPublisher eventPublisher,
             IHttpContextAccessor httpContextAccessor,
@@ -1021,10 +1022,19 @@ namespace Nop.Services.Media
             if (supportedLengthOfBinaryHash == 0 || !picturesIds.Any())
                 return new Dictionary<int, string>();
 
-            const string strCommand = "SELECT [PictureId], HASHBYTES('sha1', substring([BinaryData], 0, {0})) as [Hash] FROM [PictureBinary] where [PictureId] in ({1})";
-            
-            return _dataProvider.Query<PictureHashItem>(string.Format(strCommand, supportedLengthOfBinaryHash, picturesIds.Select(p => p.ToString()).Aggregate((all, current) => all + ", " + current))).Distinct()
-                .ToDictionary(p => p.PictureId, p => BitConverter.ToString(p.Hash).Replace("-", string.Empty));
+            using (var dataContext = _dataProvider.CreateDataContext())
+            {
+                return dataContext.GetTable<PictureBinary>()
+                    .Where(p => picturesIds.Contains(p.PictureId))
+                    .Select(x => new 
+                    {
+                        PictureId = x.PictureId, 
+                        Hash = x.BinaryData.Hash(supportedLengthOfBinaryHash) 
+                    }).ToDictionary(p => p.PictureId, p => p.Hash);
+            }
+
+            // return _dataProvider.Query<PictureHashItem>(string.Format(strCommand, supportedLengthOfBinaryHash, picturesIds.Select(p => p.ToString()).Aggregate((all, current) => all + ", " + current))).Distinct()
+            //     .ToDictionary(p => p.PictureId, p => BitConverter.ToString(p.Hash).Replace("-", string.Empty));
         }
 
         /// <summary>

@@ -37,7 +37,7 @@ namespace Nop.Services.Catalog
         protected readonly IAclService _aclService;
         protected readonly ICacheKeyFactory _cacheKeyFactory;
         protected readonly ICustomerService _customerService;
-        protected readonly IDataProvider _dataProvider;
+        protected readonly INopDataProvider _dataProvider;
         protected readonly IDateRangeService _dateRangeService;
         protected readonly IEventPublisher _eventPublisher;
         protected readonly ILanguageService _languageService;
@@ -75,7 +75,7 @@ namespace Nop.Services.Catalog
             IAclService aclService,
             ICacheKeyFactory cacheKeyFactory,
             ICustomerService customerService,
-            IDataProvider dataProvider,
+            INopDataProvider dataProvider,
             IDateRangeService dateRangeService,
             IEventPublisher eventPublisher,
             ILanguageService languageService,

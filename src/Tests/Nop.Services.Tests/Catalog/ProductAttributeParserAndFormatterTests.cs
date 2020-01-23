@@ -30,7 +30,7 @@ namespace Nop.Services.Tests.Catalog
         private IProductAttributeParser _productAttributeParser;
         private Mock<IEventPublisher> _eventPublisher;
 
-        private Mock<IDataProvider> _dataProvider;
+        private Mock<INopDataProvider> _dataProvider;
         private Mock<IWorkContext> _workContext;
         private Mock<ICurrencyService> _currencyService;
         private ILocalizationService _localizationService;
@@ -193,7 +193,7 @@ namespace Nop.Services.Tests.Catalog
                 _productAttributeMappingRepo.Object,
                 _productAttributeValueRepo.Object);
 
-            _dataProvider = new Mock<IDataProvider>();
+            _dataProvider = new Mock<INopDataProvider>();
 
             _productAttributeParser = new ProductAttributeParser(_dataProvider.Object,_productAttributeService);
 

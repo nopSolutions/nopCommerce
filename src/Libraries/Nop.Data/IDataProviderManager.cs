@@ -10,7 +10,7 @@
         /// <summary>
         /// Gets data provider
         /// </summary>
-        IDataProvider DataProvider { get; }
+        INopDataProvider DataProvider { get; }
 
         #endregion
     }

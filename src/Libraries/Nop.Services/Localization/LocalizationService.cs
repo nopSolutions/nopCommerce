@@ -32,7 +32,7 @@ namespace Nop.Services.Localization
     {
         #region Fields
 
-        private readonly IDataProvider _dataProvider;
+        private readonly INopDataProvider _dataProvider;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
@@ -47,7 +47,7 @@ namespace Nop.Services.Localization
 
         #region Ctor
 
-        public LocalizationService(IDataProvider dataProvider,
+        public LocalizationService(INopDataProvider dataProvider,
             IEventPublisher eventPublisher,
             ILanguageService languageService,
             ILocalizedEntityService localizedEntityService,
@@ -467,7 +467,7 @@ namespace Nop.Services.Localization
                 _lsrRepository.Update(lrsToUpdate);
             }
 
-            _dataProvider.BulkInsertEntities(lrsToInsertList);
+            _lsrRepository.Insert(lrsToInsertList);
 
             //clear cache
             _cacheManager.RemoveByPrefix(NopLocalizationCachingDefaults.LocaleStringResourcesPrefixCacheKey);

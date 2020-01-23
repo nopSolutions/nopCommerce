@@ -30,7 +30,7 @@ namespace Nop.Services.Customers
         private readonly CustomerSettings _customerSettings;
         private readonly ICacheKeyFactory _cacheKeyFactory;
         private readonly ICacheManager _cacheManager;
-        private readonly IDataProvider _dataProvider;
+        private readonly INopDataProvider _dataProvider;
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IRepository<Address> _customerAddressRepository;
@@ -51,7 +51,7 @@ namespace Nop.Services.Customers
         public CustomerService(CustomerSettings customerSettings,
             ICacheKeyFactory cacheKeyFactory,
             ICacheManager cacheManager,
-            IDataProvider dataProvider,
+            INopDataProvider dataProvider,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             IRepository<Address> customerAddressRepository,

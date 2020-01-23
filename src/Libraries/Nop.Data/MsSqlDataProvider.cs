@@ -3,23 +3,74 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using FluentMigrator;
+using FluentMigrator.Runner;
 using LinqToDB;
 using LinqToDB.Data;
+using LinqToDB.DataProvider.SqlServer;
+using LinqToDB.Mapping;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Data.Migrations;
 
 namespace Nop.Data
 {
     /// <summary>
     /// Represents the MS SQL Server data provider
     /// </summary>
-    public partial class MsSqlDataProvider : BaseDataProvider, IDataProvider
+    public partial class MsSqlNopDataProvider : SqlServerDataProvider, INopDataProvider
     {
+        public MsSqlNopDataProvider() : base(ProviderName.SqlServer2008, SqlServerVersion.v2008)
+        {
+
+        }
+
         #region Utils
 
+                /// <summary>
+        /// Get SQL commands from the script
+        /// </summary>
+        /// <param name="sql">SQL script</param>
+        /// <returns>List of commands</returns>
+        private static IList<string> GetCommandsFromScript(string sql)
+        {
+            var commands = new List<string>();
+
+            //origin from the Microsoft.EntityFrameworkCore.Migrations.SqlServerMigrationsSqlGenerator.Generate method
+            sql = Regex.Replace(sql, @"\\\r?\n", string.Empty);
+            var batches = Regex.Split(sql, @"^\s*(GO[ \t]+[0-9]+|GO)(?:\s+|$)", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+
+            for (var i = 0; i < batches.Length; i++)
+            {
+                if (string.IsNullOrWhiteSpace(batches[i]) || batches[i].StartsWith("GO", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                var count = 1;
+                if (i != batches.Length - 1 && batches[i + 1].StartsWith("GO", StringComparison.OrdinalIgnoreCase))
+                {
+                    var match = Regex.Match(batches[i + 1], "([0-9]+)");
+                    if (match.Success)
+                        count = int.Parse(match.Value);
+                }
+
+                var builder = new StringBuilder();
+                for (var j = 0; j < count; j++)
+                {
+                    builder.Append(batches[i]);
+                    if (i == batches.Length - 1)
+                        builder.AppendLine();
+                }
+
+                commands.Add(builder.ToString());
+            }
+
+            return commands;
+        }
+        
         protected virtual SqlConnectionStringBuilder GetConnectionStringBuilder()
         {
             var connectionString = DataSettingsManager.LoadSettings().ConnectionString;
@@ -27,7 +78,7 @@ namespace Nop.Data
             return new SqlConnectionStringBuilder(connectionString);
         }
 
-        protected override void ConfigureDataContext(IDataContext dataContext)
+        protected void ConfigureDataContext(IDataContext dataContext)
         {
             //nothing
         }
@@ -35,6 +86,20 @@ namespace Nop.Data
         #endregion
 
         #region Methods
+
+        public NopDataConnection CreateDataContext()
+        {
+            var dataContext = new NopDataConnection(this);
+
+            ConfigureDataContext(dataContext);
+
+            return dataContext;
+        }
+
+        public virtual IDbConnection CreateDbConnection()
+        {
+            return CreateConnection(GetConnectionStringBuilder().ConnectionString);
+        }
 
         public void CreateDatabase(string collation, int triesToConnect = 10)
         {
@@ -112,44 +177,9 @@ namespace Nop.Data
                 throw new DataException("This database does not support backup");
         }
 
-        /// <summary>
-        /// Get SQL commands from the script
-        /// </summary>
-        /// <param name="sql">SQL script</param>
-        /// <returns>List of commands</returns>
-        private static IList<string> GetCommandsFromScript(string sql)
+        public EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity
         {
-            var commands = new List<string>();
-
-            //origin from the Microsoft.EntityFrameworkCore.Migrations.SqlServerMigrationsSqlGenerator.Generate method
-            sql = Regex.Replace(sql, @"\\\r?\n", string.Empty);
-            var batches = Regex.Split(sql, @"^\s*(GO[ \t]+[0-9]+|GO)(?:\s+|$)", RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-            for (var i = 0; i < batches.Length; i++)
-            {
-                if (string.IsNullOrWhiteSpace(batches[i]) || batches[i].StartsWith("GO", StringComparison.OrdinalIgnoreCase))
-                    continue;
-
-                var count = 1;
-                if (i != batches.Length - 1 && batches[i + 1].StartsWith("GO", StringComparison.OrdinalIgnoreCase))
-                {
-                    var match = Regex.Match(batches[i + 1], "([0-9]+)");
-                    if (match.Success)
-                        count = int.Parse(match.Value);
-                }
-
-                var builder = new StringBuilder();
-                for (var j = 0; j < count; j++)
-                {
-                    builder.Append(batches[i]);
-                    if (i == batches.Length - 1)
-                        builder.AppendLine();
-                }
-
-                commands.Add(builder.ToString());
-            }
-
-            return commands;
+            return MappingSchema?.GetEntityDescriptor(typeof(TEntity));
         }
 
         /// <summary>
@@ -185,12 +215,12 @@ namespace Nop.Data
         /// </summary>
         public void InitializeDatabase()
         {
-            CreateDatabaseSchemaIfNotExists();
-
-            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+            var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
+            migrationManager.ApplyUpMigrations(null, NopMigrationTags.TABLE);
 
             //create stored procedures 
-            ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.SqlServerStoredProceduresFilePath);
+            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
+            ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.MySQLStoredProceduresFilePath);
         }
 
         /// <summary>

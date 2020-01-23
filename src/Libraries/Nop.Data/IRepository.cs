@@ -33,6 +33,14 @@ namespace Nop.Data
         void Insert(IEnumerable<TEntity> entities);
 
         /// <summary>
+        /// Loads the original copy of the entity
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <returns>Copy of the passed entity</returns>
+        TEntity LoadOriginalCopy(TEntity entity);
+
+        /// <summary>
         /// Update entity
         /// </summary>
         /// <param name="entity">Entity</param>

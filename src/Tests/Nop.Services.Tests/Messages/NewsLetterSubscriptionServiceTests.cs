@@ -14,7 +14,7 @@ namespace Nop.Services.Tests.Messages
     public class NewsLetterSubscriptionServiceTests : ServiceTest
     {
         private Mock<IEventPublisher> _eventPublisher;
-        private Mock<IDataProvider> _dataProvider;
+        private Mock<INopDataProvider> _dataProvider;
         private Mock<IRepository<NewsLetterSubscription>> _newsLetterSubscriptionRepository;
         private Mock<IRepository<Customer>> _customerRepository;
         private Mock<IRepository<CustomerCustomerRoleMapping>> _customerCustomerRoleMappingRepository;
@@ -23,7 +23,7 @@ namespace Nop.Services.Tests.Messages
         [SetUp]
         public new void SetUp()
         {
-            _dataProvider=new Mock<IDataProvider>();
+            _dataProvider=new Mock<INopDataProvider>();
             _eventPublisher = new Mock<IEventPublisher>();
             _newsLetterSubscriptionRepository = new Mock<IRepository<NewsLetterSubscription>>();
             _customerRepository = new Mock<IRepository<Customer>>();

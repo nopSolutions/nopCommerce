@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Validators.News
 {
     public partial class NewsItemValidator : BaseNopValidator<NewsItemModel>
     {
-        public NewsItemValidator(IDataProvider dataProvider, ILocalizationService localizationService)
+        public NewsItemValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Title).NotEmpty().WithMessage(localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Fields.Title.Required"));
 

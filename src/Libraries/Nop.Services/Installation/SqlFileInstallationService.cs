@@ -38,7 +38,7 @@ namespace Nop.Services.Installation
             IRepository<Store> storeRepository,
             IWebHelper webHelper)
         {
-           _fileProvider = fileProvider;
+            _fileProvider = fileProvider;
             _customerRepository = customerRepository;
             _languageRepository = languageRepository;
             _storeRepository = storeRepository;
@@ -88,7 +88,7 @@ namespace Nop.Services.Installation
 
             var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
             customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
-                 PasswordFormat.Hashed, defaultUserPassword, null, NopCustomerServiceDefaults.DefaultHashedPasswordFormat));
+                PasswordFormat.Hashed, defaultUserPassword, null, NopCustomerServiceDefaults.DefaultHashedPasswordFormat));
         }
 
         /// <summary>
@@ -119,10 +119,15 @@ namespace Nop.Services.Installation
                     statements.Add(statement);
             }
 
-            var dataProvider = EngineContext.Current.Resolve<IDataProvider>();
-
-            foreach (var stmt in statements)
-                dataProvider.Query<object>(stmt);
+            var dataProvider = EngineContext.Current.Resolve<INopDataProvider>();
+            using (var dataContext = dataProvider.CreateDataContext())
+            {
+                foreach (var stmt in statements)
+                {
+                    dataContext.ExecuteNonQuery(stmt);
+                }
+            }
+            
         }
 
         /// <summary>

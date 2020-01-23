@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 using Nop.Core.Domain.Catalog;
-using IDataProvider = Nop.Data.IDataProvider;
+using Nop.Data;
 
 namespace Nop.Services.Catalog
 {
@@ -15,23 +15,24 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
-        private readonly IDataProvider _dataProvider;
         private readonly IProductAttributeService _productAttributeService;
+        private readonly IRepository<ProductAttributeValue> _productAttributeValueRepository;
 
         #endregion
 
         #region Ctor
 
-        public ProductAttributeParser(IDataProvider dataProvider, IProductAttributeService productAttributeService)
+        public ProductAttributeParser(IProductAttributeService productAttributeService,
+            IRepository<ProductAttributeValue> productAttributeValueRepository)
         {
-            _dataProvider = dataProvider;
             _productAttributeService = productAttributeService;
+            _productAttributeValueRepository = productAttributeValueRepository;
         }
 
         #endregion
 
         #region Utilities
-       
+
         /// <summary>
         /// Returns a list which contains all possible combinations of elements
         /// </summary>
@@ -41,7 +42,7 @@ namespace Nop.Services.Catalog
         protected virtual IList<IList<T>> CreateCombination<T>(IList<T> elements)
         {
             var rez = new List<IList<T>>();
-            
+
             for (var i = 1; i < Math.Pow(2, elements.Count); i++)
             {
                 var current = new List<T>();
@@ -49,7 +50,7 @@ namespace Nop.Services.Catalog
 
                 //transform int to binary string
                 var binaryMask = Convert.ToString(i, 2).PadLeft(elements.Count, '0');
-            
+
                 foreach (var flag in binaryMask)
                 {
                     index++;
@@ -86,7 +87,7 @@ namespace Nop.Services.Catalog
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes?["ID"] == null) 
+                    if (node1.Attributes?["ID"] == null)
                         continue;
 
                     var str1 = node1.Attributes["ID"].InnerText.Trim();
@@ -123,11 +124,11 @@ namespace Nop.Services.Catalog
 
                 foreach (XmlNode attributeNode in xmlDoc.SelectNodes(@"//Attributes/ProductAttribute"))
                 {
-                    if (attributeNode.Attributes?["ID"] == null) 
+                    if (attributeNode.Attributes?["ID"] == null)
                         continue;
 
                     if (!int.TryParse(attributeNode.Attributes["ID"].InnerText.Trim(), out var attributeId) ||
-                        attributeId != productAttributeMappingId) 
+                        attributeId != productAttributeMappingId)
                         continue;
 
                     foreach (XmlNode attributeValue in attributeNode.SelectNodes("ProductAttributeValue"))
@@ -149,7 +150,7 @@ namespace Nop.Services.Catalog
         #endregion
 
         #region Product attributes
-       
+
         /// <summary>
         /// Gets selected product attribute mappings
         /// </summary>
@@ -175,7 +176,7 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Get product attribute values
+        /// /// Get product attribute values
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="productAttributeMappingId">Product attribute mapping identifier; pass 0 to load all values</param>
@@ -199,17 +200,18 @@ namespace Nop.Services.Catalog
 
                 foreach (var attributeValue in ParseValuesWithQuantity(attributesXml, attribute.Id))
                 {
-                    if (string.IsNullOrEmpty(attributeValue.Item1) || !int.TryParse(attributeValue.Item1, out var attributeValueId)) 
+                    if (string.IsNullOrEmpty(attributeValue.Item1) || !int.TryParse(attributeValue.Item1, out var attributeValueId))
                         continue;
 
                     var value = _productAttributeService.GetProductAttributeValueById(attributeValueId);
-                    if (value == null) 
+                    if (value == null)
                         continue;
 
                     if (!string.IsNullOrEmpty(attributeValue.Item2) && int.TryParse(attributeValue.Item2, out var quantity) && quantity != value.Quantity)
                     {
                         //if customer enters quantity, use new entity with new quantity
-                        var oldValue = _dataProvider.LoadOriginalCopy(value);
+
+                        var oldValue = _productAttributeValueRepository.LoadOriginalCopy(value);
 
                         oldValue.ProductAttributeMappingId = attribute.Id;
                         oldValue.Quantity = quantity;
@@ -243,14 +245,14 @@ namespace Nop.Services.Catalog
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes?["ID"] == null) 
+                    if (node1.Attributes?["ID"] == null)
                         continue;
 
                     var str1 = node1.Attributes["ID"].InnerText.Trim();
-                    if (!int.TryParse(str1, out var id)) 
+                    if (!int.TryParse(str1, out var id))
                         continue;
 
-                    if (id != productAttributeMappingId) 
+                    if (id != productAttributeMappingId)
                         continue;
 
                     var nodeList2 = node1.SelectNodes(@"ProductAttributeValue/Value");
@@ -300,14 +302,14 @@ namespace Nop.Services.Catalog
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes?["ID"] == null) 
+                    if (node1.Attributes?["ID"] == null)
                         continue;
 
                     var str1 = node1.Attributes["ID"].InnerText.Trim();
-                    if (!int.TryParse(str1, out var id)) 
+                    if (!int.TryParse(str1, out var id))
                         continue;
 
-                    if (id != productAttributeMapping.Id) 
+                    if (id != productAttributeMapping.Id)
                         continue;
 
                     attributeElement = (XmlElement)node1;
@@ -376,14 +378,14 @@ namespace Nop.Services.Catalog
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
-                    if (node1.Attributes?["ID"] == null) 
+                    if (node1.Attributes?["ID"] == null)
                         continue;
 
                     var str1 = node1.Attributes["ID"].InnerText.Trim();
-                    if (!int.TryParse(str1, out var id)) 
+                    if (!int.TryParse(str1, out var id))
                         continue;
 
-                    if (id != productAttributeMapping.Id) 
+                    if (id != productAttributeMapping.Id)
                         continue;
 
                     attributeElement = (XmlElement)node1;
@@ -437,7 +439,7 @@ namespace Nop.Services.Catalog
                 var hasAttribute = false;
                 foreach (var a2 in attributes2)
                 {
-                    if (a1.Id != a2.Id) 
+                    if (a1.Id != a2.Id)
                         continue;
 
                     hasAttribute = true;
@@ -452,14 +454,14 @@ namespace Nop.Services.Catalog
                             {
                                 //case insensitive? 
                                 //if (str1.Trim().ToLower() == str2.Trim().ToLower())
-                                if (str1.Item1.Trim() != str2.Item1.Trim()) 
+                                if (str1.Item1.Trim() != str2.Item1.Trim())
                                     continue;
 
                                 hasValue = ignoreQuantity || str1.Item2.Trim() == str2.Item2.Trim();
                                 break;
                             }
 
-                            if (hasValue) 
+                            if (hasValue)
                                 continue;
 
                             attributesEqual = false;
@@ -473,7 +475,7 @@ namespace Nop.Services.Catalog
                     }
                 }
 
-                if (hasAttribute) 
+                if (hasAttribute)
                     continue;
 
                 attributesEqual = false;
@@ -569,7 +571,7 @@ namespace Nop.Services.Catalog
             {
                 allProductAttributMappings = allProductAttributMappings.Where(x => !x.IsNonCombinable()).ToList();
             }
-            
+
             //get all possible attribute combinations
             var allPossibleAttributeCombinations = CreateCombination(allProductAttributMappings);
 
@@ -585,7 +587,7 @@ namespace Nop.Services.Catalog
 
                     //get product attribute values
                     var attributeValues = _productAttributeService.GetProductAttributeValues(productAttributeMapping.Id);
-                    
+
                     //filter product attribute values
                     if (allowedAttributeIds?.Any() ?? false)
                     {
@@ -598,7 +600,7 @@ namespace Nop.Services.Catalog
                     var isCheckbox = productAttributeMapping.AttributeControlType == AttributeControlType.Checkboxes ||
                                      productAttributeMapping.AttributeControlType ==
                                      AttributeControlType.ReadonlyCheckboxes;
-                    
+
                     var currentAttributesXml = new List<string>();
 
                     if (isCheckbox)
@@ -660,7 +662,7 @@ namespace Nop.Services.Catalog
 
             return allAttributesXml;
         }
-        
+
         #endregion
 
         #region Gift card attributes

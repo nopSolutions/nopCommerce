@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
 {
     public partial class CategoryValidator : BaseNopValidator<CategoryModel>
     {
-        public CategoryValidator(IDataProvider dataProvider, ILocalizationService localizationService)
+        public CategoryValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.Categories.Fields.Name.Required"));
             RuleFor(x => x.PageSizeOptions).Must(ValidatorUtilities.PageSizeOptionsValidator).WithMessage(localizationService.GetResource("Admin.Catalog.Categories.Fields.PageSizeOptions.ShouldHaveUniqueItems"));

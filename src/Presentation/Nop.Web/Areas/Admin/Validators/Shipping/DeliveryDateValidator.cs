@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Shipping
 {
     public partial class DeliveryDateValidator : BaseNopValidator<DeliveryDateModel>
     {
-        public DeliveryDateValidator(IDataProvider dataProvider, ILocalizationService localizationService)
+        public DeliveryDateValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Fields.Name.Required"));
 

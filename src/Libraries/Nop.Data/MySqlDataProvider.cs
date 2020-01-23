@@ -6,17 +6,22 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using FluentMigrator;
+using FluentMigrator.Runner;
 using LinqToDB;
 using LinqToDB.Common;
 using LinqToDB.Data;
+using LinqToDB.DataProvider.MySql;
+using LinqToDB.Mapping;
 using LinqToDB.SqlQuery;
 using MySql.Data.MySqlClient;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Data.Migrations;
 
 namespace Nop.Data
 {
-    public class MySqlDataProvider : BaseDataProvider, IDataProvider
+    public class MySqlNopDataProvider : MySqlDataProvider, INopDataProvider
     {
         #region Utils
 
@@ -27,6 +32,35 @@ namespace Nop.Data
         {
             if (!BackupSupported)
                 throw new DataException("This database does not support backup");
+        }
+
+        public virtual void ConfigureDataContext(IDataContext dataContext)
+        {
+            MappingSchema.SetDataType(
+                typeof(string),
+                new SqlDataType(DataType.Text, typeof(string)));
+
+            MappingSchema.SetDataType(
+                typeof(Guid),
+                new SqlDataType(DataType.NChar, typeof(Guid), 36));
+
+            MappingSchema.SetDataType(
+                typeof(byte[]),
+                new SqlDataType(new DbDataType(typeof(byte[]), DataType.Blob, "BLOB")));
+        }
+
+        public NopDataConnection CreateDataContext()
+        {
+            var dataContext = new NopDataConnection(this);
+
+            ConfigureDataContext(dataContext);
+
+            return dataContext;
+        }
+
+        public virtual IDbConnection CreateDbConnection()
+        {
+            return CreateConnection(GetConnectionStringBuilder().ConnectionString);
         }
 
         protected MySqlConnectionStringBuilder GetConnectionStringBuilder()
@@ -66,26 +100,6 @@ namespace Nop.Data
             return commands;
         }
 
-
-        /// <summary>
-        /// Configure DataContext before using (e.g Type mapping, Converters)
-        /// </summary>
-        /// <param name="dataContext"></param>
-        protected override void ConfigureDataContext(IDataContext dataContext)
-        {
-            dataContext.MappingSchema.SetDataType(
-                typeof(string),
-                new SqlDataType(DataType.Text, typeof(string)));
-
-            dataContext.MappingSchema.SetDataType(
-                typeof(Guid),
-                new SqlDataType(DataType.NChar, typeof(Guid), 36));
-
-            dataContext.MappingSchema.SetDataType(
-                typeof(byte[]),
-                new SqlDataType(new DbDataType(typeof(byte[]), DataType.Blob)));
-        }
-
         /// <summary>
         /// Execute commands from a file with SQL script against the context database
         /// </summary>
@@ -103,6 +117,11 @@ namespace Nop.Data
         #endregion
 
         #region Methods
+
+        public virtual IDbConnection CreateConnection()
+        {
+            return CreateConnection(GetConnectionStringBuilder().ConnectionString);
+        }
 
         /// <summary>
         /// Creates the database by using the loaded connection string
@@ -195,11 +214,17 @@ namespace Nop.Data
         /// </summary>
         public void InitializeDatabase()
         {
-            CreateDatabaseSchemaIfNotExists();
-            
+            var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
+            migrationManager.ApplyUpMigrations(null, NopMigrationTags.TABLE);
+
             //create stored procedures 
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
             ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.MySQLStoredProceduresFilePath);
+        }
+
+        public EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity
+        {
+            return MappingSchema?.GetEntityDescriptor(typeof(TEntity));
         }
 
         /// <summary>
@@ -209,7 +234,7 @@ namespace Nop.Data
         /// <returns>Integer identity; null if cannot get the result</returns>
         public virtual int? GetTableIdent<T>() where T : BaseEntity
         {
-            using (var currentConnection = new NopDataConnection())
+            using (var currentConnection = CreateDataContext())
             {
                 var tableName = currentConnection.GetTable<T>().TableName;
                 var databaseName = currentConnection.Connection.Database;
@@ -232,7 +257,7 @@ namespace Nop.Data
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
-            using (var currentConnection = new NopDataConnection())
+            using (var currentConnection = CreateDataContext())
             {
                 var tableName = currentConnection.GetTable<T>().TableName;
 
@@ -262,7 +287,7 @@ namespace Nop.Data
         /// </summary>
         public virtual void ReIndexTables()
         {
-            using (var currentConnection = new NopDataConnection())
+            using (var currentConnection = CreateDataContext())
             {
                 var tables = currentConnection.Query<string>($"SHOW TABLES FROM `{currentConnection.Connection.Database}`").ToList();
 

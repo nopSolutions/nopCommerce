@@ -14,13 +14,13 @@ namespace Nop.Services.Tests.FakeServices
         public FakePluginService(
             CatalogSettings catalogSettings = null,
             ICustomerService customerService = null,
-            IDataProvider dataProvider = null,
+            INopDataProvider dataProvider = null,
             ILogger logger = null,
             INopFileProvider fileProvider = null,
             IWebHelper webHelper = null) : base(
             catalogSettings ?? new CatalogSettings(),
             customerService ?? new Mock<ICustomerService>().Object,
-            dataProvider ?? new Mock<IDataProvider>().Object,
+            dataProvider ?? new Mock<INopDataProvider>().Object,
             logger ?? new NullLogger(),
             fileProvider ?? CommonHelper.DefaultFileProvider,
             webHelper ?? new Mock<IWebHelper>().Object)

@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Discounts
 {
     public partial class DiscountValidator : BaseNopValidator<DiscountModel>
     {
-        public DiscountValidator(IDataProvider dataProvider, ILocalizationService localizationService)
+        public DiscountValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Promotions.Discounts.Fields.Name.Required"));
 
