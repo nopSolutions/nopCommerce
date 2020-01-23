@@ -8119,7 +8119,7 @@
     <Value>Estimate shipping enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingEnabled.Hint">
-    <Value>Check to allow customers to estimate shipping on shopping cart page.</Value>
+    <Value>Check to allow customers to estimate shipping on product and shopping cart pages.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.FreeShippingOverXEnabled">
     <Value>Free shipping over 'X'</Value>
@@ -17295,6 +17295,21 @@
   <LocaleResource Name="Products.EnterProductPrice.Range">
     <Value>The price must be from {0} to {1}</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.EstimateShipping.EstimatedDeliveryPrefix">
+    <Value>Estimated Delivery on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.EstimateShipping.NoSelectedShippingOption">
+    <Value>Please select the address you want to ship from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.EstimateShipping.PriceTitle">
+    <Value>Shipping:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.EstimateShipping.ToAddress">
+    <Value>to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.EstimateShipping.ViaProvider">
+    <Value>via</Value>
+  </LocaleResource>
   <LocaleResource Name="Products.ExclTaxSuffix">
     <Value>{0} excl tax</Value>
   </LocaleResource>
@@ -17414,6 +17429,9 @@
   </LocaleResource>
   <LocaleResource Name="Products.Qty.AriaLabel">
     <Value>Enter a quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.QuantityShouldBePositive">
+    <Value>Quantity should be positive</Value>
   </LocaleResource>
   <LocaleResource Name="Products.RecentlyViewedProducts">
     <Value>Recently viewed products</Value>
@@ -17751,6 +17769,42 @@
   <LocaleResource Name="Search.Vendor">
     <Value>Vendor</Value>
   </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShipping.Country.Required">
+    <Value>Country is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShipping.ZipPostalCode.Required">
+    <Value>Zip / postal code is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.ChooseShippingTitle">
+    <Value>Shipping Method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.NoShippingOptions">
+    <Value>No shipping options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.SelectShippingOption.Button">
+    <Value>Apply</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.ShippingOption.EstimatedDelivery">
+    <Value>Estimated Delivery</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.ShippingOption.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.ShippingOption.Price">
+    <Value>Price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.ShipToTitle">
+    <Value>Ship to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.StateProvince">
+    <Value>State / province</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.ZipPostalCode">
+    <Value>Zip / postal code</Value>
+  </LocaleResource>
   <LocaleResource Name="ShippingMethod.NotAvailableMethodsError">
     <Value>Your order cannot be completed at this time as there is no shipping methods available for it. Please make necessary changes in your shipping address.</Value>
   </LocaleResource>
@@ -17859,32 +17913,8 @@
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.WrongDiscount">
     <Value>The coupon code you entered couldn't be applied to your order</Value>
   </LocaleResource>
-  <LocaleResource Name="ShoppingCart.EstimateShipping">
-    <Value>Estimate shipping</Value>
-  </LocaleResource>
   <LocaleResource Name="ShoppingCart.EstimateShipping.Button">
     <Value>Estimate shipping</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.EstimateShipping.Country">
-    <Value>Country</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.EstimateShipping.Country.Required">
-    <Value>Country is required</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.EstimateShipping.ShippingOptionWithRate">
-    <Value>{0} ({1})</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.EstimateShipping.StateProvince">
-    <Value>State / province</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.EstimateShipping.Tooltip">
-    <Value>Enter your destination to get a shipping estimate</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.EstimateShipping.ZipPostalCode">
-    <Value>Zip / postal code</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShoppingCart.EstimateShipping.ZipPostalCode.Required">
-    <Value>Zip / postal code is required</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.FileUploaded">
     <Value>Your file successfully uploaded!</Value>

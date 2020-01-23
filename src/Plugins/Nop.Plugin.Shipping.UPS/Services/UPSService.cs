@@ -846,11 +846,20 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 if (!monetaryValue.HasValue)
                     continue;
 
+                //parse transit days
+                int? transitDays = null;
+                if (!string.IsNullOrWhiteSpace(rate.GuaranteedDelivery?.BusinessDaysInTransit))
+                {
+                    if (int.TryParse(rate.GuaranteedDelivery.BusinessDaysInTransit, out var businessDaysInTransit))
+                        transitDays = businessDaysInTransit;
+                }
+
                 //add shipping option based on service rate
                 shippingOptions.Add(new ShippingOption
                 {
                     Rate = monetaryValue.Value,
-                    Name = deliveryService.Name
+                    Name = deliveryService.Name,
+                    TransitDays = transitDays
                 });
             }
 

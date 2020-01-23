@@ -1,0 +1,67 @@
+﻿@model EstimateShippingModel
+
+<a href="#estimate-shipping-popup" 
+   id="open-estimate-shipping-popup" 
+   data-effect="estimate-shipping-popup-zoom-in" 
+   class="estimate-shipping-button">
+    @T("ShoppingCart.EstimateShipping.Button")
+</a>
+@await Html.PartialAsync("_EstimateShippingPopUp", Model)
+
+<script asp-location="Footer">
+
+    $(document).ready(function () {
+        let popUp = EstimateShippingPopUp;
+
+        let localizedData = {
+            NoShippingOptions: '@T("Shipping.EstimateShippingPopUp.NoShippingOptions")'
+        };
+        let urlFactory = function (address) {
+            let params = $.param({
+                CountryId: address.countryId,
+                StateProvinceId: address.stateProvinceId,
+                ZipPostalCode: address.zipPostalCode
+            });
+
+            return `@Html.Raw(Url.Action("getestimateshipping", "shoppingcart"))?${params}`;
+        };
+        let handlers = {
+            selectedOption: function (option) {
+                let params;
+                if (option) {
+                    params = $.param({
+                        Name: option.provider,
+                        CountryId: option.address.countryId,
+                        StateProvinceId: option.address.stateProvinceId,
+                        ZipPostalCode: option.address.zipPostalCode
+                    });
+                }
+
+                $.ajax({
+                    cache: false,
+                    url: `@Html.Raw(Url.Action("selectshippingoption", "shoppingcart"))${params ? `?${params}` : ''}`,
+                    data: $('#shopping-cart-form').serialize(),
+                    type: 'POST',
+                    beforeSend: function () {
+                        displayAjaxLoading(true);
+                    },
+                    success: function (response) {
+                        if (response.ordertotalssectionhtml)
+                            $('.total-info').replaceWith(response.ordertotalssectionhtml);
+                    },
+                    complete: function () {
+                        displayAjaxLoading(false);
+                    }
+                });
+            }
+        };
+        popUp.init('#shopping-cart-form', urlFactory, handlers, localizedData);
+
+        let address = popUp.getShippingAddress();
+        if (popUp.addressIsValid(address))
+            popUp.getShippingOptions(address);
+        else
+            popUp.selectShippingOption();
+    });
+
+</script>

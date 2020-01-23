@@ -1,0 +1,119 @@
+﻿@model ProductEstimateShippingModel
+
+<div class="product-estimate-shipping">
+    <a href="#estimate-shipping-popup" 
+       id="open-estimate-shipping-popup" 
+       data-effect="estimate-shipping-popup-zoom-in">
+    </a>
+    @await Html.PartialAsync("_EstimateShippingPopUp", Model)
+</div>
+
+<script asp-location="Footer">
+
+    $(document).ready(function () {
+        let popUp = EstimateShippingPopUp;
+        let reloadPopUp = false;
+        let initialized = false;
+
+        let localizedData = {
+            NoShippingOptions: '@T("Shipping.EstimateShippingPopUp.NoShippingOptions")'
+        };
+        let urlFactory = function (address) {
+            let params = $.param({
+                CountryId: address.countryId,
+                StateProvinceId: address.stateProvinceId,
+                ZipPostalCode: address.zipPostalCode
+            });
+
+            return `@Html.Raw(Url.Action("estimateshipping", "product", new { ProductId = Model.ProductId }))&${params}`;
+        };
+        let handlers = {
+            openPopUp: function () {
+                if (reloadPopUp) {
+                    let address = popUp.getShippingAddress();
+                    popUp.getShippingOptions(address);
+
+                    reloadPopUp = false;
+                }
+            },
+            load: function () {
+                if (!$.magnificPopup.instance.isOpen) {
+                    let shippingTitle = $('<div/>').addClass('shipping-title')
+                        .append($('<span/>').addClass('shipping-price-title').text('@T("Products.EstimateShipping.PriceTitle")'))
+                        .append($('<span/>').addClass('shipping-loading'));
+                    $('#open-estimate-shipping-popup').html(shippingTitle);
+                }
+            },
+            success: function (address, response) {
+                // initialize on load only once
+                let option = popUp.getActiveShippingOption();
+                popUp.selectShippingOption(option);
+
+                initialized = true;
+                popUp.handlers.success = undefined;
+            },
+            error: function () {
+                if (!initialized)
+                    popUp.selectShippingOption();
+            },
+            selectedOption: function (option) {
+                if (option) {
+                    let shippingContent = $('#open-estimate-shipping-popup');
+
+                    let shippingTitle = $('<div/>').addClass('shipping-title')
+                        .append($('<span/>').addClass('shipping-price-title').text('@T("Products.EstimateShipping.PriceTitle")'))
+                        .append($('<span/>').addClass('shipping-price').text(option.price));
+                    shippingContent.html(shippingTitle);
+
+                    let estimatedDelivery = $('<div/>').addClass('estimated-delivery')
+                        .append($('<div/>').addClass('shipping-address')
+                            .append($('<span/>').text(`@T("Products.EstimateShipping.ToAddress") ${option.address.countryName}, ${(option.address.stateProvinceName ? option.address.stateProvinceName + ',' : '')} ${option.address.zipPostalCode} @T("Products.EstimateShipping.ViaProvider") ${option.provider}`))
+                            .append($('<i/>').addClass('arrow-down')));
+
+                    if (option.deliveryDate && option.deliveryDate !== '-')
+                        estimatedDelivery.append($('<div/>').addClass('shipping-date').text(`@T("Products.EstimateShipping.EstimatedDeliveryPrefix") ${option.deliveryDate}`));
+
+                    shippingContent.append(estimatedDelivery);
+                } else {
+                    $('#open-estimate-shipping-popup')
+                        .html($('<span/>').text('@T("Products.EstimateShipping.NoSelectedShippingOption")'))
+                        .append($('<i/>').addClass('arrow-down'));
+                }
+            }
+        };
+        popUp.init('#product-details-form', urlFactory, handlers, localizedData);
+
+        let initialLoad = function () {
+            let address = popUp.getShippingAddress();
+            if (popUp.addressIsValid(address))
+                popUp.getShippingOptions(address);
+            else
+                popUp.selectShippingOption();
+        };
+        initialLoad();
+
+        let attributeChangedHandler = function () {
+            if (popUp.selectedShippingOption) {
+                let address = popUp.selectedShippingOption.address;
+                let enteredAddress = popUp.getShippingAddress();
+
+                if (!popUp.addressesAreEqual(address, enteredAddress))
+                    reloadPopUp = true;
+
+                popUp.getShippingOptions(address);
+
+            } else {
+                if (!initialized)
+                    initialLoad();
+                else
+                    reloadPopUp = true;
+            }
+        };
+        // Prevent double init on load. If product has attributes then trigger is fires when page is loaded and attributes are loaded.
+        setTimeout(function () {
+            $(document).on('product_attributes_changed', attributeChangedHandler);
+        }, 500);
+        $(document).on('product_quantity_changed', attributeChangedHandler);
+    });
+
+</script>

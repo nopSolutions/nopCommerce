@@ -21,6 +21,7 @@ using Nop.Services.Authentication.External;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Defaults;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.ExportImport;

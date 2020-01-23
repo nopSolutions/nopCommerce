@@ -22,6 +22,7 @@ using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
@@ -57,6 +58,7 @@ namespace Nop.Web.Factories
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
+        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDiscountService _discountService;
         private readonly IDownloadService _downloadService;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -107,6 +109,7 @@ namespace Nop.Web.Factories
             ICountryService countryService,
             ICurrencyService currencyService,
             ICustomerService customerService,
+            IDateTimeHelper dateTimeHelper,
             IDiscountService discountService,
             IDownloadService downloadService,
             IGenericAttributeService genericAttributeService,
@@ -153,6 +156,7 @@ namespace Nop.Web.Factories
             _countryService = countryService;
             _currencyService = currencyService;
             _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
             _discountService = discountService;
             _downloadService = downloadService;
             _genericAttributeService = genericAttributeService;
@@ -1264,6 +1268,8 @@ namespace Nop.Web.Factories
                     ZipPostalCode = zipPostalCode,
                 };
 
+                var rawShippingOptions = new List<ShippingOption>();
+
                 var getShippingOptionResponse = _shippingService.GetShippingOptions(cart, address, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
                 if (getShippingOptionResponse.Success)
                 {
@@ -1271,24 +1277,19 @@ namespace Nop.Web.Factories
                     {
                         foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
                         {
-                            //calculate discounted and taxed rate
-                            var shippingRate = _orderTotalCalculationService.AdjustShippingRate(shippingOption.Rate, cart, out var _);
-                            shippingRate = _taxService.GetShippingPrice(shippingRate, _workContext.CurrentCustomer);
-                            shippingRate = _currencyService.ConvertFromPrimaryStoreCurrency(shippingRate, _workContext.WorkingCurrency);
-                            var shippingRateString = _priceFormatter.FormatShippingPrice(shippingRate, true);
-
-                            model.ShippingOptions.Add(new EstimateShippingResultModel.ShippingOptionModel
+                            rawShippingOptions.Add(new ShippingOption()
                             {
                                 Name = shippingOption.Name,
                                 Description = shippingOption.Description,
-                                Price = shippingRateString
+                                Rate = _orderTotalCalculationService.AdjustShippingRate(shippingOption.Rate, cart, out var _),
+                                TransitDays = shippingOption.TransitDays
                             });
                         }
                     }
+                    else
+                        foreach (var error in getShippingOptionResponse.Errors)
+                            model.Warnings.Add(error);
                 }
-                else
-                    foreach (var error in getShippingOptionResponse.Errors)
-                        model.Warnings.Add(error);
 
                 if (_shippingSettings.AllowPickupInStore)
                 {
@@ -1297,27 +1298,55 @@ namespace Nop.Web.Factories
                     {
                         if (pickupPointsResponse.PickupPoints.Any())
                         {
-                            var soModel = new EstimateShippingResultModel.ShippingOptionModel
+                            var point = pickupPointsResponse.PickupPoints.OrderBy(p => p.PickupFee).First();
+
+                            rawShippingOptions.Add(new ShippingOption()
                             {
                                 Name = _localizationService.GetResource("Checkout.PickupPoints"),
                                 Description = _localizationService.GetResource("Checkout.PickupPoints.Description"),
-                            };
-                            var pickupFee = pickupPointsResponse.PickupPoints.Min(x => x.PickupFee);
-
-                            if (pickupFee > 0)
-                            {
-                                pickupFee = _taxService.GetShippingPrice(pickupFee, _workContext.CurrentCustomer);
-                                pickupFee = _currencyService.ConvertFromPrimaryStoreCurrency(pickupFee, _workContext.WorkingCurrency);
-                            }
-
-                            soModel.Price = _priceFormatter.FormatShippingPrice(pickupFee, true);
-                            model.ShippingOptions.Add(soModel);
+                                Rate = point.PickupFee,
+                                TransitDays = point.TransitDays
+                            });
                         }
                     }
                     else
-                    {
                         foreach (var error in pickupPointsResponse.Errors)
                             model.Warnings.Add(error);
+                }
+
+                if (rawShippingOptions.Any())
+                {
+                    var orderedShippingOptions = rawShippingOptions
+                        .OrderBy(option => option.Rate)
+                        .ThenBy(option => option.TransitDays)
+                        .Select(option =>
+                        {
+                            var shippingRate = option.Rate;
+                            shippingRate = _taxService.GetShippingPrice(shippingRate, _workContext.CurrentCustomer);
+                            shippingRate = _currencyService.ConvertFromPrimaryStoreCurrency(shippingRate, _workContext.WorkingCurrency);
+                            var shippingRateString = _priceFormatter.FormatShippingPrice(shippingRate, true);
+
+                            string deliveryDateFormat = null;
+                            if (option.TransitDays.HasValue)
+                            {
+                                var currentCulture = CultureInfo.GetCultureInfo(_workContext.WorkingLanguage.LanguageCulture);
+                                var customerDateTime = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
+                                deliveryDateFormat = customerDateTime.AddDays(option.TransitDays.Value).ToString("d", currentCulture);
+                            }
+
+                            return new EstimateShippingResultModel.ShippingOptionModel()
+                            {
+                                Name = option.Name,
+                                Description = option.Description,
+                                Price = shippingRateString,
+                                Rate = option.Rate,
+                                DeliveryDateFormat = deliveryDateFormat
+                            };
+                        });
+
+                    foreach (var option in orderedShippingOptions)
+                    {
+                        model.ShippingOptions.Add(option);
                     }
                 }
             }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -14,7 +13,6 @@ using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
-using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Seo;
@@ -39,7 +37,6 @@ namespace Nop.Web.Factories
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IDownloadService _downloadService;
         private readonly IGiftCardService _giftCardService;
         private readonly ILocalizationService _localizationService;
         private readonly IOrderProcessingService _orderProcessingService;
@@ -73,7 +70,6 @@ namespace Nop.Web.Factories
             ICountryService countryService,
             ICurrencyService currencyService,
             IDateTimeHelper dateTimeHelper,
-            IDownloadService downloadService,
             IGiftCardService giftCardService,
             ILocalizationService localizationService,
             IOrderProcessingService orderProcessingService,
@@ -103,7 +99,6 @@ namespace Nop.Web.Factories
             _countryService = countryService;
             _currencyService = currencyService;
             _dateTimeHelper = dateTimeHelper;
-            _downloadService = downloadService;
             _giftCardService = giftCardService;
             _localizationService = localizationService;
             _orderProcessingService = orderProcessingService;
@@ -460,9 +455,9 @@ namespace Nop.Web.Factories
                 }
 
                 //downloadable products
-                if (_downloadService.IsDownloadAllowed(orderItem))
+                if (_orderService.IsDownloadAllowed(orderItem))
                     orderItemModel.DownloadId = product.DownloadId;
-                if (_downloadService.IsLicenseDownloadAllowed(orderItem))
+                if (_orderService.IsLicenseDownloadAllowed(orderItem))
                     orderItemModel.LicenseId = orderItem.LicenseDownloadId ?? 0;
             }
 

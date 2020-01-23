@@ -155,7 +155,10 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
                 OpeningHours = model.OpeningHours,
                 PickupFee = model.PickupFee,
                 DisplayOrder = model.DisplayOrder,
-                StoreId = model.StoreId
+                StoreId = model.StoreId,
+                Latitude = model.Latitude,
+                Longitude = model.Longitude,
+                TransitDays = model.TransitDays
             };
             _storePickupPointService.InsertStorePickupPoint(pickupPoint);
 
@@ -183,7 +186,8 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
                 DisplayOrder = pickupPoint.DisplayOrder,
                 StoreId = pickupPoint.StoreId,
                 Latitude = pickupPoint.Latitude,
-                Longitude = pickupPoint.Longitude
+                Longitude = pickupPoint.Longitude,
+                TransitDays = pickupPoint.TransitDays
             };
 
             var address = _addressService.GetAddressById(pickupPoint.AddressId);
@@ -261,6 +265,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
             pickupPoint.StoreId = model.StoreId;
             pickupPoint.Latitude = model.Latitude;
             pickupPoint.Longitude = model.Longitude;
+            pickupPoint.TransitDays = model.TransitDays;
             _storePickupPointService.UpdateStorePickupPoint(pickupPoint);
 
             ViewBag.RefreshPage = true;

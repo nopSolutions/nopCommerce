@@ -204,10 +204,6 @@ namespace Nop.Web.Controllers
         /// <param name="pickupPoint">The pickup option</param>
         protected virtual void SavePickupOption(PickupPoint pickupPoint)
         {
-            //no shipping address selected
-            _workContext.CurrentCustomer.ShippingAddressId = null;
-            _customerService.UpdateCustomer(_workContext.CurrentCustomer);
-
             var pickUpInStoreShippingOption = new ShippingOption
             {
                 Name = string.Format(_localizationService.GetResource("Checkout.PickupPoints.Name"), pickupPoint.Name),
@@ -505,11 +501,7 @@ namespace Nop.Web.Controllers
                 return Challenge();
 
             if (!_shoppingCartService.ShoppingCartRequiresShipping(cart))
-            {
-                _workContext.CurrentCustomer.ShippingAddressId = null;
-                _customerService.UpdateCustomer(_workContext.CurrentCustomer);
-                return RedirectToRoute("CheckoutShippingMethod");
-            }
+                return RedirectToRoute("CheckoutShippingMethod");        
 
             //model
             var model = _checkoutModelFactory.PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
@@ -559,11 +551,7 @@ namespace Nop.Web.Controllers
                 return Challenge();
 
             if (!_shoppingCartService.ShoppingCartRequiresShipping(cart))
-            {
-                _workContext.CurrentCustomer.ShippingAddressId = null;
-                _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                 return RedirectToRoute("CheckoutShippingMethod");
-            }
             
             //pickup point
             if (_shippingSettings.AllowPickupInStore && !_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
@@ -1333,9 +1321,6 @@ namespace Nop.Web.Controllers
                 }
 
                 //shipping is not required
-                _workContext.CurrentCustomer.ShippingAddressId = null;
-                _customerService.UpdateCustomer(_workContext.CurrentCustomer);
-
                 _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedShippingOptionAttribute, null, _storeContext.CurrentStore.Id);
 
                 //load next step

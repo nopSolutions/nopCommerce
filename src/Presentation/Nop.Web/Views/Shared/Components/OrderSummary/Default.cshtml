@@ -228,6 +228,7 @@
                     <div class="common-buttons">
                         <input type="submit" name="updatecart" value="@T("ShoppingCart.UpdateCart")" class="button-2 update-cart-button" />
                         <input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" class="button-2 continue-shopping-button" />
+                        @await Component.InvokeAsync("ShoppingCartEstimateShipping")
                     </div>
                 }
                 @if (Model.IsEditable)
@@ -246,7 +247,6 @@
                             @await Html.PartialAsync("_GiftCardBox", Model.GiftCardBox)
                             @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentDeals })
                         </div>
-                        @await Component.InvokeAsync("EstimateShipping")
                     </div>
                 }
             <div class="totals">

@@ -191,8 +191,6 @@ namespace Nop.Services.Tests.Catalog
                 _productAttributeMappingRepo.Object,
                 _productAttributeValueRepo.Object);
 
-            _productAttributeParser = new ProductAttributeParser(_productAttributeService, _productAttributeValueRepo.Object);
-
             _priceCalculationService = new Mock<IPriceCalculationService>();
 
             var workingLanguage = new Language();
@@ -206,6 +204,13 @@ namespace Nop.Services.Tests.Catalog
             _downloadService = new Mock<IDownloadService>();
             _webHelper = new Mock<IWebHelper>();
             _shoppingCartSettings = new ShoppingCartSettings();
+
+            _productAttributeParser = new ProductAttributeParser(_currencyService.Object,
+                _downloadService.Object,
+                _localizationService,
+                _productAttributeService,
+                _productAttributeValueRepo.Object,
+                _workContext.Object);
 
             _productAttributeFormatter = new ProductAttributeFormatter(_currencyService.Object,
                 _downloadService.Object,

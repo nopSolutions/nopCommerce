@@ -30,11 +30,18 @@
                 <label asp-for="EnteredQuantity" asp-postfix=":" class="qty-label"></label>
                 @if (Model.AllowedQuantities.Count > 0)
                 {
-                    <select asp-for="EnteredQuantity" asp-items="Model.AllowedQuantities" class="qty-dropdown" aria-label=@T("Products.Qty.AriaLabel")></select>
+                    <select asp-for="EnteredQuantity" asp-items="Model.AllowedQuantities" id="product_enteredQuantity_@Model.ProductId" class="qty-dropdown" aria-label=@T("Products.Qty.AriaLabel")></select>
+                    <script asp-location="Footer">
+                        $(document).ready(function () {
+                            $("#product_enteredQuantity_@Model.ProductId").on("change", function () {
+                                $(document).trigger({ type: "product_quantity_changed", quantity: $('#product_enteredQuantity_@Model.ProductId').find(":selected").text() });
+                            });
+                        });
+                    </script>
                 }
                 else
                 {
-                    <input asp-for="EnteredQuantity" class="qty-input" type="text" aria-label=@T("Products.Qty.AriaLabel")/>
+                    <input asp-for="EnteredQuantity" id="product_enteredQuantity_@Model.ProductId" class="qty-input" type="text" aria-label=@T("Products.Qty.AriaLabel")/>
                     <script asp-location="Footer">
                         //when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)
                         $(document).ready(function() {
@@ -43,6 +50,10 @@
                                     $("#add-to-cart-button-@Model.ProductId").trigger("click");
                                     return false;
                                 }
+                            });
+
+                            $("#product_enteredQuantity_@Model.ProductId").on("input propertychange paste", function () {
+                                $(document).trigger({ type: "product_quantity_changed", quantity: $('#product_enteredQuantity_@Model.ProductId').val() });
                             });
                         });
                     </script>

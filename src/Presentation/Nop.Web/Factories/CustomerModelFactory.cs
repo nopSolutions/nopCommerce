@@ -55,7 +55,6 @@ namespace Nop.Web.Factories
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
-        private readonly IDownloadService _downloadService;
         private readonly IGdprService _gdprService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
@@ -97,7 +96,6 @@ namespace Nop.Web.Factories
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IExternalAuthenticationService externalAuthenticationService,
-            IDownloadService downloadService,
             IGdprService gdprService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
@@ -135,7 +133,6 @@ namespace Nop.Web.Factories
             _customerAttributeService = customerAttributeService;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
-            _downloadService = downloadService;
             _gdprService = gdprService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
@@ -858,10 +855,10 @@ namespace Nop.Web.Factories
                 };
                 model.Items.Add(itemModel);
 
-                if (_downloadService.IsDownloadAllowed(item))
+                if (_orderService.IsDownloadAllowed(item))
                     itemModel.DownloadId = product.DownloadId;
 
-                if (_downloadService.IsLicenseDownloadAllowed(item))
+                if (_orderService.IsLicenseDownloadAllowed(item))
                     itemModel.LicenseId = item.LicenseDownloadId ?? 0;
             }
 

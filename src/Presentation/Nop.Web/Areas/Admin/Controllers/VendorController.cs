@@ -8,6 +8,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Defaults;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;

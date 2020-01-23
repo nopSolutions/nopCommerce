@@ -3,6 +3,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Shipping;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Data;
+using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -67,29 +68,24 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         }
 
         /// <summary>
+        /// Gets the transit days
+        /// </summary>
+        /// <param name="shippingMethodId">Shipping method ID</param>
+        /// <returns>Transit days</returns>
+        private int? GetTransitDays(int shippingMethodId)
+        {
+            return _settingService.GetSettingByKey<int?>(string.Format(FixedByWeightByTotalDefaults.TransitDaysSettingsKey, shippingMethodId));
+        }
+
+        /// <summary>
         /// Get rate by weight and by total
         /// </summary>
+        /// <param name="shippingByWeightByTotalRecord">Shipping by weight/by total record</param>
         /// <param name="subTotal">Subtotal</param>
         /// <param name="weight">Weight</param>
-        /// <param name="shippingMethodId">Shipping method ID</param>
-        /// <param name="storeId">Store ID</param>
-        /// <param name="warehouseId">Warehouse ID</param>
-        /// <param name="countryId">Country ID</param>
-        /// <param name="stateProvinceId">State/Province ID</param>
-        /// <param name="zip">Zip code</param>
         /// <returns>Rate</returns>
-        private decimal? GetRate(decimal subTotal, decimal weight, int shippingMethodId,
-            int storeId, int warehouseId, int countryId, int stateProvinceId, string zip)
+        private decimal GetRate(ShippingByWeightByTotalRecord shippingByWeightByTotalRecord, decimal subTotal, decimal weight)
         {
-            var shippingByWeightByTotalRecord = _shippingByWeightByTotalService.FindRecords(shippingMethodId, storeId, warehouseId, countryId, stateProvinceId, zip, weight, subTotal);
-            if (shippingByWeightByTotalRecord == null)
-            {
-                if (_fixedByWeightByTotalSettings.LimitMethodsToCreated)
-                    return null;
-
-                return decimal.Zero;
-            }
-
             //additional fixed cost
             var shippingTotal = shippingByWeightByTotalRecord.AdditionalFixedCost;
 
@@ -164,15 +160,28 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
 
                 foreach (var shippingMethod in _shippingService.GetAllShippingMethods(countryId))
                 {
-                    var rate = GetRate(subTotal, weight, shippingMethod.Id, storeId, warehouseId, countryId, stateProvinceId, zip);
-                    if (!rate.HasValue)
-                        continue;
+                    int? transitDays = null;
+                    decimal rate = decimal.Zero;
+                    
+                    var shippingByWeightByTotalRecord = _shippingByWeightByTotalService.FindRecords(
+                            shippingMethod.Id, storeId, warehouseId, countryId, stateProvinceId, zip, weight, subTotal);
+                    if (shippingByWeightByTotalRecord == null)
+                    {
+                        if (_fixedByWeightByTotalSettings.LimitMethodsToCreated)
+                            continue;
+                    }
+                    else
+                    {
+                        rate = GetRate(shippingByWeightByTotalRecord, subTotal, weight);
+                        transitDays = shippingByWeightByTotalRecord.TransitDays;
+                    }
 
                     response.ShippingOptions.Add(new ShippingOption
                     {
                         Name = _localizationService.GetLocalized(shippingMethod, x => x.Name),
                         Description = _localizationService.GetLocalized(shippingMethod, x => x.Description),
-                        Rate = rate.Value
+                        Rate = rate,
+                        TransitDays = transitDays
                     });
                 }
             }
@@ -184,7 +193,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
                 {
                     Name = _localizationService.GetLocalized(shippingMethod, x => x.Name),
                     Description = _localizationService.GetLocalized(shippingMethod, x => x.Description),
-                    Rate = GetRate(shippingMethod.Id)
+                    Rate = GetRate(shippingMethod.Id),
+                    TransitDays = GetTransitDays(shippingMethod.Id)
                 }).ToList();
             }
 
@@ -258,6 +268,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.Fields.StateProvince.Hint", "If an asterisk is selected, then this shipping rate will apply to all customers from the given country, regardless of the state.");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.Fields.Store", "Store");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.Fields.Store.Hint", "If an asterisk is selected, then this shipping rate will apply to all stores.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.Fields.TransitDays", "Transit days");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.Fields.TransitDays.Hint", "The number of days of delivery of the goods.");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.Fields.Warehouse", "Warehouse");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.Fields.Warehouse.Hint", "If an asterisk is selected, then this shipping rate will apply to all warehouses.");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.Fields.WeightFrom", "Order weight from");
@@ -315,6 +327,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
             _localizationService.DeletePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.Fields.StateProvince.Hint");
             _localizationService.DeletePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.Fields.Store");
             _localizationService.DeletePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.Fields.Store.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.Fields.TransitDays");
+            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.Fields.TransitDays.Hint");
             _localizationService.DeletePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.Fields.Warehouse");
             _localizationService.DeletePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.Fields.Warehouse.Hint");
             _localizationService.DeletePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.Fields.WeightFrom");

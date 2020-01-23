@@ -1,10 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Xml;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
+using Nop.Services.Defaults;
+using Nop.Services.Directory;
+using Nop.Services.Localization;
+using Nop.Services.Media;
 
 namespace Nop.Services.Catalog
 {
@@ -13,20 +21,33 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial class ProductAttributeParser : IProductAttributeParser
     {
+
         #region Fields
 
+        private readonly ICurrencyService _currencyService;
+        private readonly IDownloadService _downloadService;
+        private readonly ILocalizationService _localizationService;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IRepository<ProductAttributeValue> _productAttributeValueRepository;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Ctor
 
-        public ProductAttributeParser(IProductAttributeService productAttributeService,
-            IRepository<ProductAttributeValue> productAttributeValueRepository)
+        public ProductAttributeParser(ICurrencyService currencyService,
+            IDownloadService downloadService,
+            ILocalizationService localizationService,
+            IProductAttributeService productAttributeService,
+            IRepository<ProductAttributeValue> productAttributeValueRepository,
+            IWorkContext workContext)
         {
+            _currencyService = currencyService;
+            _downloadService = downloadService;
             _productAttributeService = productAttributeService;
             _productAttributeValueRepository = productAttributeValueRepository;
+            _workContext = workContext;
+            _localizationService = localizationService;
         }
 
         #endregion
@@ -145,6 +166,194 @@ namespace Nop.Services.Catalog
             }
 
             return selectedValues;
+        }
+
+        /// <summary>
+        /// Adds gift cards attributes in XML format
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="form">Form</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        protected virtual void AddGiftCardsAttributesXml(Product product, IFormCollection form, ref string attributesXml)
+        {
+            if (!product.IsGiftCard)
+                return;
+
+            var recipientName = "";
+            var recipientEmail = "";
+            var senderName = "";
+            var senderEmail = "";
+            var giftCardMessage = "";
+            foreach (var formKey in form.Keys)
+            {
+                if (formKey.Equals($"giftcard_{product.Id}.RecipientName", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    recipientName = form[formKey];
+                    continue;
+                }
+                if (formKey.Equals($"giftcard_{product.Id}.RecipientEmail", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    recipientEmail = form[formKey];
+                    continue;
+                }
+                if (formKey.Equals($"giftcard_{product.Id}.SenderName", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    senderName = form[formKey];
+                    continue;
+                }
+                if (formKey.Equals($"giftcard_{product.Id}.SenderEmail", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    senderEmail = form[formKey];
+                    continue;
+                }
+                if (formKey.Equals($"giftcard_{product.Id}.Message", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    giftCardMessage = form[formKey];
+                }
+            }
+
+            attributesXml = AddGiftCardAttribute(attributesXml, recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
+        }
+
+        /// <summary>
+        /// Gets product attributes in XML format
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="form">Form</param>
+        /// <param name="errors">Errors</param>
+        /// <returns>Attributes in XML format</returns>
+        protected virtual string GetProductAttributesXml(Product product, IFormCollection form, List<string> errors)
+        {
+            var attributesXml = string.Empty;
+            var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            foreach (var attribute in productAttributes)
+            {
+                var controlId = $"{NopAttributePrefixDefaults.Product}{attribute.Id}";
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!StringValues.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                var selectedAttributeId = int.Parse(ctrlAttributes);
+                                if (selectedAttributeId > 0)
+                                {
+                                    //get quantity entered by customer
+                                    var quantity = 1;
+                                    var quantityStr = form[$"{NopAttributePrefixDefaults.Product}{attribute.Id}_{selectedAttributeId}_qty"];
+                                    if (!StringValues.IsNullOrEmpty(quantityStr) &&
+                                        (!int.TryParse(quantityStr, out quantity) || quantity < 1))
+                                        errors.Add(_localizationService.GetResource("Products.QuantityShouldBePositive"));
+
+                                    attributesXml = AddProductAttribute(attributesXml,
+                                        attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
+                                }
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!StringValues.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                foreach (var item in ctrlAttributes.ToString()
+                                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    var selectedAttributeId = int.Parse(item);
+                                    if (selectedAttributeId > 0)
+                                    {
+                                        //get quantity entered by customer
+                                        var quantity = 1;
+                                        var quantityStr = form[$"{NopAttributePrefixDefaults.Product}{attribute.Id}_{item}_qty"];
+                                        if (!StringValues.IsNullOrEmpty(quantityStr) &&
+                                            (!int.TryParse(quantityStr, out quantity) || quantity < 1))
+                                            errors.Add(_localizationService.GetResource("Products.QuantityShouldBePositive"));
+
+                                        attributesXml = AddProductAttribute(attributesXml,
+                                            attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //load read-only (already server-side selected) values
+                            var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
+                            foreach (var selectedAttributeId in attributeValues
+                                .Where(v => v.IsPreSelected)
+                                .Select(v => v.Id)
+                                .ToList())
+                            {
+                                //get quantity entered by customer
+                                var quantity = 1;
+                                var quantityStr = form[$"{NopAttributePrefixDefaults.Product}{attribute.Id}_{selectedAttributeId}_qty"];
+                                if (!StringValues.IsNullOrEmpty(quantityStr) &&
+                                    (!int.TryParse(quantityStr, out quantity) || quantity < 1))
+                                    errors.Add(_localizationService.GetResource("Products.QuantityShouldBePositive"));
+
+                                attributesXml = AddProductAttribute(attributesXml,
+                                    attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!StringValues.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                var enteredText = ctrlAttributes.ToString().Trim();
+                                attributesXml = AddProductAttribute(attributesXml, attribute, enteredText);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                        {
+                            var day = form[controlId + "_day"];
+                            var month = form[controlId + "_month"];
+                            var year = form[controlId + "_year"];
+                            DateTime? selectedDate = null;
+                            try
+                            {
+                                selectedDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day));
+                            }
+                            catch
+                            {
+                            }
+                            if (selectedDate.HasValue)
+                                attributesXml = AddProductAttribute(attributesXml, attribute, selectedDate.Value.ToString("D"));
+                        }
+                        break;
+                    case AttributeControlType.FileUpload:
+                        {
+                            Guid.TryParse(form[controlId], out var downloadGuid);
+                            var download = _downloadService.GetDownloadByGuid(downloadGuid);
+                            if (download != null)
+                            {
+                                attributesXml = AddProductAttribute(attributesXml,
+                                    attribute, download.DownloadGuid.ToString());
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            //validate conditional attributes (if specified)
+            foreach (var attribute in productAttributes)
+            {
+                var conditionMet = IsConditionMet(attribute, attributesXml);
+                if (conditionMet.HasValue && !conditionMet.Value)
+                {
+                    attributesXml = RemoveProductAttribute(attributesXml, attribute);
+                }
+            }
+            return attributesXml;
         }
 
         #endregion
@@ -546,7 +755,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(product));
 
             //anyway combination cannot contains non combinable attributes
-            if (String.IsNullOrEmpty(attributesXml))
+            if (string.IsNullOrEmpty(attributesXml))
                 return null;
 
             var combinations = _productAttributeService.GetAllProductAttributeCombinations(product.Id);
@@ -661,6 +870,121 @@ namespace Nop.Services.Catalog
             }
 
             return allAttributesXml;
+        }
+
+        /// <summary>
+        /// Parse a customer entered price of the product
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="form">Form</param>
+        /// <returns>Customer entered price of the product</returns>
+        public virtual decimal ParseCustomerEnteredPrice(Product product, IFormCollection form)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+            if (form == null)
+                throw new ArgumentNullException(nameof(form));
+
+            var customerEnteredPriceConverted = decimal.Zero;
+            if (product.CustomerEntersPrice)
+            {
+                foreach (var formKey in form.Keys)
+                {
+                    if (formKey.Equals($"addtocart_{product.Id}.CustomerEnteredPrice", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        if (decimal.TryParse(form[formKey], out var customerEnteredPrice))
+                            customerEnteredPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(customerEnteredPrice, _workContext.WorkingCurrency);
+                        break;
+                    }
+                }
+            }
+
+            return customerEnteredPriceConverted;
+        }
+
+        /// <summary>
+        /// Parse a entered quantity of the product
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="form">Form</param>
+        /// <returns>Customer entered price of the product</returns>
+        public virtual int ParseEnteredQuantity(Product product, IFormCollection form)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+            if (form == null)
+                throw new ArgumentNullException(nameof(form));
+
+            var quantity = 1;
+            foreach (var formKey in form.Keys)
+            {
+                if (formKey.Equals($"addtocart_{product.Id}.EnteredQuantity", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    int.TryParse(form[formKey], out quantity);
+                    break;
+                }
+            }
+
+            return quantity;
+        }
+
+        /// <summary>
+        /// Parse product rental dates on the product details page
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="form">Form</param>
+        /// <param name="startDate">Start date</param>
+        /// <param name="endDate">End date</param>
+        public virtual void ParseRentalDates(Product product, IFormCollection form, out DateTime? startDate, out DateTime? endDate)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+            if (form == null)
+                throw new ArgumentNullException(nameof(form));
+
+            startDate = null;
+            endDate = null;
+
+            if (product.IsRental)
+            {
+                var startControlId = $"rental_start_date_{product.Id}";
+                var endControlId = $"rental_end_date_{product.Id}";
+                var ctrlStartDate = form[startControlId];
+                var ctrlEndDate = form[endControlId];
+                try
+                {
+                    //currently we support only this format (as in the \Views\Product\_RentalInfo.cshtml file)
+                    const string datePickerFormat = "d";
+                    startDate = DateTime.ParseExact(ctrlStartDate, datePickerFormat, CultureInfo.InvariantCulture);
+                    endDate = DateTime.ParseExact(ctrlEndDate, datePickerFormat, CultureInfo.InvariantCulture);
+                }
+                catch
+                {
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get product attributes from the passed form
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="form">Form values</param>
+        /// <param name="errors">Errors</param>
+        /// <returns>Attributes in XML format</returns>
+        public virtual string ParseProductAttributes(Product product, IFormCollection form, List<string> errors)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+            if (form == null)
+                throw new ArgumentNullException(nameof(form));
+
+            //product attributes
+            var attributesXml = GetProductAttributesXml(product, form, errors);
+
+            //gift cards
+            AddGiftCardsAttributesXml(product, form, ref attributesXml);
+
+            return attributesXml;
         }
 
         #endregion

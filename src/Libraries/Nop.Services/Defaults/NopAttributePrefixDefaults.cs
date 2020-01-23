@@ -1,6 +1,4 @@
-﻿
-
-namespace Nop.Web.Framework.Controllers
+﻿namespace Nop.Services.Defaults
 {
     public static partial class NopAttributePrefixDefaults
     {

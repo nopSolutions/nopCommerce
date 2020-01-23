@@ -67,7 +67,7 @@ namespace Nop.Web.Controllers
 
             var order = _orderService.GetOrderById(orderItem.OrderId);
             
-            if (!_downloadService.IsDownloadAllowed(orderItem))
+            if (!_orderService.IsDownloadAllowed(orderItem))
                 return Content("Downloads are not allowed");
 
             if (_customerSettings.DownloadableProductsValidateUser)
@@ -126,7 +126,7 @@ namespace Nop.Web.Controllers
 
             var order = _orderService.GetOrderById(orderItem.OrderId);
 
-            if (!_downloadService.IsLicenseDownloadAllowed(orderItem))
+            if (!_orderService.IsLicenseDownloadAllowed(orderItem))
                 return Content("Downloads are not allowed");
 
             if (_customerSettings.DownloadableProductsValidateUser)

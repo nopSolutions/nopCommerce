@@ -498,7 +498,7 @@ namespace Nop.Services.Messages
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + WebUtility.HtmlEncode(productName));
 
                 //add download link
-                if (_downloadService.IsDownloadAllowed(orderItem))
+                if (_orderService.IsDownloadAllowed(orderItem))
                 {
                     var downloadUrl = RouteUrl(order.StoreId, "GetDownload", new { orderItemId = orderItem.OrderItemGuid });
                     var downloadLink = $"<a class=\"link\" href=\"{downloadUrl}\">{_localizationService.GetResource("Messages.Order.Product(s).Download", languageId)}</a>";
@@ -506,7 +506,7 @@ namespace Nop.Services.Messages
                     sb.AppendLine(downloadLink);
                 }
                 //add download link
-                if (_downloadService.IsLicenseDownloadAllowed(orderItem))
+                if (_orderService.IsLicenseDownloadAllowed(orderItem))
                 {
                     var licenseUrl = RouteUrl(order.StoreId, "GetLicense", new { orderItemId = orderItem.OrderItemGuid });
                     var licenseLink = $"<a class=\"link\" href=\"{licenseUrl}\">{_localizationService.GetResource("Messages.Order.Product(s).License", languageId)}</a>";

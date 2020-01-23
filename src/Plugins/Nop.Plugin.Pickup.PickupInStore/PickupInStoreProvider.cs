@@ -91,7 +91,8 @@ namespace Nop.Plugin.Pickup.PickupInStore
                     DisplayOrder = point.DisplayOrder,
                     ProviderSystemName = PluginDescriptor.SystemName,
                     Latitude = point.Latitude,
-                    Longitude = point.Longitude
+                    Longitude = point.Longitude,
+                    TransitDays = point.TransitDays
                 });                
             }
 
@@ -162,6 +163,8 @@ namespace Nop.Plugin.Pickup.PickupInStore
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.PickupFee.Hint", "Specify a fee for the shipping to the pickup point.");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.Store", "Store");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.Store.Hint", "A store name for which this pickup point will be available.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.TransitDays", "Transit days");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.TransitDays.Hint", "The number of days of delivery of the goods to pickup point.");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.NoPickupPoints", "No pickup points are available");
 
             base.Install();
@@ -196,6 +199,8 @@ namespace Nop.Plugin.Pickup.PickupInStore
             _localizationService.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.PickupFee.Hint");
             _localizationService.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.Store");
             _localizationService.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.Store.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.TransitDays");
+            _localizationService.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.TransitDays.Hint");
             _localizationService.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.NoPickupPoints");
 
             base.Uninstall();

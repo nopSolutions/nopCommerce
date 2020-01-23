@@ -7,9 +7,11 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
 using Nop.Core.Html;
 using Nop.Data;
 using Nop.Services.Caching.Extensions;
+using Nop.Services.Catalog;
 using Nop.Services.Events;
 using Nop.Services.Shipping;
 
@@ -23,6 +25,7 @@ namespace Nop.Services.Orders
         #region Fields
 
         private readonly IEventPublisher _eventPublisher;
+        private readonly IProductService _productService;
         private readonly IRepository<Address> _addressRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Order> _orderRepository;
@@ -39,6 +42,7 @@ namespace Nop.Services.Orders
         #region Ctor
 
         public OrderService(IEventPublisher eventPublisher,
+            IProductService productService,
             IRepository<Address> addressRepository,
             IRepository<Customer> customerRepository,
             IRepository<Order> orderRepository,
@@ -51,6 +55,7 @@ namespace Nop.Services.Orders
             IShipmentService shipmentService)
         {
             _eventPublisher = eventPublisher;
+            _productService = productService;
             _addressRepository = addressRepository;
             _customerRepository = customerRepository;
             _orderRepository = orderRepository;
@@ -692,6 +697,90 @@ namespace Nop.Services.Orders
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether download is allowed
+        /// </summary>
+        /// <param name="orderItem">Order item to check</param>
+        /// <returns>True if download is allowed; otherwise, false.</returns>
+        public virtual bool IsDownloadAllowed(OrderItem orderItem)
+        {
+            if (orderItem is null)
+                return false;
+
+            var order = GetOrderById(orderItem.OrderId);
+            if (order == null || order.Deleted)
+                return false;
+
+            //order status
+            if (order.OrderStatus == OrderStatus.Cancelled)
+                return false;
+
+            var product = _productService.GetProductById(orderItem.ProductId);
+
+            if (product == null || !product.IsDownload)
+                return false;
+
+            //payment status
+            switch (product.DownloadActivationType)
+            {
+                case DownloadActivationType.WhenOrderIsPaid:
+                    if (order.PaymentStatus == PaymentStatus.Paid && order.PaidDateUtc.HasValue)
+                    {
+                        //expiration date
+                        if (product.DownloadExpirationDays.HasValue)
+                        {
+                            if (order.PaidDateUtc.Value.AddDays(product.DownloadExpirationDays.Value) > DateTime.UtcNow)
+                            {
+                                return true;
+                            }
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+
+                    break;
+                case DownloadActivationType.Manually:
+                    if (orderItem.IsDownloadActivated)
+                    {
+                        //expiration date
+                        if (product.DownloadExpirationDays.HasValue)
+                        {
+                            if (order.CreatedOnUtc.AddDays(product.DownloadExpirationDays.Value) > DateTime.UtcNow)
+                            {
+                                return true;
+                            }
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether license download is allowed
+        /// </summary>
+        /// <param name="orderItem">Order item to check</param>
+        /// <returns>True if license download is allowed; otherwise, false.</returns>
+        public virtual bool IsLicenseDownloadAllowed(OrderItem orderItem)
+        {
+            if (orderItem == null)
+                return false;
+
+            return IsDownloadAllowed(orderItem) &&
+                orderItem.LicenseDownloadId.HasValue &&
+                orderItem.LicenseDownloadId > 0;
         }
 
         /// <summary>

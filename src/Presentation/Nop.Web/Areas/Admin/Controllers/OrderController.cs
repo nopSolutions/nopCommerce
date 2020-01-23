@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
@@ -178,178 +177,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return true;
 
             return HasAccessToOrder(shipment.OrderId);
-        }
-
-        /// <summary>
-        /// Parse product attributes on the add product to order details page
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="form">Form</param>
-        /// <param name="errors">Errors</param>
-        /// <returns>Parsed attributes</returns>
-        protected virtual string ParseProductAttributes(Product product, IFormCollection form, List<string> errors)
-        {
-            var attributesXml = string.Empty;
-
-            var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
-            foreach (var attribute in productAttributes)
-            {
-                var controlId = $"{NopAttributePrefixDefaults.Product}{attribute.Id}";
-                StringValues ctrlAttributes;
-
-                switch (attribute.AttributeControlType)
-                {
-                    case AttributeControlType.DropdownList:
-                    case AttributeControlType.RadioList:
-                    case AttributeControlType.ColorSquares:
-                    case AttributeControlType.ImageSquares:
-                        ctrlAttributes = form[controlId];
-                        if (!StringValues.IsNullOrEmpty(ctrlAttributes))
-                        {
-                            var selectedAttributeId = int.Parse(ctrlAttributes);
-                            if (selectedAttributeId > 0)
-                            {
-                                //get quantity entered by customer
-                                var quantity = 1;
-                                var quantityStr = form[$"{NopAttributePrefixDefaults.Product}{attribute.Id}_{selectedAttributeId}_qty"];
-                                if (!StringValues.IsNullOrEmpty(quantityStr) &&
-                                    (!int.TryParse(quantityStr, out quantity) || quantity < 1))
-                                    errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
-
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
-                            }
-                        }
-
-                        break;
-                    case AttributeControlType.Checkboxes:
-                        ctrlAttributes = form[controlId];
-                        if (!StringValues.IsNullOrEmpty(ctrlAttributes))
-                        {
-                            foreach (var item in ctrlAttributes.ToString()
-                                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                            {
-                                var selectedAttributeId = int.Parse(item);
-                                if (selectedAttributeId <= 0)
-                                    continue;
-
-                                //get quantity entered by customer
-                                var quantity = 1;
-                                var quantityStr = form[$"{NopAttributePrefixDefaults.Product}{attribute.Id}_{item}_qty"];
-                                if (!StringValues.IsNullOrEmpty(quantityStr) &&
-                                    (!int.TryParse(quantityStr, out quantity) || quantity < 1))
-                                    errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
-
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
-                            }
-                        }
-
-                        break;
-                    case AttributeControlType.ReadonlyCheckboxes:
-                        //load read-only (already server-side selected) values
-                        var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
-                        foreach (var selectedAttributeId in attributeValues
-                            .Where(v => v.IsPreSelected)
-                            .Select(v => v.Id)
-                            .ToList())
-                        {
-                            //get quantity entered by customer
-                            var quantity = 1;
-                            var quantityStr = form[$"{NopAttributePrefixDefaults.Product}{attribute.Id}_{selectedAttributeId}_qty"];
-                            if (!StringValues.IsNullOrEmpty(quantityStr) &&
-                                (!int.TryParse(quantityStr, out quantity) || quantity < 1))
-                                errors.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
-
-                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
-                        }
-
-                        break;
-                    case AttributeControlType.TextBox:
-                    case AttributeControlType.MultilineTextbox:
-                        ctrlAttributes = form[controlId];
-                        if (!StringValues.IsNullOrEmpty(ctrlAttributes))
-                        {
-                            var enteredText = ctrlAttributes.ToString().Trim();
-                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                attribute, enteredText);
-                        }
-
-                        break;
-                    case AttributeControlType.Datepicker:
-
-                        var day = form[controlId + "_day"];
-                        var month = form[controlId + "_month"];
-                        var year = form[controlId + "_year"];
-                        DateTime? selectedDate = null;
-                        try
-                        {
-                            selectedDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day));
-                        }
-                        catch
-                        {
-                            // ignored
-                        }
-
-                        if (selectedDate.HasValue)
-                        {
-                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                attribute, selectedDate.Value.ToString("D"));
-                        }
-
-                        break;
-                    case AttributeControlType.FileUpload:
-
-                        Guid.TryParse(form[controlId], out var downloadGuid);
-                        var download = _downloadService.GetDownloadByGuid(downloadGuid);
-                        if (download != null)
-                        {
-                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                attribute, download.DownloadGuid.ToString());
-                        }
-
-                        break;
-                    default:
-                        break;
-                }
-            }
-            //validate conditional attributes (if specified)
-            foreach (var attribute in productAttributes)
-            {
-                var conditionMet = _productAttributeParser.IsConditionMet(attribute, attributesXml);
-                if (conditionMet.HasValue && !conditionMet.Value)
-                {
-                    attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
-                }
-            }
-
-            return attributesXml;
-        }
-
-        /// <summary>
-        /// Parse rental dates on the add product to order details page
-        /// </summary>
-        /// <param name="form">Form</param>
-        /// <param name="startDate">Start date</param>
-        /// <param name="endDate">End date</param>
-        protected virtual void ParseRentalDates(IFormCollection form, out DateTime? startDate, out DateTime? endDate)
-        {
-            startDate = null;
-            endDate = null;
-
-            var ctrlStartDate = form["rental_start_date"];
-            var ctrlEndDate = form["rental_end_date"];
-            try
-            {
-                const string datePickerFormat = "MM/dd/yyyy";
-                startDate = DateTime.ParseExact(ctrlStartDate, datePickerFormat, CultureInfo.InvariantCulture);
-                endDate = DateTime.ParseExact(ctrlEndDate, datePickerFormat, CultureInfo.InvariantCulture);
-            }
-            catch
-            {
-                // ignored
-            }
         }
 
         protected virtual void LogEditOrder(int orderId)
@@ -1266,7 +1093,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return new NullJsonResult();
 
             var errors = new List<string>();
-            var attributeXml = ParseProductAttributes(product, form, errors);
+            var attributeXml = _productAttributeParser.ParseProductAttributes(product, form, errors);
 
             //conditional attributes
             var enabledAttributeMappingIds = new List<int>();
@@ -1889,18 +1716,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var warnings = new List<string>();
 
             //attributes
-            var attributesXml = ParseProductAttributes(product, form, warnings);
+            var attributesXml = _productAttributeParser.ParseProductAttributes(product, form, warnings);
 
             //gift cards
             attributesXml = AddGiftCards(form, product, attributesXml, out var recipientName, out var recipientEmail, out var senderName, out var senderEmail, out var giftCardMessage);
 
             //rental product
-            DateTime? rentalStartDate = null;
-            DateTime? rentalEndDate = null;
-            if (product.IsRental)
-            {
-                ParseRentalDates(form, out rentalStartDate, out rentalEndDate);
-            }
+            _productAttributeParser.ParseRentalDates(product, form, out var rentalStartDate, out var rentalEndDate);
 
             //warnings
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(customer, ShoppingCartType.ShoppingCart, product, quantity, attributesXml));
