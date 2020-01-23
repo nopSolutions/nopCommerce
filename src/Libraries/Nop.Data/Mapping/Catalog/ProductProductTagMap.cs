@@ -16,15 +16,15 @@ namespace Nop.Data.Mapping.Catalog
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityMappingBuilder<ProductProductTagMapping> builder)
         {
-            builder.HasTableName(NopMappingDefaults.ProductProductTagTable);
+            builder.HasTableName(nameof(ProductProductTagMapping));
             builder.HasPrimaryKey(mapping => new
             {
                 mapping.ProductId,
                 mapping.ProductTagId
             });
 
-            builder.Property(mapping => mapping.ProductId).HasColumnName("Product_Id");
-            builder.Property(mapping => mapping.ProductTagId).HasColumnName("ProductTag_Id");
+            builder.Property(mapping => mapping.ProductId);
+            builder.Property(mapping => mapping.ProductTagId);
 
             builder.Ignore(mapping => mapping.Id);
         }

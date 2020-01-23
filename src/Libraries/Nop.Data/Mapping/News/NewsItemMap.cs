@@ -16,7 +16,7 @@ namespace Nop.Data.Mapping.News
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityMappingBuilder<NewsItem> builder)
         {
-            builder.HasTableName(NopMappingDefaults.NewsItemTable);
+            builder.HasTableName(nameof(NewsItem));
 
             builder.Property(newsItem => newsItem.Title).IsNullable(false);
             builder.Property(newsItem => newsItem.Short).IsNullable(false);

@@ -466,7 +466,7 @@ namespace Nop.Services.Localization
             {
                 _lsrRepository.Update(lrsToUpdate);
             }
-
+            
             _lsrRepository.Insert(lrsToInsertList);
 
             //clear cache

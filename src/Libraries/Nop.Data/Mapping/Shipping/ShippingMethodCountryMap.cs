@@ -16,15 +16,15 @@ namespace Nop.Data.Mapping.Shipping
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityMappingBuilder<ShippingMethodCountryMapping> builder)
         {
-            builder.HasTableName(NopMappingDefaults.ShippingMethodRestrictionsTable);
+            builder.HasTableName(nameof(ShippingMethodCountryMapping));
             builder.HasPrimaryKey(mapping => new
             {
                 mapping.ShippingMethodId,
                 mapping.CountryId
             });
 
-            builder.Property(mapping => mapping.ShippingMethodId).HasColumnName("ShippingMethod_Id");
-            builder.Property(mapping => mapping.CountryId).HasColumnName("Country_Id");
+            builder.Property(mapping => mapping.ShippingMethodId);
+            builder.Property(mapping => mapping.CountryId);
 
             builder.Ignore(mapping => mapping.Id);
         }

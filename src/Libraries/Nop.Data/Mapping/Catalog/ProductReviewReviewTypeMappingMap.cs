@@ -16,7 +16,7 @@ namespace Nop.Data.Mapping.Catalog
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityMappingBuilder<ProductReviewReviewTypeMapping> builder)
         {
-            builder.HasTableName(NopMappingDefaults.ProductReviewReviewTypeTable);
+            builder.HasTableName(nameof(ProductReviewReviewTypeMapping));
 
             builder.Property(prrt => prrt.ProductReviewId);
             builder.Property(prrt => prrt.ReviewTypeId);

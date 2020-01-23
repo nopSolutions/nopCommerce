@@ -16,7 +16,7 @@ namespace Nop.Data.Mapping.Catalog
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityMappingBuilder<ProductSpecificationAttribute> builder)
         {
-            builder.HasTableName(NopMappingDefaults.ProductSpecificationAttributeTable);
+            builder.HasTableName(nameof(ProductSpecificationAttribute));
 
             builder.Property(productSpecificationAttribute => productSpecificationAttribute.CustomValue).HasLength(4000);
             builder.Property(productspecificationattribute => productspecificationattribute.ProductId);
@@ -25,7 +25,7 @@ namespace Nop.Data.Mapping.Catalog
             builder.Property(productspecificationattribute => productspecificationattribute.AllowFiltering);
             builder.Property(productspecificationattribute => productspecificationattribute.ShowOnProductPage);
             builder.Property(productspecificationattribute => productspecificationattribute.DisplayOrder);
-          
+
             builder.Ignore(productSpecificationAttribute => productSpecificationAttribute.AttributeType);
         }
 

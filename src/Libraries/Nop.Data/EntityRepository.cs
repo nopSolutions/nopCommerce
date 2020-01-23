@@ -61,17 +61,14 @@ namespace Nop.Data
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
+
             using (var dataConnection = _dataProvider.CreateDataContext())
             {
                 dataConnection.BeginTransaction();
 
                 try
                 {
-                    foreach (var entity in entities)
-                    {
-                        Insert(entity);
-                    }
-
+                    dataConnection.BulkInsertEntities(entities);
                     dataConnection.CommitTransaction();
                 }
                 catch

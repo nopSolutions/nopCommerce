@@ -16,7 +16,7 @@ namespace Nop.Data.Mapping.Catalog
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityMappingBuilder<ProductAttributeMapping> builder)
         {
-            builder.HasTableName(NopMappingDefaults.ProductProductAttributeTable);
+            builder.HasTableName(nameof(ProductAttributeMapping));
 
             builder.Property(productattributemapping => productattributemapping.ProductId);
             builder.Property(productattributemapping => productattributemapping.ProductAttributeId);

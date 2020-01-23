@@ -16,11 +16,11 @@ namespace Nop.Data.Mapping.Customers
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityMappingBuilder<CustomerCustomerRoleMapping> builder)
         {
-            builder.HasTableName(NopMappingDefaults.CustomerCustomerRoleTable);
+            builder.HasTableName(nameof(CustomerCustomerRoleMapping));
             builder.HasPrimaryKey(mapping => new { mapping.CustomerId, mapping.CustomerRoleId });
 
-            builder.Property(mapping => mapping.CustomerId).HasColumnName("Customer_Id");
-            builder.Property(mapping => mapping.CustomerRoleId).HasColumnName("CustomerRole_Id");
+            builder.Property(mapping => mapping.CustomerId);
+            builder.Property(mapping => mapping.CustomerRoleId);
 
             builder.Ignore(mapping => mapping.Id);
         }

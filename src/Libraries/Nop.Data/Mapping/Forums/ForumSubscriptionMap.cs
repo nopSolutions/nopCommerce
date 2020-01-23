@@ -16,7 +16,7 @@ namespace Nop.Data.Mapping.Forums
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityMappingBuilder<ForumSubscription> builder)
         {
-            builder.HasTableName(NopMappingDefaults.ForumsSubscriptionTable);
+            builder.HasTableName(nameof(ForumSubscription));
 
             builder.Property(subscription => subscription.SubscriptionGuid);
             builder.Property(subscription => subscription.CustomerId);

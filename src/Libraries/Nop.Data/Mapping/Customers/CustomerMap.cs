@@ -24,8 +24,8 @@ namespace Nop.Data.Mapping.Customers
             builder.Property(customer => customer.EmailToRevalidate).HasLength(1000);
             builder.Property(customer => customer.SystemName).HasLength(400).HasDataType(DataType.NVarChar);
 
-            builder.Property(customer => customer.BillingAddressId).HasColumnName("BillingAddress_Id");
-            builder.Property(customer => customer.ShippingAddressId).HasColumnName("ShippingAddress_Id");
+            builder.Property(customer => customer.BillingAddressId);
+            builder.Property(customer => customer.ShippingAddressId);
 
             builder.Property(customer => customer.CustomerGuid);
             builder.Property(customer => customer.AdminComment);

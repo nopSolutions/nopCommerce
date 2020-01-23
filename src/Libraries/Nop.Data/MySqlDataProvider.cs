@@ -202,7 +202,7 @@ namespace Nop.Data
         public void ExecuteSqlScript(string sql)
         {
             var sqlCommands = GetCommandsFromScript(sql);
-            using (var currentConnection = new NopDataConnection())
+            using (var currentConnection = CreateDataContext())
             {
                 foreach (var command in sqlCommands)
                     currentConnection.Execute(command);

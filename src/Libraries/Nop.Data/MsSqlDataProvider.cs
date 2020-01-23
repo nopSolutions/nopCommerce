@@ -203,7 +203,7 @@ namespace Nop.Data
         public void ExecuteSqlScript(string sql)
         {
             var sqlCommands = GetCommandsFromScript(sql);
-            using (var currentConnection = new NopDataConnection())
+            using (var currentConnection = CreateDataContext())
             {
                 foreach (var command in sqlCommands)
                     currentConnection.Execute(command);
@@ -230,7 +230,7 @@ namespace Nop.Data
         /// <returns>Integer identity; null if cannot get the result</returns>
         public virtual int? GetTableIdent<T>() where T : BaseEntity
         {
-            using (var currentConnection = new NopDataConnection())
+            using (var currentConnection = CreateDataContext())
             {
                 var tableName = currentConnection.GetTable<T>().TableName;
 
@@ -248,7 +248,7 @@ namespace Nop.Data
         /// <param name="ident">Identity value</param>
         public virtual void SetTableIdent<T>(int ident) where T : BaseEntity
         {
-            using (var currentConnection = new NopDataConnection())
+            using (var currentConnection = CreateDataContext())
             {
                 var currentIdent = GetTableIdent<T>();
                 if (!currentIdent.HasValue || ident <= currentIdent.Value)
@@ -268,7 +268,7 @@ namespace Nop.Data
             CheckBackupSupported();
             //var fileName = _fileProvider.Combine(GetBackupDirectoryPath(), $"database_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(10)}.{NopCommonDefaults.DbBackupFileExtension}");
 
-            using (var currentConnection = new NopDataConnection())
+            using (var currentConnection = CreateDataContext())
             {
                 var commandText = $"BACKUP DATABASE [{currentConnection.Connection.Database}] TO DISK = '{fileName}' WITH FORMAT";
                 currentConnection.Execute(commandText);
@@ -283,7 +283,7 @@ namespace Nop.Data
         {
             CheckBackupSupported();
 
-            using (var currentConnection = new NopDataConnection())
+            using (var currentConnection = CreateDataContext())
             {
                 var commandText = string.Format(
                     "DECLARE @ErrorMessage NVARCHAR(4000)\n" +
@@ -311,7 +311,7 @@ namespace Nop.Data
         /// </summary>
         public virtual void ReIndexTables()
         {
-            using (var currentConnection = new NopDataConnection())
+            using (var currentConnection = CreateDataContext())
             {
                 var commandText = $@"
                         DECLARE @TableName sysname 

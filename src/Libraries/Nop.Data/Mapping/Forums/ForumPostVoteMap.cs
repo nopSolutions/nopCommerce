@@ -16,7 +16,7 @@ namespace Nop.Data.Mapping.Forums
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityMappingBuilder<ForumPostVote> builder)
         {
-            builder.HasTableName(NopMappingDefaults.ForumsPostVoteTable);
+            builder.HasTableName(nameof(ForumPostVote));
 
             builder.Property(forumpostvote => forumpostvote.ForumPostId);
             builder.Property(forumpostvote => forumpostvote.CustomerId);

@@ -16,15 +16,15 @@ namespace Nop.Data.Mapping.Security
         /// <param name="builder">The builder to be used to configure the entity</param>
         public override void Configure(EntityMappingBuilder<PermissionRecordCustomerRoleMapping> builder)
         {
-            builder.HasTableName(NopMappingDefaults.PermissionRecordRoleTable);
+            builder.HasTableName(nameof(PermissionRecordCustomerRoleMapping));
             builder.HasPrimaryKey(mapping => new
             {
                 mapping.PermissionRecordId,
                 mapping.CustomerRoleId
             });
 
-            builder.Property(mapping => mapping.PermissionRecordId).HasColumnName("PermissionRecord_Id");
-            builder.Property(mapping => mapping.CustomerRoleId).HasColumnName("CustomerRole_Id");
+            builder.Property(mapping => mapping.PermissionRecordId);
+            builder.Property(mapping => mapping.CustomerRoleId);
 
             builder.Ignore(mapping => mapping.Id);
         }

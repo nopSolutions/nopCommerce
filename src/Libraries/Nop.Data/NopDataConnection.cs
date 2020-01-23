@@ -16,11 +16,6 @@ namespace Nop.Data
     {
         #region Ctor
 
-        public NopDataConnection()
-        {
-            AddMappingSchema(AdditionalSchema);
-        }
-
         public NopDataConnection(INopDataProvider nopDataProvider) : base(nopDataProvider, nopDataProvider.CreateDbConnection())
         {
             AddMappingSchema(AdditionalSchema);
