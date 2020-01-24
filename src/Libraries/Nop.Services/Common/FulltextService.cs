@@ -1,4 +1,5 @@
 ﻿using System;
+using Nop.Data;
 
 //TODO: 239 try to implement FulltextService
 namespace Nop.Services.Common
@@ -9,13 +10,16 @@ namespace Nop.Services.Common
     public partial class FulltextService : IFulltextService
     {
         #region Fields
-        
+
+        private INopDataProvider _dataProvider;
+
         #endregion
 
         #region Ctor
 
-        public FulltextService()
+        public FulltextService(INopDataProvider dataProvider)
         {
+            _dataProvider = dataProvider;
         }
 
         #endregion
@@ -28,7 +32,10 @@ namespace Nop.Services.Common
         /// <returns>Result</returns>
         public virtual bool IsFullTextSupported()
         {
-            return false;
+            using (var dataContext = _dataProvider.CreateDataContext())
+            {
+                return dataContext.ExecuteStoredProcedure<bool>("FullText_IsSupported");
+            }
         }
 
         /// <summary>
@@ -36,7 +43,10 @@ namespace Nop.Services.Common
         /// </summary>
         public virtual void EnableFullText()
         {
-            throw new NotImplementedException();
+            using (var dataContext = _dataProvider.CreateDataContext())
+            {
+                dataContext.ExecuteStoredProcedure("FullText_Enable");
+            }
         }
 
         /// <summary>
@@ -44,7 +54,10 @@ namespace Nop.Services.Common
         /// </summary>
         public virtual void DisableFullText()
         {
-            throw new NotImplementedException();
+            using (var dataContext = _dataProvider.CreateDataContext())
+            {
+                dataContext.ExecuteStoredProcedure("FullText_Disable");
+            }
         }
 
         #endregion

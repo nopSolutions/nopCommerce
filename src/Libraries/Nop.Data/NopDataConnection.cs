@@ -25,19 +25,18 @@ namespace Nop.Data
 
         #region Utils
 
-        private DataParameter GetParameterForCurrentCommand(string parameterName, ParameterDirection direction = ParameterDirection.Output)
+        private void UpdateParameterValue(DataParameter parameter)
         {
-            if(string.IsNullOrWhiteSpace(parameterName))
-                throw new ArgumentNullException(nameof(parameterName));
+            if(parameter is null)
+                throw new ArgumentNullException(nameof(parameter));
             
-            if(Command == null || Command.Parameters.Count == 0 || !Command.Parameters.Contains(parameterName))
-                return null;
+            if(Command == null || Command.Parameters.Count == 0 || !Command.Parameters.Contains(parameter.Name))
+                return;;
 
-            var dataParams = Command.Parameters.Cast<DataParameter>();
-
-            return dataParams.FirstOrDefault(p => parameterName.Equals(p.Name, StringComparison.OrdinalIgnoreCase) ||
-                p.Direction == direction);
-
+            if(Command.Parameters[parameter.Name] is IDbDataParameter param)
+            {
+                parameter.Value = param.Value;
+            }
         }
 
         private void UpdateOutputParameters(DataParameter[] dataParameters)
@@ -45,14 +44,9 @@ namespace Nop.Data
             if(dataParameters is null|| dataParameters.Length == 0)
                 return;
 
-            foreach (var dataParam in dataParameters)
+            foreach (var dataParam in dataParameters.Where(p => p.Direction == ParameterDirection.Output))
             {
-                var currentParam = GetParameterForCurrentCommand(dataParam.Name);
-                
-                if(currentParam != null)
-                {
-                    dataParam.Value = currentParam.Value;
-                }
+                UpdateParameterValue(dataParam);
             }
         }
 
@@ -60,31 +54,56 @@ namespace Nop.Data
 
         #region Methods
 
-        public void ExecuteNonQuery(string sqlStatement, params DataParameter[] dataParameters)
+        /// <summary>
+        /// Executes command asynchronously and returns number of affected records.
+        /// </summary>
+        /// <param name="sqlStatement">Command text</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Number of records, affected by command execution.</returns>
+        public int ExecuteNonQuery(string sqlStatement, params DataParameter[] parameters)
         {
-            var command = new CommandInfo(this, sqlStatement, dataParameters);
-            command.Execute();
+            var command = new CommandInfo(this, sqlStatement, parameters);
+            var affectedRecords = command.Execute();
 
-            UpdateOutputParameters(dataParameters);
+            UpdateOutputParameters(parameters);
+
+            return affectedRecords;
         }
 
         /// <summary>
-        /// Executes command using System.Data.CommandType.StoredProcedure command type and
-        /// returns results as collection of values of specified type
+        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
+        /// single value
         /// </summary>
         /// <typeparam name="TEntity">Result record type</typeparam>
-        /// <param name="storeProcedureName">Procedure name</param>
-        /// <param name="dataParameters">Command parameters</param>
-        /// <returns>Returns collection of query result records</returns>
-        public IList<TEntity> ExecuteStoredProcedure<TEntity>(string storeProcedureName, params DataParameter[] dataParameters)
+        /// <param name="procedureName">Procedure name</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Resulting value</returns>
+        public T ExecuteStoredProcedure<T>(string procedureName, params DataParameter[] parameters)
         {
-            var command = new CommandInfo(this, storeProcedureName, dataParameters);
+            var command = new CommandInfo(this, procedureName, parameters);
 
-            var rez = command.QueryProc<TEntity>().ToList();
+            var result = command.ExecuteProc<T>();
+            UpdateOutputParameters(parameters);
 
-            UpdateOutputParameters(dataParameters);
+            return result;
+        }
 
-            return rez;
+        /// <summary>
+        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
+        /// number of affected records.
+        /// </summary>
+        /// <typeparam name="TEntity">Result record type</typeparam>
+        /// <param name="procedureName">Procedure name</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Number of records, affected by command execution.</returns>
+        public int ExecuteStoredProcedure(string procedureName, params DataParameter[] parameters)
+        {
+            var command = new CommandInfo(this, procedureName, parameters);
+
+            var affectedRecords = command.ExecuteProc();
+            UpdateOutputParameters(parameters);
+
+            return affectedRecords;
         }
 
         public TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
@@ -98,9 +117,23 @@ namespace Nop.Data
             this.BulkCopy<TEntity>(entities);
         }
 
-        public IList<T> QueryProc<T>(string procedureName, params DataParameter[] parameters)
+        /// <summary>
+        /// Executes command using System.Data.CommandType.StoredProcedure command type and
+        /// returns results as collection of values of specified type
+        /// </summary>
+        /// <typeparam name="TEntity">Result record type</typeparam>
+        /// <param name="procedureName">Procedure name</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Returns collection of query result records</returns>
+        public IList<TEntity> QueryProc<TEntity>(string procedureName, params DataParameter[] parameters) where TEntity : BaseEntity
         {
-            return ExecuteStoredProcedure<T>(procedureName, parameters) ?? new List<T>();
+            var command = new CommandInfo(this, procedureName, parameters);
+
+            var rez = command.QueryProc<TEntity>().ToList();
+
+            UpdateOutputParameters(parameters);
+
+            return rez ?? new List<TEntity>();
         }
 
         public IList<T> Query<T>(string sql, params DataParameter[] parameters)

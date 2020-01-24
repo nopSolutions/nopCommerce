@@ -30,7 +30,7 @@ namespace Nop.Data
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Returns collection of query result records</returns>
-        IList<T> QueryProc<T>(string procedureName, params DataParameter[] parameters);
+        IList<TEntity> QueryProc<TEntity>(string procedureName, params DataParameter[] parameters) where TEntity : BaseEntity;
 
         /// <summary>
         /// Executes command and returns results as collection of values of specified type
@@ -41,6 +41,26 @@ namespace Nop.Data
         /// <returns>Returns collection of query result records</returns>
         IList<T> Query<T>(string sql, params DataParameter[] parameters);
 
-        void ExecuteNonQuery(string sqlStatement, params DataParameter[] dataParameters);
+        int ExecuteNonQuery(string sqlStatement, params DataParameter[] dataParameters);
+
+        /// <summary>
+        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
+        /// single value
+        /// </summary>
+        /// <typeparam name="TEntity">Result record type</typeparam>
+        /// <param name="procedureName">Procedure name</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Resulting value</returns>
+        T ExecuteStoredProcedure<T>(string procedureName, params DataParameter[] parameters);
+
+        /// <summary>
+        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
+        /// number of affected records.
+        /// </summary>
+        /// <typeparam name="TEntity">Result record type</typeparam>
+        /// <param name="procedureName">Procedure name</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Returns collection of query result records</returns>
+        int ExecuteStoredProcedure(string procedureName, params DataParameter[] parameters);
     }
 }

@@ -164,7 +164,7 @@ namespace Nop.Data
         {
             using (var dataConnection = _dataProvider.CreateDataContext())
             {
-                return dataConnection.ExecuteStoredProcedure<TEntity>(storeProcedureName, dataParameters?.ToArray());
+                return dataConnection.QueryProc<TEntity>(storeProcedureName, dataParameters?.ToArray());
             }
         }
 

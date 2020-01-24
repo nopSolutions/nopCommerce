@@ -116,19 +116,19 @@ BEGIN
 		LEFT JOIN `ShoppingCartItem` sci ON sci.`CustomerId` = c.`Id`
 		INNER JOIN (
 			#guests only
-			SELECT ccrm.`Customer_Id` 
-			FROM `Customer_CustomerRole_Mapping` ccrm
-				INNER JOIN `CustomerRole` cr ON cr.`Id` = ccrm.`CustomerRole_Id`
+			SELECT ccrm.`CustomerId` 
+			FROM `CustomerCustomerRoleMapping` ccrm
+				INNER JOIN `CustomerRole` cr ON cr.`Id` = ccrm.`CustomerRoleId`
 			WHERE cr.`SystemName` = 'Guests'
-		) g ON g.`Customer_Id` = c.`Id`
+		) g ON g.`CustomerId` = c.`Id`
 		LEFT JOIN `Order` o ON o.`CustomerId` = c.`Id`
 		LEFT JOIN `BlogComment` bc ON bc.`CustomerId` = c.`Id`
 		LEFT JOIN `NewsComment` nc ON nc.`CustomerId` = c.`Id`
 		LEFT JOIN `ProductReview` pr ON pr.`CustomerId` = c.`Id`
 		LEFT JOIN `ProductReviewHelpfulness` prh ON prh.`CustomerId` = c.`Id`
 		LEFT JOIN `PollVotingRecord` pvr ON pvr.`CustomerId` = c.`Id`
-		LEFT JOIN `Forums_Topic` ft ON ft.`CustomerId` = c.`Id`
-		LEFT JOIN `Forums_Post` fp ON fp.`CustomerId` = c.`Id`
+		LEFT JOIN `ForumTopic` ft ON ft.`CustomerId` = c.`Id`
+		LEFT JOIN `ForumPost` fp ON fp.`CustomerId` = c.`Id`
 	WHERE 1 = 1
 		#no orders
 		AND (o.Id is null)
@@ -197,7 +197,8 @@ DELIMITER $$
 CREATE PROCEDURE `FullText_Disable`()
 sql security invoker
 BEGIN
-    call `Drop_FullText_Index`('Product', 'FT_IX_Product', @drop_result);
+    call `Drop_FullText_Index`('Product', 'FT_IX_Product_Description', @drop_result);
+    call `Drop_FullText_Index`('Product', 'FT_IX_Product_Name', @drop_result);
     call `Drop_FullText_Index`('LocalizedProperty', 'FT_IX_LocalizedProperty', @drop_result);
     call `Drop_FullText_Index`('ProductTag', 'FT_IX_ProductTag', @drop_result);    
 END$$
@@ -207,9 +208,10 @@ DELIMITER $$
 CREATE PROCEDURE `FullText_Enable`()
 sql security invoker
 BEGIN
-	CALL `nop_mysql_db_test`.`Create_FullText_Index`('Product', 'Name, ShortDescription, FullDescription', 'FT_IX_Product',  @result);
-    CALL `nop_mysql_db_test`.`Create_FullText_Index`('LocalizedProperty', 'LocaleValue', 'FT_IX_LocalizedProperty',  @result);
-    CALL `nop_mysql_db_test`.`Create_FullText_Index`('ProductTag', 'Name', 'FT_IX_ProductTag',  @result);
+	CALL `Create_FullText_Index`('Product', 'ShortDescription, FullDescription', 'FT_IX_Product_Description',  @result);
+    CALL `Create_FullText_Index`('Product', 'Name', 'FT_IX_Product_Name',  @result);
+    CALL `Create_FullText_Index`('LocalizedProperty', 'LocaleValue', 'FT_IX_LocalizedProperty',  @result);
+    CALL `Create_FullText_Index`('ProductTag', 'Name', 'FT_IX_ProductTag',  @result);
 END$$
 DELIMITER ;
 
@@ -231,8 +233,8 @@ BEGIN
 	#filter by customer role IDs (access control list)	
 	SELECT pt.Id as `ProductTagId`, COUNT(p.Id) as `ProductCount`
 	FROM ProductTag pt
-	LEFT JOIN Product_ProductTag_Mapping pptm ON pt.`Id` = pptm.`ProductTag_Id`
-	LEFT JOIN Product p ON pptm.`Product_Id` = p.`Id`
+	LEFT JOIN ProductProductTagMapping pptm ON pt.`Id` = pptm.`ProductTagId`
+	LEFT JOIN Product p ON pptm.`ProductId` = p.`Id`
 	WHERE
 		not p.`Deleted`
 		AND p.Published
@@ -444,15 +446,15 @@ BEGIN
 			#product tags (exact match)
 			SET @sql_command = concat(@sql_command, '
 			UNION
-			SELECT pptm.Product_Id
-			FROM Product_ProductTag_Mapping pptm INNER JOIN ProductTag pt ON pt.Id = pptm.ProductTag_Id
+			SELECT pptm.ProductId
+			FROM ProductProductTagMapping pptm INNER JOIN ProductTag pt ON pt.Id = pptm.ProductTagId
 			WHERE pt.`Name` = @OriginalKeywords ');
 
 			#localized product tags
 			SET @sql_command = concat(@sql_command, '
 			UNION
-			SELECT pptm.Product_Id
-			FROM LocalizedProperty lp INNER JOIN Product_ProductTag_Mapping pptm ON lp.EntityId = pptm.ProductTag_Id
+			SELECT pptm.ProductId
+			FROM LocalizedProperty lp INNER JOIN ProductProductTagMapping pptm ON lp.EntityId = pptm.ProductTagId
 			WHERE
 				lp.LocaleKeyGroup = N''ProductTag''
 				AND lp.LanguageId = ', `LanguageId`, '
@@ -484,20 +486,20 @@ BEGIN
     
     IF `CategoryIds` REGEXP '^([[:digit:]](,?))+$' then
 		SET @sql_command = concat(@sql_command, '
-		INNER JOIN Product_Category_Mapping pcm
+		INNER JOIN ProductCategory pcm
 			ON p.Id = pcm.ProductId');
 	END if;
     
     IF `ManufacturerId` > 0 then
 		SET @sql_command = concat(@sql_command, '
-		INNER JOIN Product_Manufacturer_Mapping pmm
+		INNER JOIN ProductManufacturer pmm
 			ON p.Id = pmm.ProductId');
 	END if;
     
     IF COALESCE(`ProductTagId`, 0) != 0 then
 		SET @sql_command = concat(@sql_command, '
-		INNER JOIN Product_ProductTag_Mapping pptm
-			ON p.Id = pptm.Product_Id');
+		INNER JOIN ProductProductTagMapping pptm
+			ON p.Id = pptm.ProductId');
 	END if;
     
     #searching by keywords
@@ -577,7 +579,7 @@ BEGIN
     #filter by product tag
 	IF COALESCE(`ProductTagId`, 0) != 0 then
 		SET  @sql_command = concat(@sql_command, '
-			AND pptm.ProductTag_Id = ', `ProductTagId`);
+			AND pptm.ProductTagId = ', `ProductTagId`);
 	END if;
 	
 	#"Published" property
@@ -641,7 +643,7 @@ BEGIN
     IF `LoadFilterableSpecificationAttributeOptionIds` then
         SET @sql_filterableSpecs = concat('
 	        SELECT group_concat(DISTINCT `psam`.SpecificationAttributeOptionId separator '','')
-	        FROM `Product_SpecificationAttribute_Mapping` `psam`
+	        FROM `ProductSpecificationAttribute` `psam`
 	            WHERE `psam`.`AllowFiltering`
 	            AND `psam`.`ProductId` IN (', @sql_command, ') into @FilterableSpecs');
                 

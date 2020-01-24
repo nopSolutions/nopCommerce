@@ -1,6 +1,6 @@
 ﻿namespace Nop.Core.Domain.Catalog
 {
-    public partial class ProductTagWithCount
+    public partial class ProductTagWithCount : BaseEntity
     {
         /// <summary>
         /// Gets or sets the product tag ID
