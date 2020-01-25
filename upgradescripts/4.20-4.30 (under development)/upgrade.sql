@@ -424,4 +424,12 @@ BEGIN
 END
 GO
 
+--new columns
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[GenericAttribute]') and NAME='CreatedOrUpdatedDateUTC')
+BEGIN
+	ALTER TABLE [GenericAttribute] ADD
+	CreatedOrUpdatedDateUTC datetime NULL
+END
+GO
+
  
