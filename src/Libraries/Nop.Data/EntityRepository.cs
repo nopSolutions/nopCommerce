@@ -192,7 +192,7 @@ namespace Nop.Data
         /// <summary>
         /// Gets an entity set
         /// </summary>
-        protected virtual ITable<TEntity> Entities => _entities ?? (_entities = _dataProvider.CreateDataContext().GetTable<TEntity>());
+        protected virtual ITable<TEntity> Entities => _entities ?? (_entities = _dataProvider.GetTable<TEntity>());
 
         #endregion
     }

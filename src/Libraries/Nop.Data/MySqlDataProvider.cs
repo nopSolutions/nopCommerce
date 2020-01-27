@@ -21,7 +21,7 @@ using Nop.Data.Migrations;
 
 namespace Nop.Data
 {
-    public class MySqlNopDataProvider : MySqlDataProvider, INopDataProvider
+    public class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     {
         #region Utils
 
@@ -36,31 +36,31 @@ namespace Nop.Data
 
         public virtual void ConfigureDataContext(IDataContext dataContext)
         {
-            MappingSchema.SetDataType(
+            AdditionalSchema.SetDataType(
                 typeof(string),
                 new SqlDataType(DataType.Text, typeof(string)));
 
-            MappingSchema.SetDataType(
+            AdditionalSchema.SetDataType(
                 typeof(Guid),
                 new SqlDataType(DataType.NChar, typeof(Guid), 36));
 
-            MappingSchema.SetDataType(
+            AdditionalSchema.SetDataType(
                 typeof(byte[]),
                 new SqlDataType(new DbDataType(typeof(byte[]), DataType.Blob, "BLOB")));
         }
 
         public NopDataConnection CreateDataContext()
         {
-            var dataContext = new NopDataConnection(this);
+            var dataContext = CreateDataContext(new MySqlDataProvider());
 
             ConfigureDataContext(dataContext);
 
             return dataContext;
         }
 
-        public virtual IDbConnection CreateDbConnection()
+        public override IDbConnection CreateDbConnection()
         {
-            return CreateConnection(GetConnectionStringBuilder().ConnectionString);
+            return new MySqlConnection(GetConnectionStringBuilder().ConnectionString);
         }
 
         protected MySqlConnectionStringBuilder GetConnectionStringBuilder()
@@ -117,11 +117,6 @@ namespace Nop.Data
         #endregion
 
         #region Methods
-
-        public virtual IDbConnection CreateConnection()
-        {
-            return CreateConnection(GetConnectionStringBuilder().ConnectionString);
-        }
 
         /// <summary>
         /// Creates the database by using the loaded connection string
@@ -220,11 +215,6 @@ namespace Nop.Data
             //create stored procedures 
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
             ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.MySQLStoredProceduresFilePath);
-        }
-
-        public EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity
-        {
-            return MappingSchema?.GetEntityDescriptor(typeof(TEntity));
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using LinqToDB;
 using LinqToDB.Data;
+using LinqToDB.DataProvider;
 using LinqToDB.Mapping;
 using Nop.Core;
 
@@ -16,9 +17,9 @@ namespace Nop.Data
     {
         #region Ctor
 
-        public NopDataConnection(INopDataProvider nopDataProvider) : base(nopDataProvider, nopDataProvider.CreateDbConnection())
+        public NopDataConnection(IDataProvider dataProvider, IDbConnection connection) : base (dataProvider, connection)
         {
-            AddMappingSchema(AdditionalSchema);
+            
         }
 
         #endregion
@@ -140,12 +141,6 @@ namespace Nop.Data
         {
             return Query<T>(sql, parameters)?.ToList() ?? new List<T>();
         }
-
-        #endregion
-
-        #region Properties
-
-        public static MappingSchema AdditionalSchema { get; } = new MappingSchema();
 
         #endregion
     }

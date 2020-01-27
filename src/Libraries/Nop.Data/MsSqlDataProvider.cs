@@ -11,6 +11,7 @@ using FluentMigrator;
 using FluentMigrator.Runner;
 using LinqToDB;
 using LinqToDB.Data;
+using LinqToDB.DataProvider.MySql;
 using LinqToDB.DataProvider.SqlServer;
 using LinqToDB.Mapping;
 using Nop.Core;
@@ -22,16 +23,16 @@ namespace Nop.Data
     /// <summary>
     /// Represents the MS SQL Server data provider
     /// </summary>
-    public partial class MsSqlNopDataProvider : SqlServerDataProvider, INopDataProvider
+    public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     {
-        public MsSqlNopDataProvider() : base(ProviderName.SqlServer2008, SqlServerVersion.v2008)
+        public MsSqlNopDataProvider()
         {
 
         }
 
         #region Utils
 
-                /// <summary>
+        /// <summary>
         /// Get SQL commands from the script
         /// </summary>
         /// <param name="sql">SQL script</param>
@@ -70,17 +71,12 @@ namespace Nop.Data
 
             return commands;
         }
-        
+
         protected virtual SqlConnectionStringBuilder GetConnectionStringBuilder()
         {
             var connectionString = DataSettingsManager.LoadSettings().ConnectionString;
 
             return new SqlConnectionStringBuilder(connectionString);
-        }
-
-        protected void ConfigureDataContext(IDataContext dataContext)
-        {
-            //nothing
         }
 
         #endregion
@@ -89,16 +85,13 @@ namespace Nop.Data
 
         public NopDataConnection CreateDataContext()
         {
-            var dataContext = new NopDataConnection(this);
-
-            ConfigureDataContext(dataContext);
-
-            return dataContext;
+            var dataProvider = new SqlServerDataProvider(ProviderName.SqlServer2008, SqlServerVersion.v2008);
+            return CreateDataContext(dataProvider);
         }
 
-        public virtual IDbConnection CreateDbConnection()
+        public override IDbConnection CreateDbConnection()
         {
-            return CreateConnection(GetConnectionStringBuilder().ConnectionString);
+            return new SqlConnection(GetConnectionStringBuilder().ConnectionString);
         }
 
         public void CreateDatabase(string collation, int triesToConnect = 10)
@@ -175,11 +168,6 @@ namespace Nop.Data
         {
             if (!BackupSupported)
                 throw new DataException("This database does not support backup");
-        }
-
-        public EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity
-        {
-            return MappingSchema?.GetEntityDescriptor(typeof(TEntity));
         }
 
         /// <summary>

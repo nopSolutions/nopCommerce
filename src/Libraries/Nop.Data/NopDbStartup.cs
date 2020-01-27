@@ -28,7 +28,7 @@ namespace Nop.Data
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            var mappingBuilder = new FluentMappingBuilder(NopDataConnection.AdditionalSchema);
+            var mappingBuilder = new FluentMappingBuilder(BaseDataProvider.AdditionalSchema);
             
             //find database mapping configuration by other assemblies
             var typeFinder = new AppDomainTypeFinder();

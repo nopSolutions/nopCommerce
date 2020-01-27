@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;  
 using System.Reflection;
+using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.Mapping;
@@ -11,7 +12,7 @@ namespace Nop.Data
     /// <summary>
     /// Represents a data provider
     /// </summary>
-    public partial interface INopDataProvider : IDataProvider
+    public partial interface INopDataProvider
     {
         #region Methods
 
@@ -35,12 +36,14 @@ namespace Nop.Data
 
         string GetIndexName(string targetTable, string targetColumn, bool isShort = true);   
 
+        ITable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity;
+        
         /// <summary>
         /// Get the current identity value
         /// </summary>
-        /// <typeparam name="T">Entity</typeparam>
+        /// <typeparam name="TEntity">Entity</typeparam>
         /// <returns>Integer identity; null if cannot get the result</returns>
-        int? GetTableIdent<T>() where T : BaseEntity;
+        int? GetTableIdent<TEntity>() where TEntity : BaseEntity;
 
         /// <summary>
         /// Checks if the specified database exists, returns true if database exists
