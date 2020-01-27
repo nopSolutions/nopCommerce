@@ -261,15 +261,15 @@ BEGIN
 			--product tags (exact match)
 			SET @sql = @sql + '
 			UNION
-			SELECT pptm.Product_Id
-			FROM Product_ProductTag_Mapping pptm with(NOLOCK) INNER JOIN ProductTag pt with(NOLOCK) ON pt.Id = pptm.ProductTag_Id
+			SELECT pptm.ProductId
+			FROM ProductProductTagMapping pptm with(NOLOCK) INNER JOIN ProductTag pt with(NOLOCK) ON pt.Id = pptm.ProductTagId
 			WHERE pt.[Name] = @OriginalKeywords '
 
 			--localized product tags
 			SET @sql = @sql + '
 			UNION
-			SELECT pptm.Product_Id
-			FROM LocalizedProperty lp with (NOLOCK) INNER JOIN Product_ProductTag_Mapping pptm with(NOLOCK) ON lp.EntityId = pptm.ProductTag_Id
+			SELECT pptm.ProductId
+			FROM LocalizedProperty lp with (NOLOCK) INNER JOIN ProductProductTagMapping pptm with(NOLOCK) ON lp.EntityId = pptm.ProductTagId
 			WHERE
 				lp.LocaleKeyGroup = N''ProductTag''
 				AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
@@ -330,22 +330,22 @@ BEGIN
 	IF @CategoryIdsCount > 0
 	BEGIN
 		SET @sql = @sql + '
-		INNER JOIN Product_Category_Mapping pcm with (NOLOCK)
+		INNER JOIN ProductCategory pcm with (NOLOCK)
 			ON p.Id = pcm.ProductId'
 	END
 	
 	IF @ManufacturerId > 0
 	BEGIN
 		SET @sql = @sql + '
-		INNER JOIN Product_Manufacturer_Mapping pmm with (NOLOCK)
+		INNER JOIN ProductManufacturer pmm with (NOLOCK)
 			ON p.Id = pmm.ProductId'
 	END
 	
 	IF ISNULL(@ProductTagId, 0) != 0
 	BEGIN
 		SET @sql = @sql + '
-		INNER JOIN Product_ProductTag_Mapping pptm with (NOLOCK)
-			ON p.Id = pptm.Product_Id'
+		INNER JOIN ProductProductTagMapping pptm with (NOLOCK)
+			ON p.Id = pptm.ProductId'
 	END
 	
 	--searching by keywords
@@ -440,7 +440,7 @@ BEGIN
 	IF ISNULL(@ProductTagId, 0) != 0
 	BEGIN
 		SET @sql = @sql + '
-		AND pptm.ProductTag_Id = ' + CAST(@ProductTagId AS nvarchar(max))
+		AND pptm.ProductTagId = ' + CAST(@ProductTagId AS nvarchar(max))
 	END
 	
 	--"Published" property
@@ -524,7 +524,7 @@ BEGIN
         SET @sql_filterableSpecs = '
 	        INSERT INTO #FilterableSpecs ([SpecificationAttributeOptionId])
 	        SELECT DISTINCT [psam].SpecificationAttributeOptionId
-	        FROM [Product_SpecificationAttribute_Mapping] [psam] WITH (NOLOCK)
+	        FROM [ProductSpecificationAttribute] [psam] WITH (NOLOCK)
 	            WHERE [psam].[AllowFiltering] = 1
 	            AND [psam].[ProductId] IN (' + @sql + ')'
 
@@ -574,7 +574,7 @@ BEGIN
             FETCH NEXT FROM cur_SpecificationAttributeOption INTO @SpecificationAttributeId, @SpecificationAttributeOptionId
             IF (@LastSpecificationAttributeId <> 0 AND @SpecificationAttributeId <> @LastSpecificationAttributeId OR @@FETCH_STATUS <> 0) 
 			    SET @sql = @sql + '
-        AND p.Id in (select psam.ProductId from [Product_SpecificationAttribute_Mapping] psam with (NOLOCK) where psam.AllowFiltering = 1 and psam.SpecificationAttributeOptionId IN (SELECT SpecificationAttributeOptionId FROM #FilteredSpecsWithAttributes WHERE SpecificationAttributeId = ' + CAST(@LastSpecificationAttributeId AS nvarchar(max)) + '))'
+        AND p.Id in (select psam.ProductId from [ProductSpecificationAttribute] psam with (NOLOCK) where psam.AllowFiltering = 1 and psam.SpecificationAttributeOptionId IN (SELECT SpecificationAttributeOptionId FROM #FilteredSpecsWithAttributes WHERE SpecificationAttributeId = ' + CAST(@LastSpecificationAttributeId AS nvarchar(max)) + '))'
             SET @LastSpecificationAttributeId = @SpecificationAttributeId
 		IF @@FETCH_STATUS = 0 GOTO FOREACH
 		CLOSE cur_SpecificationAttributeOption
@@ -680,8 +680,8 @@ BEGIN
 	
 	SELECT pt.Id as [ProductTagId], COUNT(p.Id) as [ProductCount]
 	FROM ProductTag pt with (NOLOCK)
-	LEFT JOIN Product_ProductTag_Mapping pptm with (NOLOCK) ON pt.[Id] = pptm.[ProductTag_Id]
-	LEFT JOIN Product p with (NOLOCK) ON pptm.[Product_Id] = p.[Id]
+	LEFT JOIN ProductProductTagMapping pptm with (NOLOCK) ON pt.[Id] = pptm.[ProductTagId]
+	LEFT JOIN Product p with (NOLOCK) ON pptm.[ProductId] = p.[Id]
 	WHERE
 		p.[Deleted] = 0
 		AND p.Published = 1
@@ -709,7 +709,7 @@ BEGIN
 	EXEC('
 	SELECT CASE SERVERPROPERTY(''IsFullTextInstalled'')
 	WHEN 1 THEN 
-		CASE DatabaseProperty (DB_NAME(DB_ID()), ''IsFulltextEnabled'')
+		CASE DatabaseProperty (DB_NAME(DBId()), ''IsFulltextEnabled'')
 		WHEN 1 THEN 1
 		ELSE 0
 		END
@@ -732,7 +732,7 @@ BEGIN
 	DECLARE @index_name nvarchar(1000)
 	DECLARE @ParmDefinition nvarchar(500);
 
-	SELECT @SQL = N'SELECT @index_name_out = i.name FROM sys.tables AS tbl INNER JOIN sys.indexes AS i ON (i.index_id > 0 and i.is_hypothetical = 0) AND (i.object_id=tbl.object_id) WHERE (i.is_unique=1 and i.is_disabled=0) and (tbl.name=@table_name)'
+	SELECT @SQL = N'SELECT @index_name_out = i.name FROM sys.tables AS tbl INNER JOIN sys.indexes AS i ON (i.indexId > 0 and i.is_hypothetical = 0) AND (i.objectId=tbl.objectId) WHERE (i.is_unique=1 and i.is_disabled=0) and (tbl.name=@table_name)'
 	SELECT @ParmDefinition = N'@table_name varchar(100), @index_name_out nvarchar(1000) OUTPUT'
 
 	EXEC sp_executesql @SQL, @ParmDefinition, @table_name = 'Product', @index_name_out=@index_name OUTPUT
@@ -740,7 +740,7 @@ BEGIN
 	--create indexes
 	DECLARE @create_index_text nvarchar(4000)
 	SET @create_index_text = '
-	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[Product]''))
+	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE objectId = objectId(''[Product]''))
 		CREATE FULLTEXT INDEX ON [Product]([Name], [ShortDescription], [FullDescription])
 		KEY INDEX [' + @index_name +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
 	EXEC(@create_index_text)
@@ -748,7 +748,7 @@ BEGIN
 	EXEC sp_executesql @SQL, @ParmDefinition, @table_name = 'LocalizedProperty', @index_name_out=@index_name OUTPUT
 	
 	SET @create_index_text = '
-	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[LocalizedProperty]''))
+	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE objectId = objectId(''[LocalizedProperty]''))
 		CREATE FULLTEXT INDEX ON [LocalizedProperty]([LocaleValue])
 		KEY INDEX [' + @index_name +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
 	EXEC(@create_index_text)
@@ -756,7 +756,7 @@ BEGIN
 	EXEC sp_executesql @SQL, @ParmDefinition, @table_name = 'ProductTag', @index_name_out=@index_name OUTPUT
 
 	SET @create_index_text = '
-	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[ProductTag]''))
+	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE objectId = objectId(''[ProductTag]''))
 		CREATE FULLTEXT INDEX ON [ProductTag]([Name])
 		KEY INDEX [' + @index_name +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
 	EXEC(@create_index_text)
@@ -770,17 +770,17 @@ AS
 BEGIN
 	EXEC('
 	--drop indexes
-	IF EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[Product]''))
+	IF EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE objectId = objectId(''[Product]''))
 		DROP FULLTEXT INDEX ON [Product]
 	')
 
 	EXEC('
-	IF EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[LocalizedProperty]''))
+	IF EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE objectId = objectId(''[LocalizedProperty]''))
 		DROP FULLTEXT INDEX ON [LocalizedProperty]
 	')
 
 	EXEC('
-	IF EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[ProductTag]''))
+	IF EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE objectId = objectId(''[ProductTag]''))
 		DROP FULLTEXT INDEX ON [ProductTag]
 	')
 
@@ -877,19 +877,19 @@ BEGIN
 		LEFT JOIN [ShoppingCartItem] sci with (NOLOCK) ON sci.[CustomerId] = c.[Id]
 		INNER JOIN (
 			--guests only
-			SELECT ccrm.[Customer_Id] 
-			FROM [Customer_CustomerRole_Mapping] ccrm with (NOLOCK)
-				INNER JOIN [CustomerRole] cr with (NOLOCK) ON cr.[Id] = ccrm.[CustomerRole_Id]
+			SELECT ccrm.[CustomerId] 
+			FROM [CustomerCustomerRoleMapping] ccrm with (NOLOCK)
+				INNER JOIN [CustomerRole] cr with (NOLOCK) ON cr.[Id] = ccrm.[CustomerRoleId]
 			WHERE cr.[SystemName] = N'Guests'
-		) g ON g.[Customer_Id] = c.[Id]
+		) g ON g.[CustomerId] = c.[Id]
 		LEFT JOIN [Order] o with (NOLOCK) ON o.[CustomerId] = c.[Id]
 		LEFT JOIN [BlogComment] bc with (NOLOCK) ON bc.[CustomerId] = c.[Id]
 		LEFT JOIN [NewsComment] nc with (NOLOCK) ON nc.[CustomerId] = c.[Id]
 		LEFT JOIN [ProductReview] pr with (NOLOCK) ON pr.[CustomerId] = c.[Id]
 		LEFT JOIN [ProductReviewHelpfulness] prh with (NOLOCK) ON prh.[CustomerId] = c.[Id]
 		LEFT JOIN [PollVotingRecord] pvr with (NOLOCK) ON pvr.[CustomerId] = c.[Id]
-		LEFT JOIN [Forums_Topic] ft with (NOLOCK) ON ft.[CustomerId] = c.[Id]
-		LEFT JOIN [Forums_Post] fp with (NOLOCK) ON fp.[CustomerId] = c.[Id]
+		LEFT JOIN [ForumTopic] ft with (NOLOCK) ON ft.[CustomerId] = c.[Id]
+		LEFT JOIN [ForumPost] fp with (NOLOCK) ON fp.[CustomerId] = c.[Id]
 	WHERE 1 = 1
 		--no orders
 		AND (o.Id is null)
