@@ -7,7 +7,8 @@ namespace Nop.Data.Extensions
 {
     public static class SQLFunctionsExtensions
     {
-        [Sql.Expression("SqlServer","HASHBYTES('sha1', substring({0}}, 0, {1}))", PreferServerSide = true)]
+        [Sql.Expression("SqlServer", "HASHBYTES('sha1', substring({0}, 0, {1}))", PreferServerSide = true)]
+        [Sql.Expression("MySql", "SHA1({0})", PreferServerSide = true)]
         public static string Hash<T>(this T x, int length) where T : IEnumerable<byte>
         {
             return BitConverter.ToString(x.ToArray()).Replace("-", string.Empty);

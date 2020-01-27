@@ -220,7 +220,7 @@ namespace Nop.Data
 
             //create stored procedures 
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-            ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.MySQLStoredProceduresFilePath);
+            ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.SqlServerStoredProceduresFilePath);
         }
 
         /// <summary>
@@ -364,7 +364,7 @@ namespace Nop.Data
             sb.Append("_");
 
             sb.Append(isShort
-                ? $"{primaryTable}_{primaryTable}{primaryColumn}"
+                ? $"{foreignColumn}_{primaryTable}{primaryColumn}"
                 : $"{foreignColumn}_{primaryTable}_{primaryColumn}");
 
 

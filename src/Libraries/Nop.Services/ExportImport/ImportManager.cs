@@ -383,7 +383,10 @@ namespace Nop.Services.ExportImport
                                 : new int[0];
 
                             pictureAlreadyExists = allPicturesHashes.Where(p => imagesIds.Contains(p.Key))
-                                .Select(p => p.Value).Any(p => p == newImageHash || p == newValidatedImageHash);
+                                .Select(p => p.Value)
+                                .Any(p => 
+                                    p.Equals(newImageHash, StringComparison.OrdinalIgnoreCase) || 
+                                    p.Equals(newValidatedImageHash, StringComparison.OrdinalIgnoreCase));
                         }
 
                         if (pictureAlreadyExists)
