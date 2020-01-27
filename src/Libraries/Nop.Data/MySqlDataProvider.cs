@@ -2,17 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using FluentMigrator;
-using FluentMigrator.Runner;
 using LinqToDB;
 using LinqToDB.Common;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.MySql;
-using LinqToDB.Mapping;
 using LinqToDB.SqlQuery;
 using MySql.Data.MySqlClient;
 using Nop.Core;
