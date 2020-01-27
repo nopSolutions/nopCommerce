@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
 using FluentMigrator.Runner;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
 using Nop.Data.Extensions;
 using Nop.Data.Migrations;
@@ -64,7 +64,8 @@ namespace Nop.Data
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
-            EngineContext.Current.Resolve<IDataProvider>().ApplyUpMigrations(Assembly.GetExecutingAssembly());
+            EngineContext.Current.Resolve<ILocker>().PerformActionWithLock("", TimeSpan.FromSeconds(300),
+                () => EngineContext.Current.Resolve<IDataProvider>().ApplyUpMigrations());
         }
 
         /// <summary>

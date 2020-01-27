@@ -30,7 +30,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="assembly">Assembly to find the migration;
         /// leave null to search migration on the whole application pull</param>
-        void ApplyUpMigrations(Assembly assembly);
+        void ApplyUpMigrations(Assembly assembly = null);
 
         /// <summary>
         /// Executes an Down migration
