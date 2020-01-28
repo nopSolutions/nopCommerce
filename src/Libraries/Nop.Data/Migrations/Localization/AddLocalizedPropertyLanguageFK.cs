@@ -8,7 +8,7 @@ namespace Nop.Data.Migrations.Localization
     /// <summary>
     /// Represents a localized property mapping configuration
     /// </summary>
-    [Migration(637097793590515436)]
+    [NopMigration("2019/11/19 04:55:59:0515436")]
     public class AddLocalizedPropertyLanguageFK : AutoReversingMigration
     {
         #region Methods

@@ -4,7 +4,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Indexes
 {
-    [Migration(637123521091647938)]
+    [NopMigration("2019/12/19 11:35:09:1647938")]
     public class AddProductManufacturerMappingIsFeaturedProductIX : AutoReversingMigration
     {
         #region Methods

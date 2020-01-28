@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Stores
 {
-    [Migration(637097823639005655)]
+    [NopMigration("2019/11/19 05:46:03:9005655")]
     public class AddStoreMappingStoreFK : AutoReversingMigration
     {
         #region Methods

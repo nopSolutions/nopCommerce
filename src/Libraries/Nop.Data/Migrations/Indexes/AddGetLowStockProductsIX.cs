@@ -4,7 +4,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Indexes
 {
-    [Migration(637123521091647941)]
+    [NopMigration("2019/12/19 11:35:09:1647941")]
     public class AddGetLowStockProductsIX : AutoReversingMigration
     {
         #region Methods

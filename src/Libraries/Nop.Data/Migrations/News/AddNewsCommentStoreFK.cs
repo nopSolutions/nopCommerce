@@ -6,7 +6,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.News
 {
-    [Migration(637097798362530774)]
+    [NopMigration("2019/11/19 05:03:56:2530774")]
     public class AddNewsCommentStoreFK : AutoReversingMigration
     {
         #region Methods

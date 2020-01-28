@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Security
 {
-    [Migration(637097819107801302)]
+    [NopMigration("2019/11/19 05:38:30:7801302")]
     public class AddPermissionRecordCustomerRolePermissionRecordFK : AutoReversingMigration
     {
         #region Methods

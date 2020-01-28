@@ -6,7 +6,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Orders
 {
-    [Migration(637097813093371768)]
+    [NopMigration("2019/11/19 05:28:29:3371768")]
     public class AddShoppingCartItemProductFK : AutoReversingMigration
     {
         #region Methods

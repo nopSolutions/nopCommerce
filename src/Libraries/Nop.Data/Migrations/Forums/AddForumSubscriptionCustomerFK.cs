@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Forums
 {
-    [Migration(637097788387699848)]
+    [NopMigration("2019/11/19 04:47:18:7699848")]
     public class AddForumSubscriptionCustomerFK : AutoReversingMigration
     {
         #region Methods

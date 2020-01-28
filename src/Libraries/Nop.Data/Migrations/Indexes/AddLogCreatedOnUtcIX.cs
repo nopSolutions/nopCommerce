@@ -4,7 +4,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Indexes
 {
-    [Migration(637123449689037680)]
+    [NopMigration("2019/12/19 09:36:08:9037680")]
     public class AddLogCreatedOnUtcIX : AutoReversingMigration
     {
         #region Methods          

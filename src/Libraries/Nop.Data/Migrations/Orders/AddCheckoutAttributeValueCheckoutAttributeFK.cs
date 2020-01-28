@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Orders
 {
-    [Migration(637097801078553212)]
+    [NopMigration("2019/11/19 05:08:27:8553212")]
     public class AddCheckoutAttributeValueCheckoutAttributeFK : AutoReversingMigration
     {
         #region Methods

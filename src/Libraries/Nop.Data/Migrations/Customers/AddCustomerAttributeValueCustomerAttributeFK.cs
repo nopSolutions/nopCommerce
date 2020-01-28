@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Customers
 {
-    [Migration(637097701504308129)]
+    [NopMigration("2019/11/19 02:22:30:4308129")]
     public class AddCustomerAttributeValueCustomerAttributeFK : AutoReversingMigration
     {
         #region Methods

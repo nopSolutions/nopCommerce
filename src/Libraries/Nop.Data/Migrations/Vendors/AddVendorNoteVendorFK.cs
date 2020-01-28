@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Vendors
 {
-    [Migration(637097824991868645)]
+    [NopMigration("2019/11/19 05:48:19:1868645")]
     public class AddVendorNoteVendorFK : AutoReversingMigration
     {
         #region Methods

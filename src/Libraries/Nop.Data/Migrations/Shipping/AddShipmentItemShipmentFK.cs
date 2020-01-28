@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Shipping
 {
-    [Migration(637097820921984734)]
+    [NopMigration("2019/11/19 05:41:32:1984734")]
     public class AddShipmentItemShipmentFK : AutoReversingMigration
     {
         #region Methods

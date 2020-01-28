@@ -8,7 +8,8 @@ namespace Nop.Data.Migrations.Common
     /// <summary>
     /// Represents an address attribute value mapping configuration
     /// </summary>
-    [Migration(637097693526459118)] public class AddAddressAttributeValueAddressAttributeValueFk : AutoReversingMigration
+    [NopMigration("2019/11/19 02:09:12:6459118")]
+    public class AddAddressAttributeValueAddressAttributeValueFk : AutoReversingMigration
     {
         #region Methods
 

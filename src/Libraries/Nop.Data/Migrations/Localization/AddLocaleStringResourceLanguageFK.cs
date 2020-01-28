@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Localization
 {
-    [Migration(637097792951964555)]
+    [NopMigration("2019/11/19 04:54:55:1964555")]
     public class AddLocaleStringResourceLanguageFK : AutoReversingMigration
     {
         #region Methods

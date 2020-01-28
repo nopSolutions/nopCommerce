@@ -4,7 +4,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Indexes
 {
-    [Migration(637123449689037696)]
+    [NopMigration("2019/12/19 09:36:08:9037696")]
     public class AddCategoryDisplayOrderIX : AutoReversingMigration
     {
         #region Methods         

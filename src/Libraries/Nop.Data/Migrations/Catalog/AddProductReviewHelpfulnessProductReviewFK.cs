@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Catalog
 {
-    [Migration(637097639558603530)]
+    [NopMigration("2019/11/19 12:39:15:8603530")]
     public class AddProductReviewHelpfulnessProductReviewFK : AutoReversingMigration
     {
         #region Methods

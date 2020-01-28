@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Affiliates
 {
-    [Migration(637097594562551771)]
+    [NopMigration("2019/11/19 11:24:16:2551771")]
     public class AddAffiliateAddressFK : AutoReversingMigration
     {
         #region Methods

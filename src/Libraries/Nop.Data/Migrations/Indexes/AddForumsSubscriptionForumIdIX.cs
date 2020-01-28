@@ -4,7 +4,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Indexes
 {
-    [Migration(637123449689037700)]
+    [NopMigration("2019/12/19 09:36:08:9037700")]
     public class AddForumsSubscriptionForumIdIX : AutoReversingMigration
     {
         #region Methods          

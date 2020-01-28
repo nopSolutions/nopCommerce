@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Discounts
 {
-    [Migration(637118390520043560)]
+    [NopMigration("2019/12/13 01:04:12:0043560")]
     public class AddDiscountRequirementDiscountFK : AutoReversingMigration
     {
         #region Methods

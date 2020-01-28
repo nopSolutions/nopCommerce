@@ -4,7 +4,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Indexes
 {
-    [Migration(637123521091647934)]
+    [NopMigration("2019/12/19 11:35:09:1647934")]
     public class AddCategorSubjectToAclIX : AutoReversingMigration
     {
         #region Methods

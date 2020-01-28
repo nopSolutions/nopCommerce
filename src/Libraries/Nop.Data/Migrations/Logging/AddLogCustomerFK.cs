@@ -6,7 +6,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Logging
 {
-    [Migration(637097795893561926)]
+    [NopMigration("2019/11/19 04:59:49:3561926")]
     public class AddLogCustomerFK : AutoReversingMigration
     {
         #region Methods

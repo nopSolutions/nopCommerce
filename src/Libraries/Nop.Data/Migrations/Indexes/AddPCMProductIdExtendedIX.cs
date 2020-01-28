@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Indexes
 {
-    [Migration(637123537559280389)]
+    [NopMigration("2019/12/19 12:02:35:9280389")]
     public class AddPCMProductIdExtendedIX : AutoReversingMigration
     {
         #region Methods          

@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Directory
 {
-    [Migration(637097713433797964)]
+    [NopMigration("2019/11/19 02:42:23:3797964")]
     public class AddStateProvinceCountryFK : AutoReversingMigration
     {
         #region Methods

@@ -8,7 +8,7 @@ namespace Nop.Data.Migrations.Catalog
     /// <summary>
     /// Represents a product attribute combination mapping configuration
     /// </summary>
-    [Migration(637121110600830411)]
+    [NopMigration("2019/12/16 04:37:40:0830411")]
     public class AddProductAttributeCombinationProductFk : AutoReversingMigration
     {
         #region Methods

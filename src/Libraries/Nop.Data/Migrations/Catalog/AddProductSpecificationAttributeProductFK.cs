@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Catalog
 {
-    [Migration(637097645462261986)]
+    [NopMigration("2019/11/19 12:49:06:2261986")]
     public class AddProductSpecificationAttributeProductFK : AutoReversingMigration
     {
         #region Methods

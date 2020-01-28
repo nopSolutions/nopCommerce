@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Orders
 {
-    [Migration(637097808997123308)]
+    [NopMigration("2019/11/19 05:21:39:7123308")]
     public class AddOrderNoteOrderFK : AutoReversingMigration
     {
         #region Methods

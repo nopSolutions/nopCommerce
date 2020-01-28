@@ -6,7 +6,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Blogs
 {
-    [Migration(637097605404497786)]
+    [NopMigration("2019/11/19 11:42:20:4497786")]
     public class AddBlogCommentCustomerFK : AutoReversingMigration
     {
         #region Methods

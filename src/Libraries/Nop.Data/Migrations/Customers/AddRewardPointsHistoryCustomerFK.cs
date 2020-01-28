@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Customers
 {
-    [Migration(637097709252342366)]
+    [NopMigration("2019/11/19 02:35:25:2342366")]
     public class AddRewardPointsHistoryCustomerFK : AutoReversingMigration
     {
         #region Methods

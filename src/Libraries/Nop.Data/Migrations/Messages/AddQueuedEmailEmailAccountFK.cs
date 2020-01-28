@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Messages
 {
-    [Migration(637097797031655781)]
+    [NopMigration("2019/11/19 05:01:43:1655781")]
     public class AddQueuedEmailEmailAccountFK : AutoReversingMigration
     {
         #region Methods

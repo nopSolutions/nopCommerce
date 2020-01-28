@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Indexes
 {
-    [Migration(637123537559280394)]
+    [NopMigration("2019/12/19 12:02:35:9280394")]
     public class AddProductVisibleIndividuallyPublishedDeletedExtendedIX : AutoReversingMigration
     {
         #region Methods         

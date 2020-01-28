@@ -5,7 +5,7 @@ using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Polls
 {
-    [Migration(637097815487520229)]
+    [NopMigration("2019/11/19 05:32:28:7520229")]
     public class AddPollAnswerPollFK : AutoReversingMigration
     {
         #region Methods
