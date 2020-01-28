@@ -10,6 +10,8 @@ namespace Nop.Data.Migrations
     /// </summary>
     public class NopConventionSet : IConventionSet
     {
+        #region Ctor
+
         public NopConventionSet(INopDataProvider dataProvider, IMigrationContext context)
             : this(new DefaultConventionSet(), new NopForeignKeyConvention(dataProvider, context), new NopIndexConvention(dataProvider))
         {
@@ -38,6 +40,10 @@ namespace Nop.Data.Migrations
             RootPathConvention = innerConventionSet.RootPathConvention;
         }
 
+        #endregion
+        
+        #region Properties
+        
         public IRootPathConvention RootPathConvention { get; }
 
         public DefaultSchemaConvention SchemaConvention { get; }
@@ -53,5 +59,7 @@ namespace Nop.Data.Migrations
         public IList<ISequenceConvention> SequenceConventions { get; }
 
         public IList<IAutoNameConvention> AutoNameConventions { get; }
+
+        #endregion
     }
 }

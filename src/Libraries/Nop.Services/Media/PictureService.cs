@@ -1022,19 +1022,13 @@ namespace Nop.Services.Media
             if (supportedLengthOfBinaryHash == 0 || !picturesIds.Any())
                 return new Dictionary<int, string>();
 
-            using (var dataContext = _dataProvider.CreateDataContext())
-            {
-                return dataContext.GetTable<PictureBinary>()
+            return _dataProvider.GetTable<PictureBinary>()
                     .Where(p => picturesIds.Contains(p.PictureId))
-                    .Select(x => new 
+                    .Select(x => new
                     {
-                        PictureId = x.PictureId, 
-                        Hash = x.BinaryData.Hash(supportedLengthOfBinaryHash) 
+                        PictureId = x.PictureId,
+                        Hash = x.BinaryData.Hash(supportedLengthOfBinaryHash)
                     }).ToDictionary(p => p.PictureId, p => p.Hash);
-            }
-
-            // return _dataProvider.Query<PictureHashItem>(string.Format(strCommand, supportedLengthOfBinaryHash, picturesIds.Select(p => p.ToString()).Aggregate((all, current) => all + ", " + current))).Distinct()
-            //     .ToDictionary(p => p.PictureId, p => BitConverter.ToString(p.Hash).Replace("-", string.Empty));
         }
 
         /// <summary>

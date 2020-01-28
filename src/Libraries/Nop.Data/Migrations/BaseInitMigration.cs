@@ -11,7 +11,7 @@ using Nop.Data.Migrations.Builders;
 namespace Nop.Data.Migrations
 {
     [Tags(NopMigrationTags.TABLE)]
-    public abstract class BaseInitMigration : AutoReversingMigration 
+    public abstract class BaseInitMigration : AutoReversingMigration
     {
         protected virtual void BuildEntity<TEntity>(string tableName = null,
                 IEntityBuilder<TEntity> builder = null) where TEntity : BaseEntity
@@ -40,18 +40,18 @@ namespace Nop.Data.Migrations
                 expression.Columns.Insert(0, pk);
             }
 
-            var entityColumnNames = expression.Columns.Select(c => c.Name);
-            
-            var propertiesToAutoMap = typeof(TEntity).GetProperties().Where(p => 
-                !entityColumnNames.Contains(p.Name) && 
-                !p.Name.Equals(nameof(BaseEntity.Id), StringComparison.OrdinalIgnoreCase));
+            var propertiesToAutoMap = typeof(TEntity)
+                .GetProperties()
+                .Where(p =>
+                    !expression.Columns.Any(x => x.Name.Equals(p.Name, StringComparison.OrdinalIgnoreCase)) &&
+                    !nameof(BaseEntity.Id).Equals(p.Name, StringComparison.OrdinalIgnoreCase));
 
             if (propertiesToAutoMap is null || propertiesToAutoMap.Count() == 0)
                 return;
 
             foreach (var prop in propertiesToAutoMap)
             {
-                create.WithSelfType(prop.Name, prop.PropertyType, typeof(string).Equals(prop.PropertyType));
+                create.WithSelfType(prop.Name, prop.PropertyType);
             }
         }
 

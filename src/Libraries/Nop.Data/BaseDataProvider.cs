@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Data;
 using LinqToDB;
+using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.Mapping;
 using Nop.Core;
@@ -8,9 +10,8 @@ namespace Nop.Data
 {
     public abstract class BaseDataProvider
     {
-
         public abstract IDbConnection CreateDbConnection();
-        
+        public abstract NopDataConnection CreateDataContext();
 
         public NopDataConnection CreateDataContext(IDataProvider dataProvider)
         {
@@ -19,7 +20,7 @@ namespace Nop.Data
 
             return dataContext;
         }
-        
+
         public EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity
         {
             return AdditionalSchema?.GetEntityDescriptor(typeof(TEntity));

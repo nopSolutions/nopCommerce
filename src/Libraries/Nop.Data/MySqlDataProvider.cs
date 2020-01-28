@@ -45,7 +45,7 @@ namespace Nop.Data
                 new SqlDataType(new DbDataType(typeof(byte[]), DataType.Blob, "BLOB")));
         }
 
-        public NopDataConnection CreateDataContext()
+        public override NopDataConnection CreateDataContext()
         {
             var dataContext = CreateDataContext(new MySqlDataProvider());
 

@@ -78,7 +78,7 @@ namespace Nop.Data
 
         #region Methods
 
-        public NopDataConnection CreateDataContext()
+        public override NopDataConnection CreateDataContext()
         {
             var dataProvider = new SqlServerDataProvider(ProviderName.SqlServer2008, SqlServerVersion.v2008);
             return CreateDataContext(dataProvider);

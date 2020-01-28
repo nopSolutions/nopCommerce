@@ -2,6 +2,9 @@ using System.Reflection;
 
 namespace Nop.Data.Migrations
 {
+    /// <summary>
+    /// Represents a migration manager
+    /// </summary>
     public interface IMigrationManager
     {
         /// <summary>
@@ -11,7 +14,7 @@ namespace Nop.Data.Migrations
         /// leave null to search migration on the whole application pull</param>
         /// <param name="tags">Migration tags for filtering</param>
         void ApplyUpMigrations(Assembly assembly, params string[] tags);
-        
+
         /// <summary>
         /// Executes an Down migration
         /// </summary>
