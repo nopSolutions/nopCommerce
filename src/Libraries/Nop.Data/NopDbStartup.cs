@@ -64,7 +64,7 @@ namespace Nop.Data
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
-            EngineContext.Current.Resolve<ILocker>().PerformActionWithLock("", TimeSpan.FromSeconds(300),
+            EngineContext.Current.Resolve<ILocker>().PerformActionWithLock(typeof(NopDbStartup).FullName, TimeSpan.FromSeconds(300),
                 () => EngineContext.Current.Resolve<IDataProvider>().ApplyUpMigrations());
         }
 
