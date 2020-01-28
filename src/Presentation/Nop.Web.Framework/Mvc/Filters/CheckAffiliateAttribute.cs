@@ -14,7 +14,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents filter attribute that checks and updates affiliate of customer
     /// </summary>
-    public class CheckAffiliateAttribute : TypeFilterAttribute
+    public sealed class CheckAffiliateAttribute : TypeFilterAttribute
     {
         #region Ctor
 

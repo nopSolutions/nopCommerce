@@ -12,7 +12,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents filter attribute that validates customer password expiration
     /// </summary>
-    public class ValidatePasswordAttribute : TypeFilterAttribute
+    public sealed class ValidatePasswordAttribute : TypeFilterAttribute
     {
         #region Ctor
 

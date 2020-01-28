@@ -12,7 +12,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents filter attribute that validates IP address
     /// </summary>
-    public class ValidateIpAddressAttribute : TypeFilterAttribute
+    public sealed class ValidateIpAddressAttribute : TypeFilterAttribute
     {
         #region Ctor
 

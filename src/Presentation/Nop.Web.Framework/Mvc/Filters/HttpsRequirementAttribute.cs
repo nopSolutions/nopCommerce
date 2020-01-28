@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute that checks whether current connection is secured and properly redirect if necessary
     /// </summary>
-    public class HttpsRequirementAttribute : TypeFilterAttribute
+    public sealed class HttpsRequirementAttribute : TypeFilterAttribute
     {
         #region Fields
 

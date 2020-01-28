@@ -11,7 +11,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents filter attribute that saves last customer activity date
     /// </summary>
-    public class SaveLastActivityAttribute : TypeFilterAttribute
+    public sealed class SaveLastActivityAttribute : TypeFilterAttribute
     {
         #region Ctor
 

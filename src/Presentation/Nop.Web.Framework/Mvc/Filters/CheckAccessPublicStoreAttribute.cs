@@ -10,7 +10,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute that confirms access to public store
     /// </summary>
-    public class CheckAccessPublicStoreAttribute : TypeFilterAttribute
+    public sealed class CheckAccessPublicStoreAttribute : TypeFilterAttribute
     {
         #region Fields
 

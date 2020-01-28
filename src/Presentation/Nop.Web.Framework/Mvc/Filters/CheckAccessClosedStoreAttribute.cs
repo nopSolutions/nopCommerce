@@ -15,7 +15,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute that confirms access to a closed store
     /// </summary>
-    public class CheckAccessClosedStoreAttribute : TypeFilterAttribute
+    public sealed class CheckAccessClosedStoreAttribute : TypeFilterAttribute
     {
         #region Fields
 
