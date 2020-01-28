@@ -291,7 +291,7 @@ namespace Nop.Services.Media
                 throw new ArgumentNullException(nameof(picture));
 
             var result = fromDb
-                ? GetPictureBinaryByPictureId(picture.Id)?.BinaryData ?? new byte[0]
+                ? GetPictureBinaryByPictureId(picture.Id)?.BinaryData ?? Array.Empty<byte>()
                 : LoadPictureFromFile(picture.Id, picture.MimeType);
 
             return result;
@@ -771,7 +771,7 @@ namespace Nop.Services.Media
                 IsNew = isNew
             };
             _pictureRepository.Insert(picture);
-            UpdatePictureBinary(picture, StoreInDb ? pictureBinary : new byte[0]);
+            UpdatePictureBinary(picture, StoreInDb ? pictureBinary : Array.Empty<byte>());
 
             if (!StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
@@ -905,7 +905,7 @@ namespace Nop.Services.Media
             picture.IsNew = isNew;
 
             _pictureRepository.Update(picture);
-            UpdatePictureBinary(picture, StoreInDb ? pictureBinary : new byte[0]);
+            UpdatePictureBinary(picture, StoreInDb ? pictureBinary : Array.Empty<byte>());
 
             if (!StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
@@ -935,7 +935,7 @@ namespace Nop.Services.Media
             picture.SeoFilename = seoFilename;
 
             _pictureRepository.Update(picture);
-            UpdatePictureBinary(picture, StoreInDb ? GetPictureBinaryByPictureId(picture.Id).BinaryData : new byte[0]);
+            UpdatePictureBinary(picture, StoreInDb ? GetPictureBinaryByPictureId(picture.Id).BinaryData : Array.Empty<byte>());
 
             if (!StoreInDb)
                 SavePictureInFile(picture.Id, GetPictureBinaryByPictureId(picture.Id).BinaryData, picture.MimeType);
@@ -1120,7 +1120,7 @@ namespace Nop.Services.Media
                                 //now on file system
                                 SavePictureInFile(picture.Id, pictureBinary, picture.MimeType);
                             //update appropriate properties
-                            UpdatePictureBinary(picture, value ? pictureBinary : new byte[0]);
+                            UpdatePictureBinary(picture, value ? pictureBinary : Array.Empty<byte>());
                             picture.IsNew = true;
                             //raise event?
                             //_eventPublisher.EntityUpdated(picture);

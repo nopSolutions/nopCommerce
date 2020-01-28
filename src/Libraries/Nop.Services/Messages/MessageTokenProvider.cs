@@ -1581,7 +1581,7 @@ namespace Nop.Services.Messages
                     return new[] { TokenGroupNames.StoreTokens, TokenGroupNames.ContactVendor };
 
                 default:
-                    return new string[] { };
+                    return Array.Empty<string>();
             }
         }
 

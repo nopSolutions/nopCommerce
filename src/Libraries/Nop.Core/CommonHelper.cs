@@ -205,7 +205,7 @@ namespace Nop.Core
                 throw new NopException("The property '{0}' on the instance of type '{1}' does not have a setter.", propertyName, instanceType);
             if (value != null && !value.GetType().IsAssignableFrom(pi.PropertyType))
                 value = To(value, pi.PropertyType);
-            pi.SetValue(instance, value, new object[0]);
+            pi.SetValue(instance, value, Array.Empty<object>());
         }
 
         /// <summary>
