@@ -1,7 +1,6 @@
 ﻿using System;
 using Nop.Data;
 
-//TODO: 239 try to implement FulltextService
 namespace Nop.Services.Common
 {
     /// <summary>
@@ -32,10 +31,7 @@ namespace Nop.Services.Common
         /// <returns>Result</returns>
         public virtual bool IsFullTextSupported()
         {
-            using (var dataContext = _dataProvider.CreateDataContext())
-            {
-                return dataContext.ExecuteStoredProcedure<bool>("FullText_IsSupported");
-            }
+            return _dataProvider.ExecuteStoredProcedure<bool>("FullText_IsSupported");
         }
 
         /// <summary>
@@ -43,10 +39,7 @@ namespace Nop.Services.Common
         /// </summary>
         public virtual void EnableFullText()
         {
-            using (var dataContext = _dataProvider.CreateDataContext())
-            {
-                dataContext.ExecuteStoredProcedure("FullText_Enable");
-            }
+            _dataProvider.ExecuteStoredProcedure("FullText_Enable");
         }
 
         /// <summary>
@@ -54,10 +47,7 @@ namespace Nop.Services.Common
         /// </summary>
         public virtual void DisableFullText()
         {
-            using (var dataContext = _dataProvider.CreateDataContext())
-            {
-                dataContext.ExecuteStoredProcedure("FullText_Disable");
-            }
+            _dataProvider.ExecuteStoredProcedure("FullText_Disable");
         }
 
         #endregion

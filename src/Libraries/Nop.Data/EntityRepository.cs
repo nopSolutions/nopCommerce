@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Transactions;
 using LinqToDB;
 using LinqToDB.Data;
 using Nop.Core;
@@ -47,10 +48,7 @@ namespace Nop.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            using (var dataConnection = _dataProvider.CreateDataContext())
-            {
-                entity.Id = dataConnection.InsertWithInt32Identity(entity);
-            }
+            _dataProvider.InsertEntity(entity);
         }
 
         /// <summary>
@@ -62,18 +60,15 @@ namespace Nop.Data
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            using (var dataConnection = _dataProvider.CreateDataContext())
+            using (var transaction = new TransactionScope())
             {
-                dataConnection.BeginTransaction();
-
                 try
                 {
-                    dataConnection.BulkInsertEntities(entities);
-                    dataConnection.CommitTransaction();
+                    _dataProvider.BulkInsertEntities(entities);
+                    transaction.Complete();
                 }
-                catch
+                catch (System.Exception)
                 {
-                    dataConnection.RollbackTransaction();
                     throw;
                 }
             }
@@ -87,11 +82,8 @@ namespace Nop.Data
         /// <returns>Copy of the passed entity</returns>
         public virtual TEntity LoadOriginalCopy(TEntity entity)
         {
-            using (var dataConnection = _dataProvider.CreateDataContext())
-            {
-                var entities = dataConnection.GetTable<TEntity>();
-                return entities.FirstOrDefault(e => e.Id == Convert.ToInt32(entity.Id));
-            }
+            return _dataProvider.GetTable<TEntity>()
+                .FirstOrDefault(e => e.Id == Convert.ToInt32(entity.Id));
         }
         /// <summary>
         /// Update entity
@@ -102,10 +94,7 @@ namespace Nop.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            using (var dataConnection = _dataProvider.CreateDataContext())
-            {
-                dataConnection.Update(entity);
-            }
+            _dataProvider.UpdateEntity(entity);
         }
 
         /// <summary>
@@ -132,10 +121,7 @@ namespace Nop.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            using (var dataConnection = _dataProvider.CreateDataContext())
-            {
-                dataConnection.Delete(entity);
-            }
+            _dataProvider.DeleteEntity(entity);
         }
 
         /// <summary>
@@ -162,10 +148,7 @@ namespace Nop.Data
         /// <returns>Collection of query result records</returns>
         public virtual IList<TEntity> EntityFromSql(string storeProcedureName, params DataParameter[] dataParameters)
         {
-            using (var dataConnection = _dataProvider.CreateDataContext())
-            {
-                return dataConnection.QueryProc<TEntity>(storeProcedureName, dataParameters?.ToArray());
-            }
+            return _dataProvider.QueryProc<TEntity>(storeProcedureName, dataParameters?.ToArray());
         }
 
         /// <summary>
@@ -174,10 +157,7 @@ namespace Nop.Data
         /// <param name="resetIdentity">Performs reset identity column</param>
         public virtual void Truncate(bool resetIdentity = false)
         {
-            using (var dataConnection = _dataProvider.CreateDataContext())
-            {
-                dataConnection.GetTable<TEntity>().Truncate(resetIdentity);
-            }
+            _dataProvider.GetTable<TEntity>().Truncate(resetIdentity);
         }
 
         #endregion

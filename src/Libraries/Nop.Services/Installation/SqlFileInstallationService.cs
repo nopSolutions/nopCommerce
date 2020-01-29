@@ -120,14 +120,11 @@ namespace Nop.Services.Installation
             }
 
             var dataProvider = EngineContext.Current.Resolve<INopDataProvider>();
-            using (var dataContext = dataProvider.CreateDataContext())
+            foreach (var stmt in statements)
             {
-                foreach (var stmt in statements)
-                {
-                    dataContext.ExecuteNonQuery(stmt);
-                }
+                dataProvider.ExecuteNonQuery(stmt);
             }
-            
+
         }
 
         /// <summary>

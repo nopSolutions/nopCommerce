@@ -28,17 +28,6 @@ namespace Nop.Data
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            var mappingBuilder = new FluentMappingBuilder(BaseDataProvider.AdditionalSchema);
-            
-            //find database mapping configuration by other assemblies
-            var typeFinder = new AppDomainTypeFinder();
-            var typeConfigurations = typeFinder.FindClassesOfType<IMappingConfiguration>().ToList();
-
-            foreach (var typeConfiguration in typeConfigurations)
-            {
-                var mappingConfiguration = (IMappingConfiguration)Activator.CreateInstance(typeConfiguration);
-                mappingConfiguration.ApplyConfiguration(mappingBuilder);
-            }
 
             services
                 // add common FluentMigrator services
@@ -52,17 +41,15 @@ namespace Nop.Data
                     rb.SetServers()
                     .WithVersionTable(new MigrationVersionInfo())
                     // define the assembly containing the migrations
-                    .ScanIn(typeConfigurations.Select(p => p.Assembly).Distinct().ToArray()).For.Migrations());
+                    .ScanIn(BaseDataProvider.MappingConfigurationTypes().Select(t => t.Assembly).ToArray()).For.Migrations());
 
             //further actions are performed only when the database is installed
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return;
 
-            DataConnection.DefaultSettings = Singleton<DataSettings>.Instance;
+            BaseDataProvider.ConfigureMapping();
 
-            //TODO: 
-            MappingSchema.Default.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
-
+            DataConnection.DefaultSettings = Singleton<DataSettings>.Instance; //TODO: Need test with removing this line
         }
 
         /// <summary>

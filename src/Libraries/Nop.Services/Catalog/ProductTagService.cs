@@ -101,14 +101,11 @@ namespace Nop.Services.Catalog
                 var pStoreId = SqlParameterHelper.GetInt32Parameter("StoreId", storeId);
                 var pAllowedCustomerRoleIds = SqlParameterHelper.GetStringParameter("AllowedCustomerRoleIds", allowedCustomerRolesIds);
 
-                using (var dataContext = _dataProvider.CreateDataContext())
-                {
-                    //invoke stored procedure
-                    return dataContext.QueryProc<ProductTagWithCount>("ProductTagCountLoadAll",
-                        pStoreId,
-                        pAllowedCustomerRoleIds)
-                        .ToDictionary(item => item.ProductTagId, item => item.ProductCount);
-                }
+                //invoke stored procedure
+                return _dataProvider.QueryProc<ProductTagWithCount>("ProductTagCountLoadAll",
+                    pStoreId,
+                    pAllowedCustomerRoleIds)
+                    .ToDictionary(item => item.ProductTagId, item => item.ProductCount);
             });
         }
 

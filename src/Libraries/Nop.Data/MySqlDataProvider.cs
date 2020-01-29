@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using LinqToDB;
 using LinqToDB.Common;
 using LinqToDB.Data;
+using LinqToDB.DataProvider;
 using LinqToDB.DataProvider.MySql;
 using LinqToDB.SqlQuery;
 using MySql.Data.MySqlClient;
@@ -30,40 +32,9 @@ namespace Nop.Data
                 throw new DataException("This database does not support backup");
         }
 
-        public virtual void ConfigureDataContext(IDataContext dataContext)
-        {
-            AdditionalSchema.SetDataType(
-                typeof(string),
-                new SqlDataType(DataType.Text, typeof(string)));
-
-            AdditionalSchema.SetDataType(
-                typeof(Guid),
-                new SqlDataType(DataType.NChar, typeof(Guid), 36));
-
-            AdditionalSchema.SetDataType(
-                typeof(byte[]),
-                new SqlDataType(new DbDataType(typeof(byte[]), DataType.Blob, "BLOB")));
-        }
-
-        public override NopDataConnection CreateDataContext()
-        {
-            var dataContext = CreateDataContext(new MySqlDataProvider());
-
-            ConfigureDataContext(dataContext);
-
-            return dataContext;
-        }
-
-        public override IDbConnection CreateDbConnection()
-        {
-            return new MySqlConnection(GetConnectionStringBuilder().ConnectionString);
-        }
-
         protected MySqlConnectionStringBuilder GetConnectionStringBuilder()
         {
-            var connectionString = DataSettingsManager.LoadSettings().ConnectionString;
-
-            return new MySqlConnectionStringBuilder(connectionString);
+            return new MySqlConnectionStringBuilder(CurrentConnectionString);
         }
 
         /// <summary>
@@ -114,6 +85,30 @@ namespace Nop.Data
 
         #region Methods
 
+        public virtual void ConfigureDataContext(IDataContext dataContext)
+        {
+
+            AdditionalSchema.SetDataType(
+                typeof(Guid),
+                new SqlDataType(DataType.NChar, typeof(Guid), 36));
+
+            AdditionalSchema.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
+        }
+
+        public override DataConnection CreateDataContext()
+        {
+            var dataContext = CreateDataContext(LinqToDbDataProvider);
+
+            ConfigureDataContext(dataContext);
+
+            return dataContext;
+        }
+
+        public override IDbConnection CreateDbConnection(string connectionString = null)
+        {
+            return new MySqlConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : CurrentConnectionString);
+        }
+
         /// <summary>
         /// Creates the database by using the loaded connection string
         /// </summary>
@@ -129,16 +124,17 @@ namespace Nop.Data
             //gets database name
             var databaseName = builder.Database;
 
-            //now create connection string to 'master' dabatase. It always exists.
+            //now create connection string to 'master' database. It always exists.
             builder.Database = null;
 
-            using (var connection = new MySqlConnection(builder.ConnectionString))
+            using (var connection = CreateDbConnection(builder.ConnectionString))
             {
                 var query = $"CREATE DATABASE IF NOT EXISTS {databaseName};";
                 if (!string.IsNullOrWhiteSpace(collation))
                     query = $"{query} COLLATE {collation}";
 
-                var command = new MySqlCommand(query, connection);
+                var command = connection.CreateCommand(); //TODO
+                command.CommandText = query;
                 command.Connection.Open();
 
                 command.ExecuteNonQuery();
@@ -172,7 +168,7 @@ namespace Nop.Data
         {
             try
             {
-                using (var connection = new MySqlConnection(GetConnectionStringBuilder().ConnectionString))
+                using (var connection = CreateDbConnection())
                 {
                     //just try to connect
                     connection.Open();
@@ -211,6 +207,9 @@ namespace Nop.Data
             //create stored procedures 
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
             ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.MySQLStoredProceduresFilePath);
+
+            DataConnection.DefaultSettings = Singleton<DataSettings>.Instance;
+            ConfigureMapping();
         }
 
         /// <summary>
@@ -322,6 +321,8 @@ namespace Nop.Data
         /// Gets a value indicating whether this data provider supports backup
         /// </summary>
         public bool BackupSupported { get; } = false;
+
+        protected override IDataProvider LinqToDbDataProvider => new MySqlDataProvider();
 
         /// <summary>
         /// Gets a maximum length of the data for HASHBYTES functions, returns 0 if HASHBYTES function is not supported

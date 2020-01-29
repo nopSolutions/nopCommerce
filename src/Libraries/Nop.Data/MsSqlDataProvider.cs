@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using LinqToDB;
 using LinqToDB.Data;
+using LinqToDB.DataProvider;
 using LinqToDB.DataProvider.SqlServer;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -78,15 +79,9 @@ namespace Nop.Data
 
         #region Methods
 
-        public override NopDataConnection CreateDataContext()
+        public override IDbConnection CreateDbConnection(string connectionString = null)
         {
-            var dataProvider = new SqlServerDataProvider(ProviderName.SqlServer2008, SqlServerVersion.v2008);
-            return CreateDataContext(dataProvider);
-        }
-
-        public override IDbConnection CreateDbConnection()
-        {
-            return new SqlConnection(GetConnectionStringBuilder().ConnectionString);
+            return new SqlConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : CurrentConnectionString);
         }
 
         public void CreateDatabase(string collation, int triesToConnect = 10)
@@ -362,11 +357,13 @@ namespace Nop.Data
         #endregion
 
         #region Properties
-
+        
         /// <summary>
         /// Gets a value indicating whether this data provider supports backup
         /// </summary>
         public bool BackupSupported { get; } = true;
+
+        protected override IDataProvider LinqToDbDataProvider => new SqlServerDataProvider(ProviderName.SqlServer2008, SqlServerVersion.v2008);
 
         /// <summary>
         /// Gets a maximum length of the data for HASHBYTES functions, returns 0 if HASHBYTES function is not supported

@@ -255,18 +255,12 @@ namespace Nop.Services.Installation
 
         protected virtual T InsertInstallationData<T>(T entity) where T : BaseEntity
         {
-            using (var dataContext = _dataProvider.CreateDataContext())
-            {
-                return dataContext.InsertEntity(entity);
-            }
+            return _dataProvider.InsertEntity(entity);
         }
 
         protected virtual void InsertInstallationData<T>(params T[] entities) where T : BaseEntity
         {
-            using (var dataContext = _dataProvider.CreateDataContext())
-            {
-                dataContext.BulkInsertEntities(entities);
-            }
+            _dataProvider.BulkInsertEntities(entities);
         }
 
         protected virtual SpecificationAttributeOption GetSpecificationAttributeOption(string specAttributeName, string specAttributeOptionName)
