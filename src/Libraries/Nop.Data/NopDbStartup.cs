@@ -48,8 +48,6 @@ namespace Nop.Data
                 return;
 
             BaseDataProvider.ConfigureMapping();
-
-            DataConnection.DefaultSettings = Singleton<DataSettings>.Instance; //TODO: Need test with removing this line
         }
 
         /// <summary>

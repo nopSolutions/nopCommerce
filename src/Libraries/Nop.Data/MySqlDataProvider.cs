@@ -208,7 +208,6 @@ namespace Nop.Data
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
             ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.MySQLStoredProceduresFilePath);
 
-            DataConnection.DefaultSettings = Singleton<DataSettings>.Instance;
             ConfigureMapping();
         }
 
