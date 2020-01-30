@@ -12,7 +12,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute enabling honeypot validation
     /// </summary>
-    public class ValidateHoneypotAttribute : TypeFilterAttribute
+    public sealed class ValidateHoneypotAttribute : TypeFilterAttribute
     {
         #region Ctor
 

@@ -11,7 +11,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute that checks WWW at the beginning of the URL and properly redirect if necessary
     /// </summary>
-    public class WwwRequirementAttribute : TypeFilterAttribute
+    public sealed class WwwRequirementAttribute : TypeFilterAttribute
     {
         #region Ctor
 

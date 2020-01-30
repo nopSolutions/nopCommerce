@@ -10,7 +10,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute that confirms access to the admin panel
     /// </summary>
-    public class AuthorizeAdminAttribute : TypeFilterAttribute
+    public sealed class AuthorizeAdminAttribute : TypeFilterAttribute
     {
         #region Fields
 

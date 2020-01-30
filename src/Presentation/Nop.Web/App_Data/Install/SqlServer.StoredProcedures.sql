@@ -163,6 +163,32 @@ BEGIN
 		ELSE
 			SET @sql = @sql + 'PATINDEX(@Keywords, p.[Name]) > 0 '
 
+		IF @SearchDescriptions = 1
+		BEGIN
+			--product short description
+			IF @UseFullTextSearch = 1
+			BEGIN
+				SET @sql = @sql + 'OR CONTAINS(p.[ShortDescription], @Keywords) '
+				SET @sql = @sql + 'OR CONTAINS(p.[FullDescription], @Keywords) '
+			END
+			ELSE
+			BEGIN
+				SET @sql = @sql + 'OR PATINDEX(@Keywords, p.[ShortDescription]) > 0 '
+				SET @sql = @sql + 'OR PATINDEX(@Keywords, p.[FullDescription]) > 0 '
+			END
+		END
+
+		--manufacturer part number (exact match)
+		IF @SearchManufacturerPartNumber = 1
+		BEGIN
+			SET @sql = @sql + 'OR p.[ManufacturerPartNumber] = @OriginalKeywords '
+		END
+
+		--SKU (exact match)
+		IF @SearchSku = 1
+		BEGIN
+			SET @sql = @sql + 'OR p.[Sku] = @OriginalKeywords '
+		END
 
 		--localized product name
 		SET @sql = @sql + '
@@ -172,89 +198,32 @@ BEGIN
 		WHERE
 			lp.LocaleKeyGroup = N''Product''
 			AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
-			AND lp.LocaleKey = N''Name'''
+			AND ( (lp.LocaleKey = N''Name'''
 		IF @UseFullTextSearch = 1
 			SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
 		ELSE
-			SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
-	
+			SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0) '
 
 		IF @SearchDescriptions = 1
 		BEGIN
-			--product short description
-			SET @sql = @sql + '
-			UNION
-			SELECT p.Id
-			FROM Product p with (NOLOCK)
-			WHERE '
-			IF @UseFullTextSearch = 1
-				SET @sql = @sql + 'CONTAINS(p.[ShortDescription], @Keywords) '
-			ELSE
-				SET @sql = @sql + 'PATINDEX(@Keywords, p.[ShortDescription]) > 0 '
-
-
-			--product full description
-			SET @sql = @sql + '
-			UNION
-			SELECT p.Id
-			FROM Product p with (NOLOCK)
-			WHERE '
-			IF @UseFullTextSearch = 1
-				SET @sql = @sql + 'CONTAINS(p.[FullDescription], @Keywords) '
-			ELSE
-				SET @sql = @sql + 'PATINDEX(@Keywords, p.[FullDescription]) > 0 '
-
-
-
 			--localized product short description
 			SET @sql = @sql + '
-			UNION
-			SELECT lp.EntityId
-			FROM LocalizedProperty lp with (NOLOCK)
-			WHERE
-				lp.LocaleKeyGroup = N''Product''
-				AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
-				AND lp.LocaleKey = N''ShortDescription'''
+				OR (lp.LocaleKey = N''ShortDescription'''
 			IF @UseFullTextSearch = 1
 				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
 			ELSE
-				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
-				
+				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0) '
 
 			--localized product full description
 			SET @sql = @sql + '
-			UNION
-			SELECT lp.EntityId
-			FROM LocalizedProperty lp with (NOLOCK)
-			WHERE
-				lp.LocaleKeyGroup = N''Product''
-				AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
-				AND lp.LocaleKey = N''FullDescription'''
+				OR (lp.LocaleKey = N''FullDescription'''
 			IF @UseFullTextSearch = 1
 				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
 			ELSE
-				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
+				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0) '
 		END
 
-		--manufacturer part number (exact match)
-		IF @SearchManufacturerPartNumber = 1
-		BEGIN
-			SET @sql = @sql + '
-			UNION
-			SELECT p.Id
-			FROM Product p with (NOLOCK)
-			WHERE p.[ManufacturerPartNumber] = @OriginalKeywords '
-		END
-
-		--SKU (exact match)
-		IF @SearchSku = 1
-		BEGIN
-			SET @sql = @sql + '
-			UNION
-			SELECT p.Id
-			FROM Product p with (NOLOCK)
-			WHERE p.[Sku] = @OriginalKeywords '
-		END
+		SET @sql = @sql + ' ) '
 
 		IF @SearchProductTags = 1
 		BEGIN

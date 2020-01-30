@@ -11,7 +11,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute confirming that user with "Vendor" customer role has appropriate vendor account associated (and active)
     /// </summary>
-    public class ValidateVendorAttribute : TypeFilterAttribute
+    public sealed class ValidateVendorAttribute : TypeFilterAttribute
     {
         #region Fields
 

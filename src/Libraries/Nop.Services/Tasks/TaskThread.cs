@@ -26,7 +26,7 @@ namespace Nop.Services.Tasks
 
         private readonly Dictionary<string, string> _tasks;
         private Timer _timer;
-        private bool _disposed;
+        private bool _disposed = false;
 
         #endregion
 
@@ -120,15 +120,25 @@ namespace Nop.Services.Tasks
         /// </summary>
         public void Dispose()
         {
-            if (_timer == null || _disposed)
+            Dispose(true);
+            GC.SuppressFinalize(this);            
+        }
+
+        // Protected implementation of Dispose pattern.
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
                 return;
 
-            lock (this)
+            if (disposing)
             {
-                _timer.Dispose();
-                _timer = null;
-                _disposed = true;
+                lock (this)
+                {
+                    _timer?.Dispose();
+                }
             }
+
+            _disposed = true;
         }
 
         /// <summary>

@@ -20,7 +20,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents filter attribute that checks and applied discount coupon code to customer
     /// </summary>
-    public class CheckDiscountCouponAttribute : TypeFilterAttribute
+    public sealed class CheckDiscountCouponAttribute : TypeFilterAttribute
     {
         #region Ctor
 

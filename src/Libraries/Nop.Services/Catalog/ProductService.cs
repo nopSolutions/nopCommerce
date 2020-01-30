@@ -1042,7 +1042,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(product));
 
             if (string.IsNullOrEmpty(product.RequiredProductIds))
-                return new int[0];
+                return Array.Empty<int>();
 
             var ids = new List<int>();
 

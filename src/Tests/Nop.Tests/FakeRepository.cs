@@ -9,7 +9,7 @@ namespace Nop.Tests
 {
     public class FakeRepository<T> : Mock<IRepository<T>>, IFakeRepository<T> where T : BaseEntity
     {
-        private readonly int[] _initIds = { };
+        private readonly int[] _initIds = Array.Empty<int>();
 
         private readonly HashSet<T> _table = new HashSet<T>(new BaseEntityEqualityComparer<T>());
 

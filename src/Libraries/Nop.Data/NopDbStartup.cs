@@ -10,6 +10,7 @@ using LinqToDB.Mapping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
 using Nop.Data.Extensions;
 using Nop.Data.Migrations;

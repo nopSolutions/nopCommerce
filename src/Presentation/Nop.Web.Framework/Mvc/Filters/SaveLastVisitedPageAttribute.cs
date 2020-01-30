@@ -12,7 +12,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents filter attribute that saves last visited page by customer
     /// </summary>
-    public class SaveLastVisitedPageAttribute : TypeFilterAttribute
+    public sealed class SaveLastVisitedPageAttribute : TypeFilterAttribute
     {
         #region Ctor
 

@@ -1513,7 +1513,7 @@ namespace Nop.Web.Factories
                 Name = elem.Element("Name").Value,
                 SeName = elem.Element("SeName").Value,
 
-                NumberOfProducts = elem.Element("NumberOfProducts").Value != string.Empty
+                NumberOfProducts = !string.IsNullOrEmpty(elem.Element("NumberOfProducts").Value)
                     ? Convert.ToInt32(elem.Element("NumberOfProducts").Value)
                     : (int?)null,
 

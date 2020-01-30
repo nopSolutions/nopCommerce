@@ -12,7 +12,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents filter attribute that saves last IP address of customer
     /// </summary>
-    public class SaveIpAddressAttribute : TypeFilterAttribute
+    public sealed class SaveIpAddressAttribute : TypeFilterAttribute
     {
         #region Ctor
 

@@ -96,7 +96,7 @@ namespace Nop.Services.Customers
                     query2 = query2.OrderByDescending(x => x.OrderCount);
                     break;
                 default:
-                    throw new ArgumentException("Wrong orderBy parameter", "orderBy");
+                    throw new ArgumentException("Wrong orderBy parameter", nameof(orderBy));
             }
 
             var tmp = new PagedList<dynamic>(query2, pageIndex, pageSize);

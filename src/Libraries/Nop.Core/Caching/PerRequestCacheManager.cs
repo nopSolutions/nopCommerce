@@ -37,7 +37,8 @@ namespace Nop.Core.Caching
         #endregion
 
         #region Fields
-
+        // Flag: Has Dispose already been called?
+        private bool _disposed = false;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ReaderWriterLockSlim _locker;
 
@@ -175,11 +176,26 @@ namespace Nop.Core.Caching
         }
 
         /// <summary>
-        ///     Dispose cache manager
+        /// Dispose cache manager
         /// </summary>
-        public virtual void Dispose()
+        public void Dispose()
         {
-            //nothing special
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern.
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                _locker?.Dispose();
+            }
+
+            _disposed = true;
         }
 
         #endregion

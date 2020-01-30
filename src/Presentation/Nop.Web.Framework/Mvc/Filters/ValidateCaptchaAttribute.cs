@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute enabling CAPTCHA validation
     /// </summary>
-    public class ValidateCaptchaAttribute : TypeFilterAttribute
+    public sealed class ValidateCaptchaAttribute : TypeFilterAttribute
     {
         #region Ctor
 

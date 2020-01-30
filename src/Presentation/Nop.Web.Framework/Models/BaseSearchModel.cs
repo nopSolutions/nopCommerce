@@ -10,7 +10,7 @@ namespace Nop.Web.Framework.Models
     {
         #region Ctor
 
-        public BaseSearchModel()
+        protected BaseSearchModel()
         {
             //set the default values
             Length = 10;
