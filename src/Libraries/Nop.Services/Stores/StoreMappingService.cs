@@ -1,12 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Stores;
-using Nop.Data.Extensions;
+using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Stores
@@ -21,7 +21,6 @@ namespace Nop.Services.Stores
         private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
 
         #endregion
@@ -31,13 +30,11 @@ namespace Nop.Services.Stores
         public StoreMappingService(CatalogSettings catalogSettings,
             IEventPublisher eventPublisher,
             IRepository<StoreMapping> storeMappingRepository,
-            IStaticCacheManager cacheManager,
             IStoreContext storeContext)
         {
             _catalogSettings = catalogSettings;
             _eventPublisher = eventPublisher;
             _storeMappingRepository = storeMappingRepository;
-            _cacheManager = cacheManager;
             _storeContext = storeContext;
         }
 
@@ -56,9 +53,6 @@ namespace Nop.Services.Stores
 
             _storeMappingRepository.Delete(storeMapping);
 
-            //cache
-            _cacheManager.RemoveByPrefix(NopStoreDefaults.StoreMappingPrefixCacheKey);
-
             //event notification
             _eventPublisher.EntityDeleted(storeMapping);
         }
@@ -73,7 +67,7 @@ namespace Nop.Services.Stores
             if (storeMappingId == 0)
                 return null;
 
-            return _storeMappingRepository.GetById(storeMappingId);
+            return _storeMappingRepository.ToCachedGetById(storeMappingId);
         }
 
         /// <summary>
@@ -88,7 +82,7 @@ namespace Nop.Services.Stores
                 throw new ArgumentNullException(nameof(entity));
 
             var entityId = entity.Id;
-            var entityName = entity.GetUnproxiedEntityType().Name;
+            var entityName = entity.GetType().Name;
 
             var query = from sm in _storeMappingRepository.Table
                         where sm.EntityId == entityId &&
@@ -109,9 +103,6 @@ namespace Nop.Services.Stores
 
             _storeMappingRepository.Insert(storeMapping);
 
-            //cache
-            _cacheManager.RemoveByPrefix(NopStoreDefaults.StoreMappingPrefixCacheKey);
-
             //event notification
             _eventPublisher.EntityInserted(storeMapping);
         }
@@ -131,7 +122,7 @@ namespace Nop.Services.Stores
                 throw new ArgumentOutOfRangeException(nameof(storeId));
 
             var entityId = entity.Id;
-            var entityName = entity.GetUnproxiedEntityType().Name;
+            var entityName = entity.GetType().Name;
 
             var storeMapping = new StoreMapping
             {
@@ -155,17 +146,16 @@ namespace Nop.Services.Stores
                 throw new ArgumentNullException(nameof(entity));
 
             var entityId = entity.Id;
-            var entityName = entity.GetUnproxiedEntityType().Name;
+            var entityName = entity.GetType().Name;
 
-            var key = string.Format(NopStoreDefaults.StoreMappingByEntityIdNameCacheKey, entityId, entityName);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from sm in _storeMappingRepository.Table
-                            where sm.EntityId == entityId &&
-                            sm.EntityName == entityName
-                            select sm.StoreId;
-                return query.ToArray();
-            });
+            var key = string.Format(NopStoreCachingDefaults.StoreMappingByEntityIdNameCacheKey, entityId, entityName);
+
+            var query = from sm in _storeMappingRepository.Table
+                where sm.EntityId == entityId &&
+                      sm.EntityName == entityName
+                select sm.StoreId;
+
+            return query.ToCachedArray(key);
         }
 
         /// <summary>

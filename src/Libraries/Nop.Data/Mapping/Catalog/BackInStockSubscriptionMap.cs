@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
@@ -15,22 +14,14 @@ namespace Nop.Data.Mapping.Catalog
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<BackInStockSubscription> builder)
+        public override void Configure(EntityMappingBuilder<BackInStockSubscription> builder)
         {
-            builder.ToTable(nameof(BackInStockSubscription));
-            builder.HasKey(subscription => subscription.Id);
+            builder.HasTableName(nameof(BackInStockSubscription));
 
-            builder.HasOne(subscription => subscription.Product)
-                .WithMany()
-                .HasForeignKey(subscription => subscription.ProductId)
-                .IsRequired();
-
-            builder.HasOne(subscription => subscription.Customer)
-                .WithMany()
-                .HasForeignKey(subscription => subscription.CustomerId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(backinstocksubscription => backinstocksubscription.StoreId);
+            builder.Property(backinstocksubscription => backinstocksubscription.ProductId);
+            builder.Property(backinstocksubscription => backinstocksubscription.CustomerId);
+            builder.Property(backinstocksubscription => backinstocksubscription.CreatedOnUtc);
         }
 
         #endregion

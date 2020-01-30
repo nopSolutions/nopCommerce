@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Catalog;
+using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
-using Nop.Web.Areas.Admin.Models.Discounts;
 using Nop.Web.Areas.Admin.Models.Orders;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -27,9 +25,11 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDownloadService _downloadService;
+        private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IOrderService _orderService;
+        private readonly IProductService _productService;
         private readonly IReturnRequestService _returnRequestService;
 
         #endregion
@@ -39,17 +39,21 @@ namespace Nop.Web.Areas.Admin.Factories
         public ReturnRequestModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
             IDateTimeHelper dateTimeHelper,
             IDownloadService downloadService,
+            ICustomerService customerService,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
             IOrderService orderService,
+            IProductService productService,
             IReturnRequestService returnRequestService)
         {
             _baseAdminModelFactory = baseAdminModelFactory;
             _dateTimeHelper = dateTimeHelper;
             _downloadService = downloadService;
+            _customerService = customerService;
             _localizationService = localizationService;
             _localizedModelFactory = localizedModelFactory;
             _orderService = orderService;
+            _productService = productService;
             _returnRequestService = returnRequestService;
         }
 
@@ -117,22 +121,27 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in model values from the entity
                     var returnRequestModel = returnRequest.ToModel<ReturnRequestModel>();
 
+                    var customer = _customerService.GetCustomerById(returnRequest.CustomerId);
+
                     //convert dates to the user time
                     returnRequestModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    returnRequestModel.CustomerInfo = returnRequest.Customer.IsRegistered()
-                        ? returnRequest.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+                    returnRequestModel.CustomerInfo = _customerService.IsRegistered(customer)
+                        ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     returnRequestModel.ReturnRequestStatusStr = _localizationService.GetLocalizedEnum(returnRequest.ReturnRequestStatus);
                     var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
                     if (orderItem == null)
                         return returnRequestModel;
 
+                    var order = _orderService.GetOrderById(orderItem.OrderId);
+                    var product = _productService.GetProductById(orderItem.ProductId);
+
                     returnRequestModel.ProductId = orderItem.ProductId;
-                    returnRequestModel.ProductName = orderItem.Product.Name;
-                    returnRequestModel.OrderId = orderItem.OrderId;
+                    returnRequestModel.ProductName = product.Name;
+                    returnRequestModel.OrderId = order.Id;
                     returnRequestModel.AttributeInfo = orderItem.AttributeDescription;
-                    returnRequestModel.CustomOrderNumber = orderItem.Order.CustomOrderNumber;
+                    returnRequestModel.CustomOrderNumber = order.CustomOrderNumber;
 
                     return returnRequestModel;
                 });
@@ -163,19 +172,24 @@ namespace Nop.Web.Areas.Admin.Factories
                 Quantity = returnRequest.Quantity
             };
 
+            var customer = _customerService.GetCustomerById(returnRequest.CustomerId);
+
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
 
-            model.CustomerInfo = returnRequest.Customer.IsRegistered()
-                ? returnRequest.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+            model.CustomerInfo = _customerService.IsRegistered(customer)
+                ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
             model.UploadedFileGuid = _downloadService.GetDownloadById(returnRequest.UploadedFileId)?.DownloadGuid ?? Guid.Empty;
             var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
             if (orderItem != null)
             {
-                model.ProductId = orderItem.ProductId;
-                model.ProductName = orderItem.Product.Name;
-                model.OrderId = orderItem.OrderId;
+                var order = _orderService.GetOrderById(orderItem.OrderId);
+                var product = _productService.GetProductById(orderItem.ProductId);
+
+                model.ProductId = product.Id;
+                model.ProductName = product.Name;
+                model.OrderId = order.Id;
                 model.AttributeInfo = orderItem.AttributeDescription;
-                model.CustomOrderNumber = orderItem.Order.CustomOrderNumber;
+                model.CustomOrderNumber = order.CustomOrderNumber;
             }
 
             if (excludeProperties)

@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Security;
 
 namespace Nop.Data.Mapping.Security
@@ -15,16 +14,13 @@ namespace Nop.Data.Mapping.Security
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<PermissionRecord> builder)
+        public override void Configure(EntityMappingBuilder<PermissionRecord> builder)
         {
-            builder.ToTable(nameof(PermissionRecord));
-            builder.HasKey(record => record.Id);
+            builder.HasTableName(nameof(PermissionRecord));
 
-            builder.Property(record => record.Name).IsRequired();
-            builder.Property(record => record.SystemName).HasMaxLength(255).IsRequired();
-            builder.Property(record => record.Category).HasMaxLength(255).IsRequired();
-
-            base.Configure(builder);
+            builder.Property(record => record.Name).IsNullable(false);
+            builder.Property(record => record.SystemName).HasLength(255).IsNullable(false);
+            builder.Property(record => record.Category).HasLength(255).IsNullable(false);
         }
 
         #endregion

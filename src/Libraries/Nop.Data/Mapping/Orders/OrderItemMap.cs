@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Orders;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Orders
 {
@@ -15,31 +15,30 @@ namespace Nop.Data.Mapping.Orders
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<OrderItem> builder)
+        public override void Configure(EntityMappingBuilder<OrderItem> builder)
         {
-            builder.ToTable(nameof(OrderItem));
-            builder.HasKey(orderItem => orderItem.Id);
+            builder.HasTableName(nameof(OrderItem));
 
-            builder.Property(orderItem => orderItem.UnitPriceInclTax).HasColumnType("decimal(18, 4)");
-            builder.Property(orderItem => orderItem.UnitPriceExclTax).HasColumnType("decimal(18, 4)");
-            builder.Property(orderItem => orderItem.PriceInclTax).HasColumnType("decimal(18, 4)");
-            builder.Property(orderItem => orderItem.PriceExclTax).HasColumnType("decimal(18, 4)");
-            builder.Property(orderItem => orderItem.DiscountAmountInclTax).HasColumnType("decimal(18, 4)");
-            builder.Property(orderItem => orderItem.DiscountAmountExclTax).HasColumnType("decimal(18, 4)");
-            builder.Property(orderItem => orderItem.OriginalProductCost).HasColumnType("decimal(18, 4)");
-            builder.Property(orderItem => orderItem.ItemWeight).HasColumnType("decimal(18, 4)");
+            builder.Property(orderItem => orderItem.UnitPriceInclTax).HasDecimal();
+            builder.Property(orderItem => orderItem.UnitPriceExclTax).HasDecimal();
+            builder.Property(orderItem => orderItem.PriceInclTax).HasDecimal();
+            builder.Property(orderItem => orderItem.PriceExclTax).HasDecimal();
+            builder.Property(orderItem => orderItem.DiscountAmountInclTax).HasDecimal();
+            builder.Property(orderItem => orderItem.DiscountAmountExclTax).HasDecimal();
+            builder.Property(orderItem => orderItem.OriginalProductCost).HasDecimal();
+            builder.Property(orderItem => orderItem.ItemWeight).HasDecimal();
 
-            builder.HasOne(orderItem => orderItem.Order)
-                .WithMany(order => order.OrderItems)
-                .HasForeignKey(orderItem => orderItem.OrderId)
-                .IsRequired();
-
-            builder.HasOne(orderItem => orderItem.Product)
-                .WithMany()
-                .HasForeignKey(orderItem => orderItem.ProductId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(orderItem => orderItem.OrderItemGuid);
+            builder.Property(orderItem => orderItem.OrderId);
+            builder.Property(orderItem => orderItem.ProductId);
+            builder.Property(orderItem => orderItem.Quantity);
+            builder.Property(orderItem => orderItem.AttributeDescription);
+            builder.Property(orderItem => orderItem.AttributesXml);
+            builder.Property(orderItem => orderItem.DownloadCount);
+            builder.Property(orderItem => orderItem.IsDownloadActivated);
+            builder.Property(orderItem => orderItem.LicenseDownloadId);
+            builder.Property(orderItem => orderItem.RentalStartDateUtc);
+            builder.Property(orderItem => orderItem.RentalEndDateUtc);
         }
 
         #endregion

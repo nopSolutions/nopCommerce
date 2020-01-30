@@ -14,10 +14,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
     public partial class ModelCacheEventConsumer :
         //settings
         IConsumer<EntityUpdatedEvent<Setting>>,
-        //specification attributes
-        IConsumer<EntityInsertedEvent<SpecificationAttribute>>,
-        IConsumer<EntityUpdatedEvent<SpecificationAttribute>>,
-        IConsumer<EntityDeletedEvent<SpecificationAttribute>>,
         //categories
         IConsumer<EntityInsertedEvent<Category>>,
         IConsumer<EntityUpdatedEvent<Category>>,
@@ -54,20 +50,6 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Cache
         {
             //clear models which depend on settings
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.OfficialNewsPrefixCacheKey); //depends on AdminAreaSettings.HideAdvertisementsOnAdminArea
-        }
-
-        //specification attributes
-        public void HandleEvent(EntityInsertedEvent<SpecificationAttribute> eventMessage)
-        {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.SpecAttributesPrefixCacheKey);
-        }
-        public void HandleEvent(EntityUpdatedEvent<SpecificationAttribute> eventMessage)
-        {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.SpecAttributesPrefixCacheKey);
-        }
-        public void HandleEvent(EntityDeletedEvent<SpecificationAttribute> eventMessage)
-        {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.SpecAttributesPrefixCacheKey);
         }
 
         //categories

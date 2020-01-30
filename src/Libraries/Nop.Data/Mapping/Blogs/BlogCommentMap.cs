@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Blogs;
 
 namespace Nop.Data.Mapping.Blogs
@@ -15,27 +14,16 @@ namespace Nop.Data.Mapping.Blogs
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<BlogComment> builder)
+        public override void Configure(EntityMappingBuilder<BlogComment> builder)
         {
-            builder.ToTable(nameof(BlogComment));
-            builder.HasKey(comment => comment.Id);
+            builder.HasTableName(nameof(BlogComment));
 
-            builder.HasOne(comment => comment.BlogPost)
-                .WithMany(blog => blog.BlogComments)
-                .HasForeignKey(comment => comment.BlogPostId)
-                .IsRequired();
-
-            builder.HasOne(comment => comment.Customer)
-                .WithMany()
-                .HasForeignKey(comment => comment.CustomerId)
-                .IsRequired();
-
-            builder.HasOne(comment => comment.Store)
-                .WithMany()
-                .HasForeignKey(comment => comment.StoreId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(blogcomment => blogcomment.CustomerId);
+            builder.Property(blogcomment => blogcomment.CommentText);
+            builder.Property(blogcomment => blogcomment.IsApproved);
+            builder.Property(blogcomment => blogcomment.StoreId);
+            builder.Property(blogcomment => blogcomment.BlogPostId);
+            builder.Property(blogcomment => blogcomment.CreatedOnUtc);
         }
 
         #endregion

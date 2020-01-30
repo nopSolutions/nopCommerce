@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
@@ -76,6 +78,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
         private readonly IMeasureService _measureService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IShippingService _shippingService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IWorkContext _workContext;
         private readonly UPSSettings _upsSettings;
 
@@ -91,6 +94,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
             IMeasureService measureService,
             IOrderTotalCalculationService orderTotalCalculationService,
             IShippingService shippingService,
+            IStateProvinceService stateProvinceService,
             IWorkContext workContext,
             UPSSettings upsSettings)
         {
@@ -102,6 +106,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
             _measureService = measureService;
             _orderTotalCalculationService = orderTotalCalculationService;
             _shippingService = shippingService;
+            _stateProvinceService = stateProvinceService;
             _workContext = workContext;
             _upsSettings = upsSettings;
         }
@@ -380,7 +385,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
             };
 
             //prepare addresses details
-            var stateCodeTo = shippingOptionRequest.ShippingAddress.StateProvince?.Abbreviation;
+            var stateCodeTo = _stateProvinceService.GetStateProvinceByAddress(shippingOptionRequest.ShippingAddress)?.Abbreviation;
             var stateCodeFrom = shippingOptionRequest.StateProvinceFrom?.Abbreviation;
             var countryCodeFrom = (shippingOptionRequest.CountryFrom ?? _countryService.GetAllCountries().FirstOrDefault())
                 .TwoLetterIsoCode ?? string.Empty;
@@ -398,7 +403,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 AddressLine = new[] { shippingOptionRequest.ShippingAddress.Address1, shippingOptionRequest.ShippingAddress.Address2 },
                 City = shippingOptionRequest.ShippingAddress.City,
                 StateProvinceCode = stateCodeTo,
-                CountryCode = shippingOptionRequest.ShippingAddress.Country.TwoLetterIsoCode,
+                CountryCode = _countryService.GetCountryByAddress(shippingOptionRequest.ShippingAddress)?.TwoLetterIsoCode,
                 PostalCode = shippingOptionRequest.ShippingAddress.ZipPostalCode,
                 ResidentialAddressIndicator = string.Empty
             };
@@ -539,8 +544,8 @@ namespace Nop.Plugin.Shipping.UPS.Services
             return shippingOptionRequest.Items.SelectMany(packageItem =>
             {
                 //get dimensions and weight of the single item
-                var (width, length, height) = GetDimensionsForSingleItem(packageItem.ShoppingCartItem);
-                var weight = GetWeightForSingleItem(packageItem.ShoppingCartItem);
+                var (width, length, height) = GetDimensionsForSingleItem(packageItem.ShoppingCartItem, packageItem.Product);
+                var weight = GetWeightForSingleItem(packageItem.ShoppingCartItem, shippingOptionRequest.Customer, packageItem.Product);
 
                 var insuranceAmount = 0;
                 if (_upsSettings.InsurePackage)
@@ -551,7 +556,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
                     //One could argue that the insured value should be based on Cost rather than Price.
                     //GetUnitPrice handles Attribute Adjustments and also Customer Entered Price.
                     //But, even with includeDiscounts:false, it could apply a "discount" from Tier pricing.
-                    insuranceAmount = Convert.ToInt32(packageItem.ShoppingCartItem.Product.Price);
+                    insuranceAmount = Convert.ToInt32(packageItem.Product.Price);
                 }
 
                 //create packages according to item quantity
@@ -646,8 +651,8 @@ namespace Nop.Plugin.Shipping.UPS.Services
             if (shippingOptionRequest.Items.Count == 1 && shippingOptionRequest.Items.FirstOrDefault().GetQuantity() == 1)
             {
                 //get dimensions and weight of the single cubic size of package
-                var item = shippingOptionRequest.Items.FirstOrDefault().ShoppingCartItem;
-                (width, length, height) = GetDimensionsForSingleItem(item);
+                var item = shippingOptionRequest.Items.FirstOrDefault();
+                (width, length, height) = GetDimensionsForSingleItem(item.ShoppingCartItem, item.Product);
             }
             else
             {
@@ -658,7 +663,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 var totalVolume = shippingOptionRequest.Items.Sum(item =>
                 {
                     //get dimensions and weight of the single item
-                    var (itemWidth, itemLength, itemHeight) = GetDimensionsForSingleItem(item.ShoppingCartItem);
+                    var (itemWidth, itemLength, itemHeight) = GetDimensionsForSingleItem(item.ShoppingCartItem, item.Product);
                     return item.GetQuantity() * itemWidth * itemLength * itemHeight;
                 });
                 if (totalVolume > decimal.Zero)
@@ -714,9 +719,9 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// </summary>
         /// <param name="item">Shopping cart item</param>
         /// <returns>Dimensions values</returns>
-        private (decimal width, decimal length, decimal height) GetDimensionsForSingleItem(ShoppingCartItem item)
+        private (decimal width, decimal length, decimal height) GetDimensionsForSingleItem(ShoppingCartItem item, Product product)
         {
-            var items = new[] { new GetShippingOptionRequest.PackageItem(item, 1) };
+            var items = new[] { new GetShippingOptionRequest.PackageItem(item, product, 1) };
             return GetDimensions(items);
         }
 
@@ -750,12 +755,12 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// </summary>
         /// <param name="item">Shopping cart item</param>
         /// <returns>Weight value</returns>
-        private decimal GetWeightForSingleItem(ShoppingCartItem item)
+        private decimal GetWeightForSingleItem(ShoppingCartItem item, Customer customer, Product product)
         {
             var shippingOptionRequest = new GetShippingOptionRequest
             {
-                Customer = item.Customer,
-                Items = new[] { new GetShippingOptionRequest.PackageItem(item, 1) }
+                Customer = customer,
+                Items = new[] { new GetShippingOptionRequest.PackageItem(item, product, 1) }
             };
             return GetWeight(shippingOptionRequest);
         }

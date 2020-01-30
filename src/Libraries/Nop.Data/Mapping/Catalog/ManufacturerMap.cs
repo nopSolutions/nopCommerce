@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
@@ -15,20 +14,29 @@ namespace Nop.Data.Mapping.Catalog
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<Manufacturer> builder)
+        public override void Configure(EntityMappingBuilder<Manufacturer> builder)
         {
-            builder.ToTable(nameof(Manufacturer));
-            builder.HasKey(manufacturer => manufacturer.Id);
+            builder.HasTableName(nameof(Manufacturer));
 
-            builder.Property(manufacturer => manufacturer.Name).HasMaxLength(400).IsRequired();
-            builder.Property(manufacturer => manufacturer.MetaKeywords).HasMaxLength(400);
-            builder.Property(manufacturer => manufacturer.MetaTitle).HasMaxLength(400);
-            builder.Property(manufacturer => manufacturer.PriceRanges).HasMaxLength(400);
-            builder.Property(manufacturer => manufacturer.PageSizeOptions).HasMaxLength(200);
-            
-            builder.Ignore(manufacturer => manufacturer.AppliedDiscounts);
+            builder.Property(manufacturer => manufacturer.Name).HasLength(400).IsNullable(false);
+            builder.Property(manufacturer => manufacturer.MetaKeywords).HasLength(400);
+            builder.Property(manufacturer => manufacturer.MetaTitle).HasLength(400);
+            builder.Property(manufacturer => manufacturer.PriceRanges).HasLength(400);
+            builder.Property(manufacturer => manufacturer.PageSizeOptions).HasLength(200);
 
-            base.Configure(builder);
+            builder.Property(manufacturer => manufacturer.Description);
+            builder.Property(manufacturer => manufacturer.ManufacturerTemplateId);
+            builder.Property(manufacturer => manufacturer.MetaDescription);
+            builder.Property(manufacturer => manufacturer.PictureId);
+            builder.Property(manufacturer => manufacturer.PageSize);
+            builder.Property(manufacturer => manufacturer.AllowCustomersToSelectPageSize);
+            builder.Property(manufacturer => manufacturer.SubjectToAcl);
+            builder.Property(manufacturer => manufacturer.LimitedToStores);
+            builder.Property(manufacturer => manufacturer.Published);
+            builder.Property(manufacturer => manufacturer.Deleted);
+            builder.Property(manufacturer => manufacturer.DisplayOrder);
+            builder.Property(manufacturer => manufacturer.CreatedOnUtc);
+            builder.Property(manufacturer => manufacturer.UpdatedOnUtc);
         }
 
         #endregion

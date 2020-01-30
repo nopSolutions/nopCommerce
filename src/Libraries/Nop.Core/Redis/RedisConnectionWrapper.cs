@@ -16,11 +16,11 @@ namespace Nop.Core.Redis
     {
         #region Fields
 
+        private bool _disposed = false;
         private readonly NopConfig _config;
-
         private readonly object _lock = new object();
-        private volatile ConnectionMultiplexer _connection;
         private readonly Lazy<string> _connectionString;
+        private volatile ConnectionMultiplexer _connection;
         private volatile RedLockFactory _redisLockFactory;
 
         #endregion
@@ -167,11 +167,25 @@ namespace Nop.Core.Redis
         /// </summary>
         public void Dispose()
         {
-            //dispose ConnectionMultiplexer
-            _connection?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            //dispose RedLock factory
-            _redisLockFactory?.Dispose();
+        // Protected implementation of Dispose pattern.
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                //dispose ConnectionMultiplexer
+                _connection?.Dispose();
+
+                //dispose RedLock factory
+                _redisLockFactory?.Dispose();
+            }
+            _disposed = true;
         }
 
         #endregion

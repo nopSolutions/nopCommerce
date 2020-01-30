@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>Usa le memorizzazione dati integrata (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>Nome Server SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>Il nome del Server SQL è obbligatorio</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>Password SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>La password SQLè obbligatoria</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>Utente SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>L'utente SQL è obbligatorio</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Usa il database Microsoft SQL Server (o SQL Express)</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Informazioni Negozio</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>Per completare questa procedura guidata è necessario conoscere alcune informazioni riguardanti il server di database ("stringa di connessione"). Si prega di contattare il proprio ISP, se necessario. Se si sta installando su una macchina locale o su server potrebbero essere necessarie informazioni dal proprio amministratore di sistema.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>Utilizzare l'autenticazione integrata di Windows</Value>
   </LocaleResource>
 </Language>

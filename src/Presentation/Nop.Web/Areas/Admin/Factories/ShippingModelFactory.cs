@@ -34,6 +34,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IPickupPluginManager _pickupPluginManager;
         private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IShippingService _shippingService;
+        private readonly IStateProvinceService _stateProvinceService;
 
         #endregion
 
@@ -47,7 +48,8 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizedModelFactory localizedModelFactory,
             IPickupPluginManager pickupPluginManager,
             IShippingPluginManager shippingPluginManager,
-            IShippingService shippingService)
+            IShippingService shippingService,
+            IStateProvinceService stateProvinceService)
         {
             _addressService = addressService;
             _baseAdminModelFactory = baseAdminModelFactory;
@@ -58,6 +60,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _pickupPluginManager = pickupPluginManager;
             _shippingPluginManager = shippingPluginManager;
             _shippingService = shippingService;
+            _stateProvinceService = stateProvinceService;
         }
 
         #endregion
@@ -500,7 +503,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AvailableCountries = countries.Select(country =>
             {
                 var countryModel = country.ToModel<CountryModel>();
-                countryModel.NumberOfStates = country.StateProvinces?.Count ?? 0;
+                countryModel.NumberOfStates = _stateProvinceService.GetStateProvincesByCountryId(country.Id)?.Count ?? 0;
 
                 return countryModel;
             }).ToList();

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Nop.Core.Domain.Orders
 {
@@ -31,10 +31,5 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the date and time of order note creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-
-        /// <summary>
-        /// Gets the order
-        /// </summary>
-        public virtual Order Order { get; set; }
     }
 }

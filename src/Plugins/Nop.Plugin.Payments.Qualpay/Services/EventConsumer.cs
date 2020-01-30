@@ -48,13 +48,12 @@ namespace Nop.Plugin.Payments.Qualpay.Services
                 return;
 
             //add first payment to history right after creating recurring payment
-            recurringPayment.RecurringPaymentHistory.Add(new RecurringPaymentHistory
+            _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory
             {
-                RecurringPayment = recurringPayment,
+                RecurringPaymentId = recurringPayment.Id,
                 CreatedOnUtc = DateTime.UtcNow,
                 OrderId = recurringPayment.InitialOrderId,
             });
-            _orderService.UpdateRecurringPayment(recurringPayment);
         }
 
         /// <summary>

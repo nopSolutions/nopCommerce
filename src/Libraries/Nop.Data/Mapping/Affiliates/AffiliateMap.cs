@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Affiliates;
 
 namespace Nop.Data.Mapping.Affiliates
@@ -15,18 +14,15 @@ namespace Nop.Data.Mapping.Affiliates
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<Affiliate> builder)
+        public override void Configure(EntityMappingBuilder<Affiliate> builder)
         {
-            builder.ToTable(nameof(Affiliate));
-            builder.HasKey(affiliate => affiliate.Id);
+            builder.HasTableName(nameof(Affiliate));
 
-            builder.HasOne(affiliate => affiliate.Address)
-                .WithMany()
-                .HasForeignKey(affiliate => affiliate.AddressId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            base.Configure(builder);
+            builder.Property(affiliate => affiliate.AddressId);
+            builder.Property(affiliate => affiliate.AdminComment);
+            builder.Property(affiliate => affiliate.FriendlyUrlName);
+            builder.Property(affiliate => affiliate.Deleted);
+            builder.Property(affiliate => affiliate.Active);
         }
 
         #endregion

@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -92,9 +93,10 @@ namespace Nop.Services.Shipping
             /// </summary>
             /// <param name="sci">Shopping cart item</param>
             /// <param name="qty">Override "Quantity" property of shopping cart item</param>
-            public PackageItem(ShoppingCartItem sci, int? qty = null)
+            public PackageItem(ShoppingCartItem sci, Product product, int? qty = null)
             {
                 ShoppingCartItem = sci;
+                Product = product;
                 OverriddenQuantity = qty;
             }
 
@@ -102,6 +104,11 @@ namespace Nop.Services.Shipping
             /// Shopping cart item
             /// </summary>
             public ShoppingCartItem ShoppingCartItem { get; set; }
+
+            /// <summary>
+            /// Product
+            /// </summary>
+            public Product Product { get; set; }
 
             /// <summary>
             /// If specified, override "Quantity" property of "ShoppingCartItem

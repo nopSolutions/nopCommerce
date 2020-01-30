@@ -19,6 +19,7 @@ namespace Nop.Core.Caching
     {
         #region Fields
 
+        private bool _disposed = false;
         private readonly ICacheManager _perRequestCacheManager;
         private readonly IRedisConnectionWrapper _connectionWrapper;
         private readonly IDatabase _db;
@@ -268,7 +269,6 @@ namespace Nop.Core.Caching
             _perRequestCacheManager.Remove(key);
         }
 
-
         /// <summary>
         /// Removes items by key prefix
         /// </summary>
@@ -308,10 +308,24 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Dispose cache manager
         /// </summary>
-        public virtual void Dispose()
+        public void Dispose()
         {
-            //if (_connectionWrapper != null)
-            //    _connectionWrapper.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern.
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                //nothing special
+            }
+
+            _disposed = true;
         }
 
         #endregion

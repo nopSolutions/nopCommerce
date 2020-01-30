@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Logging;
 
 namespace Nop.Data.Mapping.Logging
@@ -15,22 +14,20 @@ namespace Nop.Data.Mapping.Logging
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<Log> builder)
+        public override void Configure(EntityMappingBuilder<Log> builder)
         {
-            builder.ToTable(nameof(Log));
-            builder.HasKey(logItem => logItem.Id);
+            builder.HasTableName(nameof(Log));
 
-            builder.Property(logItem => logItem.ShortMessage).IsRequired();
-            builder.Property(logItem => logItem.IpAddress).HasMaxLength(200);
+            builder.Property(logItem => logItem.ShortMessage).IsNullable(false);
+            builder.Property(logItem => logItem.IpAddress).HasLength(200);
+            builder.Property(logItem => logItem.LogLevelId);
+            builder.Property(logItem => logItem.FullMessage);
+            builder.Property(logItem => logItem.CustomerId);
+            builder.Property(logItem => logItem.PageUrl);
+            builder.Property(logItem => logItem.ReferrerUrl);
+            builder.Property(logItem => logItem.CreatedOnUtc);
 
             builder.Ignore(logItem => logItem.LogLevel);
-
-            builder.HasOne(logItem => logItem.Customer)
-                .WithMany()
-                .HasForeignKey(logItem => logItem.CustomerId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            base.Configure(builder);
         }
 
         #endregion

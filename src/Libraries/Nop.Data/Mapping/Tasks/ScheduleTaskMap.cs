@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Tasks;
 
 namespace Nop.Data.Mapping.Tasks
@@ -15,15 +14,18 @@ namespace Nop.Data.Mapping.Tasks
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<ScheduleTask> builder)
+        public override void Configure(EntityMappingBuilder<ScheduleTask> builder)
         {
-            builder.ToTable(nameof(ScheduleTask));
-            builder.HasKey(task => task.Id);
+            builder.HasTableName(nameof(ScheduleTask));
 
-            builder.Property(task => task.Name).IsRequired();
-            builder.Property(task => task.Type).IsRequired();
-
-            base.Configure(builder);
+            builder.Property(task => task.Name).IsNullable(false);
+            builder.Property(task => task.Type).IsNullable(false);
+            builder.Property(task => task.Seconds);
+            builder.Property(task => task.Enabled);
+            builder.Property(task => task.StopOnError);
+            builder.Property(task => task.LastStartUtc);
+            builder.Property(task => task.LastEndUtc);
+            builder.Property(task => task.LastSuccessUtc);
         }
 
         #endregion

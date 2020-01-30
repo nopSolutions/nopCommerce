@@ -6,8 +6,10 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Html;
 using Nop.Services.Catalog;
+using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Stores;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Extensions;
@@ -24,10 +26,12 @@ namespace Nop.Web.Areas.Admin.Factories
 
         private readonly CatalogSettings _catalogSettings;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IProductService _productService;
         private readonly IReviewTypeService _reviewTypeService;
+        private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
 
         #endregion
@@ -36,18 +40,22 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public ProductReviewModelFactory(CatalogSettings catalogSettings,
             IBaseAdminModelFactory baseAdminModelFactory,
+            ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             IProductService productService,
             IReviewTypeService reviewTypeService,
+            IStoreService storeService,
             IWorkContext workContext)
         {
             _catalogSettings = catalogSettings;
             _baseAdminModelFactory = baseAdminModelFactory;
+            _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _localizationService = localizationService;
             _productService = productService;
             _reviewTypeService = reviewTypeService;
+            _storeService = storeService;
             _workContext = workContext;
         }
 
@@ -137,10 +145,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     productReviewModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    productReviewModel.StoreName = productReview.Store.Name;
-                    productReviewModel.ProductName = productReview.Product.Name;
-                    productReviewModel.CustomerInfo = productReview.Customer.IsRegistered()
-                        ? productReview.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+                    productReviewModel.StoreName = _storeService.GetStoreById(productReview.StoreId)?.Name;
+                    productReviewModel.ProductName = _productService.GetProductById(productReview.ProductId)?.Name;
+                    productReviewModel.CustomerInfo = _customerService.GetCustomerById(productReview.CustomerId) is Customer customer && _customerService.IsRegistered(customer)
+                        ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     productReviewModel.ReviewText = HtmlHelper.FormatText(productReview.ReviewText, false, true, false, false, false, false);
                     productReviewModel.ReplyText = HtmlHelper.FormatText(productReview.ReplyText, false, true, false, false, false, false);
 
@@ -167,15 +175,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 model = model ?? new ProductReviewModel
                 {
                     Id = productReview.Id,
-                    StoreName = productReview.Store.Name,
+                    StoreName = _storeService.GetStoreById(productReview.StoreId)?.Name,
                     ProductId = productReview.ProductId,
-                    ProductName = productReview.Product.Name,
+                    ProductName = _productService.GetProductById(productReview.ProductId)?.Name,
                     CustomerId = productReview.CustomerId,
                     Rating = productReview.Rating
                 };
 
-                model.CustomerInfo = productReview.Customer.IsRegistered()
-                    ? productReview.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+                model.CustomerInfo = _customerService.GetCustomerById(productReview.CustomerId) is Customer customer && _customerService.IsRegistered(customer)
+                    ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+
                 model.CreatedOn = _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc);
 
                 if (!excludeProperties)
@@ -212,7 +221,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             searchModel.ProductReviewId = productReview.Id;
 
-            searchModel.IsAnyReviewTypes = productReview.ProductReviewReviewTypeMappingEntries.Any();
+            searchModel.IsAnyReviewTypes = _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewId(productReview.Id).Any();
 
             //prepare page parameters
             searchModel.SetGridPageSize();            

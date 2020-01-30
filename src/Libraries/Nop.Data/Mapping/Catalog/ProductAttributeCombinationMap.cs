@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Catalog;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Catalog
 {
@@ -15,22 +15,21 @@ namespace Nop.Data.Mapping.Catalog
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<ProductAttributeCombination> builder)
+        public override void Configure(EntityMappingBuilder<ProductAttributeCombination> builder)
         {
-            builder.ToTable(nameof(ProductAttributeCombination));
-            builder.HasKey(combination => combination.Id);
+            builder.HasTableName(nameof(ProductAttributeCombination));
 
-            builder.Property(combination => combination.Sku).HasMaxLength(400);
-            builder.Property(combination => combination.ManufacturerPartNumber).HasMaxLength(400);
-            builder.Property(combination => combination.Gtin).HasMaxLength(400);
-            builder.Property(combination => combination.OverriddenPrice).HasColumnType("decimal(18, 4)");
+            builder.Property(combination => combination.Sku).HasLength(400);
+            builder.Property(combination => combination.ManufacturerPartNumber).HasLength(400);
+            builder.Property(combination => combination.Gtin).HasLength(400);
+            builder.Property(combination => combination.OverriddenPrice).HasDecimal();
 
-            builder.HasOne(combination => combination.Product)
-                .WithMany(product => product.ProductAttributeCombinations)
-                .HasForeignKey(combination => combination.ProductId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(productattributecombination => productattributecombination.ProductId);
+            builder.Property(productattributecombination => productattributecombination.AttributesXml);
+            builder.Property(productattributecombination => productattributecombination.StockQuantity);
+            builder.Property(productattributecombination => productattributecombination.AllowOutOfStockOrders);
+            builder.Property(productattributecombination => productattributecombination.NotifyAdminForQuantityBelow);
+            builder.Property(productattributecombination => productattributecombination.PictureId);
         }
 
         #endregion

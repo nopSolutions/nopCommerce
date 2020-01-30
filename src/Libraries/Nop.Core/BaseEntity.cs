@@ -1,4 +1,4 @@
-namespace Nop.Core
+﻿namespace Nop.Core
 {
     /// <summary>
     /// Base class for entities

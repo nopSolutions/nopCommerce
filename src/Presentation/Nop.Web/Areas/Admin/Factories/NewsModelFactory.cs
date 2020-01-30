@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.News;
 using Nop.Core.Html;
+using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.News;
@@ -27,6 +29,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         private readonly CatalogSettings _catalogSettings;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -41,6 +44,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public NewsModelFactory(CatalogSettings catalogSettings,
             IBaseAdminModelFactory baseAdminModelFactory,
+            ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             ILanguageService languageService,
             ILocalizationService localizationService,
@@ -50,6 +54,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IUrlRecordService urlRecordService)
         {
             _catalogSettings = catalogSettings;
+            _customerService = customerService;
             _baseAdminModelFactory = baseAdminModelFactory;
             _dateTimeHelper = dateTimeHelper;
             _languageService = languageService;
@@ -61,7 +66,7 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -249,12 +254,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 toUtc: createdOnToValue,
                 commentText: searchModel.SearchText).ToPagedList(searchModel);
 
-            //prepare store names (to avoid loading for each comment)
-            var storeNames = _storeService.GetAllStores().ToDictionary(store => store.Id, store => store.Name);
-
             //prepare list model
             var model = new NewsCommentListModel().PrepareToGrid(searchModel, comments, () =>
             {
+                //prepare store names (to avoid loading for each comment)
+                var storeNames = _storeService.GetAllStores().ToDictionary(store => store.Id, store => store.Name);
+
                 return comments.Select(newsComment =>
                 {
                     //fill in model values from the entity
@@ -264,9 +269,11 @@ namespace Nop.Web.Areas.Admin.Factories
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    commentModel.NewsItemTitle = newsComment.NewsItem.Title;
-                    commentModel.CustomerInfo = newsComment.Customer.IsRegistered()
-                        ? newsComment.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+                    commentModel.NewsItemTitle = _newsService.GetNewsById(newsComment.NewsItemId)?.Title;
+
+                    if (_customerService.GetCustomerById(newsComment.CustomerId) is Customer customer)
+                        commentModel.CustomerInfo = _customerService.IsRegistered(customer) ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+
                     commentModel.CommentText = HtmlHelper.FormatText(newsComment.CommentText, false, true, false, false, false, false);
                     commentModel.StoreName = storeNames.ContainsKey(newsComment.StoreId) ? storeNames[newsComment.StoreId] : "Deleted";
 

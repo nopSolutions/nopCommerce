@@ -8,6 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Security;
 using Nop.Core.Rss;
+using Nop.Services.Customers;
 using Nop.Services.Forums;
 using Nop.Services.Localization;
 using Nop.Web.Factories;
@@ -25,6 +26,7 @@ namespace Nop.Web.Controllers
 
         private readonly CaptchaSettings _captchaSettings;
         private readonly ForumSettings _forumSettings;
+        private readonly ICustomerService _customerService;
         private readonly IForumModelFactory _forumModelFactory;
         private readonly IForumService _forumService;
         private readonly ILocalizationService _localizationService;
@@ -38,6 +40,7 @@ namespace Nop.Web.Controllers
 
         public BoardsController(CaptchaSettings captchaSettings,
             ForumSettings forumSettings,
+            ICustomerService customerService,
             IForumModelFactory forumModelFactory,
             IForumService forumService,
             ILocalizationService localizationService,
@@ -47,6 +50,7 @@ namespace Nop.Web.Controllers
         {
             _captchaSettings = captchaSettings;
             _forumSettings = forumSettings;
+            _customerService = customerService;
             _forumModelFactory = forumModelFactory;
             _forumService = forumService;
             _localizationService = localizationService;
@@ -512,7 +516,8 @@ namespace Nop.Web.Controllers
 
             if (forumTopic == null)
                 return RedirectToRoute("Boards");
-            var forum = forumTopic.Forum;
+
+            var forum = _forumService.GetForumById(forumTopic.ForumId);
             if (forum == null)
                 return RedirectToRoute("Boards");
 
@@ -632,26 +637,28 @@ namespace Nop.Web.Controllers
                 });
 
             var forumPost = _forumService.GetPostById(id);
-            if (forumPost != null)
+
+            //TODO: ???? get topic one more time because it can be deleted (first or only post deleted)
+            var forumTopic = _forumService.GetTopicById(forumPost.TopicId);
+
+            if (forumPost != null && forumTopic != null)
             {
                 if (!_forumService.IsCustomerAllowedToDeletePost(_workContext.CurrentCustomer, forumPost))
                     return Challenge();
 
-                var forumTopic = forumPost.ForumTopic;
-                var forumId = forumTopic.Forum.Id;
-                var forumSlug = _forumService.GetForumSeName(forumTopic.Forum);
+                var forum = _forumService.GetForumById(forumTopic.ForumId);
+                var forumSlug = _forumService.GetForumSeName(forum);
 
-                _forumService.DeletePost(forumPost);
-
-                //get topic one more time because it can be deleted (first or only post deleted)
-                forumTopic = _forumService.GetTopicById(forumPost.TopicId);
                 if (forumTopic == null)
                 {
                     return Json(new
                     {
-                        redirect = Url.RouteUrl("ForumSlug", new { id = forumId, slug = forumSlug }),
+                        redirect = Url.RouteUrl("ForumSlug", new { id = forum.Id, slug = forumSlug }),
                     });
-                }
+                }                
+
+                _forumService.DeletePost(forumPost);
+                                
                 return Json(new
                 {
                     redirect = Url.RouteUrl("TopicSlug", new { id = forumTopic.Id, slug = _forumService.GetTopicSeName(forumTopic) }),
@@ -759,9 +766,9 @@ namespace Nop.Web.Controllers
                     var pageIndex = (_forumService.CalculateTopicPageIndex(forumPost.TopicId, pageSize, forumPost.Id) + 1);
                     var url = string.Empty;
                     if (pageIndex > 1)
-                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = _forumService.GetTopicSeName(forumPost.ForumTopic), pageNumber = pageIndex });
+                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = _forumService.GetTopicSeName(forumTopic), pageNumber = pageIndex });
                     else
-                        url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = _forumService.GetTopicSeName(forumPost.ForumTopic) });
+                        url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = _forumService.GetTopicSeName(forumTopic) });
                     return Redirect($"{url}#{forumPost.Id}");
                 }
                 catch (Exception ex)
@@ -807,11 +814,11 @@ namespace Nop.Web.Controllers
             if (!_forumService.IsCustomerAllowedToEditPost(_workContext.CurrentCustomer, forumPost))
                 return Challenge();
 
-            var forumTopic = forumPost.ForumTopic;
+            var forumTopic = _forumService.GetTopicById(forumPost.TopicId);
             if (forumTopic == null)
                 return RedirectToRoute("Boards");
 
-            var forum = forumTopic.Forum;
+            var forum = _forumService.GetForumById(forumTopic.ForumId);
             if (forum == null)
                 return RedirectToRoute("Boards");
 
@@ -871,11 +878,11 @@ namespace Nop.Web.Controllers
                     var url = string.Empty;
                     if (pageIndex > 1)
                     {
-                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = _forumService.GetTopicSeName(forumPost.ForumTopic), pageNumber = pageIndex });
+                        url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = _forumService.GetTopicSeName(forumTopic), pageNumber = pageIndex });
                     }
                     else
                     {
-                        url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = _forumService.GetTopicSeName(forumPost.ForumTopic) });
+                        url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = _forumService.GetTopicSeName(forumTopic) });
                     }
                     return Redirect($"{url}#{forumPost.Id}");
                 }
@@ -944,7 +951,7 @@ namespace Nop.Web.Controllers
             if (forumPost == null)
                 return new NullJsonResult();
 
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Json(new
                 {
                     Error = _localizationService.GetResource("Forum.Votes.Login"),

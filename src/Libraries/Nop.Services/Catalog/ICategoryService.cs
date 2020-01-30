@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Discounts;
+using Nop.Services.Discounts;
 
 namespace Nop.Services.Catalog
 {
@@ -9,6 +12,12 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial interface ICategoryService
     {
+        /// <summary>
+        /// Clean up category references for a specified discount
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        void ClearDiscountCategoryMapping(Discount discount);
+
         /// <summary>
         /// Delete category
         /// </summary>
@@ -52,6 +61,14 @@ namespace Nop.Services.Catalog
         IList<Category> GetAllCategoriesDisplayedOnHomepage(bool showHidden = false);
 
         /// <summary>
+        /// Get category identifiers to which a discount is applied
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Category identifiers</returns>
+        IList<int> GetAppliedCategoryIds(Discount discount, Customer customer);
+
+        /// <summary>
         /// Gets child category identifiers
         /// </summary>
         /// <param name="parentCategoryId">Parent category identifier</param>
@@ -66,6 +83,17 @@ namespace Nop.Services.Catalog
         /// <param name="categoryId">Category identifier</param>
         /// <returns>Category</returns>
         Category GetCategoryById(int categoryId);
+
+        /// <summary>
+        /// Get categories for which a discount is applied
+        /// </summary>
+        /// <param name="discountId">Discount identifier; pass null to load all records</param>
+        /// <param name="showHidden">A value indicating whether to load deleted categories</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>List of categories</returns>
+        IPagedList<Category> GetCategoriesByAppliedDiscount(int? discountId = null,
+            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Inserts category
@@ -90,6 +118,26 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productCategory">Product category</param>
         void DeleteProductCategory(ProductCategory productCategory);
+
+        /// <summary>
+        /// Get a discount-category mapping record
+        /// </summary>
+        /// <param name="categoryId">Category identifier</param>
+        /// <param name="discountId">Discount identifier</param>
+        /// <returns>Result</returns>
+        DiscountCategoryMapping GetDiscountAppliedToCategory(int categoryId, int discountId);
+
+        /// <summary>
+        /// Inserts a discount-category mapping record
+        /// </summary>
+        /// <param name="discountCategoryMapping">Discount-category mapping</param>
+        void InsertDiscountCategoryMapping(DiscountCategoryMapping discountCategoryMapping);
+
+        /// <summary>
+        /// Deletes a discount-category mapping record
+        /// </summary>
+        /// <param name="discountCategoryMapping">Discount-category mapping</param>
+        void DeleteDiscountCategoryMapping(DiscountCategoryMapping discountCategoryMapping);
 
         /// <summary>
         /// Gets product category mapping collection

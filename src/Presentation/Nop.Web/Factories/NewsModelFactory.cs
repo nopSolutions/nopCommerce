@@ -85,20 +85,23 @@ namespace Nop.Web.Factories
             if (newsComment == null)
                 throw new ArgumentNullException(nameof(newsComment));
 
+            var customer = _customerService.GetCustomerById(newsComment.CustomerId);
+
             var model = new NewsCommentModel
             {
                 Id = newsComment.Id,
                 CustomerId = newsComment.CustomerId,
-                CustomerName = _customerService.FormatUsername(newsComment.Customer),
+                CustomerName = _customerService.FormatUsername(customer),
                 CommentTitle = newsComment.CommentTitle,
                 CommentText = newsComment.CommentText,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc),
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && newsComment.Customer != null && !newsComment.Customer.IsGuest(),
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && newsComment.CustomerId != 0 && !_customerService.IsGuest(customer),
             };
+
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
                 model.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                    _genericAttributeService.GetAttribute<int>(newsComment.Customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                    _genericAttributeService.GetAttribute<Customer, int>(newsComment.CustomerId, NopCustomerDefaults.AvatarPictureIdAttribute),
                     _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
             }
 
@@ -134,14 +137,15 @@ namespace Nop.Web.Factories
 
             //number of news comments
             var storeId = _newsSettings.ShowNewsCommentsPerStore ? _storeContext.CurrentStore.Id : 0;
-            var cacheKey = string.Format(NopModelCacheDefaults.NewsCommentsNumberKey, newsItem.Id, storeId, true);
-            model.NumberOfComments = _cacheManager.Get(cacheKey, () => _newsService.GetNewsCommentsCount(newsItem, storeId, true));
+            
+            model.NumberOfComments = _newsService.GetNewsCommentsCount(newsItem, storeId, true);
 
             if (prepareComments)
             {
-                var newsComments = newsItem.NewsComments.Where(comment => comment.IsApproved);
-                if (_newsSettings.ShowNewsCommentsPerStore)
-                    newsComments = newsComments.Where(comment => comment.StoreId == _storeContext.CurrentStore.Id);
+                var newsComments = _newsService.GetAllComments(
+                    newsItemId: newsItem.Id,
+                    approved: true,
+                    storeId: _newsSettings.ShowNewsCommentsPerStore ? _storeContext.CurrentStore.Id : 0);
 
                 foreach (var nc in newsComments.OrderBy(comment => comment.CreatedOnUtc))
                 {
@@ -172,8 +176,7 @@ namespace Nop.Web.Factories
                             var newsModel = new NewsItemModel();
                             PrepareNewsItemModel(newsModel, x, false);
                             return newsModel;
-                        })
-                        .ToList()
+                        }).ToList()
                 };
             });
 
@@ -183,6 +186,7 @@ namespace Nop.Web.Factories
             var model = (HomepageNewsItemsModel)cachedModel.Clone();
             foreach (var newsItemModel in model.NewsItems)
                 newsItemModel.Comments.Clear();
+
             return model;
         }
 
@@ -198,8 +202,10 @@ namespace Nop.Web.Factories
                 WorkingLanguageId = _workContext.WorkingLanguage.Id
             };
 
-            if (command.PageSize <= 0) command.PageSize = _newsSettings.NewsArchivePageSize;
-            if (command.PageNumber <= 0) command.PageNumber = 1;
+            if (command.PageSize <= 0)
+                command.PageSize = _newsSettings.NewsArchivePageSize;
+            if (command.PageNumber <= 0)
+                command.PageNumber = 1;
 
             var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id,
                 command.PageNumber - 1, command.PageSize);
@@ -211,8 +217,7 @@ namespace Nop.Web.Factories
                     var newsModel = new NewsItemModel();
                     PrepareNewsItemModel(newsModel, x, false);
                     return newsModel;
-                })
-                .ToList();
+                }).ToList();
 
             return model;
         }

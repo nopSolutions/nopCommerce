@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Directory;
 
 namespace Nop.Data.Mapping.Directory
@@ -15,20 +14,15 @@ namespace Nop.Data.Mapping.Directory
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<StateProvince> builder)
+        public override void Configure(EntityMappingBuilder<StateProvince> builder)
         {
-            builder.ToTable(nameof(StateProvince));
-            builder.HasKey(state => state.Id);
+            builder.HasTableName(nameof(StateProvince));
 
-            builder.Property(state => state.Name).HasMaxLength(100).IsRequired();
-            builder.Property(state => state.Abbreviation).HasMaxLength(100);
-
-            builder.HasOne(state => state.Country)
-                .WithMany(country => country.StateProvinces)
-                .HasForeignKey(state => state.CountryId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(state => state.Name).HasLength(100).IsNullable(false);
+            builder.Property(state => state.Abbreviation).HasLength(100);
+            builder.Property(stateprovince => stateprovince.CountryId);
+            builder.Property(stateprovince => stateprovince.Published);
+            builder.Property(stateprovince => stateprovince.DisplayOrder);
         }
 
         #endregion

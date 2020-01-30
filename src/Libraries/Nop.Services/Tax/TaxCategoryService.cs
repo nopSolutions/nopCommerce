@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Tax;
+using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Tax
@@ -15,7 +16,6 @@ namespace Nop.Services.Tax
     {
         #region Fields
 
-        private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
 
@@ -23,11 +23,9 @@ namespace Nop.Services.Tax
 
         #region Ctor
 
-        public TaxCategoryService(ICacheManager cacheManager,
-            IEventPublisher eventPublisher,
+        public TaxCategoryService(IEventPublisher eventPublisher,
             IRepository<TaxCategory> taxCategoryRepository)
         {
-            _cacheManager = cacheManager;
             _eventPublisher = eventPublisher;
             _taxCategoryRepository = taxCategoryRepository;
         }
@@ -47,8 +45,6 @@ namespace Nop.Services.Tax
 
             _taxCategoryRepository.Delete(taxCategory);
 
-            _cacheManager.RemoveByPrefix(NopTaxDefaults.TaxCategoriesPrefixCacheKey);
-
             //event notification
             _eventPublisher.EntityDeleted(taxCategory);
         }
@@ -59,14 +55,13 @@ namespace Nop.Services.Tax
         /// <returns>Tax categories</returns>
         public virtual IList<TaxCategory> GetAllTaxCategories()
         {
-            return _cacheManager.Get(NopTaxDefaults.TaxCategoriesAllCacheKey, () =>
-            {
-                var query = from tc in _taxCategoryRepository.Table
-                            orderby tc.DisplayOrder, tc.Id
-                            select tc;
-                var taxCategories = query.ToList();
-                return taxCategories;
-            });
+            var query = from tc in _taxCategoryRepository.Table
+                orderby tc.DisplayOrder, tc.Id
+                select tc;
+
+            var taxCategories = query.ToCachedList(NopTaxCachingDefaults.TaxCategoriesAllCacheKey);
+
+            return taxCategories;
         }
 
         /// <summary>
@@ -79,8 +74,9 @@ namespace Nop.Services.Tax
             if (taxCategoryId == 0)
                 return null;
 
-            var key = string.Format(NopTaxDefaults.TaxCategoriesByIdCacheKey, taxCategoryId);
-            return _cacheManager.Get(key, () => _taxCategoryRepository.GetById(taxCategoryId));
+            var key = string.Format(NopTaxCachingDefaults.TaxCategoriesByIdCacheKey, taxCategoryId);
+
+            return _taxCategoryRepository.ToCachedGetById(taxCategoryId, key);
         }
 
         /// <summary>
@@ -93,8 +89,6 @@ namespace Nop.Services.Tax
                 throw new ArgumentNullException(nameof(taxCategory));
 
             _taxCategoryRepository.Insert(taxCategory);
-
-            _cacheManager.RemoveByPrefix(NopTaxDefaults.TaxCategoriesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(taxCategory);
@@ -110,8 +104,6 @@ namespace Nop.Services.Tax
                 throw new ArgumentNullException(nameof(taxCategory));
 
             _taxCategoryRepository.Update(taxCategory);
-
-            _cacheManager.RemoveByPrefix(NopTaxDefaults.TaxCategoriesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(taxCategory);

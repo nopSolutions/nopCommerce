@@ -4,8 +4,8 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Security;
+using Nop.Data;
 using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Framework.Mvc.Filters
@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute that checks whether current connection is secured and properly redirect if necessary
     /// </summary>
-    public class HttpsRequirementAttribute : TypeFilterAttribute
+    public sealed class HttpsRequirementAttribute : TypeFilterAttribute
     {
         #region Fields
 

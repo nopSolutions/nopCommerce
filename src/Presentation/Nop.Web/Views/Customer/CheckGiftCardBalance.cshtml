@@ -1,12 +1,13 @@
 ﻿@model CheckGiftCardBalanceModel
 
 @using Nop.Core
-@using Nop.Core.Domain.Customers
+@using Nop.Services.Customers
 @using Nop.Web.Framework.UI;
 @inject IWorkContext workContext
+@inject ICustomerService customerService
 
 @{
-    var isRegisterCustomer = workContext.CurrentCustomer.IsRegistered();
+    var isRegisterCustomer = customerService.IsRegistered(workContext.CurrentCustomer);
     Layout = isRegisterCustomer ? "_ColumnsTwo" : "_ColumnsOne";
 
     //title

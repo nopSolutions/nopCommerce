@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using EasyCaching.Core;
@@ -21,7 +19,6 @@ using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json.Serialization;
 using Nop.Core;
 using Nop.Core.Configuration;
-using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Security;
@@ -84,14 +81,13 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //create engine and configure service provider
             var engine = EngineContext.Create();
             var serviceProvider = engine.ConfigureServices(services, configuration, nopConfig);
-
-            //further actions are performed only when the database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
-                return serviceProvider;
-
+            
             //initialize and start schedule tasks
             TaskManager.Instance.Initialize();
             TaskManager.Instance.Start();
+
+            if (!DataSettingsManager.DatabaseIsInstalled)
+                return serviceProvider;
 
             //log application start
             engine.Resolve<ILogger>().Information("Application started");
@@ -357,18 +353,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
-        /// Register base object context
-        /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        public static void AddNopObjectContext(this IServiceCollection services)
-        {
-            services.AddDbContextPool<NopObjectContext>(optionsBuilder =>
-            {
-                optionsBuilder.UseSqlServerWithLazyLoading(services);
-            });
-        }
-
-        /// <summary>
         /// Add and configure MiniProfiler service
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
@@ -391,7 +375,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 miniProfilerOptions.ResultsAuthorize = request =>
                     !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerForAdminOnly ||
                     EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel);
-            }).AddEntityFramework();
+            });
         }
 
         /// <summary>
@@ -415,8 +399,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 })
                 .AddHtmlMinification(options =>
                 {
-                    var settings = options.MinificationSettings;
-
                     options.CssMinifierFactory = new NUglifyCssMinifierFactory();
                     options.JsMinifierFactory = new NUglifyJsMinifierFactory();
                 })

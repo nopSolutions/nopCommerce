@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Core.Domain.Orders
@@ -8,13 +7,11 @@ namespace Nop.Core.Domain.Orders
     /// Represents a gift card
     /// </summary>
     public partial class GiftCard : BaseEntity
-    {
-        private ICollection<GiftCardUsageHistory> _giftCardUsageHistory;
-        
+    {        
         /// <summary>
         /// Gets or sets the associated order item identifier
         /// </summary>
-        public int? PurchasedWithOrderItemId { get; set; }
+        public int? PurchasedWithOrderItemId { get; set; } //TODO: why not OrderId?
 
         /// <summary>
         /// Gets or sets the gift card type identifier
@@ -79,19 +76,5 @@ namespace Nop.Core.Domain.Orders
             get => (GiftCardType)GiftCardTypeId;
             set => GiftCardTypeId = (int)value;
         }
-        
-        /// <summary>
-        /// Gets or sets the gift card usage history
-        /// </summary>
-        public virtual ICollection<GiftCardUsageHistory> GiftCardUsageHistory
-        {
-            get => _giftCardUsageHistory ?? (_giftCardUsageHistory = new List<GiftCardUsageHistory>());
-            protected set => _giftCardUsageHistory = value;
-        }
-        
-        /// <summary>
-        /// Gets or sets the associated order item
-        /// </summary>
-        public virtual OrderItem PurchasedWithOrderItem { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Catalog
+﻿namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents a product-product tag mapping class
@@ -14,15 +14,5 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the product tag identifier
         /// </summary>
         public int ProductTagId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the product
-        /// </summary>
-        public virtual Product Product { get; set; }
-
-        /// <summary>
-        /// Gets or sets the product tag
-        /// </summary>
-        public virtual ProductTag ProductTag { get; set; }
     }
 }

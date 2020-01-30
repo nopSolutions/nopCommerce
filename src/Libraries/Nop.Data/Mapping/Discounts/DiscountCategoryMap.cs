@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Discounts;
 
 namespace Nop.Data.Mapping.Discounts
@@ -15,27 +14,15 @@ namespace Nop.Data.Mapping.Discounts
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<DiscountCategoryMapping> builder)
+        public override void Configure(EntityMappingBuilder<DiscountCategoryMapping> builder)
         {
-            builder.ToTable(NopMappingDefaults.DiscountAppliedToCategoriesTable);
-            builder.HasKey(mapping => new { mapping.DiscountId, mapping.CategoryId});
+            builder.HasTableName(NopMappingDefaults.DiscountAppliedToCategoriesTable);
+            builder.HasPrimaryKey(mapping => new { mapping.DiscountId, mapping.EntityId });
 
             builder.Property(mapping => mapping.DiscountId).HasColumnName("Discount_Id");
-            builder.Property(mapping => mapping.CategoryId).HasColumnName("Category_Id");
-
-            builder.HasOne(mapping => mapping.Discount)
-                .WithMany(discount => discount.DiscountCategoryMappings)
-                .HasForeignKey(mapping => mapping.DiscountId)
-                .IsRequired();
-
-            builder.HasOne(mapping => mapping.Category)
-                .WithMany(category => category.DiscountCategoryMappings)
-                .HasForeignKey(mapping => mapping.CategoryId)
-                .IsRequired();
+            builder.Property(mapping => mapping.EntityId).HasColumnName("Category_Id");
 
             builder.Ignore(mapping => mapping.Id);
-
-            base.Configure(builder);
         }
 
         #endregion

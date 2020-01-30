@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>使用内置的数据存储(SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>SQL Server 实例名</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>请输入SQL Server 实例名</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL Server密码</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>请输入SQL Server密码 </Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>SQL Server用户名</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>请输入SQL Server用户名</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>使用Microsoft SQL Server(或SQL Express)数据库</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>商店信息</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>完成这个向导，你必须知道如何连接数据库("即连接字符串").如有必要，请联系你的服务提供商。如果在本机或服务器上安装，你可能还需要一些管理员的信息 .</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>使用集成windows身份认证</Value>
   </LocaleResource>
 </Language>

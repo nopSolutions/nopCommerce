@@ -1,75 +1,21 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
+using LinqToDB;
+using LinqToDB.Data;
 using Nop.Core;
-using Nop.Core.Data;
 
 namespace Nop.Data
 {
     /// <summary>
-    /// Represents the Entity Framework repository
+    /// Represents the Entity repository
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
-    public partial class EfRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
+    public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
     {
         #region Fields
 
-        private readonly IDbContext _context;
-
-        private DbSet<TEntity> _entities;
-
-        #endregion
-
-        #region Ctor
-
-        public EfRepository(IDbContext context)
-        {
-            _context = context;
-        }
-
-        #endregion
-
-        #region Utilities
-
-        /// <summary>
-        /// Rollback of entity changes and return full error message
-        /// </summary>
-        /// <param name="exception">Exception</param>
-        /// <returns>Error message</returns>
-        protected string GetFullErrorTextAndRollbackEntityChanges(DbUpdateException exception)
-        {
-            //rollback entity changes
-            if (_context is DbContext dbContext)
-            {
-                var entries = dbContext.ChangeTracker.Entries()
-                    .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified).ToList();
-
-                entries.ForEach(entry =>
-                {
-                    try
-                    {
-                        entry.State = EntityState.Unchanged;
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        // ignored
-                    }
-                });
-            }
-            
-            try
-            {
-                _context.SaveChanges();
-                return exception.ToString();
-            }
-            catch (Exception ex)
-            {
-                //if after the rollback of changes the context is still not saving,
-                //return the full text of the exception that occurred when saving
-                return ex.ToString(); 
-            }
-        }
+        private ITable<TEntity> _entities;
 
         #endregion
 
@@ -82,7 +28,7 @@ namespace Nop.Data
         /// <returns>Entity</returns>
         public virtual TEntity GetById(object id)
         {
-            return Entities.Find(id);
+            return Entities.FirstOrDefault(e => e.Id == Convert.ToInt32(id));
         }
 
         /// <summary>
@@ -94,15 +40,9 @@ namespace Nop.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            try
+            using (var _dataConnection = new NopDataConnection())
             {
-                Entities.Add(entity);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException exception)
-            {
-                //ensure that the detailed error text is saved in the Log
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
+                entity.Id = _dataConnection.InsertWithInt32Identity(entity);
             }
         }
 
@@ -114,16 +54,24 @@ namespace Nop.Data
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
+            using (var _dataConnection = new NopDataConnection())
+            {
+                _dataConnection.BeginTransaction();
 
-            try
-            {
-                Entities.AddRange(entities);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException exception)
-            {
-                //ensure that the detailed error text is saved in the Log
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
+                try
+                {
+                    foreach (var entity in entities)
+                    {
+                        Insert(entity);
+                    }
+
+                    _dataConnection.CommitTransaction();
+                }
+                catch
+                {
+                    _dataConnection.RollbackTransaction();
+                    throw;
+                }
             }
         }
 
@@ -136,15 +84,9 @@ namespace Nop.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            try
+            using (var _dataConnection = new NopDataConnection())
             {
-                Entities.Update(entity);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException exception)
-            {
-                //ensure that the detailed error text is saved in the Log
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
+                _dataConnection.Update(entity);
             }
         }
 
@@ -157,15 +99,9 @@ namespace Nop.Data
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            try
+            foreach (var entity in entities)
             {
-                Entities.UpdateRange(entities);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException exception)
-            {
-                //ensure that the detailed error text is saved in the Log
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
+                Update(entity);
             }
         }
 
@@ -178,15 +114,9 @@ namespace Nop.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            try
+            using (var _dataConnection = new NopDataConnection())
             {
-                Entities.Remove(entity);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException exception)
-            {
-                //ensure that the detailed error text is saved in the Log
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
+                _dataConnection.Delete(entity);
             }
         }
 
@@ -199,15 +129,36 @@ namespace Nop.Data
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            try
+            foreach (var entity in entities)
             {
-                Entities.RemoveRange(entities);
-                _context.SaveChanges();
+                Delete(entity);
             }
-            catch (DbUpdateException exception)
+        }
+
+        /// <summary>
+        /// Executes command using System.Data.CommandType.StoredProcedure command type
+        /// and returns results as collection of values of specified type
+        /// </summary>
+        /// <param name="storeProcedureName">Store procedure name</param>
+        /// <param name="dataParameters">Command parameters</param>
+        /// <returns>Collection of query result records</returns>
+        public virtual IList<TEntity> EntityFromSql(string storeProcedureName, params DataParameter[] dataParameters)
+        {
+            using (var _dataConnection = new NopDataConnection())
             {
-                //ensure that the detailed error text is saved in the Log
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
+                return _dataConnection.ExecuteStoredProcedure<TEntity>(storeProcedureName, dataParameters?.ToArray());
+            }
+        }
+
+        /// <summary>
+        /// Truncates database table
+        /// </summary>
+        /// <param name="resetIdentity">Performs reset identity column</param>
+        public virtual void Truncate(bool resetIdentity = false)
+        {
+            using (var _dataConnection = new NopDataConnection())
+            {
+                _dataConnection.GetTable<TEntity>().Truncate(resetIdentity);
             }
         }
 
@@ -221,23 +172,12 @@ namespace Nop.Data
         public virtual IQueryable<TEntity> Table => Entities;
 
         /// <summary>
-        /// Gets a table with "no tracking" enabled (EF feature) Use it only when you load record(s) only for read-only operations
-        /// </summary>
-        public virtual IQueryable<TEntity> TableNoTracking => Entities.AsNoTracking();
-
-        /// <summary>
         /// Gets an entity set
         /// </summary>
-        protected virtual DbSet<TEntity> Entities
+        protected virtual ITable<TEntity> Entities => _entities ?? (_entities = new DataContext
         {
-            get
-            {
-                if (_entities == null)
-                    _entities = _context.Set<TEntity>();
-
-                return _entities;
-            }
-        }
+            MappingSchema = NopDataConnection.AdditionalSchema
+        }.GetTable<TEntity>());
 
         #endregion
     }

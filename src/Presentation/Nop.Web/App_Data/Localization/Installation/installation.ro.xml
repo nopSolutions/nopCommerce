@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>Folosiți mediul de stocare intern (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>Nume SQL Server</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>Numele SQL Server este obligatoriu</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>Parola SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>Parola SQL este obligatorie</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>Nume user SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>Numele user-ului SQL este obligatoriu</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Folosiți baza de date Microsoft SQL Server (sau SQL Express)</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Informații magazin</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>Pentru a completa toți pașii, trebuie să cunoașteți câteva infomații referitoare la serverul de baze de date ("șirul de conectare"). Vă rugăm să contactați ISP-ul dumneavoastră dacă este necesar. Dacă instalați pe o mașină locală sau server local, este posibil sa aveți nevoie de informații din partea administratului dumneavoastră de sistem.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>Folosește autentificare integrată Windows</Value>
   </LocaleResource>
 </Language>

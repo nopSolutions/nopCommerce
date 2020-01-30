@@ -8,15 +8,19 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Affiliates;
+using Nop.Services.Catalog;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 using Nop.Services.Stores;
 
 namespace Nop.Services.Messages
@@ -30,6 +34,7 @@ namespace Nop.Services.Messages
 
         private readonly CommonSettings _commonSettings;
         private readonly EmailAccountSettings _emailAccountSettings;
+        private readonly IAddressService _addressService;
         private readonly IAffiliateService _affiliateService;
         private readonly ICustomerService _customerService;
         private readonly IEmailAccountService _emailAccountService;
@@ -38,10 +43,13 @@ namespace Nop.Services.Messages
         private readonly ILocalizationService _localizationService;
         private readonly IMessageTemplateService _messageTemplateService;
         private readonly IMessageTokenProvider _messageTokenProvider;
+        private readonly IOrderService _orderService;
+        private readonly IProductService _productService;
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly ITokenizer _tokenizer;
+        private readonly LocalizationSettings _localizationSettings;
 
         #endregion
 
@@ -49,6 +57,7 @@ namespace Nop.Services.Messages
 
         public WorkflowMessageService(CommonSettings commonSettings,
             EmailAccountSettings emailAccountSettings,
+            IAddressService addressService,
             IAffiliateService affiliateService,
             ICustomerService customerService,
             IEmailAccountService emailAccountService,
@@ -57,13 +66,17 @@ namespace Nop.Services.Messages
             ILocalizationService localizationService,
             IMessageTemplateService messageTemplateService,
             IMessageTokenProvider messageTokenProvider,
+            IOrderService orderService,
+            IProductService productService,
             IQueuedEmailService queuedEmailService,
             IStoreContext storeContext,
             IStoreService storeService,
-            ITokenizer tokenizer)
+            ITokenizer tokenizer,
+            LocalizationSettings localizationSettings)
         {
             _commonSettings = commonSettings;
             _emailAccountSettings = emailAccountSettings;
+            _addressService = addressService;
             _affiliateService = affiliateService;
             _customerService = customerService;
             _emailAccountService = emailAccountService;
@@ -72,10 +85,13 @@ namespace Nop.Services.Messages
             _localizationService = localizationService;
             _messageTemplateService = messageTemplateService;
             _messageTokenProvider = messageTokenProvider;
+            _orderService = orderService;
+            _productService = productService;
             _queuedEmailService = queuedEmailService;
             _storeContext = storeContext;
             _storeService = storeService;
             _tokenizer = tokenizer;
+            _localizationSettings = localizationSettings;
         }
 
         #endregion
@@ -386,7 +402,7 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId, vendor.Id);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -427,7 +443,7 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -473,7 +489,7 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -486,8 +502,9 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = affiliate.Address.Email;
-                var toName = $"{affiliate.Address.FirstName} {affiliate.Address.LastName}";
+                var affiliateAddress = _addressService.GetAddressById(affiliate.AddressId);
+                var toEmail = affiliateAddress.Email;
+                var toName = $"{affiliateAddress.FirstName} {affiliateAddress.LastName}";
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -514,7 +531,7 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -560,7 +577,7 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -573,8 +590,9 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = affiliate.Address.Email;
-                var toName = $"{affiliate.Address.FirstName} {affiliate.Address.LastName}";
+                var affiliateAddress = _addressService.GetAddressById(affiliate.AddressId);
+                var toEmail = affiliateAddress.Email;
+                var toName = $"{affiliateAddress.FirstName} {affiliateAddress.LastName}";
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -604,7 +622,7 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -617,8 +635,10 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = order.BillingAddress.Email;
-                var toName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}";
+                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+
+                var toEmail = billingAddress.Email;
+                var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
                     attachmentFilePath, attachmentFileName);
@@ -650,7 +670,7 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId, vendor.Id);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -694,7 +714,7 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -707,8 +727,10 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = order.BillingAddress.Email;
-                var toName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}";
+                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+
+                var toEmail = billingAddress.Email;
+                var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
                     attachmentFilePath, attachmentFileName);
@@ -726,7 +748,7 @@ namespace Nop.Services.Messages
             if (shipment == null)
                 throw new ArgumentNullException(nameof(shipment));
 
-            var order = shipment.Order;
+            var order = _orderService.GetOrderById(shipment.OrderId);
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
@@ -740,8 +762,8 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddShipmentTokens(commonTokens, shipment, languageId);
-            _messageTokenProvider.AddOrderTokens(commonTokens, shipment.Order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, shipment.Order.Customer);
+            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -754,8 +776,10 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = order.BillingAddress.Email;
-                var toName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}";
+                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+
+                var toEmail = billingAddress.Email;
+                var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -772,7 +796,8 @@ namespace Nop.Services.Messages
             if (shipment == null)
                 throw new ArgumentNullException(nameof(shipment));
 
-            var order = shipment.Order;
+            var order = _orderService.GetOrderById(shipment.OrderId);
+
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
@@ -786,8 +811,8 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddShipmentTokens(commonTokens, shipment, languageId);
-            _messageTokenProvider.AddOrderTokens(commonTokens, shipment.Order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, shipment.Order.Customer);
+            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -800,8 +825,10 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = order.BillingAddress.Email;
-                var toName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}";
+                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+
+                var toEmail = billingAddress.Email;
+                var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -831,7 +858,7 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -844,8 +871,10 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = order.BillingAddress.Email;
-                var toName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}";
+                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+
+                var toEmail = billingAddress.Email;
+                var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
                     attachmentFilePath, attachmentFileName);
@@ -873,7 +902,7 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -886,8 +915,10 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = order.BillingAddress.Email;
-                var toName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}";
+                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+
+                var toEmail = billingAddress.Email;
+                var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -916,7 +947,7 @@ namespace Nop.Services.Messages
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
             _messageTokenProvider.AddOrderRefundedTokens(commonTokens, order, refundedAmount);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -959,7 +990,7 @@ namespace Nop.Services.Messages
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
             _messageTokenProvider.AddOrderRefundedTokens(commonTokens, order, refundedAmount);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, order.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -972,8 +1003,10 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = order.BillingAddress.Email;
-                var toName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}";
+                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+
+                var toEmail = billingAddress.Email;
+                var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -990,7 +1023,10 @@ namespace Nop.Services.Messages
             if (orderNote == null)
                 throw new ArgumentNullException(nameof(orderNote));
 
-            var order = orderNote.Order;
+            var order = _orderService.GetOrderById(orderNote.OrderId);
+
+            if (order == null)
+                throw new Exception("Order cannot be loaded");
 
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
@@ -1002,8 +1038,8 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddOrderNoteTokens(commonTokens, orderNote);
-            _messageTokenProvider.AddOrderTokens(commonTokens, orderNote.Order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, orderNote.Order.Customer);
+            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -1016,8 +1052,10 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = order.BillingAddress.Email;
-                var toName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}";
+                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+
+                var toEmail = billingAddress.Email;
+                var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -1034,7 +1072,12 @@ namespace Nop.Services.Messages
             if (recurringPayment == null)
                 throw new ArgumentNullException(nameof(recurringPayment));
 
-            var store = _storeService.GetStoreById(recurringPayment.InitialOrder.StoreId) ?? _storeContext.CurrentStore;
+            var order = _orderService.GetOrderById(recurringPayment.InitialOrderId);
+
+            if (order == null)
+                throw new Exception("Order cannot be loaded");
+
+            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
             var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.RecurringPaymentCancelledStoreOwnerNotification, store.Id);
@@ -1043,8 +1086,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, recurringPayment.InitialOrder, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, recurringPayment.InitialOrder.Customer);
+            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
             _messageTokenProvider.AddRecurringPaymentTokens(commonTokens, recurringPayment);
 
             return messageTemplates.Select(messageTemplate =>
@@ -1076,7 +1119,12 @@ namespace Nop.Services.Messages
             if (recurringPayment == null)
                 throw new ArgumentNullException(nameof(recurringPayment));
 
-            var store = _storeService.GetStoreById(recurringPayment.InitialOrder.StoreId) ?? _storeContext.CurrentStore;
+            var order = _orderService.GetOrderById(recurringPayment.InitialOrderId);
+
+            if (order == null)
+                throw new Exception("Order cannot be loaded");
+
+            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
             var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.RecurringPaymentCancelledCustomerNotification, store.Id);
@@ -1085,8 +1133,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, recurringPayment.InitialOrder, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, recurringPayment.InitialOrder.Customer);
+            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
             _messageTokenProvider.AddRecurringPaymentTokens(commonTokens, recurringPayment);
 
             return messageTemplates.Select(messageTemplate =>
@@ -1100,8 +1148,10 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = recurringPayment.InitialOrder.BillingAddress.Email;
-                var toName = $"{recurringPayment.InitialOrder.BillingAddress.FirstName} {recurringPayment.InitialOrder.BillingAddress.LastName}";
+                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+
+                var toEmail = billingAddress.Email;
+                var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -1118,7 +1168,12 @@ namespace Nop.Services.Messages
             if (recurringPayment == null)
                 throw new ArgumentNullException(nameof(recurringPayment));
 
-            var store = _storeService.GetStoreById(recurringPayment.InitialOrder.StoreId) ?? _storeContext.CurrentStore;
+            var order = _orderService.GetOrderById(recurringPayment.InitialOrderId);
+
+            if (order == null)
+                throw new Exception("Order cannot be loaded");
+
+            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
             var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.RecurringPaymentFailedCustomerNotification, store.Id);
@@ -1127,8 +1182,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, recurringPayment.InitialOrder, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, recurringPayment.InitialOrder.Customer);
+            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, order.CustomerId);
             _messageTokenProvider.AddRecurringPaymentTokens(commonTokens, recurringPayment);
 
             return messageTemplates.Select(messageTemplate =>
@@ -1142,8 +1197,10 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = recurringPayment.InitialOrder.BillingAddress.Email;
-                var toName = $"{recurringPayment.InitialOrder.BillingAddress.FirstName} {recurringPayment.InitialOrder.BillingAddress.LastName}";
+                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+
+                var toEmail = billingAddress.Email;
+                var toName = $"{billingAddress.FirstName} {billingAddress.LastName}";
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -1331,14 +1388,21 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="returnRequest">Return request</param>
         /// <param name="orderItem">Order item</param>
+        /// <param name="order">Order</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, OrderItem orderItem, int languageId)
+        public virtual IList<int> SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, OrderItem orderItem, Order order, int languageId)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException(nameof(returnRequest));
 
-            var store = _storeService.GetStoreById(orderItem.Order.StoreId) ?? _storeContext.CurrentStore;
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
             var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.NewReturnRequestStoreOwnerNotification, store.Id);
@@ -1347,8 +1411,8 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, orderItem.Order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, returnRequest.Customer);
+            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, returnRequest.CustomerId);
             _messageTokenProvider.AddReturnRequestTokens(commonTokens, returnRequest, orderItem);
 
             return messageTemplates.Select(messageTemplate =>
@@ -1374,24 +1438,32 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="returnRequest">Return request</param>
         /// <param name="orderItem">Order item</param>
-        /// <param name="languageId">Message language identifier</param>
+        /// <param name="order">Order</param>
         /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, int languageId)
+        public virtual IList<int> SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, Order order)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException(nameof(returnRequest));
 
-            var store = _storeService.GetStoreById(orderItem.Order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var languageId = EnsureLanguageIsActive(order.CustomerLanguageId, store.Id);
 
             var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.NewReturnRequestCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
+            var customer = _customerService.GetCustomerById(returnRequest.CustomerId);
+
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, orderItem.Order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, returnRequest.Customer);
+            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
             _messageTokenProvider.AddReturnRequestTokens(commonTokens, returnRequest, orderItem);
 
             return messageTemplates.Select(messageTemplate =>
@@ -1405,12 +1477,14 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = returnRequest.Customer.IsGuest() ?
-                    orderItem.Order.BillingAddress.Email :
-                    returnRequest.Customer.Email;
-                var toName = returnRequest.Customer.IsGuest() ?
-                    orderItem.Order.BillingAddress.FirstName :
-                    _customerService.GetCustomerFullName(returnRequest.Customer);
+                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+
+                var toEmail = _customerService.IsGuest(customer) ?
+                    billingAddress.Email :
+                    customer.Email;
+                var toName = _customerService.IsGuest(customer) ?
+                    billingAddress.FirstName :
+                    _customerService.GetCustomerFullName(customer);
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -1421,24 +1495,32 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="returnRequest">Return request</param>
         /// <param name="orderItem">Order item</param>
-        /// <param name="languageId">Message language identifier</param>
+        /// <param name="order">Order</param>
         /// <returns>Queued email identifier</returns>
-        public virtual IList<int> SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, int languageId)
+        public virtual IList<int> SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, Order order)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException(nameof(returnRequest));
 
-            var store = _storeService.GetStoreById(orderItem.Order.StoreId) ?? _storeContext.CurrentStore;
-            languageId = EnsureLanguageIsActive(languageId, store.Id);
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            var languageId = EnsureLanguageIsActive(order.CustomerLanguageId, store.Id);
 
             var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.ReturnRequestStatusChangedCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
+            var customer = _customerService.GetCustomerById(returnRequest.CustomerId);
+
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddOrderTokens(commonTokens, orderItem.Order, languageId);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, returnRequest.Customer);
+            _messageTokenProvider.AddOrderTokens(commonTokens, order, languageId);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
             _messageTokenProvider.AddReturnRequestTokens(commonTokens, returnRequest, orderItem);
 
             return messageTemplates.Select(messageTemplate =>
@@ -1452,12 +1534,14 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = returnRequest.Customer.IsGuest() ?
-                    orderItem.Order.BillingAddress.Email :
-                    returnRequest.Customer.Email;
-                var toName = returnRequest.Customer.IsGuest() ?
-                    orderItem.Order.BillingAddress.FirstName :
-                    _customerService.GetCustomerFullName(returnRequest.Customer);
+                var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+
+                var toEmail = _customerService.IsGuest(customer) ?
+                    billingAddress.Email :
+                    customer.Email;
+                var toName = _customerService.IsGuest(customer) ?
+                    billingAddress.FirstName :
+                    _customerService.GetCustomerFullName(customer);
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -1489,7 +1573,7 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddForumTopicTokens(commonTokens, forumTopic);
-            _messageTokenProvider.AddForumTokens(commonTokens, forumTopic.Forum);
+            _messageTokenProvider.AddForumTokens(commonTokens, forum);
             _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
 
             return messageTemplates.Select(messageTemplate =>
@@ -1535,8 +1619,8 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddForumPostTokens(commonTokens, forumPost);
-            _messageTokenProvider.AddForumTopicTokens(commonTokens, forumPost.ForumTopic, friendlyForumTopicPageIndex, forumPost.Id);
-            _messageTokenProvider.AddForumTokens(commonTokens, forumPost.ForumTopic.Forum);
+            _messageTokenProvider.AddForumTopicTokens(commonTokens, forumTopic, friendlyForumTopicPageIndex, forumPost.Id);
+            _messageTokenProvider.AddForumTokens(commonTokens, forum);
             _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
 
             return messageTemplates.Select(messageTemplate =>
@@ -1577,7 +1661,7 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddPrivateMessageTokens(commonTokens, privateMessage);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, privateMessage.ToCustomer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, privateMessage.ToCustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -1590,8 +1674,9 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = privateMessage.ToCustomer.Email;
-                var toName = _customerService.GetCustomerFullName(privateMessage.ToCustomer);
+                var customer = _customerService.GetCustomerById(privateMessage.ToCustomerId);
+                var toEmail = customer.Email;
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -1697,7 +1782,8 @@ namespace Nop.Services.Messages
             if (giftCard == null)
                 throw new ArgumentNullException(nameof(giftCard));
 
-            var order = giftCard.PurchasedWithOrderItem?.Order;
+            var order = _orderService.GetOrderByOrderItem(giftCard.PurchasedWithOrderItemId ?? 0);
+
             var store = order != null ? _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore : _storeContext.CurrentStore;
 
             languageId = EnsureLanguageIsActive(languageId, store.Id);
@@ -1749,7 +1835,7 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddProductReviewTokens(commonTokens, productReview);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, productReview.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, productReview.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -1780,17 +1866,19 @@ namespace Nop.Services.Messages
             if (productReview == null)
                 throw new ArgumentNullException(nameof(productReview));
 
-            var store = productReview.Store ?? _storeContext.CurrentStore;
+            var store = _storeService.GetStoreById(productReview.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
             var messageTemplates = GetActiveMessageTemplates(MessageTemplateSystemNames.ProductReviewReplyCustomerNotification, store.Id);
             if (!messageTemplates.Any())
                 return new List<int>();
 
+            var customer = _customerService.GetCustomerById(productReview.CustomerId);
+
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddProductReviewTokens(commonTokens, productReview);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, productReview.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -1803,8 +1891,8 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = productReview.Customer.Email;
-                var toName = _customerService.GetCustomerFullName(productReview.Customer);
+                var toEmail = customer.Email;
+                var toName = _customerService.GetCustomerFullName(customer);
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
             }).ToList();
@@ -1867,9 +1955,9 @@ namespace Nop.Services.Messages
             if (!messageTemplates.Any())
                 return new List<int>();
 
-            var product = combination.Product;
-
             var commonTokens = new List<Token>();
+            var product = _productService.GetProductById(combination.ProductId);
+
             _messageTokenProvider.AddProductTokens(commonTokens, product, languageId);
             _messageTokenProvider.AddAttributeCombinationTokens(commonTokens, combination, languageId);
 
@@ -1956,7 +2044,7 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddBlogCommentTokens(commonTokens, blogComment);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, blogComment.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, blogComment.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -1997,7 +2085,7 @@ namespace Nop.Services.Messages
             //tokens
             var commonTokens = new List<Token>();
             _messageTokenProvider.AddNewsCommentTokens(commonTokens, newsComment);
-            _messageTokenProvider.AddCustomerTokens(commonTokens, newsComment.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, newsComment.CustomerId);
 
             return messageTemplates.Select(messageTemplate =>
             {
@@ -2028,6 +2116,15 @@ namespace Nop.Services.Messages
             if (subscription == null)
                 throw new ArgumentNullException(nameof(subscription));
 
+            var customer = _customerService.GetCustomerById(subscription.CustomerId);
+
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            //ensure that customer is registered (simple and fast way)
+            if (!CommonHelper.IsValidEmail(customer.Email))
+                return new List<int>();
+
             var store = _storeService.GetStoreById(subscription.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
@@ -2037,7 +2134,7 @@ namespace Nop.Services.Messages
 
             //tokens
             var commonTokens = new List<Token>();
-            _messageTokenProvider.AddCustomerTokens(commonTokens, subscription.Customer);
+            _messageTokenProvider.AddCustomerTokens(commonTokens, customer);
             _messageTokenProvider.AddBackInStockTokens(commonTokens, subscription);
 
             return messageTemplates.Select(messageTemplate =>
@@ -2051,7 +2148,6 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var customer = subscription.Customer;
                 var toEmail = customer.Email;
                 var toName = _customerService.GetCustomerFullName(customer);
 

@@ -6,20 +6,17 @@ using System.Threading;
 using FluentAssertions;
 using Moq;
 using Nop.Core;
-using Nop.Core.Data;
-using Nop.Core.Domain.Catalog;
+using Nop.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
-using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Localization;
-using Nop.Services.Logging;
-using Nop.Services.Plugins;
 using Nop.Services.Stores;
+using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -39,13 +36,10 @@ namespace Nop.Services.Tests.Catalog
         private Mock<ILocalizationService> _localizationService;
         private TaxSettings _taxSettings;
         private IPriceFormatter _priceFormatter;
-        private CatalogSettings _catalogSettings;
 
         [SetUp]
         public new void SetUp()
         {
-            var cacheManager = new TestCacheManager();
-
             _workContext = new Mock<IWorkContext>();
             _workContext.Setup(w => w.WorkingCurrency).Returns(new Currency { RoundingType = RoundingType.Rounding001 });
 
@@ -83,18 +77,12 @@ namespace Nop.Services.Tests.Catalog
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var customerService = new Mock<ICustomerService>();
-            var loger = new Mock<ILogger>();
-            var webHelper = new Mock<IWebHelper>();
-
-            _catalogSettings = new CatalogSettings();
-            var pluginService = new PluginService(_catalogSettings, customerService.Object, loger.Object, CommonHelper.DefaultFileProvider, webHelper.Object);
+            var pluginService = new FakePluginService();
             _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, pluginService);
             _currencyService = new CurrencyService(_currencySettings,
                 null,
                 _exchangeRatePluginManager,
                 _currencyRepo.Object,
-                cacheManager,
                 _storeMappingService.Object);
 
             _taxSettings = new TaxSettings();

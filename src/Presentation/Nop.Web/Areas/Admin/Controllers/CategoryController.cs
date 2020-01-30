@@ -259,8 +259,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var discount in allDiscounts)
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
-                        //category.AppliedDiscounts.Add(discount);
-                        category.DiscountCategoryMappings.Add(new DiscountCategoryMapping { Discount = discount });
+                        _categoryService.InsertDiscountCategoryMapping(new DiscountCategoryMapping { DiscountId = discount.Id, EntityId = category.Id });
                 }
 
                 _categoryService.UpdateCategory(category);
@@ -342,15 +341,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
                         //new discount
-                        if (category.DiscountCategoryMappings.Count(mapping => mapping.DiscountId == discount.Id) == 0)
-                            category.DiscountCategoryMappings.Add(new DiscountCategoryMapping { Discount = discount });
+                        if (_categoryService.GetDiscountAppliedToCategory(category.Id, discount.Id) is null)
+                            _categoryService.InsertDiscountCategoryMapping(new DiscountCategoryMapping { DiscountId = discount.Id, EntityId = category.Id });
                     }
                     else
                     {
                         //remove discount
-                        if (category.DiscountCategoryMappings.Count(mapping => mapping.DiscountId == discount.Id) > 0)
-                            category.DiscountCategoryMappings
-                                .Remove(category.DiscountCategoryMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
+                        if (_categoryService.GetDiscountAppliedToCategory(category.Id, discount.Id) is DiscountCategoryMapping mapping)
+                            _categoryService.DeleteDiscountCategoryMapping(mapping);
                     }
                 }
 

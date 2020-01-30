@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>SQL Server Compact</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>SQL Server անուն կամ ցանցային հասցե</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>Մուտքագրեք SQL Server անունը կամ ցանցային հասցեն</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL Server գաղտնաբառ</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>Մուտքագրեք SQL Server գաղտնաբառը</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>SQL Server գաղտնանուն</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>Մուտքագրեք SQL Server գաղտնանունը</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Microsoft SQL Server կամ SQL Express</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Ինֆորմացիա խանութի մասին</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>nopCommerce համակարգը հաջողությամբ տեղադրելու համար Դուք պետք է իմանաք տվյալների բազային միանալու կարգավորումների տողը: Եթե Դուք չունեք այդ ինֆորմացիան, ապա կարող եք հարցնել Ձեր հոսթինգ պրովայդերից: Եթե տեղադրում եք լոկալ համակարգչի վրա, ապա կարող եք իմանալ Ձեր ադմինիստրատորից:</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>
       Windows համակարգի ստուգում
     </Value>

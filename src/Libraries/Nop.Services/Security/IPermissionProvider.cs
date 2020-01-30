@@ -18,6 +18,6 @@ namespace Nop.Services.Security
         /// Get default permissions
         /// </summary>
         /// <returns>Default permissions</returns>
-        IEnumerable<DefaultPermissionRecord> GetDefaultPermissions();
+        HashSet<(string systemRoleName, PermissionRecord[] permissions)> GetDefaultPermissions();
     }
 }

@@ -3,7 +3,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
@@ -81,7 +80,7 @@ namespace Nop.Web.Controllers
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult CustomerReturnRequests()
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             var model = _returnRequestModelFactory.PrepareCustomerReturnRequestsModel();
@@ -125,7 +124,7 @@ namespace Nop.Web.Controllers
             }
 
             //returnable products
-            var orderItems = order.OrderItems.Where(oi => !oi.Product.NotReturnable);
+            var orderItems = _orderService.GetOrderItems(order.Id, isNotReturnable: false);
             foreach (var orderItem in orderItems)
             {
                 var quantity = 0; //parse quantity
@@ -156,15 +155,16 @@ namespace Nop.Web.Controllers
                         CreatedOnUtc = DateTime.UtcNow,
                         UpdatedOnUtc = DateTime.UtcNow
                     };
-                    _workContext.CurrentCustomer.ReturnRequests.Add(rr);
-                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
+                    _returnRequestService.InsertReturnRequest(rr);
+
                     //set return request custom number
                     rr.CustomNumber = _customNumberFormatter.GenerateReturnRequestCustomNumber(rr);
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                     //notify store owner
-                    _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, orderItem, _localizationSettings.DefaultAdminLanguageId);
+                    _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, orderItem, order, _localizationSettings.DefaultAdminLanguageId);
                     //notify customer
-                    _workflowMessageService.SendNewReturnRequestCustomerNotification(rr, orderItem, order.CustomerLanguageId);
+                    _workflowMessageService.SendNewReturnRequestCustomerNotification(rr, orderItem, order);
 
                     count++;
                 }

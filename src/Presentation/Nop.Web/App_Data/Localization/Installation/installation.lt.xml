@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>Naudoti standartine duomenų talpykla (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>SQL Serverio pavadinimas</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>Įveskite SQL serverio pavadinimą</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL Slaptažodis</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>Įveskite SQL slaptažodį</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>SQL Vartotojo vardas</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>Įveskite SQL vartotojo vardą</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Naudoti Microsoft SQL Server (arba SQL Express) duomenų bazę?</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>E-parduotuvės informacija</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>Norėdami įdiegti šią aplikaciją, jūs turite žinoti šiek tiek informacijos apie savo SQL serverį (prisijugimo informaciją). Prašome susisiekti su savo ISP, jei būtina. Jeigu diegiate į vietinį kompiuterį ar serverį, jums gali prireikti informacijos iš jūsų sistemos administratoriaus.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>Naudoti integruotą Windows autentifikavimą</Value>
   </LocaleResource>
 </Language>

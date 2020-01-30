@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>Usar banco embutido (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>Nome do servidor SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>Entre com o nome do servidor SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>Senha SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>Entre com a senha SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>Usuário SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>Entre com o usuário SQL</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Use um banco de dados de Microsoft SQL Server (ou SQL Express)</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Guardar informação</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>Para completar o passo a passo você precisa saber algumas informações sobre seu servidor de banco de dados ("string de conexão"). Por favor entre em contato com seu provedor de hospedagem se necessário. Se você está instalando em um computador local ou servidor talvez seja necessário informações do seu Administrador de Sistemas.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>Usar autenticação integrada com o Windows</Value>
   </LocaleResource>
 </Language>

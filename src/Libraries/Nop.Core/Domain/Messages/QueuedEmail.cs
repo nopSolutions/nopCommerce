@@ -103,11 +103,6 @@ namespace Nop.Core.Domain.Messages
         public int EmailAccountId { get; set; }
 
         /// <summary>
-        /// Gets the email account
-        /// </summary>
-        public virtual EmailAccount EmailAccount { get; set; }
-
-        /// <summary>
         /// Gets or sets the priority
         /// </summary>
         public QueuedEmailPriority Priority

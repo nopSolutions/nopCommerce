@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using Newtonsoft.Json;
 using Nop.Core;
+using Nop.Services.Defaults;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
 using NUnit.Framework;

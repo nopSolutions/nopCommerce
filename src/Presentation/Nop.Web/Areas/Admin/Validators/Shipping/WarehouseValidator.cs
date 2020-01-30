@@ -9,11 +9,11 @@ namespace Nop.Web.Areas.Admin.Validators.Shipping
 {
     public partial class WarehouseValidator : BaseNopValidator<WarehouseModel>
     {
-        public WarehouseValidator(ILocalizationService localizationService, IDbContext dbContext)
+        public WarehouseValidator(IDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Shipping.Warehouses.Fields.Name.Required"));
 
-            SetDatabaseValidationRules<Warehouse>(dbContext);
+            SetDatabaseValidationRules<Warehouse>(dataProvider);
         }
     }
 }

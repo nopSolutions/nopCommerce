@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
@@ -15,22 +14,14 @@ namespace Nop.Data.Mapping.Catalog
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<ProductWarehouseInventory> builder)
+        public override void Configure(EntityMappingBuilder<ProductWarehouseInventory> builder)
         {
-            builder.ToTable(nameof(ProductWarehouseInventory));
-            builder.HasKey(productWarehouseInventory => productWarehouseInventory.Id);
+            builder.HasTableName(nameof(ProductWarehouseInventory));
 
-            builder.HasOne(productWarehouseInventory => productWarehouseInventory.Product)
-                .WithMany(product => product.ProductWarehouseInventory)
-                .HasForeignKey(productWarehouseInventory => productWarehouseInventory.ProductId)
-                .IsRequired();
-
-            builder.HasOne(productWarehouseInventory => productWarehouseInventory.Warehouse)
-                .WithMany()
-                .HasForeignKey(productWarehouseInventory => productWarehouseInventory.WarehouseId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(productWarehouseInventory => productWarehouseInventory.ProductId);
+            builder.Property(productWarehouseInventory => productWarehouseInventory.WarehouseId);
+            builder.Property(productWarehouseInventory => productWarehouseInventory.StockQuantity);
+            builder.Property(productWarehouseInventory => productWarehouseInventory.ReservedQuantity);
         }
 
         #endregion

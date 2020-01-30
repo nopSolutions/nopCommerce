@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
 {
     public partial class ProductReviewValidator : BaseNopValidator<ProductReviewModel>
     {
-        public ProductReviewValidator(ILocalizationService localizationService, IDbContext dbContext, IWorkContext workContext)
+        public ProductReviewValidator(IDataProvider dataProvider, ILocalizationService localizationService, IWorkContext workContext)
         {
             var isLoggedInAsVendor = workContext.CurrentVendor != null;
             //vendor can edit "Reply text" only
@@ -20,7 +20,7 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
                 RuleFor(x => x.ReviewText).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.ProductReviews.Fields.ReviewText.Required"));
             }
 
-            SetDatabaseValidationRules<ProductReview>(dbContext);
+            SetDatabaseValidationRules<ProductReview>(dataProvider);
         }
     }
 }

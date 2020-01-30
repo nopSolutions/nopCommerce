@@ -2,9 +2,10 @@
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
+using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using NUnit.Framework;
@@ -32,7 +33,7 @@ namespace Nop.Services.Tests.Seo
             _localizationSettings=new LocalizationSettings();
             _seoSettings=new SeoSettings();
 
-            _urlRecordService = new UrlRecordService(_languageService.Object, _urlRecordRepository.Object,
+            _urlRecordService = new UrlRecordService(new Mock<ICacheKeyFactory>().Object, _languageService.Object, _urlRecordRepository.Object,
                 _cacheManager.Object, _workContext.Object, _localizationSettings, _seoSettings);
         }
 

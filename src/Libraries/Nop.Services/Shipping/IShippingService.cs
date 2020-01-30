@@ -55,6 +55,26 @@ namespace Nop.Services.Shipping
         /// <returns>Result</returns>
         bool CountryRestrictionExists(ShippingMethod shippingMethod, int countryId);
 
+        /// <summary>
+        /// Gets shipping country mappings
+        /// </summary>
+        /// <param name="shippingMethodId">The shipping method identifier</param>
+        /// <param name="countryId">Country identifier</param>
+        /// <returns>Shipping country mappings</returns>
+        IList<ShippingMethodCountryMapping> GetShippingMethodCountryMapping(int shippingMethodId, int countryId);
+
+        /// <summary>
+        /// Inserts a shipping country mapping
+        /// </summary>
+        /// <param name="shippingMethodCountryMapping">Shipping country mapping</param>
+        void InsertShippingMethodCountryMapping(ShippingMethodCountryMapping shippingMethodCountryMapping);
+
+        /// <summary>
+        /// Delete the shipping country mapping
+        /// </summary>
+        /// <param name="shippingMethodCountryMapping">Shipping country mapping</param>
+        void DeleteShippingMethodCountryMapping(ShippingMethodCountryMapping shippingMethodCountryMapping);
+
         #endregion
 
         #region Warehouses
@@ -176,12 +196,12 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Gets available pickup points
         /// </summary>
-        /// <param name="address">Address</param>
+        /// <param name="addressId">Address identifier</param>
         /// <param name="customer">Load records allowed only to a specified customer; pass null to ignore ACL permissions</param>
         /// <param name="providerSystemName">Filter by provider identifier; null to load pickup points of all providers</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Pickup points</returns>
-        GetPickupPointsResponse GetPickupPoints(Address address, Customer customer = null, string providerSystemName = null, int storeId = 0);
+        GetPickupPointsResponse GetPickupPoints(int addressId, Customer customer = null, string providerSystemName = null, int storeId = 0);
 
         /// <summary>
         /// Whether the shopping cart item is ship enabled

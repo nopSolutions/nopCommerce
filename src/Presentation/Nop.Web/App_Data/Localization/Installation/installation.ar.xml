@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>استخدام المدمج في تخزين البيانات (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>SQL اسم خادم</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>SQL اسم الخادم مطلوب</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL كلمة المرور</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>SQL كلمة المرور مطلوبة</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>SQL اسم المستخدم</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>SQL اسم المستخدم مطلوب</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>استخدم قاعدة بيانات Microsoft SQL Server (أو SQL Express)</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>معلومات المتجر</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>لمتابعة خطوات التثبيت يجب ان تعرف المعلومات التالية حول قاعدة البيانات وخادم SQL مثل سلسلة الاتصال (Conncetion String). الرجاء الاتصال بمزود الخدمة إذا دعت الحاجة لذلك. إذا كنت تريد ان تقوم بتثبيت على جهازك (خادم محلي)، قد تحتاج إلى المعلومات من مدير الخادم لديك (Admin)</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>استخدم مصادقة وندوز (Windows Authentication) </Value>
   </LocaleResource>
 </Language>

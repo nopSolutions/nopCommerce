@@ -20,6 +20,7 @@ using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Data;
 using Nop.Services;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -52,13 +53,13 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerAttributeModelFactory _customerAttributeModelFactory;
+        private readonly IDataProvider _dataProvider;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IFulltextService _fulltextService;
         private readonly IGdprService _gdprService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
-        private readonly IMaintenanceService _maintenanceService;
         private readonly IPictureService _pictureService;
         private readonly IReturnRequestModelFactory _returnRequestModelFactory;
         private readonly IReviewTypeModelFactory _reviewTypeModelFactory;
@@ -79,13 +80,13 @@ namespace Nop.Web.Areas.Admin.Factories
             IBaseAdminModelFactory baseAdminModelFactory,
             ICurrencyService currencyService,
             ICustomerAttributeModelFactory customerAttributeModelFactory,
+            IDataProvider dataProvider,
             IDateTimeHelper dateTimeHelper,
             IFulltextService fulltextService,
             IGdprService gdprService,
             ILocalizedModelFactory localizedModelFactory,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
-            IMaintenanceService maintenanceService,
             IPictureService pictureService,
             IReturnRequestModelFactory returnRequestModelFactory,
             ISettingService settingService,
@@ -102,13 +103,13 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory = baseAdminModelFactory;
             _currencyService = currencyService;
             _customerAttributeModelFactory = customerAttributeModelFactory;
+            _dataProvider = dataProvider;
             _dateTimeHelper = dateTimeHelper;
             _fulltextService = fulltextService;
             _gdprService = gdprService;
             _localizedModelFactory = localizedModelFactory;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
-            _maintenanceService = maintenanceService;
             _pictureService = pictureService;
             _returnRequestModelFactory = returnRequestModelFactory;
             _settingService = settingService;
@@ -1175,7 +1176,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in additional values (not existing in the entity)
             model.ActiveStoreScopeConfiguration = storeId;
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)?.CurrencyCode;
-            model.OrderIdent = _maintenanceService.GetTableIdent<Order>();
+            model.OrderIdent = _dataProvider.GetTableIdent<Order>();
 
             //fill in overridden values
             if (storeId > 0)

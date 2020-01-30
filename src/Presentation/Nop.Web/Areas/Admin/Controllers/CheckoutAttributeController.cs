@@ -499,7 +499,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
 
-            if (checkoutAttributeValue.CheckoutAttribute.AttributeControlType == AttributeControlType.ColorSquares)
+            if (checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares)
             {
                 //ensure valid color is chosen/entered
                 if (string.IsNullOrEmpty(model.ColorSquaresRgb))

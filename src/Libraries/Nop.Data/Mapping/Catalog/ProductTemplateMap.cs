@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
@@ -15,15 +14,15 @@ namespace Nop.Data.Mapping.Catalog
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<ProductTemplate> builder)
+        public override void Configure(EntityMappingBuilder<ProductTemplate> builder)
         {
-            builder.ToTable(nameof(ProductTemplate));
-            builder.HasKey(template => template.Id);
+            builder.HasTableName(nameof(ProductTemplate));
 
-            builder.Property(template => template.Name).HasMaxLength(400).IsRequired();
-            builder.Property(template => template.ViewPath).HasMaxLength(400).IsRequired();
+            builder.Property(template => template.Name).HasLength(400).IsNullable(false);
+            builder.Property(template => template.ViewPath).HasLength(400).IsNullable(false);
 
-            base.Configure(builder);
+            builder.Property(producttemplate => producttemplate.DisplayOrder);
+            builder.Property(producttemplate => producttemplate.IgnoredProductTypes);
         }
 
         #endregion

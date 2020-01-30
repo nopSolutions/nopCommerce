@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Html;
+using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Messages;
 using Nop.Services.Seo;
+using NopSeoDefaults = Nop.Services.Defaults.NopSeoDefaults;
 
 namespace Nop.Services.Forums
 {
@@ -24,7 +26,6 @@ namespace Nop.Services.Forums
         #region Fields
 
         private readonly ForumSettings _forumSettings;
-        private readonly ICacheManager _cacheManager;
         private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -46,7 +47,6 @@ namespace Nop.Services.Forums
         #region Ctor
 
         public ForumService(ForumSettings forumSettings,
-            ICacheManager cacheManager,
             ICustomerService customerService,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
@@ -64,7 +64,6 @@ namespace Nop.Services.Forums
             SeoSettings seoSettings)
         {
             _forumSettings = forumSettings;
-            _cacheManager = cacheManager;
             _customerService = customerService;
             _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
@@ -246,9 +245,6 @@ namespace Nop.Services.Forums
 
             _forumGroupRepository.Delete(forumGroup);
 
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumGroupPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumPrefixCacheKey);
-
             //event notification
             _eventPublisher.EntityDeleted(forumGroup);
         }
@@ -265,7 +261,7 @@ namespace Nop.Services.Forums
                 return null;
             }
 
-            return _forumGroupRepository.GetById(forumGroupId);
+            return _forumGroupRepository.ToCachedGetById(forumGroupId);
         }
 
         /// <summary>
@@ -274,13 +270,11 @@ namespace Nop.Services.Forums
         /// <returns>Forum groups</returns>
         public virtual IList<ForumGroup> GetAllForumGroups()
         {
-            return _cacheManager.Get(NopForumDefaults.ForumGroupAllCacheKey, () =>
-            {
-                var query = from fg in _forumGroupRepository.Table
-                            orderby fg.DisplayOrder, fg.Id
-                            select fg;
-                return query.ToList();
-            });
+            var query = from fg in _forumGroupRepository.Table
+                orderby fg.DisplayOrder, fg.Id
+                select fg;
+
+            return query.ToCachedList(NopForumCachingDefaults.ForumGroupAllCacheKey);
         }
 
         /// <summary>
@@ -295,11 +289,7 @@ namespace Nop.Services.Forums
             }
 
             _forumGroupRepository.Insert(forumGroup);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumGroupPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumPrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityInserted(forumGroup);
         }
@@ -316,10 +306,6 @@ namespace Nop.Services.Forums
             }
 
             _forumGroupRepository.Update(forumGroup);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumGroupPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(forumGroup);
@@ -363,10 +349,7 @@ namespace Nop.Services.Forums
 
             //delete forum
             _forumRepository.Delete(forum);
-
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumGroupPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumPrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityDeleted(forum);
         }
@@ -381,7 +364,7 @@ namespace Nop.Services.Forums
             if (forumId == 0)
                 return null;
 
-            return _forumRepository.GetById(forumId);
+            return _forumRepository.ToCachedGetById(forumId);
         }
 
         /// <summary>
@@ -391,16 +374,16 @@ namespace Nop.Services.Forums
         /// <returns>Forums</returns>
         public virtual IList<Forum> GetAllForumsByGroupId(int forumGroupId)
         {
-            var key = string.Format(NopForumDefaults.ForumAllByForumGroupIdCacheKey, forumGroupId);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from f in _forumRepository.Table
-                            orderby f.DisplayOrder, f.Id
-                            where f.ForumGroupId == forumGroupId
-                            select f;
-                var forums = query.ToList();
-                return forums;
-            });
+            var key = string.Format(NopForumCachingDefaults.ForumAllByForumGroupIdCacheKey, forumGroupId);
+
+            var query = from f in _forumRepository.Table
+                orderby f.DisplayOrder, f.Id
+                where f.ForumGroupId == forumGroupId
+                select f;
+
+            var forums = query.ToCachedList(key);
+
+            return forums;
         }
 
         /// <summary>
@@ -415,9 +398,6 @@ namespace Nop.Services.Forums
             }
 
             _forumRepository.Insert(forum);
-
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumGroupPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(forum);
@@ -435,9 +415,6 @@ namespace Nop.Services.Forums
             }
 
             _forumRepository.Update(forum);
-
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumGroupPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(forum);
@@ -476,9 +453,6 @@ namespace Nop.Services.Forums
             UpdateForumStats(forumId);
             UpdateCustomerStats(customerId);
 
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumGroupPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumPrefixCacheKey);
-
             //event notification
             _eventPublisher.EntityDeleted(forumTopic);
         }
@@ -504,7 +478,7 @@ namespace Nop.Services.Forums
             if (forumTopicId == 0)
                 return null;
 
-            var forumTopic = _forumTopicRepository.GetById(forumTopicId);
+            var forumTopic = _forumTopicRepository.ToCachedGetById(forumTopicId);
             if (forumTopic == null)
                 return null;
 
@@ -603,10 +577,6 @@ namespace Nop.Services.Forums
             //update stats
             UpdateForumStats(forumTopic.ForumId);
 
-            //cache            
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumGroupPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumPrefixCacheKey);
-
             //event notification
             _eventPublisher.EntityInserted(forumTopic);
             
@@ -614,7 +584,7 @@ namespace Nop.Services.Forums
                 return;
 
             //send notifications
-            var forum = forumTopic.Forum;
+            var forum = GetForumById(forumTopic.ForumId);
             var subscriptions = GetAllSubscriptions(forumId: forum.Id);
             var languageId = _workContext.WorkingLanguage.Id;
 
@@ -625,10 +595,11 @@ namespace Nop.Services.Forums
                     continue;
                 }
 
-                if (!string.IsNullOrEmpty(subscription.Customer.Email))
+                var customer = _customerService.GetCustomerById(subscription.CustomerId);
+
+                if (!string.IsNullOrEmpty(customer?.Email))
                 {
-                    _workflowMessageService.SendNewForumTopicMessage(subscription.Customer, forumTopic,
-                        forum, languageId);
+                    _workflowMessageService.SendNewForumTopicMessage(customer, forumTopic, forum, languageId);
                 }
             }
         }
@@ -645,9 +616,6 @@ namespace Nop.Services.Forums
             }
 
             _forumTopicRepository.Update(forumTopic);
-
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumGroupPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(forumTopic);
@@ -729,10 +697,6 @@ namespace Nop.Services.Forums
             UpdateForumStats(forumId);
             UpdateCustomerStats(customerId);
 
-            //clear cache            
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumGroupPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumPrefixCacheKey);
-
             //event notification
             _eventPublisher.EntityDeleted(forumPost);
         }
@@ -747,7 +711,7 @@ namespace Nop.Services.Forums
             if (forumPostId == 0)
                 return null;
 
-            return _forumPostRepository.GetById(forumPostId);
+            return _forumPostRepository.ToCachedGetById(forumPostId);
         }
 
         /// <summary>
@@ -827,10 +791,6 @@ namespace Nop.Services.Forums
             UpdateForumStats(forumId);
             UpdateCustomerStats(customerId);
 
-            //clear cache            
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumGroupPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumPrefixCacheKey);
-
             //event notification
             _eventPublisher.EntityInserted(forumPost);
 
@@ -838,7 +798,7 @@ namespace Nop.Services.Forums
             if (!sendNotifications) 
                 return;
 
-            var forum = forumTopic.Forum;
+            var forum = GetForumById(forumTopic.ForumId);
             var subscriptions = GetAllSubscriptions(topicId: forumTopic.Id);
 
             var languageId = _workContext.WorkingLanguage.Id;
@@ -854,10 +814,11 @@ namespace Nop.Services.Forums
                     continue;
                 }
 
-                if (!string.IsNullOrEmpty(subscription.Customer.Email))
+                var customer = _customerService.GetCustomerById(subscription.CustomerId);
+
+                if (!string.IsNullOrEmpty(customer?.Email))
                 {
-                    _workflowMessageService.SendNewForumPostMessage(subscription.Customer, forumPost,
-                        forumTopic, forum, friendlyTopicPageIndex, languageId);
+                    _workflowMessageService.SendNewForumPostMessage(customer, forumPost, forumTopic, forum, friendlyTopicPageIndex, languageId);
                 }
             }
         }
@@ -875,9 +836,6 @@ namespace Nop.Services.Forums
             }
 
             _forumPostRepository.Update(forumPost);
-
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumGroupPrefixCacheKey);
-            _cacheManager.RemoveByPrefix(NopForumDefaults.ForumPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(forumPost);
@@ -910,7 +868,7 @@ namespace Nop.Services.Forums
             if (privateMessageId == 0)
                 return null;
 
-            return _forumPrivateMessageRepository.GetById(privateMessageId);
+            return _forumPrivateMessageRepository.ToCachedGetById(privateMessageId);
         }
 
         /// <summary>
@@ -1038,7 +996,7 @@ namespace Nop.Services.Forums
             if (forumSubscriptionId == 0)
                 return null;
 
-            return _forumSubscriptionRepository.GetById(forumSubscriptionId);
+            return _forumSubscriptionRepository.ToCachedGetById(forumSubscriptionId);
         }
 
         /// <summary>
@@ -1124,7 +1082,7 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (customer.IsGuest() && !_forumSettings.AllowGuestsToCreateTopics)
+            if (_customerService.IsGuest(customer) && !_forumSettings.AllowGuestsToCreateTopics)
             {
                 return false;
             }
@@ -1150,12 +1108,12 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (customer.IsGuest())
+            if (_customerService.IsGuest(customer))
             {
                 return false;
             }
 
-            if (customer.IsForumModerator())
+            if (_customerService.IsForumModerator(customer))
             {
                 return true;
             }
@@ -1186,12 +1144,12 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (customer.IsGuest())
+            if (_customerService.IsGuest(customer))
             {
                 return false;
             }
 
-            return customer.IsForumModerator();
+            return _customerService.IsForumModerator(customer);
         }
 
         /// <summary>
@@ -1212,12 +1170,12 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (customer.IsGuest())
+            if (_customerService.IsGuest(customer))
             {
                 return false;
             }
 
-            if (customer.IsForumModerator())
+            if (_customerService.IsForumModerator(customer))
             {
                 return true;
             }
@@ -1248,7 +1206,7 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (customer.IsGuest() && !_forumSettings.AllowGuestsToCreatePosts)
+            if (_customerService.IsGuest(customer) && !_forumSettings.AllowGuestsToCreatePosts)
             {
                 return false;
             }
@@ -1274,12 +1232,12 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (customer.IsGuest())
+            if (_customerService.IsGuest(customer))
             {
                 return false;
             }
 
-            if (customer.IsForumModerator())
+            if (_customerService.IsForumModerator(customer))
             {
                 return true;
             }
@@ -1310,12 +1268,12 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (customer.IsGuest())
+            if (_customerService.IsGuest(customer))
             {
                 return false;
             }
 
-            if (customer.IsForumModerator())
+            if (_customerService.IsForumModerator(customer))
             {
                 return true;
             }
@@ -1339,12 +1297,12 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (customer.IsGuest())
+            if (_customerService.IsGuest(customer))
             {
                 return false;
             }
 
-            return customer.IsForumModerator();
+            return _customerService.IsForumModerator(customer);
         }
 
         /// <summary>
@@ -1359,7 +1317,7 @@ namespace Nop.Services.Forums
                 return false;
             }
 
-            if (customer.IsGuest())
+            if (_customerService.IsGuest(customer))
             {
                 return false;
             }

@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Data.Mapping.Customers
@@ -15,16 +14,16 @@ namespace Nop.Data.Mapping.Customers
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<CustomerAttribute> builder)
+        public override void Configure(EntityMappingBuilder<CustomerAttribute> builder)
         {
-            builder.ToTable(nameof(CustomerAttribute));
-            builder.HasKey(attribute => attribute.Id);
+            builder.HasTableName(nameof(CustomerAttribute));
 
-            builder.Property(attribute => attribute.Name).HasMaxLength(400).IsRequired();
+            builder.Property(attribute => attribute.Name).HasLength(400).IsNullable(false);
+            builder.Property(customerattribute => customerattribute.IsRequired);
+            builder.Property(customerattribute => customerattribute.AttributeControlTypeId);
+            builder.Property(customerattribute => customerattribute.DisplayOrder);
 
             builder.Ignore(attribute => attribute.AttributeControlType);
-
-            base.Configure(builder);
         }
 
         #endregion

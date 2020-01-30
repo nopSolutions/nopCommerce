@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -20,8 +21,8 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
-        private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
 
         #endregion
@@ -29,13 +30,13 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public ActivityLogModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
-            ILocalizationService localizationService,
             ICustomerActivityService customerActivityService,
+            ICustomerService customerService,
             IDateTimeHelper dateTimeHelper)
         {
             _baseAdminModelFactory = baseAdminModelFactory;
-            _localizationService = localizationService;
             _customerActivityService = customerActivityService;
+            _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
         }
 
@@ -55,7 +56,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return models;
         }
-        
+
         #endregion
 
         #region Methods
@@ -120,15 +121,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 ipAddress: searchModel.IpAddress,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
+            if (activityLog is null)
+                return new ActivityLogListModel();
+
             //prepare list model
             var model = new ActivityLogListModel().PrepareToGrid(searchModel, activityLog, () =>
             {
+                var activityLogCustomers = _customerService.GetCustomersByIds(activityLog.GroupBy(x => x.CustomerId).Select(x => x.Key).ToArray());
+
                 return activityLog.Select(logItem =>
                 {
                     //fill in model values from the entity
                     var logItemModel = logItem.ToModel<ActivityLogModel>();
-                    logItemModel.ActivityLogTypeName = logItem.ActivityLogType.Name;
-                    logItemModel.CustomerEmail = logItem.Customer.Email;
+                    logItemModel.ActivityLogTypeName = _customerActivityService.GetActivityTypeById(logItem.ActivityLogTypeId)?.Name;
+                    logItemModel.CustomerEmail = activityLogCustomers?.FirstOrDefault(x => x.Id == logItem.CustomerId)?.Email;
 
                     //convert dates to the user time
                     logItemModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(logItem.CreatedOnUtc, DateTimeKind.Utc);

@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Stores;
 
 namespace Nop.Data.Mapping.Stores
@@ -15,19 +14,13 @@ namespace Nop.Data.Mapping.Stores
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<StoreMapping> builder)
+        public override void Configure(EntityMappingBuilder<StoreMapping> builder)
         {
-            builder.ToTable(nameof(StoreMapping));
-            builder.HasKey(storeMapping => storeMapping.Id);
+            builder.HasTableName(nameof(StoreMapping));
 
-            builder.Property(storeMapping => storeMapping.EntityName).HasMaxLength(400).IsRequired();
-
-            builder.HasOne(storeMapping => storeMapping.Store)
-                .WithMany()
-                .HasForeignKey(storeMapping => storeMapping.StoreId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(storeMapping => storeMapping.EntityName).HasLength(400).IsNullable(false);
+            builder.Property(storemapping => storemapping.EntityId);
+            builder.Property(storemapping => storemapping.StoreId);
         }
 
         #endregion

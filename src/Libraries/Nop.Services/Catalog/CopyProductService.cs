@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
@@ -8,6 +9,7 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
+using NopCatalogDefaults = Nop.Services.Defaults.NopCatalogDefaults;
 
 namespace Nop.Services.Catalog
 {
@@ -28,6 +30,7 @@ namespace Nop.Services.Catalog
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductService _productService;
+        private readonly IProductTagService _productTagService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IUrlRecordService _urlRecordService;
@@ -46,6 +49,7 @@ namespace Nop.Services.Catalog
             IProductAttributeParser productAttributeParser,
             IProductAttributeService productAttributeService,
             IProductService productService,
+            IProductTagService productTagService,
             ISpecificationAttributeService specificationAttributeService,
             IStoreMappingService storeMappingService,
             IUrlRecordService urlRecordService)
@@ -60,6 +64,7 @@ namespace Nop.Services.Catalog
             _productAttributeParser = productAttributeParser;
             _productAttributeService = productAttributeService;
             _productService = productService;
+            _productTagService = productTagService;
             _specificationAttributeService = specificationAttributeService;
             _storeMappingService = storeMappingService;
             _urlRecordService = urlRecordService;
@@ -76,9 +81,9 @@ namespace Nop.Services.Catalog
         /// <param name="productCopy">New product</param>
         protected virtual void CopyDiscountsMapping(Product product, Product productCopy)
         {
-            foreach (var discountMapping in product.DiscountProductMappings)
+            foreach (var discountMapping in _productService.GetAllDiscountsAppliedToProduct(product.Id))
             {
-                productCopy.DiscountProductMappings.Add(new DiscountProductMapping { Discount = discountMapping.Discount });
+                _productService.InsertDiscountProductMapping(new DiscountProductMapping { EntityId = productCopy.Id, DiscountId = discountMapping.DiscountId });
                 _productService.UpdateProduct(productCopy);
             }
         }
@@ -114,7 +119,7 @@ namespace Nop.Services.Catalog
         /// <param name="productCopy">New product</param>
         protected virtual void CopyTierPrices(Product product, Product productCopy)
         {
-            foreach (var tierPrice in product.TierPrices)
+            foreach (var tierPrice in _productService.GetTierPricesByProduct(product.Id))
             {
                 _productService.InsertTierPrice(new TierPrice
                 {
@@ -286,12 +291,12 @@ namespace Nop.Services.Catalog
                 var parsedProductAttributes = _productAttributeParser.ParseProductAttributeMappings(combination.AttributesXml);
                 foreach (var oldAttribute in parsedProductAttributes)
                 {
-                    if (!associatedAttributes.ContainsKey(oldAttribute.Id)) 
+                    if (!associatedAttributes.ContainsKey(oldAttribute.Id))
                         continue;
 
                     var newAttribute = _productAttributeService.GetProductAttributeMappingById(associatedAttributes[oldAttribute.Id]);
 
-                    if (newAttribute == null) 
+                    if (newAttribute == null)
                         continue;
 
                     var oldAttributeValuesStr = _productAttributeParser.ParseValues(combination.AttributesXml, oldAttribute.Id);
@@ -302,11 +307,11 @@ namespace Nop.Services.Catalog
                         {
                             //attribute values
                             var oldAttributeValue = int.Parse(oldAttributeValueStr);
-                            if (!associatedAttributeValues.ContainsKey(oldAttributeValue)) 
+                            if (!associatedAttributeValues.ContainsKey(oldAttributeValue))
                                 continue;
 
                             var newAttributeValue = _productAttributeService.GetProductAttributeValueById(associatedAttributeValues[oldAttributeValue]);
-                            
+
                             if (newAttributeValue != null)
                             {
                                 newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,
@@ -343,8 +348,7 @@ namespace Nop.Services.Catalog
                 //quantity change history
                 _productService.AddStockQuantityHistoryEntry(productCopy, combination.StockQuantity,
                     combination.StockQuantity,
-                    message: string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"),
-                        product.Id), combinationId: combination.Id);
+                    message: string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id), combinationId: combination.Id);
             }
         }
 
@@ -355,7 +359,7 @@ namespace Nop.Services.Catalog
         /// <param name="productCopy">New product</param>
         protected virtual void CopyProductSpecifications(Product product, Product productCopy)
         {
-            foreach (var productSpecificationAttribute in product.ProductSpecificationAttributes)
+            foreach (var productSpecificationAttribute in _specificationAttributeService.GetProductSpecificationAttributes(product.Id))
             {
                 var psaCopy = new ProductSpecificationAttribute
                 {
@@ -415,7 +419,7 @@ namespace Nop.Services.Catalog
         /// <param name="productCopy">New product</param>
         protected virtual void CopyManufacturersMapping(Product product, Product productCopy)
         {
-            foreach (var productManufacturers in product.ProductManufacturers)
+            foreach (var productManufacturers in _manufacturerService.GetProductManufacturersByProductId(product.Id, true))
             {
                 var productManufacturerCopy = new ProductManufacturer
                 {
@@ -436,7 +440,7 @@ namespace Nop.Services.Catalog
         /// <param name="productCopy">New product</param>
         protected virtual void CopyCategoriesMapping(Product product, Product productCopy)
         {
-            foreach (var productCategory in product.ProductCategories)
+            foreach (var productCategory in _categoryService.GetProductCategoriesByProductId(product.Id))
             {
                 var productCategoryCopy = new ProductCategory
                 {
@@ -457,17 +461,16 @@ namespace Nop.Services.Catalog
         /// <param name="productCopy">New product</param>
         protected virtual void CopyWarehousesMapping(Product product, Product productCopy)
         {
-            foreach (var pwi in product.ProductWarehouseInventory)
+            foreach (var pwi in _productService.GetAllProductWarehouseInventoryRecords(product.Id))
             {
-                var pwiCopy = new ProductWarehouseInventory
-                {
-                    ProductId = productCopy.Id,
-                    WarehouseId = pwi.WarehouseId,
-                    StockQuantity = pwi.StockQuantity,
-                    ReservedQuantity = 0
-                };
-
-                productCopy.ProductWarehouseInventory.Add(pwiCopy);
+                _productService.InsertProductWarehouseInventory(
+                    new ProductWarehouseInventory
+                    {
+                        ProductId = productCopy.Id,
+                        WarehouseId = pwi.WarehouseId,
+                        StockQuantity = pwi.StockQuantity,
+                        ReservedQuantity = 0
+                    });
 
                 //quantity change history
                 var message = $"{_localizationService.GetResource("Admin.StockQuantityHistory.Messages.MultipleWarehouses")} {string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id)}";
@@ -489,12 +492,12 @@ namespace Nop.Services.Catalog
         {
             //variable to store original and new picture identifiers
             var originalNewPictureIdentifiers = new Dictionary<int, int>();
-            if (!copyImages) 
+            if (!copyImages)
                 return originalNewPictureIdentifiers;
 
-            foreach (var productPicture in product.ProductPictures)
+            foreach (var productPicture in _productService.GetProductPicturesByProductId(product.Id))
             {
-                var picture = productPicture.Picture;
+                var picture = _pictureService.GetPictureById(productPicture.PictureId);
                 var pictureCopy = _pictureService.InsertPicture(
                     _pictureService.LoadPictureBinary(picture),
                     picture.MimeType,
@@ -749,9 +752,9 @@ namespace Nop.Services.Catalog
             CopyLocalizationData(product, productCopy);
 
             //copy product tags
-            foreach (var productProductTagMapping in product.ProductProductTagMappings)
+            foreach (var productTag in _productTagService.GetAllProductTagsByProductId(product.Id))
             {
-                productCopy.ProductProductTagMappings.Add(new ProductProductTagMapping { ProductTag = productProductTagMapping.ProductTag });
+                _productTagService.InsertProductProductTagMapping(new ProductProductTagMapping { ProductTagId = productTag.Id, ProductId = productCopy.Id });
             }
 
             _productService.UpdateProduct(productCopy);

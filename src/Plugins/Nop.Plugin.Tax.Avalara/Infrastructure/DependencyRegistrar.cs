@@ -1,17 +1,11 @@
 ﻿using Autofac;
-using Autofac.Core;
 using Nop.Core.Configuration;
-using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
-using Nop.Data;
-using Nop.Plugin.Tax.Avalara.Data;
-using Nop.Plugin.Tax.Avalara.Domain;
 using Nop.Plugin.Tax.Avalara.Factories;
 using Nop.Plugin.Tax.Avalara.Services;
 using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Factories;
-using Nop.Web.Framework.Infrastructure.Extensions;
 
 namespace Nop.Plugin.Tax.Avalara.Infrastructure
 {
@@ -37,12 +31,6 @@ namespace Nop.Plugin.Tax.Avalara.Infrastructure
             //register custom services
             builder.RegisterType<AvalaraTaxManager>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<TaxTransactionLogService>().AsSelf().InstancePerLifetimeScope();
-
-            //register custom data context
-            builder.RegisterPluginDataContext<TaxTransactionLogObjectContext>(AvalaraTaxDefaults.ObjectContextName);
-            builder.RegisterType<EfRepository<TaxTransactionLog>>().As<IRepository<TaxTransactionLog>>()
-                .WithParameter(ResolvedParameter.ForNamed<IDbContext>(AvalaraTaxDefaults.ObjectContextName))
-                .InstancePerLifetimeScope();
         }
 
         /// <summary>

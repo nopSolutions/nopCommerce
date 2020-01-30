@@ -10,6 +10,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
@@ -33,7 +34,6 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
-using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
@@ -60,7 +60,6 @@ namespace Nop.Web.Controllers
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
-        private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductAttributeService _productAttributeService;
@@ -98,7 +97,6 @@ namespace Nop.Web.Controllers
             INotificationService notificationService,
             IPermissionService permissionService,
             IPictureService pictureService,
-            IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
             IProductAttributeParser productAttributeParser,
             IProductAttributeService productAttributeService,
@@ -132,7 +130,6 @@ namespace Nop.Web.Controllers
             _notificationService = notificationService;
             _permissionService = permissionService;
             _pictureService = pictureService;
-            _priceCalculationService = priceCalculationService;
             _priceFormatter = priceFormatter;
             _productAttributeParser = productAttributeParser;
             _productAttributeService = productAttributeService;
@@ -982,14 +979,13 @@ namespace Nop.Web.Controllers
             if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices) && !product.CustomerEntersPrice)
             {
                 //we do not calculate price of "customer enters price" option is enabled
-                List<DiscountForCaching> scDiscounts;
-                var finalPrice = _priceCalculationService.GetUnitPrice(product,
+                var finalPrice = _shoppingCartService.GetUnitPrice(product,
                     _workContext.CurrentCustomer,
                     ShoppingCartType.ShoppingCart,
                     1, attributeXml, 0,
                     rentalStartDate, rentalEndDate,
-                    true, out decimal _, out scDiscounts);
-                var finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out decimal _);
+                    true, out decimal _, out _);
+                var finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out var _);
                 var finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
                 price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
                 basepricepangv = _priceFormatter.FormatBasePrice(product, finalPriceWithDiscountBase, totalWeight);
@@ -1081,11 +1077,6 @@ namespace Nop.Web.Controllers
         public virtual IActionResult CheckoutAttributeChange(IFormCollection form, bool isEditable)
         {
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
-
-            //performance optimization workaround (for Entity Framework)
-            //load all products at once (one SQL command)
-            //if not loaded right now, then anyway the code below will load each product separately (multiple SQL commands)
-            _productService.GetProductsByIds(cart.Select(sci => sci.ProductId).ToArray());
 
             //save selected attributes
             ParseAndSaveCheckoutAttributes(cart, form);
@@ -1308,26 +1299,31 @@ namespace Nop.Web.Controllers
             //get identifiers of items to remove
             var itemIdsToRemove = form["removefromcart"]
                 .SelectMany(value => value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                .Select(idString => int.TryParse(idString, out int id) ? id : 0)
+                .Select(idString => int.TryParse(idString, out var id) ? id : 0)
                 .Distinct().ToList();
+
+            var products = _productService.GetProductsByIds(cart.Select(item => item.ProductId).ToArray())
+                .ToDictionary(item => item.Id, item => item);
 
             //get order items with changed quantity
             var itemsWithNewQuantity = cart.Select(item => new
             {
                 //try to get a new quantity for the item, set 0 for items to remove
-                NewQuantity = itemIdsToRemove.Contains(item.Id) ? 0 : int.TryParse(form[$"itemquantity{item.Id}"], out int quantity) ? quantity : item.Quantity,
-                Item = item
+                NewQuantity = itemIdsToRemove.Contains(item.Id) ? 0 : int.TryParse(form[$"itemquantity{item.Id}"], out var quantity) ? quantity : item.Quantity,
+                Item = item,
+                Product = products[item.ProductId]
             }).Where(item => item.NewQuantity != item.Item.Quantity);
 
             //order cart items
             //first should be items with a reduced quantity and that require other products; or items with an increased quantity and are required for other products
             var orderedCart = itemsWithNewQuantity
                 .OrderByDescending(cartItem =>
-                    (cartItem.NewQuantity < cartItem.Item.Quantity && (cartItem.Item.Product?.RequireOtherProducts ?? false)) ||
-                    (cartItem.NewQuantity > cartItem.Item.Quantity &&
-                        cart.Any(item => item.Product != null && item.Product.RequireOtherProducts && _productService.ParseRequiredProductIds(item.Product).Contains(cartItem.Item.ProductId))))
+                    (cartItem.NewQuantity < cartItem.Item.Quantity &&
+                     (cartItem.Product?.RequireOtherProducts ?? false)) ||
+                    (cartItem.NewQuantity > cartItem.Item.Quantity && cartItem.Product != null && _shoppingCartService
+                         .GetProductsRequiringProduct(cart, cartItem.Product).Any()))
                 .ToList();
-
+            
             //try to update cart items with new quantities and get warnings
             var warnings = orderedCart.Select(cartItem => new
             {
@@ -1395,11 +1391,12 @@ namespace Nop.Web.Controllers
             var anonymousPermissed = _orderSettings.AnonymousCheckoutAllowed 
                                      && _customerSettings.UserRegistrationType == UserRegistrationType.Disabled;
 
-            if (anonymousPermissed || !_workContext.CurrentCustomer.IsGuest())
+            if (anonymousPermissed || !_customerService.IsGuest(_workContext.CurrentCustomer))
                 return RedirectToRoute("Checkout");
-            
+
+            var cartProductIds = cart.Select(ci => ci.ProductId).ToArray();
             var downloadableProductsRequireRegistration =
-                _customerSettings.RequireRegistrationForDownloadableProducts && cart.Any(sci => sci.Product.IsDownload);
+                _customerSettings.RequireRegistrationForDownloadableProducts && _productService.HasAnyDownloadableProduct(cartProductIds);
 
             if (!_orderSettings.AnonymousCheckoutAllowed || downloadableProductsRequireRegistration)
             {
@@ -1428,7 +1425,7 @@ namespace Nop.Web.Controllers
             if (!string.IsNullOrWhiteSpace(discountcouponcode))
             {
                 //we find even hidden records here. this way we can display a user-friendly message if it's expired
-                var discounts = _discountService.GetAllDiscountsForCaching(couponCode: discountcouponcode, showHidden: true)
+                var discounts = _discountService.GetAllDiscounts(couponCode: discountcouponcode, showHidden: true)
                     .Where(d => d.RequiresCouponCode)
                     .ToList();
                 if (discounts.Any())
@@ -1707,8 +1704,10 @@ namespace Nop.Web.Controllers
             {
                 if (allIdsToAdd.Contains(sci.Id))
                 {
+                    var product = _productService.GetProductById(sci.ProductId);
+
                     var warnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
-                        sci.Product, ShoppingCartType.ShoppingCart,
+                        product, ShoppingCartType.ShoppingCart,
                         _storeContext.CurrentStore.Id,
                         sci.AttributesXml, sci.CustomerEnteredPrice,
                         sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, true);
@@ -1787,7 +1786,7 @@ namespace Nop.Web.Controllers
             }
 
             //check whether the current customer is guest and ia allowed to email wishlist
-            if (_workContext.CurrentCustomer.IsGuest() && !_shoppingCartSettings.AllowAnonymousUsersToEmailWishlist)
+            if (_customerService.IsGuest(_workContext.CurrentCustomer) && !_shoppingCartSettings.AllowAnonymousUsersToEmailWishlist)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Wishlist.EmailAFriend.OnlyRegisteredUsers"));
             }

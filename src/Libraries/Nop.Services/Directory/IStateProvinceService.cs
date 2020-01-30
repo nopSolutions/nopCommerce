@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 
 namespace Nop.Services.Directory
@@ -28,7 +29,14 @@ namespace Nop.Services.Directory
         /// <param name="countryId">Country identifier; pass null to load the state regardless of a country</param>
         /// <returns>State/province</returns>
         StateProvince GetStateProvinceByAbbreviation(string abbreviation, int? countryId = null);
-        
+
+        /// <summary>
+        /// Gets a state/province by address 
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <returns>Country</returns>
+        StateProvince GetStateProvinceByAddress(Address address);
+
         /// <summary>
         /// Gets a state/province collection by country identifier
         /// </summary>

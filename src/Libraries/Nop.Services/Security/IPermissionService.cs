@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 
@@ -88,5 +88,32 @@ namespace Nop.Services.Security
         /// <param name="customer">Customer</param>
         /// <returns>true - authorized; otherwise, false</returns>
         bool Authorize(string permissionRecordSystemName, Customer customer);
+
+        /// <summary>
+        /// Authorize permission
+        /// </summary>
+        /// <param name="permissionRecordSystemName">Permission record system name</param>
+        /// <param name="customerRoleId">Customer role identifier</param>
+        /// <returns>true - authorized; otherwise, false</returns>
+        bool Authorize(string permissionRecordSystemName, int customerRoleId);
+
+        /// <summary>
+        /// Gets a permission record-customer role mapping
+        /// </summary>
+        /// <param name="permissionId">Permission identifier</param>
+        IList<PermissionRecordCustomerRoleMapping> GetMappingByPermissionRecordId(int permissionId);
+
+        /// <summary>
+        /// Delete a permission record-customer role mapping
+        /// </summary>
+        /// <param name="permissionId">Permission identifier</param>
+        /// <param name="customerRoleId">Customer role identifier</param>
+        void DeletePermissionRecordCustomerRoleMapping(int permissionId, int customerRoleId);
+
+        /// <summary>
+        /// Inserts a permission record-customer role mapping
+        /// </summary>
+        /// <param name="permissionRecordCustomerRoleMapping">Permission record-customer role mapping</param>
+        void InsertPermissionRecordCustomerRoleMapping(PermissionRecordCustomerRoleMapping permissionRecordCustomerRoleMapping);
     }
 }

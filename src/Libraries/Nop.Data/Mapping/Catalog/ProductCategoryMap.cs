@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
@@ -15,22 +14,14 @@ namespace Nop.Data.Mapping.Catalog
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<ProductCategory> builder)
+        public override void Configure(EntityMappingBuilder<ProductCategory> builder)
         {
-            builder.ToTable(NopMappingDefaults.ProductCategoryTable);
-            builder.HasKey(productCategory => productCategory.Id);
+            builder.HasTableName(NopMappingDefaults.ProductCategoryTable);
 
-            builder.HasOne(productCategory => productCategory.Category)
-                .WithMany()
-                .HasForeignKey(productCategory => productCategory.CategoryId)
-                .IsRequired();
-
-            builder.HasOne(productCategory => productCategory.Product)
-                .WithMany(product => product.ProductCategories)
-                .HasForeignKey(productCategory => productCategory.ProductId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(productcategory => productcategory.ProductId);
+            builder.Property(productcategory => productcategory.CategoryId);
+            builder.Property(productcategory => productcategory.IsFeaturedProduct);
+            builder.Property(productcategory => productcategory.DisplayOrder);
         }
 
         #endregion

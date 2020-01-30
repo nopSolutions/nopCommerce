@@ -9,11 +9,11 @@ namespace Nop.Web.Areas.Admin.Validators.Directory
 {
     public partial class StateProvinceValidator : BaseNopValidator<StateProvinceModel>
     {
-        public StateProvinceValidator(ILocalizationService localizationService, IDbContext dbContext)
+        public StateProvinceValidator(IDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Countries.States.Fields.Name.Required"));
 
-            SetDatabaseValidationRules<StateProvince>(dbContext);
+            SetDatabaseValidationRules<StateProvince>(dataProvider);
         }
     }
 }

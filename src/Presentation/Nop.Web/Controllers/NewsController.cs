@@ -7,6 +7,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Security;
 using Nop.Core.Rss;
+using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -33,6 +34,7 @@ namespace Nop.Web.Controllers
 
         private readonly CaptchaSettings _captchaSettings;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly INewsModelFactory _newsModelFactory;
@@ -53,6 +55,7 @@ namespace Nop.Web.Controllers
 
         public NewsController(CaptchaSettings captchaSettings,
             ICustomerActivityService customerActivityService,
+            ICustomerService customerService,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             INewsModelFactory newsModelFactory,
@@ -69,6 +72,7 @@ namespace Nop.Web.Controllers
         {
             _captchaSettings = captchaSettings;
             _customerActivityService = customerActivityService;
+            _customerService = customerService;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
             _newsModelFactory = newsModelFactory;
@@ -170,7 +174,7 @@ namespace Nop.Web.Controllers
                 ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
-            if (_workContext.CurrentCustomer.IsGuest() && !_newsSettings.AllowNotRegisteredUsersToLeaveComments)
+            if (_customerService.IsGuest(_workContext.CurrentCustomer) && !_newsSettings.AllowNotRegisteredUsersToLeaveComments)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("News.Comments.OnlyRegisteredUsersLeaveComments"));
             }
@@ -187,8 +191,8 @@ namespace Nop.Web.Controllers
                     StoreId = _storeContext.CurrentStore.Id,
                     CreatedOnUtc = DateTime.UtcNow,
                 };
-                newsItem.NewsComments.Add(comment);
-                _newsService.UpdateNews(newsItem);
+
+                _newsService.InsertNewsComment(comment);
 
                 //notify a store owner;
                 if (_newsSettings.NotifyAboutNewNewsComments)

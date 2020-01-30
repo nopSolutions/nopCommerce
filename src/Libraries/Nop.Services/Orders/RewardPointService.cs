@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -92,7 +93,7 @@ namespace Nop.Services.Orders
             {
                 InsertRewardPointsHistoryEntry(new RewardPointsHistory
                 {
-                    Customer = historyEntry.Customer,
+                    CustomerId = historyEntry.CustomerId,
                     StoreId = historyEntry.StoreId,
                     Points = -historyEntry.ValidPoints.Value,
                     Message = string.Format(_localizationService.GetResource("RewardPoints.Expired"),
@@ -206,9 +207,9 @@ namespace Nop.Services.Orders
             //insert new history entry
             var newHistoryEntry = new RewardPointsHistory
             {
-                Customer = customer,
+                CustomerId = customer.Id,
                 StoreId = storeId,
-                UsedWithOrder = usedWithOrder,
+                OrderId = usedWithOrder?.Id,
                 Points = points,
                 PointsBalance = activatingDate.HasValue ? null : (int?)(GetRewardPointsBalance(customer.Id, storeId) + points),
                 UsedAmount = usedAmount,
@@ -249,7 +250,7 @@ namespace Nop.Services.Orders
             if (rewardPointsHistoryId == 0)
                 return null;
 
-            return _rewardPointsHistoryRepository.GetById(rewardPointsHistoryId);
+            return _rewardPointsHistoryRepository.ToCachedGetById(rewardPointsHistoryId);
         }
 
         /// <summary>

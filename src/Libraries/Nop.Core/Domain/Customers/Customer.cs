@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Orders;
+﻿using System;
 
 namespace Nop.Core.Domain.Customers
 {
@@ -11,13 +7,6 @@ namespace Nop.Core.Domain.Customers
     /// </summary>
     public partial class Customer : BaseEntity
     {
-        private ICollection<ExternalAuthenticationRecord> _externalAuthenticationRecords;
-        private ICollection<CustomerCustomerRoleMapping> _customerCustomerRoleMappings;
-        private ICollection<ShoppingCartItem> _shoppingCartItems;
-        private ICollection<ReturnRequest> _returnRequests;
-        protected ICollection<CustomerAddressMapping> _customerAddressMappings;
-        private IList<CustomerRole> _customerRoles;
-
         public Customer()
         {
             CustomerGuid = Guid.NewGuid();
@@ -142,101 +131,5 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the shipping address identifier
         /// </summary>
         public int? ShippingAddressId { get; set; }
-
-        #region Navigation properties
-
-        /// <summary>
-        /// Gets or sets customer generated content
-        /// </summary>
-        public virtual ICollection<ExternalAuthenticationRecord> ExternalAuthenticationRecords
-        {
-            get => _externalAuthenticationRecords ?? (_externalAuthenticationRecords = new List<ExternalAuthenticationRecord>());
-            protected set => _externalAuthenticationRecords = value;
-        }
-
-        /// <summary>
-        /// Gets or sets customer roles
-        /// </summary>
-        public virtual IList<CustomerRole> CustomerRoles
-        {
-            get => _customerRoles ?? (_customerRoles = CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRole).ToList());
-        }
-
-        /// <summary>
-        /// Gets or sets customer-customer role mappings
-        /// </summary>
-        public virtual ICollection<CustomerCustomerRoleMapping> CustomerCustomerRoleMappings
-        {
-            get => _customerCustomerRoleMappings ?? (_customerCustomerRoleMappings = new List<CustomerCustomerRoleMapping>());
-            protected set => _customerCustomerRoleMappings = value;
-        }
-
-        /// <summary>
-        /// Gets or sets shopping cart items
-        /// </summary>
-        public virtual ICollection<ShoppingCartItem> ShoppingCartItems
-        {
-            get => _shoppingCartItems ?? (_shoppingCartItems = new List<ShoppingCartItem>());
-            protected set => _shoppingCartItems = value;
-        }
-
-        /// <summary>
-        /// Gets or sets return request of this customer
-        /// </summary>
-        public virtual ICollection<ReturnRequest> ReturnRequests
-        {
-            get => _returnRequests ?? (_returnRequests = new List<ReturnRequest>());
-            protected set => _returnRequests = value;
-        }
-
-        /// <summary>
-        /// Default billing address
-        /// </summary>
-        public virtual Address BillingAddress { get; set; }
-
-        /// <summary>
-        /// Default shipping address
-        /// </summary>
-        public virtual Address ShippingAddress { get; set; }
-
-        /// <summary>
-        /// Gets or sets customer addresses
-        /// </summary>
-        public IList<Address> Addresses => CustomerAddressMappings.Select(mapping => mapping.Address).ToList();
-
-        /// <summary>
-        /// Gets or sets customer-address mappings
-        /// </summary>
-        public virtual ICollection<CustomerAddressMapping> CustomerAddressMappings
-        {
-            get => _customerAddressMappings ?? (_customerAddressMappings = new List<CustomerAddressMapping>());
-            protected set => _customerAddressMappings = value;
-        }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Add customer role and reset customer roles cache
-        /// </summary>
-        /// <param name="role">Role</param>
-        public void AddCustomerRoleMapping(CustomerCustomerRoleMapping role)
-        {
-            CustomerCustomerRoleMappings.Add(role);
-            _customerRoles = null;
-        }
-
-        /// <summary>
-        /// Remove customer role and reset customer roles cache
-        /// </summary>
-        /// <param name="role">Role</param>
-        public void RemoveCustomerRoleMapping(CustomerCustomerRoleMapping role)
-        {
-            CustomerCustomerRoleMappings.Remove(role);
-            _customerRoles = null;
-        }
-
-        #endregion
     }
 }

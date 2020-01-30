@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Catalog
 {
@@ -24,31 +22,6 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(source));
 
             return source.Where(tierPrice => tierPrice.StoreId == 0 || tierPrice.StoreId == storeId);
-        }
-
-        /// <summary>
-        /// Filter tier prices for a customer
-        /// </summary>
-        /// <param name="source">Tier prices</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Filtered tier prices</returns>
-        public static IEnumerable<TierPrice> FilterForCustomer(this IEnumerable<TierPrice> source, Customer customer)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer));
-
-            var catalogSettings = EngineContext.Current.Resolve<CatalogSettings>();
-            if (catalogSettings.IgnoreAcl)
-                return source;
-
-            var customerRoleIds = customer.GetCustomerRoleIds();
-            return source.Where(tierPrice =>
-               !tierPrice.CustomerRoleId.HasValue ||
-               tierPrice.CustomerRoleId.Value == 0 ||
-               customerRoleIds.Contains(tierPrice.CustomerRoleId.Value));
         }
 
         /// <summary>

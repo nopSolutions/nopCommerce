@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>Użyj przechowywania danych (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>Nazwa SQL Serwera</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>Nazwa SQL Serwer jest wymagana</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>Hasło SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>Hasło SQL jest wymagane</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>Użytkownik SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>Użytkownik SQL jest wymagany</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Użyj Microsoft SQL Server (lub SQL Express) bazy danych</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Informacje o sklepie</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>Aby ukończyć kreatora należy znać kilka informacji na temat serwera bazy danych ("Connection string - ciąg połączenia"). Proszę skontaktować się z usługodawcą hostingu w razie potrzeby. Jeżeli instalujesz na komputerze lokalnym lub serwerze mogą być potrzebne informacje od administratora systemu.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>Użyj zintegrowane uwierzytelniania Windows</Value>
   </LocaleResource>
 </Language>

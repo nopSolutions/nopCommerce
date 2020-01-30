@@ -4,8 +4,8 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
+using Nop.Data;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Localization;
 
@@ -14,7 +14,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents filter attribute that checks SEO friendly URLs for multiple languages and properly redirect if necessary
     /// </summary>
-    public class CheckLanguageSeoCodeAttribute : TypeFilterAttribute
+    public sealed class CheckLanguageSeoCodeAttribute : TypeFilterAttribute
     {
         #region Ctor
 

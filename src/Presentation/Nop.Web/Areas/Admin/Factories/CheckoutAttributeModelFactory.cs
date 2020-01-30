@@ -84,7 +84,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get selected checkout attribute values identifiers
             var selectedValuesIds = _checkoutAttributeParser
-                .ParseCheckoutAttributeValues(checkoutAttribute.ConditionAttributeXml).Select(value => value.Id);
+                .ParseCheckoutAttributeValues(checkoutAttribute.ConditionAttributeXml).SelectMany(ta => ta.values.Select(v => v.Id));
 
             //get available condition checkout attributes (ignore this attribute and non-combinable attributes)
             var availableConditionAttributes = _checkoutAttributeService.GetAllCheckoutAttributes()
@@ -259,7 +259,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     //fill in additional values (not existing in the entity)
                     checkoutAttributeValueModel.Name =
-                        value.CheckoutAttribute.AttributeControlType != AttributeControlType.ColorSquares
+                        checkoutAttribute.AttributeControlType != AttributeControlType.ColorSquares
                             ? value.Name
                             : $"{value.Name} - {value.ColorSquaresRgb}";
 

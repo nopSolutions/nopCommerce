@@ -9,10 +9,10 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
 {
     public partial class ProductAttributeValidator : BaseNopValidator<ProductAttributeModel>
     {
-        public ProductAttributeValidator(ILocalizationService localizationService, IDbContext dbContext)
+        public ProductAttributeValidator(IDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Fields.Name.Required"));
-            SetDatabaseValidationRules<ProductAttribute>(dbContext);
+            SetDatabaseValidationRules<ProductAttribute>(dataProvider);
         }
     }
 }
