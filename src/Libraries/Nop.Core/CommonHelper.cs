@@ -283,18 +283,6 @@ namespace Nop.Core
         }
 
         /// <summary>
-        /// Set Telerik (Kendo UI) culture
-        /// </summary>
-        public static void SetTelerikCulture()
-        {
-            //little hack here
-            //always set culture to 'en-US' (Kendo UI has a bug related to editing decimal values in other cultures)
-            var culture = new CultureInfo("en-US");
-            CultureInfo.CurrentCulture = culture;
-            CultureInfo.CurrentUICulture = culture;
-        }
-
-        /// <summary>
         /// Get difference in years
         /// </summary>
         /// <param name="startDate"></param>

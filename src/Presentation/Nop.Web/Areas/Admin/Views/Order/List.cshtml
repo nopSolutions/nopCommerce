@@ -291,23 +291,23 @@
                                 FooterCallback = !Model.IsLoggedInAsVendor ? "ordersfootercallback" : null,
                                 FooterColumns = !Model.IsLoggedInAsVendor ? 10 : 0,
                                 Filters = new List<FilterParameter>
-                                {
-                                    new FilterParameter(nameof(Model.StartDate)),
-                                    new FilterParameter(nameof(Model.EndDate)),
-                                    new FilterParameter(nameof(Model.OrderStatusIds)),
-                                    new FilterParameter(nameof(Model.PaymentStatusIds)),
-                                    new FilterParameter(nameof(Model.ShippingStatusIds)),
-                                    new FilterParameter(nameof(Model.StoreId)),
-                                    new FilterParameter(nameof(Model.VendorId)),
-                                    new FilterParameter(nameof(Model.WarehouseId)),
-                                    new FilterParameter(nameof(Model.BillingEmail)),
-                                    new FilterParameter(nameof(Model.BillingPhone)),
-                                    new FilterParameter(nameof(Model.BillingLastName)),
-                                    new FilterParameter(nameof(Model.BillingCountryId)),
-                                    new FilterParameter(nameof(Model.PaymentMethodSystemName)),
-                                    new FilterParameter(nameof(Model.ProductId)),
-                                    new FilterParameter(nameof(Model.OrderNotes))
-                                }
+                                                {
+                                                    new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
+                                                    new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
+                                                    new FilterParameter(nameof(Model.OrderStatusIds)),
+                                                    new FilterParameter(nameof(Model.PaymentStatusIds)),
+                                                    new FilterParameter(nameof(Model.ShippingStatusIds)),
+                                                    new FilterParameter(nameof(Model.StoreId)),
+                                                    new FilterParameter(nameof(Model.VendorId)),
+                                                    new FilterParameter(nameof(Model.WarehouseId)),
+                                                    new FilterParameter(nameof(Model.BillingEmail)),
+                                                    new FilterParameter(nameof(Model.BillingPhone)),
+                                                    new FilterParameter(nameof(Model.BillingLastName)),
+                                                    new FilterParameter(nameof(Model.BillingCountryId)),
+                                                    new FilterParameter(nameof(Model.PaymentMethodSystemName)),
+                                                    new FilterParameter(nameof(Model.ProductId)),
+                                                    new FilterParameter(nameof(Model.OrderNotes))
+                                                }
                             };
                             gridModel.ColumnCollection = new List<ColumnProperty>
                             {

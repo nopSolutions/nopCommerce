@@ -8,18 +8,13 @@
     }
 }
 <script>
-    $(document).ready(function() {
-        $("#@Html.IdForModel()").TouchSpin({
-            min: @Html.Raw(decimal.MinValue),
-            max: @Html.Raw(decimal.MaxValue),
-            decimals: 4, //always display 4 digits
-            forcestepdivisibility: "none",
-            verticalbuttons: true,
-            verticalupclass: "glyphicon glyphicon-chevron-up",
-            verticaldownclass: "glyphicon glyphicon-chevron-down",
-            buttondown_class: "btn",
-            buttonup_class: "btn",
-            postfix: "@postfix"
+$(document).ready(function () {
+    $("#@Html.IdForModel()").kendoNumericTextBox({
+        min: @Html.Raw(decimal.MinValue),
+        max: @Html.Raw(decimal.MaxValue),
+        decimals: 4,
+        restrictDecimals: true,
+        format: "#.00 @postfix"
         });
     });
 </script>
