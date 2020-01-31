@@ -129,6 +129,25 @@
 
         #endregion
 
+        #region Localization client-side validation
+
+        /// <summary>
+        /// Gets a path to the localization client-side validation 
+        /// </summary>
+        public static string LocalePatternPath => "lib\\cldr-data\\main\\{0}";
+
+        /// <summary>
+        /// Gets a name of the archive with localization of templates
+        /// </summary>
+        public static string LocalePatternArchiveName => "main.zip";
+
+        /// <summary>
+        /// Gets a name of the default pattern locale
+        /// </summary>
+        public static string DefaultLocalePattern => "en";
+
+        #endregion
+
         #region nopCommerce official site
 
         /// <summary>
