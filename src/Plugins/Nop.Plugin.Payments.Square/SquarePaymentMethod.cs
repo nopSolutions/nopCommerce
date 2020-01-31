@@ -98,7 +98,7 @@ namespace Nop.Plugin.Payments.Square
         {
             foreach (var culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
             {
-                var regionInfo = new RegionInfo(culture.LCID);
+                var regionInfo = new RegionInfo(culture.Name);
                 if (currency.CurrencyCode.Equals(regionInfo.ISOCurrencySymbol, StringComparison.InvariantCultureIgnoreCase))
                 {
                     return true;
