@@ -76,6 +76,7 @@
 
     function updateTable(tableSelector) {
         $(tableSelector).DataTable().ajax.reload();
+        $(tableSelector).DataTable().columns.adjust();
         if (@isMasterCheckBoxUsed.ToString().ToLower()) {
             $('#mastercheckbox').attr('checked', false).change();
             selectedIds = [];
@@ -84,14 +85,14 @@
 
     $(document).ready(function () {
         $('#@Model.Name').DataTable({
-             @await Html.PartialAsync("_Table.Definition", Model)
-        });
+             @await Html.PartialAsync("_Table.Definition", Model)            
+        });        
 
         @if (!string.IsNullOrEmpty(Model.SearchButtonId))
         {
             <text>
             $('#@Model.SearchButtonId').click(function() {
-                $('#@Model.Name').DataTable().ajax.reload();
+                $('#@Model.Name').DataTable().ajax.reload();                
                 $('.checkboxGroups').attr('checked', false).change();
                 selectedIds = [];
                 return false;
@@ -121,6 +122,7 @@
             });
             </text>
         }
+        $('#@Model.Name').DataTable().columns.adjust();
     });
 </script>
 @if ((Model.UrlDelete != null) || (Model.ChildTable?.UrlDelete != null))
