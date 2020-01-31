@@ -35,6 +35,19 @@ namespace Nop.Core.Configuration
         public bool AzureBlobStorageAppendContainerName { get; set; }
 
         /// <summary>
+        /// Gets or sets whether to store Data Protection Keys in Azure Blob Storage (the UseRedisToStoreDataProtectionKeys option should be disabled)
+        /// </summary>
+        public bool UseAzureBlobStorageToStoreDataProtectionKeys { get; set; }
+        /// <summary>
+        /// Gets or sets the Azure container name for storing Data Prtection Keys (this container should be separate from the container used for media and should be Private)
+        /// </summary>
+        public string AzureBlobStorageContainerNameForDataProtectionKeys { get; set; }
+        /// <summary>
+        /// Gets or sets the Azure key vault ID used to encrypt the Data Protection Keys. (this is optional)
+        /// </summary>
+        public string AzureKeyVaultIdForDataProtectionKeys { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether we should use Redis server
         /// </summary>
         public bool RedisEnabled { get; set; }
@@ -131,5 +144,11 @@ namespace Nop.Core.Configuration
         /// </summary>
         [JsonIgnore]
         public bool AzureBlobStorageEnabled => !string.IsNullOrEmpty(AzureBlobStorageConnectionString);
+
+        /// <summary>
+        /// Whether to use an Azure Key Vault to encrypt the Data Protection Keys
+        /// </summary>
+        [JsonIgnore]
+        public bool EncryptDataProtectionKeysWithAzureKeyVault => !string.IsNullOrEmpty(AzureKeyVaultIdForDataProtectionKeys);
     }
 }

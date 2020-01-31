@@ -1,11 +1,11 @@
+﻿﻿using FluentAssertions;
+using Nop.Core.Domain.Orders;
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using Nop.Data;
-using Nop.Core.Domain.Orders;
 using Nop.Services.Events;
 using Nop.Services.Orders;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Orders
@@ -89,15 +89,15 @@ namespace Nop.Services.Tests.Orders
 
 
             //valid
-            _giftCardService.IsGiftCardValid(gc).ShouldEqual(true);
+            _giftCardService.IsGiftCardValid(gc).Should().BeTrue();
 
             //mark as not active
             gc.IsGiftCardActivated = false;
-            _giftCardService.IsGiftCardValid(gc).ShouldEqual(false);
+            _giftCardService.IsGiftCardValid(gc).Should().BeFalse();
 
             //again active
             gc.IsGiftCardActivated = true;
-            _giftCardService.IsGiftCardValid(gc).ShouldEqual(true);
+            _giftCardService.IsGiftCardValid(gc).Should().BeTrue();
 
             //add usage history record
             _giftCardService.InsertGiftCardUsageHistory(
@@ -107,7 +107,7 @@ namespace Nop.Services.Tests.Orders
                     UsedValue = 1000
                 });
 
-            _giftCardService.IsGiftCardValid(gc).ShouldEqual(false);
+            _giftCardService.IsGiftCardValid(gc).Should().BeFalse();
             });
         }
 
@@ -138,7 +138,7 @@ namespace Nop.Services.Tests.Orders
                     UsedValue = 5
                 });
 
-            _giftCardService.GetGiftCardRemainingAmount(gc).ShouldEqual(45);
+            _giftCardService.GetGiftCardRemainingAmount(gc).Should().Be(45);
             });
         }
     }

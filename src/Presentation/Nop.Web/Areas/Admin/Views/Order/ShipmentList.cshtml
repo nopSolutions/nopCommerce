@@ -174,8 +174,8 @@
                         LengthMenu = Model.AvailablePageSizes,
                         Filters = new List<FilterParameter>
                         {
-                            new FilterParameter(nameof(Model.StartDate)),
-                            new FilterParameter(nameof(Model.EndDate)),
+                            new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
+                            new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
                             new FilterParameter(nameof(Model.TrackingNumber)),
                             new FilterParameter(nameof(Model.CountryId)),
                             new FilterParameter(nameof(Model.StateProvinceId)),
@@ -241,7 +241,7 @@
                         },
                         ChildTable = new DataTablesModel
                         {
-                            Name = "shipments-grid",
+                            Name = "products-grid",
                             UrlRead = new DataUrl("ShipmentsItemsByShipmentId", "Order", null),
                             IsChildTable = true,
                             Paging = false,

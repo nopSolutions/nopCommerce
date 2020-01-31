@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using System.Linq;
 using Moq;
 using Nop.Core;
@@ -279,8 +280,8 @@ namespace Nop.Services.Tests.Catalog
             //customer
             var customer = new Customer();
 
-            _priceCalcService.GetFinalPrice(product, customer, 0, false).ShouldEqual(12.34M);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).ShouldEqual(12.34M);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false).Should().Be(12.34M);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).Should().Be(12.34M);
         }
 
         [Test]
@@ -291,11 +292,11 @@ namespace Nop.Services.Tests.Catalog
             //customer
             var customer = new Customer();
 
-            _priceCalcService.GetFinalPrice(product, customer, 0, false).ShouldEqual(12.34M);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).ShouldEqual(10);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 3).ShouldEqual(10);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 5).ShouldEqual(9);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 10).ShouldEqual(9);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false).Should().Be(12.34M);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).Should().Be(10);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 3).Should().Be(10);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 5).Should().Be(9);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 10).Should().Be(9);
         }
 
         [Test]
@@ -308,15 +309,15 @@ namespace Nop.Services.Tests.Catalog
 
             var customerRole = GetMockCustomerRoles().FirstOrDefault(cr => cr.Id == 1);
             
-            customerRole.ShouldNotBeNull();
+            customerRole.Should().NotBeNull();
 
             _customerCustomerRoleMappingRepository.Object.Insert(new CustomerCustomerRoleMapping { CustomerRoleId = customerRole?.Id ?? 0, CustomerId = customer.Id });
 
-            _priceCalcService.GetFinalPrice(product, customer, 0, false).ShouldEqual(12.34M);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).ShouldEqual(10);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 3).ShouldEqual(10);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 5).ShouldEqual(8);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 10).ShouldEqual(8);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false).Should().Be(12.34M);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).Should().Be(10);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 3).Should().Be(10);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 5).Should().Be(8);
+            _priceCalcService.GetFinalPrice(product, customer, 0, false, 10).Should().Be(8);
         }
 
         [Test]
@@ -327,7 +328,7 @@ namespace Nop.Services.Tests.Catalog
             //customer
             var customer = new Customer();
 
-            _priceCalcService.GetFinalPrice(product, customer, 5, false).ShouldEqual(17.34M);
+            _priceCalcService.GetFinalPrice(product, customer, 5, false).Should().Be(17.34M);
         }
 
         [Test]
@@ -342,8 +343,8 @@ namespace Nop.Services.Tests.Catalog
             // ------------------- ------------------ --------------product.AddAppliedDiscounts(discount1);
             //set HasDiscountsApplied property
             product.HasDiscountsApplied = true;
-
-            _priceCalcService.GetFinalPrice(product, customer).ShouldEqual(9.34M);
+           
+            _priceCalcService.GetFinalPrice(product, customer).Should().Be(9.34M);
         }
 
         [TestCase(12.366, 12.37, RoundingType.Rounding001)]
@@ -384,61 +385,9 @@ namespace Nop.Services.Tests.Catalog
         [TestCase(12.00, 12.00, RoundingType.Rounding1Up)]
         public void can_round(decimal valueToRoundig, decimal roundedValue, RoundingType roundingType)
         {
-            _priceCalcService.Round(valueToRoundig, roundingType).ShouldEqual(roundedValue);
+            _priceCalcService.Round(valueToRoundig, roundingType).Should().Be(roundedValue);
         }
 
         #endregion
-
-        //protected class TestProduct : Product
-        //{
-        //    public TestProduct()
-        //    {
-        //        _discountProductMappings = new List<DiscountProductMapping>();
-        //        _tierPrices = new List<TierPrice>();
-        //    }
-
-        //    public void AddAppliedDiscounts(Discount discount)
-        //    {
-        //        _discountProductMappings.Add(new DiscountProductMapping
-        //        {
-        //            Discount = discount,
-        //            DiscountId = discount.Id,
-        //            Id = 1,
-        //            Product = this
-        //        });
-        //    }
-        //}
-
-        //protected class TestProductService : ProductService
-        //{
-        //    private TestProductService(CatalogSettings catalogSettings, CommonSettings commonSettings,
-        //        IAclService aclService, ICacheManager cacheManager, IDataProvider dataProvider,
-        //        IDateRangeService dateRangeService, IDbContext dbContext, IEventPublisher eventPublisher,
-        //        ILanguageService languageService, ILocalizationService localizationService,
-        //        IProductAttributeParser productAttributeParser, IProductAttributeService productAttributeService,
-        //        IRepository<AclRecord> aclRepository, IRepository<CrossSellProduct> crossSellProductRepository,
-        //        IRepository<Product> productRepository, IRepository<ProductPicture> productPictureRepository,
-        //        IRepository<ProductReview> productReviewRepository,
-        //        IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository,
-        //        IRepository<RelatedProduct> relatedProductRepository,
-        //        IRepository<StockQuantityHistory> stockQuantityHistoryRepository,
-        //        IRepository<StoreMapping> storeMappingRepository, IRepository<TierPrice> tierPriceRepository,
-        //        IStoreService storeService, IStoreMappingService storeMappingService, IWorkContext workContext,
-        //        LocalizationSettings localizationSettings) : base(catalogSettings, commonSettings, aclService,
-        //        cacheManager, dataProvider, dateRangeService, dbContext, eventPublisher, languageService,
-        //        localizationService, productAttributeParser, productAttributeService, aclRepository,
-        //        crossSellProductRepository, productRepository, productPictureRepository, productReviewRepository,
-        //        productWarehouseInventoryRepository, relatedProductRepository, stockQuantityHistoryRepository,
-        //        storeMappingRepository, tierPriceRepository, storeService, storeMappingService, workContext, localizationSettings)
-        //    {
-        //    }
-
-        //    public static TestProductService Init()
-        //    {
-        //        return new TestProductService(new CatalogSettings(), new CommonSettings(), null,
-        //            null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-        //            null, null, null, null, null, null, new LocalizationSettings());
-        //    }
-        //}
     }
 }

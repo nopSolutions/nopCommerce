@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Moq;
 using Nop.Data;
 using Nop.Core.Domain.Directory;
@@ -9,7 +10,6 @@ using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Stores;
 using Nop.Services.Tests.FakeServices;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Directory
@@ -101,8 +101,8 @@ namespace Nop.Services.Tests.Directory
         public void Can_load_exchangeRateProviders()
         {
             var providers = _exchangeRatePluginManager.LoadAllPlugins();
-            providers.ShouldNotBeNull();
-            providers.Any().ShouldBeTrue();
+            providers.Should().NotBeNull();
+            providers.Any().Should().BeTrue();
         }
 
         [Test]
@@ -110,7 +110,7 @@ namespace Nop.Services.Tests.Directory
         {
             EngineContext.Replace(null);
             var provider = _exchangeRatePluginManager.LoadPluginBySystemName("CurrencyExchange.TestProvider");
-            provider.ShouldNotBeNull();
+            provider.Should().NotBeNull();
         }
 
         [Test]
@@ -118,16 +118,16 @@ namespace Nop.Services.Tests.Directory
         {
             EngineContext.Replace(null);
             var provider = _exchangeRatePluginManager.LoadPrimaryPlugin();
-            provider.ShouldNotBeNull();
+            provider.Should().NotBeNull();
         }
 
         [Test]
         public void Can_convert_currency_1()
         {
-            _currencyService.ConvertCurrency(10.1M, 1.5M).ShouldEqual(15.15M);
-            _currencyService.ConvertCurrency(10.1M, 1).ShouldEqual(10.1M);
-            _currencyService.ConvertCurrency(10.1M, 0).ShouldEqual(0);
-            _currencyService.ConvertCurrency(0, 5).ShouldEqual(0);
+            _currencyService.ConvertCurrency(10.1M, 1.5M).Should().Be(15.15M);
+            _currencyService.ConvertCurrency(10.1M, 1).Should().Be(10.1M);
+            _currencyService.ConvertCurrency(10.1M, 0).Should().Be(0);
+            _currencyService.ConvertCurrency(0, 5).Should().Be(0);
         }
 
         [Test]
@@ -135,11 +135,11 @@ namespace Nop.Services.Tests.Directory
         {
             RunWithTestServiceProvider(() =>
             {
-                _currencyService.ConvertCurrency(10M, _currencyEUR, _currencyRUR).ShouldEqual(345M);
-                _currencyService.ConvertCurrency(10.1M, _currencyEUR, _currencyEUR).ShouldEqual(10.1M);
-                _currencyService.ConvertCurrency(10.1M, _currencyRUR, _currencyRUR).ShouldEqual(10.1M);
-                _currencyService.ConvertCurrency(12M, _currencyUSD, _currencyRUR).ShouldEqual(345M);
-                _currencyService.ConvertCurrency(345M, _currencyRUR, _currencyUSD).ShouldEqual(12M);
+                _currencyService.ConvertCurrency(10M, _currencyEUR, _currencyRUR).Should().Be(345M);
+                _currencyService.ConvertCurrency(10.1M, _currencyEUR, _currencyEUR).Should().Be(10.1M);
+                _currencyService.ConvertCurrency(10.1M, _currencyRUR, _currencyRUR).Should().Be(10.1M);
+                _currencyService.ConvertCurrency(12M, _currencyUSD, _currencyRUR).Should().Be(345M);
+                _currencyService.ConvertCurrency(345M, _currencyRUR, _currencyUSD).Should().Be(12M);
             });
         }
     }

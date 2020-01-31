@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using FluentAssertions;
 using Nop.Core.ComponentModel;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Core.Tests.ComponentModel
@@ -22,14 +22,14 @@ namespace Nop.Core.Tests.ComponentModel
         public void Can_get_int_list_type_converter()
         {
             var converter = TypeDescriptor.GetConverter(typeof(List<int>));
-            converter.GetType().ShouldEqual(typeof(GenericListTypeConverter<int>));
+            converter.Should().BeOfType<GenericListTypeConverter<int>>();
         }
 
         [Test]
         public void Can_get_string_list_type_converter()
         {
             var converter = TypeDescriptor.GetConverter(typeof(List<string>));
-            converter.GetType().ShouldEqual(typeof(GenericListTypeConverter<string>));
+            converter.Should().BeOfType<GenericListTypeConverter<string>>();
         }
 
         [Test]
@@ -38,8 +38,8 @@ namespace Nop.Core.Tests.ComponentModel
             var items = "10,20,30,40,50";
             var converter = TypeDescriptor.GetConverter(typeof(List<int>));
             var result = converter.ConvertFrom(items) as IList<int>;
-            result.ShouldNotBeNull();
-            result.Count.ShouldEqual(5);
+            result.Should().NotBeNull();
+            result.Count.Should().Be(5);
         }
 
         [Test]
@@ -48,8 +48,8 @@ namespace Nop.Core.Tests.ComponentModel
             var items = "foo, bar, day";
             var converter = TypeDescriptor.GetConverter(typeof(List<string>));
             var result = converter.ConvertFrom(items) as List<string>;
-            result.ShouldNotBeNull();
-            result.Count.ShouldEqual(3);
+            result.Should().NotBeNull();
+            result.Count.Should().Be(3);
         }
 
         [Test]
@@ -59,8 +59,8 @@ namespace Nop.Core.Tests.ComponentModel
             var converter = TypeDescriptor.GetConverter(items.GetType());
             var result = converter.ConvertTo(items, typeof(string)) as string;
 
-            result.ShouldNotBeNull();
-            result.ShouldEqual("10,20,30,40,50");
+            result.Should().NotBeNull();
+            result.Should().Be("10,20,30,40,50");
         }
 
         [Test]
@@ -69,8 +69,8 @@ namespace Nop.Core.Tests.ComponentModel
             var items = new List<string> { "foo", "bar", "day" };
             var converter = TypeDescriptor.GetConverter(items.GetType());
             var result = converter.ConvertTo(items, typeof(string)) as string;
-            result.ShouldNotBeNull();
-            result.ShouldEqual("foo,bar,day");
+            result.Should().NotBeNull();
+            result.Should().Be("foo,bar,day");
         }
     }
 }

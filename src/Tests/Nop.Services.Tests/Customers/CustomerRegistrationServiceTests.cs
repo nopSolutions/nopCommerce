@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Moq;
 using Nop.Core;
 using Nop.Data;
@@ -203,7 +204,7 @@ namespace Nop.Services.Tests.Customers
         //    var registrationRequest = CreateCustomerRegistrationRequest();
         //    var result = _customerService.RegisterCustomer(registrationRequest);
 
-        //    result.Success.ShouldBeTrue();
+        //    result.Success.Should().BeTrue();
         //}
 
         //[Test]
@@ -216,15 +217,15 @@ namespace Nop.Services.Tests.Customers
         //    var userService = new UserService(_encryptionService, _userRepo, _userSettings);
         //    var result = userService.RegisterUser(registrationRequest);
 
-        //    result.Success.ShouldBeFalse();
-        //    result.Errors.Count.ShouldEqual(1);
+        //    result.Success.Should().BeFalse();
+        //    result.Errors.Count.Should().Be(1);
         //}
 
         [Test]
         public void Ensure_only_registered_customers_can_login()
         {
             var result = _customerRegistrationService.ValidateCustomer("registered@test.com", "password");
-            result.ShouldEqual(CustomerLoginResults.Successful);
+            result.Should().Be(CustomerLoginResults.Successful);
 
             var customer = new Customer
             {
@@ -244,34 +245,37 @@ namespace Nop.Services.Tests.Customers
             });
 
             result = _customerRegistrationService.ValidateCustomer("notregistered@test.com", "password");
-            result.ShouldEqual(CustomerLoginResults.NotRegistered);
+            result.Should().Be(CustomerLoginResults.NotRegistered);
         }
 
         [Test]
         public void Can_validate_a_hashed_password()
         {
             var result = _customerRegistrationService.ValidateCustomer("a@b.com", "password");
-            result.ShouldEqual(CustomerLoginResults.Successful);
+            result.Should().Be(CustomerLoginResults.Successful);
         }
 
         [Test]
         public void Can_validate_a_clear_password()
         {
             var result = _customerRegistrationService.ValidateCustomer("test@test.com", "password");
-            result.ShouldEqual(CustomerLoginResults.Successful);
+            result.Should().Be(CustomerLoginResults.Successful);
         }
 
         [Test]
         public void Can_validate_an_encrypted_password()
         {
             var result = _customerRegistrationService.ValidateCustomer("user@test.com", "password");
-            result.ShouldEqual(CustomerLoginResults.Successful);
+            result.Should().Be(CustomerLoginResults.Successful);
         }
 
         private void MappingCustomersToRegisteredRole()
         {
-            var regRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName).ShouldNotBeNull();
-            var customers = _customerService.GetAllCustomers().ShouldNotBeNull();
+            var regRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
+            regRole.Should().NotBeNull();
+            var customers = _customerService.GetAllCustomers();
+
+            customers.Should().NotBeNull();
 
             foreach (var customer in customers)
             {
@@ -292,11 +296,11 @@ namespace Nop.Services.Tests.Customers
         {
             var request = new ChangePasswordRequest("registered@test.com", true, PasswordFormat.Clear, "password", "password");
             var result = _customerRegistrationService.ChangePassword(request);
-            result.Success.ShouldEqual(false);
+            result.Success.Should().BeFalse();
 
             request = new ChangePasswordRequest("registered@test.com", true, PasswordFormat.Hashed, "newpassword", "password");
             result = _customerRegistrationService.ChangePassword(request);
-            result.Success.ShouldEqual(true);
+            result.Success.Should().BeTrue();
 
             //request = new ChangePasswordRequest("registered@test.com", true, PasswordFormat.Encrypted, "password", "newpassword");
             //result = _customerRegistrationService.ChangePassword(request);

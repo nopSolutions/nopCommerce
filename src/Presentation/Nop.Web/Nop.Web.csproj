@@ -52,7 +52,7 @@
     Therefore, we restore the standard configuration behavior (there was no copy to the output directory) 
     in order to avoid the "Duplicate dll" error during publication. 
     We can also use “ExcludeConfigFilesFromBuildOutput” according to https://github.com/aspnet/AspNetCore/issues/14017 --> 
-    <Content Update="**\*.config;**\*.json" CopyToOutputDirectory="Never" CopyToPublishDirectory="PreserveNewest"/>
+    <Content Update="**\*.config;**\*.json" CopyToOutputDirectory="Never" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

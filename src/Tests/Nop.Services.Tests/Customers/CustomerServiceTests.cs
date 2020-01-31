@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using FluentAssertions;
 using Nop.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Orders;
 using Nop.Services.Customers;
 using Nop.Tests;
 using NUnit.Framework;
@@ -130,14 +129,14 @@ namespace Nop.Services.Tests.Customers
 
             _customerCustomerRoleMapping.Insert(rm);
 
-            _customerService.IsInCustomerRole(customer, "Test system name 1", false).ShouldBeTrue();
-            _customerService.IsInCustomerRole(customer, "Test system name 1").ShouldBeTrue();
+            _customerService.IsInCustomerRole(customer, "Test system name 1", false).Should().BeTrue();
+            _customerService.IsInCustomerRole(customer, "Test system name 1").Should().BeTrue();
 
-            _customerService.IsInCustomerRole(customer, "Test system name 2", false).ShouldBeTrue();
-            _customerService.IsInCustomerRole(customer, "Test system name 2").ShouldBeFalse();
+            _customerService.IsInCustomerRole(customer, "Test system name 2", false).Should().BeTrue();
+            _customerService.IsInCustomerRole(customer, "Test system name 2").Should().BeFalse();
 
-            _customerService.IsInCustomerRole(customer, "Test system name 3", false).ShouldBeFalse();
-            _customerService.IsInCustomerRole(customer, "Test system name 3").ShouldBeFalse();
+            _customerService.IsInCustomerRole(customer, "Test system name 3", false).Should().BeFalse();
+            _customerService.IsInCustomerRole(customer, "Test system name 3").Should().BeFalse();
 
             _customerCustomerRoleMapping.Delete(rm);
         }
@@ -156,7 +155,7 @@ namespace Nop.Services.Tests.Customers
 
             _customerCustomerRoleMapping.Insert(rm);
 
-            _customerService.IsAdmin(customer).ShouldBeTrue();
+            _customerService.IsAdmin(customer).Should().BeTrue();
 
             _customerCustomerRoleMapping.Delete(rm);
         }
@@ -174,13 +173,13 @@ namespace Nop.Services.Tests.Customers
 
             _customerCustomerRoleMapping.Insert(rm);
 
-            _customerService.IsForumModerator(customer).ShouldBeFalse();
+            _customerService.IsForumModerator(customer).Should().BeFalse();
 
             var rmForumModerators = new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleForumModerators.Id, CustomerId = customer.Id };
 
             _customerCustomerRoleMapping.Insert(rmForumModerators);
 
-            _customerService.IsForumModerator(customer).ShouldBeTrue();
+            _customerService.IsForumModerator(customer).Should().BeTrue();
 
             _customerCustomerRoleMapping.Delete(rm);
             _customerCustomerRoleMapping.Delete(rmForumModerators);
@@ -199,13 +198,13 @@ namespace Nop.Services.Tests.Customers
 
             _customerCustomerRoleMapping.Insert(rm);
 
-            _customerService.IsGuest(customer).ShouldBeFalse();
+            _customerService.IsGuest(customer).Should().BeFalse();
 
             var rmRoleGuest = new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleGuests.Id, CustomerId = customer.Id };
 
             _customerCustomerRoleMapping.Insert(rmRoleGuest);
 
-            _customerService.IsGuest(customer).ShouldBeTrue();
+            _customerService.IsGuest(customer).Should().BeTrue();
 
             _customerCustomerRoleMapping.Delete(rm);
             _customerCustomerRoleMapping.Delete(rmRoleGuest);
@@ -224,13 +223,13 @@ namespace Nop.Services.Tests.Customers
 
             _customerCustomerRoleMapping.Insert(rm);
 
-            _customerService.IsRegistered(customer).ShouldBeFalse();
+            _customerService.IsRegistered(customer).Should().BeFalse();
 
             var rmRoleRegistered = new CustomerCustomerRoleMapping { CustomerRoleId = _customerRoleRegistered.Id, CustomerId = customer.Id };
 
             _customerCustomerRoleMapping.Insert(rmRoleRegistered);
 
-            _customerService.IsRegistered(customer).ShouldBeTrue();
+            _customerService.IsRegistered(customer).Should().BeTrue();
 
             _customerCustomerRoleMapping.Delete(rm);
             _customerCustomerRoleMapping.Delete(rmRoleRegistered);
@@ -244,23 +243,23 @@ namespace Nop.Services.Tests.Customers
             
             _customerService.InsertCustomerAddress(customer, address);
 
-            _customerService.GetAddressesByCustomerId(customer.Id).Count().ShouldEqual(1);
+            _customerService.GetAddressesByCustomerId(customer.Id).Count.Should().Be(1);
 
             _customerService.InsertCustomerAddress(customer, address);
 
-            _customerService.GetAddressesByCustomerId(customer.Id).Count().ShouldEqual(1);
+            _customerService.GetAddressesByCustomerId(customer.Id).Count.Should().Be(1);
 
             customer.BillingAddressId = address.Id;
 
-            _customerService.GetCustomerBillingAddress(customer).ShouldNotBeNull();
+            _customerService.GetCustomerBillingAddress(customer).Should().NotBeNull();
 
-            _customerService.GetCustomerBillingAddress(customer).Id.ShouldEqual(address.Id);
+            _customerService.GetCustomerBillingAddress(customer).Id.Should().Be(address.Id);
 
             _customerService.RemoveCustomerAddress(customer, address);
 
-            _customerService.GetAddressesByCustomerId(customer.Id).Count.ShouldEqual(0);
+            _customerService.GetAddressesByCustomerId(customer.Id).Count.Should().Be(0);
 
-            customer.BillingAddressId.ShouldBeNull();
+            customer.BillingAddressId.Should().BeNull();
         }
 
         [Test]

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using System.Linq;
 using Moq;
 using Nop.Core;
@@ -342,9 +343,9 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
                         if (os != OrderStatus.Cancelled)
-                            _orderProcessingService.CanCancelOrder(order).ShouldBeTrue();
+                            _orderProcessingService.CanCancelOrder(order).Should().BeTrue();
                         else
-                            _orderProcessingService.CanCancelOrder(order).ShouldBeFalse();
+                            _orderProcessingService.CanCancelOrder(order).Should().BeFalse();
                     }
         }
 
@@ -360,9 +361,9 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
                         if (os != OrderStatus.Cancelled && ps == PaymentStatus.Pending)
-                            _orderProcessingService.CanMarkOrderAsAuthorized(order).ShouldBeTrue();
+                            _orderProcessingService.CanMarkOrderAsAuthorized(order).Should().BeTrue();
                         else
-                            _orderProcessingService.CanMarkOrderAsAuthorized(order).ShouldBeFalse();
+                            _orderProcessingService.CanMarkOrderAsAuthorized(order).Should().BeFalse();
                     }
         }
 
@@ -385,9 +386,9 @@ namespace Nop.Services.Tests.Orders
 
                         if (os != OrderStatus.Cancelled && os != OrderStatus.Pending
                             && ps == PaymentStatus.Authorized)
-                            _orderProcessingService.CanCapture(order).ShouldBeTrue();
+                            _orderProcessingService.CanCapture(order).Should().BeTrue();
                         else
-                            _orderProcessingService.CanCapture(order).ShouldBeFalse();
+                            _orderProcessingService.CanCapture(order).Should().BeFalse();
                     }
 
 
@@ -400,7 +401,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanCapture(order).ShouldBeFalse();
+                        _orderProcessingService.CanCapture(order).Should().BeFalse();
                     }
         }
 
@@ -416,9 +417,9 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
                         if (os == OrderStatus.Cancelled || ps == PaymentStatus.Paid || ps == PaymentStatus.Refunded || ps == PaymentStatus.Voided)
-                            _orderProcessingService.CanMarkOrderAsPaid(order).ShouldBeFalse();
+                            _orderProcessingService.CanMarkOrderAsPaid(order).Should().BeFalse();
                         else
-                            _orderProcessingService.CanMarkOrderAsPaid(order).ShouldBeTrue();
+                            _orderProcessingService.CanMarkOrderAsPaid(order).Should().BeTrue();
                     }
         }
 
@@ -442,9 +443,9 @@ namespace Nop.Services.Tests.Orders
                         order.ShippingStatus = ss;
 
                         if (ps == PaymentStatus.Paid)
-                            _orderProcessingService.CanRefund(order).ShouldBeTrue();
+                            _orderProcessingService.CanRefund(order).Should().BeTrue();
                         else
-                            _orderProcessingService.CanRefund(order).ShouldBeFalse();
+                            _orderProcessingService.CanRefund(order).Should().BeFalse();
                     }
 
 
@@ -458,7 +459,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanRefund(order).ShouldBeFalse();
+                        _orderProcessingService.CanRefund(order).Should().BeFalse();
                     }
         }
 
@@ -479,7 +480,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanRefund(order).ShouldBeFalse();
+                        _orderProcessingService.CanRefund(order).Should().BeFalse();
                     }
         }
 
@@ -499,9 +500,9 @@ namespace Nop.Services.Tests.Orders
                         order.ShippingStatus = ss;
 
                         if (ps == PaymentStatus.Paid)
-                            _orderProcessingService.CanRefundOffline(order).ShouldBeTrue();
+                            _orderProcessingService.CanRefundOffline(order).Should().BeTrue();
                         else
-                            _orderProcessingService.CanRefundOffline(order).ShouldBeFalse();
+                            _orderProcessingService.CanRefundOffline(order).Should().BeFalse();
                     }
         }
 
@@ -518,7 +519,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanRefundOffline(order).ShouldBeFalse();
+                        _orderProcessingService.CanRefundOffline(order).Should().BeFalse();
                     }
         }
 
@@ -542,9 +543,9 @@ namespace Nop.Services.Tests.Orders
                         order.ShippingStatus = ss;
 
                         if (ps == PaymentStatus.Authorized)
-                            _orderProcessingService.CanVoid(order).ShouldBeTrue();
+                            _orderProcessingService.CanVoid(order).Should().BeTrue();
                         else
-                            _orderProcessingService.CanVoid(order).ShouldBeFalse();
+                            _orderProcessingService.CanVoid(order).Should().BeFalse();
                     }
 
 
@@ -558,7 +559,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanVoid(order).ShouldBeFalse();
+                        _orderProcessingService.CanVoid(order).Should().BeFalse();
                     }
         }
 
@@ -579,7 +580,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanVoid(order).ShouldBeFalse();
+                        _orderProcessingService.CanVoid(order).Should().BeFalse();
                     }
         }
 
@@ -599,9 +600,9 @@ namespace Nop.Services.Tests.Orders
                         order.ShippingStatus = ss;
 
                         if (ps == PaymentStatus.Authorized)
-                            _orderProcessingService.CanVoidOffline(order).ShouldBeTrue();
+                            _orderProcessingService.CanVoidOffline(order).Should().BeTrue();
                         else
-                            _orderProcessingService.CanVoidOffline(order).ShouldBeFalse();
+                            _orderProcessingService.CanVoidOffline(order).Should().BeFalse();
                     }
         }
 
@@ -618,7 +619,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanVoidOffline(order).ShouldBeFalse();
+                        _orderProcessingService.CanVoidOffline(order).Should().BeFalse();
                     }
         }
 
@@ -642,9 +643,9 @@ namespace Nop.Services.Tests.Orders
                         order.ShippingStatus = ss;
 
                         if (ps == PaymentStatus.Paid || order.PaymentStatus == PaymentStatus.PartiallyRefunded)
-                            _orderProcessingService.CanPartiallyRefund(order, 10).ShouldBeTrue();
+                            _orderProcessingService.CanPartiallyRefund(order, 10).Should().BeTrue();
                         else
-                            _orderProcessingService.CanPartiallyRefund(order, 10).ShouldBeFalse();
+                            _orderProcessingService.CanPartiallyRefund(order, 10).Should().BeFalse();
                     }
 
 
@@ -658,7 +659,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanPartiallyRefund(order, 10).ShouldBeFalse();
+                        _orderProcessingService.CanPartiallyRefund(order, 10).Should().BeFalse();
                     }
         }
 
@@ -682,7 +683,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanPartiallyRefund(order, 80).ShouldBeFalse();
+                        _orderProcessingService.CanPartiallyRefund(order, 80).Should().BeFalse();
                     }
         }
 
@@ -708,9 +709,9 @@ namespace Nop.Services.Tests.Orders
                             order.ShippingStatus = ss;
 
                             if (ps == PaymentStatus.Paid || order.PaymentStatus == PaymentStatus.PartiallyRefunded)
-                                _orderProcessingService.CanPartiallyRefundOffline(order, 10).ShouldBeTrue();
+                                _orderProcessingService.CanPartiallyRefundOffline(order, 10).Should().BeTrue();
                             else
-                                _orderProcessingService.CanPartiallyRefundOffline(order, 10).ShouldBeFalse();
+                                _orderProcessingService.CanPartiallyRefundOffline(order, 10).Should().BeFalse();
                         }
                     }
         }
@@ -732,7 +733,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        _orderProcessingService.CanPartiallyRefundOffline(order, 80).ShouldBeFalse();
+                        _orderProcessingService.CanPartiallyRefundOffline(order, 80).Should().BeFalse();
                     }
         }
 
@@ -753,19 +754,19 @@ namespace Nop.Services.Tests.Orders
 
             _orderService.InsertRecurringPayment(rp);
 
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 3, 1));
+            _orderProcessingService.GetNextPaymentDate(rp).Should().Be(new DateTime(2010, 3, 1));
 
             //add one history record
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 3, 8));
+            _orderProcessingService.GetNextPaymentDate(rp).Should().Be(new DateTime(2010, 3, 8));
 
             //add one more history record
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 3, 15));
+            _orderProcessingService.GetNextPaymentDate(rp).Should().Be(new DateTime(2010, 3, 15));
 
             //add one more history record
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldBeNull();
+            _orderProcessingService.GetNextPaymentDate(rp).Should().BeNull();
         }
 
         [Test]
@@ -784,17 +785,17 @@ namespace Nop.Services.Tests.Orders
 
             _orderService.InsertRecurringPayment(rp);
 
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 3, 1));
+            _orderProcessingService.GetNextPaymentDate(rp).Should().Be(new DateTime(2010, 3, 1));
 
             //add one history record
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 3, 15));
+            _orderProcessingService.GetNextPaymentDate(rp).Should().Be(new DateTime(2010, 3, 15));
             //add one more history record
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 3, 29));
+            _orderProcessingService.GetNextPaymentDate(rp).Should().Be(new DateTime(2010, 3, 29));
             //add one more history record
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldBeNull();
+            _orderProcessingService.GetNextPaymentDate(rp).Should().BeNull();
         }
 
         [Test]
@@ -813,17 +814,17 @@ namespace Nop.Services.Tests.Orders
 
             _orderService.InsertRecurringPayment(rp);
 
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 3, 1));
+            _orderProcessingService.GetNextPaymentDate(rp).Should().Be(new DateTime(2010, 3, 1));
 
             //add one history record
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 5, 1));
+            _orderProcessingService.GetNextPaymentDate(rp).Should().Be(new DateTime(2010, 5, 1));
             //add one more history record
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 7, 1));
+            _orderProcessingService.GetNextPaymentDate(rp).Should().Be(new DateTime(2010, 7, 1));
             //add one more history record
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldBeNull();
+            _orderProcessingService.GetNextPaymentDate(rp).Should().BeNull();
         }
 
         [Test]
@@ -842,17 +843,17 @@ namespace Nop.Services.Tests.Orders
 
             _orderService.InsertRecurringPayment(rp);
 
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2010, 3, 1));
+            _orderProcessingService.GetNextPaymentDate(rp).Should().Be(new DateTime(2010, 3, 1));
 
             //add one history record
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2012, 3, 1));
+            _orderProcessingService.GetNextPaymentDate(rp).Should().Be(new DateTime(2012, 3, 1));
             //add one more history record
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldEqual(new DateTime(2014, 3, 1));
+            _orderProcessingService.GetNextPaymentDate(rp).Should().Be(new DateTime(2014, 3, 1));
             //add one more history record
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldBeNull();
+            _orderProcessingService.GetNextPaymentDate(rp).Should().BeNull();
         }
 
         [Test]
@@ -869,17 +870,17 @@ namespace Nop.Services.Tests.Orders
                 IsActive = false,
             };
 
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldBeNull();
+            _orderProcessingService.GetNextPaymentDate(rp).Should().BeNull();
 
             //add one history record
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldBeNull();
+            _orderProcessingService.GetNextPaymentDate(rp).Should().BeNull();
             //add one more history record
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldBeNull();
+            _orderProcessingService.GetNextPaymentDate(rp).Should().BeNull();
             //add one more history record
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
-            _orderProcessingService.GetNextPaymentDate(rp).ShouldBeNull();
+            _orderProcessingService.GetNextPaymentDate(rp).Should().BeNull();
         }
 
         [Test]
@@ -898,20 +899,20 @@ namespace Nop.Services.Tests.Orders
 
             _orderService.InsertRecurringPayment(rp);
 
-            _orderProcessingService.GetCyclesRemaining(rp).ShouldEqual(3);
+            _orderProcessingService.GetCyclesRemaining(rp).Should().Be(3);
 
             //add one history record
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
-            _orderProcessingService.GetCyclesRemaining(rp).ShouldEqual(2);
+            _orderProcessingService.GetCyclesRemaining(rp).Should().Be(2);
             //add one more history record
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
-            _orderProcessingService.GetCyclesRemaining(rp).ShouldEqual(1);
+            _orderProcessingService.GetCyclesRemaining(rp).Should().Be(1);
             //add one more history record
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
-            _orderProcessingService.GetCyclesRemaining(rp).ShouldEqual(0);
+            _orderProcessingService.GetCyclesRemaining(rp).Should().Be(0);
             //add one more history record
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
-            _orderProcessingService.GetCyclesRemaining(rp).ShouldEqual(0);
+            _orderProcessingService.GetCyclesRemaining(rp).Should().Be(0);
         }
 
         //TODO write unit tests for the following methods:
