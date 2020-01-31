@@ -23,4 +23,9 @@
     <ProjectReference Include="..\Nop.Tests\Nop.Tests.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Domain\Customers\" />
+    <Folder Include="Domain\Orders\" />
+  </ItemGroup>
+
 </Project>

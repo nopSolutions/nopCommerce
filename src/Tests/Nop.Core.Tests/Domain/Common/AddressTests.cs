@@ -1,7 +1,11 @@
 ﻿using System;
 using FluentAssertions;
+using Moq;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Directory;
+using Nop.Services.Common;
+using Nop.Services.Directory;
+using Nop.Services.Events;
+using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Core.Tests.Domain.Common
@@ -20,9 +24,7 @@ namespace Nop.Core.Tests.Domain.Common
                 Email = "Email 1",
                 Company = "Company 1",
                 CountryId = 3,
-                Country = new Country { Id = 3, Name = "United States" },
                 StateProvinceId = 4,
-                StateProvince = new StateProvince { Id = 4, Name = "LA" },
                 City = "City 1",
                 County = "County 1",
                 Address1 = "Address1",
@@ -33,7 +35,9 @@ namespace Nop.Core.Tests.Domain.Common
                 CreatedOnUtc = new DateTime(2010, 01, 01),
             };
 
-            var newAddress = address.Clone() as Address;
+            var addressService = new AddressService(new AddressSettings(), new Mock<IAddressAttributeParser>().Object, new Mock<IAddressAttributeService>().Object, new Mock<ICountryService>().Object, new Mock<IEventPublisher>().Object, new FakeRepository<Address>().GetRepository(), new Mock<IStateProvinceService>().Object);
+
+            var newAddress = addressService.CloneAddress(address);
             newAddress.Should().NotBeNull();
             newAddress.Id.Should().Be(0);
             newAddress.FirstName.Should().Be("FirstName 1");
@@ -48,14 +52,8 @@ namespace Nop.Core.Tests.Domain.Common
             newAddress.PhoneNumber.Should().Be("PhoneNumber 1");
             newAddress.FaxNumber.Should().Be("FaxNumber 1");
             newAddress.CreatedOnUtc.Should().Be(new DateTime(2010, 01, 01));
-
-            newAddress.Country.Should().NotBeNull();
             newAddress.CountryId.Should().Be(3);
-            newAddress.Country.Name.Should().Be("United States");
-
-            newAddress.StateProvince.Should().NotBeNull();
             newAddress.StateProvinceId.Should().Be(4);
-            newAddress.StateProvince.Name.Should().Be("LA");
         }
     }
 }
