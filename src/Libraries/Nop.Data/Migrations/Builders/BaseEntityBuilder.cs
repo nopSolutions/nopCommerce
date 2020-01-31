@@ -5,7 +5,7 @@ using Nop.Core;
 
 namespace Nop.Data.Migrations.Builders
 {
-    public abstract class BaseEntityBuilder<TEntity> : IEntityBuilder<TEntity> where TEntity : BaseEntity
+    public abstract class BaseEntityBuilder<TEntity> : IEntityBuilder where TEntity : BaseEntity
     {
         public string TableName => typeof(TEntity).Name;
 

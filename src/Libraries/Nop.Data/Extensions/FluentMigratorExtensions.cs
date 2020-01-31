@@ -1,8 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using FluentMigrator.Builders.Create.Table;
+using FluentMigrator.Builders.IfDatabase;
+using FluentMigrator.Expressions;
+using FluentMigrator.Infrastructure;
+using FluentMigrator.Model;
 using FluentMigrator.Runner;
 using Nop.Core;
+using Nop.Core.Infrastructure;
+using Nop.Data.Migrations;
+using Nop.Data.Migrations.Builders;
 
 namespace Nop.Data.Extensions
 {
@@ -35,7 +44,7 @@ namespace Nop.Data.Extensions
 
             var column = create.WithColumn(name);
             _typeMapping[propType](column);
-            
+
             if (canBeNullable)
                 create.Nullable();
         }

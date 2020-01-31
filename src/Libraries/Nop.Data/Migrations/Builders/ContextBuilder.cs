@@ -148,7 +148,7 @@ namespace Nop.Data.Migrations.Builders
             BuildEntity(new VendorNoteBuilder());
         }
 
-        private void BuildEntity<TEntity>(IEntityBuilder<TEntity> builder = null) where TEntity : BaseEntity
+        private void BuildEntity<TEntity>(BaseEntityBuilder<TEntity> builder = null) where TEntity : BaseEntity
         {
             var tableName = builder?.TableName ?? typeof(TEntity).Name;
 

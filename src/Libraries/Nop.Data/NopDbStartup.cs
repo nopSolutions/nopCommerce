@@ -29,6 +29,8 @@ namespace Nop.Data
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
+            
+            var finder = new AppDomainTypeFinder { LoadAppDomainAssemblies = false };
 
             services
                 // add common FluentMigrator services
@@ -42,13 +44,7 @@ namespace Nop.Data
                     rb.SetServers()
                     .WithVersionTable(new MigrationVersionInfo())
                     // define the assembly containing the migrations
-                    .ScanIn(BaseDataProvider.MappingConfigurationTypes().Select(t => t.Assembly).ToArray()).For.Migrations());
-
-            //further actions are performed only when the database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
-                return;
-
-            BaseDataProvider.ConfigureMapping();
+                    .ScanIn(finder.GetAssemblies().ToArray()).For.Migrations());
         }
 
         /// <summary>

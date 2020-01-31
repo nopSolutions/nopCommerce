@@ -10,11 +10,11 @@ using Nop.Data.Migrations.Builders;
 
 namespace Nop.Data.Migrations
 {
-    [Tags(NopMigrationTags.TABLE)]
+    [Tags(NopMigrationTags.Schema)]
     public abstract class BaseInitMigration : AutoReversingMigration
     {
         protected virtual void BuildEntity<TEntity>(string tableName = null,
-                IEntityBuilder<TEntity> builder = null) where TEntity : BaseEntity
+                IEntityBuilder builder = null) where TEntity : BaseEntity
         {
             var entityType = typeof(TEntity);
             var tblName = string.IsNullOrEmpty(tableName) ? typeof(TEntity).Name : tableName;

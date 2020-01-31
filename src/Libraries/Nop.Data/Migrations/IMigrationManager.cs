@@ -1,4 +1,9 @@
+using System;
+using System.Collections.Generic;
 using System.Reflection;
+using FluentMigrator.Builders.Create;
+using FluentMigrator.Expressions;
+using FluentMigrator.Infrastructure;
 
 namespace Nop.Data.Migrations
 {
@@ -22,5 +27,11 @@ namespace Nop.Data.Migrations
         /// leave null to search migration on the whole application pull</param>
         /// <param name="tags">Migration tags for filtering</param>
         void ApplyDownMigrations(Assembly assembly, params string[] tags);
+
+        IEnumerable<CreateTableExpression> LoadSchemeExpressions();
+        
+        void BuildTable<TEntity>(ICreateExpressionRoot expressionRoot, string tableName = null);
+
+        CreateTableExpression GetCreateTableExpression(Type type);
     }
 }

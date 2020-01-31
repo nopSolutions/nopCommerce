@@ -9,6 +9,7 @@ using LinqToDB.Mapping;
 using LinqToDB.Tools;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Data.Mapping;
 
 namespace Nop.Data
 {
@@ -65,7 +66,7 @@ namespace Nop.Data
 
             return dataContext;
         }
-        
+
         public EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity
         {
             return AdditionalSchema?.GetEntityDescriptor(typeof(TEntity));
@@ -81,18 +82,6 @@ namespace Nop.Data
         {
             return new DataContext(LinqToDbDataProvider, CurrentConnectionString) { MappingSchema = AdditionalSchema }.GetTable<TEntity>();
         }
-
-        public static void ConfigureMapping()
-        {
-            var mappingBuilder = new FluentMappingBuilder(AdditionalSchema);
-
-            foreach (var typeConfiguration in MappingConfigurationTypes())
-            {
-                var mappingConfiguration = (IMappingConfiguration)Activator.CreateInstance(typeConfiguration);
-                mappingConfiguration.ApplyConfiguration(mappingBuilder);
-            }
-        }
-
 
         public TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
@@ -224,19 +213,20 @@ namespace Nop.Data
             return Query<T>(sql, parameters)?.ToList() ?? new List<T>();
         }
 
-        public static Type[] MappingConfigurationTypes()
-        {
-            return new AppDomainTypeFinder()
-                .FindClassesOfType<IMappingConfiguration>()?.ToArray() ?? Array.Empty<Type>();
-        }
-
         #endregion
-
-
 
         protected abstract IDataProvider LinqToDbDataProvider { get; }
 
-        protected static MappingSchema AdditionalSchema { get; } = new MappingSchema();
+        protected static MappingSchema AdditionalSchema
+        {
+            get
+            {
+                if (Singleton<MappingSchema>.Instance is null)
+                    Singleton<MappingSchema>.Instance = new MappingSchema { MetadataReader = new NopMetadataReader() };
+
+                return Singleton<MappingSchema>.Instance;
+            }
+        }
 
         protected string CurrentConnectionString => DataSettingsManager.LoadSettings().ConnectionString;
     }

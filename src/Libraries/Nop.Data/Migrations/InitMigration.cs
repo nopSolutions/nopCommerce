@@ -31,169 +31,176 @@ namespace Nop.Data.Migrations
     [Migration(1)]
     public class InitMigration : BaseInitMigration
     {
+        protected IMigrationManager _migrationManager;
+
+        public InitMigration(IMigrationManager migrationManager)
+        {
+            _migrationManager = migrationManager;
+        }
+
         public override void Up()
         {
-            BuildEntity<AddressAttribute>(builder: new AddressAttributeBuilder());
-            BuildEntity<GenericAttribute>(builder: new GenericAttributeBuilder());
-            BuildEntity<SearchTerm>();
-            BuildEntity<Country>(builder: new CountryBuilder());
-            BuildEntity<Currency>(builder: new CurrencyBuilder());
-            BuildEntity<MeasureDimension>(builder: new MeasureDimensionBuilder());
-            BuildEntity<MeasureWeight>(builder: new MeasureWeightBuilder());
-            BuildEntity<StateProvince>(builder: new StateProvinceBuilder());
-            BuildEntity<Address>(builder: new AddressBuilder());
-            BuildEntity<Affiliate>(builder: new AffiliateBuilder());
+            _migrationManager.BuildTable<AddressAttribute>(Create);
+            _migrationManager.BuildTable<GenericAttribute>(Create);
+            _migrationManager.BuildTable<SearchTerm>(Create);
+            _migrationManager.BuildTable<Country>(Create);
+            _migrationManager.BuildTable<Currency>(Create);
+            _migrationManager.BuildTable<MeasureDimension>(Create);
+            _migrationManager.BuildTable<MeasureWeight>(Create);
+            _migrationManager.BuildTable<StateProvince>(Create);
+            _migrationManager.BuildTable<Address>(Create);
+            _migrationManager.BuildTable<Affiliate>(Create);
 
-            BuildEntity<CustomerAttribute>(builder: new CustomerAttributeBuilder());
-            BuildEntity<CustomerAttributeValue>(builder: new CustomerAttributeValueBuilder());
+            _migrationManager.BuildTable<CustomerAttribute>(Create);
+            _migrationManager.BuildTable<CustomerAttributeValue>(Create);
 
-            BuildEntity<Customer>(builder: new CustomerBuilder());
-            BuildEntity<CustomerPassword>(builder: new CustomerPasswordBuilder());
-            BuildEntity<CustomerAddressMapping>(builder: new CustomerAddressMappingBuilder());
+            _migrationManager.BuildTable<Customer>(Create);
+            _migrationManager.BuildTable<CustomerPassword>(Create);
+            _migrationManager.BuildTable<CustomerAddressMapping>(Create);
 
-            BuildEntity<CustomerRole>(builder: new CustomerRoleBuilder());
-            BuildEntity<CustomerCustomerRoleMapping>(builder: new CustomerCustomerRoleMappingBuilder());
+            _migrationManager.BuildTable<CustomerRole>(Create);
+            _migrationManager.BuildTable<CustomerCustomerRoleMapping>(Create);
 
-            BuildEntity<ExternalAuthenticationRecord>(builder: new ExternalAuthenticationRecordBuilder());
+            _migrationManager.BuildTable<ExternalAuthenticationRecord>(Create);
 
-            BuildEntity<CheckoutAttribute>(builder: new CheckoutAttributeBuilder());
-            BuildEntity<CheckoutAttributeValue>(builder: new CheckoutAttributeValueBuilder());
+            _migrationManager.BuildTable<CheckoutAttribute>(Create);
+            _migrationManager.BuildTable<CheckoutAttributeValue>(Create);
 
-            BuildEntity<ReturnRequestAction>(builder: new ReturnRequestActionBuilder());
-            BuildEntity<ReturnRequest>(builder: new ReturnRequestBuilder());
-            BuildEntity<ReturnRequestReason>(builder: new ReturnRequestReasonBuilder());
+            _migrationManager.BuildTable<ReturnRequestAction>(Create);
+            _migrationManager.BuildTable<ReturnRequest>(Create);
+            _migrationManager.BuildTable<ReturnRequestReason>(Create);
 
-            BuildEntity<ProductAttribute>(builder: new ProductAttributeBuilder());
-            BuildEntity<PredefinedProductAttributeValue>(builder: new PredefinedProductAttributeValueBuilder());
-            BuildEntity<ProductTag>(builder: new ProductTagBuilder());
+            _migrationManager.BuildTable<ProductAttribute>(Create);
+            _migrationManager.BuildTable<PredefinedProductAttributeValue>(Create);
+            _migrationManager.BuildTable<ProductTag>(Create);
 
-            BuildEntity<Product>(builder: new ProductBuilder());
-            BuildEntity<ProductTemplate>(builder: new ProductTemplateBuilder());
-            BuildEntity<BackInStockSubscription>(builder: new BackInStockSubscriptionBuilder());
-            BuildEntity<RelatedProduct>();
-            BuildEntity<ReviewType>(builder: new ReviewTypeBuilder());
-            BuildEntity<SpecificationAttribute>(builder: new SpecificationAttributeBuilder());
-            BuildEntity<ProductAttributeCombination>(builder: new ProductAttributeCombinationBuilder());
-            BuildEntity<ProductAttributeMapping>(builder: new ProductAttributeMappingBuilder());
-            BuildEntity<ProductAttributeValue>(builder: new ProductAttributeValueBuilder());
+            _migrationManager.BuildTable<Product>(Create);
+            _migrationManager.BuildTable<ProductTemplate>(Create);
+            _migrationManager.BuildTable<BackInStockSubscription>(Create);
+            _migrationManager.BuildTable<RelatedProduct>(Create);
+            _migrationManager.BuildTable<ReviewType>(Create);
+            _migrationManager.BuildTable<SpecificationAttribute>(Create);
+            _migrationManager.BuildTable<ProductAttributeCombination>(Create);
+            _migrationManager.BuildTable<ProductAttributeMapping>(Create);
+            _migrationManager.BuildTable<ProductAttributeValue>(Create);
 
-            BuildEntity<Order>(builder: new OrderBuilder());
-            BuildEntity<OrderItem>(builder: new OrderItemBuilder());
-            BuildEntity<RewardPointsHistory>(builder: new RewardPointsHistoryBuilder());
+            _migrationManager.BuildTable<Order>(Create);
+            _migrationManager.BuildTable<OrderItem>(Create);
+            _migrationManager.BuildTable<RewardPointsHistory>(Create);
 
-            BuildEntity<GiftCard>(builder: new GiftCardBuilder());
-            BuildEntity<GiftCardUsageHistory>(builder: new GiftCardUsageHistoryBuilder());
+            _migrationManager.BuildTable<GiftCard>(Create);
+            _migrationManager.BuildTable<GiftCardUsageHistory>(Create);
 
-            BuildEntity<OrderNote>(builder: new OrderNoteBuilder());
+            _migrationManager.BuildTable<OrderNote>(Create);
 
-            BuildEntity<RecurringPayment>(builder: new RecurringPaymentBuilder());
-            BuildEntity<RecurringPaymentHistory>(builder: new RecurringPaymentHistoryBuilder());
+            _migrationManager.BuildTable<RecurringPayment>(Create);
+            _migrationManager.BuildTable<RecurringPaymentHistory>(Create);
 
-            BuildEntity<ShoppingCartItem>(builder: new ShoppingCartItemBuilder());
+            _migrationManager.BuildTable<ShoppingCartItem>(Create);
 
-            BuildEntity<Store>(builder: new StoreBuilder());
-            BuildEntity<StoreMapping>(builder: new StoreMappingBuilder());
+            _migrationManager.BuildTable<Store>(Create);
+            _migrationManager.BuildTable<StoreMapping>(Create);
 
-            BuildEntity<Language>(builder: new LanguageBuilder());
-            BuildEntity<LocaleStringResource>(builder: new LocaleStringResourceBuilder());
-            BuildEntity<LocalizedProperty>(builder: new LocalizedPropertyBuilder());
+            _migrationManager.BuildTable<Language>(Create);
+            _migrationManager.BuildTable<LocaleStringResource>(Create);
+            _migrationManager.BuildTable<LocalizedProperty>(Create);
 
-            BuildEntity<BlogPost>(builder: new BlogPostBuilder());
-            BuildEntity<BlogComment>(builder: new BlogCommentBuilder());
+            _migrationManager.BuildTable<BlogPost>(Create);
+            _migrationManager.BuildTable<BlogComment>(Create);
 
-            BuildEntity<Category>(builder: new CategoryBuilder());
-            BuildEntity<CategoryTemplate>(builder: new CategoryTemplateBuilder());
+            _migrationManager.BuildTable<Category>(Create);
+            _migrationManager.BuildTable<CategoryTemplate>(Create);
 
-            BuildEntity<ProductCategory>(builder: new ProductCategoryBuilder());
+            _migrationManager.BuildTable<ProductCategory>(Create);
 
-            BuildEntity<CrossSellProduct>();
-            BuildEntity<Manufacturer>(builder: new ManufacturerBuilder());
-            BuildEntity<ManufacturerTemplate>(builder: new ManufacturerTemplateBuilder());
+            _migrationManager.BuildTable<CrossSellProduct>(Create);
+            _migrationManager.BuildTable<Manufacturer>(Create);
+            _migrationManager.BuildTable<ManufacturerTemplate>(Create);
 
-            BuildEntity<ProductManufacturer>(builder: new ProductManufacturerBuilder());
+            _migrationManager.BuildTable<ProductManufacturer>(Create);
 
-            BuildEntity<ProductProductTagMapping>(builder: new ProductProductTagMappingBuilder());
-            BuildEntity<ProductReview>(builder: new ProductReviewBuilder());
+            _migrationManager.BuildTable<ProductProductTagMapping>(Create);
+            _migrationManager.BuildTable<ProductReview>(Create);
 
-            BuildEntity<ProductReviewHelpfulness>(builder: new ProductReviewHelpfulnessBuilder());
-            BuildEntity<ProductReviewReviewTypeMapping>(builder: new ProductReviewReviewTypeMappingBuilder());
+            _migrationManager.BuildTable<ProductReviewHelpfulness>(Create);
+            _migrationManager.BuildTable<ProductReviewReviewTypeMapping>(Create);
 
-            BuildEntity<SpecificationAttributeOption>(builder: new SpecificationAttributeOptionBuilder());
-            BuildEntity<ProductSpecificationAttribute>(builder: new ProductSpecificationAttributeBuilder());
+            _migrationManager.BuildTable<SpecificationAttributeOption>(Create);
+            _migrationManager.BuildTable<ProductSpecificationAttribute>(Create);
 
-            BuildEntity<TierPrice>(builder: new TierPriceBuilder());
+            _migrationManager.BuildTable<TierPrice>(Create);
 
-            BuildEntity<Warehouse>(builder: new WarehouseBuilder());
-            BuildEntity<DeliveryDate>(builder: new DeliveryDateBuilder());
-            BuildEntity<ProductAvailabilityRange>(builder: new ProductAvailabilityRangeBuilder());
-            BuildEntity<Shipment>(builder: new ShipmentBuilder());
-            BuildEntity<ShipmentItem>(builder: new ShipmentItemBuilder());
-            BuildEntity<ShippingMethod>(builder: new ShippingMethodBuilder());
-            BuildEntity<ShippingMethodCountryMapping>(builder: new ShippingMethodCountryMappingBuilder());
+            _migrationManager.BuildTable<Warehouse>(Create);
+            _migrationManager.BuildTable<DeliveryDate>(Create);
+            _migrationManager.BuildTable<ProductAvailabilityRange>(Create);
+            _migrationManager.BuildTable<Shipment>(Create);
+            _migrationManager.BuildTable<ShipmentItem>(Create);
+            _migrationManager.BuildTable<ShippingMethod>(Create);
+            _migrationManager.BuildTable<ShippingMethodCountryMapping>(Create);
 
-            BuildEntity<ProductWarehouseInventory>(builder: new ProductWarehouseInventoryBuilder());
-            BuildEntity<StockQuantityHistory>(builder: new StockQuantityHistoryBuilder());
+            _migrationManager.BuildTable<ProductWarehouseInventory>(Create);
+            _migrationManager.BuildTable<StockQuantityHistory>(Create);
 
-            BuildEntity<Download>();
-            BuildEntity<Picture>(builder: new PictureBuilder());
-            BuildEntity<PictureBinary>(builder: new PictureBinaryBuilder());
+            _migrationManager.BuildTable<Download>(Create);
+            _migrationManager.BuildTable<Picture>(Create);
+            _migrationManager.BuildTable<PictureBinary>(Create);
 
-            BuildEntity<ProductPicture>(builder: new ProductPictureBuilder());
+            _migrationManager.BuildTable<ProductPicture>(Create);
 
-            BuildEntity<Setting>(builder: new SettingBuilder());
+            _migrationManager.BuildTable<Setting>(Create);
 
-            BuildEntity<Discount>(builder: new DiscountBuilder());
+            _migrationManager.BuildTable<Discount>(Create);
 
-            BuildEntity<DiscountCategoryMapping>(builder: new DiscountCategoryMappingBuilder());
-            BuildEntity<DiscountProductMapping>(builder: new DiscountProductMappingBuilder());
-            BuildEntity<DiscountRequirement>(builder: new DiscountRequirementBuilder());
-            BuildEntity<DiscountUsageHistory>(builder: new DiscountUsageHistoryBuilder());
+            _migrationManager.BuildTable<DiscountCategoryMapping>(Create);
+            _migrationManager.BuildTable<DiscountProductMapping>(Create);
+            _migrationManager.BuildTable<DiscountRequirement>(Create);
+            _migrationManager.BuildTable<DiscountUsageHistory>(Create);
 
-            BuildEntity<PrivateMessage>(builder: new PrivateMessageBuilder());
-            BuildEntity<ForumGroup>(builder: new ForumGroupBuilder());
-            BuildEntity<Forum>(builder: new ForumBuilder());
-            BuildEntity<ForumTopic>(builder: new ForumTopicBuilder());
-            BuildEntity<ForumPost>(builder: new ForumPostBuilder());
-            BuildEntity<ForumPostVote>(builder: new ForumPostVoteBuilder());
-            BuildEntity<ForumSubscription>(builder: new ForumSubscriptionBuilder());
+            _migrationManager.BuildTable<PrivateMessage>(Create);
+            _migrationManager.BuildTable<ForumGroup>(Create);
+            _migrationManager.BuildTable<Forum>(Create);
+            _migrationManager.BuildTable<ForumTopic>(Create);
+            _migrationManager.BuildTable<ForumPost>(Create);
+            _migrationManager.BuildTable<ForumPostVote>(Create);
+            _migrationManager.BuildTable<ForumSubscription>(Create);
 
-            BuildEntity<GdprConsent>(builder: new GdprConsentBuilder());
-            BuildEntity<GdprLog>(builder: new GdprLogBuilder());
+            _migrationManager.BuildTable<GdprConsent>(Create);
+            _migrationManager.BuildTable<GdprLog>(Create);
 
-            BuildEntity<ActivityLogType>(builder: new ActivityLogTypeBuilder());
-            BuildEntity<ActivityLog>(builder: new ActivityLogBuilder());
-            BuildEntity<Log>(builder: new LogBuilder());
+            _migrationManager.BuildTable<ActivityLogType>(Create);
+            _migrationManager.BuildTable<ActivityLog>(Create);
+            _migrationManager.BuildTable<Log>(Create);
 
-            BuildEntity<Campaign>(builder: new CampaignBuilder());
-            BuildEntity<EmailAccount>(builder: new EmailAccountBuilder());
-            BuildEntity<MessageTemplate>(builder: new MessageTemplateBuilder());
-            BuildEntity<NewsLetterSubscription>(builder: new NewsLetterSubscriptionBuilder());
-            BuildEntity<QueuedEmail>(builder: new QueuedEmailBuilder());
+            _migrationManager.BuildTable<Campaign>(Create);
+            _migrationManager.BuildTable<EmailAccount>(Create);
+            _migrationManager.BuildTable<MessageTemplate>(Create);
+            _migrationManager.BuildTable<NewsLetterSubscription>(Create);
+            _migrationManager.BuildTable<QueuedEmail>(Create);
 
-            BuildEntity<NewsItem>(builder: new NewsItemBuilder());
-            BuildEntity<NewsComment>(builder: new NewsCommentBuilder());
+            _migrationManager.BuildTable<NewsItem>(Create);
+            _migrationManager.BuildTable<NewsComment>(Create);
 
-            BuildEntity<Poll>(builder: new PollBuilder());
-            BuildEntity<PollAnswer>(builder: new PollAnswerBuilder());
-            BuildEntity<PollVotingRecord>(builder: new PollVotingRecordBuilder());
+            _migrationManager.BuildTable<Poll>(Create);
+            _migrationManager.BuildTable<PollAnswer>(Create);
+            _migrationManager.BuildTable<PollVotingRecord>(Create);
 
-            BuildEntity<AclRecord>(builder: new AclRecordBuilder());
-            BuildEntity<PermissionRecord>(builder: new PermissionRecordBuilder());
-            BuildEntity<PermissionRecordCustomerRoleMapping>(builder: new PermissionRecordCustomerRoleMappingBuilder());
+            _migrationManager.BuildTable<AclRecord>(Create);
+            _migrationManager.BuildTable<PermissionRecord>(Create);
+            _migrationManager.BuildTable<PermissionRecordCustomerRoleMapping>(Create);
 
-            BuildEntity<UrlRecord>(builder: new UrlRecordBuilder());
+            _migrationManager.BuildTable<UrlRecord>(Create);
 
-            BuildEntity<ScheduleTask>(builder: new ScheduleTaskBuilder());
+            _migrationManager.BuildTable<ScheduleTask>(Create);
 
-            BuildEntity<TaxCategory>(builder: new TaxCategoryBuilder());
+            _migrationManager.BuildTable<TaxCategory>(Create);
 
-            BuildEntity<TopicTemplate>(builder: new TopicTemplateBuilder());
-            BuildEntity<Topic>(builder: new TopicBuilder());            
+            _migrationManager.BuildTable<TopicTemplate>(Create);
+            _migrationManager.BuildTable<Topic>(Create);
 
-            BuildEntity<Vendor>(builder: new VendorBuilder());
-            BuildEntity<VendorAttribute>(builder: new VendorAttributeBuilder());
-            BuildEntity<VendorAttributeValue>(builder: new VendorAttributeValueBuilder());
-            BuildEntity<VendorNote>(builder: new VendorNoteBuilder());
+            _migrationManager.BuildTable<Vendor>(Create);
+            _migrationManager.BuildTable<VendorAttribute>(Create);
+            _migrationManager.BuildTable<VendorAttributeValue>(Create);
+            _migrationManager.BuildTable<VendorNote>(Create);
         }
     }
 }
