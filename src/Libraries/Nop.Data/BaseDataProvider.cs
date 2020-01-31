@@ -67,6 +67,11 @@ namespace Nop.Data
             return dataContext;
         }
 
+        /// <summary>
+        /// Returns mapped entity descriptor.
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>Mapping descriptor</returns>
         public EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity
         {
             return AdditionalSchema?.GetEntityDescriptor(typeof(TEntity));
@@ -76,13 +81,19 @@ namespace Nop.Data
         /// Returns queryable source for specified mapping class for current connection,
         /// mapped to database table or view.
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <returns></returns>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>Queryable source</returns>
         public virtual ITable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity
         {
             return new DataContext(LinqToDbDataProvider, CurrentConnectionString) { MappingSchema = AdditionalSchema }.GetTable<TEntity>();
         }
 
+        /// <summary>
+        /// Inserts record into table. Returns inserted entity with identity
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns>Inserted entity</returns>
         public TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             using (var dataContext = CreateDataContext())
@@ -120,6 +131,11 @@ namespace Nop.Data
             }
         }
 
+        /// <summary>
+        /// Performs bulk insert operation for entity colllection.
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <typeparam name="TEntity"></typeparam>
         public void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
         {
             using (var dataContext = CreateDataContext(LinqToDbDataProvider))
@@ -208,9 +224,19 @@ namespace Nop.Data
             }
         }
 
+        /// <summary>
+        /// Executes SQL command and returns results as collection of values of specified type
+        /// </summary>
+        /// <typeparam name="T">Type of result items</typeparam>
+        /// <param name="sql">SQL command text</param>
+        /// <param name="parameters">Parameters to execute the SQL command</param>
+        /// <returns>Collection of values of specified type</returns>
         public IList<T> Query<T>(string sql, params DataParameter[] parameters)
         {
-            return Query<T>(sql, parameters)?.ToList() ?? new List<T>();
+            using (var dataContext = CreateDataContext())
+            {
+                return dataContext.Query<T>(sql, parameters)?.ToList() ?? new List<T>();
+            }
         }
 
         #endregion
@@ -222,7 +248,7 @@ namespace Nop.Data
             get
             {
                 if (Singleton<MappingSchema>.Instance is null)
-                    Singleton<MappingSchema>.Instance = new MappingSchema { MetadataReader = new NopMetadataReader() };
+                    Singleton<MappingSchema>.Instance = new MappingSchema { MetadataReader = new FluentMigratorMetadataReader() };
 
                 return Singleton<MappingSchema>.Instance;
             }

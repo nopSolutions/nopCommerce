@@ -1,16 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Conventions;
 using FluentMigrator.Runner.Initialization;
 using FluentMigrator.Runner.Processors;
-using LinqToDB;
-using LinqToDB.Data;
-using LinqToDB.Mapping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
 using Nop.Data.Extensions;
 using Nop.Data.Migrations;
@@ -29,7 +24,6 @@ namespace Nop.Data
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            
             var finder = new AppDomainTypeFinder { LoadAppDomainAssemblies = false };
 
             services
@@ -40,7 +34,7 @@ namespace Nop.Data
                 .AddScoped<IConnectionStringAccessor>(x => DataSettingsManager.LoadSettings())
                 .AddScoped<IMigrationManager, MigrationManager>()
                 .AddSingleton<IConventionSet, NopConventionSet>()
-                .ConfigureRunner(rb => 
+                .ConfigureRunner(rb =>
                     rb.SetServers()
                     .WithVersionTable(new MigrationVersionInfo())
                     // define the assembly containing the migrations
@@ -53,7 +47,7 @@ namespace Nop.Data
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            
+
         }
 
         /// <summary>

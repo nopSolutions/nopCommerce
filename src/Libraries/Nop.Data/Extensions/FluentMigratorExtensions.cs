@@ -1,17 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using FluentMigrator.Builders.Create.Table;
-using FluentMigrator.Builders.IfDatabase;
-using FluentMigrator.Expressions;
-using FluentMigrator.Infrastructure;
-using FluentMigrator.Model;
 using FluentMigrator.Runner;
 using Nop.Core;
-using Nop.Core.Infrastructure;
-using Nop.Data.Migrations;
-using Nop.Data.Migrations.Builders;
 
 namespace Nop.Data.Extensions
 {
@@ -31,6 +22,13 @@ namespace Nop.Data.Extensions
             [typeof(Guid)] = (c) => c.AsGuid()
         };
 
+        /// <summary>
+        /// Defines the column specifications by default
+        /// </summary>
+        /// <param name="create">An expression builder for a FluentMigrator.Expressions.CreateTableExpression</param>
+        /// <param name="name">Specified column name</param>
+        /// <param name="propType">Type of an entity property</param>
+        /// <param name="canBeNullable">The value indicating whether this column is nullable</param>
         public static void WithSelfType(this CreateTableExpressionBuilder create, string name, Type propType, bool canBeNullable = false)
         {
             if (Nullable.GetUnderlyingType(propType) is Type uType)
@@ -49,6 +47,14 @@ namespace Nop.Data.Extensions
                 create.Nullable();
         }
 
+        /// <summary>
+        /// Specifies a foreign key
+        /// </summary>
+        /// <param name="column">The foreign key column</param>
+        /// <param name="primaryTableName">The primary table name</param>
+        /// <param name="primaryColumnName">The primary tables column name</param>
+        /// <typeparam name="TPrimary"></typeparam>
+        /// <returns>Set column options or create a new column or set a foreign key cascade rule</returns>
         public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax ForeignKey<TPrimary>(this ICreateTableColumnOptionOrWithColumnSyntax column, string primaryTableName = null, string primaryColumnName = null) where TPrimary : BaseEntity
         {
             if (string.IsNullOrEmpty(primaryTableName))
@@ -61,10 +67,10 @@ namespace Nop.Data.Extensions
         }
 
         /// <summary>
-        /// Configure the database server
+        /// Configure the database servers support
         /// </summary>
         /// <param name="builder">Configuring migration runner services</param>
-        /// <returns></returns>
+        /// <returns>The migration runner builder</returns>
         public static IMigrationRunnerBuilder SetServers(this IMigrationRunnerBuilder builder)
         {
             return builder

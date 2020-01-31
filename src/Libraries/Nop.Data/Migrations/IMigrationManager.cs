@@ -27,11 +27,20 @@ namespace Nop.Data.Migrations
         /// leave null to search migration on the whole application pull</param>
         /// <param name="tags">Migration tags for filtering</param>
         void ApplyDownMigrations(Assembly assembly, params string[] tags);
-
-        IEnumerable<CreateTableExpression> LoadSchemeExpressions();
         
+        /// <summary>
+        /// Retrieves expressions into ICreateExpressionRoot
+        /// </summary>
+        /// <param name="expressionRoot">The root expression for a CREATE operation</param>
+        /// <param name="tableName">Specified table name; pass null to use the name of a type</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
         void BuildTable<TEntity>(ICreateExpressionRoot expressionRoot, string tableName = null);
 
+        /// <summary>
+        /// Gets create table expression for entity type
+        /// </summary>
+        /// <param name="type">Entity type</param>
+        /// <returns>Expression to create a table</returns>
         CreateTableExpression GetCreateTableExpression(Type type);
     }
 }

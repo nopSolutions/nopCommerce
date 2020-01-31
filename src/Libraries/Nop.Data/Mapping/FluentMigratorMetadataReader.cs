@@ -12,14 +12,17 @@ using Nop.Core;
 
 namespace Nop.Data.Mapping
 {
-    public class NopMetadataReader : IMetadataReader
+    /// <summary>
+    /// LINQ To DB metadata reader for schema created by FluentMigrator
+    /// </summary>
+    public class FluentMigratorMetadataReader : IMetadataReader
     {
         private static readonly ConcurrentDictionary<(Type, MemberInfo), Attribute> _types = new ConcurrentDictionary<(Type, MemberInfo), Attribute>();
-        private  static readonly ConcurrentDictionary<Type, CreateTableExpression> _expressions = new ConcurrentDictionary<Type, CreateTableExpression>();
+        private static readonly ConcurrentDictionary<Type, CreateTableExpression> _expressions = new ConcurrentDictionary<Type, CreateTableExpression>();
 
         private readonly IMigrationManager _migrationManager;
 
-        public NopMetadataReader()
+        public FluentMigratorMetadataReader()
         {
             _migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
         }
@@ -63,7 +66,7 @@ namespace Nop.Data.Mapping
 
         public T[] GetAttributes<T>(Type type, bool inherit = true) where T : Attribute
         {
-            if(type.IsSubclassOf(typeof(BaseEntity)) && typeof(T) == typeof(TableAttribute) && GetAttribute<T>(type, null) is T attr)
+            if (type.IsSubclassOf(typeof(BaseEntity)) && typeof(T) == typeof(TableAttribute) && GetAttribute<T>(type, null) is T attr)
             {
                 return new T[] { attr };
             }
@@ -74,7 +77,7 @@ namespace Nop.Data.Mapping
         public T[] GetAttributes<T>(Type type, MemberInfo memberInfo, bool inherit = true) where T : Attribute
         {
 
-            if(type.IsSubclassOf(typeof(BaseEntity)) && typeof(T) == typeof(ColumnAttribute) && GetAttribute<T>(type, memberInfo) is T attr)
+            if (type.IsSubclassOf(typeof(BaseEntity)) && typeof(T) == typeof(ColumnAttribute) && GetAttribute<T>(type, memberInfo) is T attr)
             {
                 return new T[] { attr };
             }
