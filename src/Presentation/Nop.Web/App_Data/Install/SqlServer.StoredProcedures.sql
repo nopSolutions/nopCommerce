@@ -870,6 +870,7 @@ CREATE PROCEDURE [DeleteGuests]
 AS
 BEGIN
 	CREATE TABLE #tmp_guests (CustomerId int)
+	CREATE TABLE #tmp_adresses (AddressId int)
 		
 	INSERT #tmp_guests (CustomerId)
 	SELECT c.[Id] 
@@ -915,7 +916,10 @@ BEGIN
 		AND ((@CreatedToUtc is null) OR (c.[CreatedOnUtc] < @CreatedToUtc))
 		--shopping cart items
 		AND ((@OnlyWithoutShoppingCart = 0) OR (sci.Id is null))
-	
+
+	INSERT #tmp_adresses (AddressId)
+	SELECT [Address_Id] FROM [CustomerAddresses] WHERE [Customer_Id] IN (SELECT [CustomerId] FROM #tmp_guests)
+
 	--delete guests
 	DELETE [Customer]
 	WHERE [Id] IN (SELECT [CustomerId] FROM #tmp_guests)
@@ -925,11 +929,16 @@ BEGIN
 	WHERE ([EntityId] IN (SELECT [CustomerId] FROM #tmp_guests))
 	AND
 	([KeyGroup] = N'Customer')
+
+	--delete addresses
+	DELETE [Address]
+	WHERE [Id] IN (SELECT [AddressId] FROM #tmp_adresses)
 	
 	--total records
 	SELECT @TotalRecordsDeleted = COUNT(1) FROM #tmp_guests
 	
 	DROP TABLE #tmp_guests
+	DROP TABLE #tmp_adresses
 END
 GO
 
