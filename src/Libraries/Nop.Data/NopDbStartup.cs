@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using FluentMigrator;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Conventions;
 using FluentMigrator.Runner.Initialization;
@@ -24,7 +25,10 @@ namespace Nop.Data
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            var finder = new AppDomainTypeFinder { LoadAppDomainAssemblies = false };
+            var mAssemblies = new AppDomainTypeFinder().FindClassesOfType<AutoReversingMigration>()
+                .Select(t => t.Assembly)
+                .Distinct()
+                .ToArray();
 
             services
                 // add common FluentMigrator services
@@ -38,7 +42,7 @@ namespace Nop.Data
                     rb.SetServers()
                     .WithVersionTable(new MigrationVersionInfo())
                     // define the assembly containing the migrations
-                    .ScanIn(finder.GetAssemblies().ToArray()).For.Migrations());
+                    .ScanIn(mAssemblies).For.Migrations());
         }
 
         /// <summary>

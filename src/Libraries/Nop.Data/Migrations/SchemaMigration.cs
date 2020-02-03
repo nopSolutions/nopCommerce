@@ -28,12 +28,13 @@ using Nop.Data.Migrations.Builders;
 
 namespace Nop.Data.Migrations
 {
-    [Migration(1)]
-    public class InitMigration : BaseInitMigration
+    [NopMigration("2020/01/31 11:24:16:2551771")]
+    [Tags(NopMigrationTags.Schema)]
+    public class SchemaMigration : AutoReversingMigration
     {
         protected IMigrationManager _migrationManager;
 
-        public InitMigration(IMigrationManager migrationManager)
+        public SchemaMigration(IMigrationManager migrationManager)
         {
             _migrationManager = migrationManager;
         }
