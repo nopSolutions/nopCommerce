@@ -64,6 +64,8 @@ namespace Nop.Web.Models.Catalog
 
         public int CustomerId { get; set; }
 
+        public string CustomerAvatarUrl { get; set; }
+
         public string CustomerName { get; set; }
 
         public bool AllowViewingProfiles { get; set; }

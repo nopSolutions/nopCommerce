@@ -14,6 +14,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
@@ -47,6 +48,7 @@ namespace Nop.Web.Factories
         private readonly IDateRangeService _dateRangeService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDownloadService _downloadService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IPermissionService _permissionService;
@@ -85,6 +87,7 @@ namespace Nop.Web.Factories
             IDateRangeService dateRangeService,
             IDateTimeHelper dateTimeHelper,
             IDownloadService downloadService,
+            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
             IPermissionService permissionService,
@@ -119,6 +122,7 @@ namespace Nop.Web.Factories
             _dateRangeService = dateRangeService;
             _dateTimeHelper = dateTimeHelper;
             _downloadService = downloadService;
+            _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _manufacturerService = manufacturerService;
             _permissionService = permissionService;
@@ -1409,6 +1413,13 @@ namespace Nop.Web.Factories
                     },
                     WrittenOnStr = _dateTimeHelper.ConvertToUserTime(pr.CreatedOnUtc, DateTimeKind.Utc).ToString("g"),
                 };
+
+                if (_customerSettings.AllowCustomersToUploadAvatars)
+                {
+                    productReviewModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
+                        _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                        _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
+                }
 
                 foreach (var q in _reviewTypeService.GetProductReviewReviewTypeMappingsByProductReviewId(pr.Id))
                 {
