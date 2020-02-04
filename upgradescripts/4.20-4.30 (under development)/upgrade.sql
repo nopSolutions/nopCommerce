@@ -1,5 +1,5 @@
 ﻿--upgrade scripts from nopCommerce 4.20 to 4.30
-
+use nopCommerce
 --new locale resources
 declare @resources xml
 --a resource will be deleted if its value is empty
@@ -422,6 +422,7 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'seosettings.microdataena
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'seosettings.microdataenabled', 'true', 0)
+END
 GO
 
 
@@ -453,7 +454,7 @@ CREATE TABLE [MigrationVersionInfo](
 	[Description] [nvarchar](max) NULL,
 	[Version] [bigint] NOT NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
+
 INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2019-12-30T09:12:42.0000000' AS DateTime2), N'AddAffiliateAddressFK', 637097594562551771)
 INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2019-12-30T09:12:42.0000000' AS DateTime2), N'AddBlogCommentBlogPostFK', 637097605404497785)
 INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2019-12-30T09:12:42.0000000' AS DateTime2), N'AddBlogCommentCustomerFK', 637097605404497786)
@@ -554,7 +555,6 @@ INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CA
 INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2019-12-30T09:12:47.0000000' AS DateTime2), N'AddAclRecordCustomerRoleFK', 637097818436073081)
 INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2019-12-30T09:12:47.0000000' AS DateTime2), N'AddPermissionRecordCustomerRoleCustomerRoleFK', 637097819107801301)
 INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2019-12-30T09:12:47.0000000' AS DateTime2), N'AddPermissionRecordCustomerRolePermissionRecordFK', 637097819107801302)
-GO
 INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2019-12-30T09:12:47.0000000' AS DateTime2), N'AddShipmentItemShipmentFK', 637097820921984734)
 INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2019-12-30T09:12:47.0000000' AS DateTime2), N'AddShipmentOrderFK', 637097821681126845)
 INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2019-12-30T09:12:47.0000000' AS DateTime2), N'AddShippingMethodCountryCountryFK', 637097822410528356)
