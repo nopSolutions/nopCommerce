@@ -1,5 +1,4 @@
 ﻿--upgrade scripts from nopCommerce 4.20 to 4.30
-use nopCommerce
 --new locale resources
 declare @resources xml
 --a resource will be deleted if its value is empty
