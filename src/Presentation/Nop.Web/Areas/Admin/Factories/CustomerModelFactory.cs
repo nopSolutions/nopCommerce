@@ -660,6 +660,17 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Customer model</returns>
         public virtual CustomerModel PrepareCustomerModel(CustomerModel model, Customer customer, bool excludeProperties = false)
         {
+            #region Extensions by QuanNH
+
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWorkContext>();
+            var allStores = _storeService.GetAllStoresByEntityName(_workContext.CurrentCustomer.Id, "Stores");
+            if (allStores.Count <= 0)
+            {
+                allStores = _storeService.GetAllStores();
+            }
+
+            #endregion
+
             if (customer != null)
             {
                 //fill in model values from the entity
@@ -705,8 +716,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.LastIpAddress = customer.LastIpAddress;
                     model.LastVisitedPage = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.LastVisitedPageAttribute);
                     model.SelectedCustomerRoleIds = customer.CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRoleId).ToList();
-                    model.RegisteredInStore = _storeService.GetAllStores()
-                        .FirstOrDefault(store => store.Id == customer.RegisteredInStoreId)?.Name ?? string.Empty;
+                    
+                    #region Extensions by QuanNH
+                    model.RegisteredInStore = allStores.FirstOrDefault(store => store.Id == customer.RegisteredInStoreId)?.Name ?? string.Empty;
+                    #endregion
 
                     //prepare model affiliate
                     var affiliate = _affiliateService.GetAffiliateById(customer.AffiliateId);
@@ -719,9 +732,10 @@ namespace Nop.Web.Areas.Admin.Factories
                     //prepare model newsletter subscriptions
                     if (!string.IsNullOrEmpty(customer.Email))
                     {
-                        model.SelectedNewsletterSubscriptionStoreIds = _storeService.GetAllStores()
-                            .Where(store => _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id) != null)
+                        #region Extensions by QuanNH
+                        model.SelectedNewsletterSubscriptionStoreIds = allStores.Where(store => _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id) != null)
                             .Select(store => store.Id).ToList();
+                        #endregion
                     }
                 }
                 //prepare reward points model
@@ -779,14 +793,15 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model customer attributes
             PrepareCustomerAttributeModels(model.CustomerAttributes, customer);
 
+            #region Extensions by QuanNH
             //prepare model stores for newsletter subscriptions
-            model.AvailableNewsletterSubscriptionStores = _storeService.GetAllStores().Select(store => new SelectListItem
+            model.AvailableNewsletterSubscriptionStores = allStores.Select(store => new SelectListItem
             {
                 Value = store.Id.ToString(),
                 Text = store.Name,
                 Selected = model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id)
             }).ToList();
-
+            #endregion
             //prepare model customer roles
             _aclSupportedModelFactory.PrepareModelCustomerRoles(model);
 

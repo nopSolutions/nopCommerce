@@ -62,5 +62,32 @@ namespace Nop.Services.Stores
         /// <param name="storeId">Store identifier</param>
         /// <returns>true - authorized; otherwise, false</returns>
         bool Authorize<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported;
+
+        #region Extensions by QuanNH
+
+        IList<StoreMapping> GetAllStoreMapping(string entityName);
+        List<int> GetStoreIdByEntityId(int entityId, string entityName);
+        List<int> GetEntityIdByListStoreId(int[] storeId, string entityName);
+        void InsertStoreMappingByEntity(int customerId, string entityName, int storeId);
+
+        /// <summary>
+        /// Inserts a store mapping record
+        /// </summary>
+        /// <param name="storeMapping">Store mapping</param>
+        void Insert_Store_Mapping(StoreMapping storeMapping);
+
+        bool TableEdit(int storeId);
+
+        int CurrentStore();
+
+        bool IsAdminStore();
+
+        void UpdateStoreMapping(StoreMapping storeMapping);
+
+        bool AuthorizeCustomer(int customerId);
+
+        IPagedList<StoreMapping> GetAllStoreMappings(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
+
+        #endregion
     }
 }

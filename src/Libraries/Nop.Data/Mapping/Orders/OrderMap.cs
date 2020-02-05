@@ -55,6 +55,7 @@ namespace Nop.Data.Mapping.Orders
                 .HasForeignKey(order => order.PickupAddressId);
 
             builder.Ignore(order => order.OrderStatus);
+            builder.Ignore(order => order.OrderApprovalStatus);
             builder.Ignore(order => order.PaymentStatus);
             builder.Ignore(order => order.ShippingStatus);
             builder.Ignore(order => order.CustomerTaxDisplayType);

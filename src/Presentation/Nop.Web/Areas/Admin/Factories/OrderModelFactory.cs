@@ -539,6 +539,9 @@ namespace Nop.Web.Areas.Admin.Factories
             model.CanVoid = _orderProcessingService.CanVoid(order);
             model.CanVoidOffline = _orderProcessingService.CanVoidOffline(order);
 
+            //order approval buttons // Porttomis Inc.
+            model.CanMarkOrderAsApproved = _orderProcessingService.CanMarkOrderAsIsApproved(order);
+
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)?.CurrencyCode;
             model.MaxAmountToRefund = order.OrderTotal - order.RefundedAmount;
 
@@ -1060,6 +1063,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.CustomerInfo = order.Customer.IsRegistered() ? order.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                 model.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
                 model.CustomValues = _paymentService.DeserializeCustomValues(order);
+                model.OrderApprovalStatus = _localizationService.GetLocalizedEnum(order.OrderApprovalStatus);
 
                 var affiliate = _affiliateService.GetAffiliateById(order.AffiliateId);
                 if (affiliate != null)

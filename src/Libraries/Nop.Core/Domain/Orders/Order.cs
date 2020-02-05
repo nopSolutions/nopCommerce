@@ -63,6 +63,11 @@ namespace Nop.Core.Domain.Orders
         public int OrderStatusId { get; set; }
 
         /// <summary>
+        /// Gets or sets an order status identifier
+        /// </summary>
+        public int OrderApprovalStatusId { get; set; }
+
+        /// <summary>
         /// Gets or sets the shipping status identifier
         /// </summary>
         public int ShippingStatusId { get; set; }
@@ -385,6 +390,16 @@ namespace Nop.Core.Domain.Orders
         }
 
         /// <summary>
+        /// Gets or sets the Order Approval Status // Porttomis INc.
+        /// </summary>
+        public OrderApprovalStatus OrderApprovalStatus
+        {
+            get => (OrderApprovalStatus)OrderApprovalStatusId;
+
+            set => OrderApprovalStatusId = (int)value;
+        }
+
+        /// <summary>
         /// Gets or sets the payment status
         /// </summary>
         public PaymentStatus PaymentStatus
@@ -410,6 +425,9 @@ namespace Nop.Core.Domain.Orders
             get => (TaxDisplayType)CustomerTaxDisplayTypeId;
             set => CustomerTaxDisplayTypeId = (int)value;
         }
+
+
+
 
         #endregion
     }

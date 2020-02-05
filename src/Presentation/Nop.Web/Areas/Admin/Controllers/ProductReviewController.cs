@@ -105,6 +105,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (productReview == null)
                 return RedirectToAction("List");
 
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.Authorize(productReview.Product) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && productReview.Product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List");

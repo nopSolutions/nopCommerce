@@ -133,6 +133,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 campaign.DontSendBeforeDateUtc = model.DontSendBeforeDate.HasValue ?
                     (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value) : null;
 
+                #region Extensions by QuanNH
+
+                var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+                campaign.StoreId = _storeMappingService.CurrentStore();
+
+                #endregion
+
                 _campaignService.InsertCampaign(campaign);
 
                 //activity log
@@ -160,6 +167,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var campaign = _campaignService.GetCampaignById(id);
             if (campaign == null)
                 return RedirectToAction("List");
+
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.TableEdit(campaign.StoreId))
+                return AccessDeniedView();
+
+            #endregion
 
             //prepare model
             var model = _campaignModelFactory.PrepareCampaignModel(null, campaign);

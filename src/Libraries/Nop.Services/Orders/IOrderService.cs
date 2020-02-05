@@ -263,5 +263,11 @@ namespace Nop.Services.Orders
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         #endregion
+
+        #region Extensions by QuanNH
+
+        OrderItem GetOrderItemByOrderId(int OrderId);
+
+        #endregion
     }
 }

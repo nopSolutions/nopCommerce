@@ -364,6 +364,12 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 _customerService.InsertCustomer(customer);
 
+                #region Extensions by QuanNH
+                var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+                _storeMappingService.InsertStoreMappingByEntity(customer.Id, "Stores", _storeContext.CurrentStore.Id);
+
+                #endregion
+
                 //form fields
                 if (_dateTimeSettings.AllowCustomersToSetTimeZone)
                     _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.TimeZoneIdAttribute, model.TimeZoneId);
@@ -400,36 +406,46 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //newsletter subscriptions
                 if (!string.IsNullOrEmpty(customer.Email))
                 {
-                    var allStores = _storeService.GetAllStores();
-                    foreach (var store in allStores)
-                    {
-                        var newsletterSubscription = _newsLetterSubscriptionService
-                            .GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id);
-                        if (model.SelectedNewsletterSubscriptionStoreIds != null &&
-                            model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))
-                        {
-                            //subscribed
-                            if (newsletterSubscription == null)
-                            {
-                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
-                                {
-                                    NewsLetterSubscriptionGuid = Guid.NewGuid(),
-                                    Email = customer.Email,
-                                    Active = true,
-                                    StoreId = store.Id,
-                                    CreatedOnUtc = DateTime.UtcNow
-                                });
-                            }
-                        }
-                        else
-                        {
-                            //not subscribed
-                            if (newsletterSubscription != null)
-                            {
-                                _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletterSubscription);
-                            }
-                        }
-                    }
+                    //#region Extensions by QuanNH
+                    //Commented out by James
+                    //var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWorkContext>();
+                    //var allStores = _storeService.GetAllStoresByEntityName(_workContext.CurrentCustomer.Id, "Stores");
+                    //if (allStores.Count <= 0)
+                    //{
+                    //    allStores = _storeService.GetAllStores();
+                    //}
+                    ////var allStores = _storeService.GetAllStores();
+
+                    //#endregion
+                    //foreach (var store in allStores)
+                    //{
+                    //    var newsletterSubscription = _newsLetterSubscriptionService
+                    //        .GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id);
+                    //    if (model.SelectedNewsletterSubscriptionStoreIds != null &&
+                    //        model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))
+                    //    {
+                    //        //subscribed
+                    //        if (newsletterSubscription == null)
+                    //        {
+                    //            _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
+                    //            {
+                    //                NewsLetterSubscriptionGuid = Guid.NewGuid(),
+                    //                Email = customer.Email,
+                    //                Active = true,
+                    //                StoreId = store.Id,
+                    //                CreatedOnUtc = DateTime.UtcNow
+                    //            });
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        //not subscribed
+                    //        if (newsletterSubscription != null)
+                    //        {
+                    //            _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletterSubscription);
+                    //        }
+                    //    }
+                    //}
                 }
 
                 //password
@@ -509,6 +525,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (customer == null || customer.Deleted)
                 return RedirectToAction("List");
 
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
+
             //prepare model
             var model = _customerModelFactory.PrepareCustomerModel(null, customer);
 
@@ -526,6 +549,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null || customer.Deleted)
                 return RedirectToAction("List");
+
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
 
             //validate customer roles
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
@@ -647,40 +677,51 @@ namespace Nop.Web.Areas.Admin.Controllers
                     //custom customer attributes
                     _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.CustomCustomerAttributes, customerAttributesXml);
 
-                    //newsletter subscriptions
-                    if (!string.IsNullOrEmpty(customer.Email))
-                    {
-                        var allStores = _storeService.GetAllStores();
-                        foreach (var store in allStores)
-                        {
-                            var newsletterSubscription = _newsLetterSubscriptionService
-                                .GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id);
-                            if (model.SelectedNewsletterSubscriptionStoreIds != null &&
-                                model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))
-                            {
-                                //subscribed
-                                if (newsletterSubscription == null)
-                                {
-                                    _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
-                                    {
-                                        NewsLetterSubscriptionGuid = Guid.NewGuid(),
-                                        Email = customer.Email,
-                                        Active = true,
-                                        StoreId = store.Id,
-                                        CreatedOnUtc = DateTime.UtcNow
-                                    });
-                                }
-                            }
-                            else
-                            {
-                                //not subscribed
-                                if (newsletterSubscription != null)
-                                {
-                                    _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletterSubscription);
-                                }
-                            }
-                        }
-                    }
+                    //// Porttomis Inc.
+                    ////newsletter subscriptions
+                    //if (!string.IsNullOrEmpty(customer.Email))
+                    //{
+                    //    #region Extensions by QuanNH
+
+                    //    var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWorkContext>();
+                    //    var allStores = _storeService.GetAllStoresByEntityName(_workContext.CurrentCustomer.Id, "Stores");
+                    //    if (allStores.Count <= 0)
+                    //    {
+                    //        allStores = _storeService.GetAllStores();
+                    //    }
+                    //    //var allStores = _storeService.GetAllStores();
+
+                    //    #endregion
+                    //    foreach (var store in allStores)
+                    //    {
+                    //        var newsletterSubscription = _newsLetterSubscriptionService
+                    //            .GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id);
+                    //        if (model.SelectedNewsletterSubscriptionStoreIds != null &&
+                    //            model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))
+                    //        {
+                    //            //subscribed
+                    //            if (newsletterSubscription == null)
+                    //            {
+                    //                _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
+                    //                {
+                    //                    NewsLetterSubscriptionGuid = Guid.NewGuid(),
+                    //                    Email = customer.Email,
+                    //                    Active = true,
+                    //                    StoreId = store.Id,
+                    //                    CreatedOnUtc = DateTime.UtcNow
+                    //                });
+                    //            }
+                    //        }
+                    //        else
+                    //        {
+                    //            //not subscribed
+                    //            if (newsletterSubscription != null)
+                    //            {
+                    //                _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletterSubscription);
+                    //            }
+                    //        }
+                    //    }
+                    //}
 
                     //customer roles
                     foreach (var customerRole in allCustomerRoles)
@@ -777,6 +818,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (customer == null)
                 return RedirectToAction("List");
 
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
+
             //ensure that the current customer cannot change passwords of "Administrators" if he's not an admin himself
             if (customer.IsAdmin() && !_workContext.CurrentCustomer.IsAdmin())
             {
@@ -811,6 +859,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (customer == null)
                 return RedirectToAction("List");
 
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
+
             _genericAttributeService.SaveAttribute(customer,
                 NopCustomerDefaults.VatNumberStatusIdAttribute,
                 (int)VatNumberStatus.Valid);
@@ -829,6 +884,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null)
                 return RedirectToAction("List");
+
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
 
             _genericAttributeService.SaveAttribute(customer,
                 NopCustomerDefaults.VatNumberStatusIdAttribute,
@@ -849,6 +911,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (customer == null)
                 return RedirectToAction("List");
 
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
+
             customer.AffiliateId = 0;
             _customerService.UpdateCustomer(customer);
 
@@ -865,6 +934,18 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customer = _customerService.GetCustomerById(id);
             if (customer == null)
                 return RedirectToAction("List");
+
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+            {
+                return AccessDeniedView();
+            }
+            if (_workContext.CurrentCustomer.Id == customer.Id && !_storeMappingService.IsAdminStore())
+            {
+                return AccessDeniedView();
+            }
+            #endregion
 
             try
             {
@@ -885,13 +966,23 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //delete
                 _customerService.DeleteCustomer(customer);
 
+                #region Extensions by QuanNH
+
+                //stores
+                var allStores = _storeService.GetAllStoresByEntityName(_workContext.CurrentCustomer.Id, "Stores");
+                if (allStores.Count <= 0)
+                {
+                    allStores = _storeService.GetAllStores();
+                }
+
                 //remove newsletter subscription (if exists)
-                foreach (var store in _storeService.GetAllStores())
+                foreach (var store in allStores)
                 {
                     var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id);
                     if (subscription != null)
                         _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
                 }
+                #endregion
 
                 //activity log
                 _customerActivityService.InsertActivity("DeleteCustomer",
@@ -919,6 +1010,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customer = _customerService.GetCustomerById(id);
             if (customer == null)
                 return RedirectToAction("List");
+
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
 
             if (!customer.Active)
             {
@@ -961,6 +1059,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (customer == null)
                 return RedirectToAction("List");
 
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
+
             _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendWelcomeMessage.Success"));
@@ -980,6 +1085,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (customer == null)
                 return RedirectToAction("List");
 
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
+
             //email validation message
             _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.AccountActivationTokenAttribute, Guid.NewGuid().ToString());
             _workflowMessageService.SendCustomerEmailValidationMessage(customer, _workContext.WorkingLanguage.Id);
@@ -998,6 +1110,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null)
                 return RedirectToAction("List");
+
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
 
             try
             {
@@ -1051,6 +1170,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (customer == null)
                 return RedirectToAction("List");
 
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
+
             try
             {
                 if (!_forumSettings.AllowPrivateMessages)
@@ -1101,6 +1227,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
                 ?? throw new ArgumentException("No customer found with the specified id");
 
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedDataTablesJson();
+
+            #endregion
+
             //prepare model
             var model = _customerModelFactory.PrepareRewardPointsListModel(searchModel, customer);
 
@@ -1120,6 +1253,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customer = _customerService.GetCustomerById(model.CustomerId);
             if (customer == null)
                 return ErrorJson("Customer cannot be loaded");
+
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
 
             //check whether delay is set
             DateTime? activatingDate = null;
@@ -1156,6 +1296,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
                 ?? throw new ArgumentException("No customer found with the specified id");
 
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedDataTablesJson();
+
+            #endregion
+
             //prepare model
             var model = _customerModelFactory.PrepareCustomerAddressListModel(searchModel, customer);
 
@@ -1171,6 +1318,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(customerId)
                 ?? throw new ArgumentException("No customer found with the specified id", nameof(customerId));
+
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
 
             //try to get an address with the specified id
             var address = customer.Addresses.FirstOrDefault(a => a.Id == id);
@@ -1196,6 +1350,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (customer == null)
                 return RedirectToAction("List");
 
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
+
             //prepare model
             var model = _customerModelFactory.PrepareCustomerAddressModel(new CustomerAddressModel(), customer, null);
 
@@ -1212,6 +1373,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customer = _customerService.GetCustomerById(model.CustomerId);
             if (customer == null)
                 return RedirectToAction("List");
+
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
 
             //custom address attributes
             var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(form);
@@ -1258,6 +1426,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (customer == null)
                 return RedirectToAction("List");
 
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
+
             //try to get an address with the specified id
             var address = _addressService.GetAddressById(addressId);
             if (address == null)
@@ -1279,6 +1454,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customer = _customerService.GetCustomerById(model.CustomerId);
             if (customer == null)
                 return RedirectToAction("List");
+
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
 
             //try to get an address with the specified id
             var address = _addressService.GetAddressById(model.Address.Id);
@@ -1324,6 +1506,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
                 ?? throw new ArgumentException("No customer found with the specified id");
+
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedDataTablesJson();
+
+            #endregion
 
             //prepare model
             var model = _customerModelFactory.PrepareCustomerOrderListModel(searchModel, customer);
@@ -1433,6 +1622,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
                 ?? throw new ArgumentException("No customer found with the specified id");
 
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedDataTablesJson();
+
+            #endregion
+
             //prepare model
             var model = _customerModelFactory.PrepareCustomerShoppingCartListModel(searchModel, customer);
 
@@ -1453,6 +1649,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
                 ?? throw new ArgumentException("No customer found with the specified id");
 
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedDataTablesJson();
+
+            #endregion
+
             //prepare model
             var model = _customerModelFactory.PrepareCustomerActivityLogListModel(searchModel, customer);
 
@@ -1472,6 +1675,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
                 ?? throw new ArgumentException("No customer found with the specified id");
+
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedDataTablesJson();
+
+            #endregion
 
             //prepare model
             var model = _customerModelFactory.PrepareCustomerBackInStockSubscriptionListModel(searchModel, customer);
@@ -1516,6 +1726,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customer = _customerService.GetCustomerById(id);
             if (customer == null)
                 return RedirectToAction("List");
+
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
 
             if (!_gdprSettings.GdprEnabled)
                 return RedirectToAction("List");
@@ -1566,6 +1783,12 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
+                #region Extensions by QuanNH
+                var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+                if (!_storeMappingService.AuthorizeCustomer(customer.Id) && !_storeMappingService.IsAdminStore())
+                    return AccessDeniedView();
+
+                #endregion
                 //log
                 //_gdprService.InsertLog(customer, 0, GdprRequestType.ExportData, _localizationService.GetResource("Gdpr.Exported"));
                 //export

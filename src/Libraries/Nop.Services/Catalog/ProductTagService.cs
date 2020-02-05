@@ -126,6 +126,22 @@ namespace Nop.Services.Catalog
         public virtual IList<ProductTag> GetAllProductTags()
         {
             var query = _productTagRepository.Table;
+            #region Extensions by QuanNH
+
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWorkContext>();
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            List<int> storeId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores");
+
+            if (storeId.Count > 0)
+            {
+                var productIds = _storeMappingService.GetEntityIdByListStoreId(storeId.ToArray(), "Product");
+                query = (from pt in query
+                         join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId
+                         where productIds.Contains(ppt.ProductId)
+                         orderby pt.Id
+                         select pt).Distinct();
+            }
+            #endregion
             var productTags = query.ToList();
             return productTags;
         }

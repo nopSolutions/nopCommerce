@@ -231,6 +231,17 @@ namespace Nop.Services.Messages
         {
             if (customerRoleId == 0)
             {
+                #region Extensions by QuanNH
+                var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+
+                //Current Store Admin
+                if (_storeMappingService.CurrentStore() > 0)
+                {
+                    storeId = _storeMappingService.CurrentStore();
+                }
+
+                #endregion
+
                 //do not filter by customer role
                 var query = _subscriptionRepository.Table;
                 if (!string.IsNullOrEmpty(email))

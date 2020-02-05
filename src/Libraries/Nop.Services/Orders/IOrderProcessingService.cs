@@ -135,10 +135,30 @@ namespace Nop.Services.Orders
         void MarkOrderAsPaid(Order order);
 
         /// <summary>
+        /// Gets a value indicating whether order can be marked as IsApproved // Porttomis Inc.
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>A value indicating whether order can be marked as paid</returns>
+        bool CanMarkOrderAsIsApproved(Order order);
+
+        /// <summary>
+        /// Marks order as IsApproved // Porttomis Inc.
+        /// </summary>
+        /// <param name="order">Order</param>
+        void MarkOrderAsIsApproved(Order order);
+
+        /// <summary>
+        /// Marks order as IsDenied // Porttomis Inc.
+        /// </summary>
+        /// <param name="order">Order</param>
+        void MarkOrderAsIsDenied(Order order);
+
+        /// <summary>
         /// Gets a value indicating whether refund from admin panel is allowed
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>A value indicating whether refund from admin panel is allowed</returns>
+        /// 
         bool CanRefund(Order order);
 
         /// <summary>

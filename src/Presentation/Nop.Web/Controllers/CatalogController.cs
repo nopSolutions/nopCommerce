@@ -107,11 +107,16 @@ namespace Nop.Web.Controllers
                 !_aclService.Authorize(category) ||
                 //Store mapping
                 !_storeMappingService.Authorize(category);
+               
+            #region Extensions by QuanNH
+                if (notAvailable) return InvokeHttp404();
+            #endregion
+
             //Check whether the current user has a "Manage categories" permission (usually a store owner)
             //We should allows him (her) to use "Preview" functionality
-            var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageCategories);
-            if (notAvailable && !hasAdminAccess)
-                return InvokeHttp404();
+            //var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageCategories);
+            //if (notAvailable && !hasAdminAccess)
+            //    return InvokeHttp404();
 
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
@@ -169,11 +174,15 @@ namespace Nop.Web.Controllers
                 !_aclService.Authorize(manufacturer) ||
                 //Store mapping
                 !_storeMappingService.Authorize(manufacturer);
+
+            #region Extensions by QuanNH
+            if (notAvailable) return InvokeHttp404();
+            #endregion
             //Check whether the current user has a "Manage categories" permission (usually a store owner)
             //We should allows him (her) to use "Preview" functionality
-            var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers);
-            if (notAvailable && !hasAdminAccess)
-                return InvokeHttp404();
+            //var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers);
+            //if (notAvailable && !hasAdminAccess)
+            //    return InvokeHttp404();
 
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 

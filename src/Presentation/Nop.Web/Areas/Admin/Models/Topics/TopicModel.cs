@@ -101,6 +101,14 @@ namespace Nop.Web.Areas.Admin.Models.Topics
 
         public IList<SelectListItem> AvailableCustomerRoles { get; set; }
 
+        #region Extensions by QuanNH
+
+        //Store mapping
+        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.LimitedToStores")]
+        public bool LimitedToStores { get; set; }
+
+        #endregion
+
         #endregion
     }
 

@@ -70,7 +70,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             blogPost.LimitedToStores = model.SelectedStoreIds.Any();
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(blogPost);
-            var allStores = _storeService.GetAllStores();
+            #region Extensions by QuanNH
+
+            //stores
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWorkContext>();
+            var allStores = _storeService.GetAllStoresByEntityName(_workContext.CurrentCustomer.Id, "Stores");
+            if (allStores.Count <= 0)
+            {
+                allStores = _storeService.GetAllStores();
+            }
+
+            #endregion
             foreach (var store in allStores)
             {
                 if (model.SelectedStoreIds.Contains(store.Id))
@@ -181,6 +191,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             var blogPost = _blogService.GetBlogPostById(id);
             if (blogPost == null)
                 return RedirectToAction("BlogPosts");
+            
+            #region Extensions by QuanNH
+            if (!_storeMappingService.Authorize(blogPost) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
 
             //prepare model
             var model = _blogModelFactory.PrepareBlogPostModel(null, blogPost);

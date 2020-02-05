@@ -142,6 +142,12 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         [NopResourceDisplayName("Admin.Orders.Fields.OrderStatus")]
         public int OrderStatusId { get; set; }
 
+        //order approval status
+        [NopResourceDisplayName("Admin.Orders.Fields.OrderApprovalStatus")]
+        public string OrderApprovalStatus { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.OrderApprovalStatus")]
+        public int OrderApprovalStatusId { get; set; }
+
         //payment info
         [NopResourceDisplayName("Admin.Orders.Fields.PaymentStatus")]
         public string PaymentStatus { get; set; }
@@ -236,6 +242,7 @@ namespace Nop.Web.Areas.Admin.Models.Orders
         public bool CanPartiallyRefundOffline { get; set; }
         public bool CanVoid { get; set; }
         public bool CanVoidOffline { get; set; }
+        public bool CanMarkOrderAsApproved { get; set; }
 
         public OrderShipmentSearchModel OrderShipmentSearchModel { get; set; }
 

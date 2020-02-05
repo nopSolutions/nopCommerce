@@ -197,7 +197,7 @@
                 </div>
             </div>
             @if (((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax) && !string.IsNullOrEmpty(Model.OrderSubTotalDiscountInclTax)) ||
-               ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax) && !string.IsNullOrEmpty(Model.OrderSubTotalDiscountExclTax)))
+            ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax) && !string.IsNullOrEmpty(Model.OrderSubTotalDiscountExclTax)))
             {
                 <div class="form-group">
                     <div class="col-md-3">
@@ -261,7 +261,7 @@
                 </div>
             </div>
             @if (((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax) && !string.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeInclTax)) ||
-               ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax) && !string.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeExclTax)))
+            ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax) && !string.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeExclTax)))
             {
                 <div class="form-group">
                     <div class="col-md-3">
@@ -645,6 +645,39 @@
                     </div>
                 </div>
             }
+
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="OrderApprovalStatus" />
+                </div>
+                <div class="col-md-9">
+                    <div class="form-text-row">@Model.OrderApprovalStatus</div>
+                </div>
+            </div>
+
+            @if (Model.OrderApprovalStatus == OrderApprovalStatus.Pending.ToString())
+            {
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <button type="submit" name="markorderasisapproved" id="markorderasisapproved" class="btn btn-primary">
+                            @T("Admin.Orders.Fields.MarkOrderAsIsApproved")
+                        </button>
+                        <text>&nbsp;</text>
+                        <nop-action-confirmation asp-button-id="markorderasisapproved" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <button type="submit" name="markorderasisdenied" id="markorderasisdenied" class="btn btn-primary">
+                            @T("Admin.Orders.Fields.MarkOrderAsIsDenied")
+                        </button>
+                        <text>&nbsp;</text>
+                        <nop-action-confirmation asp-button-id="markorderasisdenied" />
+                    </div>
+                </div>
+
+            }
+
             <div class="form-group">
                 <div class="col-md-3">
                     <nop-label asp-for="PaymentMethod" />
@@ -663,7 +696,7 @@
                 </div>
             </div>
             @if (Model.CanCapture || Model.CanMarkOrderAsPaid || Model.CanRefund || Model.CanRefundOffline ||
-              Model.CanPartiallyRefund || Model.CanPartiallyRefundOffline || Model.CanVoid || Model.CanVoidOffline)
+           Model.CanPartiallyRefund || Model.CanPartiallyRefundOffline || Model.CanVoid || Model.CanVoidOffline)
             {
                 <div class="form-group">
                     <div class="col-md-9 col-md-offset-3">
@@ -731,6 +764,7 @@
                                 <text>&nbsp;</text>
                                 <nop-action-confirmation asp-button-id="voidorderoffline" />
                             }
+
                         }
                     </div>
                 </div>

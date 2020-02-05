@@ -1,0 +1,58 @@
+Install from nopcommerce nosource package or Pre-installer. We recommend that you install Pre-installer is more convenient and faster
+
+I. From nopcommerce nosource
+
+ - Download(nopCommerce 4.20 - Web (no source) https://www.nopcommerce.com/downloads.aspx
+ 
+ - Overwrite files in folder: Update
+    + Overwritten files include:
+		- Areas\Admin\Views\Blog\_CreateOrUpdate.Info.cshtml
+		- Areas\Admin\Views\Category\_CreateOrUpdate.Mappings.cshtml
+		- Areas\Admin\Views\CheckoutAttribute\_CreateOrUpdate.Info.cshtml
+		- Areas\Admin\Views\Country\_CreateOrUpdate.Info.cshtml
+		- Areas\Admin\Views\Currency\_CreateOrUpdate.cshtml
+		- Areas\Admin\Views\Language\_CreateOrUpdate.Info.cshtml
+		- Areas\Admin\Views\Manufacturer\_CreateOrUpdate.Mappings.cshtml
+		- Areas\Admin\Views\MessageTemplate\_CreateOrUpdate.cshtml
+		- Areas\Admin\Views\News\_CreateOrUpdate.Info.cshtml
+		- Areas\Admin\Views\Poll\_CreateOrUpdate.Info.cshtml
+		- Areas\Admin\Views\Product\_CreateOrUpdate.Info.cshtml
+		- Areas\Admin\Views\StoreMapping\Create.cshtml
+		- Areas\Admin\Views\StoreMapping\Edit.cshtml
+		- Areas\Admin\Views\StoreMapping\List.cshtml
+		- Areas\Admin\Views\StoreMapping\_CreateOrUpdate.cshtml
+		- Areas\Admin\Views\Topic\_CreateOrUpdate.Display.cshtml
+		- Areas\Admin\sitemap.config
+		- Nop.Services.dll
+		- Nop.Web.dll
+		- Nop.Web.Framework.dll
+    
+	+ Folder permissions on iis:  App_Data,Plugins,wwwroot,web.config
+	+ Open file web.config set stdoutLogEnabled="true", View log forder: /Logs
+	
+  - Insert Table StoreMapping
+    Insert table StoreMapping 1 row with:
+		- EntityId: Id is the administrator account in the Customer table
+		- EntityName: "Admin" is the administrator-defined value
+		- StoreId: As of 1 Id any stores
+  
+  - For example
+    + Get EntityId: select * from Customer where Id in(select Customer_Id from Customer_CustomerRole_Mapping where CustomerRole_Id=1)
+    + Get StoreId: select * from Store
+  
+  INSERT INTO [dbo].[StoreMapping]([EntityId],[EntityName],[StoreId]) VALUES(1,1,1)
+
+  - Log in to admin and then see more documentation: Document/NopPlugin-Document-v4.2.docx and link http://nopplugin.com/nopcommerce-multi-tenant-download
+  
+  - Option to limit this product to a certain store. If you have multiple stores, choose one or several from the list. If you don't use this option just leave this field empty. In order to use this functionality you have to enable the following setting: Catalog settings > Checked Ignore "limit per store" rules.
+  
+II. Pre-installer
+
+Download: http://demo.nopplugin.com/NopcomerceMultiTenantNoSource_4_0.rar
+
+- Upload forder Update 
+- Restore database
+- Edit the connection string: App_Data\dataSettings.json
+
+Log in to admin and then see more documentation: Document/NopPlugin-Document-v1.1.docx and link
+http://nopplugin.com/nopcommerce-multi-tenant-download

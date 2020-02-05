@@ -158,6 +158,33 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Utilities
 
+        #region Extensions by QuanNH
+        protected virtual void PrepareStoresMappingModel(ProductModel model, Product product, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            List<int> storeId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores");
+
+            if (!excludeProperties)
+            {
+                if (product != null)
+                {
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(product).ToList();
+                }
+                else
+                {
+                    if (storeId.Count > 0) model.SelectedStoreIds = storeId;
+                }
+
+                if (storeId.Count <= 0)
+                    model.LimitedToStores = false;
+                else model.LimitedToStores = true;
+            }
+        }
+
+        #endregion
         /// <summary>
         /// Prepare copy product model
         /// </summary>
@@ -907,6 +934,10 @@ namespace Nop.Web.Areas.Admin.Factories
             //prepare model stores
             _storeMappingSupportedModelFactory.PrepareModelStores(model, product, excludeProperties);
 
+            #region Extensions by QuanNH
+            PrepareStoresMappingModel(model, product, excludeProperties);
+            #endregion
+
             return model;
         }
 
@@ -1536,9 +1567,18 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
+            #region Extensions by QuanNH
+            var storeId = 0;
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            var currentStoreId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores").FirstOrDefault();
+            if (currentStoreId > 0)
+            {
+                storeId = currentStoreId;
+            }
+
             //get product tags
             var productTags = _productTagService.GetAllProductTags()
-                .OrderByDescending(tag => _productTagService.GetProductCount(tag.Id, storeId: 0, showHidden: true)).ToList()
+                .OrderByDescending(tag => _productTagService.GetProductCount(tag.Id, storeId: storeId)).ToList()
                 .ToPagedList(searchModel);
 
             //prepare list model
@@ -1550,13 +1590,14 @@ namespace Nop.Web.Areas.Admin.Factories
                     var productTagModel = tag.ToModel<ProductTagModel>();
 
                     //fill in additional values (not existing in the entity)
-                    productTagModel.ProductCount = _productTagService.GetProductCount(tag.Id, storeId: 0, showHidden: true);
+                    productTagModel.ProductCount = _productTagService.GetProductCount(tag.Id, storeId: storeId);
 
                     return productTagModel;
                 });
             });
 
             return model;
+            #endregion
         }
 
         /// <summary>
@@ -1570,15 +1611,25 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             Action<ProductTagLocalizedModel, int> localizedModelConfiguration = null;
 
+            #region Extensions by QuanNH
+            var storeId = 0;
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            var currentStoreId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores").FirstOrDefault();
+            if (currentStoreId > 0)
+            {
+                storeId = currentStoreId;
+            }
+
             if (productTag != null)
             {
                 //fill in model values from the entity
-                if (model == null)
+                model = model ?? new ProductTagModel
                 {
-                    model = productTag.ToModel<ProductTagModel>();
-                }
+                    Id = productTag.Id,
+                    Name = productTag.Name
+                };
 
-                model.ProductCount = _productTagService.GetProductCount(productTag.Id, storeId: 0, showHidden: true);
+                model.ProductCount = _productTagService.GetProductCount(productTag.Id, storeId: storeId);
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -1586,6 +1637,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     locale.Name = _localizationService.GetLocalized(productTag, entity => entity.Name, languageId, false, false);
                 };
             }
+            #endregion
 
             //prepare localized models
             if (!excludeProperties)

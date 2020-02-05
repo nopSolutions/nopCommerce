@@ -135,11 +135,16 @@ namespace Nop.Web.Controllers
                 !_newsService.IsNewsAvailable(newsItem) ||
                 //Store mapping
                 !_storeMappingService.Authorize(newsItem);
+
+            #region Extensions by QuanNH
+            if (notAvailable) return InvokeHttp404();
+            #endregion
+
             //Check whether the current user has a "Manage news" permission (usually a store owner)
             //We should allows him (her) to use "Preview" functionality
             var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageNews);
-            if (notAvailable && !hasAdminAccess)
-                return InvokeHttp404();
+            //if (notAvailable && !hasAdminAccess)
+            //    return InvokeHttp404();
 
             var model = new NewsItemModel();
             model = _newsModelFactory.PrepareNewsItemModel(model, newsItem, true);

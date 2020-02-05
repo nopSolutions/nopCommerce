@@ -54,8 +54,17 @@ namespace Nop.Web.Areas.Admin.Models.Stores
 
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.CompanyVat")]
         public string CompanyVat { get; set; }
-        
+
+        // Added by Porttomis Inc.
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.OrderApprovals")]
+        public bool OrderApprovals { get; set; }
+
+        // Added by Porttomis Inc.
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.ShowPrices")]
+        public bool ShowPrices { get; set; }
+
         public IList<StoreLocalizedModel> Locales { get; set; }
+
 
         #endregion
     }

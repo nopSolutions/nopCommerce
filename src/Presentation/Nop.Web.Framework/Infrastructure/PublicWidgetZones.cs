@@ -72,6 +72,7 @@
         public static string CheckoutShippingAddressTop => "checkout_shipping_address_top";
         public static string CheckoutShippingMethodBottom => "checkout_shipping_method_bottom";
         public static string CheckoutShippingMethodTop => "checkout_shipping_method_top";
+        public static string ChiliTemplateEditor => "chili_template_editor";
         public static string ContactUsBottom => "contactus_bottom";
         public static string ContactUsTop => "contactus_top";
         public static string ContactVendorBottom => "contactvendor_bottom";

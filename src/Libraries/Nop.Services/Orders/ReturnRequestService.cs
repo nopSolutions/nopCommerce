@@ -85,6 +85,16 @@ namespace Nop.Services.Orders
             int orderItemId = 0, string customNumber = "", ReturnRequestStatus? rs = null, DateTime? createdFromUtc = null,
             DateTime? createdToUtc = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                storeId = _storeMappingService.CurrentStore();
+            }
+
+            #endregion
+
             var query = _returnRequestRepository.Table;
             if (storeId > 0)
                 query = query.Where(rr => storeId == rr.StoreId);

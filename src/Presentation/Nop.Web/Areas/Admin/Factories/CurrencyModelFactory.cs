@@ -53,6 +53,33 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Utilities
 
+        #region Extensions by QuanNH
+        protected virtual void PrepareStoresMappingModel(CurrencyModel model, Currency currency, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Core.IWorkContext>();
+            List<int> storeId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores");
+
+            if (!excludeProperties)
+            {
+                if (currency != null)
+                {
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(currency).ToList();
+                }
+                else
+                {
+                    if (storeId.Count > 0) model.SelectedStoreIds = storeId;
+                }
+
+                if (storeId.Count <= 0)
+                    model.LimitedToStores = false;
+                else model.LimitedToStores = true;
+            }
+        }
+        #endregion
         /// <summary>
         /// Prepare exchange rate provider model
         /// </summary>
@@ -139,8 +166,21 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
+            #region Extensions by QuanNH
+
+            int storeId = 0;
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Core.IWorkContext>();
+            int storeIds = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores").FirstOrDefault();
+            if (storeIds != 0)
+            {
+                storeId = storeIds;
+            }
+
             //get currencies
-            var currencies = _currencyService.GetAllCurrencies(showHidden: true, loadCacheableCopy: false).ToPagedList(searchModel);
+            var currencies = _currencyService.GetAllCurrencies(showHidden: true, storeId: storeId, loadCacheableCopy: false).ToPagedList(searchModel);
+
+            #endregion
 
             //prepare list model
             var model = new CurrencyListModel().PrepareToGrid(searchModel, currencies, () =>
@@ -200,7 +240,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available stores
             _storeMappingSupportedModelFactory.PrepareModelStores(model, currency, excludeProperties);
-
+            #region Extensions by QuanNH
+            PrepareStoresMappingModel(model, currency, excludeProperties);
+            #endregion
             return model;
         }
 

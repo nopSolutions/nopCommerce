@@ -29,27 +29,30 @@ namespace Nop.Web.Areas.Admin.Helpers
             if (cacheManager == null)
                 throw new ArgumentNullException(nameof(cacheManager));
 
-            var cacheKey = string.Format(NopModelCacheDefaults.CategoriesListKey, showHidden);
-            var listItems = cacheManager.Get(cacheKey, () =>
+            #region Extensions by QuanNH
+            
+            var storeId = 0;
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Core.IWorkContext>();
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            var currentStoreId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores").FirstOrDefault();
+            if (currentStoreId > 0)
             {
-                var categories = categoryService.GetAllCategories(showHidden: showHidden);
-                return categories.Select(c => new SelectListItem
-                {
-                    Text = categoryService.GetFormattedBreadCrumb(c, categories),
-                    Value = c.Id.ToString()
-                });
-            });
+                storeId = currentStoreId;
+            }
+
+            var categorys = categoryService.GetAllCategories(storeId: storeId, showHidden: true);
 
             var result = new List<SelectListItem>();
-            //clone the list to ensure that "selected" property is not set
-            foreach (var item in listItems)
+            foreach (var item in categorys)
             {
                 result.Add(new SelectListItem
                 {
-                    Text = item.Text,
-                    Value = item.Value
+                    Text = categoryService.GetFormattedBreadCrumb(item, categorys),
+                    Value = item.Id.ToString()
                 });
             }
+
+            #endregion
 
             return result;
         }
@@ -69,27 +72,19 @@ namespace Nop.Web.Areas.Admin.Helpers
             if (cacheManager == null)
                 throw new ArgumentNullException(nameof(cacheManager));
 
-            var cacheKey = string.Format(NopModelCacheDefaults.ManufacturersListKey, showHidden);
-            var listItems = cacheManager.Get(cacheKey, () =>
-            {
-                var manufacturers = manufacturerService.GetAllManufacturers(showHidden: showHidden);
-                return manufacturers.Select(m => new SelectListItem
-                {
-                    Text = m.Name,
-                    Value = m.Id.ToString()
-                });
-            });
-
+            #region Extensions by QuanNH
             var result = new List<SelectListItem>();
-            //clone the list to ensure that "selected" property is not set
-            foreach (var item in listItems)
+            var manufacturers = manufacturerService.GetAllManufacturers(showHidden: showHidden);
+            foreach (var item in manufacturers)
             {
                 result.Add(new SelectListItem
                 {
-                    Text = item.Text,
-                    Value = item.Value
+                    Text = item.Name,
+                    Value = item.Id.ToString()
                 });
             }
+
+            #endregion
 
             return result;
         }

@@ -65,6 +65,13 @@ namespace Nop.Web.Areas.Admin.Models.Directory
         [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.RoundingType")]
         public int RoundingTypeId { get; set; }
 
+        #region Extensions by QuanNH
+
+        //Store mapping
+        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.LimitedToStores")]
+        public bool LimitedToStores { get; set; }
+
+        #endregion
         #endregion
     }
 

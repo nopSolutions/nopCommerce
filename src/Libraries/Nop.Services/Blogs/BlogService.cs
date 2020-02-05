@@ -303,6 +303,16 @@ namespace Nop.Services.Blogs
         public virtual IList<BlogComment> GetAllComments(int customerId = 0, int storeId = 0, int? blogPostId = null,
             bool? approved = null, DateTime? fromUtc = null, DateTime? toUtc = null, string commentText = null)
         {
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                storeId = _storeMappingService.CurrentStore();
+            }
+
+            #endregion
+
             var query = _blogCommentRepository.Table;
 
             if (approved.HasValue)
@@ -379,6 +389,16 @@ namespace Nop.Services.Blogs
         /// <returns>Number of blog comments</returns>
         public virtual int GetBlogCommentsCount(BlogPost blogPost, int storeId = 0, bool? isApproved = null)
         {
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                storeId = _storeMappingService.CurrentStore();
+            }
+
+            #endregion
+
             var query = _blogCommentRepository.Table.Where(comment => comment.BlogPostId == blogPost.Id);
 
             if (storeId > 0)

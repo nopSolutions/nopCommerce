@@ -62,5 +62,10 @@ namespace Nop.Services.Stores
         /// <param name="storeIdsNames">The names and/or IDs of the store to check</param>
         /// <returns>List of names and/or IDs not existing stores</returns>
         string[] GetNotExistingStores(string[] storeIdsNames);
+
+        #region Extensions by QuanNH
+        IList<Store> GetStoreNameById(int[] storeId);
+        IList<Store> GetAllStoresByEntityName(int entityId, string entityName);
+        #endregion
     }
 }

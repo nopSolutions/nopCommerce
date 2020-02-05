@@ -53,9 +53,36 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         #endregion
-        
+
         #region Methods
 
+        #region Extensions by QuanNH
+        protected virtual void PrepareStoresMappingModel(MessageTemplateModel model, MessageTemplate messageTemplate, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Core.IWorkContext>();
+            System.Collections.Generic.List<int> storeId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores");
+
+            if (!excludeProperties)
+            {
+                if (messageTemplate != null)
+                {
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(messageTemplate).ToList();
+                }
+                else
+                {
+                    if (storeId.Count > 0) model.SelectedStoreIds = storeId;
+                }
+
+                if (storeId.Count <= 0)
+                    model.LimitedToStores = false;
+                else model.LimitedToStores = true;
+            }
+        }
+        #endregion
         /// <summary>
         /// Prepare message template search model
         /// </summary>
@@ -91,8 +118,22 @@ namespace Nop.Web.Areas.Admin.Factories
             var messageTemplates = _messageTemplateService
                 .GetAllMessageTemplates(storeId: searchModel.SearchStoreId).ToPagedList(searchModel);
 
+
+            #region Extensions by QuanNH
+
+            //stores
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWorkContext>();
+            var allStores = _storeService.GetAllStoresByEntityName(_workContext.CurrentCustomer.Id, "Stores");
+            if (allStores.Count <= 0)
+            {
+                allStores = _storeService.GetAllStores();
+            }
+
             //prepare store names (to avoid loading for each message template)
-            var stores = _storeService.GetAllStores().Select(store => new { store.Id, store.Name }).ToList();
+            var stores = allStores.Select(store => new { store.Id, store.Name }).ToList();
+
+            #endregion
+
 
             //prepare list model
             var model = new MessageTemplateListModel().PrepareToGrid(searchModel, messageTemplates, () =>
@@ -167,7 +208,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available stores
             _storeMappingSupportedModelFactory.PrepareModelStores(model, messageTemplate, excludeProperties);
-
+            #region Extensions by QuanNH
+            PrepareStoresMappingModel(model, messageTemplate, excludeProperties);
+            #endregion
             return model;
         }
 

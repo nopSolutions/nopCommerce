@@ -194,6 +194,16 @@ namespace Nop.Services.News
         public virtual IList<NewsComment> GetAllComments(int customerId = 0, int storeId = 0, int? newsItemId = null,
             bool? approved = null, DateTime? fromUtc = null, DateTime? toUtc = null, string commentText = null)
         {
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                storeId = _storeMappingService.CurrentStore();
+            }
+
+            #endregion
+
             var query = _newsCommentRepository.Table;
 
             if (approved.HasValue)
@@ -270,6 +280,16 @@ namespace Nop.Services.News
         /// <returns>Number of news comments</returns>
         public virtual int GetNewsCommentsCount(NewsItem newsItem, int storeId = 0, bool? isApproved = null)
         {
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                storeId = _storeMappingService.CurrentStore();
+            }
+
+            #endregion
+
             var query = _newsCommentRepository.Table.Where(comment => comment.NewsItemId == newsItem.Id);
 
             if (storeId > 0)

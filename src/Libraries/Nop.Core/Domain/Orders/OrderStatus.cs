@@ -8,6 +8,11 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Pending
         /// </summary>
+        Needs_Approval = 0,
+
+        /// <summary>
+        /// Pending
+        /// </summary>
         Pending = 10,
 
         /// <summary>

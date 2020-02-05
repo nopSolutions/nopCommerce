@@ -30,7 +30,20 @@ namespace Nop.Web.Areas.Admin.Components
             if (!enabled)
             {
                 //overridden settings
-                var stores = _storeService.GetAllStores();
+                //var stores = _storeService.GetAllStores();
+
+                #region Extensions by QuanNH
+
+                //stores
+                var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWorkContext>();
+                var stores = _storeService.GetAllStoresByEntityName(_workContext.CurrentCustomer.Id, "Stores");
+                if (stores.Count <= 0)
+                {
+                    stores = _storeService.GetAllStores();
+                }
+
+                #endregion
+
                 foreach (var store in stores)
                 {
                     var catalogSettings = _settingService.LoadSetting<CatalogSettings>(store.Id);

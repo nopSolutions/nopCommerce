@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
@@ -61,9 +62,36 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         #endregion
-        
+
         #region Methods
 
+        #region Extensions by QuanNH
+        protected virtual void PrepareStoresMappingModel(NewsItemModel model, NewsItem newsItem, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Core.IWorkContext>();
+            List<int> storeId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores");
+
+            if (!excludeProperties)
+            {
+                if (newsItem != null)
+                {
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(newsItem).ToList();
+                }
+                else
+                {
+                    if (storeId.Count > 0) model.SelectedStoreIds = storeId;
+                }
+
+                if (storeId.Count <= 0)
+                    model.LimitedToStores = false;
+                else model.LimitedToStores = true;
+            }
+        }
+        #endregion
         /// <summary>
         /// Prepare news content model
         /// </summary>
@@ -184,7 +212,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available stores
             _storeMappingSupportedModelFactory.PrepareModelStores(model, newsItem, excludeProperties);
-
+            #region Extensions by QuanNH
+            PrepareStoresMappingModel(model, newsItem, excludeProperties);
+            #endregion
             return model;
         }
 
@@ -249,8 +279,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 toUtc: createdOnToValue,
                 commentText: searchModel.SearchText).ToPagedList(searchModel);
 
+            #region Extensions by QuanNH
+
+            //stores
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWorkContext>();
+            var allStores = _storeService.GetAllStoresByEntityName(_workContext.CurrentCustomer.Id, "Stores");
+            if (allStores.Count <= 0)
+            {
+                allStores = _storeService.GetAllStores();
+            }
+
             //prepare store names (to avoid loading for each comment)
             var storeNames = _storeService.GetAllStores().ToDictionary(store => store.Id, store => store.Name);
+
+            #endregion
 
             //prepare list model
             var model = new NewsCommentListModel().PrepareToGrid(searchModel, comments, () =>

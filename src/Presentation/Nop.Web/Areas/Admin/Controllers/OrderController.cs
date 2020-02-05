@@ -799,6 +799,79 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("Edit")]
+        [FormValueRequired("markorderasisapproved")]
+        public virtual IActionResult MarkOrderAsIsApproved(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            //try to get an order with the specified id
+            var order = _orderService.GetOrderById(id);
+            if (order == null)
+                return RedirectToAction("List");
+
+            //a vendor does not have access to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id });
+
+            try
+            {
+                _orderProcessingService.MarkOrderAsIsApproved(order);
+                LogEditOrder(order.Id);
+
+                //prepare model
+                var model = _orderModelFactory.PrepareOrderModel(null, order);
+
+                return View(model);
+            }
+            catch (Exception exc)
+            {
+                //prepare model
+                var model = _orderModelFactory.PrepareOrderModel(null, order);
+
+                _notificationService.ErrorNotification(exc);
+                return View(model);
+            }
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("markorderasisdenied")]
+        public virtual IActionResult MarkOrderAsIsDenied(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            //try to get an order with the specified id
+            var order = _orderService.GetOrderById(id);
+            if (order == null)
+                return RedirectToAction("List");
+
+            //a vendor does not have access to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id });
+
+            try
+            {
+                _orderProcessingService.MarkOrderAsIsDenied(order);
+                LogEditOrder(order.Id);
+
+                //prepare model
+                var model = _orderModelFactory.PrepareOrderModel(null, order);
+
+                return View(model);
+            }
+            catch (Exception exc)
+            {
+                //prepare model
+                var model = _orderModelFactory.PrepareOrderModel(null, order);
+
+                _notificationService.ErrorNotification(exc);
+                return View(model);
+            }
+        }
+
+
+        [HttpPost, ActionName("Edit")]
         [FormValueRequired("refundorder")]
         public virtual IActionResult RefundOrder(int id)
         {
@@ -1090,6 +1163,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             var order = _orderService.GetOrderById(id);
             if (order == null || order.Deleted)
                 return RedirectToAction("List");
+
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+
+            if (!_storeMappingService.TableEdit(order.StoreId))
+                return AccessDeniedView();
+
+            #endregion
 
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))

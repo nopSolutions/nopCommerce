@@ -465,6 +465,14 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         public ProductAttributeCombinationSearchModel ProductAttributeCombinationSearchModel { get; set; }
 
+        #region Extensions by QuanNH
+
+        //Store mapping
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.LimitedToStores")]
+        public bool LimitedToStores { get; set; }
+
+        #endregion
+
         #endregion
     }
 

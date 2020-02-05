@@ -124,7 +124,8 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<WebWorkContext>().As<IWorkContext>().InstancePerLifetimeScope();
 
             //store context
-            builder.RegisterType<WebStoreContext>().As<IStoreContext>().InstancePerLifetimeScope();
+            builder.RegisterType<WebStoreContext>().As<IStoreContext>().SingleInstance();
+            //builder.RegisterType<WebStoreContext>().As<IStoreContext>().InstancePerLifetimeScope();
 
             //services
             builder.RegisterType<BackInStockSubscriptionService>().As<IBackInStockSubscriptionService>().InstancePerLifetimeScope();

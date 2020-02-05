@@ -27,6 +27,8 @@ namespace Nop.Data.Mapping.Stores
             builder.Property(store => store.CompanyAddress).HasMaxLength(1000);
             builder.Property(store => store.CompanyPhoneNumber).HasMaxLength(1000);
             builder.Property(store => store.CompanyVat).HasMaxLength(1000);
+            builder.Property(store => store.OrderApprovals).IsRequired();
+            builder.Property(store => store.Showprices).IsRequired();
 
             base.Configure(builder);
         }

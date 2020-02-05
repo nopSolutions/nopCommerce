@@ -75,6 +75,13 @@ namespace Nop.Web.Areas.Admin.Models.Messages
 
         public IList<MessageTemplateLocalizedModel> Locales { get; set; }
 
+        #region Extensions by QuanNH
+
+        //Store mapping
+        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores")]
+        public bool LimitedToStores { get; set; }
+
+        #endregion
         #endregion
     }
 

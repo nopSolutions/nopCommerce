@@ -1,0 +1,46 @@
+﻿@model StoreMappingModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="EntityId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="EntityId" asp-items="Model.AvailableCustomers" />
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="EntityName" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EntityName" />
+                                <span asp-validation-for="EntityName"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="StoreId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_store_details_bottom", additionalData = Model.Id })
+        </div>
+    </div>
+</div>

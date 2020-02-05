@@ -406,6 +406,34 @@ namespace Nop.Web.Controllers
                                 ? _customerService.GetCustomerByUsername(model.Username)
                                 : _customerService.GetCustomerByEmail(model.Email);
 
+                            #region Extensions by QuanNH
+                            //var StoreIP = _webHelper.GetCurrentIpAddress();
+                            //var StoreURL = _webHelper.GetStoreHost(false);
+                            
+                            //_logger.InsertLog(Nop.Core.Domain.Logging.LogLevel.Debug, "Store Details", " Stores IP:" + StoreIP.ToString() + ", StoreHost: " + StoreURL.ToString(), null);
+                            //////var jstoreid = _storeContext.CurrentStore.Id;
+
+                            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+                            var storesId = _storeMappingService.GetStoreIdByEntityId(customer.Id, "Stores").LastOrDefault();
+                            
+                            if (storesId > 0)
+                            {
+                                _storeContext.CurrentStore.Id = storesId;
+                            }
+
+                            _logger.InsertLog(Nop.Core.Domain.Logging.LogLevel.Debug, "Store Details", " StoresID:" + storesId.ToString() + ", CurrentStoreID: " + _storeContext.CurrentStore.Id.ToString(), null);
+
+
+                            if (storesId > 0 && storesId != _storeContext.CurrentStore.Id)
+                            {
+
+                                ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.NotRegistered"));
+                                break;
+
+                            }
+
+                            #endregion
+
                             //migrate shopping cart
                             _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
 
@@ -951,6 +979,24 @@ namespace Nop.Web.Controllers
         public virtual IActionResult RegisterResult(int resultId)
         {
             var model = _customerModelFactory.PrepareRegisterResultModel(resultId);
+
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            string emailCustomer = _workContext.CurrentCustomer.Email;
+            var getCustomer = _customerService.GetCustomerByEmail(emailCustomer);
+
+            if (getCustomer != null)
+            {
+                var currentStoreId = _storeMappingService.GetStoreIdByEntityId(getCustomer.Id, "Stores").FirstOrDefault();
+                var currentAdminId = _storeMappingService.GetStoreIdByEntityId(getCustomer.Id, "Admin").FirstOrDefault();
+
+                if (currentStoreId <= 0 && currentAdminId <= 0)
+                {
+                    _storeMappingService.InsertStoreMappingByEntity(getCustomer.Id, "Stores", _storeContext.CurrentStore.Id);
+                }
+            }
+
+            #endregion
             return View(model);
         }
 

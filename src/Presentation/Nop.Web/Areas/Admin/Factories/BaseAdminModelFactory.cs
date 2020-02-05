@@ -319,15 +319,22 @@ namespace Nop.Web.Areas.Admin.Factories
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
-            //prepare available stores
-            var availableStores = _storeService.GetAllStores();
+            #region Extensions by QuanNH
+
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWorkContext>();
+            var availableStores = _storeService.GetAllStoresByEntityName(_workContext.CurrentCustomer.Id, "Stores");
+            if (availableStores.Count <= 0)
+            {
+                availableStores = _storeService.GetAllStores();
+                PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            }
+
             foreach (var store in availableStores)
             {
                 items.Add(new SelectListItem { Value = store.Id.ToString(), Text = store.Name });
             }
 
-            //insert special item for the default value
-            PrepareDefaultItem(items, withSpecialDefaultItem, defaultItemText);
+            #endregion
         }
 
         /// <summary>

@@ -87,6 +87,9 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateLocalizationMaps();
             CreateLoggingMaps();
             CreateMediaMaps();
+            #region Extensions by QuanNH
+            CreateStoreMappingMaps();
+            #endregion
             CreateMessagesMaps();
             CreateNewsMaps();
             CreateOrdersMaps();
@@ -1644,6 +1647,15 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateMap<WarehouseModel, Warehouse>()
                 .ForMember(entity => entity.AddressId, options => options.Ignore());
         }
+
+        #region Extensions by QuanNH
+        protected virtual void CreateStoreMappingMaps()
+        {
+            CreateMap<StoreMapping, StoreMappingModel>();
+            CreateMap<StoreMappingModel, StoreMapping>();
+
+        }
+        #endregion
 
         #endregion
 

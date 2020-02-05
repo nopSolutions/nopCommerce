@@ -167,7 +167,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             category.LimitedToStores = model.SelectedStoreIds.Any();
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(category);
-            var allStores = _storeService.GetAllStores();
+            #region Extensions by QuanNH
+
+            //stores
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWorkContext>();
+            var allStores = _storeService.GetAllStoresByEntityName(_workContext.CurrentCustomer.Id, "Stores");
+            if (allStores.Count <= 0)
+            {
+                allStores = _storeService.GetAllStores();
+            }
+
+            #endregion
             foreach (var store in allStores)
             {
                 if (model.SelectedStoreIds.Contains(store.Id))
@@ -301,6 +311,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var category = _categoryService.GetCategoryById(id);
             if (category == null || category.Deleted)
                 return RedirectToAction("List");
+
+            #region Extensions by QuanNH
+
+            if (!_storeMappingService.Authorize(category) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
 
             //prepare model
             var model = _categoryModelFactory.PrepareCategoryModel(null, category);
@@ -442,8 +459,20 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
+                // var bytes = _exportManager.ExportCategoriesToXlsx(_categoryService.GetAllCategories(showHidden: true, loadCacheableCopy: false).ToList());
+
+                #region Extensions by QuanNH
+                var storeId = 0;
+                var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Core.IWorkContext>();
+                var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+                var currentStoreId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores").FirstOrDefault();
+                if (currentStoreId > 0)
+                {
+                    storeId = currentStoreId;
+                }
                 var bytes = _exportManager
-                    .ExportCategoriesToXlsx(_categoryService.GetAllCategories(showHidden: true, loadCacheableCopy: false).ToList());
+                    .ExportCategoriesToXlsx(_categoryService.GetAllCategories(storeId: storeId, showHidden: true, loadCacheableCopy: false).ToList());
+                #endregion
 
                 return File(bytes, MimeTypes.TextXlsx, "categories.xlsx");
             }

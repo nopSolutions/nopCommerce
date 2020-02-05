@@ -17,6 +17,13 @@ namespace Nop.Services.Directory
     /// </summary>
     public partial class CountryService : ICountryService
     {
+        #region Extensions by QuanNH
+        #region Constants
+        public static string CountriesAllCacheKeyByStoreId => "Nop.country.bystoreid-{0}-{1}-{2}";
+
+        #endregion
+        #endregion
+
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
@@ -77,7 +84,11 @@ namespace Nop.Services.Directory
         /// <returns>Countries</returns>
         public virtual IList<Country> GetAllCountries(int languageId = 0, bool showHidden = false)
         {
-            var key = string.Format(NopDirectoryDefaults.CountriesAllCacheKey, languageId, showHidden);
+            #region Extensions by QuanNH
+            //var key = string.Format(NopDirectoryDefaults.CountriesAllCacheKey, languageId, showHidden);
+            var key = string.Format(CountriesAllCacheKeyByStoreId, languageId, showHidden, _storeContext.CurrentStore.Id);
+            #endregion
+
             return _cacheManager.Get(key, () =>
             {
                 var query = _countryRepository.Table;

@@ -67,6 +67,16 @@ namespace Nop.Services.Catalog
         public virtual IPagedList<BackInStockSubscription> GetAllSubscriptionsByCustomerId(int customerId,
             int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                storeId = _storeMappingService.CurrentStore();
+            }
+
+            #endregion
+
             var query = _backInStockSubscriptionRepository.Table;
             //customer
             query = query.Where(biss => biss.CustomerId == customerId);
@@ -91,6 +101,16 @@ namespace Nop.Services.Catalog
         public virtual IPagedList<BackInStockSubscription> GetAllSubscriptionsByProductId(int productId,
             int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                storeId = _storeMappingService.CurrentStore();
+            }
+
+            #endregion
+
             var query = _backInStockSubscriptionRepository.Table;
             //product
             query = query.Where(biss => biss.ProductId == productId);

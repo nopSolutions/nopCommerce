@@ -130,7 +130,7 @@
             <span asp-validation-for="EndDateUtc"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div @(Model.LimitedToStores == true ? "style=display:none;" : "") class="form-group">
         <div class="col-md-3">
             <nop-label asp-for="SelectedStoreIds" />
         </div>

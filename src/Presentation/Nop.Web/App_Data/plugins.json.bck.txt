@@ -1,0 +1,37 @@
+﻿{
+  "InstalledPluginNames": [
+    "Widgets.jCarouselHomePageBlogs",
+    "DiscountRequirement.MustBeAssignedToCustomerRole",
+    "Widgets.DynamicForm",
+    "Payments.Manual",
+    "Components.jCarouselHomepageProducts",
+    "Payments.PayPalStandard",
+    "Components.jCarouselHomepageBestSellers",
+    "Components.HomepageCategories",
+    "Components.jCarouselHomepageNews",
+    "Widgets.NivoSlider",
+    "Payments.CheckMoneyOrder",
+    "Widgets.GoogleAnalytics",
+    "Payments.Square",
+    "Widgets.GoogleAcceleratedMobile",
+    "CurrencyExchange.ECB",
+    "Payments.Qualpay",
+    "Pickup.PickupInStore",
+    "Misc.SendinBlue",
+    "ExternalAuth.Facebook",
+    "Tax.FixedOrByCountryStateZip",
+    "Tax.Avalara",
+    "Shipping.FixedByWeightByTotal"
+
+  ],
+  "PluginNamesToUninstall": [],
+  "PluginNamesToDelete": [
+    "Shipping.FixedByWeightByTotal"
+  ],
+  "PluginNamesToInstall": [
+    {
+      "Item1": "Shipping.FixedByWeightByTotal",
+      "Item2": null
+    }
+  ]
+}

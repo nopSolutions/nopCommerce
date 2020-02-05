@@ -100,31 +100,52 @@ namespace Nop.Services.Catalog
             query = query.Where(m => !m.Deleted);
             query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
 
-            if ((storeId <= 0 || _catalogSettings.IgnoreStoreLimitations) && (showHidden || _catalogSettings.IgnoreAcl))
-                return new PagedList<Manufacturer>(query, pageIndex, pageSize);
-            
-            if (!showHidden && !_catalogSettings.IgnoreAcl)
-            {
-                //ACL (access control list)
-                var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
-                query = from m in query
-                    join acl in _aclRepository.Table
-                        on new { c1 = m.Id, c2 = nameof(Manufacturer) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into m_acl
-                    from acl in m_acl.DefaultIfEmpty()
-                    where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
-                    select m;
-            }
+            #region Extensions by QuanNH
+            //if ((storeId <= 0 || _catalogSettings.IgnoreStoreLimitations) && (showHidden || _catalogSettings.IgnoreAcl))
+            //    return new PagedList<Manufacturer>(query, pageIndex, pageSize);
 
-            if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+            if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) || (!showHidden && !_catalogSettings.IgnoreAcl))
+            {
+                if (!showHidden && !_catalogSettings.IgnoreAcl)
+                {
+                    //ACL (access control list)
+                    var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                    query = from m in query
+                            join acl in _aclRepository.Table
+                                on new { c1 = m.Id, c2 = nameof(Manufacturer) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into m_acl
+                            from acl in m_acl.DefaultIfEmpty()
+                            where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
+                            select m;
+                }
+
+                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+                {
+                    //Store mapping
+                    query = from m in query
+                            join sm in _storeMappingRepository.Table
+                                on new { c1 = m.Id, c2 = nameof(Manufacturer) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into m_sm
+                            from sm in m_sm.DefaultIfEmpty()
+                            where !m.LimitedToStores || storeId == sm.StoreId
+                            select m;
+                }
+            }
+            else
             {
                 //Store mapping
-                query = from m in query
-                    join sm in _storeMappingRepository.Table
-                        on new { c1 = m.Id, c2 = nameof(Manufacturer) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into m_sm
-                    from sm in m_sm.DefaultIfEmpty()
-                    where !m.LimitedToStores || storeId == sm.StoreId
-                    select m;
+                var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+                var currentStoreId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores").FirstOrDefault();
+                int adminId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Admin").FirstOrDefault();
+                if (adminId <= 0 && currentStoreId > 0)
+                    query = from m in query
+                            join sm in _storeMappingRepository.Table
+                            on new { c1 = m.Id, c2 = "Manufacturer" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into m_sm
+                            from sm in m_sm.DefaultIfEmpty()
+                            where !m.LimitedToStores || currentStoreId == sm.StoreId
+                            select m;
+
+                query = query.Distinct().OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
             }
+            #endregion
 
             query = query.Distinct().OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
             
@@ -257,7 +278,25 @@ namespace Nop.Services.Catalog
 
                     query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
                 }
+                #region Extensions by QuanNH
+                else
+                {
+                    var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+                    //Store mapping
+                    var currentStoreId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores").FirstOrDefault();
+                    int adminId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Admin").FirstOrDefault();
+                    if (adminId <= 0 && currentStoreId > 0)
+                        query = from pm in query
+                                join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
+                                join sm in _storeMappingRepository.Table
+                                on new { c1 = m.Id, c2 = "Manufacturer" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into m_sm
+                                from sm in m_sm.DefaultIfEmpty()
+                                where !m.LimitedToStores || currentStoreId == sm.StoreId
+                                select pm;
 
+                    query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
+                }
+                #endregion
                 var productManufacturers = new PagedList<ProductManufacturer>(query, pageIndex, pageSize);
                 return productManufacturers;
             });
@@ -315,6 +354,25 @@ namespace Nop.Services.Catalog
 
                     query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
                 }
+                #region Extensions by QuanNH
+                else
+                {
+                    var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+                    //Store mapping
+                    var currentStoreId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores").FirstOrDefault();
+                    int adminId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Admin").FirstOrDefault();
+                    if (adminId <= 0 && currentStoreId > 0)
+                        query = from pm in query
+                                join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
+                                join sm in _storeMappingRepository.Table
+                                on new { c1 = m.Id, c2 = "Manufacturer" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into m_sm
+                                from sm in m_sm.DefaultIfEmpty()
+                                where !m.LimitedToStores || currentStoreId == sm.StoreId
+                                select pm;
+
+                    query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
+                }
+                #endregion
 
                 var productManufacturers = query.ToList();
                 return productManufacturers;

@@ -71,7 +71,8 @@ namespace Nop.Services.Affiliates
                 return null;
 
             var query = from a in _affiliateRepository.Table
-                        orderby a.Id
+                        // orderby a.id // Porttomis Inc.
+                        orderby a.FriendlyUrlName
                         where a.FriendlyUrlName == friendlyUrlName
                         select a;
             var affiliate = query.FirstOrDefault();

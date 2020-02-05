@@ -555,10 +555,27 @@ namespace Nop.Services.ExportImport
 
         protected virtual void SaveCategory(bool isNew, Category category, Dictionary<string, Category> allCategories, string curentCategoryBreadCrumb, bool setSeName, string seName)
         {
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            #endregion
             if (isNew)
+            {
+                #region Extensions by QuanNH
+                category.LimitedToStores = true;
+                #endregion
                 _categoryService.InsertCategory(category);
+
+                #region Extensions by QuanNH
+                if (_storeMappingService.CurrentStore() > 0)
+                {
+                    _storeMappingService.InsertStoreMapping(category, _storeMappingService.CurrentStore());
+                }
+                #endregion
+            }
             else
+            {
                 _categoryService.UpdateCategory(category);
+            }
 
             var categoryBreadCrumb = _categoryService.GetFormattedBreadCrumb(category);
             if (!allCategories.ContainsKey(categoryBreadCrumb))
@@ -1226,7 +1243,18 @@ namespace Nop.Services.ExportImport
                 var allManufacturers = _manufacturerService.GetAllManufacturers(showHidden: true);
 
                 //performance optimization, load all stores in one SQL request
-                var allStores = _storeService.GetAllStores();
+                //var allStores = _storeService.GetAllStores();
+
+                #region Extensions by QuanNH
+
+                //stores
+                var allStores = _storeService.GetAllStoresByEntityName(_workContext.CurrentCustomer.Id, "Stores");
+                if (allStores.Count <= 0)
+                {
+                    allStores = _storeService.GetAllStores();
+                }
+
+                #endregion
 
                 //product to import images
                 var productPictureMetadata = new List<ProductPictureMetadata>();
@@ -1271,10 +1299,17 @@ namespace Nop.Services.ExportImport
                     metadata.Manager.ReadFromXlsx(worksheet, iRow);
 
                     var product = metadata.SkuCellNum > 0 ? allProductsBySku.FirstOrDefault(p => p.Sku == metadata.Manager.GetProperty("SKU").StringValue) : null;
-
                     var isNew = product == null;
 
                     product = product ?? new Product();
+
+                    #region Extensions by QuanNH
+                    var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+                    if (product != null && !_storeMappingService.Authorize(product) && !_storeMappingService.IsAdminStore())
+                    {
+                        return;
+                    }
+                    #endregion
 
                     //some of previous values
                     var previousStockQuantity = product.StockQuantity;
@@ -1574,7 +1609,18 @@ namespace Nop.Services.ExportImport
 
                     if (isNew)
                     {
+                        #region Extensions by QuanNH
+                         product.LimitedToStores = true;
+                        #endregion
+
                         _productService.InsertProduct(product);
+                        
+                        #region Extensions by QuanNH
+                        if (_storeMappingService.CurrentStore() > 0)
+                        {
+                            _storeMappingService.InsertStoreMapping(product, _storeMappingService.CurrentStore());
+                        }
+                        #endregion
                     }
                     else
                     {
@@ -1615,11 +1661,13 @@ namespace Nop.Services.ExportImport
                     }
 
                     var tempProperty = metadata.Manager.GetProperty("SeName");
+                    if (tempProperty != null)
+                    {
+                        var seName = tempProperty.StringValue;
+                        //search engine name
+                        _urlRecordService.SaveSlug(product, _urlRecordService.ValidateSeName(product, seName, product.Name, true), 0);
+                    }
 
-                    //search engine name
-                    var seName = tempProperty?.StringValue ?? (isNew ? string.Empty : _urlRecordService.GetSeName(product, 0));
-                    _urlRecordService.SaveSlug(product, _urlRecordService.ValidateSeName(product, seName, product.Name, true), 0);
-                    
                     tempProperty = metadata.Manager.GetProperty("Categories");
 
                     if (tempProperty != null)
@@ -1955,6 +2003,15 @@ namespace Nop.Services.ExportImport
 
                     manufacturer = manufacturer ?? new Manufacturer();
 
+                    #region Extensions by QuanNH
+
+                    var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+                    if (manufacturer != null && !_storeMappingService.Authorize(manufacturer) && !_storeMappingService.IsAdminStore())
+                    {
+                        return;
+                    }
+                    #endregion
+
                     if (isNew)
                     {
                         manufacturer.CreatedOnUtc = DateTime.UtcNow;
@@ -2024,9 +2081,24 @@ namespace Nop.Services.ExportImport
                     manufacturer.UpdatedOnUtc = DateTime.UtcNow;
 
                     if (isNew)
+                    {
+                        #region Extensions by QuanNH
+                        manufacturer.LimitedToStores = true;
+                        #endregion
                         _manufacturerService.InsertManufacturer(manufacturer);
+
+                        #region Extensions by QuanNH
+                        if (_storeMappingService.CurrentStore() > 0)
+                        {
+                            _storeMappingService.InsertStoreMapping(manufacturer, _storeMappingService.CurrentStore());
+                        }
+                        #endregion
+
+                    }
                     else
+                    {
                         _manufacturerService.UpdateManufacturer(manufacturer);
+                    }
 
                     //search engine name
                     if (setSeName)
@@ -2084,6 +2156,14 @@ namespace Nop.Services.ExportImport
 
                     //update category by data in xlsx file
                     var seName = UpdateCategoryByXlsx(category, manager, allCategories, isNew, out var isParentCategoryExists);
+
+                    #region Extensions by QuanNH
+                    var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+                    if (category != null && !_storeMappingService.Authorize(category) && !_storeMappingService.IsAdminStore())
+                    {
+                        return;
+                    }
+                    #endregion
 
                     if (isParentCategoryExists)
                     {

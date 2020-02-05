@@ -69,7 +69,8 @@ namespace Nop.Services.Stores
         {
             IList<Store> LoadStoresFunc()
             {
-                var query = from s in _storeRepository.Table orderby s.DisplayOrder, s.Id select s;
+                // var query = from s in _storeRepository.Table orderby s.DisplayOrder, s.Id select s; // Porttomis Inc.
+                var query = from s in _storeRepository.Table orderby s.Name, s.Id select s;
                 return query.ToList();
             }
 
@@ -228,6 +229,37 @@ namespace Nop.Services.Stores
 
             return queryFilter.ToArray();
         }
+
+        #endregion
+
+        #region Extensions by QuanNH
+
+        public virtual IList<Store> GetStoreNameById(int[] storeId)
+        {
+            var query = from s in _storeRepository.Table
+                        where storeId.Contains(s.Id)
+                        //orderby s.DisplayOrder, s.Name // Porttomis Inc.
+                        orderby s.Name, s.DisplayOrder
+                        select s;
+           
+            var stores = query.Distinct().ToList();
+            return stores;
+        }
+        public IList<Store> GetAllStoresByEntityName(int entityId, string entityName)
+        {
+            var _storeMappingRepository = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IRepository<StoreMapping>>();
+
+            var query = from sm in _storeMappingRepository.Table
+                        join s in _storeRepository.Table on sm.StoreId equals s.Id
+                        where sm.EntityId == entityId &&
+                        sm.EntityName == entityName
+                        orderby s.Name, s.DisplayOrder
+                        //orderby s.DisplayOrder // Porttomis Inc.
+                        select s;
+            var stores = query.Distinct().ToList();
+            return stores;
+        }
+
 
         #endregion
     }

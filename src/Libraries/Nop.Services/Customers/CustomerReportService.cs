@@ -79,6 +79,22 @@ namespace Nop.Services.Customers
                          !c.Deleted
                          select new { c, o };
 
+            #region Extensions by QuanNH
+
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            var storeMappingRepository = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IRepository<Nop.Core.Domain.Stores.StoreMapping>>();
+            int storeId = _storeMappingService.CurrentStore();
+
+            if (storeId > 0)
+                query1 = from c in query1
+                         join sm in storeMappingRepository.Table
+                         on new { c1 = c.c.Id, c2 = "Stores" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
+                         from sm in c_sm.DefaultIfEmpty()
+                         where storeId == sm.StoreId
+                         select c;
+
+            #endregion
+
             var query2 = from co in query1
                          group co by co.c.Id into g
                          select new
@@ -130,6 +146,21 @@ namespace Nop.Services.Customers
                         //&& c.CreatedOnUtc <= DateTime.UtcNow
                         select c;
 
+            #region Extensions by QuanNH
+
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            var storeMappingRepository = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IRepository<Nop.Core.Domain.Stores.StoreMapping>>();
+            int storeId = _storeMappingService.CurrentStore();
+
+            if (storeId > 0)
+                query = from c in query
+                        join sm in storeMappingRepository.Table
+                        on new { c1 = c.Id, c2 = "Stores" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
+                        from sm in c_sm.DefaultIfEmpty()
+                        where storeId == sm.StoreId
+                        select c;
+
+            #endregion
             var count = query.Count();
             return count;
         }

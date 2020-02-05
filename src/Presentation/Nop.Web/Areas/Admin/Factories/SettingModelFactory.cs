@@ -1569,13 +1569,23 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Store scope configuration model</returns>
         public virtual StoreScopeConfigurationModel PrepareStoreScopeConfigurationModel()
         {
+            #region Extensions by QuanNH
+            //stores
+            var allStores = _storeService.GetAllStoresByEntityName(_workContext.CurrentCustomer.Id, "Stores");
+            if (allStores.Count <= 0)
+            {
+                allStores = _storeService.GetAllStores();
+            }
+
             var model = new StoreScopeConfigurationModel
             {
-                Stores = _storeService.GetAllStores().Select(store => store.ToModel<StoreModel>()).ToList(),
+                Stores = allStores.Select(store => store.ToModel<StoreModel>()).ToList(),
                 StoreId = _storeContext.ActiveStoreScopeConfiguration
             };
 
             return model;
+
+            #endregion
         }
 
         #endregion

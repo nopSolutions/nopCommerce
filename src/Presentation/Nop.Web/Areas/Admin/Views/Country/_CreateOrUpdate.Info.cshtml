@@ -83,14 +83,14 @@
             <span asp-validation-for="SubjectToVat"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div @(Model.LimitedToStores == true ? "style=display:none;" : "") class="form-group">
         <div class="col-md-3">
-            <nop-label asp-for="SelectedStoreIds"/>
+            <nop-label asp-for="SelectedStoreIds" />
         </div>
         <div class="col-md-9">
             <div class="row">
                 <div class="col-md-4">
-                    <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true"/>
+                    <nop-select asp-for="SelectedStoreIds" asp-items="Model.AvailableStores" asp-multiple="true" />
                     <script>
                         $(document).ready(function() {
                             var storesIdsInput = $('#@Html.IdFor(model => model.SelectedStoreIds)')

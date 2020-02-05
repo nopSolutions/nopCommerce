@@ -76,7 +76,17 @@ namespace Nop.Web.Areas.Admin.Controllers
             language.LimitedToStores = model.SelectedStoreIds.Any();
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(language);
-            var allStores = _storeService.GetAllStores();
+            #region Extensions by QuanNH
+
+            //stores
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWorkContext>();
+            var allStores = _storeService.GetAllStoresByEntityName(_workContext.CurrentCustomer.Id, "Stores");
+            if (allStores.Count <= 0)
+            {
+                allStores = _storeService.GetAllStores();
+            }
+
+            #endregion
             foreach (var store in allStores)
             {
                 if (model.SelectedStoreIds.Contains(store.Id))
@@ -181,6 +191,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (language == null)
                 return RedirectToAction("List");
 
+            #region Extensions by QuanNH
+
+            if (!_storeMappingService.Authorize(language) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
             //prepare model
             var model = _languageModelFactory.PrepareLanguageModel(null, language);
 

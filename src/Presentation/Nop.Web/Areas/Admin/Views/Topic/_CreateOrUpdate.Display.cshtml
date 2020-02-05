@@ -111,7 +111,7 @@
             </div>
         </div>
     </div>
-    <div class="form-group advanced-setting">
+    <div @(Model.LimitedToStores == true ? "style=display:none;" : "") class="form-group advanced-setting">
         <div class="col-md-3">
             <nop-label asp-for="SelectedStoreIds" />
         </div>

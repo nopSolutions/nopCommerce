@@ -113,6 +113,22 @@ namespace Nop.Services.Customers
             int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
             var query = _customerRepository.Table;
+            
+            #region Extensions by QuanNH
+
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            var storeMappingRepository = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IRepository<Nop.Core.Domain.Stores.StoreMapping>>();
+            int storeId = _storeMappingService.CurrentStore();
+
+            if (storeId > 0)
+                query = from c in query
+                        join sm in storeMappingRepository.Table
+                        on new { c1 = c.Id, c2 = "Stores" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
+                        from sm in c_sm.DefaultIfEmpty()
+                        where storeId == sm.StoreId
+                        select c;
+            #endregion
+
             if (createdFromUtc.HasValue)
                 query = query.Where(c => createdFromUtc.Value <= c.CreatedOnUtc);
             if (createdToUtc.HasValue)
@@ -235,7 +251,8 @@ namespace Nop.Services.Customers
                 query = query.Where(w => w.LastIpAddress == ipAddress);
             }
 
-            query = query.OrderByDescending(c => c.CreatedOnUtc);
+            //query = query.OrderByDescending(c => c.CreatedOnUtc);
+            query = query.OrderBy(c => c.Email);
 
             var customers = new PagedList<Customer>(query, pageIndex, pageSize, getOnlyTotalCount);
             return customers;
@@ -257,8 +274,25 @@ namespace Nop.Services.Customers
             query = query.Where(c => !c.Deleted);
             if (customerRoleIds != null && customerRoleIds.Length > 0)
                 query = query.Where(c => c.CustomerCustomerRoleMappings.Select(mapping => mapping.CustomerRoleId).Intersect(customerRoleIds).Any());
+            
+            #region Extensions by QuanNH
 
-            query = query.OrderByDescending(c => c.LastActivityDateUtc);
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            int storeId = _storeMappingService.CurrentStore();
+            var storeMappingRepository = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IRepository<Nop.Core.Domain.Stores.StoreMapping>>();
+
+            if (storeId > 0)
+                query = from c in query
+                        join sm in storeMappingRepository.Table
+                        on new { c1 = c.Id, c2 = "Stores" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
+                        from sm in c_sm.DefaultIfEmpty()
+                        where storeId == sm.StoreId || storeId == 0
+                        select c;
+            #endregion
+
+            //query = query.OrderByDescending(c => c.LastActivityDateUtc);
+            query = query.OrderBy(c => c.Email);
+
             var customers = new PagedList<Customer>(query, pageIndex, pageSize);
             return customers;
         }
@@ -372,6 +406,7 @@ namespace Nop.Services.Customers
 
             var query = from c in _customerRepository.Table
                         where customerIds.Contains(c.Id) && !c.Deleted
+                        orderby c.Email // Porttomis Inc.
                         select c;
             var customers = query.ToList();
             //sort by passed identifiers
@@ -398,6 +433,7 @@ namespace Nop.Services.Customers
 
             var query = from c in _customerRepository.Table
                         where c.CustomerGuid == customerGuid
+                        // orderby c.Id // Porttomis Inc.
                         orderby c.Id
                         select c;
             var customer = query.FirstOrDefault();
@@ -415,7 +451,8 @@ namespace Nop.Services.Customers
                 return null;
 
             var query = from c in _customerRepository.Table
-                        orderby c.Id
+                        // orderby c.Id // Porttomis Inc.
+                        orderby c.Email
                         where c.Email == email
                         select c;
             var customer = query.FirstOrDefault();
@@ -433,7 +470,8 @@ namespace Nop.Services.Customers
                 return null;
 
             var query = from c in _customerRepository.Table
-                        orderby c.Id
+                        // orderby c.Id // Porttomis Inc.
+                        orderby c.Email
                         where c.SystemName == systemName
                         select c;
             var customer = query.FirstOrDefault();
@@ -451,7 +489,8 @@ namespace Nop.Services.Customers
                 return null;
 
             var query = from c in _customerRepository.Table
-                        orderby c.Id
+                        // orderby c.Id // Porttomis Inc.
+                        orderby c.Email
                         where c.Username == username
                         select c;
             var customer = query.FirstOrDefault();
@@ -1011,6 +1050,7 @@ namespace Nop.Services.Customers
             return _cacheManager.Get(key, () =>
             {
                 var query = from cr in _customerRoleRepository.Table
+                            // orderby cr.Id // Porttomis Inc.
                             orderby cr.Id
                             where cr.SystemName == systemName
                             select cr;
@@ -1033,6 +1073,16 @@ namespace Nop.Services.Customers
                             orderby cr.Name
                             where showHidden || cr.Active
                             select cr;
+
+                #region Extensions by QuanNH
+
+                var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+
+                if (_storeMappingService.CurrentStore() > 0)
+                    query = query.Where(x => x.Name != "Administrators");
+                
+                #endregion
+
                 var customerRoles = query.ToList();
                 return customerRoles;
             });

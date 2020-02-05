@@ -44,10 +44,10 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div class="col-md-4">
-                                        <nop-label asp-for="BlogPosts.SearchStoreId" />
+                                        <nop-label asp-for="Model.BlogPosts.SearchStoreId" />
                                     </div>
                                     <div class="col-md-8">
-                                        <nop-select asp-for="BlogPosts.SearchStoreId" asp-items="Model.BlogPosts.AvailableStores" />
+                                        <nop-select asp-for="Model.BlogPosts.SearchStoreId" asp-items="Model.BlogPosts.AvailableStores" />
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -75,7 +75,7 @@
                         LengthMenu = Model.BlogPosts.AvailablePageSizes,
                         Filters = new List<FilterParameter>
                         {
-                            new FilterParameter(nameof(Model.BlogPosts.SearchStoreId), nameof(Model.BlogPosts))
+                            new FilterParameter(nameof(Model.BlogPosts.SearchStoreId))
                         },
                         ColumnCollection = new List<ColumnProperty>
                         {

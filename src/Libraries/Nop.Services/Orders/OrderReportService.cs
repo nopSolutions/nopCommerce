@@ -63,6 +63,17 @@ namespace Nop.Services.Orders
         public virtual IList<OrderByCountryReportLine> GetCountryReport(int storeId, OrderStatus? os,
             PaymentStatus? ps, ShippingStatus? ss, DateTime? startTimeUtc, DateTime? endTimeUtc)
         {
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                storeId = _storeMappingService.CurrentStore();
+            }
+
+            #endregion
+
             int? orderStatusId = null;
             if (os.HasValue)
                 orderStatusId = (int)os.Value;
@@ -137,6 +148,16 @@ namespace Nop.Services.Orders
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
             string billingPhone = null, string billingEmail = null, string billingLastName = "", string orderNotes = null)
         {
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                storeId = _storeMappingService.CurrentStore();
+            }
+
+            #endregion
+
             var query = _orderRepository.Table;
             query = query.Where(o => !o.Deleted);
             if (storeId > 0)
@@ -239,6 +260,15 @@ namespace Nop.Services.Orders
             var nowDt = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
             var timeZone = _dateTimeHelper.CurrentTimeZone;
 
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                storeId = _storeMappingService.CurrentStore();
+            }
+
+            #endregion
             //today
             var t1 = new DateTime(nowDt.Year, nowDt.Month, nowDt.Day);
             DateTime? startTime1 = _dateTimeHelper.ConvertToUtcTime(t1, timeZone);
@@ -313,6 +343,16 @@ namespace Nop.Services.Orders
             int pageIndex = 0, int pageSize = int.MaxValue,
             bool showHidden = false)
         {
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                storeId = _storeMappingService.CurrentStore();
+            }
+
+            #endregion
+
             int? orderStatusId = null;
             if (os.HasValue)
                 orderStatusId = (int)os.Value;
@@ -390,6 +430,16 @@ namespace Nop.Services.Orders
             if (productId == 0)
                 throw new ArgumentException("Product ID is not specified");
 
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                storeId = _storeMappingService.CurrentStore();
+            }
+
+            #endregion
+
             //this inner query should retrieve all orders that contains a specified product ID
             var query1 = from orderItem in _orderItemRepository.Table
                          where orderItem.ProductId == productId
@@ -445,11 +495,24 @@ namespace Nop.Services.Orders
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
+            #region Extensions by QuanNH
+
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                storeId = _storeMappingService.CurrentStore();
+            }
+
+            #endregion
             //this inner query should retrieve all purchased product identifiers
             var query_tmp = (from orderItem in _orderItemRepository.Table
                              join o in _orderRepository.Table on orderItem.OrderId equals o.Id
                              where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
                                    (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
+                                   #region Extensions by QuanNH
+                                    (orderItem.Order.StoreId == storeId) &&
+                             #endregion
                                    !o.Deleted
                              select orderItem.ProductId).Distinct();
 
@@ -508,6 +571,16 @@ namespace Nop.Services.Orders
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
             string billingPhone = null, string billingEmail = null, string billingLastName = "", string orderNotes = null)
         {
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                storeId = _storeMappingService.CurrentStore();
+            }
+
+            #endregion
+
             var dontSearchPhone = string.IsNullOrEmpty(billingPhone);
             var dontSearchEmail = string.IsNullOrEmpty(billingEmail);
             var dontSearchLastName = string.IsNullOrEmpty(billingLastName);

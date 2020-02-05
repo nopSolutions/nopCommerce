@@ -61,9 +61,37 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         #endregion
-        
+
         #region Methods
 
+        #region Extensions by QuanNH
+        protected virtual void PrepareStoresMappingModel(BlogPostModel model, BlogPost blog, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Core.IWorkContext>();
+            System.Collections.Generic.List<int> storeId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores");
+
+            if (!excludeProperties)
+            {
+                if (blog != null)
+                {
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(blog).ToList();
+                }
+                else
+                {
+                    if (storeId.Count > 0) model.SelectedStoreIds = storeId;
+                }
+
+                if (storeId.Count <= 0)
+                    model.LimitedToStores = false;
+                else model.LimitedToStores = true;
+            }
+        }
+        #endregion
         /// <summary>
         /// Prepare blog content model
         /// </summary>
@@ -114,9 +142,22 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
+            #region Extensions by QuanNH
+
+            int storeId = searchModel.SearchStoreId;
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Core.IWorkContext>();
+            int storeIds = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores").FirstOrDefault();
+            if (storeIds != 0)
+            {
+                storeId = storeIds;
+            }
+
             //get blog posts
-            var blogPosts = _blogService.GetAllBlogPosts(storeId: searchModel.SearchStoreId, showHidden: true,
+            var blogPosts = _blogService.GetAllBlogPosts(storeId, showHidden: true,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+
+            #endregion
 
             //prepare list model
             var model = new BlogPostListModel().PrepareToGrid(searchModel, blogPosts, () =>
@@ -148,7 +189,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-
+  
         /// <summary>
         /// Prepare blog post model
         /// </summary>
@@ -179,7 +220,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available stores
             _storeMappingSupportedModelFactory.PrepareModelStores(model, blogPost, excludeProperties);
-
+            #region Extensions by QuanNH
+            PrepareStoresMappingModel(model, blogPost, excludeProperties);
+            #endregion
             return model;
         }
 
@@ -244,9 +287,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 toUtc: createdOnToValue,
                 commentText: searchModel.SearchText).ToPagedList(searchModel);
 
-            //prepare store names (to avoid loading for each comment)
-            var storeNames = _storeService.GetAllStores().ToDictionary(store => store.Id, store => store.Name);
+            #region Extensions by QuanNH
 
+            //stores
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWorkContext>();
+            var allStores = _storeService.GetAllStoresByEntityName(_workContext.CurrentCustomer.Id, "Stores");
+            if (allStores.Count <= 0)
+            {
+                allStores = _storeService.GetAllStores();
+            }
+
+            //prepare store names (to avoid loading for each comment)
+            var storeNames = allStores.ToDictionary(store => store.Id, store => store.Name);
+            
+            #endregion
             //prepare list model
             var model = new BlogCommentListModel().PrepareToGrid(searchModel, comments, () =>
             {

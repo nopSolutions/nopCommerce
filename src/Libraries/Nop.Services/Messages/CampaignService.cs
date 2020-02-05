@@ -119,6 +119,17 @@ namespace Nop.Services.Messages
         {
             var query = _campaignRepository.Table;
 
+            #region Extensions by QuanNH
+
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                storeId = _storeMappingService.CurrentStore();
+            }
+
+            #endregion
+
             if (storeId > 0)
             {
                 query = query.Where(c => c.StoreId == storeId);

@@ -60,7 +60,18 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //manage store mappings
             var existingStoreMappings = _storeMappingService.GetStoreMappings(poll);
-            foreach (var store in _storeService.GetAllStores())
+            #region Extensions by QuanNH
+
+            //stores
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWorkContext>();
+            var allStores = _storeService.GetAllStoresByEntityName(_workContext.CurrentCustomer.Id, "Stores");
+            if (allStores.Count <= 0)
+            {
+                allStores = _storeService.GetAllStores();
+            }
+
+            #endregion
+            foreach (var store in allStores)
             {
                 var existingStoreMapping = existingStoreMappings.FirstOrDefault(storeMapping => storeMapping.StoreId == store.Id);
 
@@ -157,6 +168,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             var poll = _pollService.GetPollById(id);
             if (poll == null)
                 return RedirectToAction("List");
+
+            #region Extensions by QuanNH
+
+            if (!_storeMappingService.Authorize(poll) && !_storeMappingService.IsAdminStore())
+                return AccessDeniedView();
+
+            #endregion
 
             //prepare model
             var model = _pollModelFactory.PreparePollModel(null, poll);

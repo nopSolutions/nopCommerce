@@ -43,14 +43,23 @@ namespace Nop.Web.Framework.Factories
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            //prepare available stores
-            var availableStores = _storeService.GetAllStores();
+            #region Extensions by QuanNH
+
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWorkContext>();
+            var availableStores = _storeService.GetAllStoresByEntityName(_workContext.CurrentCustomer.Id, "Stores");
+            if (availableStores.Count <= 0)
+            {
+                availableStores = _storeService.GetAllStores();
+            }
+
             model.AvailableStores = availableStores.Select(store => new SelectListItem
             {
                 Text = store.Name,
                 Value = store.Id.ToString(),
                 Selected = model.SelectedStoreIds.Contains(store.Id)
             }).ToList();
+
+            #endregion
         }
 
         /// <summary>

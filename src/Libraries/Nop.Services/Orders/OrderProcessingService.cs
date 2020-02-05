@@ -2414,6 +2414,32 @@ namespace Nop.Services.Orders
             return true;
         }
 
+        /// <summary> // Porttomis Inc
+        /// Gets a value indicating whether order can be marked as IsApproved
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>A value indicating whether order can be marked as IsApproved</returns>
+        public virtual bool CanMarkOrderAsIsApproved(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            if (order.OrderStatus == OrderStatus.Cancelled)
+                return false;
+
+            if (order.PaymentStatus == PaymentStatus.Paid ||
+                order.PaymentStatus == PaymentStatus.Refunded ||
+                order.PaymentStatus == PaymentStatus.Voided)
+                return false;
+
+            //if (order.PaymentStatus == PaymentStatus.Paid ||
+            //    order.PaymentStatus == PaymentStatus.Refunded ||
+            //    order.PaymentStatus == PaymentStatus.Voided)
+            //    return false;
+
+            return true;
+        }
+
         /// <summary>
         /// Marks order as paid
         /// </summary>
@@ -2425,6 +2451,9 @@ namespace Nop.Services.Orders
 
             if (!CanMarkOrderAsPaid(order))
                 throw new NopException("You can't mark this order as paid");
+
+            if (order.OrderApprovalStatus == OrderApprovalStatus.Pending)
+                throw new NopException("You can't mark this order as paid until it is marked Approved");
 
             order.PaymentStatusId = (int)PaymentStatus.Paid;
             order.PaidDateUtc = DateTime.UtcNow;
@@ -2439,6 +2468,56 @@ namespace Nop.Services.Orders
             {
                 ProcessOrderPaid(order);
             }
+        }
+
+        /// <summary>
+        /// Marks order as IsApproved // Porttomis Inc.
+        /// </summary>
+        /// <param name="order">Order</param>
+        public virtual void MarkOrderAsIsApproved(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            if (!CanMarkOrderAsIsApproved(order))
+                throw new NopException("You can't mark this order as Approved");
+
+            order.OrderApprovalStatusId = (int)OrderApprovalStatus.Approved;
+            _orderService.UpdateOrder(order);
+
+            //add a note
+            AddOrderNote(order, "Order has been marked as Approved");
+
+            CheckOrderStatus(order);
+
+            if (order.PaymentStatus == PaymentStatus.Paid)
+            {
+                ProcessOrderPaid(order);
+            }
+        }
+
+        /// <summary>
+        /// Marks order as IsDenied // Porttomis Inc.
+        /// </summary>
+        /// <param name="order">Order</param>
+        public virtual void MarkOrderAsIsDenied(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException(nameof(order));
+
+            if (!CanMarkOrderAsIsApproved(order))
+                throw new NopException("You can't mark this order as Denied");
+
+            order.OrderApprovalStatusId = (int)OrderApprovalStatus.Denied;
+
+            _orderService.UpdateOrder(order);
+
+            CancelOrder(order, true);
+            //add a note
+            AddOrderNote(order, "Order has been marked as denied and is now cancelled");
+
+            CheckOrderStatus(order);
+
         }
 
         /// <summary>

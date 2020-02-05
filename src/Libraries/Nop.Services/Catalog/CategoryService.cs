@@ -195,7 +195,8 @@ namespace Nop.Services.Catalog
             if (!string.IsNullOrWhiteSpace(categoryName))
                 query = query.Where(c => c.Name.Contains(categoryName));
             query = query.Where(c => !c.Deleted);
-            query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id);
+            //query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id); //Porttomis Inc.
+            query = query.OrderBy(c => c.Name).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id);
 
             if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) || (!showHidden && !_catalogSettings.IgnoreAcl))
             {
@@ -208,6 +209,7 @@ namespace Nop.Services.Catalog
                                 on new { c1 = c.Id, c2 = nameof(Category) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
                             from acl in c_acl.DefaultIfEmpty()
                             where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
+                            orderby c.Name //Porttomis Inc.
                             select c;
                 }
 
@@ -219,12 +221,33 @@ namespace Nop.Services.Catalog
                                 on new { c1 = c.Id, c2 = nameof(Category) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
                             from sm in c_sm.DefaultIfEmpty()
                             where !c.LimitedToStores || storeId == sm.StoreId
+                            orderby c.Name //Porttomis Inc.
                             select c;
                 }
 
-                query = query.Distinct().OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id);
+                //query = query.Distinct().OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id); //Porttomis Inc.
+                query = query.Distinct().OrderBy(c => c.ParentCategoryId).ThenBy(c => c.Name).ThenBy(c => c.Id);
             }
+            #region Extensions by QuanNH
+            else
+            {
+                //Store mapping
+                var currentStoreId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores").FirstOrDefault();
+                int adminId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Admin").FirstOrDefault();
+                if (adminId <= 0 && currentStoreId > 0)
+                    query = from c in query
+                            join sm in _storeMappingRepository.Table
+                            on new { c1 = c.Id, c2 = "Category" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
+                            from sm in c_sm.DefaultIfEmpty()
+                            where !c.LimitedToStores || currentStoreId == sm.StoreId
+                            orderby c.Name //Porttomis Inc.
+                            select c;
 
+                // query = query.Distinct().OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder).ThenBy(c => c.Id); // Porttomis Inc.
+                query = query.Distinct().OrderBy(c => c.ParentCategoryId).ThenBy(c => c.Name).ThenBy(c => c.Id);
+
+            }
+            #endregion
             var unsortedCategories = query.ToList();
 
             //sort categories
@@ -251,7 +274,8 @@ namespace Nop.Services.Catalog
                     query = query.Where(c => c.Published);
                 query = query.Where(c => c.ParentCategoryId == parentCategoryId);
                 query = query.Where(c => !c.Deleted);
-                query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
+                //query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id); // Porttomis Inc.
+                query = query.OrderBy(c => c.Name).ThenBy(c => c.Id);
 
                 if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
                 {
@@ -264,6 +288,7 @@ namespace Nop.Services.Catalog
                                 on new { c1 = c.Id, c2 = nameof(Category) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
                                 from acl in c_acl.DefaultIfEmpty()
                                 where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
+                                orderby c.Name //Porttomis Inc.
                                 select c;
                     }
 
@@ -276,12 +301,32 @@ namespace Nop.Services.Catalog
                                 on new { c1 = c.Id, c2 = nameof(Category) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
                                 from sm in c_sm.DefaultIfEmpty()
                                 where !c.LimitedToStores || currentStoreId == sm.StoreId
+                                orderby c.Name  //Porttomis Inc.
                                 select c;
                     }
 
-                    query = query.Distinct().OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
+                    //query = query.Distinct().OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id); //Porttomis Inc.
+                    query = query.Distinct().OrderBy(c => c.Name).ThenBy(c => c.Id);
                 }
+                #region Extensions by QuanNH
+                else
+                {
+                    //Store mapping
+                    var currentStoreId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores").FirstOrDefault();
+                    int adminId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Admin").FirstOrDefault();
+                    if (adminId <= 0 && currentStoreId > 0)
+                        query = from c in query
+                                join sm in _storeMappingRepository.Table
+                                on new { c1 = c.Id, c2 = "Category" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
+                                from sm in c_sm.DefaultIfEmpty()
+                                where !c.LimitedToStores || currentStoreId == sm.StoreId
+                                orderby c.Name //Porttomis Inc.
+                                select c;
 
+                    query = query.Distinct().OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
+
+                }
+                #endregion
                 var categories = query.ToList();
                 return categories;
             });
@@ -295,10 +340,11 @@ namespace Nop.Services.Catalog
         public virtual IList<Category> GetAllCategoriesDisplayedOnHomepage(bool showHidden = false)
         {
             var query = from c in _categoryRepository.Table
-                        orderby c.DisplayOrder, c.Id
                         where c.Published &&
                         !c.Deleted &&
                         c.ShowOnHomepage
+                        //orderby c.DisplayOrder, c.Id // Porttomis Inc.
+                        orderby c.Name, c.Id
                         select c;
 
             var categories = query.ToList();
@@ -321,6 +367,16 @@ namespace Nop.Services.Catalog
         /// <returns>Category identifiers</returns>
         public virtual IList<int> GetChildCategoryIds(int parentCategoryId, int storeId = 0, bool showHidden = false)
         {
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                storeId = _storeMappingService.CurrentStore();
+            }
+
+            #endregion
+
             var cacheKey = string.Format(NopCatalogDefaults.CategoriesChildIdentifiersCacheKey,
                 parentCategoryId,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
@@ -457,7 +513,8 @@ namespace Nop.Services.Catalog
                             where pc.CategoryId == categoryId &&
                                   !p.Deleted &&
                                   (showHidden || p.Published)
-                            orderby pc.DisplayOrder, pc.Id
+                            //orderby pc.DisplayOrder, pc.Id // Porttomis Inc.
+                            orderby pc.Category, pc.Id
                             select pc;
 
                 if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
@@ -472,6 +529,7 @@ namespace Nop.Services.Catalog
                                 on new { c1 = c.Id, c2 = nameof(Category) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
                                 from acl in c_acl.DefaultIfEmpty()
                                 where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
+                                orderby pc.Category //Porttomis Inc.
                                 select pc;
                     }
 
@@ -485,10 +543,12 @@ namespace Nop.Services.Catalog
                                 on new { c1 = c.Id, c2 = nameof(Category) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
                                 from sm in c_sm.DefaultIfEmpty()
                                 where !c.LimitedToStores || currentStoreId == sm.StoreId
+                                orderby pc.Category //Porttomis Inc.
                                 select pc;
                     }
 
-                    query = query.Distinct().OrderBy(pc => pc.DisplayOrder).ThenBy(pc => pc.Id);
+                    //query = query.Distinct().OrderBy(pc => pc.DisplayOrder).ThenBy(pc => pc.Id); //Porttomis Inc.
+                    query = query.Distinct().OrderBy(pc => pc.Category).ThenBy(pc => pc.Id);
                 }
 
                 var productCategories = new PagedList<ProductCategory>(query, pageIndex, pageSize);
@@ -519,6 +579,16 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return new List<ProductCategory>();
 
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                storeId = _storeMappingService.CurrentStore();
+            }
+
+            #endregion
+
             var key = string.Format(NopCatalogDefaults.ProductCategoriesAllByProductIdCacheKey, showHidden, productId, _workContext.CurrentCustomer.Id, storeId);
             return _cacheManager.Get(key, () =>
             {
@@ -527,7 +597,8 @@ namespace Nop.Services.Catalog
                             where pc.ProductId == productId &&
                                   !c.Deleted &&
                                   (showHidden || c.Published)
-                            orderby pc.DisplayOrder, pc.Id
+                            // orderby pc.DisplayOrder, pc.Id // Porttomis Inc.
+                            orderby pc.Category, pc.Id
                             select pc;
 
                 var allProductCategories = query.ToList();
@@ -655,6 +726,7 @@ namespace Nop.Services.Catalog
 
             var query = from p in _categoryRepository.Table
                         where categoryIds.Contains(p.Id) && !p.Deleted
+                        orderby p.Name //Porttomis Inc.
                         select p;
 
             return query.ToList();

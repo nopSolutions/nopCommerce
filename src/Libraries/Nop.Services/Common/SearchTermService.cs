@@ -87,19 +87,31 @@ namespace Nop.Services.Common
         /// <returns>A list search term report lines</returns>
         public virtual IPagedList<SearchTermReportLine> GetStats(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = (from st in _searchTermRepository.Table
+            #region Extensions by QuanNH
+            var queryStore = _searchTermRepository.Table;
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                queryStore = queryStore.Where(c => c.StoreId == _storeMappingService.CurrentStore());
+            }
+
+            var query = (from st in queryStore
                          group st by st.Keyword into groupedResult
                          select new
                          {
                              Keyword = groupedResult.Key,
                              Count = groupedResult.Sum(o => o.Count)
                          })
-                        .OrderByDescending(m => m.Count)
-                        .Select(r => new SearchTermReportLine
-                        {
-                            Keyword = r.Keyword,
-                            Count = r.Count
-                        });
+            .OrderByDescending(m => m.Count)
+            .Select(r => new SearchTermReportLine
+            {
+                Keyword = r.Keyword,
+                Count = r.Count
+            });
+
+            #endregion
 
             var result = new PagedList<SearchTermReportLine>(query, pageIndex, pageSize);
             return result;

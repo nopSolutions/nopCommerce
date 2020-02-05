@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
@@ -63,6 +64,33 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Utilities
 
+        #region Extensions by QuanNH
+        protected virtual void PrepareStoresMappingModel(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Core.IWorkContext>();
+            List<int> storeId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores");
+
+            if (!excludeProperties)
+            {
+                if (checkoutAttribute != null)
+                {
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(checkoutAttribute).ToList();
+                }
+                else
+                {
+                    if (storeId.Count > 0) model.SelectedStoreIds = storeId;
+                }
+
+                if (storeId.Count <= 0)
+                    model.LimitedToStores = false;
+                else model.LimitedToStores = true;
+            }
+        }
+        #endregion
         /// <summary>
         /// Prepare condition attributes model
         /// </summary>
@@ -226,6 +254,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare model stores
             _storeMappingSupportedModelFactory.PrepareModelStores(model, checkoutAttribute, excludeProperties);
+
+            #region Extensions by QuanNH
+            PrepareStoresMappingModel(model, checkoutAttribute, excludeProperties);
+            #endregion
 
             return model;
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
@@ -44,6 +45,33 @@ namespace Nop.Web.Areas.Admin.Factories
 
         #region Utilities
 
+        #region Extensions by QuanNH
+        protected virtual void PrepareStoresMappingModel(CountryModel model, Country country, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Core.IWorkContext>();
+            List<int> storeId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores");
+
+            if (!excludeProperties)
+            {
+                if (country != null)
+                {
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(country).ToList();
+                }
+                else
+                {
+                    if (storeId.Count > 0) model.SelectedStoreIds = storeId;
+                }
+
+                if (storeId.Count <= 0)
+                    model.LimitedToStores = false;
+                else model.LimitedToStores = true;
+            }
+        }
+        #endregion
         /// <summary>
         /// Prepare state and province search model
         /// </summary>
@@ -96,8 +124,21 @@ namespace Nop.Web.Areas.Admin.Factories
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
 
+            #region Extensions by QuanNH
+
+            bool showHidden = true;
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Core.IWorkContext>();
+            int storeIds = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores").FirstOrDefault();
+            if (storeIds != 0)
+            {
+                showHidden = false;
+            }
+
             //get countries
-            var countries = _countryService.GetAllCountries(showHidden: true).ToPagedList(searchModel);
+            var countries = _countryService.GetAllCountries(showHidden: showHidden).ToPagedList(searchModel);
+
+            #endregion
 
             //prepare list model
             var model = new CountryListModel().PrepareToGrid(searchModel, countries, () =>
@@ -159,7 +200,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available stores
             _storeMappingSupportedModelFactory.PrepareModelStores(model, country, excludeProperties);
-
+            #region Extensions by QuanNH
+            PrepareStoresMappingModel(model, country, excludeProperties);
+            #endregion
             return model;
         }
 

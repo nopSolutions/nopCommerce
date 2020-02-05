@@ -22,6 +22,7 @@ namespace Nop.Web.Framework
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IStoreService _storeService;
 
+
         private Store _cachedStore;
         private int? _cachedActiveStoreScopeConfiguration;
 
@@ -36,7 +37,7 @@ namespace Nop.Web.Framework
         /// <param name="httpContextAccessor">HTTP context accessor</param>
         /// <param name="storeService">Store service</param>
         public WebStoreContext(IGenericAttributeService genericAttributeService,
-            IHttpContextAccessor httpContextAccessor,
+            IHttpContextAccessor httpContextAccessor, 
             IStoreService storeService)
         {
             _genericAttributeService = genericAttributeService;
@@ -62,12 +63,17 @@ namespace Nop.Web.Framework
                 string host = _httpContextAccessor.HttpContext?.Request?.Headers[HeaderNames.Host];
 
                 var allStores = _storeService.GetAllStores();
-                var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s, host));
+                var store = allStores.FirstOrDefault(s => _storeService.ContainsHostValue(s,host));
 
                 if (store == null)
                 {
                     //load the first found store
                     store = allStores.FirstOrDefault();
+                }
+
+                if (host == null && store != null)
+                {
+                    return store;
                 }
 
                 _cachedStore = store ?? throw new Exception("No store could be loaded");

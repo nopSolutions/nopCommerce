@@ -443,6 +443,15 @@ namespace Nop.Services.Catalog
         /// <returns>Number of products</returns>
         public virtual int GetNumberOfProductsInCategory(IList<int> categoryIds = null, int storeId = 0)
         {
+            #region Extensions by QuanNH
+
+            int storeIds = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores").FirstOrDefault();
+            if (storeIds != 0)
+            {
+                storeId = storeIds;
+            }
+
+            #endregion
             //validate "categoryIds" parameter
             if (categoryIds != null && categoryIds.Contains(0))
                 categoryIds.Remove(0);
@@ -617,6 +626,15 @@ namespace Nop.Services.Catalog
         {
             filterableSpecificationAttributeOptionIds = new List<int>();
 
+            #region Extensions by QuanNH
+
+            int storeIds = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores").FirstOrDefault();
+            if (storeIds != 0)
+            {
+                storeId = storeIds;
+            }
+
+            #endregion
             //search by keyword
             var searchLocalizedValue = false;
             if (languageId > 0)
@@ -774,6 +792,15 @@ namespace Nop.Services.Catalog
         public virtual IList<Product> GetAssociatedProducts(int parentGroupedProductId,
             int storeId = 0, int vendorId = 0, bool showHidden = false)
         {
+            #region Extensions by QuanNH
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                storeId = _storeMappingService.CurrentStore();
+            }
+            #endregion
+
             var query = _productRepository.Table;
             query = query.Where(x => x.ParentGroupedProductId == parentGroupedProductId);
             if (!showHidden)
@@ -860,6 +887,21 @@ namespace Nop.Services.Catalog
         {
             var query = _productRepository.Table;
 
+            #region Extensions by QuanNH
+            //Store mapping
+            List<int> storeId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores");
+
+            if (storeId != null)
+            {
+                query = from p in query
+                        join sm in _storeMappingRepository.Table
+                        on new { c1 = p.Id, c2 = "Product" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
+                        from sm in p_sm.DefaultIfEmpty()
+                        where storeId.Contains(sm.StoreId)
+                        select p;
+            }
+            #endregion
+
             //filter by products with tracking inventory
             query = query.Where(product => product.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock);
 
@@ -901,6 +943,20 @@ namespace Nop.Services.Catalog
         {
             var products = _productRepository.Table;
 
+            #region Extensions by QuanNH
+            //Store mapping
+            List<int> storeId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores");
+
+            if (storeId != null)
+            {
+                products = from p in products
+                           join sm in _storeMappingRepository.Table
+                        on new { c1 = p.Id, c2 = "Product" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
+                           from sm in p_sm.DefaultIfEmpty()
+                           where storeId.Contains(sm.StoreId)
+                           select p;
+            }
+            #endregion
             //filter by products with tracking inventory by attributes
             products = products.Where(product => product.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes);
 
@@ -1302,7 +1358,19 @@ namespace Nop.Services.Catalog
             product.LimitedToStores = limitedToStoresIds.Any();
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(product);
-            var allStores = _storeService.GetAllStores();
+            
+            #region Extensions by QuanNH
+
+            //stores
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWorkContext>();
+            var allStores = _storeService.GetAllStoresByEntityName(_workContext.CurrentCustomer.Id, "Stores");
+            if (allStores.Count <= 0)
+            {
+                allStores = _storeService.GetAllStores();
+            }
+
+            #endregion
+
             foreach (var store in allStores)
             {
                 if (limitedToStoresIds.Contains(store.Id))
@@ -2087,6 +2155,17 @@ namespace Nop.Services.Catalog
             string message = null, int storeId = 0, int productId = 0, int vendorId = 0, bool showHidden = false,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
+            #region Extensions by QuanNH
+
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            //Current Store Admin
+            if (_storeMappingService.CurrentStore() > 0)
+            {
+                storeId = _storeMappingService.CurrentStore();
+            }
+
+            #endregion
+
             var query = _productReviewRepository.Table;
             if (approved.HasValue)
                 query = query.Where(pr => pr.IsApproved == approved);

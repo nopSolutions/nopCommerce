@@ -193,7 +193,12 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteString("UpdatedOnUtc", category.UpdatedOnUtc, IgnoreExportCategoryProperty());
 
                 xmlWriter.WriteStartElement("Products");
-                var productCategories = _categoryService.GetProductCategoriesByCategoryId(category.Id, showHidden: true);
+                //var productCategories = _categoryService.GetProductCategoriesByCategoryId(category.Id, showHidden: true);
+
+                #region Extensions by QuanNH
+                var productCategories = _categoryService.GetProductCategoriesByCategoryId(category.Id, showHidden: false);
+                #endregion
+
                 foreach (var productCategory in productCategories)
                 {
                     var product = productCategory.Product;

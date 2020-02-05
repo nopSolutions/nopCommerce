@@ -172,6 +172,16 @@ namespace Nop.Services.Orders
             string billingPhone = null, string billingEmail = null, string billingLastName = "",
             string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
+            #region Extensions by QuanNH
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWorkContext>();
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            var currentStoreId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores").FirstOrDefault();
+            if (storeId == 0 && currentStoreId > 0)
+            {
+                storeId = currentStoreId;
+            }
+            #endregion
+
             var query = _orderRepository.Table;
             if (storeId > 0)
                 query = query.Where(o => o.StoreId == storeId);
@@ -745,6 +755,16 @@ namespace Nop.Services.Orders
             int customerId = 0, int initialOrderId = 0, OrderStatus? initialOrderStatus = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
+            #region Extensions by QuanNH
+            var _workContext = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWorkContext>();
+            var _storeMappingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Stores.IStoreMappingService>();
+            var currentStoreId = _storeMappingService.GetStoreIdByEntityId(_workContext.CurrentCustomer.Id, "Stores").FirstOrDefault();
+            if (storeId == 0 && currentStoreId > 0)
+            {
+                storeId = currentStoreId;
+            }
+            #endregion
+
             int? initialOrderStatusId = null;
             if (initialOrderStatus.HasValue)
                 initialOrderStatusId = (int)initialOrderStatus.Value;
@@ -773,6 +793,25 @@ namespace Nop.Services.Orders
         }
 
         #endregion
+
+        #endregion
+        #region Extensions by QuanNH
+
+        public virtual OrderItem GetOrderItemByOrderId(int OrderId)
+        {
+            if (OrderId == 0)
+                return null;
+            var query = from orderItem in _orderItemRepository.Table
+                        join o in _orderRepository.Table on orderItem.OrderId equals o.Id
+                        join p in _productRepository.Table on orderItem.ProductId equals p.Id
+                        where
+                        !o.Deleted
+                        orderby o.CreatedOnUtc descending, orderItem.Id
+                        select orderItem;
+
+            var orderItems = query.FirstOrDefault();
+            return orderItems;
+        }
 
         #endregion
     }
