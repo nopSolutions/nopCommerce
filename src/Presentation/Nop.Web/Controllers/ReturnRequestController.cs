@@ -19,6 +19,7 @@ using Nop.Web.Models.Order;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class ReturnRequestController : BasePublicController
     {
         #region Fields
@@ -103,7 +104,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("ReturnRequest")]
-        [PublicAntiForgery]
         public virtual IActionResult ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model, IFormCollection form)
         {
             var order = _orderService.GetOrderById(orderId);
@@ -180,6 +180,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult UploadFileReturnRequest()
         {
             if (!_orderSettings.ReturnRequestsEnabled || !_orderSettings.ReturnRequestsAllowFiles)

@@ -500,6 +500,7 @@ namespace Nop.Services.Media.RoxyFileman
             await base.DeleteFileAsync(sourcePath);
         }
 
+
         /// <summary>
         /// Upload files to a directory on passed path
         /// </summary>
@@ -524,6 +525,8 @@ namespace Nop.Services.Media.RoxyFileman
                         var uniqueFileName = GetUniqueFileName(fullPath, _fileProvider.GetFileName(fileName));
                         var destinationFile = _fileProvider.Combine(fullPath, uniqueFileName);
 
+                        //A warning (SCS0018 - Path Traversal) from the "Security Code Scan" analyzer may appear at this point. 
+                        //In this case, it is not relevant. The input is not supplied by user.
                         if (GetFileType(new FileInfo(uniqueFileName).Extension) != "image")
                         {
                             using (var stream = new FileStream(destinationFile, FileMode.OpenOrCreate))

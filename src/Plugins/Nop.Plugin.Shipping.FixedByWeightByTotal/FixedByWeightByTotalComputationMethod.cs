@@ -338,23 +338,16 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         /// <summary>
         /// Gets a shipping rate computation method type
         /// </summary>
-        public ShippingRateComputationMethodType ShippingRateComputationMethodType
-        {
-            get { return ShippingRateComputationMethodType.Offline; }
-        }
+        public ShippingRateComputationMethodType ShippingRateComputationMethodType => ShippingRateComputationMethodType.Offline;
 
         /// <summary>
         /// Gets a shipment tracker
         /// </summary>
-        public IShipmentTracker ShipmentTracker
-        {
-            get
-            {
-                //uncomment a line below to return a general shipment tracker (finds an appropriate tracker by tracking number)
-                //return new GeneralShipmentTracker(EngineContext.Current.Resolve<ITypeFinder>());
-                return null;
-            }
-        }
+        /// <remarks>
+        /// uncomment a line below to return a general shipment tracker (finds an appropriate tracker by tracking number)
+        /// return new GeneralShipmentTracker(EngineContext.Current.Resolve<ITypeFinder>());
+        /// </remarks>
+        public IShipmentTracker ShipmentTracker => null;
 
         #endregion
     }

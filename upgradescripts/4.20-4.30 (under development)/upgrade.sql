@@ -217,6 +217,18 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LocalePattern.SuccessUpload">
     <Value>Localization patterns for the current culture loaded successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForAdminArea">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForAdminArea.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForPublicStore">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForPublicStore.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -424,6 +436,21 @@ BEGIN
 END
 GO
 
+--delete setting
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'securitysettings.enablexsrfprotectionforadminarea')
+BEGIN
+    DELETE FROM [Setting]
+    WHERE [Name] = N'securitysettings.enablexsrfprotectionforadminarea'
+END
+GO
+
+--delete setting
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'securitysettings.enablexsrfprotectionforpublicstore')
+BEGIN
+    DELETE FROM [Setting]
+    WHERE [Name] = N'securitysettings.enablexsrfprotectionforpublicstore'
+END
+GO
 
 --new column
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='RedeemedRewardPointsEntryId')

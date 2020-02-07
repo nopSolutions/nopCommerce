@@ -17,6 +17,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
 {
     [AuthorizeAdmin]
     [Area(AreaNames.Admin)]
+    [AutoValidateAntiforgeryToken]
     public class DiscountRulesCustomerRolesController : BasePluginController
     {
         #region Fields
@@ -91,8 +92,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             return View("~/Plugins/DiscountRules.CustomerRoles/Views/Configure.cshtml", model);
         }
 
-        [HttpPost]
-        [AdminAntiForgery]
+        [HttpPost]        
         public IActionResult Configure(int discountId, int? discountRequirementId, int customerRoleId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))

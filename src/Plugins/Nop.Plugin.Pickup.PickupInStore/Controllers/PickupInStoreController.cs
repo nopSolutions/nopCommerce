@@ -23,6 +23,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
 {
     [Area(AreaNames.Admin)]
     [AuthorizeAdmin]
+    [AutoValidateAntiforgeryToken]
     public class PickupInStoreController : BasePluginController
     {
         #region Fields
@@ -78,7 +79,6 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult List(StorePickupPointSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -130,7 +130,6 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult Create(StorePickupPointModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -229,7 +228,6 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult Edit(StorePickupPointModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -271,7 +269,6 @@ namespace Nop.Plugin.Pickup.PickupInStore.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))

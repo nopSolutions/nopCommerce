@@ -36,6 +36,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         #region Methods
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public IActionResult UseValidatedAddress(int addressId, bool isNewAddress)
         {
             //try to get an address by the passed identifier

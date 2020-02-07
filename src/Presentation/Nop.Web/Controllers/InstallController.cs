@@ -74,6 +74,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult Index(InstallModel model)
         {
             if (DataSettingsManager.DatabaseIsInstalled)
@@ -230,6 +231,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult RestartInstall()
         {
             if (DataSettingsManager.DatabaseIsInstalled)

@@ -1324,8 +1324,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (!string.IsNullOrWhiteSpace(s))
                         securitySettings.AdminAreaAllowedIpAddresses.Add(s.Trim());
             securitySettings.ForceSslForAllPages = model.SecuritySettings.ForceSslForAllPages;
-            securitySettings.EnableXsrfProtectionForAdminArea = model.SecuritySettings.EnableXsrfProtectionForAdminArea;
-            securitySettings.EnableXsrfProtectionForPublicStore = model.SecuritySettings.EnableXsrfProtectionForPublicStore;
             securitySettings.HoneypotEnabled = model.SecuritySettings.HoneypotEnabled;
             _settingService.SaveSetting(securitySettings);
 

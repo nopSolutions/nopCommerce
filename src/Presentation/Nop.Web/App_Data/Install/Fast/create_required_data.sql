@@ -1860,8 +1860,6 @@ INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (438, N'ordersettings
 INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (439, N'securitysettings.forcesslforallpages', N'True', 0)
 INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (440, N'securitysettings.encryptionkey', N'8883890619141320', 0)
 INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (441, N'securitysettings.adminareaallowedipaddresses', N'', 0)
-INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (442, N'securitysettings.enablexsrfprotectionforadminarea', N'True', 0)
-INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (443, N'securitysettings.enablexsrfprotectionforpublicstore', N'True', 0)
 INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (444, N'securitysettings.honeypotenabled', N'False', 0)
 INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (445, N'securitysettings.honeypotinputname', N'hpinput', 0)
 INSERT [Setting] ([Id], [Name], [Value], [StoreId]) VALUES (446, N'securitysettings.pluginstaticfileextensionsblacklist', N'', 0)

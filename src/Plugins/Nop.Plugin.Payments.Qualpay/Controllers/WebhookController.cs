@@ -37,6 +37,7 @@ namespace Nop.Plugin.Payments.Qualpay.Controllers
         #region Methods
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         [HttpsRequirement(SslRequirement.Yes)]
         public IActionResult WebhookHandler()
         {

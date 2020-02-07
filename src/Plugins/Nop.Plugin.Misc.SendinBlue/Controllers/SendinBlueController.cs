@@ -25,6 +25,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Misc.SendinBlue.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class SendinBlueController : BasePluginController
     {
         #region Fields
