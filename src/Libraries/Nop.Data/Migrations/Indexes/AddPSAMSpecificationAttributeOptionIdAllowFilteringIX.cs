@@ -2,6 +2,7 @@
 using FluentMigrator.SqlServer;
 using Nop.Core.Domain.Catalog;
 using Nop.Data.Extensions;
+using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.Indexes
 {

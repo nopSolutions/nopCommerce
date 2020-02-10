@@ -1,4 +1,4 @@
-﻿namespace Nop.Data
+﻿namespace Nop.Data.Mapping
 {
     /// <summary>
     /// Represents default values related to data mapping

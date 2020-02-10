@@ -2,6 +2,7 @@
 using FluentMigrator;
 using Nop.Core.Domain.News;
 using Nop.Data.Extensions;
+using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.News
 {

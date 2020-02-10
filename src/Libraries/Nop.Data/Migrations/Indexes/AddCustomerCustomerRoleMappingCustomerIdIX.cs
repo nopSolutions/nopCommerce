@@ -1,5 +1,6 @@
 ﻿using FluentMigrator;
 using Nop.Data.Extensions;
+using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.Indexes
 {

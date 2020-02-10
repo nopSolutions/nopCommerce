@@ -2,6 +2,7 @@
 using FluentMigrator;
 using Nop.Core.Domain.Catalog;
 using Nop.Data.Extensions;
+using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.Catalog
 {
