@@ -23,7 +23,7 @@
                 @T("Admin.System.Log.DeleteSelected")
             </button>
             <nop-action-confirmation asp-button-id="delete-selected" />
-            <button type="submit" id="clearall" name="clearall" class="btn bg-red">
+            <button asp-action="ClearAll" type="submit" id="clearall" name="clearall" class="btn bg-red">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.System.Log.ClearLog")
             </button>

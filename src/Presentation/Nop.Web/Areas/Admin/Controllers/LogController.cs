@@ -73,7 +73,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
-        [HttpPost, ActionName("List")]
+        [HttpPost, ActionName("ClearAll")]
         [FormValueRequired("clearall")]
         public virtual IActionResult ClearAll()
         {
