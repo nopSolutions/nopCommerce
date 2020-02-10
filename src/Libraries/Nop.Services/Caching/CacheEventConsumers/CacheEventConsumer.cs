@@ -70,7 +70,7 @@ namespace Nop.Services.Caching.CacheEventConsumers
         public virtual void HandleEvent(EntityInsertedEvent<TEntity> eventMessage)
         {
             var entity = eventMessage.Entity;
-            ClearCache(entity, EntityEventType.Inserte);
+            ClearCache(entity, EntityEventType.Insert);
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Nop.Services.Caching.CacheEventConsumers
 
         protected enum EntityEventType
         {
-            Inserte,
+            Insert,
             Update,
             Delete
         }
