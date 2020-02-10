@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -241,6 +241,8 @@ namespace Nop.Data
 
         #endregion
 
+        #region Properties
+
         protected abstract IDataProvider LinqToDbDataProvider { get; }
 
         protected static MappingSchema AdditionalSchema
@@ -255,5 +257,7 @@ namespace Nop.Data
         }
 
         protected string CurrentConnectionString => DataSettingsManager.LoadSettings().ConnectionString;
+
+        #endregion
     }
 }
