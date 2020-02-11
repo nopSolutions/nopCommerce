@@ -176,6 +176,8 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         public bool DisplayVatNumber { get; set; }
 
+        public bool DisplayRegisteredInStore { get; set; }
+
         //registration date
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
