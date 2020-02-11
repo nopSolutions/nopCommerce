@@ -90,6 +90,7 @@ namespace Nop.Services.Common
             if (attribute == null)
                 throw new ArgumentNullException(nameof(attribute));
 
+            attribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow;
             _genericAttributeRepository.Insert(attribute);
             
             //event notification
@@ -105,6 +106,7 @@ namespace Nop.Services.Common
             if (attribute == null)
                 throw new ArgumentNullException(nameof(attribute));
 
+            attribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow;
             _genericAttributeRepository.Update(attribute);
             
             //event notification
