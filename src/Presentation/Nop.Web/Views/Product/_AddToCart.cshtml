@@ -30,11 +30,11 @@
                 <label asp-for="EnteredQuantity" asp-postfix=":" class="qty-label"></label>
                 @if (Model.AllowedQuantities.Count > 0)
                 {
-                    <select asp-for="EnteredQuantity" asp-items="Model.AllowedQuantities" class="qty-dropdown" aria-label=T("Products.Qty.AriaLabel").Text></select>
+                    <select asp-for="EnteredQuantity" asp-items="Model.AllowedQuantities" class="qty-dropdown" aria-label=@T("Products.Qty.AriaLabel")></select>
                 }
                 else
                 {
-                    <input asp-for="EnteredQuantity" class="qty-input" type="text" aria-label=T("Products.Qty.AriaLabel").Text />
+                    <input asp-for="EnteredQuantity" class="qty-input" type="text" aria-label=@T("Products.Qty.AriaLabel")/>
                     <script asp-location="Footer">
                         //when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)
                         $(document).ready(function() {

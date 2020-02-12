@@ -43,7 +43,7 @@
                     <label for="price-value-@(Model.ProductId)">@T("Products.Price"):</label>
                 }
                 @*render price*@
-                <span @if (string.IsNullOrWhiteSpace(Model.PriceWithDiscount)) { <text> id="price-value-@(Model.ProductId)" class="price-value-@(Model.ProductId)" </text>  }>
+                <span @if (string.IsNullOrWhiteSpace(Model.PriceWithDiscount)) { <text> id="price-value-@(Model.ProductId)" class="price-value-@(Model.ProductId)" </text> }>
                     @Html.Raw(Model.Price)
                 </span>
             </div>

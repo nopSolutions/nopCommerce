@@ -217,6 +217,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LocalePattern.SuccessUpload">
     <Value>Localization patterns for the current culture loaded successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Qty.AriaLabel">
+    <Value>Enter a quantity</Value>
+  </LocaleResource>
 </Language>
 '
 
