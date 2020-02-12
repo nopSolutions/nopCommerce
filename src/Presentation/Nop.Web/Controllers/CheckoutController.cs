@@ -281,7 +281,7 @@ namespace Nop.Web.Controllers
         /// <returns></returns>
         public virtual IActionResult GetAddressById(int addressId)
         {
-            var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == addressId);
+            var address = _customerService.GetCustomerAddress(_workContext.CurrentCustomer.Id, addressId);
             if (address == null)
                 throw new ArgumentNullException(nameof(address));
 
@@ -308,13 +308,16 @@ namespace Nop.Web.Controllers
                 if (!cart.Any())
                     throw new Exception("Your cart is empty");
 
-                var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == model.BillingNewAddress.Id);
+                var customer = _workContext.CurrentCustomer;
+                //find address (ensure that it belongs to the current customer)
+                var address = _customerService.GetCustomerAddress(customer.Id, model.BillingNewAddress.Id);
                 if (address == null)
                     throw new Exception("Address can't be loaded");
 
                 address = model.BillingNewAddress.ToEntity(address);
+                _addressService.UpdateAddress(address);
 
-                _workContext.CurrentCustomer.BillingAddress = address;
+                _workContext.CurrentCustomer.BillingAddressId = address.Id;
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
                 if (!opc)
@@ -357,7 +360,7 @@ namespace Nop.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
-            var address = customer.Addresses.FirstOrDefault(a => a.Id == addressId);
+            var address = _customerService.GetCustomerAddress(customer.Id, addressId);
             if (address != null)
             {
                 _customerService.RemoveCustomerAddress(customer, address);

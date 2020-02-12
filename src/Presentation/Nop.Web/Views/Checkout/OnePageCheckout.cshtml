@@ -1,8 +1,9 @@
 ﻿@model OnePageCheckoutModel
 @using Nop.Core
-@using Nop.Core.Domain.Customers
+@using Nop.Services.Customers
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
+@inject ICustomerService _customerService
 @{
     Layout = "_ColumnsOne";
 
@@ -62,7 +63,7 @@
                     <script asp-location="Footer">
                         Billing.init('#co-billing-form', '@(storeLocation)checkout/OpcSaveBilling/',
                             @(Model.DisableBillingAddressCheckoutStep.ToString().ToLowerInvariant()),
-                            @(workContext.CurrentCustomer.IsGuest().ToString().ToLowerInvariant()));
+                            @(_customerService.IsGuest(workContext.CurrentCustomer).ToString().ToLowerInvariant()));
                         if ($("#billing-address-select").length > 0) {
                             Billing.newAddress(!$('#billing-address-select').val());
                         }

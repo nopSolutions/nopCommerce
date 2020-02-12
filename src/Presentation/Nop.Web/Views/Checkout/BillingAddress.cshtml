@@ -1,8 +1,9 @@
 ﻿@using Nop.Core
-@using Nop.Core.Domain.Customers
+@using Nop.Services.Customers
 @model CheckoutBillingAddressModel
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
+@inject ICustomerService _customerService
 @{
     Layout = "_ColumnsOne";
 
@@ -53,18 +54,18 @@
                                 {
                                     <div class="address-item">
                                         <div class="address-list-page">
-                                            <input id="billingaddress-edit-button"
+                                            <input id="edit-button-@(item.Id)"
                                                    type="button"
                                                    class="button-2 edit-address-button"
                                                    style="float: right; margin: 20px 10px 10px 12px; display: none;"
                                                    onclick="CheckoutBilling.editAddress('@(storeLocation)checkout/GetAddressById/', @(item.Id)); return false;"
-                                                   value="@T("Common.Edit")"/>
-                                            <input id="billingaddress-delete-button"
+                                                   value="@T("Common.Edit")" />
+                                            <input id="delete-button-@(item.Id)"
                                                    type="button"
                                                    class="button-2 delete-address-button"
                                                    style="float: right; margin: 20px 0 10px 0; display: none;"
                                                    onclick="CheckoutBilling.deleteEditAddress('@(storeLocation)checkout/DeleteEditAddress/', @(item.Id)); return false;"
-                                                   value="@T("Common.Delete")"/>
+                                                   value="@T("Common.Delete")" />
                                         </div>
                                         <ul class="address-box">
                                             <li class="name">
@@ -107,37 +108,37 @@
                                                 </li>
                                             }
                                             @if (item.CityEnabled && !string.IsNullOrEmpty(item.City) ||
-                                                 item.CountyEnabled && !string.IsNullOrEmpty(item.County) ||
-                                                 item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) ||
-                                                 item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                                item.CountyEnabled && !string.IsNullOrEmpty(item.County) ||
+                                                item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) ||
+                                                item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
                                             {
                                                 <li class="city-state-zip">
                                                     @if (item.CityEnabled && !string.IsNullOrEmpty(item.City))
                                                     {
                                                         @item.City
-                                                        @if (item.CountyEnabled && !string.IsNullOrEmpty(item.County) ||
-                                                             item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) ||
-                                                             item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
-                                                         {
-                                                             <text>,</text>
-                                                         }
+                                                        if (item.CountyEnabled && !string.IsNullOrEmpty(item.County) ||
+                                                            item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) ||
+                                                            item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                                        {
+                                                            <text>,</text>
+                                                        }
                                                     }
                                                     @if (item.CountyEnabled && !string.IsNullOrEmpty(item.County))
                                                     {
                                                         @item.County
-                                                        @if (item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) ||
-                                                             item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
-                                                         {
-                                                             <text>,</text>
-                                                         }
+                                                        if (item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName) ||
+                                                            item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                                        {
+                                                            <text>,</text>
+                                                        }
                                                     }
                                                     @if (item.StateProvinceEnabled && !string.IsNullOrEmpty(item.StateProvinceName))
                                                     {
                                                         @item.StateProvinceName
-                                                        @if (item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
-                                                         {
-                                                             <text>,</text>
-                                                         }
+                                                        if (item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
+                                                        {
+                                                            <text>,</text>
+                                                        }
                                                     }
                                                     @if (item.ZipPostalCodeEnabled && !string.IsNullOrEmpty(item.ZipPostalCode))
                                                     {
@@ -179,7 +180,7 @@
                         </div>
                     }
                 </div>
-                @await Component.InvokeAsync("Widget", new {widgetZone = PublicWidgetZones.CheckoutBillingAddressMiddle})
+                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutBillingAddressMiddle })
                 <div class="section new-billing-address" id="billingaddress-new-form">
                     <div class="title">
                         @if (Model.ExistingAddresses.Count > 0)
@@ -200,7 +201,7 @@
                         }
                     </div>
                 </div>
-                @await Component.InvokeAsync("Widget", new {widgetZone = PublicWidgetZones.CheckoutBillingAddressBottom})
+                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.CheckoutBillingAddressBottom })
             </div>
             <div class="buttons">
                 <input id="billingaddress-save-button"
@@ -208,21 +209,21 @@
                        class="button-1"
                        style="display: none"
                        onclick="CheckoutBilling.saveEditAddress('@(storeLocation)checkout/SaveEditAddress/'); return false;"
-                       value="@T("Common.Save")"/>
+                       value="@T("Common.Save")" />
                 <input id="billingaddress-cancel-button"
                        type="button"
                        class="button-1"
                        style="display: none"
                        onclick="setLocation('@Url.RouteUrl("CheckoutBillingAddress")')"
-                       value="@T("Common.Cancel")"/>
-                <input id="billingaddress-next-button" type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button"/>
+                       value="@T("Common.Cancel")" />
+                <input id="billingaddress-next-button" type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button" />
             </div>
         </form>
         <script asp-location="Footer">
             CheckoutBilling.init('#billing-form');
-            if (@(workContext.CurrentCustomer.IsGuest().ToString().ToLowerInvariant())) {
-                $('#billingaddress-edit-button').show();
-                $('#billingaddress-delete-button').show();
+            if (@(_customerService.IsGuest(workContext.CurrentCustomer).ToString().ToLowerInvariant())) {
+                $('input.edit-address-button').show();
+                $('input.delete-address-button').show();
             }
         </script>
         <div class="section order-summary">
