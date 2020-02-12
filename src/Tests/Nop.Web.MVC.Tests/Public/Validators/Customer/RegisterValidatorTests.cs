@@ -18,7 +18,13 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [SetUp]
         public new void Setup()
         {
-            _customerSettings = new CustomerSettings();
+            _customerSettings = new CustomerSettings
+            {
+                FirstNameEnabled = true,
+                FirstNameRequired = true,
+                LastNameEnabled = true,
+                LastNameRequired = true
+            };
             _stateProvinceService = new Mock<IStateProvinceService>();
             _validator = new RegisterValidator(_localizationService, _stateProvinceService.Object, _customerSettings);
         }
