@@ -7,7 +7,6 @@
     Html.SetActiveMenuItemSystemName("Specification attributes");
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Catalog.Attributes.SpecificationAttributes")
@@ -18,6 +17,11 @@
             @T("Admin.Common.AddNew")
         </a>
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.SpecificationAttributeListButtons })
+        <button type="button" id="delete-selected" class="btn bg-red">
+            <i class="fa fa-trash-o"></i>
+            @T("Admin.Common.Delete.Selected")
+        </button>
+        <nop-action-confirmation asp-button-id="delete-selected" />
     </div>
 </div>
 
@@ -36,6 +40,13 @@
                     LengthMenu = Model.AvailablePageSizes,
                     ColumnCollection = new List<ColumnProperty>
                     {
+                        new ColumnProperty(nameof(SpecificationAttributeModel.Id))
+                        {
+                            IsMasterCheckBox = true,
+                            Render = new RenderCheckBox("checkbox_specificationattributes"),
+                            ClassName =  NopColumnClassDefaults.CenterAll,
+                            Width = "50"
+                        },
                         new ColumnProperty(nameof(SpecificationAttributeModel.Name))
                         {
                             Title = T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name").Text
@@ -55,6 +66,33 @@
                         }
                     }
                 })
+
+                <script>
+                    $(document).ready(function () {
+                        $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                            var postData = {
+                                selectedIds: selectedIds
+                            };
+                            addAntiForgeryToken(postData);
+                            $.ajax({
+                                cache: false,
+                                type: "POST",
+                                url: "@(Url.Action("DeleteSelected", "SpecificationAttribute"))",
+                                data: postData,
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    $('#deleteSelectedFailed-info').text(errorThrown);
+                                    $('#deleteSelectedFailed').click();
+                                },
+                                complete: function (jqXHR, textStatus) {
+                                    updateTable('#specificationattributes-grid');
+                                }
+                            });
+                            $('#delete-selected-action-confirmation').modal('toggle');
+                            return false;
+                        });
+                    });
+                </script>
+                <nop-alert asp-alert-id="deleteSelectedFailed" />
             </div>
         </div>
     </div>

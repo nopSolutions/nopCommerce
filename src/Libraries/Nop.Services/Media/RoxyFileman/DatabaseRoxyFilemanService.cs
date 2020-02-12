@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Bmp;
@@ -110,21 +110,10 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>List of paths to the files</returns>
         protected override List<string> GetFiles(string directoryPath, string type)
         {
-            if (type == "#")
-                type = string.Empty;
-
-            var files = new List<string>();
-
             //store files on disk if needed
             FlushImagesOnDisk(directoryPath);
 
-            foreach (var fileName in _fileProvider.GetFiles(_fileProvider.DirectoryExists(directoryPath) ? directoryPath : GetFullPath(directoryPath)))
-            {
-                if (string.IsNullOrEmpty(type) || GetFileType(_fileProvider.GetFileExtension(fileName)) == type)
-                    files.Add(fileName);
-            }
-
-            return files;
+            return base.GetFiles(directoryPath, type);
         }
 
         /// <summary>
@@ -142,7 +131,7 @@ namespace Nop.Services.Media.RoxyFileman
                 var destinationPathVirtualPath =
                     $"{baseDestinationPathVirtualPath.TrimEnd('/')}{picture.VirtualPath.Replace(_fileProvider.GetVirtualPath(sourcePath), "")}";
 
-                _pictureService.InsertPicture(new RoxyFilemanFormFile(picture, _pictureService.GetFileExtensionFromMimeType(picture.MimeType)), string.Empty, destinationPathVirtualPath);
+                _pictureService.InsertPicture(new RoxyFilemanFormFile(picture, _pictureService.GetPictureBinaryByPictureId(picture.Id), _pictureService.GetFileExtensionFromMimeType(picture.MimeType)), string.Empty, destinationPathVirtualPath);
             }
         }
 
@@ -240,7 +229,7 @@ namespace Nop.Services.Media.RoxyFileman
             if (height < 1)
                 height = 1;
 
-            //we invoke Math.Round to ensure that no white background is rendered - https://www.nopcommerce.com/boards/t/40616/image-resizing-bug.aspx
+            //we invoke Math.Round to ensure that no white background is rendered - https://www.nopcommerce.com/boards/topic/40616/image-resizing-bug
             return new Size((int)Math.Round(width), (int)Math.Round(height));
         }
 
@@ -337,7 +326,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <param name="maxHeight">Max image height</param>
         protected virtual void FlushImages(Picture picture, int maxWidth, int maxHeight)
         {
-            var image = Image.Load(picture.PictureBinary.BinaryData);
+            var image = Image.Load(_pictureService.GetPictureBinaryByPictureId(picture.Id).BinaryData);
 
             maxWidth = image.Width > maxWidth ? maxWidth : 0;
             maxHeight = image.Height > maxHeight ? maxHeight : 0;
@@ -366,15 +355,11 @@ namespace Nop.Services.Media.RoxyFileman
                 var picture = new Picture
                 {
                     IsNew = true,
-                    SeoFilename = uniqueFileName,
-                    PictureBinary = new PictureBinary
-                    {
-                        BinaryData = _fileProvider.ReadAllBytes(filePath)
-                    }
+                    SeoFilename = uniqueFileName
                 };
 
                 _pictureService.InsertPicture(
-                    new RoxyFilemanFormFile(picture, _fileProvider.GetFileExtension(filePath)),
+                    new RoxyFilemanFormFile(picture, new PictureBinary { BinaryData = _fileProvider.ReadAllBytes(filePath) },  _fileProvider.GetFileExtension(filePath)),
                     string.Empty, _fileProvider.GetVirtualPath(filePath));
             }
         }
@@ -450,7 +435,7 @@ namespace Nop.Services.Media.RoxyFileman
                 throw new Exception(GetLanguageResource("E_CopyFile"));
 
             _pictureService.InsertPicture(
-                new RoxyFilemanFormFile(picture, _fileProvider.GetFileExtension(filePath)),
+                new RoxyFilemanFormFile(picture, _pictureService.GetPictureBinaryByPictureId(picture.Id), _fileProvider.GetFileExtension(filePath)),
                 string.Empty, _fileProvider.GetVirtualPath(destinationPath));
 
             await GetHttpContext().Response.WriteAsync(GetSuccessResponse());
@@ -527,6 +512,10 @@ namespace Nop.Services.Media.RoxyFileman
             try
             {
                 var fullPath = GetFullPath(GetVirtualPath(directoryPath));
+
+                if (!IsPathAllowed(fullPath))
+                    throw new Exception(GetLanguageResource("E_UploadNotAll"));
+
                 foreach (var formFile in GetHttpContext().Request.Form.Files)
                 {
                     var fileName = formFile.FileName;

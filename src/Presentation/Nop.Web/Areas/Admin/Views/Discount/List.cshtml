@@ -12,7 +12,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Promotions.Discounts")
@@ -112,8 +111,8 @@
                             new FilterParameter(nameof(Model.SearchDiscountTypeId)),
                             new FilterParameter(nameof(Model.SearchDiscountCouponCode)),
                             new FilterParameter(nameof(Model.SearchDiscountName)),
-                            new FilterParameter(nameof(Model.SearchStartDate)),
-                            new FilterParameter(nameof(Model.SearchEndDate))
+                            new FilterParameter(nameof(Model.SearchStartDate), typeof(DateTime?)),
+                            new FilterParameter(nameof(Model.SearchEndDate), typeof(DateTime?))
                         },
                    ColumnCollection = new List<ColumnProperty>
                         {

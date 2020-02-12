@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Routing;
-using Nop.Services.Seo;
+using Nop.Core.Domain.Seo;
 
 namespace Nop.Web.Framework.Seo
 {
@@ -15,7 +15,7 @@ namespace Nop.Web.Framework.Seo
         /// </summary>
         /// <param name="routeData">Route data</param>
         /// <param name="urlRecord">URL record</param>
-        public CustomUrlRecordEntityNameRequestedEvent(RouteData routeData, UrlRecordService.UrlRecordForCaching urlRecord)
+        public CustomUrlRecordEntityNameRequestedEvent(RouteData routeData, UrlRecord urlRecord)
         {
             RouteData = routeData;
             UrlRecord = urlRecord;
@@ -33,7 +33,7 @@ namespace Nop.Web.Framework.Seo
         /// <summary>
         /// Gets or sets URL record
         /// </summary>
-        public UrlRecordService.UrlRecordForCaching UrlRecord { get; private set; }
+        public UrlRecord UrlRecord { get; private set; }
 
         #endregion
 

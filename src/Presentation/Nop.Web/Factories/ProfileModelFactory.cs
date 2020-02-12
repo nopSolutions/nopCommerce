@@ -144,7 +144,7 @@ namespace Nop.Web.Factories
             }
 
             //private message
-            var pmEnabled = _forumSettings.AllowPrivateMessages && !customer.IsGuest();
+            var pmEnabled = _forumSettings.AllowPrivateMessages && !_customerService.IsGuest(customer);
 
             //total forum posts
             var totalPostsEnabled = false;
@@ -232,11 +232,13 @@ namespace Nop.Web.Factories
                     posted = _dateTimeHelper.ConvertToUserTime(forumPost.CreatedOnUtc, DateTimeKind.Utc).ToString("f");
                 }
 
+                var topic = _forumService.GetTopicById(forumPost.TopicId);
+
                 latestPosts.Add(new PostsModel
                 {
-                    ForumTopicId = forumPost.TopicId,
-                    ForumTopicTitle = forumPost.ForumTopic.Subject,
-                    ForumTopicSlug = _forumService.GetTopicSeName(forumPost.ForumTopic),
+                    ForumTopicId = topic.Id,
+                    ForumTopicTitle = topic.Subject,
+                    ForumTopicSlug = _forumService.GetTopicSeName(topic),
                     ForumPostText = _forumService.FormatPostText(forumPost),
                     Posted = posted
                 });

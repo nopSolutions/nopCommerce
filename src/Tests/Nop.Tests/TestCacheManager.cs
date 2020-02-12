@@ -9,6 +9,8 @@ namespace Nop.Tests
     /// </summary>
     public partial class TestCacheManager : IStaticCacheManager
     {
+        private bool _disposed = false;
+
         /// <summary>
         /// Get a cached item. If it's not in the cache yet, then load and cache it
         /// </summary>
@@ -83,9 +85,24 @@ namespace Nop.Tests
         /// <summary>
         /// Dispose cache manager
         /// </summary>
-        public virtual void Dispose()
+        public void Dispose()
         {
-            //nothing special
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern.
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                //nothing special
+            }
+
+            _disposed = true;
         }
     }
 }

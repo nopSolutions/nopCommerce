@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>Sử dụng lưu trữ dữ liệu tích hợp (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>Tên máy chủ SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>Bắt buộc nhập tên máy chủ SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>Mật khẩu SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>Bắt buộc nhập mật khẩu SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>Người dùng SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>Bắt buộc nhập người dùng SQL</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Sử dụng cơ sở dữ liệu Microsoft SQL Server (hoặc SQL Express)</Value>
   </LocaleResource>
   <LocaleResource Name="WebsiteInformation">
     <Value>Thông tin website</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>Để hoàn thành cài đặt, bạn phải cung cấp một số thông tin liên quan đến máy chủ cơ sở dữ liệu ("chuỗi kết nối"). Hãy liên hệ với nhà cung cấp dịch vụ Internet của bạn nếu cần thiết. Nếu bạn đang cài đặt trên máy tính hoặc trên máy chủ, có thể bạn sẽ cần hỏi thông tin từ Quản trị viên Hệ thống của mình.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>Sử dụng xác thực tích hợp với Windows</Value>
   </LocaleResource>
 </Language>

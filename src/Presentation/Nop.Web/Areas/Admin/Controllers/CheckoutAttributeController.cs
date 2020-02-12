@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
@@ -349,6 +350,28 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        [HttpPost]
+        public virtual IActionResult DeleteSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                var checkoutAttributes = _checkoutAttributeService.GetCheckoutAttributeByIds(selectedIds.ToArray());
+                _checkoutAttributeService.DeleteCheckoutAttributes(checkoutAttributes);
+
+                foreach (var checkoutAttribute in checkoutAttributes)
+                {
+                    //activity log
+                    _customerActivityService.InsertActivity("DeleteCheckoutAttribute",
+                        string.Format(_localizationService.GetResource("ActivityLog.DeleteCheckoutAttribute"), checkoutAttribute.Name), checkoutAttribute);
+                }
+            }
+
+            return Json(new { Result = true });
+        }
+
         #endregion
 
         #region Checkout attribute values
@@ -476,7 +499,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
 
-            if (checkoutAttributeValue.CheckoutAttribute.AttributeControlType == AttributeControlType.ColorSquares)
+            if (checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares)
             {
                 //ensure valid color is chosen/entered
                 if (string.IsNullOrEmpty(model.ColorSquaresRgb))

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Moq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
@@ -47,23 +48,24 @@ namespace Nop.Services.Tests.Localization
 
             _storeMappingService = new Mock<IStoreMappingService>();
 
-            var cacheManager = new TestCacheManager();
-
             _settingService = new Mock<ISettingService>();
 
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
             _localizationSettings = new LocalizationSettings();
-            _languageService = new LanguageService(_eventPublisher.Object, _languageRepo.Object,_settingService.Object, cacheManager, _storeMappingService.Object, _localizationSettings);
+            _languageService = new LanguageService(_eventPublisher.Object, _languageRepo.Object,_settingService.Object, new TestCacheManager(),  _storeMappingService.Object, _localizationSettings);
         }
 
         [Test]
         public void Can_get_all_languages()
         {
-            var languages = _languageService.GetAllLanguages();
-            languages.ShouldNotBeNull();
-            languages.Any().ShouldBeTrue();
+            RunWithTestServiceProvider(() =>
+            {
+                var languages = _languageService.GetAllLanguages();
+                languages.Should().NotBeNull();
+                languages.Any().Should().BeTrue();
+            });
         }
     }
 }

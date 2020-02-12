@@ -10,6 +10,11 @@
             ? $"{(dataUrl.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(dataUrl.Url) : dataUrl.Url).TrimEnd('/')}" + (!dataUrl.TrimEnd ? "/" : "")
             : string.Empty;
     }
+
+    string ReplaceName(string str)
+    {
+        return str.Replace("-", "_");
+    }
 }
 <table class="table table-bordered table-hover table-striped dataTable" width="100%" id="@Model.Name">
     @if (Model.FooterColumns > 0)
@@ -31,10 +36,30 @@
     //check using MasterCheckBox
     var isMasterCheckBoxUsed = Model.ColumnCollection.Any(x => x.IsMasterCheckBox);
     //Model name for js function names
-    var model_name = Model.Name.Replace("-", "_");
+    var model_name = ReplaceName(Model.Name);
 }
 
 <script>
+    var entityMap = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+        '/': '&#x2F;',
+        '`': '&#x60;',
+        '=': '&#x3D;'
+    };
+
+    function escapeHtml (string) {
+        if (string == null) {
+            return '';
+        }
+        return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+            return entityMap[s];
+        });
+    }
+
     @if (isMasterCheckBoxUsed)
     {
         //selectedIds - This variable will be used on views. It can not be renamed
@@ -51,6 +76,7 @@
 
     function updateTable(tableSelector) {
         $(tableSelector).DataTable().ajax.reload();
+        $(tableSelector).DataTable().columns.adjust();
         if (@isMasterCheckBoxUsed.ToString().ToLower()) {
             $('#mastercheckbox').attr('checked', false).change();
             selectedIds = [];
@@ -59,14 +85,14 @@
 
     $(document).ready(function () {
         $('#@Model.Name').DataTable({
-             @await Html.PartialAsync("_Table.Definition", Model)
-        });
+             @await Html.PartialAsync("_Table.Definition", Model)            
+        });        
 
         @if (!string.IsNullOrEmpty(Model.SearchButtonId))
         {
             <text>
             $('#@Model.SearchButtonId').click(function() {
-                $('#@Model.Name').DataTable().ajax.reload();
+                $('#@Model.Name').DataTable().ajax.reload();                
                 $('.checkboxGroups').attr('checked', false).change();
                 selectedIds = [];
                 return false;
@@ -96,6 +122,7 @@
             });
             </text>
         }
+        $('#@Model.Name').DataTable().columns.adjust();
     });
 </script>
 @if ((Model.UrlDelete != null) || (Model.ChildTable?.UrlDelete != null))
@@ -153,7 +180,7 @@
         var editIndexTable_@(model_name) = -1;
         var editRowData_@(model_name) = [];
         var columnData_@(model_name) = [];
-        @foreach(var column in Model.ColumnCollection.Where(x => x.Editable))
+        @foreach (var column in Model.ColumnCollection.Where(x => x.Editable))
         {
             <text>
                 var obj = { 'Data': '@column.Data', 'Editable': @column.Editable.ToString().ToLower(), 'Type': '@column.EditType.ToString().ToLower()' }
@@ -224,6 +251,7 @@
                     var strValue = editRowData_@(model_name)[cellName];
                     $($(curRow).children("[data-columnname='" + cellName + "']")[0]).html('<input value="' + escapeQuotHtml(strValue) + '" class="userinput"  style="width: 99% " />');
                 }
+                $('#@Model.Name').DataTable().columns.adjust();
             }
         }
 
@@ -325,17 +353,33 @@
 
 @if (Model.ChildTable != null)
 {
+    @functions{
+        void GetAllModels(DataTablesModel model, List<DataTablesModel> models)
+        {        
+            models.Add(model);
+            if (model.ChildTable.ChildTable != null)
+            {
+                GetAllModels(model.ChildTable, models);
+            }
+        }
+    }
+    
+    var listofTables = new List<DataTablesModel>();
+    GetAllModels(Model,listofTables);
+    foreach (var curModel in listofTables)
+    {
+        var modelName = ReplaceName(curModel.Name);
     <text>
     <script>
-        function getchild_@(model_name)(d) {
-            return '<table id="child' + d.@(Model.PrimaryKeyColumn) + '" class="table table-bordered table-hover dataTable" width="100%" style="padding-left:2%;"></table>';
+        function getchild_@(modelName)(d) {
+            return '<table id="child' + d.@(curModel.PrimaryKeyColumn) + '" class="table table-bordered table-hover dataTable" width="100%" style="padding-left:2%;"></table>';
         }
         $(document).ready(function () {
             // Add event listener for opening and closing childs
-            $('#@Model.Name tbody').on('click', 'td.child-control', function () {
+            $('#@curModel.Name tbody').on('click', 'td.child-control', function () {
                 var tr = $(this).closest('tr');
                 var tdi = tr.find('i.fa');
-                var row = $('#@Model.Name').DataTable().row(tr);
+                var row = $('#@curModel.Name').DataTable().row(tr);
 
                 if (row.child.isShown()) {
                     // This row is already open - close it
@@ -346,17 +390,19 @@
                 }
                 else {
                     // Open this row
-                    row.child(getchild_@(model_name)(row.data())).show();
-                    var classid = '#child' + row.data().@(Model.PrimaryKeyColumn);
+                    row.child(getchild_@(modelName)(row.data())).show();
+                    var classid = '#child' + row.data().@(curModel.PrimaryKeyColumn);
                     $(classid).DataTable({
-                        @await Html.PartialAsync("_Table.Definition", Model.ChildTable)
+                        @await Html.PartialAsync("_Table.Definition", curModel.ChildTable)
                     }).draw;
                     tr.addClass('shown');
                     tdi.first().removeClass('fa-caret-right');
                     tdi.first().addClass(' fa-caret-down');
                 }
+                $('#@curModel.Name').DataTable().columns.adjust();
             });
         });
     </script>
     </text>
+    }
 }

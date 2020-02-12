@@ -105,26 +105,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>Använd inbyggd datalagring (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>SQL Server namn</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>SQL Server namn måste anges.</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL Lösenord</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>SQL Lösenord måste anges</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>SQL Användarnamn</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>SQL Användarnamn måste anges</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Använd Microsoft SQL Server (eller SQL Express) databas</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Butiksinformation</Value>
@@ -138,7 +135,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>För att genomföra den här guiden behöver du känna till en del information om din databasserver ("anslutningssträng"). Vänligen kontakta din internetleverantör vid behov. Om du installerar på en lokal maskin eller server, kanske du behöver kontakta din systemadministratör.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>Använd integrerad Windowsautenticering</Value>
   </LocaleResource>
 </Language>

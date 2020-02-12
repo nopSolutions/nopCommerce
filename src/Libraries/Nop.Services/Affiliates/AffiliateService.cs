@@ -1,10 +1,14 @@
-using System;
+﻿using System;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Affiliates;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Seo;
+using Nop.Data;
+using Nop.Services.Caching.Extensions;
+using Nop.Services.Common;
+using Nop.Services.Defaults;
 using Nop.Services.Events;
 using Nop.Services.Seo;
 
@@ -17,7 +21,9 @@ namespace Nop.Services.Affiliates
     {
         #region Fields
 
+        private readonly IAddressService _addressService;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<Address> _addressRepository;
         private readonly IRepository<Affiliate> _affiliateRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IUrlRecordService _urlRecordService;
@@ -28,14 +34,18 @@ namespace Nop.Services.Affiliates
 
         #region Ctor
 
-        public AffiliateService(IEventPublisher eventPublisher,
+        public AffiliateService(IAddressService addressService,
+            IEventPublisher eventPublisher,
+            IRepository<Address> addressRepository,
             IRepository<Affiliate> affiliateRepository,
             IRepository<Order> orderRepository,
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
             SeoSettings seoSettings)
         {
+            _addressService = addressService;
             _eventPublisher = eventPublisher;
+            _addressRepository = addressRepository;
             _affiliateRepository = affiliateRepository;
             _orderRepository = orderRepository;
             _urlRecordService = urlRecordService;
@@ -57,7 +67,7 @@ namespace Nop.Services.Affiliates
             if (affiliateId == 0)
                 return null;
 
-            return _affiliateRepository.GetById(affiliateId);
+            return _affiliateRepository.ToCachedGetById(affiliateId);
         }
 
         /// <summary>
@@ -115,12 +125,22 @@ namespace Nop.Services.Affiliates
             bool showHidden = false)
         {
             var query = _affiliateRepository.Table;
+
             if (!string.IsNullOrWhiteSpace(friendlyUrlName))
                 query = query.Where(a => a.FriendlyUrlName.Contains(friendlyUrlName));
+
             if (!string.IsNullOrWhiteSpace(firstName))
-                query = query.Where(a => a.Address.FirstName.Contains(firstName));
+                query = from aff in query
+                         join addr in _addressRepository.Table on aff.AddressId equals addr.Id
+                         where addr.FirstName.Contains(firstName)
+                         select aff;
+
             if (!string.IsNullOrWhiteSpace(lastName))
-                query = query.Where(a => a.Address.LastName.Contains(lastName));
+                query = from aff in query
+                         join addr in _addressRepository.Table on aff.AddressId equals addr.Id
+                         where addr.LastName.Contains(lastName)
+                         select aff;
+
             if (!showHidden)
                 query = query.Where(a => a.Active);
             query = query.Where(a => !a.Deleted);
@@ -186,20 +206,12 @@ namespace Nop.Services.Affiliates
             if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
 
-            var firstName = affiliate.Address.FirstName;
-            var lastName = affiliate.Address.LastName;
+            var affiliateAddress = _addressService.GetAddressById(affiliate.AddressId);
 
-            var fullName = string.Empty;
-            if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
-                fullName = $"{firstName} {lastName}";
-            else
-            {
-                if (!string.IsNullOrWhiteSpace(firstName))
-                    fullName = firstName;
+            if (affiliateAddress == null)
+                return string.Empty;
 
-                if (!string.IsNullOrWhiteSpace(lastName))
-                    fullName = lastName;
-            }
+            var fullName = $"{affiliateAddress.FirstName} {affiliateAddress.LastName}";
 
             return fullName;
         }

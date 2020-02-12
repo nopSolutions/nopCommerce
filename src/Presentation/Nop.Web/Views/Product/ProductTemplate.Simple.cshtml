@@ -53,7 +53,11 @@
     <div class="page-body">
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsTop, additionalData = Model })
         <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
-            <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
+            @if (seoSettings.MicrodataEnabled)
+            {
+                @await Html.PartialAsync("_Microdata", Model)
+            }
+            <div data-productid="@Model.Id">
                 <div class="product-essential">
                     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsEssentialTop, additionalData = Model })
                     <!--product pictures-->
@@ -61,7 +65,7 @@
                     <div class="overview">
                         @await Html.PartialAsync("_Discontinued", Model)
                         <div class="product-name">
-                            <h1 itemprop="name">
+                            <h1>
                                 @Model.Name
                             </h1>
                         </div>
@@ -131,7 +135,7 @@
                     </div>
                     @if (!string.IsNullOrEmpty(Model.FullDescription))
                     {
-                        <div class="full-description" itemprop="description">
+                        <div class="full-description">
                             @Html.Raw(Model.FullDescription)
                         </div>
                     }

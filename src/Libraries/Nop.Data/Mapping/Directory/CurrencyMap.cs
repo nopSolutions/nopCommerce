@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Directory;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Directory
 {
@@ -15,20 +15,23 @@ namespace Nop.Data.Mapping.Directory
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<Currency> builder)
+        public override void Configure(EntityMappingBuilder<Currency> builder)
         {
-            builder.ToTable(nameof(Currency));
-            builder.HasKey(currency => currency.Id);
+            builder.HasTableName(nameof(Currency));
 
-            builder.Property(currency => currency.Name).HasMaxLength(50).IsRequired();
-            builder.Property(currency => currency.CurrencyCode).HasMaxLength(5).IsRequired();
-            builder.Property(currency => currency.DisplayLocale).HasMaxLength(50);
-            builder.Property(currency => currency.CustomFormatting).HasMaxLength(50);
-            builder.Property(currency => currency.Rate).HasColumnType("decimal(18, 4)");
+            builder.Property(currency => currency.Name).HasLength(50).IsNullable(false);
+            builder.Property(currency => currency.CurrencyCode).HasLength(5).IsNullable(false);
+            builder.Property(currency => currency.DisplayLocale).HasLength(50);
+            builder.Property(currency => currency.CustomFormatting).HasLength(50);
+            builder.Property(currency => currency.Rate).HasDecimal();
+            builder.Property(currency => currency.LimitedToStores);
+            builder.Property(currency => currency.Published);
+            builder.Property(currency => currency.DisplayOrder);
+            builder.Property(currency => currency.CreatedOnUtc);
+            builder.Property(currency => currency.UpdatedOnUtc);
+            builder.Property(currency => currency.RoundingTypeId);
 
             builder.Ignore(currency => currency.RoundingType);
-
-            base.Configure(builder);
         }
 
         #endregion

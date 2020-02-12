@@ -138,8 +138,8 @@
                             LengthMenu = Model.AvailablePageSizes,
                             Filters = new List<FilterParameter>
                             {
-                                new FilterParameter(nameof(Model.SearchStartDate)),
-                                new FilterParameter(nameof(Model.SearchEndDate)),
+                                new FilterParameter(nameof(Model.SearchStartDate), typeof(DateTime?)),
+                                new FilterParameter(nameof(Model.SearchEndDate), typeof(DateTime?)),
                                 new FilterParameter(nameof(Model.SearchFromEmail)),
                                 new FilterParameter(nameof(Model.SearchToEmail)),
                                 new FilterParameter(nameof(Model.SearchLoadNotSent), typeof(bool)),
@@ -152,17 +152,16 @@
                                     IsMasterCheckBox = true,
                                     Render = new RenderCheckBox("checkbox_queuedemails"),
                                     ClassName =  NopColumnClassDefaults.CenterAll,
-                                    Width = "50",
+                                    Width = "50"
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.Id))
                                 {
                                     Title = T("Admin.System.QueuedEmails.Fields.Id").Text,
-                                    Width = "100",
+                                    Width = "50",
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.Subject))
                                 {
-                                    Title = T("Admin.System.QueuedEmails.Fields.Subject").Text,
-                                    Width = "300",
+                                    Title = T("Admin.System.QueuedEmails.Fields.Subject").Text
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.From))
                                 {
@@ -177,25 +176,25 @@
                                 new ColumnProperty(nameof(QueuedEmailModel.CreatedOn))
                                 {
                                     Title = T("Admin.System.QueuedEmails.Fields.CreatedOn").Text,
-                                    Width = "200",
+                                    Width = "150",
                                     Render = new RenderDate()
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.DontSendBeforeDate))
                                 {
                                     Title = T("Admin.System.QueuedEmails.Fields.DontSendBeforeDate").Text,
-                                    Width = "200",
+                                    Width = "150",
                                     Render = new RenderDate()
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.SentOn))
                                 {
                                     Title = T("Admin.System.QueuedEmails.Fields.SentOn").Text,
-                                    Width = "100",
+                                    Width = "150",
                                     Render = new RenderDate()
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.PriorityName))
                                 {
                                     Title = T("Admin.System.QueuedEmails.Fields.Priority").Text,
-                                    Width = "150",
+                                    Width = "120",
                                 },
                                 new ColumnProperty(nameof(QueuedEmailModel.Id))
                                 {

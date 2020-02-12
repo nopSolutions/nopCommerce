@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -7,8 +7,9 @@ using System.Reflection;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
-using Nop.Core.Data;
 using Nop.Core.Domain.Configuration;
+using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Configuration
@@ -39,47 +40,28 @@ namespace Nop.Services.Configuration
 
         #endregion
 
-        #region Nested classes
-
-        /// <summary>
-        /// Setting (for caching)
-        /// </summary>
-        [Serializable]
-        public class SettingForCaching
-        {
-            public int Id { get; set; }
-
-            public string Name { get; set; }
-
-            public string Value { get; set; }
-
-            public int StoreId { get; set; }
-        }
-
-        #endregion
-
         #region Utilities
 
         /// <summary>
         /// Gets all settings
         /// </summary>
         /// <returns>Settings</returns>
-        protected virtual IDictionary<string, IList<SettingForCaching>> GetAllSettingsCached()
+        protected virtual IDictionary<string, IList<Setting>> GetAllSettingsCached()
         {
             //cache
             return _cacheManager.Get(NopConfigurationDefaults.SettingsAllCacheKey, () =>
             {
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
-                var query = from s in _settingRepository.TableNoTracking
+                var query = from s in _settingRepository.Table
                             orderby s.Name, s.StoreId
                             select s;
                 var settings = query.ToList();
-                var dictionary = new Dictionary<string, IList<SettingForCaching>>();
+                var dictionary = new Dictionary<string, IList<Setting>>();
                 foreach (var s in settings)
                 {
                     var resourceName = s.Name.ToLowerInvariant();
-                    var settingForCaching = new SettingForCaching
+                    var settingForCaching = new Setting
                     {
                         Id = s.Id,
                         Name = s.Name,
@@ -89,7 +71,7 @@ namespace Nop.Services.Configuration
                     if (!dictionary.ContainsKey(resourceName))
                     {
                         //first setting
-                        dictionary.Add(resourceName, new List<SettingForCaching>
+                        dictionary.Add(resourceName, new List<Setting>
                         {
                             settingForCaching
                         });
@@ -162,7 +144,7 @@ namespace Nop.Services.Configuration
 
             //cache
             if (clearCache)
-                _cacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
+                ClearCache();
 
             //event notification
             _eventPublisher.EntityInserted(setting);
@@ -182,7 +164,7 @@ namespace Nop.Services.Configuration
 
             //cache
             if (clearCache)
-                _cacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
+                ClearCache();
 
             //event notification
             _eventPublisher.EntityUpdated(setting);
@@ -200,7 +182,7 @@ namespace Nop.Services.Configuration
             _settingRepository.Delete(setting);
 
             //cache
-            _cacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
+            ClearCache();
 
             //event notification
             _eventPublisher.EntityDeleted(setting);
@@ -218,7 +200,7 @@ namespace Nop.Services.Configuration
             _settingRepository.Delete(settings);
 
             //cache
-            _cacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
+            ClearCache();
 
             //event notification
             foreach (var setting in settings)
@@ -237,7 +219,7 @@ namespace Nop.Services.Configuration
             if (settingId == 0)
                 return null;
 
-            return _settingRepository.GetById(settingId);
+            return _settingRepository.ToCachedGetById(settingId);
         }
 
         /// <summary>

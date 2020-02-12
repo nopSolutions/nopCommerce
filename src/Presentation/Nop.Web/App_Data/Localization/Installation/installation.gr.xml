@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>Χρησιμοποιήστε την ενσωματωμένη αποθήκευση δεδομένων (SQL Server Compact Edition)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>Όνομα του SQL διακομιστή</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>Το όνομα του SQL διακομιστή απαιτείται</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL κωδικός</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>Ο SQL κωδικός απαιτείται</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>SQL όνομα χρήστη</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>Το SQL όνομα χρήστη απαιτείται</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Χρήση του Microsoft SQL Server (ή SQL Express) ως βάση δεδομένων</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Πληροφορίες καταστηματός</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>Για την ολοκλήρωση αυτού του οδηγού θα πρέπει να γνωρίζουμε κάποιες πληροφορίες σχετικά με server της βάσης δεδομένων σας ("συμβολοσειρά σύνδεσης"). Παρακαλούμε επικοινωνήστε με τον ISP σας, εάν είναι απαραίτητο. Εάν θέλετε να εγκαταστήσετε σε έναν τοπικό υπολογιστή ή διακομιστή μπορεί να χρειαστείτε πληροφορίες από διαχειριστή του συστήματός σας.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>Χρησιμοποιήστε το ενσωματωμένο έλεγχο ταυτότητας των Windows</Value>
   </LocaleResource>
 </Language>

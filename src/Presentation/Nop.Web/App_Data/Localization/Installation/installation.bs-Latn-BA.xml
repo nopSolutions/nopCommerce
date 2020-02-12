@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>Koristi internu pohranu podataka (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>Naziv SQL Servera</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>Naziv SQL Servera je obavezan</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL lozinka</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>SQL lozinka je obavezna</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>SQL korisničko ime</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>SQL korisničko ime je obavezno</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Koristi Microsoft SQL Server (ili SQL Express) bazu podataka</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Informacije o prodavnici</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>Za kompletiranje ovog čarobnjaka, morate znati neke informacije o vašoj bazi podataka ("string za povezivanje"). Molimo da kontaktirate vašeg ISP-a ako je to potrebno. Ako instalaciju vršite na lokalnoj mašini ili lokalnom serveru informacije možete tražiti od vašeg sistemskog administratora.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>Koristi internu Windows autentifikaciju</Value>
   </LocaleResource>
 </Language>

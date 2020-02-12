@@ -1,13 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
-using Nop.Data.Extensions;
+using Nop.Services.Caching.Extensions;
 
 namespace Nop.Services.Logging
 {
@@ -19,7 +18,7 @@ namespace Nop.Services.Logging
         #region Fields
 
         private readonly CommonSettings _commonSettings;
-        private readonly IDbContext _dbContext;
+        
         private readonly IRepository<Log> _logRepository;
         private readonly IWebHelper _webHelper;
 
@@ -28,12 +27,10 @@ namespace Nop.Services.Logging
         #region Ctor
 
         public DefaultLogger(CommonSettings commonSettings,
-            IDbContext dbContext,
             IRepository<Log> logRepository,
             IWebHelper webHelper)
         {
             _commonSettings = commonSettings;
-            _dbContext = dbContext;
             _logRepository = logRepository;
             _webHelper = webHelper;
         }
@@ -109,13 +106,7 @@ namespace Nop.Services.Logging
         /// </summary>
         public virtual void ClearLog()
         {
-            //do all databases support "Truncate command"?
-            var logTableName = _dbContext.GetTableName<Log>();
-            _dbContext.ExecuteSqlCommand($"TRUNCATE TABLE [{logTableName}]");
-
-            //var log = _logRepository.Table.ToList();
-            //foreach (var logItem in log)
-            //    _logRepository.Delete(logItem);
+            _logRepository.Truncate();
         }
 
         /// <summary>
@@ -161,7 +152,7 @@ namespace Nop.Services.Logging
             if (logId == 0)
                 return null;
 
-            return _logRepository.GetById(logId);
+            return _logRepository.ToCachedGetById(logId);
         }
 
         /// <summary>
@@ -210,7 +201,7 @@ namespace Nop.Services.Logging
                 ShortMessage = shortMessage,
                 FullMessage = fullMessage,
                 IpAddress = _webHelper.GetCurrentIpAddress(),
-                Customer = customer,
+                CustomerId = customer?.Id,
                 PageUrl = _webHelper.GetThisPageUrl(true),
                 ReferrerUrl = _webHelper.GetUrlReferrer(),
                 CreatedOnUtc = DateTime.UtcNow

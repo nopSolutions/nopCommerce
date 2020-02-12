@@ -1,6 +1,5 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Nop.Data.Mapping;
+﻿using LinqToDB.Mapping;
+using Nop.Data;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
 
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Data
@@ -15,13 +14,23 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Data
         /// <summary>
         /// Configures the entity
         /// </summary>
-        /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<ShippingByWeightByTotalRecord> builder)
+        public override void Configure(EntityMappingBuilder<ShippingByWeightByTotalRecord> builder)
         {
-            builder.ToTable(nameof(ShippingByWeightByTotalRecord));
-            builder.HasKey(record => record.Id);
-
-            builder.Property(record => record.Zip).HasMaxLength(400);
+            builder.HasTableName(nameof(ShippingByWeightByTotalRecord));
+            builder.Property(record => record.StoreId);
+            builder.Property(record => record.WarehouseId);
+            builder.Property(record => record.CountryId);
+            builder.Property(record => record.StateProvinceId);
+            builder.Property(record => record.ShippingMethodId);
+            builder.Property(record => record.WeightFrom).HasPrecision(18).HasScale(2);
+            builder.Property(record => record.WeightTo).HasPrecision(18).HasScale(2);
+            builder.Property(record => record.OrderSubtotalFrom).HasPrecision(18).HasScale(2);
+            builder.Property(record => record.OrderSubtotalTo).HasPrecision(18).HasScale(2);
+            builder.Property(record => record.AdditionalFixedCost).HasPrecision(18).HasScale(2);
+            builder.Property(record => record.PercentageRateOfSubtotal).HasPrecision(18).HasScale(2);
+            builder.Property(record => record.RatePerWeightUnit).HasPrecision(18).HasScale(2);
+            builder.Property(record => record.LowerWeightLimit).HasPrecision(18).HasScale(2);
+            builder.Property(record => record.Zip).HasLength(400);
         }
 
         #endregion

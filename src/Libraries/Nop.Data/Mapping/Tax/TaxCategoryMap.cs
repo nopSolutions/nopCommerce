@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Tax;
 
 namespace Nop.Data.Mapping.Tax
@@ -15,14 +14,12 @@ namespace Nop.Data.Mapping.Tax
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<TaxCategory> builder)
+        public override void Configure(EntityMappingBuilder<TaxCategory> builder)
         {
-            builder.ToTable(nameof(TaxCategory));
-            builder.HasKey(taxCategory => taxCategory.Id);
+            builder.HasTableName(nameof(TaxCategory));
 
-            builder.Property(taxCategory => taxCategory.Name).HasMaxLength(400).IsRequired();
-
-            base.Configure(builder);
+            builder.Property(taxCategory => taxCategory.Name).HasLength(400).IsNullable(false);
+            builder.Property(taxcategory => taxcategory.DisplayOrder);
         }
 
         #endregion

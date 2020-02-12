@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Nop.Core.Events;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Payments;

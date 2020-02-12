@@ -7,10 +7,12 @@
 @inject CommonSettings commonSettings
 @inject LocalizationSettings localizationSettings
 @inject StoreInformationSettings storeInformationSettings
+@inject INopFileProvider fileProvider;
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment HostingEnvironment
 @inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject Nop.Services.Localization.ILanguageService languageService
 @using System.Globalization
-@using Nop.Core.Domain.Customers
+@using Nop.Core.Caching
 @using Nop.Web.Framework.UI;
 @using Nop.Core.Domain
 @using Nop.Core.Domain.Localization
@@ -21,7 +23,26 @@
 @{
     var returnUrl = webHelper.GetRawUrl(Context.Request);
 
-    var kendoVersion = "2019.2.619";
+    //Kendo UI
+    var kendoVersion = "2019.3.1023";
+    var currentKendoCulture = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.LanguageCulture;
+    var currentCulture = CultureInfo.CurrentCulture;
+
+    //Code to get check if current cultures scripts are exists. If not, select parent cultures scripts
+    string GetDefaultLocale()
+    {
+        var localePattern = NopCommonDefaults.LocalePatternPath;
+        
+        var cultureToUse = NopCommonDefaults.DefaultLocalePattern; //Default regionalisation to use
+
+        if (fileProvider.DirectoryExists(fileProvider.Combine(HostingEnvironment.WebRootPath, string.Format(localePattern, currentCulture.Name))))
+            cultureToUse = currentCulture.Name;
+        else if (fileProvider.DirectoryExists(fileProvider.Combine(HostingEnvironment.WebRootPath, string.Format(localePattern, currentCulture.TwoLetterISOLanguageName))))
+            cultureToUse = currentCulture.TwoLetterISOLanguageName;
+
+        return cultureToUse;
+    }
+
     var jQueryUI = "1.10.3";
 
     var supportRtl = workContext.WorkingLanguage.Rtl && !localizationSettings.IgnoreRtlPropertyForAdminArea;
@@ -44,9 +65,9 @@
     Html.AppendCssFileParts($"~/lib/datatables/buttons.dataTables.min.css");
     Html.AppendCssFileParts($"~/lib/datatables/datatables.min.css");
     Html.AppendCssFileParts($"~/lib/datatables/css/dataTables.bootstrap.css");
-    Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.rtl.min.css");
-    Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.default.min.css");
-    Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.common.min.css");
+    Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/styles/web/kendo.rtl.min.css");
+    Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/styles/web/kendo.default.min.css");
+    Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/styles/web/kendo.common.min.css");
     Html.AppendCssFileParts($"~/lib/jquery-ui/jquery-ui-{jQueryUI}/jquery-ui-themes/smoothness/jquery-ui-{jQueryUI}.custom.min.css");
     Html.AppendCssFileParts("~/lib/fontAwesome/css/font-awesome.min.css");
     Html.AppendCssFileParts("~/lib/typeahead/typeahead.css");
@@ -61,7 +82,9 @@
     Html.AppendScriptParts($"~/lib/datatables/datatables.min.js");
     Html.AppendScriptParts($"~/lib/datatables/js/dataTables.bootstrap.min.js");
     Html.AppendScriptParts($"~/lib/datatables/js/jquery.dataTables.min.js");
-    Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/kendo.ui.core.min.js");
+    Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/cultures/kendo.culture.{currentKendoCulture}.min.js");
+    Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/messages/kendo.messages.{currentKendoCulture}.min.js");
+    Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/js/kendo.ui.core.min.js");
 
     Html.AppendScriptParts("~/js/admin.search.js");
     Html.AppendScriptParts("~/js/admin.navigation.js");
@@ -69,6 +92,23 @@
     Html.AppendScriptParts("~/lib/typeahead/typeahead.bundle.min.js");
     Html.AppendScriptParts("~/lib/jquery-migrate/jquery-migrate-3.1.0.min.js");
     Html.AppendScriptParts($"~/lib/jquery-ui/jquery-ui-{jQueryUI}/jquery-ui-{jQueryUI}.custom.min.js");
+
+    // this file can be downloaded from : 
+    // https://github.com/johnnyreilly/jquery-validation-globalize 
+    //Html.AppendScriptParts("https://cdn.jsdelivr.net/gh/johnnyreilly/jquery-validation-globalize@1.0.0/jquery.validate.globalize.min.js");
+    Html.AppendScriptParts("~/lib/jquery-validate/jquery.validate.globalize-1.0.0.min.js");
+
+    // globalize scripts
+    Html.AppendScriptParts("~/lib/globalize/dist/globalize/currency.min.js");
+    Html.AppendScriptParts("~/lib/globalize/dist/globalize/date.min.js");
+    Html.AppendScriptParts("~/lib/globalize/dist/globalize/number.min.js");
+    Html.AppendScriptParts("~/lib/globalize/dist/globalize.min.js");
+
+    // cldr scripts (needed for globalize)    
+    Html.AppendScriptParts("~/lib/cldr/dist/cldr/supplemental.min.js");
+    Html.AppendScriptParts("~/lib/cldr/dist/cldr/event.min.js");
+    Html.AppendScriptParts("~/lib/cldr/dist/cldr.min.js");
+
     Html.AppendScriptParts("~/lib/jquery-validate/jquery.validate.unobtrusive-v3.2.11/jquery.validate.unobtrusive.min.js");
     Html.AppendScriptParts("~/lib/jquery-validate/jquery.validate-v1.19.1/jquery.validate.min.js");
     Html.AppendScriptParts("~/lib/adminLTE/js/adminlte.min.js");
@@ -115,6 +155,31 @@
         @await Component.InvokeAsync("Favicon")
     </head>
     <body class="hold-transition skin-blue sidebar-mini">
+        <script type="text/javascript">
+            var culture = "@GetDefaultLocale()";
+
+            //load cldr for current culture
+            $.when(
+                $.get("/lib/cldr-data/supplemental/likelySubtags.json"),
+                $.get("/lib/cldr-data/main/" + culture + "/numbers.json"),
+                $.get("/lib/cldr-data/main/" + culture + "/currencies.json"),
+                $.get("/lib/cldr-data/supplemental/numberingSystems.json"),
+                $.get("/lib/cldr-data/main/" + culture + "/ca-gregorian.json"),
+                $.get("/lib/cldr-data/main/" + culture + "/timeZoneNames.json"),
+                $.get("/lib/cldr-data/supplemental/timeData.json"),
+                $.get("/lib/cldr-data/supplemental/weekData.json"),
+            ).then(function () {
+                // Normalize $.get results, we only need the JSON, not the request statuses.
+                return [].slice.apply(arguments, [0]).map(function (result) {
+                    return result[0];
+                });
+            }).then(Globalize.load).then(function () {
+                Globalize.locale(culture);
+            });
+        </script>
+        <script>
+            kendo.culture("@(currentKendoCulture)");            
+        </script>
         <div class="throbber">
             <div class="curtain">
             </div>
@@ -156,7 +221,7 @@
                                 <li>
                                     @await Component.InvokeAsync("AdminLanguageSelector")
                                 </li>
-                                @if (currentCustomer.IsRegistered())
+                                @if (customerService.IsRegistered(currentCustomer))
                                 {
                                     <li class="account-info">
                                         @customerService.GetCustomerFullName(currentCustomer)
@@ -236,6 +301,7 @@
             <div class="content-wrapper">
                 @await Html.PartialAsync("Notifications")
                 <div>
+                    <nop-antiforgery-token />
                     @RenderBody()
                 </div>
             </div>
@@ -243,7 +309,7 @@
                 @if (!storeInformationSettings.HidePoweredByNopCommerce)
                 {
                     @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
-                    Please find more info at https://www.nopcommerce.com/copyrightremoval.aspx*@
+                    Please find more info at https://www.nopcommerce.com/nopcommerce-premium-support-services*@
                     <div class="pull-left">
                         Powered by <a href="https://www.nopcommerce.com/?utm_source=admin-panel&utm_medium=footer&utm_campaign=admin-panel" target="_blank">nopCommerce</a>
                     </div>
@@ -252,9 +318,6 @@
                     <b>nopCommerce version @NopVersion.CurrentVersion</b>
                 </div>
                 <div class="text-center">
-                    @{
-                        var currentCulture = new CultureInfo(workContext.WorkingLanguage.LanguageCulture);
-                    }
                     @dateTimeHelper.ConvertToUserTime(DateTime.Now).ToString("f", currentCulture)
                 </div>
             </div>

@@ -1,6 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Discounts;
 
 namespace Nop.Services.Catalog
 {
@@ -10,10 +12,28 @@ namespace Nop.Services.Catalog
     public partial interface IManufacturerService
     {
         /// <summary>
+        /// Clean up manufacturer references for a specified discount
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        void ClearDiscountManufacturerMapping(Discount discount);
+
+        /// <summary>
+        /// Deletes a discount-manufacturer mapping record
+        /// </summary>
+        /// <param name="discountManufacturerMapping">Discount-manufacturer mapping</param>
+        void DeleteDiscountManufacturerMapping(DiscountManufacturerMapping discountManufacturerMapping);
+
+        /// <summary>
         /// Deletes a manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
         void DeleteManufacturer(Manufacturer manufacturer);
+
+        /// <summary>
+        /// Delete manufacturers
+        /// </summary>
+        /// <param name="manufacturers">Manufacturers</param>
+        void DeleteManufacturers(IList<Manufacturer> manufacturers);
 
         /// <summary>
         /// Gets all manufacturers
@@ -31,11 +51,37 @@ namespace Nop.Services.Catalog
             bool showHidden = false);
 
         /// <summary>
+        /// Get manufacturer identifiers to which a discount is applied
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Manufacturer identifiers</returns>
+        IList<int> GetAppliedManufacturerIds(Discount discount, Customer customer);
+
+        /// <summary>
         /// Gets a manufacturer
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>Manufacturer</returns>
         Manufacturer GetManufacturerById(int manufacturerId);
+
+        /// <summary>
+        /// Gets manufacturers by identifier
+        /// </summary>
+        /// <param name="manufacturerIds">manufacturer identifiers</param>
+        /// <returns>Manufacturers</returns>
+        List<Manufacturer> GetManufacturersByIds(int[] manufacturerIds);
+
+        /// <summary>
+        /// Get manufacturers for which a discount is applied
+        /// </summary>
+        /// <param name="discountId">Discount identifier; pass null to load all records</param>
+        /// <param name="showHidden">A value indicating whether to load deleted manufacturers</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>List of manufacturers</returns>
+        IPagedList<Manufacturer> GetManufacturersWithAppliedDiscount(int? discountId = null,
+            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Inserts a manufacturer
@@ -115,5 +161,19 @@ namespace Nop.Services.Catalog
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>A ProductManufacturer that has the specified values; otherwise null</returns>
         ProductManufacturer FindProductManufacturer(IList<ProductManufacturer> source, int productId, int manufacturerId);
+
+        /// <summary>
+        /// Get a discount-manufacturer mapping record
+        /// </summary>
+        /// <param name="manufacturerId">Manufacturer identifier</param>
+        /// <param name="discountId">Discount identifier</param>
+        /// <returns>Result</returns>
+        DiscountManufacturerMapping GetDiscountAppliedToManufacturer(int manufacturerId, int discountId);
+
+        /// <summary>
+        /// Inserts a discount-manufacturer mapping record
+        /// </summary>
+        /// <param name="discountManufacturerMapping">Discount-manufacturer mapping</param>
+        void InsertDiscountManufacturerMapping(DiscountManufacturerMapping discountManufacturerMapping);
     }
 }

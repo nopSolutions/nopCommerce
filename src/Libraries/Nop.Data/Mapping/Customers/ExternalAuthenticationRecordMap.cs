@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Data.Mapping.Customers
@@ -15,17 +14,17 @@ namespace Nop.Data.Mapping.Customers
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<ExternalAuthenticationRecord> builder)
+        public override void Configure(EntityMappingBuilder<ExternalAuthenticationRecord> builder)
         {
-            builder.ToTable(nameof(ExternalAuthenticationRecord));
-            builder.HasKey(record => record.Id);
+            builder.HasTableName(nameof(ExternalAuthenticationRecord));
 
-            builder.HasOne(record => record.Customer)
-                .WithMany(customer => customer.ExternalAuthenticationRecords)
-                .HasForeignKey(record => record.CustomerId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(record => record.CustomerId);
+            builder.Property(record => record.Email);
+            builder.Property(record => record.ExternalIdentifier);
+            builder.Property(record => record.ExternalDisplayIdentifier);
+            builder.Property(record => record.OAuthToken);
+            builder.Property(record => record.OAuthAccessToken);
+            builder.Property(record => record.ProviderSystemName);
         }
 
         #endregion

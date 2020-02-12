@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>Használja a beépített adattárolást (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>SQL Server neve</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>SQL Server neve szükséges</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL Jelszó</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>SQL Jelszó szükséges</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>SQL Felhasználónév</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>SQL Felhasználónév szükséges</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Használja az Microsoft SQL Server (vagy SQL Express) adatbázist</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Áruház információk</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value> A varázsló befejezéséhez, tudnia kell néhány információt az adatbázis szerver ("kapcsolat string"). Kérjük, lépjen kapcsolatba az internetszolgáltatóval, ha szükséges. Ha a telepítés helyi gépen vagy a szerveren, akkor szüksége lehet információkra a Rendszer Admin-tol.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>Használja a beépített Windows-hitelesítést</Value>
   </LocaleResource>
 </Language>

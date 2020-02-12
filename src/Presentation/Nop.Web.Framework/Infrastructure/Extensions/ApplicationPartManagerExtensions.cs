@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Nop.Core;
 using Nop.Core.ComponentModel;
 using Nop.Core.Configuration;
-using Nop.Core.Redis;
 using Nop.Core.Infrastructure;
+using Nop.Core.Redis;
 using Nop.Services.Plugins;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
@@ -100,7 +100,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 }
 
                 //file already exists but passed file is more updated, so delete an existing file and copy again
-                //More info: https://www.nopcommerce.com/boards/t/11511/access-error-nopplugindiscountrulesbillingcountrydll.aspx?p=4#60838
+                //More info: https://www.nopcommerce.com/boards/topic/11511/access-error-nopplugindiscountrulesbillingcountrydll/page/4#60838
                 fileProvider.DeleteFile(shadowCopiedFile);
             }
 
@@ -270,7 +270,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             }
 
             //sort list by display order. NOTE: Lowest DisplayOrder will be first i.e 0 , 1, 1, 1, 5, 10
-            //it's required: https://www.nopcommerce.com/boards/t/17455/load-plugins-based-on-their-displayorder-on-startup.aspx
+            //it's required: https://www.nopcommerce.com/boards/topic/17455/load-plugins-based-on-their-displayorder-on-startup
             result = result.OrderBy(item => item.PluginDescriptor.DisplayOrder).ToList();
 
             return result;
@@ -361,18 +361,18 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 ? new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config), config)
                 : new PluginsInfo(_fileProvider);
 
-            if (PluginsInfo.LoadPluginInfo() || useRedisToStorePluginsInfo || !config.RedisEnabled) 
+            if (PluginsInfo.LoadPluginInfo() || useRedisToStorePluginsInfo || !config.RedisEnabled)
                 return;
 
             var redisPluginsInfo = new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config), config);
 
-            if (!redisPluginsInfo.LoadPluginInfo()) 
+            if (!redisPluginsInfo.LoadPluginInfo())
                 return;
-            
+
             //copy plugins info data from redis 
             PluginsInfo.CopyFrom(redisPluginsInfo);
             PluginsInfo.Save();
-                    
+
             //clear redis plugins info data
             redisPluginsInfo = new RedisPluginsInfo(_fileProvider, new RedisConnectionWrapper(config), config);
             redisPluginsInfo.Save();
@@ -394,7 +394,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             if (config == null)
                 throw new ArgumentNullException(nameof(config));
-            
+
             LoadPluginsInfo(config);
 
             //perform with locked access to resources
@@ -543,7 +543,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                                 //determine a plugin type (only one plugin per assembly is allowed)
                                 var pluginType = pluginDescriptor.ReferencedAssembly.GetTypes().FirstOrDefault(type =>
                                     typeof(IPlugin).IsAssignableFrom(type) && !type.IsInterface && type.IsClass && !type.IsAbstract);
-                                if (pluginType != default(Type))
+                                if (pluginType != default(Type)) 
                                     pluginDescriptor.PluginType = pluginType;
                             }
 

@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Catalog;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Catalog
 {
@@ -15,22 +15,18 @@ namespace Nop.Data.Mapping.Catalog
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<PredefinedProductAttributeValue> builder)
+        public override void Configure(EntityMappingBuilder<PredefinedProductAttributeValue> builder)
         {
-            builder.ToTable(nameof(PredefinedProductAttributeValue));
-            builder.HasKey(value => value.Id);
+            builder.HasTableName(nameof(PredefinedProductAttributeValue));
 
-            builder.Property(value => value.Name).HasMaxLength(400).IsRequired();
-            builder.Property(value => value.PriceAdjustment).HasColumnType("decimal(18, 4)");
-            builder.Property(value => value.WeightAdjustment).HasColumnType("decimal(18, 4)");
-            builder.Property(value => value.Cost).HasColumnType("decimal(18, 4)");
-
-            builder.HasOne(value => value.ProductAttribute)
-                .WithMany()
-                .HasForeignKey(value => value.ProductAttributeId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(value => value.Name).HasLength(400).IsNullable(false);
+            builder.Property(value => value.PriceAdjustment).HasDecimal();
+            builder.Property(value => value.WeightAdjustment).HasDecimal();
+            builder.Property(value => value.Cost).HasDecimal();
+            builder.Property(value => value.ProductAttributeId);
+            builder.Property(value => value.PriceAdjustmentUsePercentage);
+            builder.Property(value => value.IsPreSelected);
+            builder.Property(value => value.DisplayOrder);
         }
 
         #endregion

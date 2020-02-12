@@ -454,9 +454,9 @@ namespace Nop.Core.Infrastructure
             if (!IsDirectory(path) && FileExists(path))
                 path = new FileInfo(path).DirectoryName;
 
-            path = path?.Replace(Root, "").Replace('\\', '/').Trim('/').TrimStart('~', '/');
+            path = path?.Replace(Root, string.Empty).Replace('\\', '/').Trim('/').TrimStart('~', '/');
 
-            return $"~/{path ?? ""}";
+            return $"~/{path ?? string.Empty}";
         }
 
         /// <summary>
@@ -491,7 +491,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>A byte array containing the contents of the file</returns>
         public virtual byte[] ReadAllBytes(string filePath)
         {
-            return File.Exists(filePath) ? File.ReadAllBytes(filePath) : new byte[0];
+            return File.Exists(filePath) ? File.ReadAllBytes(filePath) : Array.Empty<byte>();
         }
 
         /// <summary>

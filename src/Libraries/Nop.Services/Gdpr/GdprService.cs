@@ -1,13 +1,13 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Gdpr;
-using Nop.Data.Extensions;
+using Nop.Data;
 using Nop.Services.Authentication.External;
 using Nop.Services.Blogs;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -96,7 +96,7 @@ namespace Nop.Services.Gdpr
             if (gdprConsentId == 0)
                 return null;
 
-            return _gdprConsentRepository.GetById(gdprConsentId);
+            return _gdprConsentRepository.ToCachedGetById(gdprConsentId);
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace Nop.Services.Gdpr
             if (gdprLogId == 0)
                 return null;
 
-            return _gdprLogRepository.GetById(gdprLogId);
+            return _gdprLogRepository.ToCachedGetById(gdprLogId);
         }
 
         /// <summary>
@@ -333,7 +333,7 @@ namespace Nop.Services.Gdpr
                 _backInStockSubscriptionService.DeleteSubscription(backInStockSubscription);
 
             //product review
-            var productReviews = _productService.GetAllProductReviews(customerId: customer.Id, approved: null);
+            var productReviews = _productService.GetAllProductReviews(customer.Id);
             var reviewedProducts = _productService.GetProductsByIds(productReviews.Select(p => p.ProductId).Distinct().ToArray());
             _productService.DeleteProductReviews(productReviews);
             //update product totals
@@ -341,9 +341,9 @@ namespace Nop.Services.Gdpr
             {
                 _productService.UpdateProductReviewTotals(product);
             }
-
+            
             //external authentication record
-            foreach (var ear in customer.ExternalAuthenticationRecords)
+            foreach (var ear in _externalAuthenticationService.GetCustomerExternalAuthenticationRecords(customer))
                 _externalAuthenticationService.DeleteExternalAuthenticationRecord(ear);
 
             //forum subscriptions
@@ -352,7 +352,7 @@ namespace Nop.Services.Gdpr
                 _forumService.DeleteSubscription(forumSubscription);
 
             //shopping cart items
-            foreach (var sci in customer.ShoppingCartItems)
+            foreach (var sci in _shoppingCartService.GetShoppingCart(customer))
                 _shoppingCartService.DeleteShoppingCartItem(sci);
 
             //private messages (sent)
@@ -373,7 +373,7 @@ namespace Nop.Services.Gdpr
             }
 
             //addresses
-            foreach (var address in customer.Addresses)
+            foreach (var address in _customerService.GetAddressesByCustomerId(customer.Id))
             {
                 _customerService.RemoveCustomerAddress(customer, address);
                 _customerService.UpdateCustomer(customer);
@@ -382,7 +382,7 @@ namespace Nop.Services.Gdpr
             }
 
             //generic attributes
-            var keyGroup = customer.GetUnproxiedEntityType().Name;
+            var keyGroup = customer.GetType().Name;
             var genericAttributes = _genericAttributeService.GetAttributesForEntity(customer.Id, keyGroup);
             _genericAttributeService.DeleteAttributes(genericAttributes);
 
@@ -397,17 +397,16 @@ namespace Nop.Services.Gdpr
             //and we do not delete orders
 
             //remove from Registered role, add to Guest one
-            if (customer.IsRegistered())
+            if (_customerService.IsRegistered(customer))
             {
                 var registeredRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.RegisteredRoleName);
-                customer.RemoveCustomerRoleMapping(
-                    customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == registeredRole.Id));
+                _customerService.RemoveCustomerRoleMapping(customer, registeredRole);
             }
 
-            if (!customer.IsGuest())
+            if (!_customerService.IsGuest(customer))
             {
                 var guestRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
-                customer.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = guestRole });
+                _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = guestRole.Id });
             }
 
             var email = customer.Email;

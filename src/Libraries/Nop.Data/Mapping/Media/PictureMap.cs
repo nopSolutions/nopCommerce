@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Media;
 
 namespace Nop.Data.Mapping.Media
@@ -15,15 +14,16 @@ namespace Nop.Data.Mapping.Media
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<Picture> builder)
+        public override void Configure(EntityMappingBuilder<Picture> builder)
         {
-            builder.ToTable(nameof(Picture));
-            builder.HasKey(picture => picture.Id);
+            builder.HasTableName(nameof(Picture));
             
-            builder.Property(picture => picture.MimeType).HasMaxLength(40).IsRequired();
-            builder.Property(picture => picture.SeoFilename).HasMaxLength(300);
-
-            base.Configure(builder);
+            builder.Property(picture => picture.MimeType).HasLength(40).IsNullable(false);
+            builder.Property(picture => picture.SeoFilename).HasLength(300);
+            builder.Property(picture => picture.AltAttribute);
+            builder.Property(picture => picture.TitleAttribute);
+            builder.Property(picture => picture.IsNew);
+            builder.Property(picture => picture.VirtualPath);
         }
 
         #endregion

@@ -105,26 +105,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>Gunakan penyimpanan data built-in (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>Nama SQL Server</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>Nama SQL Server diperlukan</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>Kata sandi SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>Kata sandi SQL diperlukan</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>Nama user SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>Nama user SQL diperlukan</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Gunakan database Microsoft SQL Server (or SQL Express)</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Informasi Toko</Value>
@@ -138,7 +135,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>Untuk menyelesaikan panduan ini, anda harus mempunyai informasi mengenai server database anda ("connection string"). Harap menghubungi ISP anda jika diperlukan. Jika anda memasang di mesin atau server lokal, anda mungkin memerlukan informasi dari Sistem Admin anda.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>Gunakan integrated Windows authentication</Value>
   </LocaleResource>
 </Language>

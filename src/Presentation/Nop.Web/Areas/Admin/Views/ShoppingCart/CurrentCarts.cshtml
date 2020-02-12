@@ -17,7 +17,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.CurrentCarts.CartsAndWishlists")
@@ -147,8 +146,8 @@
                         Filters = new List<FilterParameter>
                         {
                             new FilterParameter(nameof(Model.ShoppingCartType)),
-                            new FilterParameter(nameof(Model.StartDate)),
-                            new FilterParameter(nameof(Model.EndDate)),
+                            new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
+                            new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
                             new FilterParameter(nameof(Model.StoreId)),
                             new FilterParameter(nameof(Model.BillingCountryId)),
                             new FilterParameter(nameof(Model.ProductId))
@@ -175,7 +174,7 @@
                         },
                         ChildTable = new DataTablesModel
                         {
-                            Name = "carts-grid",
+                            Name = "products-grid",
                             UrlRead = new DataUrl("GetCartDetails", "ShoppingCart", null),
                             UrlDelete = new DataUrl("DeleteItem", "ShoppingCart", null),
                             IsChildTable = true,
@@ -185,8 +184,8 @@
                             {
                                 new FilterParameter(nameof(ShoppingCartItemSearchModel.CustomerId), nameof(ShoppingCartItemSearchModel.CustomerId), true),
                                 new FilterParameter(nameof(ShoppingCartItemSearchModel.ShoppingCartType)),
-                                new FilterParameter(nameof(ShoppingCartItemSearchModel.StartDate)),
-                                new FilterParameter(nameof(ShoppingCartItemSearchModel.EndDate)),
+                                new FilterParameter(nameof(ShoppingCartItemSearchModel.StartDate), typeof(DateTime?)),
+                                new FilterParameter(nameof(ShoppingCartItemSearchModel.EndDate), typeof(DateTime?)),
                                 new FilterParameter(nameof(ShoppingCartItemSearchModel.StoreId)),
                                 new FilterParameter(nameof(ShoppingCartItemSearchModel.BillingCountryId)),
                                 new FilterParameter(nameof(ShoppingCartItemSearchModel.ProductId))

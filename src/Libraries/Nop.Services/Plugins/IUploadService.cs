@@ -21,5 +21,9 @@ namespace Nop.Services.Plugins
         /// <param name="archivefile">Archive file</param>
         void UploadIconsArchive(IFormFile archivefile);
 
+        /// <summary>
+        /// Upload locale pattern for ccurrent culture
+        /// </summary>
+        void UploadLocalePattern();
     }
 }

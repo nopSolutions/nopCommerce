@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Directory;
 
 namespace Nop.Data.Mapping.Directory
@@ -15,16 +14,20 @@ namespace Nop.Data.Mapping.Directory
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<Country> builder)
+        public override void Configure(EntityMappingBuilder<Country> builder)
         {
-            builder.ToTable(nameof(Country));
-            builder.HasKey(country => country.Id);
+            builder.HasTableName(nameof(Country));
 
-            builder.Property(country => country.Name).HasMaxLength(100).IsRequired();
-            builder.Property(country => country.TwoLetterIsoCode).HasMaxLength(2);
-            builder.Property(country => country.ThreeLetterIsoCode).HasMaxLength(3);
-
-            base.Configure(builder);
+            builder.Property(country => country.Name).HasLength(100).IsNullable(false);
+            builder.Property(country => country.TwoLetterIsoCode).HasLength(2);
+            builder.Property(country => country.ThreeLetterIsoCode).HasLength(3);
+            builder.Property(country => country.AllowsBilling);
+            builder.Property(country => country.AllowsShipping);
+            builder.Property(country => country.NumericIsoCode);
+            builder.Property(country => country.SubjectToVat);
+            builder.Property(country => country.Published);
+            builder.Property(country => country.DisplayOrder);
+            builder.Property(country => country.LimitedToStores);
         }
 
         #endregion

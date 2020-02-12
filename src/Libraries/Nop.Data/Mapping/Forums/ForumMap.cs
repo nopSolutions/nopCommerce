@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Forums;
 
 namespace Nop.Data.Mapping.Forums
@@ -15,19 +14,22 @@ namespace Nop.Data.Mapping.Forums
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<Forum> builder)
+        public override void Configure(EntityMappingBuilder<Forum> builder)
         {
-            builder.ToTable(NopMappingDefaults.ForumTable);
-            builder.HasKey(forum => forum.Id);
+            builder.HasTableName(NopMappingDefaults.ForumTable);
 
-            builder.Property(forum => forum.Name).HasMaxLength(200).IsRequired();
-
-            builder.HasOne(forum => forum.ForumGroup)
-                .WithMany(forumGroup => forumGroup.Forums)
-                .HasForeignKey(forum => forum.ForumGroupId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(forum => forum.Name).HasLength(200).IsNullable(false);
+            builder.Property(forum => forum.ForumGroupId);
+            builder.Property(forum => forum.Description);
+            builder.Property(forum => forum.NumTopics);
+            builder.Property(forum => forum.NumPosts);
+            builder.Property(forum => forum.LastTopicId);
+            builder.Property(forum => forum.LastPostId);
+            builder.Property(forum => forum.LastPostCustomerId);
+            builder.Property(forum => forum.LastPostTime);
+            builder.Property(forum => forum.DisplayOrder);
+            builder.Property(forum => forum.CreatedOnUtc);
+            builder.Property(forum => forum.UpdatedOnUtc);
         }
 
         #endregion

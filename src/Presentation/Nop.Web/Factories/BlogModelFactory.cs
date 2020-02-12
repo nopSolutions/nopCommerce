@@ -86,19 +86,22 @@ namespace Nop.Web.Factories
             if (blogComment == null)
                 throw new ArgumentNullException(nameof(blogComment));
 
+            var customer = _customerService.GetCustomerById(blogComment.CustomerId);
+
             var model = new BlogCommentModel
             {
                 Id = blogComment.Id,
                 CustomerId = blogComment.CustomerId,
-                CustomerName = _customerService.FormatUsername(blogComment.Customer),
+                CustomerName = _customerService.FormatUsername(customer),
                 CommentText = blogComment.CommentText,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc),
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && blogComment.Customer != null && !blogComment.Customer.IsGuest()
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !_customerService.IsGuest(customer)
             };
+
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
                 model.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                    _genericAttributeService.GetAttribute<int>(blogComment.Customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                    _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
                     _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
             }
 
@@ -134,16 +137,17 @@ namespace Nop.Web.Factories
 
             //number of blog comments
             var storeId = _blogSettings.ShowBlogCommentsPerStore ? _storeContext.CurrentStore.Id : 0;
-            var cacheKey = string.Format(NopModelCacheDefaults.BlogCommentsNumberKey, blogPost.Id, storeId, true);
-            model.NumberOfComments = _cacheManager.Get(cacheKey, () => _blogService.GetBlogCommentsCount(blogPost, storeId, true));
+            
+            model.NumberOfComments = _blogService.GetBlogCommentsCount(blogPost, storeId, true);
 
             if (prepareComments)
-            {
-                var blogComments = blogPost.BlogComments.Where(comment => comment.IsApproved);
-                if (_blogSettings.ShowBlogCommentsPerStore)
-                    blogComments = blogComments.Where(comment => comment.StoreId == _storeContext.CurrentStore.Id);
+            {                
+                var blogComments = _blogService.GetAllComments(
+                    blogPostId: blogPost.Id, 
+                    approved: true,
+                    storeId: storeId);
 
-                foreach (var bc in blogComments.OrderBy(comment => comment.CreatedOnUtc))
+                foreach (var bc in blogComments)
                 {
                     var commentModel = PrepareBlogPostCommentModel(bc);
                     model.Comments.Add(commentModel);
@@ -262,7 +266,6 @@ namespace Nop.Web.Factories
                         first = first.AddMonths(1);
                     }
 
-
                     var current = 0;
                     foreach (var kvp in months)
                     {
@@ -289,8 +292,10 @@ namespace Nop.Web.Factories
                         current = date.Year;
                     }
                 }
+
                 return model;
             });
+
             return cachedModel;
         }
 

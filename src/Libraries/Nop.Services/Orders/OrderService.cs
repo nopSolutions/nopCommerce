@@ -1,14 +1,17 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Html;
+using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
+using Nop.Services.Shipping;
 
 namespace Nop.Services.Orders
 {
@@ -20,32 +23,44 @@ namespace Nop.Services.Orders
         #region Fields
 
         private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<Address> _addressRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<OrderNote> _orderNoteRepository;
         private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
         private readonly IRepository<RecurringPayment> _recurringPaymentRepository;
+        private readonly IRepository<RecurringPaymentHistory> _recurringPaymentHistoryRepository;
+        private readonly IShipmentService _shipmentService;
 
         #endregion
 
         #region Ctor
 
         public OrderService(IEventPublisher eventPublisher,
+            IRepository<Address> addressRepository,
             IRepository<Customer> customerRepository,
             IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
             IRepository<OrderNote> orderNoteRepository,
             IRepository<Product> productRepository,
-            IRepository<RecurringPayment> recurringPaymentRepository)
+            IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository,
+            IRepository<RecurringPayment> recurringPaymentRepository,
+            IRepository<RecurringPaymentHistory> recurringPaymentHistoryRepository,
+            IShipmentService shipmentService)
         {
             _eventPublisher = eventPublisher;
+            _addressRepository = addressRepository;
             _customerRepository = customerRepository;
             _orderRepository = orderRepository;
             _orderItemRepository = orderItemRepository;
             _orderNoteRepository = orderNoteRepository;
             _productRepository = productRepository;
+            _productWarehouseInventoryRepository = productWarehouseInventoryRepository;
             _recurringPaymentRepository = recurringPaymentRepository;
+            _recurringPaymentHistoryRepository = recurringPaymentHistoryRepository;
+            _shipmentService = shipmentService;
         }
 
         #endregion
@@ -64,7 +79,7 @@ namespace Nop.Services.Orders
             if (orderId == 0)
                 return null;
 
-            return _orderRepository.GetById(orderId);
+            return _orderRepository.ToCachedGetById(orderId);
         }
 
         /// <summary>
@@ -78,6 +93,22 @@ namespace Nop.Services.Orders
                 return null;
 
             return _orderRepository.Table.FirstOrDefault(o => o.CustomOrderNumber == customOrderNumber);
+        }
+
+        /// <summary>
+        /// Gets an order by order item identifier
+        /// </summary>
+        /// <param name="orderItemId">The order item identifier</param>
+        /// <returns>Order</returns>
+        public virtual Order GetOrderByOrderItem(int orderItemId)
+        {
+            if (orderItemId == 0)
+                return null;
+
+            return (from o in _orderRepository.Table
+                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                    where oi.Id == orderItemId
+                    select o).FirstOrDefault();
         }
 
         /// <summary>
@@ -173,58 +204,77 @@ namespace Nop.Services.Orders
             string orderNotes = null, int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false)
         {
             var query = _orderRepository.Table;
+
             if (storeId > 0)
                 query = query.Where(o => o.StoreId == storeId);
+
             if (vendorId > 0)
-                query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.Product.VendorId == vendorId));
+                query = from o in query
+                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                    join p in _productRepository.Table on oi.ProductId equals p.Id
+                    where p.VendorId == vendorId
+                    select o;
+
             if (customerId > 0)
                 query = query.Where(o => o.CustomerId == customerId);
+
             if (productId > 0)
-                query = query.Where(o => o.OrderItems.Any(orderItem => orderItem.ProductId == productId));
-           
+                query = from o in query
+                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                    where oi.ProductId == productId
+                    select o;
+
             if (warehouseId > 0)
             {
                 var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
-                query = query
-                    .Where(o => o.OrderItems
-                    .Any(orderItem =>
+
+                query = from o in query
+                    join oi in _orderItemRepository.Table on o.Id equals oi.OrderId
+                    join p in _productRepository.Table on oi.ProductId equals p.Id
+                    join pwi in _productWarehouseInventoryRepository.Table on p.Id equals pwi.ProductId
+                    where
                         //"Use multiple warehouses" enabled
                         //we search in each warehouse
-                        (orderItem.Product.ManageInventoryMethodId == manageStockInventoryMethodId &&
-                        orderItem.Product.UseMultipleWarehouses &&
-                        orderItem.Product.ProductWarehouseInventory.Any(pwi => pwi.WarehouseId == warehouseId))
-                        ||
+                        (p.ManageInventoryMethodId == manageStockInventoryMethodId && p.UseMultipleWarehouses && pwi.WarehouseId == warehouseId) ||
                         //"Use multiple warehouses" disabled
                         //we use standard "warehouse" property
-                        ((orderItem.Product.ManageInventoryMethodId != manageStockInventoryMethodId ||
-                        !orderItem.Product.UseMultipleWarehouses) &&
-                        orderItem.Product.WarehouseId == warehouseId)));
+                        ((p.ManageInventoryMethodId != manageStockInventoryMethodId || !p.UseMultipleWarehouses) && p.WarehouseId == warehouseId)
+                    select o;
             }
 
-            if (billingCountryId > 0)
-                query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
             if (!string.IsNullOrEmpty(paymentMethodSystemName))
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
+
             if (affiliateId > 0)
                 query = query.Where(o => o.AffiliateId == affiliateId);
+
             if (createdFromUtc.HasValue)
                 query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
+
             if (createdToUtc.HasValue)
                 query = query.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
+
             if (osIds != null && osIds.Any())
                 query = query.Where(o => osIds.Contains(o.OrderStatusId));
+
             if (psIds != null && psIds.Any())
                 query = query.Where(o => psIds.Contains(o.PaymentStatusId));
+
             if (ssIds != null && ssIds.Any())
                 query = query.Where(o => ssIds.Contains(o.ShippingStatusId));
-            if (!string.IsNullOrEmpty(billingPhone))
-                query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.PhoneNumber) && o.BillingAddress.PhoneNumber.Contains(billingPhone));
-            if (!string.IsNullOrEmpty(billingEmail))
-                query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
-            if (!string.IsNullOrEmpty(billingLastName))
-                query = query.Where(o => o.BillingAddress != null && !string.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
+
             if (!string.IsNullOrEmpty(orderNotes))
-                query = query.Where(o => o.OrderNotes.Any(on => on.Note.Contains(orderNotes)));
+                query = query.Where(o => _orderNoteRepository.Table.Any(oNote => oNote.OrderId == o.Id && oNote.Note.Contains(orderNotes)));
+
+            query = from o in query
+                join oba in _addressRepository.Table on o.BillingAddressId equals oba.Id
+                where
+                    (billingCountryId <= 0 || (oba.CountryId == billingCountryId)) &&
+                    (string.IsNullOrEmpty(billingPhone) || (!string.IsNullOrEmpty(oba.PhoneNumber) && oba.PhoneNumber.Contains(billingPhone))) &&
+                    (string.IsNullOrEmpty(billingEmail) || (!string.IsNullOrEmpty(oba.Email) && oba.Email.Contains(billingEmail))) &&
+                    (string.IsNullOrEmpty(billingLastName) || (!string.IsNullOrEmpty(oba.LastName) && oba.LastName.Contains(billingLastName)))
+                select o;
+
             query = query.Where(o => !o.Deleted);
             query = query.OrderByDescending(o => o.CreatedOnUtc);
 
@@ -335,12 +385,8 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            foreach (var orderItem in order.OrderItems)
+            foreach (var orderItem in GetOrderItems(order.Id, isShipEnabled: true)) //we can ship only shippable products
             {
-                //we can ship only shippable products
-                if (!orderItem.Product.IsShipEnabled)
-                    continue;
-
                 var totalNumberOfItemsCanBeAddedToShipment = GetTotalNumberOfItemsCanBeAddedToShipment(orderItem);
                 if (totalNumberOfItemsCanBeAddedToShipment <= 0)
                     continue;
@@ -362,12 +408,8 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            foreach (var orderItem in order.OrderItems)
+            foreach (var orderItem in GetOrderItems(order.Id, isShipEnabled: true)) //we can ship only shippable products
             {
-                //we can ship only shippable products
-                if (!orderItem.Product.IsShipEnabled)
-                    continue;
-
                 var totalNumberOfNotYetShippedItems = GetTotalNumberOfNotYetShippedItems(orderItem);
                 if (totalNumberOfNotYetShippedItems <= 0)
                     continue;
@@ -389,12 +431,8 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            foreach (var orderItem in order.OrderItems)
+            foreach (var orderItem in GetOrderItems(order.Id, isShipEnabled: true)) //we can ship only shippable products
             {
-                //we can ship only shippable products
-                if (!orderItem.Product.IsShipEnabled)
-                    continue;
-
                 var totalNumberOfShippedItems = GetTotalNumberOfShippedItems(orderItem);
                 var totalNumberOfDeliveredItems = GetTotalNumberOfDeliveredItems(orderItem);
                 if (totalNumberOfShippedItems <= totalNumberOfDeliveredItems)
@@ -421,7 +459,46 @@ namespace Nop.Services.Orders
             if (orderItemId == 0)
                 return null;
 
-            return _orderItemRepository.GetById(orderItemId);
+            return _orderItemRepository.ToCachedGetById(orderItemId);
+        }
+
+        /// <summary>
+        /// Gets a product of specify order item
+        /// </summary>
+        /// <param name="orderItemId">Order item identifier</param>
+        /// <returns>Product</returns>
+        public virtual Product GetProductByOrderItemId(int orderItemId)
+        {
+            if (orderItemId == 0)
+                return null;
+
+            return (from p in _productRepository.Table
+                    join oi in _orderItemRepository.Table on p.Id equals oi.ProductId
+                    where oi.Id == orderItemId
+                    select p).SingleOrDefault();
+        }
+
+        /// <summary>
+        /// Gets a list items of order
+        /// </summary>
+        /// <param name="orderId">Order identifier</param>
+        /// <param name="isNotReturnable">Value indicating whether this product is returnable; pass null to ignore</param>
+        /// <param name="isShipEnabled">Value indicating whether the entity is ship enabled; pass null to ignore</param>
+        /// <param name="vendorId">Vendor identifier; pass 0 to ignore</param>
+        /// <returns>Result</returns>
+        public virtual IList<OrderItem> GetOrderItems(int orderId, bool? isNotReturnable = null, bool? isShipEnabled = null, int vendorId = 0)
+        {
+            if (orderId == 0)
+                return new List<OrderItem>();
+
+            return (from oi in _orderItemRepository.Table
+                    join p in _productRepository.Table on oi.ProductId equals p.Id
+                    where
+                    oi.OrderId == orderId &&
+                    (!isShipEnabled.HasValue || (p.IsShipEnabled == isShipEnabled.Value)) &&
+                    (!isNotReturnable.HasValue || (p.NotReturnable == isNotReturnable)) &&
+                    (vendorId <= 0 || (p.VendorId == vendorId))
+                    select oi).ToList();
         }
 
         /// <summary>
@@ -490,11 +567,12 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(orderItem));
 
             var totalInShipments = 0;
-            var shipments = orderItem.Order.Shipments.ToList();
+            var shipments = _shipmentService.GetShipmentsByOrderId(orderItem.OrderId);
+
             for (var i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
-                var si = shipment.ShipmentItems
+                var si = _shipmentService.GetShipmentItemsByShipmentId(shipment.Id)
                     .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
                 if (si != null)
                 {
@@ -536,7 +614,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(orderItem));
 
             var result = 0;
-            var shipments = orderItem.Order.Shipments.ToList();
+            var shipments = _shipmentService.GetShipmentsByOrderId(orderItem.OrderId);
             for (var i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
@@ -544,7 +622,7 @@ namespace Nop.Services.Orders
                     //already shipped
                     continue;
 
-                var si = shipment.ShipmentItems
+                var si = _shipmentService.GetShipmentItemsByShipmentId(shipment.Id)
                     .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
                 if (si != null)
                 {
@@ -566,7 +644,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(orderItem));
 
             var result = 0;
-            var shipments = orderItem.Order.Shipments.ToList();
+            var shipments = _shipmentService.GetShipmentsByOrderId(orderItem.OrderId);
             for (var i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
@@ -574,7 +652,7 @@ namespace Nop.Services.Orders
                     //not shipped yet
                     continue;
 
-                var si = shipment.ShipmentItems
+                var si = _shipmentService.GetShipmentItemsByShipmentId(shipment.Id)
                     .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
                 if (si != null)
                 {
@@ -588,7 +666,7 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Gets a total number of already delivered items
         /// </summary>
-        /// <param name="orderItem">Order  item</param>
+        /// <param name="orderItem">Order item</param>
         /// <returns>Total number of already delivered items</returns>
         public virtual int GetTotalNumberOfDeliveredItems(OrderItem orderItem)
         {
@@ -596,7 +674,8 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException(nameof(orderItem));
 
             var result = 0;
-            var shipments = orderItem.Order.Shipments.ToList();
+            var shipments = _shipmentService.GetShipmentsByOrderId(orderItem.OrderId);
+
             for (var i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
@@ -604,7 +683,7 @@ namespace Nop.Services.Orders
                     //not delivered yet
                     continue;
 
-                var si = shipment.ShipmentItems
+                var si = _shipmentService.GetShipmentItemsByShipmentId(shipment.Id)
                     .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
                 if (si != null)
                 {
@@ -613,6 +692,35 @@ namespace Nop.Services.Orders
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Inserts a order item
+        /// </summary>
+        /// <param name="orderItem">Order item</param>
+        public virtual void InsertOrderItem(OrderItem orderItem)
+        {
+            if (orderItem is null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            _orderItemRepository.Insert(orderItem);
+
+            _eventPublisher.EntityInserted(orderItem);
+        }
+
+        /// <summary>
+        /// Updates a order item
+        /// </summary>
+        /// <param name="orderItem">Order item</param>
+        public virtual void UpdateOrderItem(OrderItem orderItem)
+        {
+            if (orderItem == null)
+                throw new ArgumentNullException(nameof(orderItem));
+
+            _orderItemRepository.Update(orderItem);
+
+            //event notification
+            _eventPublisher.EntityUpdated(orderItem);
         }
 
         #endregion
@@ -629,7 +737,28 @@ namespace Nop.Services.Orders
             if (orderNoteId == 0)
                 return null;
 
-            return _orderNoteRepository.GetById(orderNoteId);
+            return _orderNoteRepository.ToCachedGetById(orderNoteId);
+        }
+
+        /// <summary>
+        /// Gets a list notes of order
+        /// </summary>
+        /// <param name="orderId">Order identifier</param>
+        /// <param name="displayToCustomer">Value indicating whether a customer can see a note; pass null to ignore</param>
+        /// <returns>Result</returns>
+        public virtual IList<OrderNote> GetOrderNotesByOrderId(int orderId, bool? displayToCustomer = null)
+        {
+            if (orderId == 0)
+                return new List<OrderNote>();
+
+            var query = _orderNoteRepository.Table.Where(on => on.OrderId == orderId);
+
+            if (displayToCustomer.HasValue)
+            {
+                query = query.Where(on => on.DisplayToCustomer == displayToCustomer);
+            }
+
+            return query.ToList();
         }
 
         /// <summary>
@@ -667,6 +796,21 @@ namespace Nop.Services.Orders
             return text;
         }
 
+        /// <summary>
+        /// Inserts an order note
+        /// </summary>
+        /// <param name="orderNote">The order note</param>
+        public virtual void InsertOrderNote(OrderNote orderNote)
+        {
+            if (orderNote is null)
+                throw new ArgumentNullException(nameof(orderNote));
+
+            _orderNoteRepository.Insert(orderNote);
+
+            //event notification
+            _eventPublisher.EntityInserted(orderNote);
+        }
+
         #endregion
 
         #region Recurring payments
@@ -697,7 +841,7 @@ namespace Nop.Services.Orders
             if (recurringPaymentId == 0)
                 return null;
 
-            return _recurringPaymentRepository.GetById(recurringPaymentId);
+            return _recurringPaymentRepository.ToCachedGetById(recurringPaymentId);
         }
 
         /// <summary>
@@ -750,17 +894,18 @@ namespace Nop.Services.Orders
                 initialOrderStatusId = (int)initialOrderStatus.Value;
 
             var query1 = from rp in _recurringPaymentRepository.Table
-                         join c in _customerRepository.Table on rp.InitialOrder.CustomerId equals c.Id
+                         join o in _orderRepository.Table on rp.InitialOrderId equals o.Id
+                         join c in _customerRepository.Table on o.CustomerId equals c.Id
                          where
                          !rp.Deleted &&
-                         (showHidden || !rp.InitialOrder.Deleted) &&
+                         (showHidden || !o.Deleted) &&
                          (showHidden || !c.Deleted) &&
                          (showHidden || rp.IsActive) &&
-                         (customerId == 0 || rp.InitialOrder.CustomerId == customerId) &&
-                         (storeId == 0 || rp.InitialOrder.StoreId == storeId) &&
-                         (initialOrderId == 0 || rp.InitialOrder.Id == initialOrderId) &&
+                         (customerId == 0 || o.CustomerId == customerId) &&
+                         (storeId == 0 || o.StoreId == storeId) &&
+                         (initialOrderId == 0 || o.Id == initialOrderId) &&
                          (!initialOrderStatusId.HasValue || initialOrderStatusId.Value == 0 ||
-                          rp.InitialOrder.OrderStatusId == initialOrderStatusId.Value)
+                          o.OrderStatusId == initialOrderStatusId.Value)
                          select rp.Id;
 
             var query2 = from rp in _recurringPaymentRepository.Table
@@ -770,6 +915,38 @@ namespace Nop.Services.Orders
 
             var recurringPayments = new PagedList<RecurringPayment>(query2, pageIndex, pageSize);
             return recurringPayments;
+        }
+
+        #endregion
+
+        #region Recurring payments history
+
+        /// <summary>
+        /// Gets a recurring payment history
+        /// </summary>
+        /// <param name="recurringPayment">The recurring payment</param>
+        /// <returns>Result</returns>
+        public virtual IList<RecurringPaymentHistory> GetRecurringPaymentHistory(RecurringPayment recurringPayment)
+        {
+            if (recurringPayment is null)
+                throw new ArgumentNullException(nameof(recurringPayment));
+
+            return _recurringPaymentHistoryRepository.Table.Where(rph => rph.RecurringPaymentId == recurringPayment.Id).ToList();
+        }
+
+        /// <summary>
+        /// Inserts a recurring payment history entry
+        /// </summary>
+        /// <param name="recurringPaymentHistory">Recurring payment history entry</param>
+        public virtual void InsertRecurringPaymentHistory(RecurringPaymentHistory recurringPaymentHistory)
+        {
+            if (recurringPaymentHistory == null)
+                throw new ArgumentNullException(nameof(recurringPaymentHistory));
+
+            _recurringPaymentHistoryRepository.Insert(recurringPaymentHistory);
+
+            //event notification
+            _eventPublisher.EntityInserted(recurringPaymentHistory);
         }
 
         #endregion

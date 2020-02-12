@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Localization
+﻿namespace Nop.Core.Domain.Localization
 {
     /// <summary>
     /// Represents a locale string resource
@@ -19,10 +19,5 @@ namespace Nop.Core.Domain.Localization
         /// Gets or sets the resource value
         /// </summary>
         public string ResourceValue { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the language
-        /// </summary>
-        public virtual Language Language { get; set; }
     }
 }

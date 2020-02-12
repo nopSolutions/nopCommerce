@@ -7,13 +7,7 @@
         /// </summary>
         public static string OfficialNewsModelKey => "Nop.pres.admin.official.news";
         public static string OfficialNewsPrefixCacheKey => "Nop.pres.admin.official.news";
-
-        /// <summary>
-        /// Key for specification attributes caching (product details page)
-        /// </summary>
-        public static string SpecAttributesModelKey => "Nop.pres.admin.product.specs";
-        public static string SpecAttributesPrefixCacheKey => "Nop.pres.admin.product.specs";
-
+        
         /// <summary>
         /// Key for categories caching
         /// </summary>

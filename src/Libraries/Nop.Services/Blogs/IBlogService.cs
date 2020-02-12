@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
@@ -159,6 +159,11 @@ namespace Nop.Services.Blogs
         /// <param name="blogComments">Blog comments</param>
         void DeleteBlogComments(IList<BlogComment> blogComments);
 
+        /// <summary>
+        /// Inserts a blog comment
+        /// </summary>
+        /// <param name="blogComment">Blog comment</param>
+        void InsertBlogComment(BlogComment blogComment);
         #endregion
     }
 }

@@ -133,6 +133,13 @@ else
                         }
                         continue;
                     }
+                    if (filter.Type == typeof(DateTime?))
+                    {
+                        <text>
+                        data.@filter.Name = $('#@filter.Name').val();
+                        </text>
+                        continue;
+                    }
                 }
             }
             addAntiForgeryToken(data);
@@ -229,7 +236,9 @@ columns: [
             @if (column.Encode && column.Render == null)
             {
                 <text>
-                render: $.fn.dataTable.render.text(),
+                render: function (data, type, row, meta) {                    
+                    return escapeHtml(data)
+                },
                 </text>
             }
             @switch (column.Render)
@@ -334,7 +343,7 @@ columns: [
                 case RenderCheckBox checkBox:
                     <text>
                     render: function (data, type, row, meta) {
-                        return (data === 'true')
+                        return (data == true)
                             ? '<input name="@checkBox.Name" value="' + row.@checkBox.PropertyKeyName + '" type="checkbox" class="checkboxGroups" checked="checked" />'
                             : '<input name="@checkBox.Name" value="' + row.@checkBox.PropertyKeyName + '" type="checkbox" class="checkboxGroups" />';
                     },
@@ -343,7 +352,7 @@ columns: [
                 case RenderBoolean renderBoolean:
                     <text>
                     render: function (data, type, row) {
-                        return (data == true)
+                        return data
                             ? '<i class="fa fa-check true-icon" nop-value="true"></i>'
                             : '<i class="fa fa-close false-icon" nop-value="false"></i>';
                     },

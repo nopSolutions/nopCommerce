@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Core.Rss
+﻿namespace Nop.Core.Rss
 {
     /// <summary>
     /// Represents default values related to RSS feed

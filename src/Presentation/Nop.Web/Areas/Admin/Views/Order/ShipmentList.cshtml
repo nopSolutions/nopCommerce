@@ -174,8 +174,8 @@
                         LengthMenu = Model.AvailablePageSizes,
                         Filters = new List<FilterParameter>
                         {
-                            new FilterParameter(nameof(Model.StartDate)),
-                            new FilterParameter(nameof(Model.EndDate)),
+                            new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
+                            new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
                             new FilterParameter(nameof(Model.TrackingNumber)),
                             new FilterParameter(nameof(Model.CountryId)),
                             new FilterParameter(nameof(Model.StateProvinceId)),
@@ -199,12 +199,13 @@
                                 IsMasterCheckBox = true,
                                 Render = new RenderCheckBox("checkbox_shipments"),
                                 Searchable = false,
-                                Width = "10",
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Width = "50"
                             },
                             new ColumnProperty(nameof(ShipmentModel.Id))
                             {
                                 Title = T("Admin.Orders.Shipments.ID").Text,
-                                Width = "50"
+                                Width = "80"
                             },
                             new ColumnProperty(nameof(ShipmentModel.CustomOrderNumber))
                             {
@@ -213,8 +214,7 @@
                             },
                             new ColumnProperty(nameof(ShipmentModel.TrackingNumber))
                             {
-                                Title = T("Admin.Orders.Shipments.TrackingNumber").Text,
-                                Width = "100"
+                                Title = T("Admin.Orders.Shipments.TrackingNumber").Text
                             },
                             new ColumnProperty(nameof(ShipmentModel.TotalWeight))
                             {
@@ -224,24 +224,24 @@
                             new ColumnProperty(nameof(ShipmentModel.ShippedDate))
                             {
                                 Title = T("Admin.Orders.Shipments.ShippedDate").Text,
-                                Width = "200"
+                                Width = "150"
                             },
                             new ColumnProperty(nameof(ShipmentModel.DeliveryDate))
                             {
                                 Title = T("Admin.Orders.Shipments.DeliveryDate").Text,
-                                Width = "200"
+                                Width = "150"
                             },
                             new ColumnProperty(nameof(OrderModel.Id))
                             {
                                 Title = T("Admin.Common.View").Text,
-                                Width = "50",
+                                Width = "100",
                                 ClassName = NopColumnClassDefaults.Button,
                                 Render = new RenderButtonView(new DataUrl("~/Admin/Order/ShipmentDetails/"))
                             }
                         },
                         ChildTable = new DataTablesModel
                         {
-                            Name = "shipments-grid",
+                            Name = "products-grid",
                             UrlRead = new DataUrl("ShipmentsItemsByShipmentId", "Order", null),
                             IsChildTable = true,
                             Paging = false,

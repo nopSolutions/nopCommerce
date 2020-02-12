@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Data.Mapping.Localization
@@ -15,17 +14,19 @@ namespace Nop.Data.Mapping.Localization
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<Language> builder)
+        public override void Configure(EntityMappingBuilder<Language> builder)
         {
-            builder.ToTable(nameof(Language));
-            builder.HasKey(language => language.Id);
+            builder.HasTableName(nameof(Language));
 
-            builder.Property(language => language.Name).HasMaxLength(100).IsRequired();
-            builder.Property(language => language.LanguageCulture).HasMaxLength(20).IsRequired();
-            builder.Property(language => language.UniqueSeoCode).HasMaxLength(2);
-            builder.Property(language => language.FlagImageFileName).HasMaxLength(50);
-
-            base.Configure(builder);
+            builder.Property(language => language.Name).HasLength(100).IsNullable(false);
+            builder.Property(language => language.LanguageCulture).HasLength(20).IsNullable(false);
+            builder.Property(language => language.UniqueSeoCode).HasLength(2);
+            builder.Property(language => language.FlagImageFileName).HasLength(50);
+            builder.Property(language => language.Rtl);
+            builder.Property(language => language.LimitedToStores);
+            builder.Property(language => language.DefaultCurrencyId);
+            builder.Property(language => language.Published);
+            builder.Property(language => language.DisplayOrder);
         }
 
         #endregion

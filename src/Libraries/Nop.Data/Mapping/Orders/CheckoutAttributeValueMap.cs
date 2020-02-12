@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Orders;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Orders
 {
@@ -15,22 +15,17 @@ namespace Nop.Data.Mapping.Orders
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<CheckoutAttributeValue> builder)
+        public override void Configure(EntityMappingBuilder<CheckoutAttributeValue> builder)
         {
-            builder.ToTable(nameof(CheckoutAttributeValue));
-            builder.HasKey(value => value.Id);
+            builder.HasTableName(nameof(CheckoutAttributeValue));
 
-            builder.Property(value => value.Name).HasMaxLength(400).IsRequired();
-            builder.Property(value => value.ColorSquaresRgb).HasMaxLength(100);
-            builder.Property(value => value.PriceAdjustment).HasColumnType("decimal(18, 4)");
-            builder.Property(value => value.WeightAdjustment).HasColumnType("decimal(18, 4)");
-
-            builder.HasOne(value => value.CheckoutAttribute)
-                .WithMany(attribute => attribute.CheckoutAttributeValues)
-                .HasForeignKey(value => value.CheckoutAttributeId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(value => value.Name).HasLength(400).IsNullable(false);
+            builder.Property(value => value.ColorSquaresRgb).HasLength(100);
+            builder.Property(value => value.PriceAdjustment).HasDecimal();
+            builder.Property(value => value.WeightAdjustment).HasDecimal();
+            builder.Property(value => value.CheckoutAttributeId);
+            builder.Property(value => value.IsPreSelected);
+            builder.Property(value => value.DisplayOrder);
         }
 
         #endregion

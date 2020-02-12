@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
@@ -15,17 +14,13 @@ namespace Nop.Data.Mapping.Orders
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<RecurringPaymentHistory> builder)
+        public override void Configure(EntityMappingBuilder<RecurringPaymentHistory> builder)
         {
-            builder.ToTable(nameof(RecurringPaymentHistory));
-            builder.HasKey(historyEntry => historyEntry.Id);
+            builder.HasTableName(nameof(RecurringPaymentHistory));
 
-            builder.HasOne(historyEntry => historyEntry.RecurringPayment)
-                .WithMany(recurringPayment => recurringPayment.RecurringPaymentHistory)
-                .HasForeignKey(historyEntry => historyEntry.RecurringPaymentId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(historyEntry => historyEntry.RecurringPaymentId);
+            builder.Property(historyEntry => historyEntry.OrderId);
+            builder.Property(historyEntry => historyEntry.CreatedOnUtc);
         }
 
         #endregion

@@ -441,7 +441,7 @@
             <span asp-validation-for="AdminComment"></span>
         </div>
     </div>
-    @if (Model.Id > 0 && !string.IsNullOrEmpty(Model.RegisteredInStore))
+    @if (Model.DisplayRegisteredInStore)
     {
         <div class="form-group">
             <div class="col-md-3">

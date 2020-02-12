@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Catalog;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Catalog
 {
@@ -15,25 +15,28 @@ namespace Nop.Data.Mapping.Catalog
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<ProductAttributeValue> builder)
+        public override void Configure(EntityMappingBuilder<ProductAttributeValue> builder)
         {
-            builder.ToTable(nameof(ProductAttributeValue));
-            builder.HasKey(value => value.Id);
+            builder.HasTableName(nameof(ProductAttributeValue));
 
-            builder.Property(value => value.Name).HasMaxLength(400).IsRequired();
-            builder.Property(value => value.ColorSquaresRgb).HasMaxLength(100);
-            builder.Property(value => value.PriceAdjustment).HasColumnType("decimal(18, 4)");
-            builder.Property(value => value.WeightAdjustment).HasColumnType("decimal(18, 4)");
-            builder.Property(value => value.Cost).HasColumnType("decimal(18, 4)");
+            builder.Property(value => value.Name).HasLength(400).IsNullable(false);
+            builder.Property(value => value.ColorSquaresRgb).HasLength(100);
+            builder.Property(value => value.PriceAdjustment).HasDecimal();
+            builder.Property(value => value.WeightAdjustment).HasDecimal();
+            builder.Property(value => value.Cost).HasDecimal();
 
-            builder.HasOne(value => value.ProductAttributeMapping)
-                .WithMany(productAttributeMapping => productAttributeMapping.ProductAttributeValues)
-                .HasForeignKey(value => value.ProductAttributeMappingId)
-                .IsRequired();
+            builder.Property(productattributevalue => productattributevalue.ProductAttributeMappingId);
+            builder.Property(productattributevalue => productattributevalue.AttributeValueTypeId);
+            builder.Property(productattributevalue => productattributevalue.AssociatedProductId);
+            builder.Property(productattributevalue => productattributevalue.ImageSquaresPictureId);
+            builder.Property(productattributevalue => productattributevalue.PriceAdjustmentUsePercentage);
+            builder.Property(productattributevalue => productattributevalue.CustomerEntersQty);
+            builder.Property(productattributevalue => productattributevalue.Quantity);
+            builder.Property(productattributevalue => productattributevalue.IsPreSelected);
+            builder.Property(productattributevalue => productattributevalue.DisplayOrder);
+            builder.Property(productattributevalue => productattributevalue.PictureId);
 
             builder.Ignore(value => value.AttributeValueType);
-
-            base.Configure(builder);
         }
 
         #endregion

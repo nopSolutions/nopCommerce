@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Security;
+using Nop.Data;
 using Nop.Services.Logging;
 using Nop.Web.Framework.Security.Captcha;
 
@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute enabling CAPTCHA validation
     /// </summary>
-    public class ValidateCaptchaAttribute : TypeFilterAttribute
+    public sealed class ValidateCaptchaAttribute : TypeFilterAttribute
     {
         #region Ctor
 

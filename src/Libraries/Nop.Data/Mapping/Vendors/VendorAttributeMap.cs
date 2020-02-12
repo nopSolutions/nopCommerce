@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Vendors;
 
 namespace Nop.Data.Mapping.Vendors
@@ -15,16 +14,16 @@ namespace Nop.Data.Mapping.Vendors
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<VendorAttribute> builder)
+        public override void Configure(EntityMappingBuilder<VendorAttribute> builder)
         {
-            builder.ToTable(nameof(VendorAttribute));
-            builder.HasKey(attribute => attribute.Id);
+            builder.HasTableName(nameof(VendorAttribute));
 
-            builder.Property(attribute => attribute.Name).HasMaxLength(400).IsRequired();
+            builder.Property(attribute => attribute.Name).HasLength(400).IsNullable(false);
+            builder.Property(attribute => attribute.IsRequired);
+            builder.Property(attribute => attribute.DisplayOrder);
+            builder.Property(attribute => attribute.AttributeControlTypeId);
 
             builder.Ignore(attribute => attribute.AttributeControlType);
-
-            base.Configure(builder);
         }
 
         #endregion

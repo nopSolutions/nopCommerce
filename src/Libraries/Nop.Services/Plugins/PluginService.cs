@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -20,10 +22,11 @@ namespace Nop.Services.Plugins
 
         private readonly CatalogSettings _catalogSettings;
         private readonly ICustomerService _customerService;
+        private readonly IDataProvider _dataProvider;
         private readonly ILogger _logger;
         private readonly INopFileProvider _fileProvider;
-        private readonly IWebHelper _webHelper;
         private readonly IPluginsInfo _pluginsInfo;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -31,16 +34,18 @@ namespace Nop.Services.Plugins
 
         public PluginService(CatalogSettings catalogSettings,
             ICustomerService customerService,
+            IDataProvider dataProvider,
             ILogger logger,
             INopFileProvider fileProvider,
             IWebHelper webHelper)
         {
             _catalogSettings = catalogSettings;
             _customerService = customerService;
+            _dataProvider = dataProvider;
             _logger = logger;
             _fileProvider = fileProvider;
-            _webHelper = webHelper;
             _pluginsInfo = Singleton<IPluginsInfo>.Instance;
+            _webHelper = webHelper;
         }
 
         #endregion
@@ -108,7 +113,7 @@ namespace Nop.Services.Plugins
             if (_catalogSettings.IgnoreAcl)
                 return true;
 
-            return pluginDescriptor.LimitedToCustomerRoles.Intersect(customer.GetCustomerRoleIds()).Any();
+            return pluginDescriptor.LimitedToCustomerRoles.Intersect(_customerService.GetCustomerRoleIds(customer)).Any();
         }
 
         /// <summary>
@@ -148,7 +153,23 @@ namespace Nop.Services.Plugins
 
             return pluginDescriptor.DependsOn?.Contains(dependsOnSystemName) ?? false;
         }
-        
+
+        protected virtual void DeletePluginData(Type pluginType)
+        {
+            var assembly = Assembly.GetAssembly(pluginType);
+
+            _dataProvider.ApplyDownMigrations(assembly);
+            _dataProvider.DeleteDatabaseSchemaIfExists(assembly);
+        }
+
+        protected virtual void InsertPluginData(Type pluginType)
+        {
+            var assembly = Assembly.GetAssembly(pluginType);
+
+            _dataProvider.CreateDatabaseSchemaIfNotExists(assembly);
+            _dataProvider.ApplyUpMigrations(assembly);
+        }
+
         #endregion
 
         #region Methods
@@ -325,7 +346,7 @@ namespace Nop.Services.Plugins
                 {
                     if (!_pluginsInfo.InstalledPluginNames.Contains(dependentPlugin.SystemName))
                         continue;
-                    if(_pluginsInfo.PluginNamesToUninstall.Contains(dependentPlugin.SystemName))
+                    if (_pluginsInfo.PluginNamesToUninstall.Contains(dependentPlugin.SystemName))
                         continue;
 
                     dependsOn.Add(string.IsNullOrEmpty(dependentPlugin.FriendlyName)
@@ -415,6 +436,8 @@ namespace Nop.Services.Plugins
             {
                 try
                 {
+                    InsertPluginData(descriptor.PluginType);
+
                     //try to install an instance
                     descriptor.Instance<IPlugin>().Install();
 
@@ -468,8 +491,12 @@ namespace Nop.Services.Plugins
             {
                 try
                 {
+                    var plugin = descriptor.Instance<IPlugin>();
                     //try to uninstall an instance
-                    descriptor.Instance<IPlugin>().Uninstall();
+                    plugin.Uninstall();
+
+                    //clear plugin data on the database
+                    DeletePluginData(descriptor.PluginType);
 
                     //remove plugin system name from appropriate lists
                     _pluginsInfo.InstalledPluginNames.Remove(descriptor.SystemName);

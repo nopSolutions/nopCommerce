@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Media;
 
 namespace Nop.Data.Mapping.Media
@@ -15,12 +14,18 @@ namespace Nop.Data.Mapping.Media
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<Download> builder)
+        public override void Configure(EntityMappingBuilder<Download> builder)
         {
-            builder.ToTable(nameof(Download));
-            builder.HasKey(download => download.Id);
+            builder.HasTableName(nameof(Download));
 
-            base.Configure(builder);
+            builder.Property(download => download.DownloadGuid);
+            builder.Property(download => download.UseDownloadUrl);
+            builder.Property(download => download.DownloadUrl);
+            builder.Property(download => download.DownloadBinary);
+            builder.Property(download => download.ContentType);
+            builder.Property(download => download.Filename);
+            builder.Property(download => download.Extension);
+            builder.Property(download => download.IsNew);
         }
 
         #endregion

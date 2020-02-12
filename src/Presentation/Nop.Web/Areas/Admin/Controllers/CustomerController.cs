@@ -156,7 +156,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //check ACL permission to manage customer roles
             var rolesToAdd = customerRoles.Except(existingCustomerRoles);
             var rolesToDelete = existingCustomerRoles.Except(customerRoles);
-            if (rolesToAdd.Where(role => role.SystemName != NopCustomerDefaults.RegisteredRoleName).Any() || rolesToDelete.Any())
+            if (rolesToAdd.Any(role => role.SystemName != NopCustomerDefaults.RegisteredRoleName) || rolesToDelete.Any())
             {
                 if (!_permissionService.Authorize(StandardPermissionProvider.ManageAcl))
                     return _localizationService.GetResource("Admin.Customers.Customers.CustomerRolesManagingError");
@@ -450,17 +450,17 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var customerRole in newCustomerRoles)
                 {
                     //ensure that the current customer cannot add to "Administrators" system role if he's not an admin himself
-                    if (customerRole.SystemName == NopCustomerDefaults.AdministratorsRoleName && !_workContext.CurrentCustomer.IsAdmin())
+                    if (customerRole.SystemName == NopCustomerDefaults.AdministratorsRoleName && !_customerService.IsAdmin(_workContext.CurrentCustomer))
                         continue;
 
-                    customer.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = customerRole });
+                    _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole.Id });
                 }
 
                 _customerService.UpdateCustomer(customer);
 
                 //ensure that a customer with a vendor associated is not in "Administrators" role
                 //otherwise, he won't have access to other functionality in admin area
-                if (customer.IsAdmin() && customer.VendorId > 0)
+                if (_customerService.IsAdmin(customer) && customer.VendorId > 0)
                 {
                     customer.VendorId = 0;
                     _customerService.UpdateCustomer(customer);
@@ -470,15 +470,10 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 //ensure that a customer in the Vendors role has a vendor account associated.
                 //otherwise, he will have access to ALL products
-                if (customer.IsVendor() && customer.VendorId == 0)
+                if (_customerService.IsVendor(customer) && customer.VendorId == 0)
                 {
-                    var vendorRole = customer
-                        .CustomerRoles
-                        .FirstOrDefault(x => x.SystemName == NopCustomerDefaults.VendorsRoleName);
-                    //customer.CustomerRoles.Remove(vendorRole);
-                    customer.RemoveCustomerRoleMapping(
-                        customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == vendorRole.Id));
-                    _customerService.UpdateCustomer(customer);
+                    var vendorRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.VendorsRoleName);
+                    _customerService.RemoveCustomerRoleMapping(customer, vendorRole);
 
                     _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                 }
@@ -535,7 +530,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var customerRole in allCustomerRoles)
                 if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                     newCustomerRoles.Add(customerRole);
-            var customerRolesError = ValidateCustomerRoles(newCustomerRoles, customer.CustomerRoles);
+
+            var customerRolesError = ValidateCustomerRoles(newCustomerRoles, _customerService.GetCustomerRoles(customer));
+
             if (!string.IsNullOrEmpty(customerRolesError))
             {
                 ModelState.AddModelError(string.Empty, customerRolesError);
@@ -569,7 +566,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     customer.IsTaxExempt = model.IsTaxExempt;
 
                     //prevent deactivation of the last active administrator
-                    if (!customer.IsAdmin() || model.Active || SecondAdminAccountExists(customer))
+                    if (!_customerService.IsAdmin(customer) || model.Active || SecondAdminAccountExists(customer))
                         customer.Active = model.Active;
                     else
                         _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.Deactivate"));
@@ -692,14 +689,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                         //ensure that the current customer cannot add/remove to/from "Administrators" system role
                         //if he's not an admin himself
                         if (customerRole.SystemName == NopCustomerDefaults.AdministratorsRoleName &&
-                            !_workContext.CurrentCustomer.IsAdmin())
+                            !_customerService.IsAdmin(_workContext.CurrentCustomer))
                             continue;
 
                         if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                         {
                             //new role
-                            if (customer.CustomerCustomerRoleMappings.Count(mapping => mapping.CustomerRoleId == customerRole.Id) == 0)
-                                customer.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = customerRole });
+                            if (!_customerService.IsInCustomerRole(customer, customerRole.SystemName))
+                                _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole.Id });
                         }
                         else
                         {
@@ -711,11 +708,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                             }
 
                             //remove role
-                            if (customer.CustomerCustomerRoleMappings.Count(mapping => mapping.CustomerRoleId == customerRole.Id) > 0)
+                            if (_customerService.IsInCustomerRole(customer, customerRole.SystemName))
                             {
-                                customer.RemoveCustomerRoleMapping(
-                                    customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == customerRole.Id));
-
+                                _customerService.RemoveCustomerRoleMapping(customer, customerRole);
                             }
                         }
                     }
@@ -724,7 +719,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     //ensure that a customer with a vendor associated is not in "Administrators" role
                     //otherwise, he won't have access to the other functionality in admin area
-                    if (customer.IsAdmin() && customer.VendorId > 0)
+                    if (_customerService.IsAdmin(customer) && customer.VendorId > 0)
                     {
                         customer.VendorId = 0;
                         _customerService.UpdateCustomer(customer);
@@ -733,15 +728,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                     //ensure that a customer in the Vendors role has a vendor account associated.
                     //otherwise, he will have access to ALL products
-                    if (customer.IsVendor() && customer.VendorId == 0)
+                    if (_customerService.IsVendor(customer) && customer.VendorId == 0)
                     {
-                        var vendorRole = customer
-                            .CustomerRoles
-                            .FirstOrDefault(x => x.SystemName == NopCustomerDefaults.VendorsRoleName);
-                        //customer.CustomerRoles.Remove(vendorRole);
-                        customer.RemoveCustomerRoleMapping(
-                            customer.CustomerCustomerRoleMappings.FirstOrDefault(mapping => mapping.CustomerRoleId == vendorRole.Id));
-                        _customerService.UpdateCustomer(customer);
+                        var vendorRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.VendorsRoleName);
+                        _customerService.RemoveCustomerRoleMapping(customer, vendorRole);
+
                         _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                     }
 
@@ -782,7 +773,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //ensure that the current customer cannot change passwords of "Administrators" if he's not an admin himself
-            if (customer.IsAdmin() && !_workContext.CurrentCustomer.IsAdmin())
+            if (_customerService.IsAdmin(customer) && !_customerService.IsAdmin(_workContext.CurrentCustomer))
             {
                 _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.OnlyAdminCanChangePassword"));
                 return RedirectToAction("Edit", new { id = customer.Id });
@@ -873,14 +864,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 //prevent attempts to delete the user, if it is the last active administrator
-                if (customer.IsAdmin() && !SecondAdminAccountExists(customer))
+                if (_customerService.IsAdmin(customer) && !SecondAdminAccountExists(customer))
                 {
                     _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator"));
                     return RedirectToAction("Edit", new { id = customer.Id });
                 }
 
                 //ensure that the current customer cannot delete "Administrators" if he's not an admin himself
-                if (customer.IsAdmin() && !_workContext.CurrentCustomer.IsAdmin())
+                if (_customerService.IsAdmin(customer) && !_customerService.IsAdmin(_workContext.CurrentCustomer))
                 {
                     _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.OnlyAdminCanDeleteAdmin"));
                     return RedirectToAction("Edit", new { id = customer.Id });
@@ -933,7 +924,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //ensure that a non-admin user cannot impersonate as an administrator
             //otherwise, that user can simply impersonate as an administrator and gain additional administrative privileges
-            if (!_workContext.CurrentCustomer.IsAdmin() && customer.IsAdmin())
+            if (!_customerService.IsAdmin(_workContext.CurrentCustomer) && _customerService.IsAdmin(customer))
             {
                 _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.NonAdminNotImpersonateAsAdminError"));
                 return RedirectToAction("Edit", customer.Id);
@@ -1059,7 +1050,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 if (!_forumSettings.AllowPrivateMessages)
                     throw new NopException("Private messages are disabled");
-                if (customer.IsGuest())
+                if (_customerService.IsGuest(customer))
                     throw new NopException("Customer should be registered");
                 if (string.IsNullOrWhiteSpace(model.SendPm.Subject))
                     throw new NopException("PM subject is empty");
@@ -1177,7 +1168,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No customer found with the specified id", nameof(customerId));
 
             //try to get an address with the specified id
-            var address = customer.Addresses.FirstOrDefault(a => a.Id == id);
+            var address = _customerService.GetCustomerAddress(customer.Id, id);            
+
             if (address == null)
                 return Content("No address found with the specified id");
 
@@ -1236,9 +1228,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                     address.CountryId = null;
                 if (address.StateProvinceId == 0)
                     address.StateProvinceId = null;
-                //customer.Addresses.Add(address);
-                customer.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = address });
-                _customerService.UpdateCustomer(customer);
+
+                _addressService.InsertAddress(address);
+
+                _customerService.InsertCustomerAddress(customer, address);
 
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Addresses.Added"));
 
@@ -1527,14 +1520,14 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 //prevent attempts to delete the user, if it is the last active administrator
-                if (customer.IsAdmin() && !SecondAdminAccountExists(customer))
+                if (_customerService.IsAdmin(customer) && !SecondAdminAccountExists(customer))
                 {
                     _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminAccountShouldExists.DeleteAdministrator"));
                     return RedirectToAction("Edit", new { id = customer.Id });
                 }
 
                 //ensure that the current customer cannot delete "Administrators" if he's not an admin himself
-                if (customer.IsAdmin() && !_workContext.CurrentCustomer.IsAdmin())
+                if (_customerService.IsAdmin(customer) && !_customerService.IsAdmin(_workContext.CurrentCustomer))
                 {
                     _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.OnlyAdminCanDeleteAdmin"));
                     return RedirectToAction("Edit", new { id = customer.Id });

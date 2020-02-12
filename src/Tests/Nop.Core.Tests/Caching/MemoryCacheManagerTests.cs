@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using EasyCaching.InMemory;
+using FluentAssertions;
 using Nop.Core.Caching;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Core.Tests.Caching
@@ -24,7 +24,7 @@ namespace Nop.Core.Tests.Caching
         public void Can_set_and_get_object_from_cache()
         {
             _cacheManager.Set("some_key_1", 3, int.MaxValue);
-            _cacheManager.Get("some_key_1", () => 0).ShouldEqual(3);
+            _cacheManager.Get("some_key_1", () => 0).Should().Be(3);
         }
 
         [Test]
@@ -33,8 +33,8 @@ namespace Nop.Core.Tests.Caching
             _cacheManager.Set("some_key_1", 3, int.MaxValue);
             _cacheManager.Set("some_key_2", 4, int.MaxValue);
 
-            _cacheManager.IsSet("some_key_1").ShouldEqual(true);
-            _cacheManager.IsSet("some_key_3").ShouldEqual(false);
+            _cacheManager.IsSet("some_key_1").Should().BeTrue();
+            _cacheManager.IsSet("some_key_3").Should().BeFalse();
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace Nop.Core.Tests.Caching
 
             _cacheManager.Clear();
 
-            _cacheManager.IsSet("some_key_1").ShouldEqual(false);
+            _cacheManager.IsSet("some_key_1").Should().BeFalse();
         }
 
         [Test]
@@ -56,27 +56,26 @@ namespace Nop.Core.Tests.Caching
             var actionCount = 0;
             var action = new Action(() =>
             {
-                _cacheManager.IsSet(key).ShouldBeTrue();
+                _cacheManager.IsSet(key).Should().BeTrue();
 
                 _cacheManager.PerformActionWithLock(key, expiration,
                     () => Assert.Fail("Action in progress"))
-                    .ShouldBeFalse();
+                    .Should().BeFalse();
 
                 if (++actionCount % 2 == 0)
                     throw new ApplicationException("Alternating actions fail");
             });
 
             _cacheManager.PerformActionWithLock(key, expiration, action)
-                .ShouldBeTrue();
-            actionCount.ShouldEqual(1);
+                .Should().BeTrue();
+            actionCount.Should().Be(1);
 
-            Assert.Throws<ApplicationException>(() =>
-                _cacheManager.PerformActionWithLock(key, expiration, action));
-            actionCount.ShouldEqual(2);
+            _cacheManager.Invoking(a => a.PerformActionWithLock(key, expiration, action)).Should().Throw<ApplicationException>();
+            actionCount.Should().Be(2);
 
             _cacheManager.PerformActionWithLock(key, expiration, action)
-                .ShouldBeTrue();
-            actionCount.ShouldEqual(3);
+                .Should().BeTrue();
+            actionCount.Should().Be(3);
         }
     }
 }

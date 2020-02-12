@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Data.Mapping.Localization
@@ -15,21 +14,15 @@ namespace Nop.Data.Mapping.Localization
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<LocalizedProperty> builder)
+        public override void Configure(EntityMappingBuilder<LocalizedProperty> builder)
         {
-            builder.ToTable(nameof(LocalizedProperty));
-            builder.HasKey(property => property.Id);
+            builder.HasTableName(nameof(LocalizedProperty));
 
-            builder.Property(property => property.LocaleKeyGroup).HasMaxLength(400).IsRequired();
-            builder.Property(property => property.LocaleKey).HasMaxLength(400).IsRequired();
-            builder.Property(property => property.LocaleValue).IsRequired();
-
-            builder.HasOne(property => property.Language)
-                .WithMany()
-                .HasForeignKey(property => property.LanguageId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(property => property.LocaleKeyGroup).HasLength(400).IsNullable(false);
+            builder.Property(property => property.LocaleKey).HasLength(400).IsNullable(false);
+            builder.Property(property => property.LocaleValue).IsNullable(false);
+            builder.Property(localizedproperty => localizedproperty.EntityId);
+            builder.Property(localizedproperty => localizedproperty.LanguageId);
         }
 
         #endregion

@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB;
+using LinqToDB.Mapping;
 using Nop.Core.Domain.Orders;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Orders
 {
@@ -15,26 +16,24 @@ namespace Nop.Data.Mapping.Orders
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<ShoppingCartItem> builder)
+        public override void Configure(EntityMappingBuilder<ShoppingCartItem> builder)
         {
-            builder.ToTable(nameof(ShoppingCartItem));
-            builder.HasKey(item => item.Id);
+            builder.HasTableName(nameof(ShoppingCartItem));
 
-            builder.Property(item => item.CustomerEnteredPrice).HasColumnType("decimal(18, 4)");
+            builder.Property(item => item.CustomerEnteredPrice).HasDecimal();
 
-            builder.HasOne(item => item.Customer)
-                .WithMany(customer => customer.ShoppingCartItems)
-                .HasForeignKey(item => item.CustomerId)
-                .IsRequired();
-
-            builder.HasOne(item => item.Product)
-                .WithMany()
-                .HasForeignKey(item => item.ProductId)
-                .IsRequired();
+            builder.Property(item => item.StoreId);
+            builder.Property(item => item.ShoppingCartTypeId);
+            builder.Property(item => item.CustomerId);
+            builder.Property(item => item.ProductId);
+            builder.Property(item => item.AttributesXml);
+            builder.Property(item => item.Quantity);
+            builder.Property(item => item.RentalStartDateUtc);
+            builder.Property(item => item.RentalEndDateUtc);
+            builder.Property(item => item.CreatedOnUtc);
+            builder.Property(item => item.UpdatedOnUtc);
 
             builder.Ignore(item => item.ShoppingCartType);
-
-            base.Configure(builder);
         }
 
         #endregion

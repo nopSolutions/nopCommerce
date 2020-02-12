@@ -6,7 +6,7 @@
         {
             Name = "vendornotes-grid",
             UrlRead = new DataUrl("VendorNotesSelect", "Vendor", new RouteValueDictionary { [nameof(Model.VendorNoteSearchModel.VendorId)] = Model.VendorNoteSearchModel.VendorId }),
-            UrlDelete = new DataUrl("VendorNoteDelete", "Vendor", new RouteValueDictionary { [nameof(Model.VendorNoteSearchModel.VendorId)] = Model.VendorNoteSearchModel.VendorId }),
+            UrlDelete = new DataUrl("VendorNoteDelete", "Vendor", null),
             Length = Model.VendorNoteSearchModel.PageSize,
             LengthMenu = Model.VendorNoteSearchModel.AvailablePageSizes,
             ColumnCollection = new List<ColumnProperty>

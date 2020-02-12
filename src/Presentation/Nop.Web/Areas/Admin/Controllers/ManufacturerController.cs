@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Http;
@@ -259,7 +260,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                         //manufacturer.AppliedDiscounts.Add(discount);
-                        manufacturer.DiscountManufacturerMappings.Add(new DiscountManufacturerMapping { Discount = discount });
+                        _manufacturerService.InsertDiscountManufacturerMapping(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
+
                 }
 
                 _manufacturerService.UpdateManufacturer(manufacturer);
@@ -340,15 +342,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
                         //new discount
-                        if (manufacturer.DiscountManufacturerMappings.Count(mapping => mapping.DiscountId == discount.Id) == 0)
-                            manufacturer.DiscountManufacturerMappings.Add(new DiscountManufacturerMapping { Discount = discount });
+                        if (_manufacturerService.GetDiscountAppliedToManufacturer(manufacturer.Id, discount.Id) is null)
+                            _manufacturerService.InsertDiscountManufacturerMapping(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
                     }
                     else
                     {
                         //remove discount
-                        if (manufacturer.DiscountManufacturerMappings.Count(mapping => mapping.DiscountId == discount.Id) > 0)
-                            manufacturer.DiscountManufacturerMappings
-                                .Remove(manufacturer.DiscountManufacturerMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
+                        if (_manufacturerService.GetDiscountAppliedToManufacturer(manufacturer.Id, discount.Id) is DiscountManufacturerMapping discountManufacturerMapping)
+                            _manufacturerService.DeleteDiscountManufacturerMapping(discountManufacturerMapping);
                     }
                 }
 
@@ -410,6 +411,28 @@ namespace Nop.Web.Areas.Admin.Controllers
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Deleted"));
 
             return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public virtual IActionResult DeleteSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                var manufacturers = _manufacturerService.GetManufacturersByIds(selectedIds.ToArray());
+                _manufacturerService.DeleteManufacturers(manufacturers);
+
+                manufacturers.ForEach(manufacturer => 
+                {
+                    //activity log
+                    _customerActivityService.InsertActivity("DeleteManufacturer",
+                        string.Format(_localizationService.GetResource("ActivityLog.DeleteManufacturer"), manufacturer.Name), manufacturer);
+                });
+            }
+
+            return Json(new { Result = true });
         }
 
         #endregion

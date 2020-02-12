@@ -238,7 +238,7 @@ namespace Nop.Web.Framework
                         {
                             //get customer from cookie (should not be registered)
                             var customerByCookie = _customerService.GetCustomerByGuid(customerGuid);
-                            if (customerByCookie != null && !customerByCookie.IsRegistered())
+                            if (customerByCookie != null && !_customerService.IsRegistered(customerByCookie))
                                 customer = customerByCookie;
                         }
                     }

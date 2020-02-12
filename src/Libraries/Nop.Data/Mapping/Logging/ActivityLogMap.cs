@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Logging;
 
 namespace Nop.Data.Mapping.Logging
@@ -15,26 +14,17 @@ namespace Nop.Data.Mapping.Logging
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<ActivityLog> builder)
+        public override void Configure(EntityMappingBuilder<ActivityLog> builder)
         {
-            builder.ToTable(nameof(ActivityLog));
-            builder.HasKey(logItem => logItem.Id);
+            builder.HasTableName(nameof(ActivityLog));
 
-            builder.Property(logItem => logItem.Comment).IsRequired();
-            builder.Property(logItem => logItem.IpAddress).HasMaxLength(200);
-            builder.Property(logItem => logItem.EntityName).HasMaxLength(400);
-
-            builder.HasOne(logItem => logItem.ActivityLogType)
-                .WithMany()
-                .HasForeignKey(logItem => logItem.ActivityLogTypeId)
-                .IsRequired();
-
-            builder.HasOne(logItem => logItem.Customer)
-                .WithMany()
-                .HasForeignKey(logItem => logItem.CustomerId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(logItem => logItem.Comment).IsNullable(false);
+            builder.Property(logItem => logItem.IpAddress).HasLength(200);
+            builder.Property(logItem => logItem.EntityName).HasLength(400);
+            builder.Property(logItem => logItem.ActivityLogTypeId);
+            builder.Property(logItem => logItem.EntityId);
+            builder.Property(logItem => logItem.CustomerId);
+            builder.Property(logItem => logItem.CreatedOnUtc);
         }
 
         #endregion

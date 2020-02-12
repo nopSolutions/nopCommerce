@@ -468,37 +468,32 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
+            if (string.IsNullOrEmpty(message))
+                return ErrorJson(_localizationService.GetResource("Admin.Vendors.VendorNotes.Fields.Note.Validation"));
+
             //try to get a vendor with the specified id
             var vendor = _vendorService.GetVendorById(vendorId);
             if (vendor == null)
                 return ErrorJson("Vendor cannot be loaded");
 
-            if (string.IsNullOrEmpty(message))
-                return ErrorJson(_localizationService.GetResource("Admin.Vendors.VendorNotes.Fields.Note.Validation"));
-
-            var vendorNote = new VendorNote
+            _vendorService.InsertVendorNote(new VendorNote
             {
                 Note = message,
-                CreatedOnUtc = DateTime.UtcNow
-            };
-            vendor.VendorNotes.Add(vendorNote);
-            _vendorService.UpdateVendor(vendor);
+                CreatedOnUtc = DateTime.UtcNow,
+                VendorId = vendor.Id
+            });
 
             return Json(new { Result = true });
         }
 
         [HttpPost]
-        public virtual IActionResult VendorNoteDelete(int id, int vendorId)
+        public virtual IActionResult VendorNoteDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
-            //try to get a vendor with the specified id
-            var vendor = _vendorService.GetVendorById(vendorId)
-                ?? throw new ArgumentException("No vendor found with the specified id", nameof(vendorId));
-
             //try to get a vendor note with the specified id
-            var vendorNote = vendor.VendorNotes.FirstOrDefault(vn => vn.Id == id)
+            var vendorNote = _vendorService.GetVendorNoteById(id)
                 ?? throw new ArgumentException("No vendor note found with the specified id", nameof(id));
 
             _vendorService.DeleteVendorNote(vendorNote);

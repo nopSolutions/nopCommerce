@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Mapping.Shipping
@@ -15,14 +14,12 @@ namespace Nop.Data.Mapping.Shipping
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<ProductAvailabilityRange> builder)
+        public override void Configure(EntityMappingBuilder<ProductAvailabilityRange> builder)
         {
-            builder.ToTable(nameof(ProductAvailabilityRange));
-            builder.HasKey(range => range.Id);
+            builder.HasTableName(nameof(ProductAvailabilityRange));
 
-            builder.Property(range => range.Name).HasMaxLength(400).IsRequired();
-
-            base.Configure(builder);
+            builder.Property(range => range.Name).HasLength(400).IsNullable(false);
+            builder.Property(range => range.DisplayOrder);
         }
 
         #endregion

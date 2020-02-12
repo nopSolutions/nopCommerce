@@ -15,6 +15,11 @@
         <div class="pull-right">
             &nbsp;
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductTagListButtons })
+            <button type="button" id="delete-selected" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete.Selected")
+            </button>
+            <nop-action-confirmation asp-button-id="delete-selected" />
         </div>
     </div>
 
@@ -31,10 +36,16 @@
                         LengthMenu = Model.AvailablePageSizes,
                         ColumnCollection = new List<ColumnProperty>
                         {
+                            new ColumnProperty(nameof(ProductTagModel.Id))
+                            {
+                                IsMasterCheckBox = true,
+                                Render = new RenderCheckBox("checkbox_producttags"),
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Width = "50"
+                            },
                             new ColumnProperty(nameof(ProductTagModel.Name))
                             {
-                                Title = T("Admin.Catalog.ProductTags.Fields.Name").Text,
-                                Width = "300"
+                                Title = T("Admin.Catalog.ProductTags.Fields.Name").Text
                             },
                             new ColumnProperty(nameof(ProductTagModel.ProductCount))
                             {
@@ -64,7 +75,7 @@
                             return '<button onclick=\"javascript:OpenWindow(\'@Url.Content("~/Admin/Product/EditProductTag/")' + data + '?btnId=btnRefresh&formId=product-tags-form\', 800, 320, true); return false;\" class="btn btn-default"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</button>';
                         }
                     </script>
-                    
+
                     <input type="submit" id="btnRefresh" style="display: none" />
                     <script>
                         $(document).ready(function() {
@@ -75,8 +86,31 @@
                                 //return false to don't reload a page
                                 return false;
                             });
+
+                            $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                                var postData = {
+                                    selectedIds: selectedIds
+                                };
+                                addAntiForgeryToken(postData);
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@(Url.Action("ProductTagsDelete", "Product"))",
+                                    data: postData,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#deleteSelectedFailed-info').text(errorThrown);
+                                        $('#deleteSelectedFailed').click();
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                        updateTable('#product-tags-grid');
+                                    }
+                                });
+                                $('#delete-selected-action-confirmation').modal('toggle');
+                                return false;
+                            });
                         });
                     </script>
+                    <nop-alert asp-alert-id="deleteSelectedFailed" />
                 </div>
             </div>
         </div>

@@ -3,7 +3,7 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Services.Customers;
 
 namespace Nop.Web.Framework.Mvc.Filters
@@ -11,7 +11,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents filter attribute that saves last customer activity date
     /// </summary>
-    public class SaveLastActivityAttribute : TypeFilterAttribute
+    public sealed class SaveLastActivityAttribute : TypeFilterAttribute
     {
         #region Ctor
 

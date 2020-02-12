@@ -1,11 +1,10 @@
-using System;
+﻿using System;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
-using Nop.Data.Extensions;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 
@@ -19,9 +18,10 @@ namespace Nop.Services.Messages
         #region Fields
 
         private readonly ICustomerService _customerService;
-        private readonly IDbContext _context;
+        private readonly IDataProvider _dataProvider;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Customer> _customerRepository;
+        private readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
         private readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
 
         #endregion
@@ -29,15 +29,17 @@ namespace Nop.Services.Messages
         #region Ctor
 
         public NewsLetterSubscriptionService(ICustomerService customerService,
-            IDbContext context,
+            IDataProvider dataProvider,
             IEventPublisher eventPublisher,
             IRepository<Customer> customerRepository,
+            IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository,
             IRepository<NewsLetterSubscription> subscriptionRepository)
         {
             _customerService = customerService;
-            _context = context;
+            _dataProvider = dataProvider;
             _eventPublisher = eventPublisher;
             _customerRepository = customerRepository;
+            _customerCustomerRoleMappingRepository = customerCustomerRoleMappingRepository;
             _subscriptionRepository = subscriptionRepository;
         }
 
@@ -114,7 +116,7 @@ namespace Nop.Services.Messages
             newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
 
             //Get original subscription record
-            var originalSubscription = _context.LoadOriginalCopy(newsLetterSubscription);
+            var originalSubscription = _dataProvider.LoadOriginalCopy(newsLetterSubscription);
 
             //Persist
             _subscriptionRepository.Update(newsLetterSubscription);
@@ -171,7 +173,7 @@ namespace Nop.Services.Messages
         {
             if (newsLetterSubscriptionId == 0) return null;
 
-            return _subscriptionRepository.GetById(newsLetterSubscriptionId);
+            return _subscriptionRepository.ToCachedGetById(newsLetterSubscriptionId);
         }
 
         /// <summary>
@@ -272,6 +274,7 @@ namespace Nop.Services.Messages
                 query = query.OrderBy(nls => nls.Email);
 
                 var subscriptions = new PagedList<NewsLetterSubscription>(query, pageIndex, pageSize);
+
                 return subscriptions;
             }
             else
@@ -285,7 +288,9 @@ namespace Nop.Services.Messages
                         NewsletterSubscribers = nls,
                         Customer = c
                     });
-                query = query.Where(x => x.Customer.CustomerCustomerRoleMappings.Any(mapping => mapping.CustomerRoleId == customerRoleId));
+
+                query = query.Where(x => _customerCustomerRoleMappingRepository.Table.Any(ccrm => ccrm.CustomerId == x.Customer.Id && ccrm.CustomerRoleId == customerRoleId));
+
                 if (!string.IsNullOrEmpty(email))
                     query = query.Where(x => x.NewsletterSubscribers.Email.Contains(email));
                 if (createdFromUtc.HasValue)
@@ -296,9 +301,11 @@ namespace Nop.Services.Messages
                     query = query.Where(x => x.NewsletterSubscribers.StoreId == storeId);
                 if (isActive.HasValue)
                     query = query.Where(x => x.NewsletterSubscribers.Active == isActive.Value);
+
                 query = query.OrderBy(x => x.NewsletterSubscribers.Email);
 
                 var subscriptions = new PagedList<NewsLetterSubscription>(query.Select(x => x.NewsletterSubscribers), pageIndex, pageSize);
+
                 return subscriptions;
             }
         }

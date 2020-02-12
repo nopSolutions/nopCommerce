@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>اندرونی ڈیٹا اسٹوریج کا استعمال کریں (ایس کیو ایل سرور کومپیکٹ)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value> ایس کیو ایل سرور کا نام </Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value> ایس کیو ایل سرور کا نام ضروری ہے </Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value> ایس کیو ایل پاس ورڈ </Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value> ایس کیو ایل پاس ورڈ ضروری ہے </Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value> ایس کیو ایل یوزر کا نام </Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value> ایس کیو ایل یوزر کا نام ضروری ہے </Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>ایس کیو ایل سرور کے ڈیٹا بیس (یا ایس کیو ایل ایکسپریس) کو استعمال کریں</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>سٹور کی معلومات</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>اس وزرڈ کو مکمل کرنے کے لئے آپ کو کچھ معلومات آپ کے ڈیٹا بیس سرور کے بارے میں پتہ ہونا چاہئے ("کنکشن سٹرنگ"). براہ مہربانی اگر ضروری ہو تو اپنے آئی ایس پی سے رابطہ کریں. اگر آپ ایک مقامی مشین یا سرور پر انسٹال کر رہے ہیں تو آپ کو اپنے سسٹم ایڈمنسٹریٹر سے معلومات کی ضرورت ہو سکتی ہے.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value> integrated Windows authentication کا استعمال کریں </Value>
   </LocaleResource>
 </Language>

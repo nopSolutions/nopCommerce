@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>Integrierte Datenbank verwenden (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>SQL Server Name</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>SQL Server Name ist notwendig</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL Password</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>SQL Password ist notwendig</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>SQL Benutzername</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>SQL Benutzername ist notwendig</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Microsoft SQL Server (oder SQL Express) Datenbank verwenden</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Shop Information</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>Um den Wizard abzuschliessen müssen Sie die Daten Ihres Datenbankservers kennen ("connection string"). Bitte kontaktieren Sie gegebenenfalls Ihren ISP. Falls Sie auf einem lokalen Computer installieren benötigen Sie eventuell Informationen von Ihrem Systemadministrator</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>Integrierte Windows Authentifizierung verwenden</Value>
   </LocaleResource>
 </Language>

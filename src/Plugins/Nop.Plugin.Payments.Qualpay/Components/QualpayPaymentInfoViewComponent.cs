@@ -3,11 +3,11 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Payments.Qualpay.Models;
 using Nop.Plugin.Payments.Qualpay.Services;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
@@ -23,6 +23,7 @@ namespace Nop.Plugin.Payments.Qualpay.Components
     {
         #region Fields
 
+        private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
         private readonly ISettingService _settingService;
@@ -36,7 +37,8 @@ namespace Nop.Plugin.Payments.Qualpay.Components
 
         #region Ctor
 
-        public QualpayPaymentInfoViewComponent(ILocalizationService localizationService,
+        public QualpayPaymentInfoViewComponent(ICustomerService customerService,
+            ILocalizationService localizationService,
             ILogger logger,
             ISettingService settingService,
             IShoppingCartService shoppingCartService,
@@ -45,6 +47,7 @@ namespace Nop.Plugin.Payments.Qualpay.Components
             QualpayManager qualpayManager,
             QualpaySettings qualpaySettings)
         {
+            _customerService = customerService;
             _localizationService = localizationService;
             _logger = logger;
             _settingService = settingService;
@@ -99,7 +102,7 @@ namespace Nop.Plugin.Payments.Qualpay.Components
             }
 
             //prepare Qualpay Customer Vault model for non-guest customer
-            model.IsGuest = _workContext.CurrentCustomer.IsGuest();
+            model.IsGuest = _customerService.IsGuest(_workContext.CurrentCustomer);
             if (_qualpaySettings.UseCustomerVault && !model.IsGuest)
             {
                 //try to get customer billing cards

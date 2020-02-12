@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Common;
 
 namespace Nop.Data.Mapping.Common
@@ -15,12 +14,13 @@ namespace Nop.Data.Mapping.Common
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<SearchTerm> builder)
+        public override void Configure(EntityMappingBuilder<SearchTerm> builder)
         {
-            builder.ToTable(nameof(SearchTerm));
-            builder.HasKey(searchTerm => searchTerm.Id);
+            builder.HasTableName(nameof(SearchTerm));
 
-            base.Configure(builder);
+            builder.Property(searchTerm => searchTerm.Keyword);
+            builder.Property(searchTerm => searchTerm.StoreId);
+            builder.Property(searchTerm => searchTerm.Count);
         }
 
         #endregion

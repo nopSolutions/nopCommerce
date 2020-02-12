@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>Gebruik built-in data opslag (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>SQL Server naam</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>SQL Server naam is vereist</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL Wachtwoord</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>SQL Wachtwoord is vereist</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>SQL Gebruikersnaam</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>SQL Gebruikersnaam is vereist</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Gebruik Microsoft SQL Server (of SQL Express) database</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Webshop informatie</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>Om deze wizard volledig en succesvol te doorlopen, heeft u wat informatie over uw database nodig (de "connectie string"). Indien nodig, neem contact hierover op met uw ISP. Als u nopCommerce op een lokaal systeem installeert, heeft u wellicht informatie van uw Systeembeheerder nodig.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>Gebruik geïntegreerde Windows authenticatie</Value>
   </LocaleResource>
 </Language>

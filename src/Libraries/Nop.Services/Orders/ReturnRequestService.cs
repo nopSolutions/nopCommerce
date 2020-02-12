@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Orders;
+using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Orders
@@ -64,7 +65,7 @@ namespace Nop.Services.Orders
             if (returnRequestId == 0)
                 return null;
 
-            return _returnRequestRepository.GetById(returnRequestId);
+            return _returnRequestRepository.ToCachedGetById(returnRequestId);
         }
 
         /// <summary>
@@ -150,7 +151,22 @@ namespace Nop.Services.Orders
             if (returnRequestActionId == 0)
                 return null;
 
-            return _returnRequestActionRepository.GetById(returnRequestActionId);
+            return _returnRequestActionRepository.ToCachedGetById(returnRequestActionId);
+        }
+
+        /// <summary>
+        /// Inserts a return request
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        public virtual void InsertReturnRequest(ReturnRequest returnRequest)
+        {
+            if (returnRequest == null)
+                throw new ArgumentNullException(nameof(returnRequest));
+
+            _returnRequestRepository.Insert(returnRequest);
+
+            //event notification
+            _eventPublisher.EntityInserted(returnRequest);
         }
 
         /// <summary>
@@ -169,7 +185,22 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Updates the  return request action
+        /// Updates the return request
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        public virtual void UpdateReturnRequest(ReturnRequest returnRequest)
+        {
+            if (returnRequest == null)
+                throw new ArgumentNullException(nameof(returnRequest));
+
+            _returnRequestRepository.Update(returnRequest);
+
+            //event notification
+            _eventPublisher.EntityUpdated(returnRequest);
+        }
+
+        /// <summary>
+        /// Updates the return request action
         /// </summary>
         /// <param name="returnRequestAction">Return request action</param>
         public virtual void UpdateReturnRequestAction(ReturnRequestAction returnRequestAction)
@@ -220,7 +251,7 @@ namespace Nop.Services.Orders
             if (returnRequestReasonId == 0)
                 return null;
 
-            return _returnRequestReasonRepository.GetById(returnRequestReasonId);
+            return _returnRequestReasonRepository.ToCachedGetById(returnRequestReasonId);
         }
 
         /// <summary>

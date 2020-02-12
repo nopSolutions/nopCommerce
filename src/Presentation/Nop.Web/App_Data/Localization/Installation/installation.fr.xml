@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>Utilisez la fonction de stockage de données (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>Nom du serveur SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>Nom du serveur SQL est requise</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL Mot de passe</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>Mot de passe SQL est requise</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>Nom d'utilisateur SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>Nom d'utilisateur SQL est requise</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Utilisez Microsoft SQL Server (ou SQL Express) base de données</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>informations sur le magasin</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>Pour compléter cet assistant, vous devez connaître certaines informations concernant votre serveur de base de données ("chaîne de connexion"). S'il vous plaît contactez votre FAI si nécessaire. Si vous installez sur une machine locale ou serveur que vous pourriez avoir besoin d'informations à partir de votre système d'administration</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>Utilisez l'authentification Windows intégrée</Value>
   </LocaleResource>
 </Language>

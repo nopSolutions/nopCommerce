@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>Nota innbyggðan gagnagrunn (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>Nafn SQL þjóns</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>Slá verður inn nafn á SQL þjóni</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL lykilorð</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>Slá verður inn lykilorð að SQL þjóni</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>SQL notandi</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>Slá verður inn nafn SQL notanda</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Nota Microsoft SQL Server(eða SQL Express)</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Vista upplýsingar</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>Til að ljúka þessum álfi, þá þarftu að hafa upplýsingar um gagnaþjón ("tengistreng"). Hafðu samband við vistunaraðila ef þörf er. Ef þú ert að setja upp á eigin þjón þá gæti þig vantað upplýsingar frá kerfisstjóra.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>Nota Windows notanda</Value>
   </LocaleResource>
 </Language>

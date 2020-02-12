@@ -5,11 +5,12 @@ using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
@@ -24,6 +25,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 using static SixLabors.ImageSharp.Configuration;
+using NopMediaDefaults = Nop.Services.Defaults.NopMediaDefaults;
 
 namespace Nop.Services.Media
 {
@@ -35,7 +37,6 @@ namespace Nop.Services.Media
         #region Fields
 
         private readonly IDataProvider _dataProvider;
-        private readonly IDbContext _dbContext;
         private readonly IDownloadService _downloadService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -54,7 +55,6 @@ namespace Nop.Services.Media
         #region Ctor
 
         public PictureService(IDataProvider dataProvider,
-            IDbContext dbContext,
             IDownloadService downloadService,
             IEventPublisher eventPublisher,
             IHttpContextAccessor httpContextAccessor,
@@ -69,7 +69,6 @@ namespace Nop.Services.Media
             MediaSettings mediaSettings)
         {
             _dataProvider = dataProvider;
-            _dbContext = dbContext;
             _downloadService = downloadService;
             _eventPublisher = eventPublisher;
             _httpContextAccessor = httpContextAccessor;
@@ -138,7 +137,7 @@ namespace Nop.Services.Media
             if (height < 1)
                 height = 1;
 
-            //we invoke Math.Round to ensure that no white background is rendered - https://www.nopcommerce.com/boards/t/40616/image-resizing-bug.aspx
+            //we invoke Math.Round to ensure that no white background is rendered - https://www.nopcommerce.com/boards/topic/40616/image-resizing-bug
             return new Size((int)Math.Round(width), (int)Math.Round(height));
         }
 
@@ -292,7 +291,7 @@ namespace Nop.Services.Media
                 throw new ArgumentNullException(nameof(picture));
 
             var result = fromDb
-                ? picture.PictureBinary?.BinaryData ?? new byte[0]
+                ? GetPictureBinaryByPictureId(picture.Id)?.BinaryData ?? Array.Empty<byte>()
                 : LoadPictureFromFile(picture.Id, picture.MimeType);
 
             return result;
@@ -337,7 +336,7 @@ namespace Nop.Services.Media
             if (picture == null)
                 throw new ArgumentNullException(nameof(picture));
 
-            var pictureBinary = picture.PictureBinary;
+            var pictureBinary = GetPictureBinaryByPictureId(picture.Id);
 
             var isNew = pictureBinary == null;
 
@@ -667,7 +666,7 @@ namespace Nop.Services.Media
             if (pictureId == 0)
                 return null;
 
-            return _pictureRepository.GetById(pictureId);
+            return _pictureRepository.ToCachedGetById(pictureId);
         }
 
         /// <summary>
@@ -693,7 +692,6 @@ namespace Nop.Services.Media
             _eventPublisher.EntityDeleted(picture);
         }
 
-
         /// <summary>
         /// Gets a collection of pictures
         /// </summary>
@@ -710,7 +708,10 @@ namespace Nop.Services.Media
 
             query = query.OrderByDescending(p => p.Id);
 
-            var pics = new PagedList<Picture>(query, pageIndex, pageSize);
+            var key = string.Format(NopMediaCachingDefaults.PicturesByVirtualPathCacheKey, virtualPath);
+
+            var pics = query.ToCachedPagedList(key, pageIndex, pageSize);
+
             return pics;
         }
 
@@ -770,7 +771,7 @@ namespace Nop.Services.Media
                 IsNew = isNew
             };
             _pictureRepository.Insert(picture);
-            UpdatePictureBinary(picture, StoreInDb ? pictureBinary : new byte[0]);
+            UpdatePictureBinary(picture, StoreInDb ? pictureBinary : Array.Empty<byte>());
 
             if (!StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
@@ -904,7 +905,7 @@ namespace Nop.Services.Media
             picture.IsNew = isNew;
 
             _pictureRepository.Update(picture);
-            UpdatePictureBinary(picture, StoreInDb ? pictureBinary : new byte[0]);
+            UpdatePictureBinary(picture, StoreInDb ? pictureBinary : Array.Empty<byte>());
 
             if (!StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
@@ -934,15 +935,25 @@ namespace Nop.Services.Media
             picture.SeoFilename = seoFilename;
 
             _pictureRepository.Update(picture);
-            UpdatePictureBinary(picture, StoreInDb ? picture.PictureBinary.BinaryData : new byte[0]);
+            UpdatePictureBinary(picture, StoreInDb ? GetPictureBinaryByPictureId(picture.Id).BinaryData : Array.Empty<byte>());
 
             if (!StoreInDb)
-                SavePictureInFile(picture.Id, picture.PictureBinary.BinaryData, picture.MimeType);
+                SavePictureInFile(picture.Id, GetPictureBinaryByPictureId(picture.Id).BinaryData, picture.MimeType);
 
             //event notification
             _eventPublisher.EntityUpdated(picture);
 
             return picture;
+        }
+
+        /// <summary>
+        /// Get product picture binary by picture identifier
+        /// </summary>
+        /// <param name="pictureId">The picture identifier</param>
+        /// <returns>Picture binary</returns>
+        public virtual PictureBinary GetPictureBinaryByPictureId(int pictureId)
+        {
+            return _pictureBinaryRepository.Table.FirstOrDefault(pb => pb.PictureId == pictureId);
         }
 
         /// <summary>
@@ -1006,12 +1017,13 @@ namespace Nop.Services.Media
         public IDictionary<int, string> GetPicturesHash(int[] picturesIds)
         {
             var supportedLengthOfBinaryHash = _dataProvider.SupportedLengthOfBinaryHash;
+
             if (supportedLengthOfBinaryHash == 0 || !picturesIds.Any())
                 return new Dictionary<int, string>();
 
             const string strCommand = "SELECT [PictureId], HASHBYTES('sha1', substring([BinaryData], 0, {0})) as [Hash] FROM [PictureBinary] where [PictureId] in ({1})";
-            return _dbContext
-                .QueryFromSql<PictureHashItem>(string.Format(strCommand, supportedLengthOfBinaryHash, picturesIds.Select(p => p.ToString()).Aggregate((all, current) => all + ", " + current))).Distinct()
+            
+            return _dataProvider.Query<PictureHashItem>(string.Format(strCommand, supportedLengthOfBinaryHash, picturesIds.Select(p => p.ToString()).Aggregate((all, current) => all + ", " + current))).Distinct()
                 .ToDictionary(p => p.PictureId, p => BitConverter.ToString(p.Hash).Replace("-", string.Empty));
         }
 
@@ -1108,7 +1120,7 @@ namespace Nop.Services.Media
                                 //now on file system
                                 SavePictureInFile(picture.Id, pictureBinary, picture.MimeType);
                             //update appropriate properties
-                            UpdatePictureBinary(picture, value ? pictureBinary : new byte[0]);
+                            UpdatePictureBinary(picture, value ? pictureBinary : Array.Empty<byte>());
                             picture.IsNew = true;
                             //raise event?
                             //_eventPublisher.EntityUpdated(picture);
@@ -1116,11 +1128,6 @@ namespace Nop.Services.Media
 
                         //save all at once
                         _pictureRepository.Update(pictures);
-                        //detach them in order to release memory
-                        foreach (var picture in pictures)
-                        {
-                            _dbContext.Detach(picture);
-                        }
                     }
                 }
                 catch

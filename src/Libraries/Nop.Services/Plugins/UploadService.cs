@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
 using Nop.Services.Common;
 using Nop.Services.Themes;
@@ -366,6 +368,75 @@ namespace Nop.Services.Plugins
                 //delete the zip file and leave only unpacked files in the folder
                 if (!string.IsNullOrEmpty(zipFilePath))
                     _fileProvider.DeleteFile(zipFilePath);
+            }
+        }
+
+        /// <summary>
+        /// Upload locale pattern for ccurrent culture
+        /// </summary>
+        public virtual void UploadLocalePattern()
+        {
+            string getPath(string dirPath, string dirName)
+            {
+                return _fileProvider.GetAbsolutePath(string.Format(dirPath, dirName));
+            }
+
+            bool checkDirectoryExists(string dirPath, string dirName)
+            {
+                return _fileProvider.DirectoryExists(getPath(dirPath, dirName));
+            }
+            
+            var tempFolder = "temp";
+            try
+            {
+                //1. check if the archive with localization of templates is in its place
+                var ziplocalePatternPath = getPath(NopCommonDefaults.LocalePatternPath, NopCommonDefaults.LocalePatternArchiveName);
+                if (!_fileProvider.GetFileExtension(ziplocalePatternPath)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
+                    throw new Exception($"Archive '{NopCommonDefaults.LocalePatternArchiveName}' to retrieve localization patterns not found.");
+
+                var currentCulture = CultureInfo.CurrentCulture;
+
+                //2. Check if there is already an unpacked folder with locales for the current culture in the lib directory, if not then
+                if (!(checkDirectoryExists(NopCommonDefaults.LocalePatternPath, currentCulture.Name) || 
+                    checkDirectoryExists(NopCommonDefaults.LocalePatternPath, currentCulture.TwoLetterISOLanguageName)))
+                {
+                    var cultureToUse = string.Empty;
+
+                    //3. Unpack the archive into a temporary folder
+                    ZipFile.ExtractToDirectory(ziplocalePatternPath, getPath(NopCommonDefaults.LocalePatternPath, tempFolder));
+
+                    //4. Search in the temp unpacked archive a folder with locales by culture
+                    var sourcelocalePath = _fileProvider.Combine(getPath(NopCommonDefaults.LocalePatternPath, tempFolder), currentCulture.Name);
+                    if (_fileProvider.DirectoryExists(sourcelocalePath))
+                    {
+                        cultureToUse = currentCulture.Name;
+                    }
+
+                    var sourcelocaleISOPath = _fileProvider.Combine(getPath(NopCommonDefaults.LocalePatternPath, tempFolder), currentCulture.TwoLetterISOLanguageName);
+                    if (_fileProvider.DirectoryExists(sourcelocaleISOPath))
+                    {
+                        cultureToUse = currentCulture.TwoLetterISOLanguageName;
+                        sourcelocalePath = sourcelocaleISOPath;
+                    }
+
+                    //5. Copy locales to destination folder
+                    if (!string.IsNullOrEmpty(cultureToUse))
+                    {
+                        var destlocalePath = getPath(NopCommonDefaults.LocalePatternPath, cultureToUse);
+                        if (_fileProvider.DirectoryExists(destlocalePath))
+                        {
+                            _fileProvider.DeleteDirectory(destlocalePath);
+                        }
+
+                        _fileProvider.DirectoryMove(sourcelocalePath, destlocalePath);
+                    }
+                }
+            }
+            finally
+            {
+                //6. delete the zip file and leave only unpacked files in the folder
+                if (checkDirectoryExists(NopCommonDefaults.LocalePatternPath, tempFolder))
+                    _fileProvider.DeleteDirectory(getPath(NopCommonDefaults.LocalePatternPath, tempFolder));
             }
         }
 

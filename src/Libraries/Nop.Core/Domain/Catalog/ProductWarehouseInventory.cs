@@ -1,6 +1,4 @@
-using Nop.Core.Domain.Shipping;
-
-namespace Nop.Core.Domain.Catalog
+﻿namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents a record to manage product inventory per warehouse
@@ -26,15 +24,5 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the reserved quantity (ordered but not shipped yet)
         /// </summary>
         public int ReservedQuantity { get; set; }
-
-        /// <summary>
-        /// Gets the product
-        /// </summary>
-        public virtual Product Product { get; set; }
-
-        /// <summary>
-        /// Gets the warehouse
-        /// </summary>
-        public virtual Warehouse Warehouse { get; set; }
     }
 }
