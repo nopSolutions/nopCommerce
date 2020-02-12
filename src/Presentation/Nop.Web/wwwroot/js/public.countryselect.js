@@ -31,8 +31,9 @@
                 alert('Failed to retrieve states.');
             },
             complete: function(jqXHR, textStatus) {
-              //stateProvince.trigger('change');
-              $(`#${stateProvince[0].id} option[value=${Billing.selectedStateId}]`).prop('selected', true);
+              var stateId = (typeof Billing !== "undefined") ? Billing.selectedStateId : (typeof CheckoutBilling !== "undefined") ? CheckoutBilling.selectedStateId : 0;
+              $(`#${stateProvince[0].id} option[value=${stateId}]`).prop('selected', true);
+
               loading.hide();
             }
         });

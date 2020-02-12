@@ -72,33 +72,35 @@ var Checkout = {
         Accordion.openPrevSection(true, true);
     },
 
-    setStepResponse: function (response) {
-        if (response.update_section) {
-            $('#checkout-' + response.update_section.name + '-load').html(response.update_section.html);
-        }
-        if (response.allow_sections) {
-            response.allow_sections.each(function (e) {
-                $('#opc-' + e).addClass('allow');
-            });
-        }
-        
-        //TODO move it to a new method
-        if ($("#billing-address-select").length > 0) {
-            Billing.newAddress(!$('#billing-address-select').val());
-        }
-        if ($("#shipping-address-select").length > 0) {
-            Shipping.newAddress(!$('#shipping-address-select').val());
-        }
+    setStepResponse: function(response) {
+      if (response.update_section) {
+        $('#checkout-' + response.update_section.name + '-load').html(response.update_section.html);
+      }
+      if (response.allow_sections) {
+        response.allow_sections.each(function(e) {
+          $('#opc-' + e).addClass('allow');
+        });
+      }
 
-        if (response.goto_section) {
-            Checkout.gotoSection(response.goto_section);
-            return true;
-        }
-        if (response.redirect) {
-            location.href = response.redirect;
-            return true;
-        }
-        return false;
+      //TODO move it to a new method
+      if ($("#billing-address-select").length > 0) {
+        Billing.newAddress(!$('#billing-address-select').val());
+      } else {
+        Billing.newAddress(true);
+      }
+      if ($("#shipping-address-select").length > 0) {
+        Shipping.newAddress(!$('#shipping-address-select').val());
+      }
+
+      if (response.goto_section) {
+        Checkout.gotoSection(response.goto_section);
+        return true;
+      }
+      if (response.redirect) {
+        location.href = response.redirect;
+        return true;
+      }
+      return false;
     }
 };
 
@@ -124,9 +126,13 @@ var Billing = {
       this.resetSelectedAddress();
       $('#billing-new-address-form').show();
       $('#edit-address-button').hide();
+      $('#delete-address-button').hide();
     } else {
       $('#billing-new-address-form').hide();
-      if (this.guest) $('#edit-address-button').show();
+      if (this.guest) {
+        $('#edit-address-button').show();
+        $('#delete-address-button').show();
+      }
     }
     $(document).trigger({ type: "onepagecheckout_billing_address_new" });
   },
@@ -225,21 +231,18 @@ var Billing = {
       complete: function(jqXHR, textStatus) {
         $('#billing-new-address-form').show();
         $('#edit-address-button').hide();
+        $('#delete-address-button').hide();
         $('#save-address-button').show();
       },
       error: Checkout.ajaxFailure
     });
   },
 
-  setSelectedStateId: function(id) {
-    this.selectedStateId = id;
-  },
-
   saveEditAddress: function(url) {
     var selectedId;
     $.ajax({
       cache: false,
-      url: url,
+      url: url + '?opc=true',
       data: $(this.form).serialize(),
       type: "POST",
       success: function(response) {
@@ -256,24 +259,35 @@ var Billing = {
     });
   },
 
+  deleteAddress: function (url) {
+    var selectedAddress = $('#billing-address-select').children("option:selected").val();
+    $.ajax({
+      cache: false,
+      type: "GET",
+      url: url,
+      data: {
+        "addressId": selectedAddress,
+        "opc": 'true'
+      },
+      success: function (response) {
+        Checkout.setStepResponse(response);
+      },
+      error: Checkout.ajaxFailure
+    });
+  },
+
+  setSelectedStateId: function (id) {
+    this.selectedStateId = id;
+  },
+
   resetBillingForm: function() {
     $(':input', '#billing-new-address-form')
       .not(':button, :submit, :reset, :hidden').removeAttr('checked').removeAttr('selected')
       .not(':checkbox, :radio, select').val('');
 
     $('select option[value="0"]').prop('selected', true);
-  },
-
-  initializeStateSelect: function() {
-    if ($('#billing-new-address-form').has('[data-trigger="state-select"]')) {
-      $('select[data-trigger="state-select"]').change(stateSelectHandle);
-    }
   }
 };
-
-var stateSelectHandle = function(event) {
-  $(`#${event.target.id} option[value=${Billing.selectedStateId}]`).prop('selected', true);
-} 
 
 var Shipping = {
     form: false,

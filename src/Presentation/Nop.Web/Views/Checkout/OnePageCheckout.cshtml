@@ -73,13 +73,19 @@
                                class="button-1"
                                style="display: none"
                                onclick="Billing.editAddress('@(storeLocation)checkout/GetAddressById/'); return false;"
-                               value="Edit"/>
+                               value="@T("Common.Edit")" />
+                        <input id="delete-address-button"
+                               type="button"
+                               class="button-1"
+                               style="display: none"
+                               onclick="Billing.deleteAddress('@(storeLocation)checkout/DeleteEditAddress/'); return false;"
+                               value="@T("Common.Delete")" />
                         <input id="save-address-button"
                                type="button"
                                class="button-1"
                                style="display: none"
                                onclick="Billing.saveEditAddress('@(storeLocation)checkout/SaveEditAddress/'); return false;"
-                               value="Save"/>
+                               value="@T("Common.Save")" />
                         <input type="button" title="@T("Common.Continue")" class="button-1 new-address-next-step-button" onclick="Billing.save()" value="@T("Common.Continue")" />
                         <span class="please-wait" id="billing-please-wait" style="display: none;">@T("Common.LoadingNextStep")</span>
                     </div>
