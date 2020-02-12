@@ -17271,6 +17271,9 @@
   <LocaleResource Name="Products.Qty">
     <Value>Qty</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Qty.AriaLabel">
+    <Value>Enter a quantity</Value>
+  </LocaleResource>
   <LocaleResource Name="Products.RecentlyViewedProducts">
     <Value>Recently viewed products</Value>
   </LocaleResource>
