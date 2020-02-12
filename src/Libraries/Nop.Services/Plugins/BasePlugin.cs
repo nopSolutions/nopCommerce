@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nop.Services.Plugins
+﻿namespace Nop.Services.Plugins
 {
     /// <summary>
     /// Base plugin

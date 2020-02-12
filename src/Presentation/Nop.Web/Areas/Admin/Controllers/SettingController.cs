@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
@@ -25,6 +26,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -58,13 +60,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IAddressService _addressService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
+        private readonly IDataProvider _dataProvider;
         private readonly IEncryptionService _encryptionService;
         private readonly IFulltextService _fulltextService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGdprService _gdprService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILocalizationService _localizationService;
-        private readonly IMaintenanceService _maintenanceService;
         private readonly INopFileProvider _fileProvider;
         private readonly INotificationService _notificationService;
         private readonly IOrderService _orderService;
@@ -87,13 +89,13 @@ namespace Nop.Web.Areas.Admin.Controllers
         public SettingController(IAddressService addressService,
             ICustomerActivityService customerActivityService,
             ICustomerService customerService,
+            IDataProvider dataProvider,
             IEncryptionService encryptionService,
             IFulltextService fulltextService,
             IGenericAttributeService genericAttributeService,
             IGdprService gdprService,
             ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService,
-            IMaintenanceService maintenanceService,
             INopFileProvider fileProvider,
             INotificationService notificationService,
             IOrderService orderService,
@@ -112,13 +114,13 @@ namespace Nop.Web.Areas.Admin.Controllers
             _addressService = addressService;
             _customerActivityService = customerActivityService;
             _customerService = customerService;
+            _dataProvider = dataProvider;
             _encryptionService = encryptionService;
             _fulltextService = fulltextService;
             _genericAttributeService = genericAttributeService;
             _gdprService = gdprService;
             _localizedEntityService = localizedEntityService;
             _localizationService = localizationService;
-            _maintenanceService = maintenanceService;
             _fileProvider = fileProvider;
             _notificationService = notificationService;
             _orderService = orderService;
@@ -805,7 +807,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     try
                     {
-                        _maintenanceService.SetTableIdent<Order>(model.OrderIdent.Value);
+                        _dataProvider.SetTableIdent<Order>(model.OrderIdent.Value);
                     }
                     catch (Exception exc)
                     {
@@ -1621,6 +1623,25 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        public virtual IActionResult UploadLocalePattern()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            try
+            {
+                _uploadService.UploadLocalePattern();
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.LocalePattern.SuccessUpload"));
+            }
+            catch (Exception exc)
+            {
+                _notificationService.ErrorNotification(exc);
+            }
+
+            return RedirectToAction("GeneralCommon");
+        }
+
+        [HttpPost]
         public virtual IActionResult UploadIconsArchive(IFormFile archivefile)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -1652,7 +1673,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     commonSettings.FaviconAndAppIconsHeadCode = sr.ReadToEnd();
                 }
 
-                _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.FaviconAndAppIconsHeadCode, true, storeScope, true);
+                _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.FaviconAndAppIconsHeadCode, true, storeScope);
 
                 //delete old favicon icon if exist
                 var oldFaviconIconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.OldFaviconIconName, _storeContext.ActiveStoreScopeConfiguration));

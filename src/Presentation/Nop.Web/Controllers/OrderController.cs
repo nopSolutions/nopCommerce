@@ -8,6 +8,7 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
@@ -22,6 +23,7 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
+        private readonly ICustomerService _customerService;
         private readonly IOrderModelFactory _orderModelFactory;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderService _orderService;
@@ -36,7 +38,8 @@ namespace Nop.Web.Controllers
 
 		#region Ctor
 
-        public OrderController(IOrderModelFactory orderModelFactory,
+        public OrderController(ICustomerService customerService,
+            IOrderModelFactory orderModelFactory,
             IOrderProcessingService orderProcessingService, 
             IOrderService orderService, 
             IPaymentService paymentService, 
@@ -46,6 +49,7 @@ namespace Nop.Web.Controllers
             IWorkContext workContext,
             RewardPointsSettings rewardPointsSettings)
         {
+            _customerService = customerService;
             _orderModelFactory = orderModelFactory;
             _orderProcessingService = orderProcessingService;
             _orderService = orderService;
@@ -65,7 +69,7 @@ namespace Nop.Web.Controllers
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult CustomerOrders()
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             var model = _orderModelFactory.PrepareCustomerOrderListModel();
@@ -78,7 +82,7 @@ namespace Nop.Web.Controllers
         [FormValueRequired(FormValueRequirement.StartsWith, "cancelRecurringPayment")]
         public virtual IActionResult CancelRecurringPayment(IFormCollection form)
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             //get recurring payment identifier
@@ -112,7 +116,7 @@ namespace Nop.Web.Controllers
         [FormValueRequired(FormValueRequirement.StartsWith, "retryLastPayment")]
         public virtual IActionResult RetryLastRecurringPayment(IFormCollection form)
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             //get recurring payment identifier
@@ -141,7 +145,7 @@ namespace Nop.Web.Controllers
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult CustomerRewardPoints(int? pageNumber)
         {
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
             if (!_rewardPointsSettings.Enabled)
@@ -244,7 +248,8 @@ namespace Nop.Web.Controllers
             if (shipment == null)
                 return Challenge();
 
-            var order = shipment.Order;
+            var order = _orderService.GetOrderById(shipment.OrderId);
+            
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return Challenge();
 

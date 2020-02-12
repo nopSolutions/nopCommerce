@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Logging;
 
 namespace Nop.Data.Mapping.Logging
@@ -15,15 +14,13 @@ namespace Nop.Data.Mapping.Logging
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<ActivityLogType> builder)
+        public override void Configure(EntityMappingBuilder<ActivityLogType> builder)
         {
-            builder.ToTable(nameof(ActivityLogType));
-            builder.HasKey(logType => logType.Id);
+            builder.HasTableName(nameof(ActivityLogType));
 
-            builder.Property(logType => logType.SystemKeyword).HasMaxLength(100).IsRequired();
-            builder.Property(logType => logType.Name).HasMaxLength(200).IsRequired();
-
-            base.Configure(builder);
+            builder.Property(logType => logType.SystemKeyword).HasLength(100).IsNullable(false);
+            builder.Property(logType => logType.Name).HasLength(200).IsNullable(false);
+            builder.Property(activitylogtype => activitylogtype.Enabled);
         }
 
         #endregion

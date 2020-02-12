@@ -1,12 +1,11 @@
 ﻿using System;
-using Nop.Core.Domain.Directory;
 
 namespace Nop.Core.Domain.Common
 {
     /// <summary>
     /// Address
     /// </summary>
-    public partial class Address : BaseEntity, ICloneable
+    public partial class Address : BaseEntity
     {
         /// <summary>
         /// Gets or sets the first name
@@ -82,45 +81,5 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the country
-        /// </summary>
-        public virtual Country Country { get; set; }
-
-        /// <summary>
-        /// Gets or sets the state/province
-        /// </summary>
-        public virtual StateProvince StateProvince { get; set; }
-
-        /// <summary>
-        /// Clone
-        /// </summary>
-        /// <returns></returns>
-        public object Clone()
-        {
-            var addr = new Address
-            {
-                FirstName = FirstName,
-                LastName = LastName,
-                Email = Email,
-                Company = Company,
-                Country = Country,
-                CountryId = CountryId,
-                StateProvince = StateProvince,
-                StateProvinceId = StateProvinceId,
-                County = County,
-                City = City,
-                Address1 = Address1,
-                Address2 = Address2,
-                ZipPostalCode = ZipPostalCode,
-                PhoneNumber = PhoneNumber,
-                FaxNumber = FaxNumber,
-                CustomAttributes = CustomAttributes,
-                CreatedOnUtc = CreatedOnUtc
-            };
-
-            return addr;
-        }
     }
 }

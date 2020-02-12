@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Topics;
+using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching.Extensions;
+using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -24,7 +25,7 @@ namespace Nop.Services.Topics
 
         private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<AclRecord> _aclRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
@@ -38,7 +39,7 @@ namespace Nop.Services.Topics
 
         public TopicService(CatalogSettings catalogSettings,
             IAclService aclService,
-            ICacheManager cacheManager,
+            ICustomerService customerService,
             IEventPublisher eventPublisher,
             IRepository<AclRecord> aclRepository,
             IRepository<StoreMapping> storeMappingRepository,
@@ -48,7 +49,7 @@ namespace Nop.Services.Topics
         {
             _catalogSettings = catalogSettings;
             _aclService = aclService;
-            _cacheManager = cacheManager;
+            _customerService = customerService;
             _eventPublisher = eventPublisher;
             _aclRepository = aclRepository;
             _storeMappingRepository = storeMappingRepository;
@@ -72,9 +73,6 @@ namespace Nop.Services.Topics
 
             _topicRepository.Delete(topic);
 
-            //cache
-            _cacheManager.RemoveByPrefix(NopTopicDefaults.TopicsPrefixCacheKey);
-
             //event notification
             _eventPublisher.EntityDeleted(topic);
         }
@@ -89,8 +87,9 @@ namespace Nop.Services.Topics
             if (topicId == 0)
                 return null;
 
-            var key = string.Format(NopTopicDefaults.TopicsByIdCacheKey, topicId);
-            return _cacheManager.Get(key, () => _topicRepository.GetById(topicId));
+            var key = string.Format(NopTopicCachingDefaults.TopicsByIdCacheKey, topicId);
+
+            return _topicRepository.ToCachedGetById(topicId, key);
         }
 
         /// <summary>
@@ -132,49 +131,72 @@ namespace Nop.Services.Topics
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="ignorAcl">A value indicating whether to ignore ACL rules</param>
         /// <param name="showHidden">A value indicating whether to show hidden topics</param>
+        /// <param name="onlyIncludedInTopMenu">A value indicating whether to show only topics which include on the top menu</param>
         /// <returns>Topics</returns>
-        public virtual IList<Topic> GetAllTopics(int storeId, bool ignorAcl = false, bool showHidden = false)
+        public virtual IList<Topic> GetAllTopics(int storeId, bool ignorAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false)
         {
-            var key = string.Format(NopTopicDefaults.TopicsAllCacheKey, storeId, ignorAcl, showHidden);
-            return _cacheManager.Get(key, () =>
+            var key = ignorAcl ? string.Format(NopTopicCachingDefaults.TopicsAllCacheKey, storeId, showHidden, onlyIncludedInTopMenu) :
+                string.Format(NopTopicCachingDefaults.TopicsAllWithACLCacheKey, storeId, showHidden, onlyIncludedInTopMenu, string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)));
+
+            var query = _topicRepository.Table;
+            query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
+
+            if (!showHidden)
+                query = query.Where(t => t.Published);
+
+            if (onlyIncludedInTopMenu)
+                query = query.Where(t => t.IncludeInTopMenu);
+
+            if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) ||
+                (!ignorAcl && !_catalogSettings.IgnoreAcl))
             {
-                var query = _topicRepository.Table;
-                query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
-
-                if (!showHidden)
-                    query = query.Where(t => t.Published);
-
-                if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) ||
-                    (!ignorAcl && !_catalogSettings.IgnoreAcl))
+                if (!ignorAcl && !_catalogSettings.IgnoreAcl)
                 {
-                    if (!ignorAcl && !_catalogSettings.IgnoreAcl)
-                    {
-                        //ACL (access control list)
-                        var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
-                        query = from c in query
-                                join acl in _aclRepository.Table
-                                on new { c1 = c.Id, c2 = nameof(Topic) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into cAcl
-                                from acl in cAcl.DefaultIfEmpty()
-                                where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
-                                select c;
-                    }
-
-                    if (!_catalogSettings.IgnoreStoreLimitations && storeId > 0)
-                    {
-                        //Store mapping
-                        query = from c in query
-                                join sm in _storeMappingRepository.Table
-                                on new { c1 = c.Id, c2 = nameof(Topic) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into cSm
-                                from sm in cSm.DefaultIfEmpty()
-                                where !c.LimitedToStores || storeId == sm.StoreId
-                                select c;
-                    }
-
-                    query = query.Distinct().OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
+                    //ACL (access control list)
+                    var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
+                    query = from c in query
+                        join acl in _aclRepository.Table
+                            on new
+                            {
+                                c1 = c.Id,
+                                c2 = nameof(Topic)
+                            } 
+                            equals new
+                            {
+                                c1 = acl.EntityId,
+                                c2 = acl.EntityName
+                            } 
+                            into cAcl
+                        from acl in cAcl.DefaultIfEmpty()
+                        where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
+                        select c;
                 }
 
-                return query.ToList();
-            });
+                if (!_catalogSettings.IgnoreStoreLimitations && storeId > 0)
+                {
+                    //Store mapping
+                    query = from c in query
+                        join sm in _storeMappingRepository.Table
+                            on new
+                            {
+                                c1 = c.Id,
+                                c2 = nameof(Topic)
+                            } 
+                            equals new
+                            {
+                                c1 = sm.EntityId,
+                                c2 = sm.EntityName
+                            } 
+                            into cSm
+                        from sm in cSm.DefaultIfEmpty()
+                        where !c.LimitedToStores || storeId == sm.StoreId
+                        select c;
+                }
+
+                query = query.Distinct().OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
+            }
+
+            return query.ToCachedList(key);
         }
 
         /// <summary>
@@ -187,9 +209,6 @@ namespace Nop.Services.Topics
                 throw new ArgumentNullException(nameof(topic));
 
             _topicRepository.Insert(topic);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopTopicDefaults.TopicsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(topic);
@@ -205,9 +224,6 @@ namespace Nop.Services.Topics
                 throw new ArgumentNullException(nameof(topic));
 
             _topicRepository.Update(topic);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopTopicDefaults.TopicsPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(topic);

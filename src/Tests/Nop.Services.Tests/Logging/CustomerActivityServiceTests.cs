@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Moq;
 using Nop.Core;
-using Nop.Core.Caching;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Services.Logging;
@@ -15,7 +15,6 @@ namespace Nop.Services.Tests.Logging
     [TestFixture]
     public class CustomerActivityServiceTests : ServiceTest
     {
-        private IStaticCacheManager _cacheManager;
         private Mock<IRepository<ActivityLog>> _activityLogRepository;
         private Mock<IRepository<ActivityLogType>> _activityLogTypeRepository;
         private Mock<IWorkContext> _workContext;
@@ -59,38 +58,36 @@ namespace Nop.Services.Tests.Logging
             _activity1 = new ActivityLog
             {
                 Id = 1,
-                ActivityLogType = _activityType1,
-                CustomerId = _customer1.Id,
-                Customer = _customer1
+                ActivityLogTypeId = _activityType1.Id,
+                CustomerId = _customer1.Id
             };
             _activity2 = new ActivityLog
             {
                 Id = 2,
-                ActivityLogType = _activityType2,
-                CustomerId = _customer2.Id,
-                Customer = _customer2
+                ActivityLogTypeId = _activityType2.Id,
+                CustomerId = _customer2.Id
             };
-            _cacheManager = new TestCacheManager();
+
             _workContext = new Mock<IWorkContext>();
             _webHelper = new Mock<IWebHelper>();
             _activityLogRepository = new Mock<IRepository<ActivityLog>>();
             _activityLogTypeRepository = new Mock<IRepository<ActivityLogType>>();
             _activityLogTypeRepository.Setup(x => x.Table).Returns(new List<ActivityLogType> { _activityType1, _activityType2 }.AsQueryable());
             _activityLogRepository.Setup(x => x.Table).Returns(new List<ActivityLog> { _activity1, _activity2 }.AsQueryable());
-            _customerActivityService = new CustomerActivityService(null, _activityLogRepository.Object, _activityLogTypeRepository.Object, _cacheManager, _webHelper.Object, _workContext.Object);
+            _customerActivityService = new CustomerActivityService(_activityLogRepository.Object, _activityLogTypeRepository.Object, _webHelper.Object, _workContext.Object);
         }
 
         [Test]
         public void Can_Find_Activities()
         {
             var activities = _customerActivityService.GetAllActivities(customerId: 1, pageSize: 10);
-            activities.Contains(_activity1).ShouldBeTrue();
+            activities.Contains(_activity1).Should().BeTrue();
 
             activities = _customerActivityService.GetAllActivities(customerId: 2, pageSize: 10);
-            activities.Contains(_activity1).ShouldBeFalse();
+            activities.Contains(_activity1).Should().BeFalse();
 
             activities = _customerActivityService.GetAllActivities(customerId: 2, pageSize: 10);
-            activities.Contains(_activity2).ShouldBeTrue();
+            activities.Contains(_activity2).Should().BeTrue();
         }
     }
 }

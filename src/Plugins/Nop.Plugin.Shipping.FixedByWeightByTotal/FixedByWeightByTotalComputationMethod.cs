@@ -4,9 +4,9 @@ using Nop.Core;
 using Nop.Core.Domain.Shipping;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Data;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Services;
-using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 using Nop.Services.Plugins;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
@@ -22,13 +22,12 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
 
         private readonly FixedByWeightByTotalSettings _fixedByWeightByTotalSettings;
         private readonly ILocalizationService _localizationService;
-        private readonly IPriceCalculationService _priceCalculationService;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly ISettingService _settingService;
         private readonly IShippingByWeightByTotalService _shippingByWeightByTotalService;
         private readonly IShippingService _shippingService;
         private readonly IStoreContext _storeContext;
         private readonly IWebHelper _webHelper;
-        private readonly ShippingByWeightByTotalObjectContext _objectContext;
 
         #endregion
 
@@ -36,23 +35,21 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
 
         public FixedByWeightByTotalComputationMethod(FixedByWeightByTotalSettings fixedByWeightByTotalSettings,
             ILocalizationService localizationService,
-            IPriceCalculationService priceCalculationService,
+            IShoppingCartService shoppingCartService,
             ISettingService settingService,
             IShippingByWeightByTotalService shippingByWeightByTotalService,
             IShippingService shippingService,
             IStoreContext storeContext,
-            IWebHelper webHelper,
-            ShippingByWeightByTotalObjectContext objectContext)
+            IWebHelper webHelper)
         {
             _fixedByWeightByTotalSettings = fixedByWeightByTotalSettings;
             _localizationService = localizationService;
-            _priceCalculationService = priceCalculationService;
+            _shoppingCartService = shoppingCartService;
             _settingService = settingService;
             _shippingByWeightByTotalService = shippingByWeightByTotalService;
             _shippingService = shippingService;
             _storeContext = storeContext;
             _webHelper = webHelper;
-            _objectContext = objectContext;
         }
 
         #endregion
@@ -159,7 +156,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
                         continue;
 
                     //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal
-                    subTotal += _priceCalculationService.GetSubTotal(packageItem.ShoppingCartItem);
+                    subTotal += _shoppingCartService.GetSubTotal(packageItem.ShoppingCartItem);
                 }
 
                 //get weight of shipped items (excluding items with free shipping)
@@ -182,7 +179,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
             else
             {
                 //shipping rate calculation by fixed rate
-                var restrictByCountryId = getShippingOptionRequest.ShippingAddress?.Country?.Id;
+                var restrictByCountryId =  getShippingOptionRequest.ShippingAddress?.CountryId;
                 response.ShippingOptions = _shippingService.GetAllShippingMethods(restrictByCountryId).Select(shippingMethod => new ShippingOption
                 {
                     Name = _localizationService.GetLocalized(shippingMethod, x => x.Name),
@@ -208,7 +205,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
             if (_fixedByWeightByTotalSettings.ShippingByWeightByTotalEnabled)
                 return null;
 
-            var restrictByCountryId = getShippingOptionRequest.ShippingAddress?.Country?.Id;
+            var restrictByCountryId = getShippingOptionRequest.ShippingAddress?.CountryId;
             var rates = _shippingService.GetAllShippingMethods(restrictByCountryId)
                 .Select(shippingMethod => GetRate(shippingMethod.Id)).Distinct().ToList();
 
@@ -234,9 +231,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
         {
             //settings
             _settingService.SaveSetting(new FixedByWeightByTotalSettings());
-
-            //database objects
-            _objectContext.Install();
 
             //locales
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.AddRecord", "Add record");
@@ -294,9 +288,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
                     string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, shippingMethod.Id)))
                 .Where(setting => setting != null).ToList();
             _settingService.DeleteSettings(fixedRates);
-
-            //database objects
-            _objectContext.Uninstall();
 
             //locales
             _localizationService.DeletePluginLocaleResource("Plugins.Shipping.FixedByWeightByTotal.AddRecord");

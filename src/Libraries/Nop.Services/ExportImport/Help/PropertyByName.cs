@@ -150,7 +150,7 @@ namespace Nop.Services.ExportImport.Help
         /// <returns>Result</returns>
         public string[] GetDropDownElements()
         {
-            return IsDropDownCell ? DropDownElements.Select(ev => ev.Text).ToArray() : new string[0];
+            return IsDropDownCell ? DropDownElements.Select(ev => ev.Text).ToArray() : Array.Empty<string>();
         }
 
         /// <summary>

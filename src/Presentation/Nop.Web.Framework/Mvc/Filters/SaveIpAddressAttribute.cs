@@ -3,8 +3,8 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
+using Nop.Data;
 using Nop.Services.Customers;
 
 namespace Nop.Web.Framework.Mvc.Filters
@@ -12,7 +12,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents filter attribute that saves last IP address of customer
     /// </summary>
-    public class SaveIpAddressAttribute : TypeFilterAttribute
+    public sealed class SaveIpAddressAttribute : TypeFilterAttribute
     {
         #region Ctor
 

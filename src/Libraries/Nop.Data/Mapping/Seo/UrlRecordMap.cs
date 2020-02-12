@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Seo;
 
 namespace Nop.Data.Mapping.Seo
@@ -15,15 +14,15 @@ namespace Nop.Data.Mapping.Seo
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<UrlRecord> builder)
+        public override void Configure(EntityMappingBuilder<UrlRecord> builder)
         {
-            builder.ToTable(nameof(UrlRecord));
-            builder.HasKey(record => record.Id);
+            builder.HasTableName(nameof(UrlRecord));
 
-            builder.Property(record => record.EntityName).HasMaxLength(400).IsRequired();
-            builder.Property(record => record.Slug).IsRequired().HasMaxLength(400);
-
-            base.Configure(builder);
+            builder.Property(record => record.EntityName).HasLength(400).IsNullable(false);
+            builder.Property(record => record.Slug).HasLength(400).IsNullable(false);
+            builder.Property(urlrecord => urlrecord.EntityId);
+            builder.Property(urlrecord => urlrecord.IsActive);
+            builder.Property(urlrecord => urlrecord.LanguageId);
         }
 
         #endregion

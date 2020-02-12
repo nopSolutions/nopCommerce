@@ -1,7 +1,5 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Common;
-
 
 namespace Nop.Data.Mapping.Common
 {
@@ -16,15 +14,16 @@ namespace Nop.Data.Mapping.Common
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<AddressAttribute> builder)
+        public override void Configure(EntityMappingBuilder<AddressAttribute> builder)
         {
-            builder.ToTable(nameof(AddressAttribute));
-            builder.HasKey(attribute => attribute.Id);
+            builder.HasTableName(nameof(AddressAttribute));
 
-            builder.Property(attribute => attribute.Name).HasMaxLength(400).IsRequired();
+            builder.Property(attribute => attribute.Name).HasLength(400).IsNullable(false);
+            builder.Property(addressattribute => addressattribute.IsRequired);
+            builder.Property(addressattribute => addressattribute.AttributeControlTypeId);
+            builder.Property(addressattribute => addressattribute.DisplayOrder);
+
             builder.Ignore(attribute => attribute.AttributeControlType);
-
-            base.Configure(builder);
         }
 
         #endregion

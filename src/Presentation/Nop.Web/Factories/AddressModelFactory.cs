@@ -26,6 +26,7 @@ namespace Nop.Web.Factories
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
+        private readonly ICountryService _countryService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -38,6 +39,7 @@ namespace Nop.Web.Factories
             IAddressAttributeFormatter addressAttributeFormatter,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
+            ICountryService countryService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IStateProvinceService stateProvinceService)
@@ -46,6 +48,7 @@ namespace Nop.Web.Factories
             _addressAttributeFormatter = addressAttributeFormatter;
             _addressAttributeParser = addressAttributeParser;
             _addressAttributeService = addressAttributeService;
+            _countryService = countryService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _stateProvinceService = stateProvinceService;
@@ -183,9 +186,9 @@ namespace Nop.Web.Factories
                 model.Email = address.Email;
                 model.Company = address.Company;
                 model.CountryId = address.CountryId;
-                model.CountryName = address.Country != null ? _localizationService.GetLocalized(address.Country, x => x.Name) : null;
+                model.CountryName = _countryService.GetCountryByAddress(address) is Country country ? _localizationService.GetLocalized(country, x => x.Name) : null;
                 model.StateProvinceId = address.StateProvinceId;
-                model.StateProvinceName = address.StateProvince != null ? _localizationService.GetLocalized(address.StateProvince, x => x.Name) : null;
+                model.StateProvinceName = _stateProvinceService.GetStateProvinceByAddress(address) is StateProvince stateProvince ? _localizationService.GetLocalized(stateProvince, x => x.Name) : null;
                 model.County = address.County;
                 model.City = address.City;
                 model.Address1 = address.Address1;
@@ -208,7 +211,7 @@ namespace Nop.Web.Factories
                 model.ZipPostalCode = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.ZipPostalCodeAttribute);
                 model.City = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CityAttribute);
                 model.County = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CountyAttribute);
-                //ignore country and state for prepopulation. it can cause some issues when posting pack with errors, etc
+                //TODO: ignore country and state for prepopulation. it can cause some issues when posting pack with errors, etc
                 //model.CountryId = _genericAttributeService.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
                 //model.StateProvinceId = _genericAttributeService.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
                 model.PhoneNumber = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.PhoneAttribute);

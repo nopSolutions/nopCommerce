@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
@@ -12,20 +10,8 @@ namespace Nop.Core.Domain.Catalog
     /// <summary>
     /// Represents a product
     /// </summary>
-    public partial class Product : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported
+    public partial class Product : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported, IDiscountSupported<DiscountProductMapping>
     {
-        private ICollection<ProductCategory> _productCategories;
-        private ICollection<ProductManufacturer> _productManufacturers;
-        private ICollection<ProductPicture> _productPictures;
-        private ICollection<ProductReview> _productReviews;
-        private ICollection<ProductSpecificationAttribute> _productSpecificationAttributes;
-        private ICollection<ProductProductTagMapping> _productProductTagMappings;
-        private ICollection<ProductAttributeMapping> _productAttributeMappings;
-        private ICollection<ProductAttributeCombination> _productAttributeCombinations;
-        protected ICollection<TierPrice> _tierPrices;
-        protected ICollection<DiscountProductMapping> _discountProductMappings;
-        private ICollection<ProductWarehouseInventory> _productWarehouseInventory;
-
         /// <summary>
         /// Gets or sets the product type identifier
         /// </summary>
@@ -624,110 +610,6 @@ namespace Nop.Core.Domain.Catalog
         {
             get => (RentalPricePeriod)RentalPricePeriodId;
             set => RentalPricePeriodId = (int)value;
-        }
-
-        /// <summary>
-        /// Gets or sets the collection of ProductCategory
-        /// </summary>
-        public virtual ICollection<ProductCategory> ProductCategories
-        {
-            get => _productCategories ?? (_productCategories = new List<ProductCategory>());
-            protected set => _productCategories = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the collection of ProductManufacturer
-        /// </summary>
-        public virtual ICollection<ProductManufacturer> ProductManufacturers
-        {
-            get => _productManufacturers ?? (_productManufacturers = new List<ProductManufacturer>());
-            protected set => _productManufacturers = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the collection of ProductPicture
-        /// </summary>
-        public virtual ICollection<ProductPicture> ProductPictures
-        {
-            get => _productPictures ?? (_productPictures = new List<ProductPicture>());
-            protected set => _productPictures = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the collection of product reviews
-        /// </summary>
-        public virtual ICollection<ProductReview> ProductReviews
-        {
-            get => _productReviews ?? (_productReviews = new List<ProductReview>());
-            protected set => _productReviews = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the product specification attribute
-        /// </summary>
-        public virtual ICollection<ProductSpecificationAttribute> ProductSpecificationAttributes
-        {
-            get => _productSpecificationAttributes ?? (_productSpecificationAttributes = new List<ProductSpecificationAttribute>());
-            protected set => _productSpecificationAttributes = value;
-        }
-
-        /// <summary>
-        /// Gets or sets product-product tag mappings
-        /// </summary>
-        public virtual ICollection<ProductProductTagMapping> ProductProductTagMappings
-        {
-            get => _productProductTagMappings ?? (_productProductTagMappings = new List<ProductProductTagMapping>());
-            protected set => _productProductTagMappings = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the product attribute mappings
-        /// </summary>
-        public virtual ICollection<ProductAttributeMapping> ProductAttributeMappings
-        {
-            get => _productAttributeMappings ?? (_productAttributeMappings = new List<ProductAttributeMapping>());
-            protected set => _productAttributeMappings = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the product attribute combinations
-        /// </summary>
-        public virtual ICollection<ProductAttributeCombination> ProductAttributeCombinations
-        {
-            get => _productAttributeCombinations ?? (_productAttributeCombinations = new List<ProductAttributeCombination>());
-            protected set => _productAttributeCombinations = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the tier prices
-        /// </summary>
-        public virtual ICollection<TierPrice> TierPrices
-        {
-            get => _tierPrices ?? (_tierPrices = new List<TierPrice>());
-            protected set => _tierPrices = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the collection of applied discounts
-        /// </summary>
-        public IList<Discount> AppliedDiscounts => DiscountProductMappings.Select(mapping => mapping.Discount).ToList();
-
-        /// <summary>
-        /// Gets or sets the discount-product mappings
-        /// </summary>
-        public virtual ICollection<DiscountProductMapping> DiscountProductMappings
-        {
-            get => _discountProductMappings ?? (_discountProductMappings = new List<DiscountProductMapping>());
-            set => _discountProductMappings = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the collection of "ProductWarehouseInventory" records. We use it only when "UseMultipleWarehouses" is set to "true" and ManageInventoryMethod" to "ManageStock"
-        /// </summary>
-        public virtual ICollection<ProductWarehouseInventory> ProductWarehouseInventory
-        {
-            get => _productWarehouseInventory ?? (_productWarehouseInventory = new List<ProductWarehouseInventory>());
-            protected set => _productWarehouseInventory = value;
         }
     }
 }

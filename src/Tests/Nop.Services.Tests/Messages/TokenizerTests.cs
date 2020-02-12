@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using FluentAssertions;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Messages;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Messages
@@ -25,11 +25,11 @@ namespace Nop.Services.Tests.Messages
             //correct case
             tokenizer
                 .Replace("Some text %Token1%", tokens, false)
-                .ShouldEqual("Some text Value1");
+                .Should().Be("Some text Value1");
             //wrong case
             tokenizer
                 .Replace("Some text %TOKeN1%", tokens, false)
-                .ShouldEqual("Some text %TOKeN1%");
+                .Should().Be("Some text %TOKeN1%");
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace Nop.Services.Tests.Messages
             };
             tokenizer
                 .Replace("Some text %TOKEn1%", tokens, false)
-                .ShouldEqual("Some text Value1");
+                .Should().Be("Some text Value1");
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace Nop.Services.Tests.Messages
 
             tokenizer
                 .Replace("Some text %Token1%", tokens, true)
-                .ShouldEqual("Some text &lt;Value1&gt;");
+                .Should().Be("Some text &lt;Value1&gt;");
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace Nop.Services.Tests.Messages
 
             tokenizer
                 .Replace("Some text %Token1%", tokens, true)
-                .ShouldEqual("Some text <Value1>");
+                .Should().Be("Some text <Value1>");
         }
 
         [Test]
@@ -107,27 +107,27 @@ namespace Nop.Services.Tests.Messages
 
             //simple condition
             tokenizer.Replace(@"Some text %if (%ConditionToken%) %ThenToken% endif% %SomeValueToken%", tokens, true)
-                .ShouldEqual("Some text value  10");
+                .Should().Be("Some text value  10");
 
             //broken token in condition
             tokenizer.Replace(@"Some text %if (ConditionToken%) %ThenToken% endif% %SomeValueToken%", tokens, true)
-                .ShouldEqual("Some text  10");
+                .Should().Be("Some text  10");
 
             //multiple conditions
             tokenizer.Replace(@"Some text %if (%ConditionToken% && %ConditionToken2% > 1) %ThenToken% endif% %SomeValueToken%", tokens, true)
-                .ShouldEqual("Some text value  10");
+                .Should().Be("Some text value  10");
 
             //nested conditional statements
             tokenizer.Replace(@"Some text %if (%ConditionToken%) %ThenToken% %if (%ConditionToken2% > 1) %ThenToken2% endif% %if (!%ConditionToken%) %ThenToken% endif% %ThenToken% endif% %SomeValueToken%", tokens, true)
-                .ShouldEqual("Some text value value2   value  10");
+                .Should().Be("Some text value value2   value  10");
 
             //wrong condition
             tokenizer.Replace(@"Some text %if (%ConditionToken%) %ThenToken%", tokens, true)
-                .ShouldEqual("Some text %if (True) value");
+                .Should().Be("Some text %if (True) value");
 
             //complex condition
             tokenizer.Replace(@"Some text %if (%ConditionToken%) %ThenToken% endif% %SomeValueToken% %if (%ConditionToken2% > 1) %ThenToken2% %if (!%ConditionToken%) %ThenToken% endif% endif% %SomeValueToken%", tokens, true)
-                .ShouldEqual("Some text value  10 value2   10");
+                .Should().Be("Some text value  10 value2   10");
         }
 
         [Test]
@@ -146,7 +146,7 @@ namespace Nop.Services.Tests.Messages
             };
 
             tokenizer.Replace("Some text %Token1%, %Token2%, %Token3%", tokens, true)
-                .ShouldEqual("Some text True, 1, value");
+                .Should().Be("Some text True, 1, value");
         }
     }
 }

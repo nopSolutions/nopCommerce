@@ -1,7 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Orders;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Customers
 {
@@ -16,24 +15,21 @@ namespace Nop.Data.Mapping.Customers
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<RewardPointsHistory> builder)
+        public override void Configure(EntityMappingBuilder<RewardPointsHistory> builder)
         {
-            builder.ToTable(nameof(RewardPointsHistory));
-            builder.HasKey(historyEntry => historyEntry.Id);
+            builder.HasTableName(nameof(RewardPointsHistory));
 
-            builder.Property(historyEntry => historyEntry.UsedAmount).HasColumnType("decimal(18, 4)");
+            builder.Property(historyEntry => historyEntry.UsedAmount).HasDecimal();
 
-            builder.HasOne(historyEntry => historyEntry.Customer)
-                .WithMany()
-                .HasForeignKey(historyEntry => historyEntry.CustomerId)
-                .IsRequired();
-
-            builder.HasOne(historyEntry => historyEntry.UsedWithOrder)
-                .WithOne(order => order.RedeemedRewardPointsEntry)
-                .HasForeignKey<Order>(order => order.RewardPointsHistoryEntryId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-
-            base.Configure(builder);
+            builder.Property(historyEntry => historyEntry.CustomerId);
+            builder.Property(historyEntry => historyEntry.StoreId);
+            builder.Property(historyEntry => historyEntry.Points);
+            builder.Property(historyEntry => historyEntry.PointsBalance);
+            builder.Property(historyEntry => historyEntry.Message);
+            builder.Property(historyEntry => historyEntry.CreatedOnUtc);
+            builder.Property(historyEntry => historyEntry.EndDateUtc);
+            builder.Property(historyEntry => historyEntry.ValidPoints);
+            builder.Property(historyEntry => historyEntry.OrderId);
         }
 
         #endregion

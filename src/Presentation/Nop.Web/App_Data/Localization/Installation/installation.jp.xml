@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>組み込みデータストレージを使用(SQLServer Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>SQLServer名</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>SQLServer名は必須です</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQLServerのパスワード</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>SQLServerのパスワードは必須です</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>SQLServerのユーザ名</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>SQLServerのユーザ名は必須です</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Microsoft SQL Server (又はSQL Express)データベースを使用</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>ストア情報</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>このウィザードを完了するためには、データベースに関する情報(接続文字列)などを取得しておく必要があります。必要に応じて、ご契約先のISPに確認をしてください。ローカルのマシン又はサーバにインストールする場合には、システム管理者から情報を得る必要があるかもしれません。</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>Windowsの統合認証を使用</Value>
   </LocaleResource>
 </Language>

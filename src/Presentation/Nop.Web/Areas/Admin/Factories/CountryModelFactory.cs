@@ -106,7 +106,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 return countries.Select(country =>
                 {
                     var countryModel = country.ToModel<CountryModel>();
-                    countryModel.NumberOfStates = country.StateProvinces?.Count ?? 0;
+                    countryModel.NumberOfStates = _stateProvinceService.GetStateProvincesByCountryId(country.Id)?.Count ?? 0;
 
                     return countryModel;
                 });
@@ -132,7 +132,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (model == null)
                 {
                     model = country.ToModel<CountryModel>();
-                    model.NumberOfStates = country.StateProvinces?.Count ?? 0;
+                    model.NumberOfStates = _stateProvinceService.GetStateProvincesByCountryId(country.Id)?.Count ?? 0;
                 }
 
                 //prepare nested search model

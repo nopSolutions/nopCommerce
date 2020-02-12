@@ -114,21 +114,19 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.Items.Add(newsItem);
 
                     //has new items?
-                    if (i == 0)
-                    {
-                        var firstRequest = string.IsNullOrEmpty(_adminAreaSettings.LastNewsTitleAdminArea);
-                        if (_adminAreaSettings.LastNewsTitleAdminArea != newsItem.Title)
-                        {
-                            _adminAreaSettings.LastNewsTitleAdminArea = newsItem.Title;
-                            _settingService.SaveSetting(_adminAreaSettings);
+                    if (i != 0)
+                        continue;
 
-                            if (!firstRequest)
-                            {
-                                //new item
-                                model.HasNewItems = true;
-                            }
-                        }
-                    }
+                    var firstRequest = string.IsNullOrEmpty(_adminAreaSettings.LastNewsTitleAdminArea);
+                    if (_adminAreaSettings.LastNewsTitleAdminArea == newsItem.Title)
+                        continue;
+
+                    _adminAreaSettings.LastNewsTitleAdminArea = newsItem.Title;
+                    _settingService.SaveSetting(_adminAreaSettings);
+
+                    //new item
+                    if (!firstRequest)
+                        model.HasNewItems = true;
                 }
             }
             catch (Exception ex)

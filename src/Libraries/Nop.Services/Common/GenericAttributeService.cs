@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Common;
-using Nop.Data.Extensions;
+using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Common
@@ -17,7 +17,6 @@ namespace Nop.Services.Common
     {
         #region Fields
 
-        private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<GenericAttribute> _genericAttributeRepository;
 
@@ -25,11 +24,9 @@ namespace Nop.Services.Common
 
         #region Ctor
 
-        public GenericAttributeService(ICacheManager cacheManager,
-            IEventPublisher eventPublisher,
+        public GenericAttributeService(IEventPublisher eventPublisher,
             IRepository<GenericAttribute> genericAttributeRepository)
         {
-            _cacheManager = cacheManager;
             _eventPublisher = eventPublisher;
             _genericAttributeRepository = genericAttributeRepository;
         }
@@ -48,10 +45,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(attribute));
 
             _genericAttributeRepository.Delete(attribute);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCommonDefaults.GenericAttributePrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityDeleted(attribute);
         }
@@ -66,10 +60,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(attributes));
 
             _genericAttributeRepository.Delete(attributes);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCommonDefaults.GenericAttributePrefixCacheKey);
-
+            
             //event notification
             foreach (var attribute in attributes)
             {
@@ -87,7 +78,7 @@ namespace Nop.Services.Common
             if (attributeId == 0)
                 return null;
 
-            return _genericAttributeRepository.GetById(attributeId);
+            return _genericAttributeRepository.ToCachedGetById(attributeId);
         }
 
         /// <summary>
@@ -99,11 +90,9 @@ namespace Nop.Services.Common
             if (attribute == null)
                 throw new ArgumentNullException(nameof(attribute));
 
+            attribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow;
             _genericAttributeRepository.Insert(attribute);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCommonDefaults.GenericAttributePrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityInserted(attribute);
         }
@@ -117,11 +106,9 @@ namespace Nop.Services.Common
             if (attribute == null)
                 throw new ArgumentNullException(nameof(attribute));
 
+            attribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow;
             _genericAttributeRepository.Update(attribute);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCommonDefaults.GenericAttributePrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityUpdated(attribute);
         }
@@ -134,16 +121,15 @@ namespace Nop.Services.Common
         /// <returns>Get attributes</returns>
         public virtual IList<GenericAttribute> GetAttributesForEntity(int entityId, string keyGroup)
         {
-            var key = string.Format(NopCommonDefaults.GenericAttributeCacheKey, entityId, keyGroup);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from ga in _genericAttributeRepository.Table
-                            where ga.EntityId == entityId &&
-                            ga.KeyGroup == keyGroup
-                            select ga;
-                var attributes = query.ToList();
-                return attributes;
-            });
+            var key = string.Format(NopCommonCachingDefaults.GenericAttributeCacheKey, entityId, keyGroup);
+
+            var query = from ga in _genericAttributeRepository.Table
+                where ga.EntityId == entityId &&
+                      ga.KeyGroup == keyGroup
+                select ga;
+            var attributes = query.ToCachedList(key);
+
+            return attributes;
         }
 
         /// <summary>
@@ -162,7 +148,7 @@ namespace Nop.Services.Common
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
 
-            var keyGroup = entity.GetUnproxiedEntityType().Name;
+            var keyGroup = entity.GetType().Name;
 
             var props = GetAttributesForEntity(entity.Id, keyGroup)
                 .Where(x => x.StoreId == storeId)
@@ -219,7 +205,7 @@ namespace Nop.Services.Common
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            var keyGroup = entity.GetUnproxiedEntityType().Name;
+            var keyGroup = entity.GetType().Name;
 
             var props = GetAttributesForEntity(entity.Id, keyGroup);
 
@@ -238,6 +224,25 @@ namespace Nop.Services.Common
                 return defaultValue;
 
             return CommonHelper.To<TPropType>(prop.Value);
+        }
+
+        /// <summary>
+        /// Get an attribute of an entity
+        /// </summary>
+        /// <typeparam name="TPropType">Property type</typeparam>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="entityId">Entity identifier</param>
+        /// <param name="key">Key</param>
+        /// <param name="storeId">Load a value specific for a certain store; pass 0 to load a value shared for all stores</param>
+        /// <param name="defaultValue">Default value</param>
+        /// <returns>Attribute</returns>
+        public virtual TPropType GetAttribute<TEntity, TPropType>(int entityId, string key, int storeId = 0, TPropType defaultValue = default(TPropType))
+            where TEntity : BaseEntity
+        {
+            var entity = (TEntity)Activator.CreateInstance(typeof(TEntity));
+            entity.Id = entityId;
+
+            return GetAttribute(entity, key, storeId, defaultValue);
         }
 
         #endregion

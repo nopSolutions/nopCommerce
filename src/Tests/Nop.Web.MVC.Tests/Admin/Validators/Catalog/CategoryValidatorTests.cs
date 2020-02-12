@@ -1,4 +1,6 @@
 ﻿using FluentValidation.TestHelper;
+using Moq;
+using Nop.Data;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Validators.Catalog;
 using Nop.Web.MVC.Tests.Public.Validators;
@@ -10,11 +12,13 @@ namespace Nop.Web.MVC.Tests.Admin.Validators.Catalog
     public class CategoryValidatorTests : BaseValidatorTests
     {
         private CategoryValidator _validator;
+        private Mock<IDataProvider> _dataProvider;
 
         [SetUp]
         public new void Setup()
         {
-            _validator = new CategoryValidator(_localizationService, null);
+            _dataProvider = new Mock<IDataProvider>();
+            _validator = new CategoryValidator(_dataProvider.Object, _localizationService);
         }
 
         [Test]

@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Polls;
 
 namespace Nop.Data.Mapping.Polls
@@ -15,19 +14,20 @@ namespace Nop.Data.Mapping.Polls
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<Poll> builder)
+        public override void Configure(EntityMappingBuilder<Poll> builder)
         {
-            builder.ToTable(nameof(Poll));
-            builder.HasKey(poll => poll.Id);
+            builder.HasTableName(nameof(Poll));
 
-            builder.Property(poll => poll.Name).IsRequired();
-
-            builder.HasOne(poll => poll.Language)
-                .WithMany()
-                .HasForeignKey(poll => poll.LanguageId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(poll => poll.Name).IsNullable(false);
+            builder.Property(poll => poll.LanguageId);
+            builder.Property(poll => poll.SystemKeyword);
+            builder.Property(poll => poll.Published);
+            builder.Property(poll => poll.ShowOnHomepage);
+            builder.Property(poll => poll.AllowGuestsToVote);
+            builder.Property(poll => poll.DisplayOrder);
+            builder.Property(poll => poll.LimitedToStores);
+            builder.Property(poll => poll.StartDateUtc);
+            builder.Property(poll => poll.EndDateUtc);
         }
 
         #endregion

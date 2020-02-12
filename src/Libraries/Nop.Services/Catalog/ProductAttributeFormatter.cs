@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net;
 using System.Text;
 using Nop.Core;
@@ -26,6 +26,7 @@ namespace Nop.Services.Catalog
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductAttributeService _productAttributeService;
         private readonly ITaxService _taxService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
@@ -41,6 +42,7 @@ namespace Nop.Services.Catalog
             IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
             IProductAttributeParser productAttributeParser,
+            IProductAttributeService productAttributeService,
             ITaxService taxService,
             IWebHelper webHelper,
             IWorkContext workContext,
@@ -52,6 +54,7 @@ namespace Nop.Services.Catalog
             _priceCalculationService = priceCalculationService;
             _priceFormatter = priceFormatter;
             _productAttributeParser = productAttributeParser;
+            _productAttributeService = productAttributeService;
             _taxService = taxService;
             _webHelper = webHelper;
             _workContext = workContext;
@@ -99,6 +102,9 @@ namespace Nop.Services.Catalog
             {
                 foreach (var attribute in _productAttributeParser.ParseProductAttributeMappings(attributesXml))
                 {
+                    var productAttrubute = _productAttributeService.GetProductAttributeById(attribute.ProductAttributeId);
+                    var attributeName = _localizationService.GetLocalized(productAttrubute, a => a.Name, _workContext.WorkingLanguage.Id);
+
                     //attributes without values
                     if (!attribute.ShouldHaveValues())
                     {
@@ -107,9 +113,6 @@ namespace Nop.Services.Catalog
                             var formattedAttribute = string.Empty;
                             if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
                             {
-                                //multiline textbox
-                                var attributeName = _localizationService.GetLocalized(attribute.ProductAttribute, a => a.Name, _workContext.WorkingLanguage.Id);
-
                                 //encode (if required)
                                 if (htmlEncode)
                                     attributeName = WebUtility.HtmlEncode(attributeName);
@@ -134,8 +137,6 @@ namespace Nop.Services.Catalog
                                     var attributeText = allowHyperlinks ? $"<a href=\"{_webHelper.GetStoreLocation(false)}download/getfileupload/?downloadId={download.DownloadGuid}\" class=\"fileuploadattribute\">{fileName}</a>"
                                         : fileName;
 
-                                    var attributeName = _localizationService.GetLocalized(attribute.ProductAttribute, a => a.Name, _workContext.WorkingLanguage.Id);
-
                                     //encode (if required)
                                     if (htmlEncode)
                                         attributeName = WebUtility.HtmlEncode(attributeName);
@@ -146,7 +147,7 @@ namespace Nop.Services.Catalog
                             else
                             {
                                 //other attributes (textbox, datepicker)
-                                formattedAttribute = $"{_localizationService.GetLocalized(attribute.ProductAttribute, a => a.Name, _workContext.WorkingLanguage.Id)}: {value}";
+                                formattedAttribute = $"{attributeName}: {value}";
 
                                 //encode (if required)
                                 if (htmlEncode)
@@ -166,7 +167,7 @@ namespace Nop.Services.Catalog
                     {
                         foreach (var attributeValue in _productAttributeParser.ParseProductAttributeValues(attributesXml, attribute.Id))
                         {
-                            var formattedAttribute = $"{_localizationService.GetLocalized(attribute.ProductAttribute, a => a.Name, _workContext.WorkingLanguage.Id)}: {_localizationService.GetLocalized(attributeValue, a => a.Name, _workContext.WorkingLanguage.Id)}";
+                            var formattedAttribute = $"{attributeName}: {_localizationService.GetLocalized(attributeValue, a => a.Name, _workContext.WorkingLanguage.Id)}";
 
                             if (renderPrices)
                             {
@@ -187,7 +188,7 @@ namespace Nop.Services.Catalog
                                 }
                                 else
                                 {
-                                    var attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue, customer);
+                                    var attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(product, attributeValue, customer);
                                     var priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer, out var _);
                                     var priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
 

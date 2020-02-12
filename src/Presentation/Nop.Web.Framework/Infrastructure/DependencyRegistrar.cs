@@ -6,11 +6,10 @@ using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.EntityFrameworkCore;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
-using Nop.Core.Data;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Redis;
@@ -83,13 +82,11 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerLifetimeScope();
 
             //data layer
-            builder.RegisterType<EfDataProviderManager>().As<IDataProviderManager>().InstancePerDependency();
+            builder.RegisterType<DataProviderManager>().As<IDataProviderManager>().InstancePerDependency();
             builder.Register(context => context.Resolve<IDataProviderManager>().DataProvider).As<IDataProvider>().InstancePerDependency();
-            builder.Register(context => new NopObjectContext(context.Resolve<DbContextOptions<NopObjectContext>>()))
-                .As<IDbContext>().InstancePerLifetimeScope();
 
             //repositories
-            builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(EntityRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
 
             //plugins
             builder.RegisterType<PluginService>().As<IPluginService>().InstancePerLifetimeScope();
@@ -269,12 +266,7 @@ namespace Nop.Web.Framework.Infrastructure
 
             //installation service
             if (!DataSettingsManager.DatabaseIsInstalled)
-            {
-                if (config.UseFastInstallationService)
-                    builder.RegisterType<SqlFileInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
-                else
-                    builder.RegisterType<CodeFirstInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
-            }
+                builder.RegisterType<CodeFirstInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
 
             //event consumers
             var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
@@ -327,14 +319,39 @@ namespace Nop.Web.Framework.Infrastructure
             return RegistrationBuilder
                 .ForDelegate((c, p) =>
                 {
-                    var currentStoreId = c.Resolve<IStoreContext>().CurrentStore.Id;
+                    Store store;
+
+                    try
+                    {
+                        store = c.Resolve<IStoreContext>().CurrentStore;
+                    }
+                    catch
+                    {
+                        if (!DataSettingsManager.DatabaseIsInstalled)
+                            store = null;
+                        else
+                            throw;
+                    }
+
+                    var currentStoreId = store?.Id ?? 0;
+
                     //uncomment the code below if you want load settings per store only when you have two stores installed.
                     //var currentStoreId = c.Resolve<IStoreService>().GetAllStores().Count > 1
                     //    c.Resolve<IStoreContext>().CurrentStore.Id : 0;
 
                     //although it's better to connect to your database and execute the following SQL:
                     //DELETE FROM [Setting] WHERE [StoreId] > 0
-                    return c.Resolve<ISettingService>().LoadSetting<TSettings>(currentStoreId);
+                    try
+                    {
+                        return c.Resolve<ISettingService>().LoadSetting<TSettings>(currentStoreId);
+                    }
+                    catch
+                    {
+                        if (DataSettingsManager.DatabaseIsInstalled)
+                            throw;
+                    }
+
+                    return default(TSettings);
                 })
                 .InstancePerLifetimeScope()
                 .CreateRegistration();

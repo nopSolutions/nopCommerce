@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Gdpr;
 
 namespace Nop.Data.Mapping.Gdpr
@@ -15,14 +14,17 @@ namespace Nop.Data.Mapping.Gdpr
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<GdprConsent> builder)
+        public override void Configure(EntityMappingBuilder<GdprConsent> builder)
         {
-            builder.ToTable(nameof(GdprConsent));
-            builder.HasKey(gdpr => gdpr.Id);
+            builder.HasTableName(nameof(GdprConsent));
 
-            builder.Property(category => category.Message).IsRequired();
+            builder.Property(gdpr => gdpr.Message).IsNullable(false);
 
-            base.Configure(builder);
+            builder.Property(gdpr => gdpr.IsRequired);
+            builder.Property(gdpr => gdpr.RequiredMessage);
+            builder.Property(gdpr => gdpr.DisplayDuringRegistration);
+            builder.Property(gdpr => gdpr.DisplayOnCustomerInfoPage);
+            builder.Property(gdpr => gdpr.DisplayOrder);
         }
 
         #endregion

@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
@@ -15,22 +14,13 @@ namespace Nop.Data.Mapping.Catalog
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<ProductPicture> builder)
+        public override void Configure(EntityMappingBuilder<ProductPicture> builder)
         {
-            builder.ToTable(NopMappingDefaults.ProductPictureTable);
-            builder.HasKey(productPicture => productPicture.Id);
+            builder.HasTableName(NopMappingDefaults.ProductPictureTable);
 
-            builder.HasOne(productPicture => productPicture.Picture)
-                .WithMany()
-                .HasForeignKey(productPicture => productPicture.PictureId)
-                .IsRequired();
-
-            builder.HasOne(productPicture => productPicture.Product)
-                .WithMany(product => product.ProductPictures)
-                .HasForeignKey(productPicture => productPicture.ProductId)
-                .IsRequired();
-
-            base.Configure(builder);
+            builder.Property(productpicture => productpicture.ProductId);
+            builder.Property(productpicture => productpicture.PictureId);
+            builder.Property(productpicture => productpicture.DisplayOrder);
         }
 
         #endregion

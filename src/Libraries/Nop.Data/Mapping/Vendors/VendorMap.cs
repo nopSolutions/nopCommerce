@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Vendors;
 
 namespace Nop.Data.Mapping.Vendors
@@ -15,18 +14,26 @@ namespace Nop.Data.Mapping.Vendors
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<Vendor> builder)
+        public override void Configure(EntityMappingBuilder<Vendor> builder)
         {
-            builder.ToTable(nameof(Vendor));
-            builder.HasKey(vendor => vendor.Id);
+            builder.HasTableName(nameof(Vendor));
 
-            builder.Property(vendor => vendor.Name).HasMaxLength(400).IsRequired();
-            builder.Property(vendor => vendor.Email).HasMaxLength(400);
-            builder.Property(vendor => vendor.MetaKeywords).HasMaxLength(400);
-            builder.Property(vendor => vendor.MetaTitle).HasMaxLength(400);
-            builder.Property(vendor => vendor.PageSizeOptions).HasMaxLength(200);
+            builder.Property(vendor => vendor.Name).HasLength(400).IsNullable(false);
+            builder.Property(vendor => vendor.Email).HasLength(400);
+            builder.Property(vendor => vendor.MetaKeywords).HasLength(400);
+            builder.Property(vendor => vendor.MetaTitle).HasLength(400);
+            builder.Property(vendor => vendor.PageSizeOptions).HasLength(200);
 
-            base.Configure(builder);
+            builder.Property(vendor => vendor.Description);
+            builder.Property(vendor => vendor.PictureId);
+            builder.Property(vendor => vendor.AddressId);
+            builder.Property(vendor => vendor.AdminComment);
+            builder.Property(vendor => vendor.Active);
+            builder.Property(vendor => vendor.Deleted);
+            builder.Property(vendor => vendor.DisplayOrder);
+            builder.Property(vendor => vendor.MetaDescription);
+            builder.Property(vendor => vendor.PageSize);
+            builder.Property(vendor => vendor.AllowCustomersToSelectPageSize);
         }
 
         #endregion

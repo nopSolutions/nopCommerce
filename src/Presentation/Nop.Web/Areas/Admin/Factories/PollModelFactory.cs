@@ -191,7 +191,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(poll));
 
             //get poll answers
-            var pollAnswers = poll.PollAnswers.OrderBy(pollAnswer => pollAnswer.DisplayOrder).ToList().ToPagedList(searchModel);
+            var pollAnswers = _pollService.GetPollAnswerByPoll(poll.Id, searchModel.Page - 1, searchModel.PageSize);
 
             //prepare list model
             var model = new PollAnswerListModel().PrepareToGrid(searchModel, pollAnswers,

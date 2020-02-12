@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Catalog;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Catalog
 {
@@ -15,24 +15,17 @@ namespace Nop.Data.Mapping.Catalog
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<TierPrice> builder)
+        public override void Configure(EntityMappingBuilder<TierPrice> builder)
         {
-            builder.ToTable(nameof(TierPrice));
-            builder.HasKey(price => price.Id);
+            builder.HasTableName(nameof(TierPrice));
 
-            builder.Property(price => price.Price).HasColumnType("decimal(18, 4)");
-
-            builder.HasOne(price => price.Product)
-                .WithMany(product => product.TierPrices)
-                .HasForeignKey(price => price.ProductId)
-                .IsRequired();
-
-            builder.HasOne(price => price.CustomerRole)
-                .WithMany()
-                .HasForeignKey(price => price.CustomerRoleId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            base.Configure(builder);
+            builder.Property(price => price.Price).HasDecimal();
+            builder.Property(price => price.ProductId);
+            builder.Property(price => price.StoreId);
+            builder.Property(price => price.CustomerRoleId);
+            builder.Property(price => price.Quantity);
+            builder.Property(price => price.StartDateTimeUtc);
+            builder.Property(price => price.EndDateTimeUtc);
         }
 
         #endregion

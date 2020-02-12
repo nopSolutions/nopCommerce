@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using EasyCaching.Core;
@@ -13,19 +11,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json.Serialization;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Configuration;
-using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Security;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Core.Redis;
+using Nop.Core.Security;
 using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
@@ -81,14 +81,13 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //create engine and configure service provider
             var engine = EngineContext.Create();
             var serviceProvider = engine.ConfigureServices(services, configuration, nopConfig);
-
-            //further actions are performed only when the database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
-                return serviceProvider;
-
+            
             //initialize and start schedule tasks
             TaskManager.Instance.Initialize();
             TaskManager.Instance.Start();
+
+            if (!DataSettingsManager.DatabaseIsInstalled)
+                return serviceProvider;
 
             //log application start
             engine.Resolve<ILogger>().Information("Application started");
@@ -200,11 +199,28 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 {
                     var redisConnectionWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
                     return redisConnectionWrapper.GetDatabase(nopConfig.RedisDatabaseId ?? (int)RedisDatabaseNumber.DataProtectionKeys);
-                }, NopCachingDefaults.RedisDataProtectionKey);
+                }, NopDataProtectionDefaults.RedisDataProtectionKey);
+            }
+            else if (nopConfig.AzureBlobStorageEnabled && nopConfig.UseAzureBlobStorageToStoreDataProtectionKeys)
+            {
+                var cloudStorageAccount = CloudStorageAccount.Parse(nopConfig.AzureBlobStorageConnectionString);
+
+                var client = cloudStorageAccount.CreateCloudBlobClient();
+                var container = client.GetContainerReference(nopConfig.AzureBlobStorageContainerNameForDataProtectionKeys);
+
+                var dataProtectionBuilder = services.AddDataProtection().PersistKeysToAzureBlobStorage(container, NopDataProtectionDefaults.AzureDataProtectionKeyFile);
+
+                if (!nopConfig.EncryptDataProtectionKeysWithAzureKeyVault)
+                    return;
+
+                var tokenProvider = new AzureServiceTokenProvider();
+                var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(tokenProvider.KeyVaultTokenCallback));
+                    
+                dataProtectionBuilder.ProtectKeysWithAzureKeyVault(keyVaultClient, nopConfig.AzureKeyVaultIdForDataProtectionKeys);
             }
             else
             {
-                var dataProtectionKeysPath = CommonHelper.DefaultFileProvider.MapPath("~/App_Data/DataProtectionKeys");
+                var dataProtectionKeysPath = CommonHelper.DefaultFileProvider.MapPath(NopDataProtectionDefaults.DataProtectionKeysPath);
                 var dataProtectionKeysFolder = new System.IO.DirectoryInfo(dataProtectionKeysPath);
 
                 //configure the data protection system to persist keys to the specified directory
@@ -337,18 +353,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
-        /// Register base object context
-        /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        public static void AddNopObjectContext(this IServiceCollection services)
-        {
-            services.AddDbContextPool<NopObjectContext>(optionsBuilder =>
-            {
-                optionsBuilder.UseSqlServerWithLazyLoading(services);
-            });
-        }
-
-        /// <summary>
         /// Add and configure MiniProfiler service
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
@@ -371,7 +375,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 miniProfilerOptions.ResultsAuthorize = request =>
                     !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerForAdminOnly ||
                     EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel);
-            }).AddEntityFramework();
+            });
         }
 
         /// <summary>
@@ -395,8 +399,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 })
                 .AddHtmlMinification(options =>
                 {
-                    var settings = options.MinificationSettings;
-
                     options.CssMinifierFactory = new NUglifyCssMinifierFactory();
                     options.JsMinifierFactory = new NUglifyJsMinifierFactory();
                 })

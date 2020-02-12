@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Data.Mapping.Messages
@@ -15,14 +14,15 @@ namespace Nop.Data.Mapping.Messages
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<NewsLetterSubscription> builder)
+        public override void Configure(EntityMappingBuilder<NewsLetterSubscription> builder)
         {
-            builder.ToTable(nameof(NewsLetterSubscription));
-            builder.HasKey(subscription => subscription.Id);
+            builder.HasTableName(nameof(NewsLetterSubscription));
 
-            builder.Property(subscription => subscription.Email).HasMaxLength(255).IsRequired();
-
-            base.Configure(builder);
+            builder.Property(subscription => subscription.Email).HasLength(255).IsNullable(false);
+            builder.Property(subscription => subscription.NewsLetterSubscriptionGuid);
+            builder.Property(subscription => subscription.Active);
+            builder.Property(subscription => subscription.StoreId);
+            builder.Property(subscription => subscription.CreatedOnUtc);
         }
 
         #endregion

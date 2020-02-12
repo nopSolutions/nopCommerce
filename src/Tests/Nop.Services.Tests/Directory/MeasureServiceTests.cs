@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Moq;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
 using Nop.Services.Events;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Directory
@@ -105,8 +105,6 @@ namespace Nop.Services.Tests.Directory
             _measureWeightRepository.Setup(x => x.GetById(measureWeight3.Id)).Returns(measureWeight3);
             _measureWeightRepository.Setup(x => x.GetById(measureWeight4.Id)).Returns(measureWeight4);
 
-            var cacheManager = new TestCacheManager();
-
             _measureSettings = new MeasureSettings
             {
                 BaseDimensionId = measureDimension1.Id, //inch(es)
@@ -116,8 +114,7 @@ namespace Nop.Services.Tests.Directory
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            _measureService = new MeasureService(cacheManager,
-                _eventPublisher.Object,
+            _measureService = new MeasureService(_eventPublisher.Object,
                 _measureDimensionRepository.Object,
                 _measureWeightRepository.Object,
                 _measureSettings);
@@ -126,31 +123,37 @@ namespace Nop.Services.Tests.Directory
         [Test]
         public void Can_convert_dimension()
         {
-            //from meter(s) to feet
-            _measureService.ConvertDimension(10, measureDimension3, measureDimension2).ShouldEqual(32.81);
-            //from inch(es) to meter(s)
-            _measureService.ConvertDimension(10, measureDimension1, measureDimension3).ShouldEqual(0.25);
-            //from meter(s) to meter(s)
-            _measureService.ConvertDimension(13.333M, measureDimension3, measureDimension3).ShouldEqual(13.33);
-            //from meter(s) to millimeter(s)
-            _measureService.ConvertDimension(10, measureDimension3, measureDimension4).ShouldEqual(10000);
-            //from millimeter(s) to meter(s)
-            _measureService.ConvertDimension(10000, measureDimension4, measureDimension3).ShouldEqual(10);
+            RunWithTestServiceProvider(() =>
+            {
+                //from meter(s) to feet
+                _measureService.ConvertDimension(10, measureDimension3, measureDimension2).Should().Be(32.81M);
+                //from inch(es) to meter(s)
+                _measureService.ConvertDimension(10, measureDimension1, measureDimension3).Should().Be(0.25M);
+                //from meter(s) to meter(s)
+                _measureService.ConvertDimension(13.333M, measureDimension3, measureDimension3).Should().Be(13.33M);
+                //from meter(s) to millimeter(s)
+                _measureService.ConvertDimension(10, measureDimension3, measureDimension4).Should().Be(10000);
+                //from millimeter(s) to meter(s)
+                _measureService.ConvertDimension(10000, measureDimension4, measureDimension3).Should().Be(10);
+            });
         }
 
         [Test]
         public void Can_convert_weight()
         {
-            //from ounce(s) to lb(s)
-            _measureService.ConvertWeight(11, measureWeight1, measureWeight2).ShouldEqual(0.69);
-            //from lb(s) to ounce(s)
-            _measureService.ConvertWeight(11, measureWeight2, measureWeight1).ShouldEqual(176);
-            //from ounce(s) to  ounce(s)
-            _measureService.ConvertWeight(13.333M, measureWeight1, measureWeight1).ShouldEqual(13.33);
-            //from kg(s) to ounce(s)
-            _measureService.ConvertWeight(11, measureWeight3, measureWeight1).ShouldEqual(388.01);
-            //from kg(s) to gram(s)
-            _measureService.ConvertWeight(10, measureWeight3, measureWeight4).ShouldEqual(10000);
+            RunWithTestServiceProvider(() =>
+            {
+                //from ounce(s) to lb(s)
+                _measureService.ConvertWeight(11, measureWeight1, measureWeight2).Should().Be(0.69M);
+                //from lb(s) to ounce(s)
+                _measureService.ConvertWeight(11, measureWeight2, measureWeight1).Should().Be(176);
+                //from ounce(s) to  ounce(s)
+                _measureService.ConvertWeight(13.333M, measureWeight1, measureWeight1).Should().Be(13.33M);
+                //from kg(s) to ounce(s)
+                _measureService.ConvertWeight(11, measureWeight3, measureWeight1).Should().Be(388.01M);
+                //from kg(s) to gram(s)
+                _measureService.ConvertWeight(10, measureWeight3, measureWeight4).Should().Be(10000);
+            });
         }
     }
 }

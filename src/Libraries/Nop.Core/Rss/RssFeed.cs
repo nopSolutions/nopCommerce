@@ -111,7 +111,6 @@ namespace Nop.Core.Rss
                 }
 
                 return feed;
-
             }
             catch
             {

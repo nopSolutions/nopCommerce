@@ -13,11 +13,11 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
 {
     public partial class CustomerValidator : BaseNopValidator<CustomerModel>
     {
-        public CustomerValidator(ILocalizationService localizationService,
+        public CustomerValidator(IDataProvider dataProvider, 
+            ILocalizationService localizationService,
             IStateProvinceService stateProvinceService,
             ICustomerService customerService,
-            CustomerSettings customerSettings,
-            IDbContext dbContext)
+            CustomerSettings customerSettings)
         {
             //ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
             RuleFor(x => x.Email)
@@ -120,7 +120,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                     .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
             }
 
-            SetDatabaseValidationRules<Customer>(dbContext);
+            SetDatabaseValidationRules<Customer>(dataProvider);
         }
 
         private bool IsRegisteredCustomerRoleChecked(CustomerModel model, ICustomerService customerService)

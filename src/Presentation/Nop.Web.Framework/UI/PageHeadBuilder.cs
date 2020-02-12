@@ -365,16 +365,18 @@ namespace Nop.Web.Framework.UI
 
                         //check whether this file exists, if not it should be stored into /wwwroot directory
                         if (!_fileProvider.FileExists(_fileProvider.MapPath(path)))
-                            src = $"wwwroot/{src}";
+                            src = _fileProvider.Combine(_hostingEnvironment.WebRootPath, _fileProvider.Combine(src.Split("/").ToArray()));
+                        else
+                            src = _fileProvider.MapPath(path);
 
                         bundle.InputFiles.Add(src);
                     }
 
                     //output file
                     var outputFileName = GetBundleFileName(partsToBundle.Select(x => debugModel ? x.DebugSrc : x.Src).ToArray());
-                    bundle.OutputFileName = "wwwroot/bundles/" + outputFileName + ".js";
+                    bundle.OutputFileName = _fileProvider.Combine(_hostingEnvironment.WebRootPath, "bundles", outputFileName + ".js");
                     //save
-                    var configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
+                    var configFilePath = _fileProvider.MapPath($"/{outputFileName}.json");
                     bundle.FileName = configFilePath;
 
                     //performance optimization. do not bundle and minify for each HTTP request
@@ -579,27 +581,22 @@ namespace Nop.Web.Framework.UI
                     var bundle = new Bundle();
                     foreach (var item in partsToBundle)
                     {
-                        var src = debugModel ? item.DebugSrc : item.Src;
-                        src = urlHelper.Content(src);
+                        new PathString(urlHelper.Content(debugModel ? item.DebugSrc : item.Src))
+                            .StartsWithSegments(urlHelper.ActionContext.HttpContext.Request.PathBase, out PathString path);
+                        var src = path.Value.TrimStart('/');
+
                         //check whether this file exists 
-                        var srcPath = _fileProvider.Combine(_hostingEnvironment.ContentRootPath, src.Remove(0, 1).Replace("/", "\\"));
-                        if (_fileProvider.FileExists(srcPath))
-                        {
-                            //remove starting /
-                            src = src.Remove(0, 1);
-                        }
+                        if (!_fileProvider.FileExists(_fileProvider.MapPath(path)))
+                            src = _fileProvider.Combine(_hostingEnvironment.WebRootPath, _fileProvider.Combine(src.Split("/").ToArray()));
                         else
-                        {
-                            //if not, it should be stored into /wwwroot directory
-                            src = "wwwroot/" + src;
-                        }
+                            src = _fileProvider.MapPath(path);
                         bundle.InputFiles.Add(src);
                     }
                     //output file
                     var outputFileName = GetBundleFileName(partsToBundle.Select(x => { return debugModel ? x.DebugSrc : x.Src; }).ToArray());
-                    bundle.OutputFileName = "wwwroot/bundles/" + outputFileName + ".css";
+                    bundle.OutputFileName = _fileProvider.Combine(_hostingEnvironment.WebRootPath, "bundles", outputFileName + ".css");
                     //save
-                    var configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
+                    var configFilePath = _fileProvider.MapPath($"/{outputFileName}.json");
                     bundle.FileName = configFilePath;
 
                     //performance optimization. do not bundle and minify for each HTTP request

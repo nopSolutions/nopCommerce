@@ -42,7 +42,7 @@
     <Value>Create sample data</Value>
   </LocaleResource>
   <LocaleResource Name="CustomCollation">
-    <Value>Specify custom SQL Server collation</Value>
+    <Value>Specify custom collation</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseCreationError">
     <Value>An error occurred while creating the database: {0}</Value>
@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>Use built-in data storage (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
-    <Value>SQL Server name</Value>
+  <LocaleResource Name="ServerName">
+    <Value>Server name</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
-    <Value>SQL Server name is required</Value>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Server name is required</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL Password</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>SQL Password is required</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>SQL Username</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>SQL Username is required</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Use Microsoft SQL Server (or SQL Express) database</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Store information</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>To complete this wizard, you must know some information regarding your database server ("connection string"). Please contact your ISP if necessary. If you're installing on a local machine or server, you might need information from your System Admin.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>Use integrated Windows authentication</Value>
   </LocaleResource>
 </Language>

@@ -9,11 +9,11 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
 {
     public partial class CustomerAttributeValidator : BaseNopValidator<CustomerAttributeModel>
     {
-        public CustomerAttributeValidator(ILocalizationService localizationService, IDbContext dbContext)
+        public CustomerAttributeValidator(IDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.CustomerAttributes.Fields.Name.Required"));
 
-            SetDatabaseValidationRules<CustomerAttribute>(dbContext);
+            SetDatabaseValidationRules<CustomerAttribute>(dataProvider);
         }
     }
 }

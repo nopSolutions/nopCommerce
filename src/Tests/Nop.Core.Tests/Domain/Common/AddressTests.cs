@@ -1,6 +1,10 @@
 ﻿using System;
+using FluentAssertions;
+using Moq;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Directory;
+using Nop.Services.Common;
+using Nop.Services.Directory;
+using Nop.Services.Events;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -20,9 +24,7 @@ namespace Nop.Core.Tests.Domain.Common
                 Email = "Email 1",
                 Company = "Company 1",
                 CountryId = 3,
-                Country = new Country { Id = 3, Name = "United States" },
                 StateProvinceId = 4,
-                StateProvince = new StateProvince { Id = 4, Name = "LA" },
                 City = "City 1",
                 County = "County 1",
                 Address1 = "Address1",
@@ -33,29 +35,25 @@ namespace Nop.Core.Tests.Domain.Common
                 CreatedOnUtc = new DateTime(2010, 01, 01),
             };
 
-            var newAddress = address.Clone() as Address;
-            newAddress.ShouldNotBeNull();
-            newAddress.Id.ShouldEqual(0);
-            newAddress.FirstName.ShouldEqual("FirstName 1");
-            newAddress.LastName.ShouldEqual("LastName 1");
-            newAddress.Email.ShouldEqual("Email 1");
-            newAddress.Company.ShouldEqual("Company 1");
-            newAddress.City.ShouldEqual("City 1");
-            newAddress.County.ShouldEqual("County 1");
-            newAddress.Address1.ShouldEqual("Address1");
-            newAddress.Address2.ShouldEqual("Address2");
-            newAddress.ZipPostalCode.ShouldEqual("ZipPostalCode 1");
-            newAddress.PhoneNumber.ShouldEqual("PhoneNumber 1");
-            newAddress.FaxNumber.ShouldEqual("FaxNumber 1");
-            newAddress.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
+            var addressService = new AddressService(new AddressSettings(), new Mock<IAddressAttributeParser>().Object, new Mock<IAddressAttributeService>().Object, new Mock<ICountryService>().Object, new Mock<IEventPublisher>().Object, new FakeRepository<Address>().GetRepository(), new Mock<IStateProvinceService>().Object);
 
-            newAddress.Country.ShouldNotBeNull();
-            newAddress.CountryId.ShouldEqual(3);
-            newAddress.Country.Name.ShouldEqual("United States");
-
-            newAddress.StateProvince.ShouldNotBeNull();
-            newAddress.StateProvinceId.ShouldEqual(4);
-            newAddress.StateProvince.Name.ShouldEqual("LA");
+            var newAddress = addressService.CloneAddress(address);
+            newAddress.Should().NotBeNull();
+            newAddress.Id.Should().Be(0);
+            newAddress.FirstName.Should().Be("FirstName 1");
+            newAddress.LastName.Should().Be("LastName 1");
+            newAddress.Email.Should().Be("Email 1");
+            newAddress.Company.Should().Be("Company 1");
+            newAddress.City.Should().Be("City 1");
+            newAddress.County.Should().Be("County 1");
+            newAddress.Address1.Should().Be("Address1");
+            newAddress.Address2.Should().Be("Address2");
+            newAddress.ZipPostalCode.Should().Be("ZipPostalCode 1");
+            newAddress.PhoneNumber.Should().Be("PhoneNumber 1");
+            newAddress.FaxNumber.Should().Be("FaxNumber 1");
+            newAddress.CreatedOnUtc.Should().Be(new DateTime(2010, 01, 01));
+            newAddress.CountryId.Should().Be(3);
+            newAddress.StateProvinceId.Should().Be(4);
         }
     }
 }

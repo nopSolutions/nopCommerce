@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>आंकड़ा भंडारण का निर्माण का उपयोग करें (SQL सर्वर संकुचित)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>SQL सर्वर का नाम</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>SQL सर्वर नाम की आवश्यकता है</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL पासवर्ड</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>SQL पासवर्ड की आवश्यकता है</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>SQL उपयोगकर्ता नाम</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>SQL उपयोगकर्ता नाम की आवश्यकता है</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Microsoft SQL Server(या SQL Express) डेटाबेस का उपयोग करें</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>स्टोर जानकारी</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>इस जादूगर को पूरा करने के लिए आप अपने डेटाबेस सर्वर के बारे में कुछ जानकारी ("कनेक्शन स्ट्रिंग") पता होना चाहिए. कृपया अपने ISP से संपर्क करें यदि आवश्यक हो.यदि आप एक स्थानीय मशीन या सर्वर पर स्थापित कर रहे हैं आप अपने सिस्टम व्यवस्थापक से जानकारी की आवश्यकता हो सकती है</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>एकीकृत Windows प्रमाणीकरण का उपयोग करें</Value>
   </LocaleResource>
 </Language>

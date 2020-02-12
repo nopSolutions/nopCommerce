@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Forums;
 
 namespace Nop.Data.Mapping.Forums
@@ -15,18 +14,15 @@ namespace Nop.Data.Mapping.Forums
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<ForumSubscription> builder)
+        public override void Configure(EntityMappingBuilder<ForumSubscription> builder)
         {
-            builder.ToTable(NopMappingDefaults.ForumsSubscriptionTable);
-            builder.HasKey(subscription => subscription.Id);
+            builder.HasTableName(NopMappingDefaults.ForumsSubscriptionTable);
 
-            builder.HasOne(subscription => subscription.Customer)
-                .WithMany()
-                .HasForeignKey(subscription => subscription.CustomerId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-
-            base.Configure(builder);
+            builder.Property(subscription => subscription.SubscriptionGuid);
+            builder.Property(subscription => subscription.CustomerId);
+            builder.Property(subscription => subscription.ForumId);
+            builder.Property(subscription => subscription.TopicId);
+            builder.Property(subscription => subscription.CreatedOnUtc);
         }
 
         #endregion

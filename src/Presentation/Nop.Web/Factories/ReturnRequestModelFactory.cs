@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -30,6 +29,7 @@ namespace Nop.Web.Factories
         private readonly ILocalizationService _localizationService;
         private readonly IOrderService _orderService;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IProductService _productService;
         private readonly IReturnRequestService _returnRequestService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
@@ -47,6 +47,7 @@ namespace Nop.Web.Factories
             ILocalizationService localizationService,
             IOrderService orderService,
             IPriceFormatter priceFormatter,
+            IProductService productService,
             IReturnRequestService returnRequestService,
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
@@ -60,6 +61,7 @@ namespace Nop.Web.Factories
             _localizationService = localizationService;
             _orderService = orderService;
             _priceFormatter = priceFormatter;
+            _productService = productService;
             _returnRequestService = returnRequestService;
             _cacheManager = cacheManager;
             _storeContext = storeContext;
@@ -82,14 +84,15 @@ namespace Nop.Web.Factories
             if (orderItem == null)
                 throw new ArgumentNullException(nameof(orderItem));
 
-            var order = orderItem.Order;
+            var order = _orderService.GetOrderById(orderItem.OrderId);
+            var product = _productService.GetProductById(orderItem.ProductId);
 
             var model = new SubmitReturnRequestModel.OrderItemModel
             {
                 Id = orderItem.Id,
-                ProductId = orderItem.Product.Id,
-                ProductName = _localizationService.GetLocalized(orderItem.Product, x => x.Name),
-                ProductSeName = _urlRecordService.GetSeName(orderItem.Product),
+                ProductId = product.Id,
+                ProductName = _localizationService.GetLocalized(product, x => x.Name),
+                ProductSeName = _urlRecordService.GetSeName(product),
                 AttributeInfo = orderItem.AttributeDescription,
                 Quantity = orderItem.Quantity
             };
@@ -133,32 +136,29 @@ namespace Nop.Web.Factories
             model.AvailableReturnReasons = _cacheManager.Get(string.Format(NopModelCacheDefaults.ReturnRequestReasonsModelKey, _workContext.WorkingLanguage.Id),
                 () =>
                 {
-                    var reasons = new List<SubmitReturnRequestModel.ReturnRequestReasonModel>();
-                    foreach (var rrr in _returnRequestService.GetAllReturnRequestReasons())
-                        reasons.Add(new SubmitReturnRequestModel.ReturnRequestReasonModel
+                    return _returnRequestService.GetAllReturnRequestReasons()
+                        .Select(rrr => new SubmitReturnRequestModel.ReturnRequestReasonModel
                         {
                             Id = rrr.Id,
                             Name = _localizationService.GetLocalized(rrr, x => x.Name)
-                        });
-                    return reasons;
+                        }).ToList();
                 });
 
             //return actions
             model.AvailableReturnActions = _cacheManager.Get(string.Format(NopModelCacheDefaults.ReturnRequestActionsModelKey, _workContext.WorkingLanguage.Id),
                 () =>
                 {
-                    var actions = new List<SubmitReturnRequestModel.ReturnRequestActionModel>();
-                    foreach (var rra in _returnRequestService.GetAllReturnRequestActions())
-                        actions.Add(new SubmitReturnRequestModel.ReturnRequestActionModel
+                    return _returnRequestService.GetAllReturnRequestActions()
+                        .Select(rra => new SubmitReturnRequestModel.ReturnRequestActionModel
                         {
                             Id = rra.Id,
                             Name = _localizationService.GetLocalized(rra, x => x.Name)
-                        });
-                    return actions;
+                        })
+                        .ToList();
                 });
 
             //returnable products
-            var orderItems = order.OrderItems.Where(oi => !oi.Product.NotReturnable);
+            var orderItems = _orderService.GetOrderItems(order.Id, isNotReturnable: false);
             foreach (var orderItem in orderItems)
             {
                 var orderItemModel = PrepareSubmitReturnRequestOrderItemModel(orderItem);
@@ -182,7 +182,8 @@ namespace Nop.Web.Factories
                 var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
                 if (orderItem != null)
                 {
-                    var product = orderItem.Product;
+                    var product = _productService.GetProductById(orderItem.ProductId);
+
                     var download = _downloadService.GetDownloadById(returnRequest.UploadedFileId);
 
                     var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel

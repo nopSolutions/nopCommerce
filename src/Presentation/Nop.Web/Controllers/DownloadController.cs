@@ -63,8 +63,8 @@ namespace Nop.Web.Controllers
             if (orderItem == null)
                 return InvokeHttp404();
 
-            var order = orderItem.Order;
-            var product = orderItem.Product;
+            var order = _orderService.GetOrderById(orderItem.OrderId);
+            
             if (!_downloadService.IsDownloadAllowed(orderItem))
                 return Content("Downloads are not allowed");
 
@@ -76,6 +76,8 @@ namespace Nop.Web.Controllers
                 if (order.CustomerId != _workContext.CurrentCustomer.Id)
                     return Content("This is not your order");
             }
+
+            var product = _productService.GetProductById(orderItem.ProductId);
 
             var download = _downloadService.GetDownloadById(product.DownloadId);
             if (download == null)
@@ -92,7 +94,7 @@ namespace Nop.Web.Controllers
             {
                 //increase download
                 orderItem.DownloadCount++;
-                _orderService.UpdateOrder(order);
+                _orderService.UpdateOrderItem(orderItem);
 
                 //return result
                 return new RedirectResult(download.DownloadUrl);
@@ -104,7 +106,7 @@ namespace Nop.Web.Controllers
 
             //increase download
             orderItem.DownloadCount++;
-            _orderService.UpdateOrder(order);
+            _orderService.UpdateOrderItem(orderItem);
 
             //return result
             var fileName = !string.IsNullOrWhiteSpace(download.Filename) ? download.Filename : product.Id.ToString();
@@ -118,8 +120,8 @@ namespace Nop.Web.Controllers
             if (orderItem == null)
                 return InvokeHttp404();
 
-            var order = orderItem.Order;
-            var product = orderItem.Product;
+            var order = _orderService.GetOrderById(orderItem.OrderId);
+
             if (!_downloadService.IsLicenseDownloadAllowed(orderItem))
                 return Content("Downloads are not allowed");
 
@@ -139,9 +141,9 @@ namespace Nop.Web.Controllers
             //binary download
             if (download.DownloadBinary == null)
                 return Content("Download data is not available any more.");
-                
+
             //return result
-            var fileName = !string.IsNullOrWhiteSpace(download.Filename) ? download.Filename : product.Id.ToString();
+            var fileName = !string.IsNullOrWhiteSpace(download.Filename) ? download.Filename : orderItem.ProductId.ToString();
             var contentType = !string.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : MimeTypes.ApplicationOctetStream;
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
@@ -171,7 +173,7 @@ namespace Nop.Web.Controllers
             if (orderNote == null)
                 return InvokeHttp404();
 
-            var order = orderNote.Order;
+            var order = _orderService.GetOrderById(orderNote.OrderId);
 
             if (_workContext.CurrentCustomer == null || order.CustomerId != _workContext.CurrentCustomer.Id)
                 return Challenge();

@@ -1,14 +1,17 @@
-﻿using Moq;
-using Nop.Core;
-using System;
+﻿using System;
 using Microsoft.AspNetCore.Http;
+using Moq;
+using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.Orders;
+using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
@@ -24,10 +27,14 @@ namespace Nop.Tests
             GenericAttributeService = new Mock<IGenericAttributeService>();
             WorkContext = new Mock<IWorkContext>();
             
+            DiscountCategoryMappingRepository = new Mock<IRepository<DiscountCategoryMapping>>();
+            DiscountManufacturerMappingRepository = new Mock<IRepository<DiscountManufacturerMapping>>();
+            DiscountProductMappingRepository = new Mock<IRepository<DiscountProductMapping>>();
+
             PriceCalculationService = new PriceCalculationService(new CatalogSettings(), new CurrencySettings(), 
-                new Mock<ICategoryService>().Object, new Mock<ICurrencyService>().Object, new Mock<IDiscountService>().Object,
+                new Mock<ICategoryService>().Object, new Mock<ICurrencyService>().Object, new Mock<ICustomerService>().Object, new Mock<IDiscountService>().Object,
                 new Mock<IManufacturerService>().Object, new Mock<IProductAttributeParser>().Object,
-                new Mock<IProductService>().Object, new TestCacheManager(), new Mock<IStoreContext>().Object, WorkContext.Object, new ShoppingCartSettings());
+                new Mock<IProductService>().Object, new TestCacheManager(), new Mock<IStoreContext>().Object, WorkContext.Object);
 
             LocalizationService.Setup(l => l.GetResource(It.IsAny<string>())).Returns("Invalid");
             WorkContext.Setup(p => p.WorkingLanguage).Returns(new Language {Id = 1});
@@ -36,13 +43,13 @@ namespace Nop.Tests
             CurrencyService = new Mock<ICurrencyService>();
             CurrencyService.Setup(x => x.GetCurrencyById(1, true)).Returns(new Currency {Id = 1, RoundingTypeId = 0});
 
-            GenericAttributeService.Setup(p => p.GetAttribute<bool>(It.IsAny<Customer>(), "product-advanced-mode", It.IsAny<int>(), false))
+            GenericAttributeService.Setup(p => p.GetAttribute(It.IsAny<Customer>(), "product-advanced-mode", It.IsAny<int>(), false))
                 .Returns(true);
 
-            GenericAttributeService.Setup(p => p.GetAttribute<bool>(It.IsAny<Customer>(), "manufacturer-advanced-mode", It.IsAny<int>(), false))
+            GenericAttributeService.Setup(p => p.GetAttribute(It.IsAny<Customer>(), "manufacturer-advanced-mode", It.IsAny<int>(), false))
                 .Returns(true);
 
-            GenericAttributeService.Setup(p => p.GetAttribute<bool>(It.IsAny<Customer>(), "category-advanced-mode", It.IsAny<int>(), false))
+            GenericAttributeService.Setup(p => p.GetAttribute(It.IsAny<Customer>(), "category-advanced-mode", It.IsAny<int>(), false))
                 .Returns(true);
         }
 
@@ -52,7 +59,11 @@ namespace Nop.Tests
         public IPriceCalculationService PriceCalculationService { get; }
         public Mock<ICurrencyService> CurrencyService { get; }
 
-        public object GetService(Type serviceType)
+        public Mock<IRepository<DiscountCategoryMapping>> DiscountCategoryMappingRepository { get; }
+        public Mock<IRepository<DiscountManufacturerMapping>> DiscountManufacturerMappingRepository { get; }
+        public Mock<IRepository<DiscountProductMapping>> DiscountProductMappingRepository { get; }
+
+        public virtual object GetService(Type serviceType)
         {
             if (serviceType == typeof(IHttpContextAccessor))
                 return new Mock<IHttpContextAccessor>().Object;
@@ -80,6 +91,18 @@ namespace Nop.Tests
 
             if (serviceType == typeof(IPriceCalculationService))
                 return PriceCalculationService;
+
+            if (serviceType == typeof(IStaticCacheManager))
+                return new TestCacheManager();
+
+            if(serviceType == typeof(IRepository<DiscountCategoryMapping>))
+                return DiscountCategoryMappingRepository.Object;
+
+            if (serviceType == typeof(IRepository<DiscountManufacturerMapping>))
+                return DiscountManufacturerMappingRepository.Object;
+
+            if (serviceType == typeof(IRepository<DiscountProductMapping>))
+                return DiscountProductMappingRepository.Object;
 
             return null;
         }

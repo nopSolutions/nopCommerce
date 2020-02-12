@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using Newtonsoft.Json;
 using Nop.Core;
+using Nop.Services.Defaults;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Messages
@@ -63,21 +64,21 @@ namespace Nop.Services.Tests.Messages
             _notificationService.ErrorNotification("error");
             var messageList = DeserializedDataDictionary;
 
-            messageList.Count.ShouldEqual(3);
+            messageList.Count.Should().Be(3);
             var succMsg = messageList
                 .Where(m => m.Type == NotifyType.Success)
                 .First();
-            succMsg.Message.ShouldEqual("success");
+            succMsg.Message.Should().Be("success");
 
             var warnMsg = messageList
                 .Where(m => m.Type == NotifyType.Warning)
                 .First();
-            warnMsg.Message.ShouldEqual("warning");
+            warnMsg.Message.Should().Be("warning");
 
             var errMsg = messageList
                 .Where(m => m.Type == NotifyType.Error)
                 .First();
-            errMsg.Message.ShouldEqual("error");
+            errMsg.Message.Should().Be("error");
         }
 
         [Test]
@@ -85,7 +86,7 @@ namespace Nop.Services.Tests.Messages
         {
             _notificationService.ErrorNotification(new Exception("error"));
             var msg = DeserializedDataDictionary.First();
-            msg.Message.ShouldEqual("error");
+            msg.Message.Should().Be("error");
         }
     }
 }

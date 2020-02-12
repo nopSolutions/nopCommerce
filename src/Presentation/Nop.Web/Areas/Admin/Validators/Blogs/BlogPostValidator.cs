@@ -2,15 +2,15 @@
 using Nop.Web.Areas.Admin.Models.Blogs;
 using Nop.Core.Domain.Blogs;
 using Nop.Data;
+using Nop.Services.Defaults;
 using Nop.Services.Localization;
-using Nop.Services.Seo;
 using Nop.Web.Framework.Validators;
 
 namespace Nop.Web.Areas.Admin.Validators.Blogs
 {
     public partial class BlogPostValidator : BaseNopValidator<BlogPostModel>
     {
-        public BlogPostValidator(ILocalizationService localizationService, IDbContext dbContext)
+        public BlogPostValidator(IDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Title)
                 .NotEmpty()
@@ -29,7 +29,7 @@ namespace Nop.Web.Areas.Admin.Validators.Blogs
             RuleFor(x => x.SeName).Length(0, NopSeoDefaults.SearchEngineNameLength)
                 .WithMessage(string.Format(localizationService.GetResource("Admin.SEO.SeName.MaxLengthValidation"), NopSeoDefaults.SearchEngineNameLength));
 
-            SetDatabaseValidationRules<BlogPost>(dbContext);
+            SetDatabaseValidationRules<BlogPost>(dataProvider);
         }
     }
 }

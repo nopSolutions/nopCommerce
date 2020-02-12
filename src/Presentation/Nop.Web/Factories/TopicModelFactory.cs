@@ -2,8 +2,8 @@
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Topics;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Seo;
@@ -22,6 +22,7 @@ namespace Nop.Web.Factories
         #region Fields
 
         private readonly IAclService _aclService;
+        private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
@@ -36,6 +37,7 @@ namespace Nop.Web.Factories
         #region Ctor
 
         public TopicModelFactory(IAclService aclService,
+            ICustomerService customerService,
             ILocalizationService localizationService,
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
@@ -46,6 +48,7 @@ namespace Nop.Web.Factories
             IWorkContext workContext)
         {
             _aclService = aclService;
+            _customerService = customerService;
             _localizationService = localizationService;
             _cacheManager = cacheManager;
             _storeContext = storeContext;
@@ -76,14 +79,15 @@ namespace Nop.Web.Factories
                 SystemName = topic.SystemName,
                 IncludeInSitemap = topic.IncludeInSitemap,
                 IsPasswordProtected = topic.IsPasswordProtected,
-                Title = topic.IsPasswordProtected ? "" : _localizationService.GetLocalized(topic, x => x.Title),
-                Body = topic.IsPasswordProtected ? "" : _localizationService.GetLocalized(topic, x => x.Body),
+                Title = topic.IsPasswordProtected ? string.Empty : _localizationService.GetLocalized(topic, x => x.Title),
+                Body = topic.IsPasswordProtected ? string.Empty : _localizationService.GetLocalized(topic, x => x.Body),
                 MetaKeywords = _localizationService.GetLocalized(topic, x => x.MetaKeywords),
                 MetaDescription = _localizationService.GetLocalized(topic, x => x.MetaDescription),
                 MetaTitle = _localizationService.GetLocalized(topic, x => x.MetaTitle),
                 SeName = _urlRecordService.GetSeName(topic),
                 TopicTemplateId = topic.TopicTemplateId
             };
+
             return model;
         }
 
@@ -103,7 +107,7 @@ namespace Nop.Web.Factories
                 topicId,
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                 showHidden);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
@@ -138,13 +142,14 @@ namespace Nop.Web.Factories
                 systemName,
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
+                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)));
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 //load by store
                 var topic = _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
                 if (topic == null)
                     return null;
+
                 return PrepareTopicModel(topic);
             });
 
@@ -161,13 +166,13 @@ namespace Nop.Web.Factories
             var templateCacheKey = string.Format(NopModelCacheDefaults.TopicTemplateModelKey, topicTemplateId);
             var templateViewPath = _cacheManager.Get(templateCacheKey, () =>
             {
-                var template = _topicTemplateService.GetTopicTemplateById(topicTemplateId);
-                if (template == null)
-                    template = _topicTemplateService.GetAllTopicTemplates().FirstOrDefault();
+                var template = _topicTemplateService.GetTopicTemplateById(topicTemplateId) ?? _topicTemplateService.GetAllTopicTemplates().FirstOrDefault();
                 if (template == null)
                     throw new Exception("No default template could be loaded");
+
                 return template.ViewPath;
             });
+
             return templateViewPath;
         }
 

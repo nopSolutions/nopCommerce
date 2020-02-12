@@ -133,6 +133,13 @@ else
                         }
                         continue;
                     }
+                    if (filter.Type == typeof(DateTime?))
+                    {
+                        <text>
+                        data.@filter.Name = $('#@filter.Name').val();
+                        </text>
+                        continue;
+                    }
                 }
             }
             addAntiForgeryToken(data);
@@ -229,26 +236,7 @@ columns: [
             @if (column.Encode && column.Render == null)
             {
                 <text>
-                render: function (data, type, row, meta) {
-                    var entityMap = {
-                        '&': '&amp;',
-                        '<': '&lt;',
-                        '>': '&gt;',
-                        '"': '&quot;',
-                        "'": '&#39;',
-                        '/': '&#x2F;',
-                        '`': '&#x60;',
-                        '=': '&#x3D;'
-                    };
-
-                    function escapeHtml (string) {
-                        if (string == null) {
-                            return '';
-                        }
-                        return String(string).replace(/[&<>"'`=\/]/g, function (s) {
-                            return entityMap[s];
-                        });
-                    }
+                render: function (data, type, row, meta) {                    
                     return escapeHtml(data)
                 },
                 </text>
@@ -355,7 +343,9 @@ columns: [
                 case RenderCheckBox checkBox:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<input name="@checkBox.Name" value="' + row.@checkBox.PropertyKeyName + '" type="checkbox" class="checkboxGroups" />';
+                        return (data == true)
+                            ? '<input name="@checkBox.Name" value="' + row.@checkBox.PropertyKeyName + '" type="checkbox" class="checkboxGroups" checked="checked" />'
+                            : '<input name="@checkBox.Name" value="' + row.@checkBox.PropertyKeyName + '" type="checkbox" class="checkboxGroups" />';
                     },
                     </text>
                     break;

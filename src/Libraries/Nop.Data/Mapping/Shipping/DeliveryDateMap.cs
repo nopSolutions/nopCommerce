@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Mapping.Shipping
@@ -15,14 +14,12 @@ namespace Nop.Data.Mapping.Shipping
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<DeliveryDate> builder)
+        public override void Configure(EntityMappingBuilder<DeliveryDate> builder)
         {
-            builder.ToTable(nameof(DeliveryDate));
-            builder.HasKey(date => date.Id);
+            builder.HasTableName(nameof(DeliveryDate));
 
-            builder.Property(date => date.Name).HasMaxLength(400).IsRequired();
-
-            base.Configure(builder);
+            builder.Property(date => date.Name).HasLength(400).IsNullable(false);
+            builder.Property(date => date.DisplayOrder);
         }
 
         #endregion

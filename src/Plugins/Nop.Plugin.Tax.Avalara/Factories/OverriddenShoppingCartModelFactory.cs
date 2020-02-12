@@ -41,6 +41,7 @@ namespace Nop.Plugin.Tax.Avalara.Factories
     {
         #region Fields
 
+        private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -48,8 +49,8 @@ namespace Nop.Plugin.Tax.Avalara.Factories
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IPaymentService _paymentService;
-        private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IProductService _productService;
         private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -70,6 +71,7 @@ namespace Nop.Plugin.Tax.Avalara.Factories
             CatalogSettings catalogSettings,
             CommonSettings commonSettings,
             CustomerSettings customerSettings,
+            IAddressService addressService,
             IAddressModelFactory addressModelFactory,
             ICheckoutAttributeFormatter checkoutAttributeFormatter,
             ICheckoutAttributeParser checkoutAttributeParser,
@@ -89,7 +91,6 @@ namespace Nop.Plugin.Tax.Avalara.Factories
             IPaymentService paymentService,
             IPermissionService permissionService,
             IPictureService pictureService,
-            IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
             IProductAttributeFormatter productAttributeFormatter,
             IProductService productService,
@@ -135,7 +136,6 @@ namespace Nop.Plugin.Tax.Avalara.Factories
                 paymentService,
                 permissionService,
                 pictureService,
-                priceCalculationService,
                 priceFormatter,
                 productAttributeFormatter,
                 productService,
@@ -158,6 +158,7 @@ namespace Nop.Plugin.Tax.Avalara.Factories
                 taxSettings,
                 vendorSettings)
         {
+            _addressService = addressService;
             _countryService = countryService;
             _currencyService = currencyService;
             _genericAttributeService = genericAttributeService;
@@ -165,8 +166,8 @@ namespace Nop.Plugin.Tax.Avalara.Factories
             _httpContextAccessor = httpContextAccessor;
             _orderTotalCalculationService = orderTotalCalculationService;
             _paymentService = paymentService;
-            _priceCalculationService = priceCalculationService;
             _priceFormatter = priceFormatter;
+            _productService = productService;
             _shippingPluginManager = shippingPluginManager;
             _shoppingCartService = shoppingCartService;
             _stateProvinceService = stateProvinceService;
@@ -197,11 +198,12 @@ namespace Nop.Plugin.Tax.Avalara.Factories
                 return;
 
             //create dummy order for the tax request
-            var order = new Order { Customer = _workContext.CurrentCustomer };
+            var order = new Order { CustomerId = _workContext.CurrentCustomer.Id };
 
             //addresses
-            order.BillingAddress = _workContext.CurrentCustomer.BillingAddress;
-            order.ShippingAddress = _workContext.CurrentCustomer.ShippingAddress;
+            order.BillingAddressId = _workContext.CurrentCustomer.BillingAddressId ?? 0;
+            order.ShippingAddressId = _workContext.CurrentCustomer.ShippingAddressId;
+
             if (_shippingSettings.AllowPickupInStore)
             {
                 var pickupPoint = _genericAttributeService.GetAttribute<PickupPoint>(_workContext.CurrentCustomer,
@@ -209,15 +211,20 @@ namespace Nop.Plugin.Tax.Avalara.Factories
                 if (pickupPoint != null)
                 {
                     var country = _countryService.GetCountryByTwoLetterIsoCode(pickupPoint.CountryCode);
-                    order.PickupAddress = new Address
+
+                    var pickupAddress = new Address
                     {
                         Address1 = pickupPoint.Address,
                         City = pickupPoint.City,
-                        Country = country,
-                        StateProvince = _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation, country?.Id),
+                        CountryId = country?.Id,
+                        StateProvinceId = _stateProvinceService.GetStateProvinceByAbbreviation(pickupPoint.StateAbbreviation, country?.Id)?.Id,
                         ZipPostalCode = pickupPoint.ZipPostalCode,
                         CreatedOnUtc = DateTime.UtcNow,
                     };
+
+                    _addressService.InsertAddress(pickupAddress);
+
+                    order.PickupAddressId = pickupAddress.Id;
                 }
             }
 
@@ -242,24 +249,28 @@ namespace Nop.Plugin.Tax.Avalara.Factories
             _orderTotalCalculationService.GetShoppingCartSubTotal(cart, false, out var orderSubTotalDiscountExclTax, out _, out _, out _);
             order.OrderSubTotalDiscountExclTax = orderSubTotalDiscountExclTax;
 
+            var orderItems = new List<OrderItem>();
+
             //create dummy order items
             foreach (var cartItem in cart)
             {
                 var orderItem = new OrderItem
                 {
                     AttributesXml = cartItem.AttributesXml,
-                    Product = cartItem.Product,
+                    ProductId = cartItem.ProductId,
                     Quantity = cartItem.Quantity
                 };
 
-                var itemSubtotal = _priceCalculationService.GetSubTotal(cartItem, true, out _, out _, out _);
-                orderItem.PriceExclTax = _taxService.GetProductPrice(cartItem.Product, itemSubtotal, false, _workContext.CurrentCustomer, out _);
+                var product = _productService.GetProductById(cartItem.ProductId);
 
-                order.OrderItems.Add(orderItem);
+                var itemSubtotal = _shoppingCartService.GetSubTotal(cartItem, true, out _, out _, out _);
+                orderItem.PriceExclTax = _taxService.GetProductPrice(product, itemSubtotal, false, _workContext.CurrentCustomer, out _);
+
+                orderItems.Add(orderItem);
             }
 
             //get tax details
-            var taxTransaction = taxProvider.CreateOrderTaxTransaction(order, false);
+            var taxTransaction = taxProvider.CreateOrderTaxTransaction(order, orderItems, false);
             if (taxTransaction == null)
                 return;
 

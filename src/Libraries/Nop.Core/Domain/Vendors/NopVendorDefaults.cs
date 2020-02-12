@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Core.Domain.Vendors
+﻿namespace Nop.Core.Domain.Vendors
 {
     /// <summary>
     /// Represents default values related to vendors data

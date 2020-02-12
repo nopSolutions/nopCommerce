@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute that enables anti-forgery feature for the admin area
     /// </summary>
-    public class AdminAntiForgeryAttribute : TypeFilterAttribute
+    public sealed class AdminAntiForgeryAttribute : TypeFilterAttribute
     {
         #region Fields
 

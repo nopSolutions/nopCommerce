@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
@@ -15,22 +14,25 @@ namespace Nop.Data.Mapping.Orders
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<ReturnRequest> builder)
+        public override void Configure(EntityMappingBuilder<ReturnRequest> builder)
         {
-            builder.ToTable(nameof(ReturnRequest));
-            builder.HasKey(returnRequest => returnRequest.Id);
+            builder.HasTableName(nameof(ReturnRequest));
 
-            builder.Property(returnRequest => returnRequest.ReasonForReturn).IsRequired();
-            builder.Property(returnRequest => returnRequest.RequestedAction).IsRequired();
-
-            builder.HasOne(returnRequest => returnRequest.Customer)
-                .WithMany(customer => customer.ReturnRequests)
-                .HasForeignKey(returnRequest => returnRequest.CustomerId)
-                .IsRequired();
+            builder.Property(returnRequest => returnRequest.ReasonForReturn).IsNullable(false);
+            builder.Property(returnRequest => returnRequest.RequestedAction).IsNullable(false);
+            builder.Property(returnrequest => returnrequest.CustomNumber);
+            builder.Property(returnrequest => returnrequest.StoreId);
+            builder.Property(returnrequest => returnrequest.OrderItemId);
+            builder.Property(returnrequest => returnrequest.CustomerId);
+            builder.Property(returnrequest => returnrequest.Quantity);
+            builder.Property(returnrequest => returnrequest.CustomerComments);
+            builder.Property(returnrequest => returnrequest.UploadedFileId);
+            builder.Property(returnrequest => returnrequest.StaffNotes);
+            builder.Property(returnrequest => returnrequest.ReturnRequestStatusId);
+            builder.Property(returnrequest => returnrequest.CreatedOnUtc);
+            builder.Property(returnrequest => returnrequest.UpdatedOnUtc);
 
             builder.Ignore(returnRequest => returnRequest.ReturnRequestStatus);
-
-            base.Configure(builder);
         }
 
         #endregion

@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Data.Mapping.Customers
@@ -15,19 +14,17 @@ namespace Nop.Data.Mapping.Customers
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<CustomerPassword> builder)
+        public override void Configure(EntityMappingBuilder<CustomerPassword> builder)
         {
-            builder.ToTable(nameof(CustomerPassword));
-            builder.HasKey(password => password.Id);
+            builder.HasTableName(nameof(CustomerPassword));
 
-            builder.HasOne(password => password.Customer)
-                .WithMany()
-                .HasForeignKey(password => password.CustomerId)
-                .IsRequired();
+            builder.Property(password => password.CustomerId);
+            builder.Property(password => password.Password);
+            builder.Property(password => password.PasswordFormatId);
+            builder.Property(password => password.PasswordSalt);
+            builder.Property(password => password.CreatedOnUtc);
 
             builder.Ignore(password => password.PasswordFormat);
-
-            base.Configure(builder);
         }
 
         #endregion

@@ -187,4 +187,7 @@ src/Presentation/Nop.Web/wwwroot/images/uploaded/*
 !src/Presentation/Nop.Web/wwwroot/images/uploaded/placeholder.txt
 src/Presentation/Nop.Web/wwwroot/files/exportimport/*
 !src/Presentation/Nop.Web/wwwroot/files/exportimport/Index.htm
+src/Presentation/Nop.Web/wwwroot/lib/cldr-data/main*
+!src/Presentation/Nop.Web/wwwroot/lib/cldr-data/main/en/*
+!src/Presentation/Nop.Web/wwwroot/lib/cldr-data/main/main.zip
 src/packages/*

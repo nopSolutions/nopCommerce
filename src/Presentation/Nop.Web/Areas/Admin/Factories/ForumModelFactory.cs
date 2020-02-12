@@ -136,9 +136,9 @@ namespace Nop.Web.Areas.Admin.Factories
 
             if (forumGroup == null)
                 throw new ArgumentNullException(nameof(forumGroup));
-
+            
             //get forums
-            var forums = forumGroup.Forums.ToList().ToPagedList(searchModel);
+            var forums = _forumService.GetAllForumsByGroupId(forumGroup.Id).ToPagedList(searchModel);
 
             //prepare list model
             var model = new ForumListModel().PrepareToGrid(searchModel, forums, () =>

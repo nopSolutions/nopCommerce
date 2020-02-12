@@ -104,26 +104,23 @@
   <LocaleResource Name="SqlCompact">
     <Value>SQL Server Compact</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
+  <LocaleResource Name="ServerName">
     <Value>שם או כתובת הרשת של שרת הSQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
+  <LocaleResource Name="ServerNameRequired">
     <Value>הזינו שם או כתובת הרשת של שרת הSQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>סיסמה עבור חשבון שרת הSQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>הזינו סיסמה עבור חשבון שרת הSQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlUsername">
     <Value>שם משתמש בחשבון שרת הSQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>הזינו שם משתמש בחשבון שרת הSQL</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Microsoft SQL Server או SQL Express</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>פרטי החנות</Value>
@@ -137,7 +134,7 @@
   <LocaleResource Name="Tooltip2">
     <Value>על מנת להתקין בהצלחה את מערכת ה nopCommerce , עלייך לדעת את מחרוזת החיבור למסד הנתונים. אם אין לך את המידע הזה, באפשרותך  לקבל את המידע מספק האירוח שלך. אם הנך מתקין את nopCommerce על מחשב האישי שלך, באפשרותך לקבל את זה ממנהל המערכת שלך.</Value>
   </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
+  <LocaleResource Name="IntegratedAuthentication">
     <Value>אימות  Windows</Value>
   </LocaleResource>
 </Language>

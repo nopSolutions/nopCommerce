@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net;
 using System.Text;
 using Nop.Core;
@@ -163,7 +163,7 @@ namespace Nop.Services.Orders
                                 formattedAttribute = $"{_localizationService.GetLocalized(attribute, a => a.Name, _workContext.WorkingLanguage.Id)}: {_localizationService.GetLocalized(attributeValue, a => a.Name, _workContext.WorkingLanguage.Id)}";
                                 if (renderPrices)
                                 {
-                                    var priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(attributeValue, customer);
+                                    var priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(attribute, attributeValue, customer);
                                     var priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                                     if (priceAdjustmentBase > 0)
                                     {
@@ -177,7 +177,6 @@ namespace Nop.Services.Orders
                             //encode (if required)
                             if (htmlEncode)
                                 formattedAttribute = WebUtility.HtmlEncode(formattedAttribute);
-
                         }
                     }
 

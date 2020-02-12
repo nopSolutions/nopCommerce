@@ -48,6 +48,5 @@ namespace Nop.Core.Domain.Payments
         /// Set to 0 to generate a new order GUID for each payment attempt
         /// </summary>
         public int RegenerateOrderGuidInterval { get; set; }
-
     }
 }

@@ -73,6 +73,13 @@ namespace Nop.Services.Customers
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
+        /// Gets customer for shopping cart
+        /// </summary>
+        /// <param name="shoppingCart">Shopping cart</param>
+        /// <returns>Result</returns>
+        Customer GetShoppingCartCustomer(IList<ShoppingCartItem> shoppingCart);
+
+        /// <summary>
         /// Delete a customer
         /// </summary>
         /// <param name="customer">Customer</param>
@@ -170,13 +177,6 @@ namespace Nop.Services.Customers
         TaxDisplayType? GetCustomerDefaultTaxDisplayType(Customer customer);
 
         /// <summary>
-        /// Remove address
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="address">Address</param>
-        void RemoveCustomerAddress(Customer customer, Address address);
-
-        /// <summary>
         /// Get full name
         /// </summary>
         /// <param name="customer">Customer</param>
@@ -243,6 +243,19 @@ namespace Nop.Services.Customers
         #region Customer roles
 
         /// <summary>
+        /// Add a customer-customer role mapping
+        /// </summary>
+        /// <param name="roleMapping">Customer-customer role mapping</param>
+        void AddCustomerRoleMapping(CustomerCustomerRoleMapping roleMapping);
+
+        /// <summary>
+        /// Remove a customer-customer role mapping
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="role">Customer role</param>
+        void RemoveCustomerRoleMapping(Customer customer, CustomerRole role);
+
+        /// <summary>
         /// Delete a customer role
         /// </summary>
         /// <param name="customerRole">Customer role</param>
@@ -263,6 +276,22 @@ namespace Nop.Services.Customers
         CustomerRole GetCustomerRoleBySystemName(string systemName);
 
         /// <summary>
+        /// Get customer role identifiers
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="showHidden">A value indicating whether to load hidden records</param>
+        /// <returns>Customer role identifiers</returns>
+        int[] GetCustomerRoleIds(Customer customer, bool showHidden = false);
+
+        /// <summary>
+        /// Gets list of customer roles
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="showHidden">A value indicating whether to load hidden records</param>
+        /// <returns>Result</returns>
+        IList<CustomerRole> GetCustomerRoles(Customer customer, bool showHidden = false);
+
+        /// <summary>
         /// Gets all customer roles
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
@@ -274,6 +303,55 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerRole">Customer role</param>
         void InsertCustomerRole(CustomerRole customerRole);
+
+        /// <summary>
+        /// Gets a value indicating whether customer is in a certain customer role
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="customerRoleSystemName">Customer role system name</param>
+        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
+        /// <returns>Result</returns>
+        bool IsInCustomerRole(Customer customer, string customerRoleSystemName, bool onlyActiveCustomerRoles = true);
+
+        /// <summary>
+        /// Gets a value indicating whether customer is administrator
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
+        /// <returns>Result</returns>
+        bool IsAdmin(Customer customer, bool onlyActiveCustomerRoles = true);
+
+        /// <summary>
+        /// Gets a value indicating whether customer is a forum moderator
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
+        /// <returns>Result</returns>
+        bool IsForumModerator(Customer customer, bool onlyActiveCustomerRoles = true);
+
+        /// <summary>
+        /// Gets a value indicating whether customer is registered
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
+        /// <returns>Result</returns>
+        bool IsRegistered(Customer customer, bool onlyActiveCustomerRoles = true);
+
+        /// <summary>
+        /// Gets a value indicating whether customer is guest
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
+        /// <returns>Result</returns>
+        bool IsGuest(Customer customer, bool onlyActiveCustomerRoles = true);
+
+        /// <summary>
+        /// Gets a value indicating whether customer is vendor
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
+        /// <returns>Result</returns>
+        bool IsVendor(Customer customer, bool onlyActiveCustomerRoles = true);
 
         /// <summary>
         /// Updates the customer role
@@ -335,6 +413,53 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <returns>True if password is expired; otherwise false</returns>
         bool PasswordIsExpired(Customer customer);
+
+        #endregion
+
+        #region Customer address mapping
+
+        /// <summary>
+        /// Gets a list of addresses mapped to customer
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <returns></returns>
+        IList<Address> GetAddressesByCustomerId(int customerId);
+
+        /// <summary>
+        /// Gets a address mapped to customer
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <param name="addressId">Address identifier</param>
+        /// <returns>Result</returns>
+        Address GetCustomerAddress(int customerId, int addressId);
+
+        /// <summary>
+        /// Gets a customer billing address
+        /// </summary>
+        /// <param name="customer">Customer identifier</param>
+        /// <returns>Result</returns>
+        Address GetCustomerBillingAddress(Customer customer);
+
+        /// <summary>
+        /// Gets a customer shipping address
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        Address GetCustomerShippingAddress(Customer customer);
+
+        /// <summary>
+        /// Remove a customer-address mapping record
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="address">Address</param>
+        void RemoveCustomerAddress(Customer customer, Address address);
+
+        /// <summary>
+        /// Inserts a customer-address mapping record
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="address">Address</param>
+        void InsertCustomerAddress(Customer customer, Address address);
 
         #endregion
     }

@@ -6,7 +6,6 @@ using System.Net.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
@@ -16,6 +15,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport.Help;
@@ -332,13 +332,14 @@ namespace Nop.Services.ExportImport
                     try
                     {
                         var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.ProductItem.Name));
-                        product.ProductItem.ProductPictures.Add(new ProductPicture
+                        _productService.InsertProductPicture(new ProductPicture
                         {
                             //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
                             //pictures are duplicated
                             //maybe because entity size is too large
                             PictureId = newPicture.Id,
-                            DisplayOrder = 1
+                            DisplayOrder = 1,
+                            ProductId = product.ProductItem.Id
                         });
                         _productService.UpdateProduct(product.ProductItem);
                     }
@@ -379,7 +380,7 @@ namespace Nop.Services.ExportImport
 
                             var imagesIds = productsImagesIds.ContainsKey(product.ProductItem.Id)
                                 ? productsImagesIds[product.ProductItem.Id]
-                                : new int[0];
+                                : Array.Empty<int>();
 
                             pictureAlreadyExists = allPicturesHashes.Where(p => imagesIds.Contains(p.Key))
                                 .Select(p => p.Value).Any(p => p == newImageHash || p == newValidatedImageHash);
@@ -389,14 +390,17 @@ namespace Nop.Services.ExportImport
                             continue;
 
                         var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.ProductItem.Name));
-                        product.ProductItem.ProductPictures.Add(new ProductPicture
+
+                        _productService.InsertProductPicture(new ProductPicture
                         {
                             //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
                             //pictures are duplicated
                             //maybe because entity size is too large
                             PictureId = newPicture.Id,
-                            DisplayOrder = 1
+                            DisplayOrder = 1,
+                            ProductId = product.ProductItem.Id
                         });
+
                         _productService.UpdateProduct(product.ProductItem);
                     }
                     catch (Exception ex)
@@ -617,9 +621,8 @@ namespace Nop.Services.ExportImport
             var isRequired = productAttributeManager.GetProperty("AttributeIsRequired").BooleanValue;
             var attributeDisplayOrder = productAttributeManager.GetProperty("AttributeDisplayOrder").IntValue;
 
-            var productAttributeMapping =
-                lastLoadedProduct.ProductAttributeMappings.FirstOrDefault(
-                    pam => pam.ProductAttributeId == productAttributeId);
+            var productAttributeMapping = _productAttributeService.GetProductAttributeMappingsByProductId(lastLoadedProduct.Id)
+                .FirstOrDefault(pam => pam.ProductAttributeId == productAttributeId);
 
             if (productAttributeMapping == null)
             {
@@ -1627,7 +1630,7 @@ namespace Nop.Services.ExportImport
                         var categoryList = tempProperty.StringValue;
 
                         //category mappings
-                        var categories = isNew || !allProductsCategoryIds.ContainsKey(product.Id) ? new int[0] : allProductsCategoryIds[product.Id];
+                        var categories = isNew || !allProductsCategoryIds.ContainsKey(product.Id) ? Array.Empty<int>() : allProductsCategoryIds[product.Id];
 
                         var importedCategories = categoryList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
                             .Select(categoryName => new CategoryKey(categoryName))
@@ -1666,7 +1669,8 @@ namespace Nop.Services.ExportImport
 
                         //delete product categories
                         var deletedProductCategories = categories.Where(categoryId => !importedCategories.Contains(categoryId))
-                            .Select(categoryId => product.ProductCategories.First(pc => pc.CategoryId == categoryId));
+                            .Select(categoryId => _categoryService.GetProductCategoriesByProductId(product.Id).First(pc => pc.CategoryId == categoryId));
+
                         foreach (var deletedProductCategory in deletedProductCategories)
                         {
                             _categoryService.DeleteProductCategory(deletedProductCategory);
@@ -1679,7 +1683,7 @@ namespace Nop.Services.ExportImport
                         var manufacturerList = tempProperty.StringValue;
 
                         //manufacturer mappings
-                        var manufacturers = isNew || !allProductsManufacturerIds.ContainsKey(product.Id) ? new int[0] : allProductsManufacturerIds[product.Id];
+                        var manufacturers = isNew || !allProductsManufacturerIds.ContainsKey(product.Id) ? Array.Empty<int>() : allProductsManufacturerIds[product.Id];
                         var importedManufacturers = manufacturerList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
                             .Select(x => allManufacturers.FirstOrDefault(m => m.Name == x.Trim())?.Id ?? int.Parse(x.Trim())).ToList();
                         foreach (var manufacturerId in importedManufacturers)
@@ -1699,7 +1703,7 @@ namespace Nop.Services.ExportImport
 
                         //delete product manufacturers
                         var deletedProductsManufacturers = manufacturers.Where(manufacturerId => !importedManufacturers.Contains(manufacturerId))
-                            .Select(manufacturerId => product.ProductManufacturers.First(pc => pc.ManufacturerId == manufacturerId));
+                            .Select(manufacturerId => _manufacturerService.GetProductManufacturersByProductId(product.Id).First(pc => pc.ManufacturerId == manufacturerId));
                         foreach (var deletedProductManufacturer in deletedProductsManufacturers)
                         {
                             _manufacturerService.DeleteProductManufacturer(deletedProductManufacturer);
@@ -1713,8 +1717,9 @@ namespace Nop.Services.ExportImport
 
                         //searching existing product tags by their id
                         var productTagIds = productTags.Where(pt => int.TryParse(pt, out var _)).Select(int.Parse);
-                        var pruductTagsByIds = product.ProductProductTagMappings
-                            .Select(mapping => mapping.ProductTag).Where(pt => productTagIds.Contains(pt.Id)).ToList();
+
+                        var pruductTagsByIds = _productTagService.GetAllProductTagsByProductId(product.Id).Where(pt => productTagIds.Contains(pt.Id)).ToList();
+
                         productTags.AddRange(pruductTagsByIds.Select(pt => pt.Name));
                         var filter = pruductTagsByIds.Select(pt => pt.Id.ToString()).ToList();
 

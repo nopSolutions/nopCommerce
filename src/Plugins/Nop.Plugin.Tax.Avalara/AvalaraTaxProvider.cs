@@ -46,13 +46,13 @@ namespace Nop.Plugin.Tax.Avalara
         private readonly ILocalizationService _localizationService;
         private readonly IProductService _productService;
         private readonly ISettingService _settingService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITaxPluginManager _taxPluginManager;
         private readonly IWebHelper _webHelper;
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
-        private readonly TaxTransactionLogObjectContext _objectContext;
         private readonly WidgetSettings _widgetSettings;
 
         #endregion
@@ -71,13 +71,13 @@ namespace Nop.Plugin.Tax.Avalara
             ILocalizationService localizationService,
             IProductService productService,
             ISettingService settingService,
+            IStateProvinceService stateProvinceService,
             IStaticCacheManager cacheManager,
             ITaxCategoryService taxCategoryService,
             ITaxPluginManager taxPluginManager,
             IWebHelper webHelper,
             ShippingSettings shippingSettings,
             TaxSettings taxSettings,
-            TaxTransactionLogObjectContext objectContext,
             WidgetSettings widgetSettings)
         {
             _avalaraTaxManager = avalaraTaxManager;
@@ -92,13 +92,13 @@ namespace Nop.Plugin.Tax.Avalara
             _localizationService = localizationService;
             _productService = productService;
             _settingService = settingService;
+            _stateProvinceService = stateProvinceService;
             _cacheManager = cacheManager;
             _taxCategoryService = taxCategoryService;
             _taxPluginManager = taxPluginManager;
             _webHelper = webHelper;
             _shippingSettings = shippingSettings;
             _taxSettings = taxSettings;
-            _objectContext = objectContext;
             _widgetSettings = widgetSettings;
         }
 
@@ -131,35 +131,43 @@ namespace Nop.Plugin.Tax.Avalara
         /// Prepare request parameters to get a tax for the order
         /// </summary>
         /// <param name="order">Order</param>
+        /// <param name="orderItems">Order items</param>
         /// <param name="save">Whether to save tax transaction</param>
         /// <returns>Request parameters to create tax transaction</returns>
-        private CreateTransactionModel PrepareOrderTaxModel(Order order, bool save)
+        private CreateTransactionModel PrepareOrderTaxModel(Order order, IList<OrderItem> orderItems, bool save)
         {
+            if (order is null)
+                throw new ArgumentNullException(nameof(order));
+
+            var customer = _customerService.GetCustomerById(order.CustomerId);
+
             //prepare common parameters
-            var transactionModel = PrepareTaxModel(GetOrderDestinationAddress(order), order.Customer?.Id.ToString(), save);
+            var transactionModel = PrepareTaxModel(GetOrderDestinationAddress(order), customer.Id.ToString(), save);
+
+            var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
 
             //prepare specific order parameters
             transactionModel.code = CommonHelper.EnsureMaximumLength(save ? order.CustomOrderNumber : Guid.NewGuid().ToString(), 50);
             transactionModel.commit = save && _avalaraTaxSettings.CommitTransactions;
             transactionModel.discount = order.OrderSubTotalDiscountExclTax;
-            transactionModel.email = CommonHelper.EnsureMaximumLength(order.BillingAddress?.Email, 50);
+            transactionModel.email = CommonHelper.EnsureMaximumLength(billingAddress.Email, 50);
 
             //set purchased item lines
-            transactionModel.lines = GetItemLines(order);
+            transactionModel.lines = GetItemLines(order, orderItems);
 
             //set whole request tax exemption
-            var exemptedCustomerRole = order.Customer?.CustomerRoles.FirstOrDefault(role => role.Active && role.TaxExempt);
-            if (order.Customer?.IsTaxExempt ?? false)
-                transactionModel.exemptionNo = CommonHelper.EnsureMaximumLength($"Exempt-customer-#{order.Customer?.Id}", 25);
+            var exemptedCustomerRole = _customerService.GetCustomerRoles(customer).FirstOrDefault(role => role.TaxExempt);
+
+            if (customer.IsTaxExempt)
+                transactionModel.exemptionNo = CommonHelper.EnsureMaximumLength($"Exempt-customer-#{customer.Id}", 25);
             else if (!string.IsNullOrEmpty(exemptedCustomerRole?.Name))
                 transactionModel.exemptionNo = CommonHelper.EnsureMaximumLength($"Exempt-{exemptedCustomerRole.Name}", 25);
 
             //whether entity use code is set
-            var entityUseCode = order.Customer != null
-                ? _genericAttributeService.GetAttribute<string>(order.Customer, AvalaraTaxDefaults.EntityUseCodeAttribute)
-                : exemptedCustomerRole != null
+            var entityUseCode = _genericAttributeService.GetAttribute<string>(customer, AvalaraTaxDefaults.EntityUseCodeAttribute) != null
                 ? _genericAttributeService.GetAttribute<string>(exemptedCustomerRole, AvalaraTaxDefaults.EntityUseCodeAttribute)
                 : null;
+
             if (!string.IsNullOrEmpty(entityUseCode))
                 transactionModel.customerUsageType = CommonHelper.EnsureMaximumLength(entityUseCode, 25);
 
@@ -237,11 +245,11 @@ namespace Nop.Plugin.Tax.Avalara
             return address == null ? null : new AddressLocationInfo
             {
                 city = CommonHelper.EnsureMaximumLength(address.City, 50),
-                country = CommonHelper.EnsureMaximumLength(address.Country?.TwoLetterIsoCode, 2),
+                country = CommonHelper.EnsureMaximumLength(_countryService.GetCountryByAddress(address)?.TwoLetterIsoCode, 2),
                 line1 = CommonHelper.EnsureMaximumLength(address.Address1, 50),
                 line2 = CommonHelper.EnsureMaximumLength(address.Address2, 100),
                 postalCode = CommonHelper.EnsureMaximumLength(address.ZipPostalCode, 11),
-                region = CommonHelper.EnsureMaximumLength(address.StateProvince?.Abbreviation, 3)
+                region = CommonHelper.EnsureMaximumLength(_stateProvinceService.GetStateProvinceByAddress(address)?.Abbreviation, 3)
             };
         }
 
@@ -255,16 +263,16 @@ namespace Nop.Plugin.Tax.Avalara
             Address destinationAddress = null;
 
             //tax is based on billing address
-            if (_taxSettings.TaxBasedOn == TaxBasedOn.BillingAddress)
-                destinationAddress = order.BillingAddress;
+            if (_taxSettings.TaxBasedOn == TaxBasedOn.BillingAddress && _addressService.GetAddressById(order.BillingAddressId) is Address billingAddress)
+                destinationAddress = billingAddress;
 
             //tax is based on shipping address
-            if (_taxSettings.TaxBasedOn == TaxBasedOn.ShippingAddress)
-                destinationAddress = order.ShippingAddress;
+            if (_taxSettings.TaxBasedOn == TaxBasedOn.ShippingAddress && order.ShippingAddressId.HasValue && _addressService.GetAddressById(order.ShippingAddressId.Value) is Address shippingAddress)
+                destinationAddress = shippingAddress;
 
             //tax is based on pickup point address
-            if (_taxSettings.TaxBasedOnPickupPointAddress && order.PickupAddress != null)
-                destinationAddress = order.PickupAddress;
+            if (_taxSettings.TaxBasedOnPickupPointAddress && order.PickupAddressId.HasValue && _addressService.GetAddressById(order.PickupAddressId.Value) is Address pickupAddress)
+                destinationAddress = pickupAddress;
 
             //or use default address for tax calculation
             if (destinationAddress == null)
@@ -277,11 +285,12 @@ namespace Nop.Plugin.Tax.Avalara
         /// Get item lines to create tax transaction
         /// </summary>
         /// <param name="order">Order</param>
+        /// <param name="orderItems">Order items</param>
         /// <returns>List of item lines</returns>
-        private List<LineItemModel> GetItemLines(Order order)
+        private List<LineItemModel> GetItemLines(Order order, IList<OrderItem> orderItems)
         {
             //get purchased products details
-            var items = CreateLinesForOrderItems(order).ToList();
+            var items = CreateLinesForOrderItems(order, orderItems).ToList();
 
             //set payment method additional fee as the separate item line
             if (order.PaymentMethodAdditionalFeeExclTax > decimal.Zero)
@@ -302,54 +311,64 @@ namespace Nop.Plugin.Tax.Avalara
         /// Create item lines for purchased order items
         /// </summary>
         /// <param name="order">Order</param>
+        /// <param name="orderItems">Order items</param>
         /// <returns>Collection of item lines</returns>
-        private IEnumerable<LineItemModel> CreateLinesForOrderItems(Order order)
+        private IEnumerable<LineItemModel> CreateLinesForOrderItems(Order order, IList<OrderItem> orderItems)
         {
-            return order.OrderItems.Select(orderItem =>
+            if (orderItems is null)
+                throw new ArgumentNullException(nameof(orderItems));
+
+            var billingAddress = _addressService.GetAddressById(order.BillingAddressId);
+            var customer = _customerService.GetCustomerById(order.CustomerId);
+
+            return orderItems.Select(orderItem =>
             {
+                var product = _productService.GetProductById(orderItem.ProductId);
+
                 var item = new LineItemModel
                 {
                     amount = orderItem.PriceExclTax,
 
                     //item description
-                    description = CommonHelper.EnsureMaximumLength(orderItem.Product?.ShortDescription ?? orderItem.Product?.Name, 2096),
+                    description = CommonHelper.EnsureMaximumLength(product?.ShortDescription ?? product?.Name, 2096),
 
                     //whether the discount to the item was applied
                     discounted = order.OrderSubTotalDiscountExclTax > decimal.Zero,
 
                     //product exemption
-                    exemptionCode = orderItem.Product?.IsTaxExempt ?? false
-                        ? CommonHelper.EnsureMaximumLength($"Exempt-product-#{orderItem.Product.Id}", 25) : null,
+                    exemptionCode = product?.IsTaxExempt ?? false
+                        ? CommonHelper.EnsureMaximumLength($"Exempt-product-#{product.Id}", 25) : null,
 
                     //set SKU as item code
-                    itemCode = CommonHelper.EnsureMaximumLength(orderItem.Product != null ?
-                        _productService.FormatSku(orderItem.Product, orderItem.AttributesXml) : string.Empty, 50),
+                    itemCode = CommonHelper.EnsureMaximumLength(product != null ?
+                        _productService.FormatSku(product, orderItem.AttributesXml) : string.Empty, 50),
 
                     quantity = orderItem.Quantity
                 };
 
                 //force to use billing address as the destination one in the accordance with EU VAT rules (if enabled)
                 var useEuVatRules = _taxSettings.EuVatEnabled
-                    && (orderItem.Product?.IsTelecommunicationsOrBroadcastingOrElectronicServices ?? false)
-                    && ((order.BillingAddress.Country
-                        ?? _countryService.GetCountryById(_genericAttributeService.GetAttribute<int>(order.Customer, NopCustomerDefaults.CountryIdAttribute))
-                        ?? _countryService.GetCountryByTwoLetterIsoCode(_geoLookupService.LookupCountryIsoCode(order.Customer.LastIpAddress)))
+                    && (product?.IsTelecommunicationsOrBroadcastingOrElectronicServices ?? false)
+                    && ((_countryService.GetCountryByAddress(billingAddress)
+                        ?? _countryService.GetCountryById(_genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.CountryIdAttribute))
+                        ?? _countryService.GetCountryByTwoLetterIsoCode(_geoLookupService.LookupCountryIsoCode(customer.LastIpAddress)))
                         ?.SubjectToVat ?? false)
-                    && _genericAttributeService.GetAttribute<int>(order.Customer, NopCustomerDefaults.VatNumberStatusIdAttribute) != (int)VatNumberStatus.Valid;
+                    && _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute) != (int)VatNumberStatus.Valid;
+
                 if (useEuVatRules)
                 {
-                    var destinationAddress = MapAddress(order.BillingAddress);
+                    var destinationAddress = MapAddress(billingAddress);
                     if (destinationAddress != null)
                         item.addresses = new AddressesModel { shipTo = destinationAddress };
                 }
 
                 //set tax code
-                var productTaxCategory = _taxCategoryService.GetTaxCategoryById(orderItem.Product?.TaxCategoryId ?? 0);
+                var productTaxCategory = _taxCategoryService.GetTaxCategoryById(product?.TaxCategoryId ?? 0);
                 item.taxCode = CommonHelper.EnsureMaximumLength(productTaxCategory?.Name, 25);
 
                 //whether entity use code is set
-                var entityUseCode = orderItem.Product != null
-                    ? _genericAttributeService.GetAttribute<string>(orderItem.Product, AvalaraTaxDefaults.EntityUseCodeAttribute) : null;
+                var entityUseCode = product != null
+                    ? _genericAttributeService.GetAttribute<string>(product, AvalaraTaxDefaults.EntityUseCodeAttribute) : null;
                 if (!string.IsNullOrEmpty(entityUseCode))
                     item.customerUsageType = CommonHelper.EnsureMaximumLength(entityUseCode, 25);
 
@@ -439,42 +458,49 @@ namespace Nop.Plugin.Tax.Avalara
             //get checkout attributes values
             var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(order.CheckoutAttributesXml);
 
-            return attributeValues.Where(attributeValue => attributeValue.CheckoutAttribute != null).Select(attributeValue =>
-            {
-                //create line
-                var checkoutAttributeItem = new LineItemModel
+            return attributeValues.SelectMany(x => {
+
+                var lineItemModels = new List<LineItemModel>();
+
+                foreach (var value in x.values)
                 {
-                    amount = attributeValue.PriceAdjustment,
+                    //create line
+                    var checkoutAttributeItem = new LineItemModel
+                    {
+                        amount = value.PriceAdjustment,
 
-                    //item description
-                    description = CommonHelper.EnsureMaximumLength($"{attributeValue.CheckoutAttribute.Name} ({attributeValue.Name})", 2096),
+                        //item description
+                        description = CommonHelper.EnsureMaximumLength($"{x.attribute.Name} ({value.Name})", 2096),
 
-                    //whether the discount to the item was applied
-                    discounted = order.OrderSubTotalDiscountExclTax > decimal.Zero,
+                        //whether the discount to the item was applied
+                        discounted = order.OrderSubTotalDiscountExclTax > decimal.Zero,
 
-                    //set checkout attribute name and value as item code
-                    itemCode = CommonHelper.EnsureMaximumLength($"{attributeValue.CheckoutAttribute.Name}-{attributeValue.Name}", 50),
+                        //set checkout attribute name and value as item code
+                        itemCode = CommonHelper.EnsureMaximumLength($"{x.attribute.Name}-{value.Name}", 50),
 
-                    quantity = 1
-                };
+                        quantity = 1
+                    };
 
-                //whether checkout attribute is tax exempt
-                if (attributeValue.CheckoutAttribute.IsTaxExempt)
-                    checkoutAttributeItem.exemptionCode = "Attribute-non-taxable";
-                else
-                {
-                    //or try to get tax code
-                    var attributeTaxCategory = _taxCategoryService.GetTaxCategoryById(attributeValue.CheckoutAttribute.TaxCategoryId);
-                    checkoutAttributeItem.taxCode = CommonHelper.EnsureMaximumLength(attributeTaxCategory?.Name, 25);
+                    //whether checkout attribute is tax exempt
+                    if (x.attribute.IsTaxExempt)
+                        checkoutAttributeItem.exemptionCode = "Attribute-non-taxable";
+                    else
+                    {
+                        //or try to get tax code
+                        var attributeTaxCategory = _taxCategoryService.GetTaxCategoryById(x.attribute.TaxCategoryId);
+                        checkoutAttributeItem.taxCode = CommonHelper.EnsureMaximumLength(attributeTaxCategory?.Name, 25);
+                    }
+
+                    //whether entity use code is set
+                    var entityUseCode = _genericAttributeService
+                        .GetAttribute<string>(x.attribute, AvalaraTaxDefaults.EntityUseCodeAttribute);
+                    if (!string.IsNullOrEmpty(entityUseCode))
+                        checkoutAttributeItem.customerUsageType = CommonHelper.EnsureMaximumLength(entityUseCode, 25);
+
+                    lineItemModels.Add(checkoutAttributeItem);
                 }
 
-                //whether entity use code is set
-                var entityUseCode = _genericAttributeService
-                    .GetAttribute<string>(attributeValue.CheckoutAttribute, AvalaraTaxDefaults.EntityUseCodeAttribute);
-                if (!string.IsNullOrEmpty(entityUseCode))
-                    checkoutAttributeItem.customerUsageType = CommonHelper.EnsureMaximumLength(entityUseCode, 25);
-
-                return checkoutAttributeItem;
+                return lineItemModels;
             });
         }
 
@@ -502,10 +528,10 @@ namespace Nop.Plugin.Tax.Avalara
 
             //we don't use standard way _cacheManager.Get() due the need write errors to CalculateTaxResult
             if (_cacheManager.IsSet(cacheKey))
-                return new CalculateTaxResult { TaxRate = _cacheManager.Get<decimal>(cacheKey, () => default(decimal)) };
+                return new CalculateTaxResult { TaxRate = _cacheManager.Get(cacheKey, () => default(decimal)) };
 
             //get estimated tax
-            var address = _addressService.GetAddressById(calculateTaxRequest.Address.AddressId);
+            var address = _addressService.GetAddressById(calculateTaxRequest.Address.Id);
             var totalTax = CreateEstimatedTaxTransaction(address, calculateTaxRequest.Customer?.Id.ToString())?.totalTax;
             if (!totalTax.HasValue)
                 return new CalculateTaxResult { Errors = new[] { "No response from the service" }.ToList() };
@@ -532,11 +558,12 @@ namespace Nop.Plugin.Tax.Avalara
         /// Create tax transaction to get tax for the order
         /// </summary>
         /// <param name="order">Order</param>
+        /// <param name="orderItems">Order items</param>
         /// <param name="save">Whether to save tax transaction</param>
         /// <returns>Transaction</returns>
-        public TransactionModel CreateOrderTaxTransaction(Order order, bool save)
+        public TransactionModel CreateOrderTaxTransaction(Order order, IList<OrderItem> orderItems, bool save)
         {
-            var transactionModel = PrepareOrderTaxModel(order, save);
+            var transactionModel = PrepareOrderTaxModel(order, orderItems, save); 
             return _avalaraTaxManager.CreateTaxTransaction(transactionModel, save);
         }
 
@@ -655,9 +682,6 @@ namespace Nop.Plugin.Tax.Avalara
         /// </summary>
         public override void Install()
         {
-            //database objects
-            _objectContext.Install();
-
             //settings
             _settingService.SaveSetting(new AvalaraTaxSettings
             {
@@ -759,9 +783,6 @@ namespace Nop.Plugin.Tax.Avalara
         /// </summary>
         public override void Uninstall()
         {
-            //database objects
-            _objectContext.Uninstall();
-
             //generic attributes
             foreach (var taxCategory in _taxCategoryService.GetAllTaxCategories())
             {

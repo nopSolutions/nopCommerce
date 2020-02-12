@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using LinqToDB.Mapping;
 using Nop.Core.Domain.Configuration;
 
 namespace Nop.Data.Mapping.Configuration
@@ -15,15 +14,12 @@ namespace Nop.Data.Mapping.Configuration
         /// Configures the entity
         /// </summary>
         /// <param name="builder">The builder to be used to configure the entity</param>
-        public override void Configure(EntityTypeBuilder<Setting> builder)
+        public override void Configure(EntityMappingBuilder<Setting> builder)
         {
-            builder.ToTable(nameof(Setting));
-            builder.HasKey(setting => setting.Id);
-
-            builder.Property(setting => setting.Name).HasMaxLength(200).IsRequired();
-            builder.Property(setting => setting.Value).IsRequired();
-
-            base.Configure(builder);
+            builder.HasTableName(nameof(Setting));
+            builder.Property(setting => setting.Name).HasLength(200).IsNullable(false);
+            builder.Property(setting => setting.Value).IsNullable(false);
+            builder.Property(setting => setting.StoreId);
         }
 
         #endregion

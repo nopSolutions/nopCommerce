@@ -3,9 +3,9 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Customers;
+using Nop.Data;
 using Nop.Services.Affiliates;
 using Nop.Services.Customers;
 
@@ -14,7 +14,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents filter attribute that checks and updates affiliate of customer
     /// </summary>
-    public class CheckAffiliateAttribute : TypeFilterAttribute
+    public sealed class CheckAffiliateAttribute : TypeFilterAttribute
     {
         #region Ctor
 

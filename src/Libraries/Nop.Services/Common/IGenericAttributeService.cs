@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 
@@ -68,5 +69,17 @@ namespace Nop.Services.Common
         /// <param name="defaultValue">Default value</param>
         /// <returns>Attribute</returns>
         TPropType GetAttribute<TPropType>(BaseEntity entity, string key, int storeId = 0, TPropType defaultValue = default(TPropType));
+
+        /// <summary>
+        /// Get an attribute of an entity
+        /// </summary>
+        /// <typeparam name="TPropType">Property type</typeparam>
+        /// <param name="entityId">Entity identifier</param>
+        /// <param name="key">Key</param>
+        /// <param name="storeId">Load a value specific for a certain store; pass 0 to load a value shared for all stores</param>
+        /// <param name="defaultValue">Default value</param>
+        /// <returns>Attribute</returns>
+        TPropType GetAttribute<TEntity, TPropType>(int entityId, string key, int storeId = 0, TPropType defaultValue = default(TPropType))
+            where TEntity : BaseEntity;
     }
 }
