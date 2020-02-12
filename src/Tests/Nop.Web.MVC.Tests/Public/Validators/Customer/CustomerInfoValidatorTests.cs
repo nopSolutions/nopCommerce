@@ -91,20 +91,32 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_have_error_when_lastName_is_null_or_empty()
         {
+            var model = new CustomerInfoModel();
+
+            //required
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
                 {
                     LastNameEnabled = true,
                     LastNameRequired = true
                 });
-
-            var model = new CustomerInfoModel
-            {
-                LastName = null
-            };
+            model.LastName = null;
             validator.ShouldHaveValidationErrorFor(x => x.LastName, model);
             model.LastName = "";
             validator.ShouldHaveValidationErrorFor(x => x.LastName, model);
+
+
+            //not required
+            validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
+                new CustomerSettings
+                {
+                    LastNameEnabled = true,
+                    LastNameRequired = false
+                });
+            model.LastName = null;
+            validator.ShouldNotHaveValidationErrorFor(x => x.LastName, model);
+            model.LastName = "";
+            validator.ShouldNotHaveValidationErrorFor(x => x.LastName, model);
         }
         [Test]
         public void Should_not_have_error_when_lastName_is_specified()
@@ -112,8 +124,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
                 new CustomerSettings
                 {
-                    LastNameEnabled = true,
-                    LastNameRequired = true
+                    LastNameEnabled = true
                 });
 
             var model = new CustomerInfoModel
