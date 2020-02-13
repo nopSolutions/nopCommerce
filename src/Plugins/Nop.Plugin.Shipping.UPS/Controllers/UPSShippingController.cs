@@ -19,6 +19,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
 {
     [AuthorizeAdmin]
     [Area(AreaNames.Admin)]
+    [AutoValidateAntiforgeryToken]
     public class UPSShippingController : BasePluginController
     {
         #region Fields
@@ -102,7 +103,6 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult Configure(UPSShippingModel model)
         {
             //whether user has the authority to manage configuration

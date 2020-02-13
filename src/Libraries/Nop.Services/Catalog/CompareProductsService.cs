@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Http;
 
@@ -17,6 +18,7 @@ namespace Nop.Services.Catalog
         private readonly CatalogSettings _catalogSettings;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IProductService _productService;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -24,11 +26,13 @@ namespace Nop.Services.Catalog
 
         public CompareProductsService(CatalogSettings catalogSettings,
             IHttpContextAccessor httpContextAccessor,
-            IProductService productService)
+            IProductService productService,
+            IWebHelper webHelper)
         {
             _catalogSettings = catalogSettings;
             _httpContextAccessor = httpContextAccessor;
             _productService = productService;
+            _webHelper = webHelper;
         }
 
         #endregion
@@ -75,7 +79,8 @@ namespace Nop.Services.Catalog
             var cookieOptions = new CookieOptions
             {
                 Expires = DateTime.Now.AddHours(cookieExpires),
-                HttpOnly = true
+                HttpOnly = true,
+                Secure =  _webHelper.IsCurrentConnectionSecured()
             };
 
             //add cookie

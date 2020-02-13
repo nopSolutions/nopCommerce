@@ -23,6 +23,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
 {
     [AuthorizeAdmin]
     [Area(AreaNames.Admin)]
+    [AutoValidateAntiforgeryToken]
     public class FixedByWeightByTotalController : BasePluginController
     {
         #region Fields
@@ -114,7 +115,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult Configure(ConfigurationModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -128,6 +128,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public IActionResult SaveMode(bool value)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -165,7 +166,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult UpdateFixedShippingRate(FixedRateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -181,7 +181,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         #region Rate by weight
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult RateByWeightByTotalList(ConfigurationModel searchModel, ConfigurationModel filter)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -316,7 +315,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
         
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult AddRateByWeightByTotalPopup(ShippingByWeightByTotalModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -411,7 +409,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult EditRateByWeightByTotalPopup(ShippingByWeightByTotalModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -445,7 +442,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult DeleteRateByWeightByTotal(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))

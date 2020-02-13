@@ -10,7 +10,6 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
@@ -40,6 +39,7 @@ using Nop.Web.Models.ShoppingCart;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class ShoppingCartController : BasePublicController
     {
         #region Fields
@@ -244,7 +244,7 @@ namespace Nop.Web.Controllers
                         break;
                     case AttributeControlType.FileUpload:
                         {
-                            Guid.TryParse(form[controlId], out Guid downloadGuid);
+                            Guid.TryParse(form[controlId], out var downloadGuid);
                             var download = _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
@@ -470,7 +470,7 @@ namespace Nop.Web.Controllers
                         break;
                     case AttributeControlType.FileUpload:
                         {
-                            Guid.TryParse(form[controlId], out Guid downloadGuid);
+                            Guid.TryParse(form[controlId], out var downloadGuid);
                             var download = _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
@@ -626,6 +626,7 @@ namespace Nop.Web.Controllers
         //add product to cart using AJAX
         //currently we use this method on catalog pages (category/manufacturer/etc)
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult AddProductToCart_Catalog(int productId, int shoppingCartTypeId,
             int quantity, bool forceredirection = false)
         {
@@ -822,6 +823,7 @@ namespace Nop.Web.Controllers
         //add product to cart using AJAX
         //currently we use this method on the product details pages
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult AddProductToCart_Details(int productId, int shoppingCartTypeId, IFormCollection form)
         {
             var product = _productService.GetProductById(productId);
@@ -886,7 +888,7 @@ namespace Nop.Web.Controllers
                 {
                     if (formKey.Equals($"addtocart_{productId}.CustomerEnteredPrice", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        if (decimal.TryParse(form[formKey], out decimal customerEnteredPrice))
+                        if (decimal.TryParse(form[formKey], out var customerEnteredPrice))
                             customerEnteredPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(customerEnteredPrice, _workContext.WorkingCurrency);
                         break;
                     }
@@ -928,6 +930,7 @@ namespace Nop.Web.Controllers
         //handle product attribute selection event. this way we return new price, overridden gtin/sku/mpn
         //currently we use this method on the product details pages
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult ProductDetails_AttributeChange(int productId, bool validateAttributeConditions,
             bool loadPicture, IFormCollection form)
         {
@@ -984,7 +987,7 @@ namespace Nop.Web.Controllers
                     ShoppingCartType.ShoppingCart,
                     1, attributeXml, 0,
                     rentalStartDate, rentalEndDate,
-                    true, out decimal _, out _);
+                    true, out var _, out _);
                 var finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out var _);
                 var finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
                 price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
@@ -1074,6 +1077,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult CheckoutAttributeChange(IFormCollection form, bool isEditable)
         {
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
@@ -1114,6 +1118,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult UploadFileProductAttribute(int attributeId)
         {
             var attribute = _productAttributeService.GetProductAttributeMappingById(attributeId);
@@ -1195,6 +1200,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult UploadFileCheckoutAttribute(int attributeId)
         {
             var attribute = _checkoutAttributeService.GetCheckoutAttributeById(attributeId);
@@ -1518,7 +1524,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [PublicAntiForgery]
         [HttpPost]
         public virtual IActionResult GetEstimateShipping(int? countryId, int? stateProvinceId, string zipPostalCode, IFormCollection form)
         {
@@ -1643,8 +1648,7 @@ namespace Nop.Web.Controllers
                     foreach (var formKey in form.Keys)
                         if (formKey.Equals($"itemquantity{sci.Id}", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            int newQuantity;
-                            if (int.TryParse(form[formKey], out newQuantity))
+                            if (int.TryParse(form[formKey], out var newQuantity))
                             {
                                 var currSciWarnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
                                     sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice,
@@ -1766,7 +1770,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("EmailWishlist")]
-        [PublicAntiForgery]
         [FormValueRequired("send-email")]
         [ValidateCaptcha]
         public virtual IActionResult EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid)

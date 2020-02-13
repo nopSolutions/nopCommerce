@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Nop.Services.Media.RoxyFileman;
 using Nop.Services.Security;
-using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -12,7 +12,7 @@ namespace Nop.Web.Areas.Admin.Controllers
     //the original file was \RoxyFileman-1.4.5-net\fileman\asp_net\main.ashx
 
     //do not validate request token (XSRF)
-    [AdminAntiForgery(true)]
+    [IgnoreAntiforgeryToken]
     public class RoxyFilemanController : BaseAdminController
     {
         #region Fields

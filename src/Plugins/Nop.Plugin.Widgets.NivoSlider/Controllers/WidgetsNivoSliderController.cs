@@ -14,6 +14,7 @@ using Nop.Web.Framework.Controllers;
 namespace Nop.Plugin.Widgets.NivoSlider.Controllers
 {
     [Area(AreaNames.Admin)]
+    [AutoValidateAntiforgeryToken]
     public class WidgetsNivoSliderController : BasePluginController
     {
         private readonly ILocalizationService _localizationService;

@@ -155,7 +155,10 @@
         <div class="wrapper">
             <div class="content-wrapper">
                 @await Html.PartialAsync("~/Areas/Admin/Views/Shared/Notifications.cshtml")
-                @RenderBody()
+                <div>
+                    <nop-antiforgery-token />
+                    @RenderBody()
+                </div>
             </div>
         </div>
         @Html.NopCssFiles(ResourceLocation.Footer)

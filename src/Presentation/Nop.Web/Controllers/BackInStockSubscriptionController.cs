@@ -88,6 +88,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult SubscribePopupPOST(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -200,6 +201,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("CustomerSubscriptions")]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult CustomerSubscriptionsPOST(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)

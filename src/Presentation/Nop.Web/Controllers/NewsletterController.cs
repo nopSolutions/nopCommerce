@@ -36,6 +36,7 @@ namespace Nop.Web.Controllers
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult SubscribeNewsletter(string email, bool subscribe)
         {
             string result;
