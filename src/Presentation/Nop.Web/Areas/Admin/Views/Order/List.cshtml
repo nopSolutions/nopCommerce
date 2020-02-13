@@ -32,7 +32,7 @@
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <li>
-                        <button type="submit" name="exportxml-all">
+                        <button asp-action="ExportXml" type="submit" name="exportxml-all">
                             <i class="fa fa-file-code-o"></i>
                             @T("Admin.Common.ExportToXml.All")
                         </button>
@@ -45,7 +45,7 @@
                     </li>
                     <li class="divider"></li>
                     <li>
-                        <button type="submit" name="exportexcel-all">
+                        <button asp-action="ExportExcel" type="submit" name="exportexcel-all">
                             <i class="fa fa-file-excel-o"></i>
                             @T("Admin.Common.ExportToExcel.All")
                         </button>
@@ -69,7 +69,7 @@
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <li>
-                        <button type="submit" name="pdf-invoice-all">
+                        <button asp-action="PdfInvoice" type="submit" name="pdf-invoice-all">
                             @T("Admin.Orders.PdfInvoices.All")
                         </button>
                     </li>

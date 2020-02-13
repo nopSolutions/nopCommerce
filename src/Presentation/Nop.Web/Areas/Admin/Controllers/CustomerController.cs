@@ -1577,7 +1577,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Export / Import
 
-        [HttpPost, ActionName("List")]
+        [HttpPost, ActionName("ExportExcel")]
         [FormValueRequired("exportexcel-all")]
         public virtual IActionResult ExportExcelAll(CustomerSearchModel model)
         {
@@ -1635,7 +1635,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        [HttpPost, ActionName("List")]
+        [HttpPost, ActionName("ExportXML")]
         [FormValueRequired("exportxml-all")]
         public virtual IActionResult ExportXmlAll(CustomerSearchModel model)
         {
