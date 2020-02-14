@@ -292,6 +292,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ProductsByTagPageSizeOptions_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ProductsByTagPageSize_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ProductSearchAutoCompleteEnabled_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.ProductSearchEnabled_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ProductSearchAutoCompleteNumberOfProducts_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ProductSearchTermMinimumLength_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.RecentlyViewedProductsEnabled_OverrideForStore, options => options.Ignore())
