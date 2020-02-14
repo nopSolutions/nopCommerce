@@ -146,6 +146,9 @@ namespace Nop.Web.Models.Catalog
             public bool DisableBuyButton { get; set; }
             public bool DisableWishlistButton { get; set; }
 
+            //Porttomis Inc.
+            public bool RequiresEditor { get; set; }
+            
             //rental
             public bool IsRental { get; set; }
 

@@ -92,6 +92,11 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public bool DisableBuyButton { get; set; }
 
+        /// <summary> //Porttomis Inc.
+        /// Gets or sets a value indicating whether 'Disable buy button' field is shown
+        /// </summary>
+        public bool RequiresEditor { get; set; }
+        
         /// <summary>
         /// Gets or sets a value indicating whether 'Disable wishlist button' field is shown
         /// </summary>
@@ -326,5 +331,20 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether 'Stock quantity history' tab is shown
         /// </summary>
         public bool StockQuantityHistory { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Stock quantity history' tab is shown
+        /// </summary>
+        public bool Editor_WorkSpace { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Stock quantity history' tab is shown
+        /// </summary>
+        public bool Editor_ViewPrefs { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Stock quantity history' tab is shown
+        /// </summary>
+        public bool Editor_ViewConstraints { get; set; }
     }
 }

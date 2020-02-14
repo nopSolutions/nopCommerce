@@ -63,6 +63,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.DisableBuyButton")]
         public bool DisableBuyButton { get; set; }
 
+        //Porttomis Inc.
+        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.RequiresEditor")]
+        public bool RequiresEditor { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.DisableWishlistButton")]
         public bool DisableWishlistButton { get; set; }
 
@@ -203,6 +207,15 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.StockQuantityHistory")]
         public bool StockQuantityHistory { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.Editor_WorkSpace")]
+        public bool Editor_WorkSpace { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.Editor_ViewPrefs")]
+        public bool Editor_ViewPrefs { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.Editor_ViewConstraints")]
+        public bool Editor_ViewConstraints { get; set; }
 
         #endregion
     }

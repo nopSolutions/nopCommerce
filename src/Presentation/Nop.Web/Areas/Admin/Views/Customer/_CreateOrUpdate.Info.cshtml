@@ -35,6 +35,17 @@
 }
 
 <div class="panel-body">
+    <div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="StoreId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="StoreId" asp-items="Model.AvailableStores" />
+                <span asp-validation-for="StoreId"></span>
+            </div>
+        </div>
+    </div>
     @if (Model.UsernamesEnabled)
     {
         <div class="form-group">
@@ -301,24 +312,24 @@
     }
     @*// Porttomis Inc.*@
     @*@if (Model.AvailableNewsletterSubscriptionStores != null && Model.AvailableNewsletterSubscriptionStores.Count > 0)
-    {
-        <div class="form-group">
-            <div class="col-md-3">
-                <nop-label asp-for="SelectedNewsletterSubscriptionStoreIds" />
+        {
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="SelectedNewsletterSubscriptionStoreIds" />
+                </div>
+                <div class="col-md-9">
+                    @foreach (var store in Model.AvailableNewsletterSubscriptionStores)
+                    {
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="SelectedNewsletterSubscriptionStoreIds" value="@store.Value" checked="@store.Selected" />
+                                (@(store.Text))
+                            </label>
+                        </div>
+                    }
+                </div>
             </div>
-            <div class="col-md-9">
-                @foreach (var store in Model.AvailableNewsletterSubscriptionStores)
-                {
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" name="SelectedNewsletterSubscriptionStoreIds" value="@store.Value" checked="@store.Selected" />
-                            (@(store.Text))
-                        </label>
-                    </div>
-                }
-            </div>
-        </div>
-    }*@
+        }*@
     <div class="form-group">
         <div class="col-md-3">
             <nop-label asp-for="SelectedCustomerRoleIds" />
@@ -386,7 +397,7 @@
             <span asp-validation-for="Active"></span>
         </div>
     </div>
-    
+
     @if (Model.Id > 0 && Model.CustomerAssociatedExternalAuthRecordsSearchModel.AssociatedExternalAuthRecords.Count > 0)
     {
         <div class="form-group">

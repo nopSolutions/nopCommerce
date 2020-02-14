@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Discounts;
@@ -389,6 +389,11 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public bool DisableBuyButton { get; set; }
 
+        /// <summary> //Porttomis Inc.
+        /// Gets or sets a value indicating whether to disable buy (Add to cart) button
+        /// </summary>
+        public bool RequiresEditor { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether to disable "Add to wishlist" button
         /// </summary>
@@ -553,6 +558,25 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the date and time of product update
         /// </summary>
         public DateTime UpdatedOnUtc { get; set; }
+
+
+        /// <summary>
+        /// //Porttomis Inc.
+        /// Gets or sets the date and time of product update
+        /// </summary>
+        public string Editor_WorkSpace { get; set; }
+
+        /// <summary>
+        /// //Porttomis Inc.
+        /// Gets or sets the date and time of product update
+        /// </summary>
+        public string Editor_ViewPrefs { get; set; }
+
+        /// <summary>
+        /// //Porttomis Inc.
+        /// Gets or sets the date and time of product update
+        /// </summary>
+        public string Editor_ViewConstraints { get; set; }
 
         /// <summary>
         /// Gets or sets the product type

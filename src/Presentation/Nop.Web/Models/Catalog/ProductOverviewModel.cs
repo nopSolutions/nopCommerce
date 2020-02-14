@@ -49,6 +49,9 @@ namespace Nop.Web.Models.Catalog
             public string BasePricePAngV { get; set; }
 
             public bool DisableBuyButton { get; set; }
+
+            //Porttomis Inc.
+            public bool RequiresEditor { get; set; }
             public bool DisableWishlistButton { get; set; }
             public bool DisableAddToCompareListButton { get; set; }
 

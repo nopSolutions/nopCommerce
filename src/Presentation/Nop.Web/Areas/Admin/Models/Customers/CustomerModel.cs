@@ -17,6 +17,9 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         public CustomerModel()
         {
+            // Porttomis Inc.
+            AvailableStores = new List<SelectListItem>();
+
             AvailableTimeZones = new List<SelectListItem>();
             SendEmail = new SendEmailModel() { SendImmediately = true };
             SendPm = new SendPmModel();
@@ -43,6 +46,13 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         #endregion
 
         #region Properties
+
+         // Porttomis Inc.
+       [NopResourceDisplayName("Admin.Customers.Customers.Fields.StoreId")]
+        public int StoreId { get; set; }
+        // Porttomis Inc.
+        public IList<SelectListItem> AvailableStores { get; set; }
+
 
         public bool UsernamesEnabled { get; set; }
 
@@ -165,7 +175,7 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         public string TimeZoneId { get; set; }
 
         public bool AllowCustomersToSetTimeZone { get; set; }
-
+        
         public IList<SelectListItem> AvailableTimeZones { get; set; }
 
         //EU VAT

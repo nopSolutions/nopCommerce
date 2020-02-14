@@ -786,6 +786,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.DisplayVatNumber = false;
             }
 
+            //prepare available stores Porttomis Inc.
+            _baseAdminModelFactory.PrepareStores(model.AvailableStores,
+                defaultItemText: _localizationService.GetResource("Admin.Customers.Customers.Fields.UserMappedStore.None"));
+
+
             //prepare available vendors
             _baseAdminModelFactory.PrepareVendors(model.AvailableVendors,
                 defaultItemText: _localizationService.GetResource("Admin.Customers.Customers.Fields.Vendor.None"));

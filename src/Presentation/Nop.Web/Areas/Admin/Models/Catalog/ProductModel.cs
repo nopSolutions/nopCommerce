@@ -106,6 +106,15 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AdminComment")]
         public string AdminComment { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Editor_WorkSpace")]
+        public string Editor_WorkSpace { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Editor_ViewPrefs")]
+        public string Editor_ViewPrefs { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Editor_ViewConstraints")]
+        public string Editor_ViewConstraints { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ShowOnHomepage")]
         public bool ShowOnHomepage { get; set; }
 
@@ -296,6 +305,10 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisableBuyButton")]
         public bool DisableBuyButton { get; set; }
 
+        // Porttomis Inc.
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.RequiresEditor")]
+        public bool RequiresEditor { get; set; }
+        
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisableWishlistButton")]
         public bool DisableWishlistButton { get; set; }
 
