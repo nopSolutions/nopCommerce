@@ -5552,12 +5552,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteEnabled">
     <Value>Search autocomplete enabled</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteEnabled.Hint">
+    <Value>Check to enabled autocomplete in the search box.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchEnabled">
     <Value>Search enabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteEnabled.Hint">
-    <Value>Check to enabled autocomplete in the search box.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchEnabled.Hint">
     <Value>Check to enabled the search box.</Value>

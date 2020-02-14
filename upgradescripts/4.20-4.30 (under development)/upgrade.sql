@@ -256,6 +256,12 @@ set @resources='
   <LocaleResource Name="Products.Qty.AriaLabel">
     <Value>Enter a quantity</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchEnabled">
+    <Value>Search enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchEnabled.Hint">
+    <Value>Check to enabled the search box.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1403,5 +1409,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.lastnam
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'customersettings.lastnamerequired', 'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'catalogsettings.productsearchenabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'catalogsettings.productsearchenabled', 'true', 0)
 END
 GO
