@@ -21,6 +21,9 @@ stages:
     pool:
       vmImage: 'ubuntu-16.04'
 
+    variables:
+      wwwrootDir: 'src/Presentation/Nop.Web/wwwroot'
+
     steps:
     - task: UseDotNet@2
       displayName: 'Use .NET Core SDK $(dotnetSdkVersion)'
