@@ -42,6 +42,7 @@ stages:
         arguments: '--no-restore --configuration $(buildConfiguration)'
         projects: '**/*.csproj'
 
+    #
     - task: DotNetCoreCLI@2
       displayName: 'Install ReportGenerator'
       inputs:
@@ -53,12 +54,12 @@ stages:
       displayName: 'Run unit tests - $(buildConfiguration)'
       inputs:
         command: 'test'
-        arguments: '--no-build --configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat="cobertura%2copencover" /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
+        arguments: '--no-build --configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
         publishTestResults: true
         projects: '**/*.Tests.csproj'
 
     - script: |
-        reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.opencover.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines
+        reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.opencover.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines;Cobertura
       displayName: 'Create code coverage report'
 
     - task: PublishCodeCoverageResults@1
