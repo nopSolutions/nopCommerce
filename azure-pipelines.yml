@@ -59,7 +59,7 @@ stages:
         projects: '**/*.Tests.csproj'
 
     - script: |
-        reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.opencover.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines;Cobertura
+        reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.opencover.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines
       displayName: 'Create code coverage report'
 
     - task: PublishCodeCoverageResults@1
