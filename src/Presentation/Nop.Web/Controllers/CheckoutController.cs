@@ -29,6 +29,7 @@ using Nop.Web.Models.Checkout;
 namespace Nop.Web.Controllers
 {
     [HttpsRequirement(SslRequirement.Yes)]
+    [AutoValidateAntiforgeryToken]
     public partial class CheckoutController : BasePublicController
     {
         #region Fields
@@ -239,6 +240,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("CheckoutBillingAddress");
         }
 
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult Completed(int? orderId)
         {
             //validation
@@ -1151,6 +1153,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult OpcSaveBilling(CheckoutBillingAddressModel model, IFormCollection form)
         {
             try
@@ -1294,6 +1297,7 @@ namespace Nop.Web.Controllers
             }
         }
 
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult OpcSaveShipping(CheckoutShippingAddressModel model, IFormCollection form)
         {
             try
@@ -1425,6 +1429,7 @@ namespace Nop.Web.Controllers
             }
         }
 
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult OpcSaveShippingMethod(string shippingoption)
         {
             try
@@ -1491,6 +1496,7 @@ namespace Nop.Web.Controllers
             }
         }
 
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult OpcSavePaymentMethod(string paymentmethod, CheckoutPaymentMethodModel model)
         {
             try
@@ -1560,6 +1566,7 @@ namespace Nop.Web.Controllers
             }
         }
 
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult OpcSavePaymentInfo(IFormCollection form)
         {
             try
@@ -1627,6 +1634,7 @@ namespace Nop.Web.Controllers
             }
         }
 
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult OpcConfirmOrder()
         {
             try

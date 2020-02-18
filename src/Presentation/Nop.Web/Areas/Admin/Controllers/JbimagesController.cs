@@ -5,7 +5,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Infrastructure;
 using Nop.Services.Security;
-using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -13,7 +12,7 @@ namespace Nop.Web.Areas.Admin.Controllers
     /// Controller used by jbimages (JustBoil.me) plugin (TimyMCE)
     /// </summary>
     //do not validate request token (XSRF)
-    [AdminAntiForgery(true)]
+    [IgnoreAntiforgeryToken]
     public partial class JbimagesController : BaseAdminController
     {
         #region Const
@@ -83,6 +82,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return View();
             }
 
+            //A warning (SCS0018 - Path Traversal) from the "Security Code Scan" analyzer may appear at this point. 
+            //In this case, it is not relevant. The input is not supplied by user.
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 uploadFile.CopyTo(fileStream);

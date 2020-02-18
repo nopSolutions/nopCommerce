@@ -24,16 +24,6 @@ namespace Nop.Core.Domain.Security
         public List<string> AdminAreaAllowedIpAddresses { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether XSRF protection for admin area should be enabled
-        /// </summary>
-        public bool EnableXsrfProtectionForAdminArea { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether XSRF protection for public store should be enabled
-        /// </summary>
-        public bool EnableXsrfProtectionForPublicStore { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether honeypot is enabled on the registration page
         /// </summary>
         public bool HoneypotEnabled { get; set; }

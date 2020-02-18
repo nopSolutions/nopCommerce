@@ -384,6 +384,10 @@ namespace Nop.Web.Factories
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             model.VatNumberStatusNote = _localizationService.GetLocalizedEnum((VatNumberStatus)_genericAttributeService
                 .GetAttribute<int>(customer, NopCustomerDefaults.VatNumberStatusIdAttribute));
+            model.FirstNameEnabled = _customerSettings.FirstNameEnabled;
+            model.LastNameEnabled = _customerSettings.LastNameEnabled;
+            model.FirstNameRequired = _customerSettings.FirstNameRequired;
+            model.LastNameRequired = _customerSettings.LastNameRequired;
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.DateOfBirthRequired = _customerSettings.DateOfBirthRequired;
@@ -473,6 +477,10 @@ namespace Nop.Web.Factories
 
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             //form fields
+            model.FirstNameEnabled = _customerSettings.FirstNameEnabled;
+            model.LastNameEnabled = _customerSettings.LastNameEnabled;
+            model.FirstNameRequired = _customerSettings.FirstNameRequired;
+            model.LastNameRequired = _customerSettings.LastNameRequired;
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.DateOfBirthRequired = _customerSettings.DateOfBirthRequired;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -43,6 +43,7 @@ using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class CustomerController : BasePublicController
     {
         #region Fields
@@ -384,7 +385,6 @@ namespace Nop.Web.Controllers
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
-        [PublicAntiForgery]
         public virtual IActionResult Login(LoginModel model, string returnUrl, bool captchaValid)
         {
             //validate CAPTCHA
@@ -522,7 +522,6 @@ namespace Nop.Web.Controllers
 
         [ValidateCaptcha]
         [HttpPost, ActionName("PasswordRecovery")]
-        [PublicAntiForgery]
         [FormValueRequired("send-email")]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
@@ -605,7 +604,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("PasswordRecoveryConfirm")]
-        [PublicAntiForgery]
         [FormValueRequired("set-password")]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
@@ -680,7 +678,6 @@ namespace Nop.Web.Controllers
         [HttpPost]
         [ValidateCaptcha]
         [ValidateHoneypot]
-        [PublicAntiForgery]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult Register(RegisterModel model, string returnUrl, bool captchaValid, IFormCollection form)
@@ -755,8 +752,10 @@ namespace Nop.Web.Controllers
                     //form fields
                     if (_customerSettings.GenderEnabled)
                         _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.GenderAttribute, model.Gender);
-                    _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.FirstNameAttribute, model.FirstName);
-                    _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.LastNameAttribute, model.LastName);
+                    if (_customerSettings.FirstNameEnabled)
+                        _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.FirstNameAttribute, model.FirstName);
+                    if (_customerSettings.LastNameEnabled)
+                        _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.LastNameAttribute, model.LastName);
                     if (_customerSettings.DateOfBirthEnabled)
                     {
                         var dateOfBirth = model.ParseDateOfBirth();
@@ -975,6 +974,7 @@ namespace Nop.Web.Controllers
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult RegisterResult(string returnUrl)
         {
             if (string.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
@@ -984,7 +984,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult CheckUsernameAvailability(string username)
@@ -1076,7 +1075,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         public virtual IActionResult Info(CustomerInfoModel model, IFormCollection form)
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1160,8 +1158,10 @@ namespace Nop.Web.Controllers
                     //form fields
                     if (_customerSettings.GenderEnabled)
                         _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.GenderAttribute, model.Gender);
-                    _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.FirstNameAttribute, model.FirstName);
-                    _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.LastNameAttribute, model.LastName);
+                    if (_customerSettings.FirstNameEnabled)
+                        _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.FirstNameAttribute, model.FirstName);
+                    if (_customerSettings.LastNameEnabled)
+                        _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.LastNameAttribute, model.LastName);
                     if (_customerSettings.DateOfBirthEnabled)
                     {
                         var dateOfBirth = model.ParseDateOfBirth();
@@ -1247,7 +1247,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         public virtual IActionResult RemoveExternalAssociation(int id)
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1345,7 +1344,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         [HttpsRequirement(SslRequirement.Yes)]
         public virtual IActionResult AddressDelete(int addressId)
         {
@@ -1388,7 +1386,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         public virtual IActionResult AddressAdd(CustomerAddressEditModel model, IFormCollection form)
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1456,7 +1453,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         public virtual IActionResult AddressEdit(CustomerAddressEditModel model, int addressId, IFormCollection form)
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1548,7 +1544,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         public virtual IActionResult ChangePassword(ChangePasswordModel model)
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1595,7 +1590,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Avatar")]
-        [PublicAntiForgery]
         [FormValueRequired("upload-avatar")]
         public virtual IActionResult UploadAvatar(CustomerAvatarModel model, IFormFile uploadedFile)
         {
@@ -1649,7 +1643,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Avatar")]
-        [PublicAntiForgery]
         [FormValueRequired("remove-avatar")]
         public virtual IActionResult RemoveAvatar(CustomerAvatarModel model)
         {
@@ -1687,7 +1680,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("GdprTools")]
-        [PublicAntiForgery]
         [FormValueRequired("export-data")]
         public virtual IActionResult GdprToolsExport()
         {
@@ -1707,7 +1699,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("GdprTools")]
-        [PublicAntiForgery]
         [FormValueRequired("delete-account")]
         public virtual IActionResult GdprToolsDelete()
         {

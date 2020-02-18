@@ -6284,6 +6284,7 @@ namespace Nop.Services.Installation
                 CompareProductsEnabled = true,
                 CompareProductsNumber = 4,
                 ProductSearchAutoCompleteEnabled = true,
+                ProductSearchEnabled = true,
                 ProductSearchAutoCompleteNumberOfProducts = 10,
                 ShowLinkToAllResultInSearchAutoComplete = false,
                 ProductSearchTermMinimumLength = 3,
@@ -6376,6 +6377,10 @@ namespace Nop.Services.Installation
                 HideBackInStockSubscriptionsTab = false,
                 DownloadableProductsValidateUser = false,
                 CustomerNameFormat = CustomerNameFormat.ShowFirstName,
+                FirstNameEnabled = true,
+                FirstNameRequired = true,
+                LastNameEnabled = true,
+                LastNameRequired = true,
                 GenderEnabled = true,
                 DateOfBirthEnabled = true,
                 DateOfBirthRequired = false,
@@ -6574,8 +6579,6 @@ namespace Nop.Services.Installation
                 ForceSslForAllPages = true,
                 EncryptionKey = CommonHelper.GenerateRandomDigitCode(16),
                 AdminAreaAllowedIpAddresses = null,
-                EnableXsrfProtectionForAdminArea = true,
-                EnableXsrfProtectionForPublicStore = true,
                 HoneypotEnabled = false,
                 HoneypotInputName = "hpinput",
                 AllowNonAsciiCharactersInHeaders = true
@@ -10965,36 +10968,38 @@ namespace Nop.Services.Installation
             _relatedProductRepository.Insert(relatedProducts);
 
             //reviews
-            var random = new Random();
-            foreach (var product in allProducts)
+            using (var random = new SecureRandomNumberGenerator())
             {
-                if (product.ProductType != ProductType.SimpleProduct)
-                    continue;
-
-                //only 3 of 4 products will have reviews
-                if (random.Next(4) == 3)
-                    continue;
-
-                //rating from 4 to 5
-                var rating = random.Next(4, 6);
-
-                InsertInstallationData(new ProductReview
+                foreach (var product in allProducts)
                 {
-                    CustomerId = defaultCustomer.Id,
-                    ProductId = product.Id,
-                    StoreId = defaultStore.Id,
-                    IsApproved = true,
-                    Title = "Some sample review",
-                    ReviewText = $"This sample review is for the {product.Name}. I've been waiting for this product to be available. It is priced just right.",
-                    //random (4 or 5)
-                    Rating = rating,
-                    HelpfulYesTotal = 0,
-                    HelpfulNoTotal = 0,
-                    CreatedOnUtc = DateTime.UtcNow
-                });
+                    if (product.ProductType != ProductType.SimpleProduct)
+                        continue;
 
-                product.ApprovedRatingSum = rating;
-                //product.ApprovedTotalReviews = _dbContext.Set<ProductReview>().Count(r => r.ProductId == product.Id);
+                    //only 3 of 4 products will have reviews
+                    if (random.Next(4) == 3)
+                        continue;
+
+                    //rating from 4 to 5
+                    var rating = random.Next(4, 6);
+
+                    InsertInstallationData(new ProductReview
+                    {
+                        CustomerId = defaultCustomer.Id,
+                        ProductId = product.Id,
+                        StoreId = defaultStore.Id,
+                        IsApproved = true,
+                        Title = "Some sample review",
+                        ReviewText = $"This sample review is for the {product.Name}. I've been waiting for this product to be available. It is priced just right.",
+                        //random (4 or 5)
+                        Rating = rating,
+                        HelpfulYesTotal = 0,
+                        HelpfulNoTotal = 0,
+                        CreatedOnUtc = DateTime.UtcNow
+                    });
+
+                    product.ApprovedRatingSum = rating;
+                    //product.ApprovedTotalReviews = _dbContext.Set<ProductReview>().Count(r => r.ProductId == product.Id);
+                }
             }
 
             _productRepository.Update(allProducts);

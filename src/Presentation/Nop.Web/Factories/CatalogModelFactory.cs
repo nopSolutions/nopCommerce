@@ -1476,7 +1476,8 @@ namespace Nop.Web.Factories
             {
                 AutoCompleteEnabled = _catalogSettings.ProductSearchAutoCompleteEnabled,
                 ShowProductImagesInSearchAutoComplete = _catalogSettings.ShowProductImagesInSearchAutoComplete,
-                SearchTermMinimumLength = _catalogSettings.ProductSearchTermMinimumLength
+                SearchTermMinimumLength = _catalogSettings.ProductSearchTermMinimumLength,
+                ShowSearchBox = _catalogSettings.ProductSearchEnabled
             };
             return model;
         }

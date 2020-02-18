@@ -196,13 +196,16 @@ namespace Nop.Web.Areas.Admin.Factories
                     WarehouseName = warehouse.Name
                 };
 
-                var productWarehouseInventory = _productService.GetAllProductWarehouseInventoryRecords(product.Id)?.FirstOrDefault(inventory => inventory.WarehouseId == warehouse.Id);
-                if (productWarehouseInventory != null)
+                if (product != null)
                 {
-                    model.WarehouseUsed = true;
-                    model.StockQuantity = productWarehouseInventory.StockQuantity;
-                    model.ReservedQuantity = productWarehouseInventory.ReservedQuantity;
-                    model.PlannedQuantity = _shipmentService.GetQuantityInShipments(product, productWarehouseInventory.WarehouseId, true, true);
+                    var productWarehouseInventory = _productService.GetAllProductWarehouseInventoryRecords(product.Id)?.FirstOrDefault(inventory => inventory.WarehouseId == warehouse.Id);
+                    if (productWarehouseInventory != null)
+                    {
+                        model.WarehouseUsed = true;
+                        model.StockQuantity = productWarehouseInventory.StockQuantity;
+                        model.ReservedQuantity = productWarehouseInventory.ReservedQuantity;
+                        model.PlannedQuantity = _shipmentService.GetQuantityInShipments(product, productWarehouseInventory.WarehouseId, true, true);
+                    }
                 }
 
                 models.Add(model);

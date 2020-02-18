@@ -178,6 +178,30 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Wishlist.EmailAFriend">
     <Value><![CDATA[This message template is used when a customer wants to share some product from the wishlist with a friend by sending an email. You can set up this option by ticking the checkbox Allow customers to email their wishlists in Configuration - Settings - Shopping cart settings.]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FirstNameEnabled">
+    <Value>''First name'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FirstNameEnabled.Hint">
+    <Value>Set if ''First name'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FirstNameRequired">
+    <Value>''First name'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FirstNameRequired.Hint">
+    <Value>Check if ''First name'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.LastNameEnabled">
+    <Value>''Last name'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.LastNameEnabled.Hint">
+    <Value>Set if ''Last name'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.LastNameRequired">
+    <Value>''Last name'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.LastNameRequired.Hint">
+    <Value>Check if ''Last name'' is required.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Payment.Methods.DownloadMorePlugins">
     <Value><![CDATA[You can download more plugins in our <a href="https://www.nopcommerce.com/extensions?category=payment-modules&utm_source=admin-panel&utm_medium=payment-plugins&utm_campaign=admin-panel" target="_blank">marketplace</a>]]></Value>
   </LocaleResource>
@@ -216,6 +240,27 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LocalePattern.SuccessUpload">
     <Value>Localization patterns for the current culture loaded successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForAdminArea">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForAdminArea.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForPublicStore">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForPublicStore.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Qty.AriaLabel">
+    <Value>Enter a quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchEnabled">
+    <Value>Search enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchEnabled.Hint">
+    <Value>Check to enabled the search box.</Value>
   </LocaleResource>
 </Language>
 '
@@ -424,6 +469,21 @@ BEGIN
 END
 GO
 
+--delete setting
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'securitysettings.enablexsrfprotectionforadminarea')
+BEGIN
+    DELETE FROM [Setting]
+    WHERE [Name] = N'securitysettings.enablexsrfprotectionforadminarea'
+END
+GO
+
+--delete setting
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'securitysettings.enablexsrfprotectionforpublicstore')
+BEGIN
+    DELETE FROM [Setting]
+    WHERE [Name] = N'securitysettings.enablexsrfprotectionforpublicstore'
+END
+GO
 
 --new column
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='RedeemedRewardPointsEntryId')
@@ -1310,3 +1370,52 @@ BEGIN
 	DROP TABLE #tmp_guests
 	DROP TABLE #tmp_adresses
 END
+GO
+
+--new columns
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[GenericAttribute]') and NAME='CreatedOrUpdatedDateUTC')
+BEGIN
+	ALTER TABLE [GenericAttribute] ADD
+	CreatedOrUpdatedDateUTC datetime NULL
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.firstnameenabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.firstnameenabled', 'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.firstnamerequired')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.firstnamerequired', 'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.lastnameenabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.lastnameenabled', 'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.lastnamerequired')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.lastnamerequired', 'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'catalogsettings.productsearchenabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'catalogsettings.productsearchenabled', 'true', 0)
+END
+GO

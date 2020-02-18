@@ -5552,9 +5552,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteEnabled">
     <Value>Search autocomplete enabled</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteEnabled.Hint">
     <Value>Check to enabled autocomplete in the search box.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchEnabled">
+    <Value>Search enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchEnabled.Hint">
+    <Value>Check to enabled the search box.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteNumberOfProducts">
     <Value>Number of 'autocomplete' products to display</Value>
@@ -6015,6 +6021,18 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FaxRequired.Hint">
     <Value>Check if 'Fax number' is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FirstNameEnabled">
+    <Value>'First name' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FirstNameEnabled.Hint">
+    <Value>Set if 'First name' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FirstNameRequired">
+    <Value>'First name' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FirstNameRequired.Hint">
+    <Value>Check if 'First name' is required.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.GenderEnabled">
     <Value>'Gender' enabled</Value>
   </LocaleResource>
@@ -6038,6 +6056,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideNewsletterBlock.Hint">
     <Value>Check if you want to hide the newsletter subscription box.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.LastNameEnabled">
+    <Value>'Last name' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.LastNameEnabled.Hint">
+    <Value>Set if 'Last name' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.LastNameRequired">
+    <Value>'Last name' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.LastNameRequired.Hint">
+    <Value>Check if 'Last name' is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterBlockAllowToUnsubscribe">
     <Value>Newsletter box. Allow to unsubscribe</Value>
@@ -6836,19 +6866,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableHtmlMinification.Hint">
     <Value>Allows you to minify HTML pages as well as compress them, thereby increasing the download speed. Please note that after applying this setting, you need to restart the application.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForAdminArea">
-    <Value>Enable XSRF protection for admin area</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForAdminArea.Hint">
-    <Value>Check to enable XSRF protection for admin area.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForPublicStore">
-    <Value>Enable XSRF protection for public store</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForPublicStore.Hint">
-    <Value>Check to enable XSRF protection for public store.</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EncryptionKey">
     <Value>Encryption private key</Value>
   </LocaleResource>
@@ -17270,6 +17288,9 @@
   </LocaleResource>
   <LocaleResource Name="Products.Qty">
     <Value>Qty</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Qty.AriaLabel">
+    <Value>Enter a quantity</Value>
   </LocaleResource>
   <LocaleResource Name="Products.RecentlyViewedProducts">
     <Value>Recently viewed products</Value>

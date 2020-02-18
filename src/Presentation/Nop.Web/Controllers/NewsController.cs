@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Security;
@@ -22,7 +21,6 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Framework.Security;
-using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.News;
 
 namespace Nop.Web.Controllers
@@ -156,7 +154,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("NewsItem")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [FormValueRequired("add-comment")]
         [ValidateCaptcha]
         public virtual IActionResult NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)
