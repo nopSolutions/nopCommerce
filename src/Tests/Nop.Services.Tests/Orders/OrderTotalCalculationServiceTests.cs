@@ -410,7 +410,11 @@ namespace Nop.Services.Tests.Orders
                 Quantity = 3
             };
 
-            var cart = new List<ShoppingCartItem> { sci1, sci2 };
+            var cart = new List<ShoppingCartItem>
+            {
+                sci1,
+                sci2
+            };
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
             _discountService.InsertDiscount(new Discount
