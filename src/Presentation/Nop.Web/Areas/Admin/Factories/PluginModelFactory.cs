@@ -57,7 +57,6 @@ namespace Nop.Web.Areas.Admin.Factories
             IPickupPluginManager pickupPluginManager,
             IPluginService pluginService,
             IShippingPluginManager shippingPluginManager,
-            IShippingService shippingService,
             IStaticCacheManager cacheManager,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             ITaxPluginManager taxPluginManager,

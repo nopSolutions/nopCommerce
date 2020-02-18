@@ -81,7 +81,7 @@ namespace Nop.Services.Caching.CacheEventConsumers
         {
             var entity = eventMessage.Entity;
 
-            _staticCacheManager.Remove(string.Format(NopCachingDefaults.NopEntityCacheKey, typeof(TEntity).Name, entity.Id));
+            _staticCacheManager.Remove(entity.EntityCacheKey);
             ClearCache(eventMessage.Entity, EntityEventType.Update);
         }
 
@@ -93,7 +93,7 @@ namespace Nop.Services.Caching.CacheEventConsumers
         {
             var entity = eventMessage.Entity;
 
-            _staticCacheManager.Remove(string.Format(NopCachingDefaults.NopEntityCacheKey, typeof(TEntity).Name, entity.Id));
+            _staticCacheManager.Remove(entity.EntityCacheKey);
             ClearCache(eventMessage.Entity, EntityEventType.Delete);
         }
 

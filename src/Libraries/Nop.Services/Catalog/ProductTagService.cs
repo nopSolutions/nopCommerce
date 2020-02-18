@@ -150,7 +150,8 @@ namespace Nop.Services.Catalog
         public virtual IList<ProductTag> GetAllProductTags()
         {
             var query = _productTagRepository.Table;
-            var productTags = query.ToList();
+            var productTags = query.ToCachedList(NopCatalogCachingDefaults.ProductTagAllCacheKey);
+
             return productTags;
         }
 

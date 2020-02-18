@@ -163,17 +163,13 @@ namespace Nop.Web.Factories
         /// <returns>View path</returns>
         public virtual string PrepareTemplateViewPath(int topicTemplateId)
         {
-            var templateCacheKey = string.Format(NopModelCacheDefaults.TopicTemplateModelKey, topicTemplateId);
-            var templateViewPath = _cacheManager.Get(templateCacheKey, () =>
-            {
-                var template = _topicTemplateService.GetTopicTemplateById(topicTemplateId) ?? _topicTemplateService.GetAllTopicTemplates().FirstOrDefault();
-                if (template == null)
-                    throw new Exception("No default template could be loaded");
+            var template = _topicTemplateService.GetTopicTemplateById(topicTemplateId) ??
+                           _topicTemplateService.GetAllTopicTemplates().FirstOrDefault();
 
-                return template.ViewPath;
-            });
+            if (template == null)
+                throw new Exception("No default template could be loaded");
 
-            return templateViewPath;
+            return template.ViewPath;
         }
 
         #endregion

@@ -95,7 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get languages
-            var languages = _languageService.GetAllLanguages(showHidden: true, loadCacheableCopy: false).ToPagedList(searchModel);
+            var languages = _languageService.GetAllLanguages(showHidden: true).ToPagedList(searchModel);
 
             //prepare list model
             var model = new LanguageListModel().PrepareToGrid(searchModel, languages, () =>

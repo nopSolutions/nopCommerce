@@ -26,5 +26,18 @@
         /// Gets a key pattern to clear cache
         /// </summary>
         public static string MessageTemplatesPrefixCacheKey => "Nop.messagetemplate.";
+        
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : store ID
+        /// </remarks>
+        public static string EmailAccountsAllCacheKey => "Nop.emailaccounts.all";
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string EmailAccountsPrefixCacheKey => "Nop.emailaccounts.";
     }
 }

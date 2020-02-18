@@ -7,6 +7,7 @@ using Nop.Core.Domain.Gdpr;
 using Nop.Data;
 using Nop.Services.Authentication.External;
 using Nop.Services.Blogs;
+using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -108,7 +109,9 @@ namespace Nop.Services.Gdpr
             var query = from c in _gdprConsentRepository.Table
                         orderby c.DisplayOrder, c.Id
                         select c;
-            var gdprConsents = query.ToList();
+
+            var gdprConsents = query.ToCachedList(NopGdprCachingDefaults.ConsentsAllCacheKey);
+
             return gdprConsents;
         }
 
@@ -194,7 +197,7 @@ namespace Nop.Services.Gdpr
             if (gdprLogId == 0)
                 return null;
 
-            return _gdprLogRepository.ToCachedGetById(gdprLogId);
+            return _gdprLogRepository.GetById(gdprLogId);
         }
 
         /// <summary>

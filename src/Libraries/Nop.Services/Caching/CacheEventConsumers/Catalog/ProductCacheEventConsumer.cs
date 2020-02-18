@@ -16,7 +16,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
         {
             RemoveByPrefix(NopCatalogCachingDefaults.ProductsPrefixCacheKey);
             RemoveByPrefix(NopCatalogCachingDefaults.ProductPricePrefixCacheKey);
-            RemoveByPrefix(NopNewsCachingDefaults.ShoppingCartPrefixCacheKey);
+            RemoveByPrefix(NopOrderCachingDefaults.ShoppingCartPrefixCacheKey);
         }
     }
 }

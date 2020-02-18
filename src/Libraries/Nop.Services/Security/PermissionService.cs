@@ -196,19 +196,13 @@ namespace Nop.Services.Security
                         };
                         _customerService.InsertCustomerRole(customerRole);
                     }
-                    //TODO: issue - 239 redundant code?
+
                     var defaultMappingProvided = defaultPermission.permissions.Any(p => p.SystemName == permission1.SystemName);
                                         
-                    var mappingExists = (from mapping in _permissionRecordCustomerRoleMappingRepository.Table.Where(prcm => prcm.CustomerRoleId == customerRole.Id)
-                                         join pr in _permissionRecordRepository.Table on mapping.PermissionRecordId equals pr.Id
-                                         where pr.SystemName == permission1.SystemName
-                                         select mapping.PermissionRecordId).Any();
-                    // issue - 239
-                    if (defaultMappingProvided && !mappingExists)
-                    {
-                        //permission1.CustomerRoles.Add(customerRole);
-                        InsertPermissionRecordCustomerRoleMapping(new PermissionRecordCustomerRoleMapping { CustomerRoleId = customerRole.Id, PermissionRecordId = permission1.Id });
-                    }
+                    if (!defaultMappingProvided)
+                        continue;
+
+                    InsertPermissionRecordCustomerRoleMapping(new PermissionRecordCustomerRoleMapping { CustomerRoleId = customerRole.Id, PermissionRecordId = permission1.Id });
                 }
 
                 //save localization

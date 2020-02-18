@@ -1211,7 +1211,7 @@ namespace Nop.Services.ExportImport
                 Dictionary<CategoryKey, Category> allCategories;
                 try
                 {
-                    var allCategoryList = _categoryService.GetAllCategories(showHidden: true, loadCacheableCopy: false);
+                    var allCategoryList = _categoryService.GetAllCategories(showHidden: true);
 
                     allCategories = allCategoryList
                         .ToDictionary(c => new CategoryKey(c, _categoryService, allCategoryList, _storeMappingService), c => c);
@@ -2069,7 +2069,7 @@ namespace Nop.Services.ExportImport
 
                 //performance optimization, load all categories in one SQL request
                 var allCategories = _categoryService
-                    .GetAllCategories(showHidden: true, loadCacheableCopy: false)
+                    .GetAllCategories(showHidden: true)
                     .GroupBy(c => _categoryService.GetFormattedBreadCrumb(c))
                     .ToDictionary(c => c.Key, c => c.First());
 

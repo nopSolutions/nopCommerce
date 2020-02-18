@@ -94,6 +94,23 @@ namespace Nop.Services.Localization
         }
 
         /// <summary>
+        /// Gets all locale string resources by language identifier
+        /// </summary>
+        /// <param name="languageId">Language identifier</param>
+        /// <returns>Locale string resources</returns>
+        protected virtual IList<LocaleStringResource> GetAllResources(int languageId)
+        {
+            var query = from l in _lsrRepository.Table
+                orderby l.ResourceName
+                where l.LanguageId == languageId
+                select l;
+
+            var locales = query.ToList();
+
+            return locales;
+        }
+
+        /// <summary>
         /// Update resources
         /// </summary>
         /// <param name="resources">Resources</param>
@@ -185,26 +202,13 @@ namespace Nop.Services.Localization
                         orderby lsr.ResourceName
                         where lsr.LanguageId == languageId && lsr.ResourceName == resourceName
                         select lsr;
+
             var localeStringResource = query.FirstOrDefault();
 
             if (localeStringResource == null && logIfNotFound)
                 _logger.Warning($"Resource string ({resourceName}) not found. Language ID = {languageId}");
-            return localeStringResource;
-        }
 
-        /// <summary>
-        /// Gets all locale string resources by language identifier
-        /// </summary>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Locale string resources</returns>
-        public virtual IList<LocaleStringResource> GetAllResources(int languageId)
-        {
-            var query = from l in _lsrRepository.Table
-                        orderby l.ResourceName
-                        where l.LanguageId == languageId
-                        select l;
-            var locales = query.ToList();
-            return locales;
+            return localeStringResource;
         }
 
         /// <summary>

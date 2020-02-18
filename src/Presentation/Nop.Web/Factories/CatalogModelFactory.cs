@@ -504,19 +504,13 @@ namespace Nop.Web.Factories
         /// <returns>Category template view path</returns>
         public virtual string PrepareCategoryTemplateViewPath(int templateId)
         {
-            var templateCacheKey = string.Format(NopModelCacheDefaults.CategoryTemplateModelKey, templateId);
-            var templateViewPath = _cacheManager.Get(templateCacheKey, () =>
-            {
-                var template = _categoryTemplateService.GetCategoryTemplateById(templateId) ??
-                               _categoryTemplateService.GetAllCategoryTemplates().FirstOrDefault();
+            var template = _categoryTemplateService.GetCategoryTemplateById(templateId) ??
+                           _categoryTemplateService.GetAllCategoryTemplates().FirstOrDefault();
 
-                if (template == null)
-                    throw new Exception("No default template could be loaded");
+            if (template == null)
+                throw new Exception("No default template could be loaded");
 
-                return template.ViewPath;
-            });
-
-            return templateViewPath;
+            return template.ViewPath;
         }
 
         /// <summary>
@@ -696,20 +690,14 @@ namespace Nop.Web.Factories
                 //number of products in each category
                 if (_catalogSettings.ShowCategoryProductNumber)
                 {
-                    var cacheKey = string.Format(NopModelCacheDefaults.CategoryNumberOfProductsModelKey,
-                        string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
-                        _storeContext.CurrentStore.Id,
-                        category.Id);
+                    var categoryIds = new List<int> { category.Id };
+                    //include subcategories
+                    if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
+                        categoryIds.AddRange(
+                            _categoryService.GetChildCategoryIds(category.Id, _storeContext.CurrentStore.Id));
 
-                    categoryModel.NumberOfProducts = _cacheManager.Get(cacheKey, () =>
-                    {
-                        var categoryIds = new List<int> { category.Id };
-                        //include subcategories
-                        if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
-                            categoryIds.AddRange(_categoryService.GetChildCategoryIds(category.Id, _storeContext.CurrentStore.Id));
-
-                        return _productService.GetNumberOfProductsInCategory(categoryIds, _storeContext.CurrentStore.Id);
-                    });
+                    categoryModel.NumberOfProducts =
+                        _productService.GetNumberOfProductsInCategory(categoryIds, _storeContext.CurrentStore.Id);
                 }
 
                 if (loadSubCategories)
@@ -905,19 +893,13 @@ namespace Nop.Web.Factories
         /// <returns>Manufacturer template view path</returns>
         public virtual string PrepareManufacturerTemplateViewPath(int templateId)
         {
-            var templateCacheKey = string.Format(NopModelCacheDefaults.ManufacturerTemplateModelKey, templateId);
-            var templateViewPath = _cacheManager.Get(templateCacheKey, () =>
-            {
-                var template = _manufacturerTemplateService.GetManufacturerTemplateById(templateId) ??
-                               _manufacturerTemplateService.GetAllManufacturerTemplates().FirstOrDefault();
+            var template = _manufacturerTemplateService.GetManufacturerTemplateById(templateId) ??
+                           _manufacturerTemplateService.GetAllManufacturerTemplates().FirstOrDefault();
 
-                if (template == null)
-                    throw new Exception("No default template could be loaded");
+            if (template == null)
+                throw new Exception("No default template could be loaded");
 
-                return template.ViewPath;
-            });
-
-            return templateViewPath;
+            return template.ViewPath;
         }
 
         /// <summary>

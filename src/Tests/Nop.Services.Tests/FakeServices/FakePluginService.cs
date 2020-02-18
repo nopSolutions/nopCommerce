@@ -6,6 +6,7 @@ using Nop.Data;
 using Nop.Services.Customers;
 using Nop.Services.Logging;
 using Nop.Services.Plugins;
+using Nop.Tests;
 
 namespace Nop.Services.Tests.FakeServices
 {

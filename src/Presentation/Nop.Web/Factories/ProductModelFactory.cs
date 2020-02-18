@@ -214,17 +214,15 @@ namespace Nop.Web.Factories
             switch (product.ProductType)
             {
                 case ProductType.GroupedProduct:
-                    {
-                        //grouped product
-                        PrepareGroupedProductOverviewPriceModel(product, priceModel);
-                    }
+                    //grouped product
+                    PrepareGroupedProductOverviewPriceModel(product, priceModel);
+
                     break;
                 case ProductType.SimpleProduct:
                 default:
-                    {
-                        //simple product
-                        PrepareSimpleProductOverviewPriceModel(product, priceModel);
-                    }
+                    //simple product
+                    PrepareSimpleProductOverviewPriceModel(product, priceModel);
+
                     break;
             }
 
@@ -854,6 +852,7 @@ namespace Nop.Web.Factories
                                             }
                                 }
                             }
+
                             break;
                         case AttributeControlType.ReadonlyCheckboxes:
                             {
@@ -871,6 +870,7 @@ namespace Nop.Web.Factories
                                     }
                                 }
                             }
+
                             break;
                         case AttributeControlType.TextBox:
                         case AttributeControlType.MultilineTextbox:
@@ -882,6 +882,7 @@ namespace Nop.Web.Factories
                                         attributeModel.DefaultValue = enteredText[0];
                                 }
                             }
+
                             break;
                         case AttributeControlType.Datepicker:
                             {
@@ -897,8 +898,8 @@ namespace Nop.Web.Factories
                                         attributeModel.SelectedYear = selectedDate.Year;
                                     }
                                 }
-
                             }
+
                             break;
                         case AttributeControlType.FileUpload:
                             {
@@ -911,6 +912,7 @@ namespace Nop.Web.Factories
                                         attributeModel.DefaultValue = download.DownloadGuid.ToString();
                                 }
                             }
+
                             break;
                         default:
                             break;
@@ -935,9 +937,11 @@ namespace Nop.Web.Factories
 
             var model = _productService.GetTierPrices(product, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
                    .Select(tierPrice =>
-                   {
-                       var priceBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product,
-                       _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts, tierPrice.Quantity), out var _);
+                {
+                    var priceBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product,
+                        _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts,
+                        tierPrice.Quantity), out var _);
+
                        var price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
 
                        return new ProductDetailsModel.TierPriceModel
@@ -978,9 +982,7 @@ namespace Nop.Web.Factories
                         };
 
                         return modelMan;
-                    })
-                    .ToList()
-                );
+                    }).ToList());
 
             return model;
         }
@@ -1069,19 +1071,13 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var templateCacheKey = string.Format(NopModelCacheDefaults.ProductTemplateModelKey, product.ProductTemplateId);
-            var productTemplateViewPath = _cacheManager.Get(templateCacheKey, () =>
-            {
-                var template = _productTemplateService.GetProductTemplateById(product.ProductTemplateId) ??
-                               _productTemplateService.GetAllProductTemplates().FirstOrDefault();
+            var template = _productTemplateService.GetProductTemplateById(product.ProductTemplateId) ??
+                           _productTemplateService.GetAllProductTemplates().FirstOrDefault();
 
-                if (template == null)
-                    throw new Exception("No default template could be loaded");
+            if (template == null)
+                throw new Exception("No default template could be loaded");
 
-                return template.ViewPath;
-            });
-
-            return productTemplateViewPath;
+            return template.ViewPath;
         }
 
         /// <summary>
@@ -1142,6 +1138,7 @@ namespace Nop.Web.Factories
 
                 models.Add(model);
             }
+
             return models;
         }
 
@@ -1178,7 +1175,7 @@ namespace Nop.Web.Factories
                 ShowGtin = _catalogSettings.ShowGtin,
                 Gtin = product.Gtin,
                 ManageInventoryMethod = product.ManageInventoryMethod,
-                StockAvailability = _productService.FormatStockMessage(product, ""),
+                StockAvailability = _productService.FormatStockMessage(product, string.Empty),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
                 DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts,
                 AvailableEndDate = product.AvailableEndDateTimeUtc
@@ -1237,6 +1234,7 @@ namespace Nop.Web.Factories
                     //need to change the add this link to be https linked when the page is, so that the page doesn't ask about mixed mode when viewed in https...
                     shareCode = shareCode.Replace("http://", "https://");
                 }
+
                 model.PageShareCode = shareCode;
             }
 
@@ -1600,39 +1598,46 @@ namespace Nop.Web.Factories
             var cacheKey = string.Format(NopModelCacheDefaults.ProductSpecsModelKey, product.Id, _workContext.WorkingLanguage.Id);
             return _cacheManager.Get(cacheKey, () =>
                 _specificationAttributeService.GetProductSpecificationAttributes(product.Id, 0, null, true)
-                .Select(psa =>
-                {
-                    var specAttributeOption = _specificationAttributeService.GetSpecificationAttributeOptionById(psa.SpecificationAttributeOptionId);
-                    var specAttribute = _specificationAttributeService.GetSpecificationAttributeById(specAttributeOption.SpecificationAttributeId);
-
-                    var m = new ProductSpecificationModel
+                    .Select(psa =>
                     {
-                        SpecificationAttributeId = specAttribute.Id,
-                        SpecificationAttributeName = _localizationService.GetLocalized(specAttribute, x => x.Name),
-                        ColorSquaresRgb = specAttributeOption.ColorSquaresRgb,
-                        AttributeTypeId = psa.AttributeTypeId
-                    };
+                        var specAttributeOption =
+                            _specificationAttributeService.GetSpecificationAttributeOptionById(
+                                psa.SpecificationAttributeOptionId);
+                        var specAttribute =
+                            _specificationAttributeService.GetSpecificationAttributeById(specAttributeOption
+                                .SpecificationAttributeId);
 
-                    switch (psa.AttributeType)
-                    {
-                        case SpecificationAttributeType.Option:
-                            m.ValueRaw = WebUtility.HtmlEncode(_localizationService.GetLocalized(specAttributeOption, x => x.Name));
-                            break;
-                        case SpecificationAttributeType.CustomText:
-                            m.ValueRaw = WebUtility.HtmlEncode(_localizationService.GetLocalized(psa, x => x.CustomValue));
-                            break;
-                        case SpecificationAttributeType.CustomHtmlText:
-                            m.ValueRaw = _localizationService.GetLocalized(psa, x => x.CustomValue);
-                            break;
-                        case SpecificationAttributeType.Hyperlink:
-                            m.ValueRaw = $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>";
-                            break;
-                        default:
-                            break;
-                    }
-                    return m;
-                }).ToList()
-            );
+                        var m = new ProductSpecificationModel
+                        {
+                            SpecificationAttributeId = specAttribute.Id,
+                            SpecificationAttributeName = _localizationService.GetLocalized(specAttribute, x => x.Name),
+                            ColorSquaresRgb = specAttributeOption.ColorSquaresRgb,
+                            AttributeTypeId = psa.AttributeTypeId
+                        };
+
+                        switch (psa.AttributeType)
+                        {
+                            case SpecificationAttributeType.Option:
+                                m.ValueRaw =
+                                    WebUtility.HtmlEncode(
+                                        _localizationService.GetLocalized(specAttributeOption, x => x.Name));
+                                break;
+                            case SpecificationAttributeType.CustomText:
+                                m.ValueRaw =
+                                    WebUtility.HtmlEncode(_localizationService.GetLocalized(psa, x => x.CustomValue));
+                                break;
+                            case SpecificationAttributeType.CustomHtmlText:
+                                m.ValueRaw = _localizationService.GetLocalized(psa, x => x.CustomValue);
+                                break;
+                            case SpecificationAttributeType.Hyperlink:
+                                m.ValueRaw = $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>";
+                                break;
+                            default:
+                                break;
+                        }
+
+                        return m;
+                    }).ToList());
         }
 
         #endregion

@@ -28,6 +28,7 @@ namespace Nop.Data
         {
             var builder = modelBuilder.Entity<TEntity>();
             builder.HasPrimaryKey(entity => entity.Id).HasIdentity(entity => entity.Id);
+            builder.Ignore(entity => entity.EntityCacheKey);
 
             Configure(builder);
         }

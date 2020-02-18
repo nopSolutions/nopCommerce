@@ -6,7 +6,6 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 
 namespace Nop.Services.Logging
 {
@@ -152,7 +151,7 @@ namespace Nop.Services.Logging
             if (logId == 0)
                 return null;
 
-            return _logRepository.ToCachedGetById(logId);
+            return _logRepository.GetById(logId);
         }
 
         /// <summary>

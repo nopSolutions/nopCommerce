@@ -54,17 +54,6 @@
         public static string CategoryAllPrefixCacheKey => "Nop.pres.category.all";
 
         /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : comma separated list of customer roles
-        /// {1} : current store ID
-        /// {2} : category ID
-        /// </remarks>
-        public static string CategoryNumberOfProductsModelKey => "Nop.pres.category.numberofproducts-{0}-{1}-{2}";
-        public static string CategoryNumberOfProductsPrefixCacheKey => "Nop.pres.category.numberofproducts";
-
-        /// <summary>
         /// Key for caching of a value indicating whether a category has featured products
         /// </summary>
         /// <remarks>
@@ -107,8 +96,8 @@
         /// {1} : comma separated list of customer roles
         /// {2} : current store ID
         /// </remarks>
-        public const string CategoryXmlAllModelKey = "Nop.pres.categoryXml.all-{0}-{1}-{2}";
-        public const string CategoryXmlAllPrefixCacheKey = "Nop.pres.categoryXml.all";
+        public static string CategoryXmlAllModelKey => "Nop.pres.categoryXml.all-{0}-{1}-{2}";
+        public static string CategoryXmlAllPrefixCacheKey => "Nop.pres.categoryXml.all";
 
         /// <summary>
         /// Key for SpecificationAttributeOptionFilter caching
@@ -237,42 +226,6 @@
         public static string TopicPrefixCacheKey => "Nop.pres.topic";
 
         /// <summary>
-        /// Key for CategoryTemplate caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : category template id
-        /// </remarks>
-        public static string CategoryTemplateModelKey => "Nop.pres.categorytemplate-{0}";
-        public static string CategoryTemplatePrefixCacheKey => "Nop.pres.categorytemplate";
-
-        /// <summary>
-        /// Key for ManufacturerTemplate caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : manufacturer template id
-        /// </remarks>
-        public static string ManufacturerTemplateModelKey => "Nop.pres.manufacturertemplate-{0}";
-        public static string ManufacturerTemplatePrefixCacheKey => "Nop.pres.manufacturertemplate";
-
-        /// <summary>
-        /// Key for ProductTemplate caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : product template id
-        /// </remarks>
-        public static string ProductTemplateModelKey => "Nop.pres.producttemplate-{0}";
-        public static string ProductTemplatePrefixCacheKey => "Nop.pres.producttemplate";
-
-        /// <summary>
-        /// Key for TopicTemplate caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : topic template id
-        /// </remarks>
-        public static string TopicTemplateModelKey => "Nop.pres.topictemplate-{0}";
-        public static string TopicTemplatePrefixCacheKey => "Nop.pres.topictemplate";
-
-        /// <summary>
         /// Key for bestsellers identifiers displayed on the home page
         /// </summary>
         /// <remarks>
@@ -290,16 +243,6 @@
         /// </remarks>
         public static string ProductsAlsoPurchasedIdsKey => "Nop.pres.alsopuchased-{0}-{1}";
         public static string ProductsAlsoPurchasedIdsPrefixCacheKey => "Nop.pres.alsopuchased";
-
-        /// <summary>
-        /// Key for "related" product identifiers displayed on the product details page
-        /// </summary>
-        /// <remarks>
-        /// {0} : current product id
-        /// {1} : current store ID
-        /// </remarks>
-        public static string ProductsRelatedIdsKey => "Nop.pres.related-{0}-{1}";
-        public static string ProductsRelatedIdsPrefixCacheKey => "Nop.pres.related";
 
         /// <summary>
         /// Key for default product picture caching (all pictures)

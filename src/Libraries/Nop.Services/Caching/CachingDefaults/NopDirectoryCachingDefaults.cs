@@ -122,7 +122,15 @@
         /// {1} : language ID
         /// {2} : show hidden records?
         /// </remarks>
-        public static string StateProvincesAllCacheKey => "Nop.stateprovince.all-{0}-{1}-{2}";
+        public static string StateProvincesByCountryCacheKey => "Nop.stateprovince.all-{0}-{1}-{2}";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : show hidden records?
+        /// </remarks>
+        public static string StateProvincesAllCacheKey => "Nop.stateprovince.all-{0}";
 
         /// <summary>
         /// Gets a key for caching

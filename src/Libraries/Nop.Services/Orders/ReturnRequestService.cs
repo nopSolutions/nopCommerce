@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -238,7 +239,8 @@ namespace Nop.Services.Orders
             var query = from rra in _returnRequestReasonRepository.Table
                         orderby rra.DisplayOrder, rra.Id
                         select rra;
-            return query.ToList();
+
+            return query.ToCachedList(NopOrderCachingDefaults.ReturnRequestReasonAllCacheKey);
         }
 
         /// <summary>
