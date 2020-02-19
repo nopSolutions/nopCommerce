@@ -680,7 +680,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(settings => settings.DownloadableProductsValidateUser, options => options.Ignore())
                 .ForMember(settings => settings.HashedPasswordFormat, options => options.Ignore())
                 .ForMember(settings => settings.OnlineCustomerMinutes, options => options.Ignore())
-                .ForMember(settings => settings.SuffixDeletedCustomers, options => options.Ignore());
+                .ForMember(settings => settings.SuffixDeletedCustomers, options => options.Ignore())
+                .ForMember(settings => settings.LastActivityMinutes, options => options.Ignore());
 
             CreateMap<RewardPointsSettings, RewardPointsSettingsModel>()
                 .ForMember(model => model.ActivatePointsImmediately, options => options.Ignore())
