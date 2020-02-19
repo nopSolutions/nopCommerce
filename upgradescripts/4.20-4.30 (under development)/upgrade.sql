@@ -1419,3 +1419,12 @@ BEGIN
     VALUES (N'catalogsettings.productsearchenabled', 'true', 0)
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.lastactivityminutes')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.lastactivityminutes', '15', 0)
+END
+GO
+

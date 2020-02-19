@@ -6406,6 +6406,7 @@ namespace Nop.Services.Installation
                 OnlineCustomerMinutes = 20,
                 StoreLastVisitedPage = false,
                 StoreIpAddresses = true,
+                LastActivityMinutes = 15,
                 SuffixDeletedCustomers = false,
                 EnteringEmailTwice = false,
                 RequireRegistrationForDownloadableProducts = false,
