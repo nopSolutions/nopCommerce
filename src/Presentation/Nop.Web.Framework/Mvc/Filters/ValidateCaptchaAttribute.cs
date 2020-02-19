@@ -91,7 +91,20 @@ namespace Nop.Web.Framework.Mvc.Filters
                     {
                         var value = !StringValues.IsNullOrEmpty(captchaResponseValue) ? captchaResponseValue : gCaptchaResponseValue;
                         var response = _captchaHttpClient.ValidateCaptchaAsync(value).Result;
-                        isValid = response.IsValid;
+
+                        switch (_captchaSettings.CaptchaType)
+                        {
+                            case CaptchaType.CheckBoxReCaptchaV2:
+                                isValid = response.IsValid;
+                                break;
+                            case CaptchaType.ReCaptchaV3:
+                                isValid = response.IsValid &&
+                                            response.Action == context.RouteData.Values["action"].ToString() &&
+                                              response.Score > _captchaSettings.ReCaptchaV3ScoreThreshold;
+                                break;
+                            default:
+                                break;
+                        }
                     }
                     catch (Exception exception)
                     {

@@ -1,4 +1,5 @@
-﻿using Nop.Web.Framework.Models;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Settings
@@ -66,7 +67,16 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPrivateKey")]
         public string ReCaptchaPrivateKey { get; set; }
-        public bool ReCaptchaPrivateKey_OverrideForStore { get; set; }        
+        public bool ReCaptchaPrivateKey_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaType")]
+        public int CaptchaType { get; set; }
+        public bool CaptchaType_OverrideForStore { get; set; }
+        public SelectList CaptchaTypeValues { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaV3ScoreThreshold")]
+        public double ReCaptchaV3ScoreThreshold { get; set; }
+        public bool ReCaptchaV3ScoreThreshold_OverrideForStore { get; set; }
 
         #endregion
     }

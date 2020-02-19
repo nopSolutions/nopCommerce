@@ -17,9 +17,10 @@
         /// </summary>
         /// <remarks>
         /// {0} : Id of recaptcha instance on page
-        /// {1} : language if exists
+        /// {1} : Render type
+        /// {2} : language if exists
         /// </remarks>
-        public static string RecaptchaScriptPath => "api.js?onload=onloadCallback{0}&render=explicit{1}";
+        public static string RecaptchaScriptPath => "api.js?onload=onloadCallback{0}&render={1}{2}";
 
         /// <summary>
         /// Gets a reCAPTCHA validation URL

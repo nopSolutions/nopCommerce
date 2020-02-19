@@ -13,6 +13,11 @@ namespace Nop.Core.Domain.Security
         public bool Enabled { get; set; }
 
         /// <summary>
+        /// Type of reCAPTCHA
+        /// </summary>
+        public CaptchaType CaptchaType { get; set; }
+
+        /// <summary>
         /// A value indicating whether CAPTCHA should be displayed on the login page
         /// </summary>
         public bool ShowOnLoginPage { get; set; }
@@ -79,8 +84,13 @@ namespace Nop.Core.Domain.Security
         /// <summary>
         /// reCAPTCHA private key
         /// </summary>
-        public string ReCaptchaPrivateKey { get; set; }   
-        
+        public string ReCaptchaPrivateKey { get; set; }
+
+        /// <summary>
+        /// reCAPTCHA V3 score threshold
+        /// </summary>
+        public double ReCaptchaV3ScoreThreshold { get; set; }
+
         /// <summary>
         /// reCAPTCHA theme
         /// </summary>

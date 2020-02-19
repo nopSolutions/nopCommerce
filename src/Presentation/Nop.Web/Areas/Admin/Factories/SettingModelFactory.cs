@@ -499,6 +499,28 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             var model = captchaSettings.ToSettingsModel<CaptchaSettingsModel>();
 
+            model.CaptchaTypeValues = captchaSettings.CaptchaType.ToSelectList();
+
+            if (storeId <= 0)
+                return model;
+
+            model.Enabled_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.Enabled, storeId);
+            model.ShowOnLoginPage_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnLoginPage, storeId);
+            model.ShowOnRegistrationPage_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnRegistrationPage, storeId);
+            model.ShowOnContactUsPage_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnContactUsPage, storeId);
+            model.ShowOnEmailWishlistToFriendPage_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnEmailWishlistToFriendPage, storeId);
+            model.ShowOnEmailProductToFriendPage_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnEmailProductToFriendPage, storeId);
+            model.ShowOnBlogCommentPage_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnBlogCommentPage, storeId);
+            model.ShowOnNewsCommentPage_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnNewsCommentPage, storeId);
+            model.ShowOnProductReviewPage_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnProductReviewPage, storeId);
+            model.ShowOnApplyVendorPage_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnApplyVendorPage, storeId);
+            model.ShowOnForgotPasswordPage_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnForgotPasswordPage, storeId);
+            model.ShowOnForum_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ShowOnForum, storeId);
+            model.ReCaptchaPublicKey_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ReCaptchaPublicKey, storeId);
+            model.ReCaptchaPrivateKey_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ReCaptchaPrivateKey, storeId);
+            model.CaptchaType_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.CaptchaType, storeId);
+            model.ReCaptchaV3ScoreThreshold_OverrideForStore = _settingService.SettingExists(captchaSettings, x => x.ReCaptchaV3ScoreThreshold, storeId);
+
             return model;
         }
 

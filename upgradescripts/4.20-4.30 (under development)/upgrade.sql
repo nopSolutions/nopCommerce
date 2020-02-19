@@ -358,6 +358,24 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Order.DisplayPickupInStoreOnShippingMethodPage.Hint">
     <Value>Display "Pickup in store" options on "Shipping method" page; otherwise display on the "Shipping address" page.</Value>
   </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaType">
+    <Value>Type of reCAPTCHA</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaType.Hint">
+    <Value>Select a type of reCAPTCHA. Also check if ''reCAPTCHA public key'' and ''reCAPTCHA private key'' fields uses the same reCAPTCHA version.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaV3ScoreThreshold">
+    <Value>reCAPTCHA v3 score threshold</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaV3ScoreThreshold.Hint">
+    <Value>Select a reCAPTCHA v3 score threshold (1.0 is very likely a good interaction, 0.0 is very likely a bot). By default, you can use a threshold of 0.5.</Value>
+  </LocaleResource>
+    <LocaleResource Name="Enums.Nop.Core.Domain.Security.CaptchaType.CheckBoxReCaptchaV2">
+    <Value>reCAPTCHA v2 ("I''m not a robot" Checkbox)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Security.CaptchaType.ReCaptchaV3">
+    <Value>reCAPTCHA v3</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2308,4 +2326,21 @@ INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALU
 INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddProductDeleteIdIX', 637123521091647940)
 INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:33.0000000' AS DateTime2), N'AddGetLowStockProductsIX', 637123521091647941)
 INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:33.0000000' AS DateTime2), N'AddPMMProductManufacturerIX', 637123521091647942)
+GO
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'captchasettings.captchatype')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'captchasettings.captchatype', 'CheckBoxReCaptchaV2', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'captchasettings.recaptchav3scorethreshold')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'captchasettings.recaptchav3scorethreshold', '0.5', 0)
+END
 GO

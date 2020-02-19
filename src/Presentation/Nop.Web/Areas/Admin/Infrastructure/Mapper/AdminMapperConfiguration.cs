@@ -1360,7 +1360,10 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ShowOnProductReviewPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnRegistrationPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ShowOnForgotPasswordPage_OverrideForStore, options => options.Ignore())
-                .ForMember(model => model.ShowOnForum_OverrideForStore, options => options.Ignore());
+                .ForMember(model => model.ShowOnForum_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.CaptchaType_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.ReCaptchaV3ScoreThreshold_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.CaptchaTypeValues, options => options.Ignore());
             CreateMap<CaptchaSettingsModel, CaptchaSettings>()
                 .ForMember(settings => settings.AutomaticallyChooseLanguage, options => options.Ignore())
                 .ForMember(settings => settings.ReCaptchaDefaultLanguage, options => options.Ignore())

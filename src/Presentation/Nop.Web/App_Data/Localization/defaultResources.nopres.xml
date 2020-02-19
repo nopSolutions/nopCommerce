@@ -6651,6 +6651,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnRegistrationPage.Hint">
     <Value>Check to show CAPTCHA on registration page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaType">
+    <Value>Type of reCAPTCHA</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaType.Hint">
+    <Value>Select a type of reCAPTCHA. Also check if 'reCAPTCHA public key' and 'reCAPTCHA private key' fields uses the same reCAPTCHA version.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnForgotPasswordPage">
     <Value>Show on forgot password page</Value>
   </LocaleResource>
@@ -7052,6 +7058,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaPublicKey.Hint">
     <Value>Enter reCAPTCHA public key (if enabled).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaV3ScoreThreshold">
+    <Value>reCAPTCHA v3 score threshold</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaV3ScoreThreshold.Hint">
+    <Value>Select a reCAPTCHA v3 score threshold (1.0 is very likely a good interaction, 0.0 is very likely a bot). By default, you can use a threshold of 0.5.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled">
     <Value>SEO friendly URLs with multiple languages enabled</Value>
@@ -15545,6 +15557,12 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Payments.PaymentStatus.Voided">
     <Value>Voided</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Security.CaptchaType.CheckBoxReCaptchaV2">
+    <Value>reCAPTCHA v2 ("I'm not a robot" Checkbox)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Security.CaptchaType.ReCaptchaV3">
+    <Value>reCAPTCHA v3</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Security.PasswordFormat.Clear">
     <Value>Clear</Value>
