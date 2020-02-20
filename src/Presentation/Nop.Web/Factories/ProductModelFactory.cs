@@ -479,42 +479,33 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var cacheKey = string.Format(NopModelCacheDefaults.ProductBreadcrumbModelKey,
-                    product.Id,
-                    _workContext.WorkingLanguage.Id,
-                    string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
-                    _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var breadcrumbModel = new ProductDetailsModel.ProductBreadcrumbModel
             {
-                var breadcrumbModel = new ProductDetailsModel.ProductBreadcrumbModel
-                {
-                    Enabled = _catalogSettings.CategoryBreadcrumbEnabled,
-                    ProductId = product.Id,
-                    ProductName = _localizationService.GetLocalized(product, x => x.Name),
-                    ProductSeName = _urlRecordService.GetSeName(product)
-                };
-                var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
-                if (!productCategories.Any())
-                    return breadcrumbModel;
-
-                var category = _categoryService.GetCategoryById(productCategories[0].CategoryId);
-                if (category == null)
-                    return breadcrumbModel;
-
-                foreach (var catBr in _categoryService.GetCategoryBreadCrumb(category))
-                {
-                    breadcrumbModel.CategoryBreadcrumb.Add(new CategorySimpleModel
-                    {
-                        Id = catBr.Id,
-                        Name = _localizationService.GetLocalized(catBr, x => x.Name),
-                        SeName = _urlRecordService.GetSeName(catBr),
-                        IncludeInTopMenu = catBr.IncludeInTopMenu
-                    });
-                }
-
+                Enabled = _catalogSettings.CategoryBreadcrumbEnabled,
+                ProductId = product.Id,
+                ProductName = _localizationService.GetLocalized(product, x => x.Name),
+                ProductSeName = _urlRecordService.GetSeName(product)
+            };
+            var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
+            if (!productCategories.Any())
                 return breadcrumbModel;
-            });
-            return cachedModel;
+
+            var category = _categoryService.GetCategoryById(productCategories[0].CategoryId);
+            if (category == null)
+                return breadcrumbModel;
+
+            foreach (var catBr in _categoryService.GetCategoryBreadCrumb(category))
+            {
+                breadcrumbModel.CategoryBreadcrumb.Add(new CategorySimpleModel
+                {
+                    Id = catBr.Id,
+                    Name = _localizationService.GetLocalized(catBr, x => x.Name),
+                    SeName = _urlRecordService.GetSeName(catBr),
+                    IncludeInTopMenu = catBr.IncludeInTopMenu
+                });
+            }
+
+            return breadcrumbModel;
         }
 
         /// <summary>
@@ -527,22 +518,17 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var productTagsCacheKey = string.Format(NopModelCacheDefaults.ProductTagByProductModelKey,
-                product.Id,
-                _workContext.WorkingLanguage.Id,
-                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
-                _storeContext.CurrentStore.Id);
-            var model = _cacheManager.Get(productTagsCacheKey, () =>
+            var model =
                 _productTagService.GetAllProductTagsByProductId(product.Id)
-                //filter by store
-                .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
-                .Select(x => new ProductTagModel
-                {
-                    Id = x.Id,
-                    Name = _localizationService.GetLocalized(x, y => y.Name),
-                    SeName = _urlRecordService.GetSeName(x),
-                    ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
-                }).ToList());
+                    //filter by store
+                    .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
+                    .Select(x => new ProductTagModel
+                    {
+                        Id = x.Id,
+                        Name = _localizationService.GetLocalized(x, y => y.Name),
+                        SeName = _urlRecordService.GetSeName(x),
+                        ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
+                    }).ToList();
 
             return model;
         }
@@ -964,25 +950,19 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var manufacturersCacheKey = string.Format(NopModelCacheDefaults.ProductManufacturersModelKey,
-                     product.Id,
-                     _workContext.WorkingLanguage.Id,
-                     string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
-                     _storeContext.CurrentStore.Id);
-            var model = _cacheManager.Get(manufacturersCacheKey,
-                () => _manufacturerService.GetProductManufacturersByProductId(product.Id)
-                    .Select(pm =>
+            var model = _manufacturerService.GetProductManufacturersByProductId(product.Id)
+                .Select(pm =>
+                {
+                    var manufacturer = _manufacturerService.GetManufacturerById(pm.ManufacturerId);
+                    var modelMan = new ManufacturerBriefInfoModel
                     {
-                        var manufacturer = _manufacturerService.GetManufacturerById(pm.ManufacturerId);
-                        var modelMan = new ManufacturerBriefInfoModel
-                        {
-                            Id = manufacturer.Id,
-                            Name = _localizationService.GetLocalized(manufacturer, x => x.Name),
-                            SeName = _urlRecordService.GetSeName(manufacturer)
-                        };
+                        Id = manufacturer.Id,
+                        Name = _localizationService.GetLocalized(manufacturer, x => x.Name),
+                        SeName = _urlRecordService.GetSeName(manufacturer)
+                    };
 
-                        return modelMan;
-                    }).ToList());
+                    return modelMan;
+                }).ToList();
 
             return model;
         }
@@ -1595,49 +1575,47 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var cacheKey = string.Format(NopModelCacheDefaults.ProductSpecsModelKey, product.Id, _workContext.WorkingLanguage.Id);
-            return _cacheManager.Get(cacheKey, () =>
-                _specificationAttributeService.GetProductSpecificationAttributes(product.Id, 0, null, true)
-                    .Select(psa =>
+            return _specificationAttributeService.GetProductSpecificationAttributes(product.Id, 0, null, true)
+                .Select(psa =>
+                {
+                    var specAttributeOption =
+                        _specificationAttributeService.GetSpecificationAttributeOptionById(
+                            psa.SpecificationAttributeOptionId);
+                    var specAttribute =
+                        _specificationAttributeService.GetSpecificationAttributeById(specAttributeOption
+                            .SpecificationAttributeId);
+
+                    var m = new ProductSpecificationModel
                     {
-                        var specAttributeOption =
-                            _specificationAttributeService.GetSpecificationAttributeOptionById(
-                                psa.SpecificationAttributeOptionId);
-                        var specAttribute =
-                            _specificationAttributeService.GetSpecificationAttributeById(specAttributeOption
-                                .SpecificationAttributeId);
+                        SpecificationAttributeId = specAttribute.Id,
+                        SpecificationAttributeName = _localizationService.GetLocalized(specAttribute, x => x.Name),
+                        ColorSquaresRgb = specAttributeOption.ColorSquaresRgb,
+                        AttributeTypeId = psa.AttributeTypeId
+                    };
 
-                        var m = new ProductSpecificationModel
-                        {
-                            SpecificationAttributeId = specAttribute.Id,
-                            SpecificationAttributeName = _localizationService.GetLocalized(specAttribute, x => x.Name),
-                            ColorSquaresRgb = specAttributeOption.ColorSquaresRgb,
-                            AttributeTypeId = psa.AttributeTypeId
-                        };
+                    switch (psa.AttributeType)
+                    {
+                        case SpecificationAttributeType.Option:
+                            m.ValueRaw =
+                                WebUtility.HtmlEncode(
+                                    _localizationService.GetLocalized(specAttributeOption, x => x.Name));
+                            break;
+                        case SpecificationAttributeType.CustomText:
+                            m.ValueRaw =
+                                WebUtility.HtmlEncode(_localizationService.GetLocalized(psa, x => x.CustomValue));
+                            break;
+                        case SpecificationAttributeType.CustomHtmlText:
+                            m.ValueRaw = _localizationService.GetLocalized(psa, x => x.CustomValue);
+                            break;
+                        case SpecificationAttributeType.Hyperlink:
+                            m.ValueRaw = $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>";
+                            break;
+                        default:
+                            break;
+                    }
 
-                        switch (psa.AttributeType)
-                        {
-                            case SpecificationAttributeType.Option:
-                                m.ValueRaw =
-                                    WebUtility.HtmlEncode(
-                                        _localizationService.GetLocalized(specAttributeOption, x => x.Name));
-                                break;
-                            case SpecificationAttributeType.CustomText:
-                                m.ValueRaw =
-                                    WebUtility.HtmlEncode(_localizationService.GetLocalized(psa, x => x.CustomValue));
-                                break;
-                            case SpecificationAttributeType.CustomHtmlText:
-                                m.ValueRaw = _localizationService.GetLocalized(psa, x => x.CustomValue);
-                                break;
-                            case SpecificationAttributeType.Hyperlink:
-                                m.ValueRaw = $"<a href='{psa.CustomValue}' target='_blank'>{psa.CustomValue}</a>";
-                                break;
-                            default:
-                                break;
-                        }
-
-                        return m;
-                    }).ToList());
+                    return m;
+                }).ToList();
         }
 
         #endregion

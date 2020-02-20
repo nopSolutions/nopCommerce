@@ -139,7 +139,8 @@ namespace Nop.Services.Orders
             var query = from rra in _returnRequestActionRepository.Table
                         orderby rra.DisplayOrder, rra.Id
                         select rra;
-            return query.ToList();
+
+            return query.ToCachedList(NopOrderCachingDefaults.ReturnRequestActionAllCacheKey);
         }
 
         /// <summary>

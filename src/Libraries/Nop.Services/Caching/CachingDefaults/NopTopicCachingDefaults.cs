@@ -35,6 +35,16 @@
         public static string TopicsByIdCacheKey => "Nop.topics.id-{0}";
 
         /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : topic system name
+        /// {1} : store id
+        /// {2} : comma separated list of customer roles
+        /// </remarks>
+        public static string TopicBySystemName => "Nop.topics.systemName-{0}-{1}-{2}";
+
+        /// <summary>
         /// Gets a pattern to clear cache
         /// </summary>
         public static string TopicsPrefixCacheKey => "Nop.topics.";

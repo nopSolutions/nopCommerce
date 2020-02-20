@@ -74,7 +74,7 @@
 
         #endregion
 
-        #region ReturnRequestReason
+        #region Return requests
 
         /// <summary>
         /// Gets a key for caching
@@ -87,6 +87,18 @@
         /// Gets a key pattern to clear cache
         /// </summary>
         public static string ReturnRequestReasonPrefixCacheKey => "Nop.returnrequestreason.";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        public static string ReturnRequestActionAllCacheKey => "Nop.returnrequestactions.all";
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string ReturnRequestActionPrefixCacheKey => "Nop.returnrequestactions.";
 
         #endregion
 
