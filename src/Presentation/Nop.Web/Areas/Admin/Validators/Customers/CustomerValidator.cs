@@ -8,6 +8,10 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
+using System;
+using System.Text.RegularExpressions;
+using Microsoft.SqlServer.TransactSql.ScriptDom;
+using System.IO;
 
 namespace Nop.Web.Areas.Admin.Validators.Customers
 {
@@ -27,6 +31,27 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
                 .WithMessage(localizationService.GetResource("Admin.Common.WrongEmail"))
                 //only for registered users
                 .When(x => IsRegisteredCustomerRoleChecked(x, customerService));
+
+            // For each string input in the CreateOrUpdate.Info Partial view for a customer, validate that
+            // the input is safe
+            RuleFor(x => x.Username).Must(username => IsSafeInput(username)).When(x => x.UsernamesEnabled);
+            RuleFor(x => x.Password).Must(password => IsSafeInput(password));
+            RuleFor(x => x.Gender).Must(gender => IsSafeInput(gender)).When(x => x.GenderEnabled);
+            RuleFor(x => x.FirstName).Must(firstName => IsSafeInput(firstName));
+            RuleFor(x => x.LastName).Must(lastName => IsSafeInput(lastName));
+            RuleFor(x => x.Company).Must(company => IsSafeInput(company)).When(x => x.CompanyEnabled);
+            RuleFor(x => x.StreetAddress).Must(streetAddress => IsSafeInput(streetAddress))
+                .When(x => x.StreetAddressEnabled);
+            RuleFor(x => x.StreetAddress2).Must(streetAddress2 => IsSafeInput(streetAddress2)).
+                When(x => x.StreetAddress2Enabled);
+            RuleFor(x => x.ZipPostalCode).Must(zipcode => IsSafeInput(zipcode)).When(x => x.ZipPostalCodeEnabled);
+            RuleFor(x => x.City).Must(city => IsSafeInput(city)).When(x => x.CityEnabled);
+            RuleFor(x => x.County).Must(county => IsSafeInput(county)).When(x => x.CountyEnabled);
+            RuleFor(x => x.Phone).Must(phone => IsSafeInput(phone)).When(x => x.PhoneEnabled);
+            RuleFor(x => x.Fax).Must(fax => IsSafeInput(fax)).When(x => x.FaxEnabled);
+            RuleFor(x => x.AdminComment).Must(adminComment => IsSafeInput(adminComment));
+            RuleFor(x => x.TimeZoneId).Must(timezone => IsSafeInput(timezone));
+            RuleFor(x => x.VatNumber).Must(vatNumber => IsSafeInput(vatNumber)).When(x => x.DisplayVatNumber);
 
             //form fields
             if (customerSettings.CountryEnabled && customerSettings.CountryRequired)
@@ -133,6 +158,44 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
 
             var isInRegisteredRole = newCustomerRoles.FirstOrDefault(cr => cr.SystemName == NopCustomerDefaults.RegisteredRoleName) != null;
             return isInRegisteredRole;
+        }
+        /// <summary>
+        /// Given input text, determine if it is safe based on SQL, HTML, and URL checks
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        private bool IsSafeInput(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return true;
+            }
+            //Check if there are tags to verify against HTML
+            var tagRegex = new Regex(@"<[^>]+>");
+            if (tagRegex.IsMatch(text))
+            {
+                return false;
+            }
+
+            //Check if the string contains a URL
+            bool isUri = Uri.IsWellFormedUriString(text, UriKind.RelativeOrAbsolute);
+            if (isUri)
+            {
+                return false;
+            }
+
+            //Check if string is query. If errors is null, that means that conversion to query is successful
+            var parser = new TSql100Parser(false);
+            using (var reader = new StringReader(text))
+            {
+                parser.Parse(reader, out var errors);
+                if (errors == null)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
