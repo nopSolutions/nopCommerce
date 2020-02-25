@@ -26,13 +26,6 @@ namespace Nop.Services.Blogs
         BlogPost GetBlogPostById(int blogPostId);
 
         /// <summary>
-        /// Gets blog posts
-        /// </summary>
-        /// <param name="blogPostIds">Blog post identifiers</param>
-        /// <returns>Blog posts</returns>
-        IList<BlogPost> GetBlogPostsByIds(int[] blogPostIds);
-
-        /// <summary>
         /// Gets all blog posts
         /// </summary>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>

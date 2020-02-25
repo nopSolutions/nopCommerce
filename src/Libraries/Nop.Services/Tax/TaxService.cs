@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -222,9 +221,7 @@ namespace Nop.Services.Tax
 
             if (basedOn == TaxBasedOn.BillingAddress && customer.BillingAddressId == null ||
                 basedOn == TaxBasedOn.ShippingAddress && customer.ShippingAddressId == null)
-            {
                 basedOn = TaxBasedOn.DefaultAddress;
-            }
 
             switch (basedOn)
             {

@@ -3,17 +3,6 @@
     public static partial class NopModelCacheDefaults
     {
         /// <summary>
-        /// Key for categories on the search page
-        /// </summary>
-        /// <remarks>
-        /// {0} : language id
-        /// {1} : roles of the current user
-        /// {2} : current store ID
-        /// </remarks>
-        public static string SearchCategoriesModelKey => "Nop.pres.search.categories-{0}-{1}-{2}";
-        public static string SearchCategoriesPrefixCacheKey => "Nop.pres.search.categories";
-
-        /// <summary>
         /// Key for ManufacturerNavigationModel caching
         /// </summary>
         /// <remarks>
@@ -54,17 +43,6 @@
         public static string CategoryAllPrefixCacheKey => "Nop.pres.category.all";
 
         /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : comma separated list of customer roles
-        /// {1} : current store ID
-        /// {2} : category ID
-        /// </remarks>
-        public static string CategoryNumberOfProductsModelKey => "Nop.pres.category.numberofproducts-{0}-{1}-{2}";
-        public static string CategoryNumberOfProductsPrefixCacheKey => "Nop.pres.category.numberofproducts";
-
-        /// <summary>
         /// Key for caching of a value indicating whether a category has featured products
         /// </summary>
         /// <remarks>
@@ -75,19 +53,6 @@
         public static string CategoryHasFeaturedProductsKey => "Nop.pres.category.hasfeaturedproducts-{0}-{1}-{2}";
         public static string CategoryHasFeaturedProductsPrefixCacheKeyById => "Nop.pres.category.hasfeaturedproducts-{0}-";
         
-        /// <summary>
-        /// Key for caching of subcategories of certain category
-        /// </summary>
-        /// <remarks>
-        /// {0} : category id
-        /// {1} : roles of the current user
-        /// {2} : current store ID
-        /// {3} : language ID
-        /// {4} : is connection SSL secured (included in a category picture URL)
-        /// </remarks>
-        public static string CategorySubcategoriesKey => "Nop.pres.category.subcategories-{0}-{1}-{2}-{3}-{4}-{5}";
-        public static string CategorySubcategoriesPrefixCacheKey => "Nop.pres.category.subcategories";
-
         /// <summary>
         /// Key for caching of categories displayed on home page
         /// </summary>
@@ -107,8 +72,8 @@
         /// {1} : comma separated list of customer roles
         /// {2} : current store ID
         /// </remarks>
-        public const string CategoryXmlAllModelKey = "Nop.pres.categoryXml.all-{0}-{1}-{2}";
-        public const string CategoryXmlAllPrefixCacheKey = "Nop.pres.categoryXml.all";
+        public static string CategoryXmlAllModelKey => "Nop.pres.categoryXml.all-{0}-{1}-{2}";
+        public static string CategoryXmlAllPrefixCacheKey => "Nop.pres.categoryXml.all";
 
         /// <summary>
         /// Key for SpecificationAttributeOptionFilter caching
@@ -119,158 +84,6 @@
         /// </remarks>
         public static string SpecsFilterModelKey => "Nop.pres.filter.specs-{0}-{1}";
         public static string SpecsFilterPrefixCacheKey => "Nop.pres.filter.specs";
-
-        /// <summary>
-        /// Key for ProductBreadcrumbModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : product id
-        /// {1} : language id
-        /// {2} : comma separated list of customer roles
-        /// {3} : current store ID
-        /// </remarks>
-        public static string ProductBreadcrumbModelKey => "Nop.pres.product.breadcrumb-{0}-{1}-{2}-{3}";
-        public static string ProductBreadcrumbPrefixCacheKey => "Nop.pres.product.breadcrumb";
-        public static string ProductBreadcrumbPrefixCacheKeyById => "Nop.pres.product.breadcrumb-{0}-";
-
-        /// <summary>
-        /// Key for ProductTagModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : product id
-        /// {1} : language id
-        /// {2} : comma separated list of customer roles
-        /// {3} : current store ID
-        /// </remarks>
-        public static string ProductTagByProductModelKey => "Nop.pres.producttag.byproduct-{0}-{1}-{2}-{3}";
-        public static string ProductTagByProductPrefixCacheKey => "Nop.pres.producttag.byproduct";
-
-        /// <summary>
-        /// Key for PopularProductTagsModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : language id
-        /// {1} : current store ID
-        /// </remarks>
-        public static string ProductTagPopularModelKey => "Nop.pres.producttag.popular-{0}-{1}";
-        public static string ProductTagPopularPrefixCacheKey => "Nop.pres.producttag.popular";
-
-        /// <summary>
-        /// Key for ProductManufacturers model caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : product id
-        /// {1} : language id
-        /// {2} : roles of the current user
-        /// {3} : current store ID
-        /// </remarks>
-        public static string ProductManufacturersModelKey => "Nop.pres.product.manufacturers-{0}-{1}-{2}-{3}";
-        public static string ProductManufacturersPrefixCacheKey => "Nop.pres.product.manufacturers";
-        public static string ProductManufacturersPrefixCacheKeyById => "Nop.pres.product.manufacturers-{0}-";
-
-        /// <summary>
-        /// Key for ProductSpecificationModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : product id
-        /// {1} : language id
-        /// </remarks>
-        public static string ProductSpecsModelKey => "Nop.pres.product.specs-{0}-{1}";
-        public static string ProductSpecsPrefixCacheKey => "Nop.pres.product.specs";
-        public static string ProductSpecsPrefixCacheKeyById => "Nop.pres.product.specs-{0}-";
-
-        /// <summary>
-        /// Key for TopicModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : topic system name
-        /// {1} : language id
-        /// {2} : store id
-        /// {3} : comma separated list of customer roles
-        /// </remarks>
-        public static string TopicModelBySystemNameKey => "Nop.pres.topic.details.bysystemname-{0}-{1}-{2}-{3}";
-        /// <summary>
-        /// Key for TopicModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : topic id
-        /// {1} : language id
-        /// {2} : store id
-        /// {3} : comma separated list of customer roles
-        /// {4} : show hidden records?
-        /// </remarks>
-        public static string TopicModelByIdKey => "Nop.pres.topic.details.byid-{0}-{1}-{2}-{3}-{4}";
-        /// <summary>
-        /// Key for TopicModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : topic system name
-        /// {1} : language id
-        /// {2} : store id
-        /// {3} : comma separated list of customer roles
-        /// </remarks>
-        public static string TopicSenameBySystemName => "Nop.pres.topic.sename.bysystemname-{0}-{1}-{2}-{3}";
-        /// <summary>
-        /// Key for TopicModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : topic system name
-        /// {1} : language id
-        /// {2} : store id
-        /// {3} : comma separated list of customer roles
-        /// </remarks>
-        public static string TopicTitleBySystemName => "Nop.pres.topic.title.bysystemname-{0}-{1}-{2}-{3}";
-        /// <summary>
-        /// Key for TopMenuModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : language id
-        /// </remarks>
-        public static string TopicTopMenuModelKey => "Nop.pres.topic.topmenu-{0}";
-        /// <summary>
-        /// Key for TopMenuModel caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : language id
-        /// </remarks>
-        public static string TopicFooterModelKey => "Nop.pres.topic.footer-{0}";
-        public static string TopicPrefixCacheKey => "Nop.pres.topic";
-
-        /// <summary>
-        /// Key for CategoryTemplate caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : category template id
-        /// </remarks>
-        public static string CategoryTemplateModelKey => "Nop.pres.categorytemplate-{0}";
-        public static string CategoryTemplatePrefixCacheKey => "Nop.pres.categorytemplate";
-
-        /// <summary>
-        /// Key for ManufacturerTemplate caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : manufacturer template id
-        /// </remarks>
-        public static string ManufacturerTemplateModelKey => "Nop.pres.manufacturertemplate-{0}";
-        public static string ManufacturerTemplatePrefixCacheKey => "Nop.pres.manufacturertemplate";
-
-        /// <summary>
-        /// Key for ProductTemplate caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : product template id
-        /// </remarks>
-        public static string ProductTemplateModelKey => "Nop.pres.producttemplate-{0}";
-        public static string ProductTemplatePrefixCacheKey => "Nop.pres.producttemplate";
-
-        /// <summary>
-        /// Key for TopicTemplate caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : topic template id
-        /// </remarks>
-        public static string TopicTemplateModelKey => "Nop.pres.topictemplate-{0}";
-        public static string TopicTemplatePrefixCacheKey => "Nop.pres.topictemplate";
 
         /// <summary>
         /// Key for bestsellers identifiers displayed on the home page
@@ -290,16 +103,6 @@
         /// </remarks>
         public static string ProductsAlsoPurchasedIdsKey => "Nop.pres.alsopuchased-{0}-{1}";
         public static string ProductsAlsoPurchasedIdsPrefixCacheKey => "Nop.pres.alsopuchased";
-
-        /// <summary>
-        /// Key for "related" product identifiers displayed on the product details page
-        /// </summary>
-        /// <remarks>
-        /// {0} : current product id
-        /// {1} : current store ID
-        /// </remarks>
-        public static string ProductsRelatedIdsKey => "Nop.pres.related-{0}-{1}";
-        public static string ProductsRelatedIdsPrefixCacheKey => "Nop.pres.related";
 
         /// <summary>
         /// Key for default product picture caching (all pictures)
@@ -445,14 +248,6 @@
         public static string PollsPrefixCacheKey => "Nop.pres.poll";
 
         /// <summary>
-        /// Key for blog tag list model
-        /// </summary>
-        /// <remarks>
-        /// {0} : language ID
-        /// {1} : current store ID
-        /// </remarks>
-        public static string BlogTagsModelKey => "Nop.pres.blog.tags-{0}-{1}";
-        /// <summary>
         /// Key for blog archive (years, months) block model
         /// </summary>
         /// <remarks>
@@ -471,35 +266,6 @@
         /// </remarks>
         public static string HomepageNewsModelKey => "Nop.pres.news.homepage-{0}-{1}";
         public static string NewsPrefixCacheKey => "Nop.pres.news";
-        
-        /// <summary>
-        /// Key for states by country id
-        /// </summary>
-        /// <remarks>
-        /// {0} : country ID
-        /// {1} : "empty" or "select" item
-        /// {2} : language ID
-        /// </remarks>
-        public static string StateProvincesByCountryModelKey => "Nop.pres.stateprovinces.bycountry-{0}-{1}-{2}";
-        public static string StateProvincesPrefixCacheKey => "Nop.pres.stateprovinces";
-
-        /// <summary>
-        /// Key for return request reasons
-        /// </summary>
-        /// <remarks>
-        /// {0} : language ID
-        /// </remarks>
-        public static string ReturnRequestReasonsModelKey => "Nop.pres.returnrequesreasons-{0}";
-        public static string ReturnRequestReasonsPrefixCacheKey => "Nop.pres.returnrequesreasons";
-
-        /// <summary>
-        /// Key for return request actions
-        /// </summary>
-        /// <remarks>
-        /// {0} : language ID
-        /// </remarks>
-        public static string ReturnRequestActionsModelKey => "Nop.pres.returnrequestactions-{0}";
-        public static string ReturnRequestActionsPrefixCacheKey => "Nop.pres.returnrequestactions";
 
         /// <summary>
         /// Key for logo
@@ -512,16 +278,6 @@
         public static string StoreLogoPath => "Nop.pres.logo-{0}-{1}-{2}";
         public static string StoreLogoPathPrefixCacheKey => "Nop.pres.logo";
 
-        /// <summary>
-        /// Key for available currencies
-        /// </summary>
-        /// <remarks>
-        /// {0} : language ID
-        /// {1} : current store ID
-        /// </remarks>
-        public static string AvailableCurrenciesModelKey => "Nop.pres.currencies.all-{0}-{1}";
-        public static string AvailableCurrenciesPrefixCacheKey => "Nop.pres.currencies";
-       
         /// <summary>
         /// Key for sitemap on the sitemap page
         /// </summary>

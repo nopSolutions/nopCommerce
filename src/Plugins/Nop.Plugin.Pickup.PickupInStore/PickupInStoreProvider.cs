@@ -54,10 +54,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
         /// <summary>
         /// Gets a shipment tracker
         /// </summary>
-        public IShipmentTracker ShipmentTracker
-        {
-            get { return null; }
-        }
+        public IShipmentTracker ShipmentTracker => null;
 
         #endregion
 

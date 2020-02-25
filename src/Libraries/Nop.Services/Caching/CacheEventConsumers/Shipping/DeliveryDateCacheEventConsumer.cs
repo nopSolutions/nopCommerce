@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Domain.Shipping;
+using Nop.Services.Caching.CachingDefaults;
 
 namespace Nop.Services.Caching.CacheEventConsumers.Shipping
 {
@@ -7,5 +8,9 @@ namespace Nop.Services.Caching.CacheEventConsumers.Shipping
     /// </summary>
     public partial class DeliveryDateCacheEventConsumer : CacheEventConsumer<DeliveryDate>
     {
+        protected override void ClearCache(DeliveryDate entity)
+        {
+            RemoveByPrefix(NopShippingCachingDefaults.DeliveryDatesPrefixCacheKey);
+        }
     }
 }

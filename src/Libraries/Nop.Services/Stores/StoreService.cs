@@ -56,13 +56,12 @@ namespace Nop.Services.Stores
         /// <summary>
         /// Gets all stores
         /// </summary>
-        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Stores</returns>
-        public virtual IList<Store> GetAllStores(bool loadCacheableCopy = true)
+        public virtual IList<Store> GetAllStores()
         {
             var query = from s in _storeRepository.Table orderby s.DisplayOrder, s.Id select s;
 
-            var result = loadCacheableCopy ? query.ToCachedList(NopStoreCachingDefaults.StoresAllCacheKey) : query.ToList();
+            var result = query.ToCachedList(NopStoreCachingDefaults.StoresAllCacheKey);
 
             return result;
         }
@@ -71,18 +70,15 @@ namespace Nop.Services.Stores
         /// Gets a store 
         /// </summary>
         /// <param name="storeId">Store identifier</param>
-        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Store</returns>
-        public virtual Store GetStoreById(int storeId, bool loadCacheableCopy = true)
+        public virtual Store GetStoreById(int storeId)
         {
             if (storeId == 0)
                 return null;
 
             var key = string.Format(NopStoreCachingDefaults.StoresByIdCacheKey, storeId);
 
-            var store = loadCacheableCopy
-                ? _storeRepository.ToCachedGetById(storeId, key)
-                : _storeRepository.ToCachedGetById(storeId);
+            var store = _storeRepository.ToCachedGetById(storeId, key);
 
             return store;
         }

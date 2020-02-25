@@ -58,6 +58,9 @@ namespace Nop.Core.Caching
         {
             IDictionary<object, object> items;
 
+            if (_disposed)
+                return acquire();
+
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
             {
                 items = GetItems();

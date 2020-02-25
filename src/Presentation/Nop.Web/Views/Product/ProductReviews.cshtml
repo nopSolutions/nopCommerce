@@ -54,7 +54,7 @@
                                     <div class="rating-options">
                                         <input asp-for="AddProductReview.Rating" value="1" type="radio" id="addproductrating_1" aria-label="@T("Reviews.Fields.Rating.Bad")" />
                                         <input asp-for="AddProductReview.Rating" value="2" type="radio" id="addproductrating_2" aria-label="@T("Reviews.Fields.Rating.NotGood")" />
-                                        <input asp-for="AddProductReview.Rating" value="3" type="radio" id="addproductrating_3" aria-label="@T("Reviews.Fields.Rating.NotBadNotExcellent")" /> 
+                                        <input asp-for="AddProductReview.Rating" value="3" type="radio" id="addproductrating_3" aria-label="@T("Reviews.Fields.Rating.NotBadNotExcellent")" />
                                         <input asp-for="AddProductReview.Rating" value="4" type="radio" id="addproductrating_4" aria-label="@T("Reviews.Fields.Rating.Good")" />
                                         <input asp-for="AddProductReview.Rating" value="5" type="radio" id="addproductrating_5" aria-label="@T("Reviews.Fields.Rating.Excellent")" />
                                     </div>
@@ -130,10 +130,31 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="review-content">
+                        <div class="review-item-head">
+                            <div class="review-title">
+                                @if (!string.IsNullOrEmpty(review.CustomerAvatarUrl))
+                                {
+                                    <div class="avatar">
+                                        @if (review.AllowViewingProfiles)
+                                        {
+                                            <a href="@Url.RouteUrl("CustomerProfile", new { id = review.CustomerId })" class="avatar-img-link">
+                                                <img src="@(review.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <img src="@(review.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />
+                                        }
+                                    </div>
+                                }
+                            </div>
+                            &nbsp
                             <div class="review-text">
+                                &nbsp
                                 @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(review.ReviewText, false, true, false, false, false, false))
                             </div>
+                        </div>
+                        <div class="review-content">
                             @foreach (var reviewType in review.AdditionalProductReviewList.Where(x => x.Rating > 0 && x.VisibleToAllCustomers))
                             {
                                 var ratingExtPercent = reviewType.Rating * 20;

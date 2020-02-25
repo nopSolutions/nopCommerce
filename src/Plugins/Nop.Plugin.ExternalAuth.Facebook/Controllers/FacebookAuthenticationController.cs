@@ -81,7 +81,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
         public IActionResult Configure(ConfigurationModel model)

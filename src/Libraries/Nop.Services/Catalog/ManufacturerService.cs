@@ -373,6 +373,7 @@ namespace Nop.Services.Catalog
             }
 
             var productManufacturers = query.ToCachedPagedList(key, pageIndex, pageSize);
+
             return productManufacturers;
         }
 

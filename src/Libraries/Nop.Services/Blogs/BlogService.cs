@@ -81,17 +81,6 @@ namespace Nop.Services.Blogs
         }
 
         /// <summary>
-        /// Gets blog posts
-        /// </summary>
-        /// <param name="blogPostIds">Blog post identifiers</param>
-        /// <returns>Blog posts</returns>
-        public virtual IList<BlogPost> GetBlogPostsByIds(int[] blogPostIds)
-        {
-            var query = _blogPostRepository.Table;
-            return query.Where(bp => blogPostIds.Contains(bp.Id)).ToList();
-        }
-
-        /// <summary>
         /// Gets all blog posts
         /// </summary>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
@@ -135,6 +124,7 @@ namespace Nop.Services.Blogs
             query = query.OrderByDescending(b => b.StartDateUtc ?? b.CreatedOnUtc);
 
             var blogPosts = new PagedList<BlogPost>(query, pageIndex, pageSize);
+
             return blogPosts;
         }
 
@@ -178,32 +168,39 @@ namespace Nop.Services.Blogs
         /// <returns>Blog post tags</returns>
         public virtual IList<BlogPostTag> GetAllBlogPostTags(int storeId, int languageId, bool showHidden = false)
         {
-            var blogPostTags = new List<BlogPostTag>();
-
-            var blogPosts = GetAllBlogPosts(storeId: storeId, languageId: languageId, showHidden: showHidden);
-            foreach (var blogPost in blogPosts)
-            {
-                var tags = ParseTags(blogPost);
-                foreach (var tag in tags)
-                {
-                    var foundBlogPostTag = blogPostTags.Find(bpt => bpt.Name.Equals(tag, StringComparison.InvariantCultureIgnoreCase));
-                    if (foundBlogPostTag == null)
-                    {
-                        foundBlogPostTag = new BlogPostTag
-                        {
-                            Name = tag,
-                            BlogPostCount = 1
-                        };
-                        blogPostTags.Add(foundBlogPostTag);
-                    }
-                    else
-                        foundBlogPostTag.BlogPostCount++;
-                }
-            }
-
             var cacheKey = string.Format(NopBlogsCachingDefaults.BlogTagsModelKey, languageId, storeId);
 
-            return _cacheManager.Get(cacheKey, () => blogPostTags);
+            var blogPostTags = _cacheManager.Get(cacheKey, () =>
+            {
+                var rezBlogPostTags = new List<BlogPostTag>();
+
+                var blogPosts = GetAllBlogPosts(storeId, languageId, showHidden: showHidden);
+
+                foreach (var blogPost in blogPosts)
+                {
+                    var tags = ParseTags(blogPost);
+                    foreach (var tag in tags)
+                    {
+                        var foundBlogPostTag = rezBlogPostTags.Find(bpt =>
+                            bpt.Name.Equals(tag, StringComparison.InvariantCultureIgnoreCase));
+                        if (foundBlogPostTag == null)
+                        {
+                            foundBlogPostTag = new BlogPostTag
+                            {
+                                Name = tag,
+                                BlogPostCount = 1
+                            };
+                            rezBlogPostTags.Add(foundBlogPostTag);
+                        }
+                        else
+                            foundBlogPostTag.BlogPostCount++;
+                    }
+                }
+
+                return rezBlogPostTags;
+            });
+
+            return blogPostTags;
         }
 
         /// <summary>

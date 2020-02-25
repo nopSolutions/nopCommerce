@@ -506,7 +506,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Export / Import
 
-        [HttpPost, ActionName("List")]
+        [HttpPost, ActionName("ExportXml")]
         [FormValueRequired("exportxml-all")]
         public virtual IActionResult ExportXmlAll(OrderSearchModel model)
         {
@@ -591,7 +591,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return File(Encoding.UTF8.GetBytes(xml), MimeTypes.ApplicationXml, "orders.xml");
         }
 
-        [HttpPost, ActionName("List")]
+        [HttpPost, ActionName("ExportExcel")]
         [FormValueRequired("exportexcel-all")]
         public virtual IActionResult ExportExcelAll(OrderSearchModel model)
         {
@@ -1155,7 +1155,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return File(bytes, MimeTypes.ApplicationPdf, $"order_{order.Id}.pdf");
         }
 
-        [HttpPost, ActionName("List")]
+        [HttpPost, ActionName("PdfInvoice")]
         [FormValueRequired("pdf-invoice-all")]
         public virtual IActionResult PdfInvoiceAll(OrderSearchModel model)
         {

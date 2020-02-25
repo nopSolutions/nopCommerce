@@ -37,8 +37,8 @@ namespace Nop.Core.Infrastructure
         /// <returns>IServiceProvider</returns>
         protected IServiceProvider GetServiceProvider()
         {
-            var accessor = ServiceProvider.GetService<IHttpContextAccessor>();
-            var context = accessor.HttpContext;
+            var accessor = ServiceProvider?.GetService<IHttpContextAccessor>();
+            var context = accessor?.HttpContext;
             return context?.RequestServices ?? ServiceProvider;
         }
 
@@ -219,7 +219,7 @@ namespace Nop.Core.Infrastructure
         /// <returns>Resolved service</returns>
         public object Resolve(Type type)
         {
-            return GetServiceProvider().GetService(type);
+            return GetServiceProvider()?.GetService(type);
         }
 
         /// <summary>

@@ -366,11 +366,15 @@ namespace Nop.Services.Catalog
         /// <returns>Product attribute mapping collection</returns>
         public virtual IList<PredefinedProductAttributeValue> GetPredefinedProductAttributeValues(int productAttributeId)
         {
+            var key = string.Format(NopCatalogCachingDefaults.PredefinedProductAttributeValuesAllCacheKey, productAttributeId);
+
             var query = from ppav in _predefinedProductAttributeValueRepository.Table
                         orderby ppav.DisplayOrder, ppav.Id
                         where ppav.ProductAttributeId == productAttributeId
                         select ppav;
-            var values = query.ToList();
+
+            var values = query.ToCachedList(key);
+
             return values;
         }
 

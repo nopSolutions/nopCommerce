@@ -15,7 +15,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Stores
         protected override void ClearCache(Store entity)
         {
             RemoveByPrefix(NopStoreCachingDefaults.StoresPrefixCacheKey);
-            RemoveByPrefix(NopNewsCachingDefaults.ShoppingCartPrefixCacheKey, false);
+            RemoveByPrefix(NopOrderCachingDefaults.ShoppingCartPrefixCacheKey, false);
             RemoveByPrefix(NopLocalizationCachingDefaults.LanguagesPrefixCacheKey);
         }
     }

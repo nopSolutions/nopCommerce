@@ -9,9 +9,8 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
-using Nop.Services.Common;
+using Nop.Services.Defaults;
 using Nop.Services.Themes;
 
 namespace Nop.Services.Plugins

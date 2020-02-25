@@ -2,16 +2,12 @@
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
-using Nop.Core.Caching;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
-using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Services.Topics;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.UI.Paging;
-using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Boards;
 using Nop.Web.Models.Common;
 
@@ -223,26 +219,16 @@ namespace Nop.Web.Extensions
         /// <returns>Topic SEO Name</returns>
         public static string GetTopicSeName<T>(this IHtmlHelper<T> html, string systemName)
         {
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
             var storeContext = EngineContext.Current.Resolve<IStoreContext>();
-            var customerService = EngineContext.Current.Resolve<ICustomerService>();
+            var topicService = EngineContext.Current.Resolve<ITopicService>();
 
-            //static cache manager
-            var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-            var cacheKey = string.Format(NopModelCacheDefaults.TopicSenameBySystemName,
-                systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id,
-                string.Join(",", customerService.GetCustomerRoleIds(workContext.CurrentCustomer)));
-            var cachedSeName = cacheManager.Get(cacheKey, () =>
-            {
-                var topicService = EngineContext.Current.Resolve<ITopicService>();
-                var topic = topicService.GetTopicBySystemName(systemName, storeContext.CurrentStore.Id);
-                if (topic == null)
-                    return "";
+            var topic = topicService.GetTopicBySystemName(systemName, storeContext.CurrentStore.Id);
+            if (topic == null)
+                return "";
 
-                var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
-                return urlRecordService.GetSeName(topic);
-            });
-            return cachedSeName;
+            var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
+
+            return urlRecordService.GetSeName(topic);
         }
 
         /// <summary>
@@ -254,26 +240,17 @@ namespace Nop.Web.Extensions
         /// <returns>Topic SEO Name</returns>
         public static string GetTopicTitle<T>(this IHtmlHelper<T> html, string systemName)
         {
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
             var storeContext = EngineContext.Current.Resolve<IStoreContext>();
-            var customerService = EngineContext.Current.Resolve<ICustomerService>();
 
-            //static cache manager
-            var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-            var cacheKey = string.Format(NopModelCacheDefaults.TopicTitleBySystemName,
-                systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id,
-                string.Join(",", customerService.GetCustomerRoleIds(workContext.CurrentCustomer)));
-            var cachedTitle = cacheManager.Get(cacheKey, () =>
-            {
-                var topicService = EngineContext.Current.Resolve<ITopicService>();
-                var topic = topicService.GetTopicBySystemName(systemName, storeContext.CurrentStore.Id);
-                if (topic == null)
-                    return "";
+            var topicService = EngineContext.Current.Resolve<ITopicService>();
+            var topic = topicService.GetTopicBySystemName(systemName, storeContext.CurrentStore.Id);
 
-                var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-                return localizationService.GetLocalized(topic, x => x.Title);
-            });
-            return cachedTitle;
+            if (topic == null)
+                return "";
+
+            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+
+            return localizationService.GetLocalized(topic, x => x.Title);
         }
     }
 }

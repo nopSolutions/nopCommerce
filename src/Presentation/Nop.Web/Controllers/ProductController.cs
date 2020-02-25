@@ -28,6 +28,7 @@ using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class ProductController : BasePublicController
     {
         #region Fields
@@ -310,8 +311,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("ProductReviews")]
-        [PublicAntiForgery]
+        [HttpPost, ActionName("ProductReviews")]        
         [FormValueRequired("add-review")]
         [ValidateCaptcha]
         public virtual IActionResult ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
@@ -412,6 +412,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult SetProductReviewHelpfulness(int productReviewId, bool washelpful)
         {
             var productReview = _productService.GetProductReviewById(productReviewId);
@@ -483,7 +484,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("ProductEmailAFriend")]
-        [PublicAntiForgery]
         [FormValueRequired("send-email")]
         [ValidateCaptcha]
         public virtual IActionResult ProductEmailAFriendSend(ProductEmailAFriendModel model, bool captchaValid)
@@ -529,6 +529,7 @@ namespace Nop.Web.Controllers
         #region Comparing products
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult AddProductToCompareList(int productId)
         {
             var product = _productService.GetProductById(productId);

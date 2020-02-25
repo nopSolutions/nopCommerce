@@ -114,7 +114,7 @@ namespace Nop.Services.Directory
         /// <returns>States</returns>
         public virtual IList<StateProvince> GetStateProvincesByCountryId(int countryId, int languageId = 0, bool showHidden = false)
         {
-            var key = string.Format(NopDirectoryCachingDefaults.StateProvincesAllCacheKey, countryId, languageId, showHidden);
+            var key = string.Format(NopDirectoryCachingDefaults.StateProvincesByCountryCacheKey, countryId, languageId, showHidden);
             return _cacheManager.Get(key, () =>
             {
                 var query = from sp in _stateProvinceRepository.Table
@@ -148,7 +148,9 @@ namespace Nop.Services.Directory
                         orderby sp.CountryId, sp.DisplayOrder, sp.Name
                         where showHidden || sp.Published
                         select sp;
-            var stateProvinces = query.ToList();
+
+            var stateProvinces = query.ToCachedList(string.Format(NopDirectoryCachingDefaults.StateProvincesAllCacheKey, showHidden));
+
             return stateProvinces;
         }
 

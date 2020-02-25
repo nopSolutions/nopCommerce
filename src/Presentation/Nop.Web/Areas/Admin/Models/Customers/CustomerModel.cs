@@ -69,9 +69,11 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Gender")]
         public string Gender { get; set; }
 
+        public bool FirstNameEnabled { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.FirstName")]
         public string FirstName { get; set; }
 
+        public bool LastNameEnabled { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.LastName")]
         public string LastName { get; set; }
 
@@ -175,6 +177,8 @@ namespace Nop.Web.Areas.Admin.Models.Customers
         public string VatNumberStatusNote { get; set; }
 
         public bool DisplayVatNumber { get; set; }
+
+        public bool DisplayRegisteredInStore { get; set; }
 
         //registration date
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CreatedOn")]

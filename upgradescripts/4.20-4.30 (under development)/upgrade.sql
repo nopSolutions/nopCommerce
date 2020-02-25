@@ -1,5 +1,4 @@
 ﻿--upgrade scripts from nopCommerce 4.20 to 4.30
-
 --new locale resources
 declare @resources xml
 --a resource will be deleted if its value is empty
@@ -179,6 +178,30 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Description.Wishlist.EmailAFriend">
     <Value><![CDATA[This message template is used when a customer wants to share some product from the wishlist with a friend by sending an email. You can set up this option by ticking the checkbox Allow customers to email their wishlists in Configuration - Settings - Shopping cart settings.]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FirstNameEnabled">
+    <Value>''First name'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FirstNameEnabled.Hint">
+    <Value>Set if ''First name'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FirstNameRequired">
+    <Value>''First name'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FirstNameRequired.Hint">
+    <Value>Check if ''First name'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.LastNameEnabled">
+    <Value>''Last name'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.LastNameEnabled.Hint">
+    <Value>Set if ''Last name'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.LastNameRequired">
+    <Value>''Last name'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.LastNameRequired.Hint">
+    <Value>Check if ''Last name'' is required.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Payment.Methods.DownloadMorePlugins">
     <Value><![CDATA[You can download more plugins in our <a href="https://www.nopcommerce.com/extensions?category=payment-modules&utm_source=admin-panel&utm_medium=payment-plugins&utm_campaign=admin-panel" target="_blank">marketplace</a>]]></Value>
   </LocaleResource>
@@ -217,6 +240,27 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LocalePattern.SuccessUpload">
     <Value>Localization patterns for the current culture loaded successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForAdminArea">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForAdminArea.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForPublicStore">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForPublicStore.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Qty.AriaLabel">
+    <Value>Enter a quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchEnabled">
+    <Value>Search enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchEnabled.Hint">
+    <Value>Check to enabled the search box.</Value>
   </LocaleResource>
 </Language>
 '
@@ -422,8 +466,24 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'seosettings.microdataena
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'seosettings.microdataenabled', 'true', 0)
+END
 GO
 
+--delete setting
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'securitysettings.enablexsrfprotectionforadminarea')
+BEGIN
+    DELETE FROM [Setting]
+    WHERE [Name] = N'securitysettings.enablexsrfprotectionforadminarea'
+END
+GO
+
+--delete setting
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'securitysettings.enablexsrfprotectionforpublicstore')
+BEGIN
+    DELETE FROM [Setting]
+    WHERE [Name] = N'securitysettings.enablexsrfprotectionforpublicstore'
+END
+GO
 
 --new column
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='RedeemedRewardPointsEntryId')
@@ -453,7 +513,7 @@ CREATE TABLE [MigrationVersionInfo](
 	[Description] [nvarchar](max) NULL,
 	[Version] [bigint] NOT NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
+
 INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2019-12-30T09:12:42.0000000' AS DateTime2), N'AddAffiliateAddressFK', 637097594562551771)
 INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2019-12-30T09:12:42.0000000' AS DateTime2), N'AddBlogCommentBlogPostFK', 637097605404497785)
 INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2019-12-30T09:12:42.0000000' AS DateTime2), N'AddBlogCommentCustomerFK', 637097605404497786)
@@ -554,7 +614,6 @@ INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CA
 INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2019-12-30T09:12:47.0000000' AS DateTime2), N'AddAclRecordCustomerRoleFK', 637097818436073081)
 INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2019-12-30T09:12:47.0000000' AS DateTime2), N'AddPermissionRecordCustomerRoleCustomerRoleFK', 637097819107801301)
 INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2019-12-30T09:12:47.0000000' AS DateTime2), N'AddPermissionRecordCustomerRolePermissionRecordFK', 637097819107801302)
-GO
 INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2019-12-30T09:12:47.0000000' AS DateTime2), N'AddShipmentItemShipmentFK', 637097820921984734)
 INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2019-12-30T09:12:47.0000000' AS DateTime2), N'AddShipmentOrderFK', 637097821681126845)
 INSERT [MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2019-12-30T09:12:47.0000000' AS DateTime2), N'AddShippingMethodCountryCountryFK', 637097822410528356)
@@ -1311,3 +1370,61 @@ BEGIN
 	DROP TABLE #tmp_guests
 	DROP TABLE #tmp_adresses
 END
+GO
+
+--new columns
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[GenericAttribute]') and NAME='CreatedOrUpdatedDateUTC')
+BEGIN
+	ALTER TABLE [GenericAttribute] ADD
+	CreatedOrUpdatedDateUTC datetime NULL
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.firstnameenabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.firstnameenabled', 'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.firstnamerequired')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.firstnamerequired', 'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.lastnameenabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.lastnameenabled', 'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.lastnamerequired')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.lastnamerequired', 'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'catalogsettings.productsearchenabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'catalogsettings.productsearchenabled', 'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.lastactivityminutes')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.lastactivityminutes', '15', 0)
+END
+GO
+

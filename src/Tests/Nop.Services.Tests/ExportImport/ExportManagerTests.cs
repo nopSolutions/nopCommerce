@@ -483,7 +483,7 @@ namespace Nop.Services.Tests.ExportImport
             //fields tested individually
             ignore.AddRange(new[]
             {
-               "Customer", "BillingAddressId", "ShippingAddressId"
+               "Customer", "BillingAddressId", "ShippingAddressId", "EntityCacheKey"
             });
 
             AreAllObjectPropertiesPresent(order, manager, ignore.ToArray());
@@ -550,7 +550,7 @@ namespace Nop.Services.Tests.ExportImport
 
             var manufacturer = manufacturers.First();
 
-            var ignore = new List<string> { "Picture", "PictureId", "SubjectToAcl", "LimitedToStores", "Deleted", "CreatedOnUtc", "UpdatedOnUtc", "AppliedDiscounts", "DiscountManufacturerMappings" };
+            var ignore = new List<string> { "Picture", "EntityCacheKey", "PictureId", "SubjectToAcl", "LimitedToStores", "Deleted", "CreatedOnUtc", "UpdatedOnUtc", "AppliedDiscounts", "DiscountManufacturerMappings" };
 
             AreAllObjectPropertiesPresent(manufacturer, manager, ignore.ToArray());
             PropertiesShouldEqual(manufacturer, manager, new Dictionary<string, string>());
@@ -588,7 +588,7 @@ namespace Nop.Services.Tests.ExportImport
                 "EmailToRevalidate", "HasShoppingCartItems", "RequireReLogin", "FailedLoginAttempts",
                 "CannotLoginUntilDateUtc", "Deleted", "IsSystemAccount", "SystemName", "LastIpAddress",
                 "LastLoginDateUtc", "LastActivityDateUtc", "RegisteredInStoreId", "BillingAddressId", "ShippingAddressId",
-                "CustomerCustomerRoleMappings", "CustomerAddressMappings" };
+                "CustomerCustomerRoleMappings", "CustomerAddressMappings", "EntityCacheKey" };
 
             AreAllObjectPropertiesPresent(customer, manager, ignore.ToArray());
             PropertiesShouldEqual(customer, manager, new Dictionary<string, string>());
@@ -628,7 +628,7 @@ namespace Nop.Services.Tests.ExportImport
             manager.ReadFromXlsx(worksheet, 2);
             var category = categories.First();
 
-            var ignore = new List<string> { "CreatedOnUtc", "Picture", "PictureId", "AppliedDiscounts", "UpdatedOnUtc", "SubjectToAcl", "LimitedToStores", "Deleted", "DiscountCategoryMappings" };
+            var ignore = new List<string> { "CreatedOnUtc", "EntityCacheKey", "Picture", "PictureId", "AppliedDiscounts", "UpdatedOnUtc", "SubjectToAcl", "LimitedToStores", "Deleted", "DiscountCategoryMappings" };
 
             AreAllObjectPropertiesPresent(category, manager, ignore.ToArray());
             PropertiesShouldEqual(category, manager, new Dictionary<string, string>());
@@ -763,7 +763,7 @@ namespace Nop.Services.Tests.ExportImport
                 "ApprovedTotalReviews", "NotApprovedTotalReviews", "SubjectToAcl", "LimitedToStores", "Deleted",
                 "DownloadExpirationDays", "HasTierPrices", "HasDiscountsApplied", "AvailableStartDateTimeUtc",
                 "AvailableEndDateTimeUtc", "DisplayOrder", "CreatedOnUtc", "UpdatedOnUtc", "ProductProductTagMappings",
-                "DiscountProductMappings" };
+                "DiscountProductMappings", "EntityCacheKey" };
 
             ignore.AddRange(replacePairse.Values);
 

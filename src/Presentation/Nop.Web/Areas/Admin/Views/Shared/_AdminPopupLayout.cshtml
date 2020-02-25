@@ -5,10 +5,10 @@
 @inject INopFileProvider fileProvider;
 @inject Microsoft.AspNetCore.Hosting.IHostingEnvironment HostingEnvironment
 @using System.Globalization
+@using Nop.Core.Caching
 @using Nop.Web.Framework.UI;
 @using Nop.Core;
 @using Nop.Core.Domain.Localization
-@using Nop.Services.Common
 @inject Nop.Services.Localization.ILanguageService languageService
 @{
     //Kendo UI
@@ -155,7 +155,10 @@
         <div class="wrapper">
             <div class="content-wrapper">
                 @await Html.PartialAsync("~/Areas/Admin/Views/Shared/Notifications.cshtml")
-                @RenderBody()
+                <div>
+                    <nop-antiforgery-token />
+                    @RenderBody()
+                </div>
             </div>
         </div>
         @Html.NopCssFiles(ResourceLocation.Footer)
