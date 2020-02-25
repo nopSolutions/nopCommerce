@@ -14,7 +14,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Logging
         /// <param name="entity">Entity</param>
         protected override void ClearCache(ActivityLogType entity)
         {
-            RemoveByPrefix(NopLoggingCachingDefaults.ActivityTypePrefixCacheKey);
+            Remove(NopLoggingCachingDefaults.ActivityTypeAllCacheKey);
         }
     }
 }

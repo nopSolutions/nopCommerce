@@ -11,14 +11,6 @@
         /// Gets a key for caching
         /// </summary>
         /// <remarks>
-        /// {0} : language ID
-        /// </remarks>
-        public static string LanguagesByIdCacheKey => "Nop.language.id-{0}";
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
         /// {0} : store ID
         /// {1} : show hidden records?
         /// </remarks>
@@ -27,7 +19,15 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string LanguagesPrefixCacheKey => "Nop.language.";
+        /// <remarks>
+        /// {0} : store ID
+        /// </remarks>
+        public static string LanguagesByStoreIdPrefixCacheKey => "Nop.language.all-{0}";
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string LanguagesAllPrefixCacheKey => "Nop.language.all";
 
         #endregion
 
@@ -47,7 +47,7 @@
         /// <remarks>
         /// {0} : language ID
         /// </remarks>
-        public static string LocaleStringResourcesAllCacheKey => "Nop.lsr.all-{0}";
+        public static string LocaleStringResourcesAllAdminCacheKey => "Nop.lsr.all.admin-{0}";
 
         /// <summary>
         /// Gets a key for caching
@@ -55,7 +55,7 @@
         /// <remarks>
         /// {0} : language ID
         /// </remarks>
-        public static string LocaleStringResourcesAllAdminCacheKey => "Nop.lsr.all.admin-{0}";
+        public static string LocaleStringResourcesAllCacheKey => "Nop.lsr.all-{0}";
 
         /// <summary>
         /// Gets a key for caching
@@ -65,6 +65,14 @@
         /// {1} : resource key
         /// </remarks>
         public static string LocaleStringResourcesByResourceNameCacheKey => "Nop.lsr.{0}-{1}";
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : language ID
+        /// </remarks>
+        public static string LocaleStringResourcesByResourceNamePrefixCacheKey => "Nop.lsr.{0}";
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -90,12 +98,7 @@
         /// Gets a key for caching
         /// </summary>
         public static string LocalizedPropertyAllCacheKey => "Nop.localizedproperty.all";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string LocalizedPropertyPrefixCacheKey => "Nop.localizedproperty.";
-
+        
         #endregion
     }
 }

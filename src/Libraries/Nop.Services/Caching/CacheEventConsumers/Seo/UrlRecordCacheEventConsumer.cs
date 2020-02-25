@@ -14,7 +14,16 @@ namespace Nop.Services.Caching.CacheEventConsumers.Seo
         /// <param name="entity">Entity</param>
         protected override void ClearCache(UrlRecord entity)
         {
-            RemoveByPrefix(NopSeoCachingDefaults.UrlRecordPrefixCacheKey);
+            Remove(NopSeoCachingDefaults.UrlRecordAllCacheKey);
+
+            var cacheKey = NopSeoCachingDefaults.UrlRecordActiveByIdNameLanguageCacheKey.ToCacheKey(entity.EntityId,
+                entity.EntityName, entity.LanguageId);
+            Remove(cacheKey);
+
+            RemoveByPrefix(NopSeoCachingDefaults.UrlRecordByIdsPrefixCacheKey);
+
+            cacheKey = NopSeoCachingDefaults.UrlRecordBySlugCacheKey.ToCacheKey(entity.Slug);
+            Remove(cacheKey);
         }
     }
 }

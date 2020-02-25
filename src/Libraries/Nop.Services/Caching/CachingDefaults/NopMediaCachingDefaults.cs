@@ -16,7 +16,7 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string ThumbsPrefixCacheKey => "Nop.azure.thumb";
+        public static string ThumbsExistsPrefixCacheKey => "Nop.azure.thumb.exists";
 
         /// <summary>
         /// Gets a key to cache
@@ -25,10 +25,5 @@
         /// {0} : virtual path
         /// </remarks>
         public static string PicturesByVirtualPathCacheKey => "Nop.pictures.virtualpath-{0}";
-        
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string PicturesPrefixCacheKey => "Nop.pictures";
     }
 }

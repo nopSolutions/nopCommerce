@@ -15,7 +15,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Topics
         /// <param name="entityEventType">Entity event type</param>
         protected override void ClearCache(TopicTemplate entity, EntityEventType entityEventType)
         {
-            RemoveByPrefix(NopTopicCachingDefaults.TopicTemplatesPrefixCacheKey);
+            Remove(NopTopicCachingDefaults.TopicTemplatesAllCacheKey);
         }
     }
 }

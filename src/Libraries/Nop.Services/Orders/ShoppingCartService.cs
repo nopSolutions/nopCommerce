@@ -39,7 +39,6 @@ namespace Nop.Services.Orders
         private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly ICacheKeyFactory _cacheKeyFactory;
         private readonly ICacheManager _cacheManager; 
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
@@ -73,7 +72,6 @@ namespace Nop.Services.Orders
         public ShoppingCartService(CatalogSettings catalogSettings,
             IAclService aclService,
             IActionContextAccessor actionContextAccessor,
-            ICacheKeyFactory cacheKeyFactory,
             ICacheManager cacheManager,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICheckoutAttributeService checkoutAttributeService,
@@ -103,7 +101,6 @@ namespace Nop.Services.Orders
             _catalogSettings = catalogSettings;
             _aclService = aclService;
             _actionContextAccessor = actionContextAccessor;
-            _cacheKeyFactory = cacheKeyFactory;
             _cacheManager = cacheManager;
             _checkoutAttributeParser = checkoutAttributeParser;
             _checkoutAttributeService = checkoutAttributeService;
@@ -240,9 +237,13 @@ namespace Nop.Services.Orders
             {
                 var cart = GetShoppingCart(customer, ShoppingCartType.ShoppingCart, storeId);
 
-                var checkoutAttributesXml = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CheckoutAttributes, storeId);
-                checkoutAttributesXml = _checkoutAttributeParser.EnsureOnlyActiveAttributes(checkoutAttributesXml, cart);
-                _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.CheckoutAttributes, checkoutAttributesXml, storeId);
+                var checkoutAttributesXml =
+                    _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CheckoutAttributes,
+                        storeId);
+                checkoutAttributesXml =
+                    _checkoutAttributeParser.EnsureOnlyActiveAttributes(checkoutAttributesXml, cart);
+                _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.CheckoutAttributes,
+                    checkoutAttributesXml, storeId);
             }
 
             //event notification
@@ -256,9 +257,10 @@ namespace Nop.Services.Orders
                 return;
 
             var requiredProductIds = _productService.ParseRequiredProductIds(product);
-            var requiredShoppingCartItems = GetShoppingCart(customer, shoppingCartType: shoppingCartItem.ShoppingCartType)
-                .Where(item => requiredProductIds.Any(id => id == item.ProductId))
-                .ToList();
+            var requiredShoppingCartItems =
+                GetShoppingCart(customer, shoppingCartType: shoppingCartItem.ShoppingCartType)
+                    .Where(item => requiredProductIds.Any(id => id == item.ProductId))
+                    .ToList();
 
             //update quantity of required products in the cart if the main one is removed
             foreach (var cartItem in requiredShoppingCartItems)
@@ -658,7 +660,7 @@ namespace Nop.Services.Orders
             if (createdToUtc.HasValue)
                 items = items.Where(item => createdToUtc.Value >= item.CreatedOnUtc);
 
-            var key = _cacheKeyFactory.CreateCacheKey(NopOrderCachingDefaults.ShoppingCartCacheKey, customer.Id, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
+            var key = NopOrderCachingDefaults.ShoppingCartCacheKey.ToCacheKey(customer, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
 
             return _cacheManager.Get(key, () => items.ToList());
         }

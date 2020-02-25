@@ -9,10 +9,5 @@
         /// Gets a key for caching
         /// </summary>
         public static string ConsentsAllCacheKey => "Nop.consents.all";
-       
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string ConsentsPrefixCacheKey => "Nop.consents.";
     }
 }

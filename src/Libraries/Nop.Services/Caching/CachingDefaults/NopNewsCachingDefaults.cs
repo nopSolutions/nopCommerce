@@ -18,6 +18,9 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string NewsCommentsPrefixCacheKey => "Nop.news.comments";
+        /// <remarks>
+        /// {0} : news item ID
+        /// </remarks>
+        public static string NewsCommentsNumberPrefixCacheKey => "Nop.news.comments.number-{0}";
     }
 }

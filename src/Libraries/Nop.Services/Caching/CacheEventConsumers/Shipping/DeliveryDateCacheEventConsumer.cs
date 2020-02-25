@@ -8,9 +8,13 @@ namespace Nop.Services.Caching.CacheEventConsumers.Shipping
     /// </summary>
     public partial class DeliveryDateCacheEventConsumer : CacheEventConsumer<DeliveryDate>
     {
+        /// <summary>
+        /// Clear cache data
+        /// </summary>
+        /// <param name="entity">Entity</param>
         protected override void ClearCache(DeliveryDate entity)
         {
-            RemoveByPrefix(NopShippingCachingDefaults.DeliveryDatesPrefixCacheKey);
+            Remove(NopShippingCachingDefaults.DeliveryDatesAllCacheKey);
         }
     }
 }

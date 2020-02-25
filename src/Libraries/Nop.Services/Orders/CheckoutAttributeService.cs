@@ -119,9 +119,7 @@ namespace Nop.Services.Orders
             if (checkoutAttributeId == 0)
                 return null;
 
-            var key = string.Format(NopOrderCachingDefaults.CheckoutAttributesByIdCacheKey, checkoutAttributeId);
-
-            return _checkoutAttributeRepository.ToCachedGetById(checkoutAttributeId, key);
+            return _checkoutAttributeRepository.ToCachedGetById(checkoutAttributeId);
         }
 
         /// <summary>
@@ -218,9 +216,7 @@ namespace Nop.Services.Orders
             if (checkoutAttributeValueId == 0)
                 return null;
 
-            var key = string.Format(NopOrderCachingDefaults.CheckoutAttributeValuesByIdCacheKey, checkoutAttributeValueId);
-
-            return _checkoutAttributeValueRepository.ToCachedGetById(checkoutAttributeValueId, key);
+            return _checkoutAttributeValueRepository.ToCachedGetById(checkoutAttributeValueId);
         }
 
         /// <summary>
