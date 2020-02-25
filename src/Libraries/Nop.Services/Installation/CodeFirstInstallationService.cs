@@ -55,7 +55,7 @@ namespace Nop.Services.Installation
         #region Fields
 
         private readonly IAddressService _addressService;
-        private readonly IDataProvider _dataProvider;
+        private readonly INopDataProvider _dataProvider;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly INopFileProvider _fileProvider;
         private readonly IRepository<ActivityLog> _activityLogRepository;
@@ -122,7 +122,7 @@ namespace Nop.Services.Installation
         #region Ctor
 
         public CodeFirstInstallationService(IAddressService addressService,
-            IDataProvider dataProvider,
+            INopDataProvider dataProvider,
             IGenericAttributeService genericAttributeService,
             INopFileProvider fileProvider,
             IRepository<ActivityLog> activityLogRepository,
