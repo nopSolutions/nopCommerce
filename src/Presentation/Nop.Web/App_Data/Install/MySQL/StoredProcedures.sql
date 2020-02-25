@@ -669,7 +669,7 @@ BEGIN
 					where psa.Id in (
 						select sao.SpecificationAttributeId 
 						from `SpecificationAttributeOption` as sao 
-						where find_in_set(sao.Id,', `FilteredSpecs`, ')
+						where sao.Id in (', `FilteredSpecs`, ')
 					)
                 )
 			)');
