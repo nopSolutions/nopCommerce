@@ -86,10 +86,9 @@ namespace Nop.Data.Migrations
             }
 
             var propertiesToAutoMap = type
-                .GetProperties()
+                .GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public)
                 .Where(p =>
-                    !expression.Columns.Any(x => x.Name.Equals(p.Name, StringComparison.OrdinalIgnoreCase)) &&
-                    !nameof(BaseEntity.Id).Equals(p.Name, StringComparison.OrdinalIgnoreCase));
+                    !expression.Columns.Any(x => x.Name.Equals(p.Name, StringComparison.OrdinalIgnoreCase)));
 
             if (propertiesToAutoMap is null || propertiesToAutoMap.Count() == 0)
                 return;
