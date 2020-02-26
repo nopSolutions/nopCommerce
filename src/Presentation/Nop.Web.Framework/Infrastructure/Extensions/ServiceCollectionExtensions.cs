@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
-using System.Text.Encodings.Web;
-using System.Text.Unicode;
 using EasyCaching.Core;
 using EasyCaching.InMemory;
 using FluentValidation.AspNetCore;
@@ -17,7 +15,6 @@ using Microsoft.Azure.KeyVault;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.WebEncoders;
 using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json.Serialization;
 using Nop.Core;
@@ -70,9 +67,6 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             //add hosting configuration parameters
             services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
-
-            //configure web encoder options for non-english characher encoding
-            services.Configure<WebEncoderOptions>(options => options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All));
 
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
