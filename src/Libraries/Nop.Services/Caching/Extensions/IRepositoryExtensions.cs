@@ -11,7 +11,7 @@ namespace Nop.Services.Caching.Extensions
         {
             var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
 
-            return cacheManager.Get(cacheKey ?? string.Format(NopCachingDefaults.NopEntityCacheKey, typeof(TEntity).Name, id), () => repository.GetById(id));
+            return cacheManager.Get(cacheKey ?? BaseEntity.GetEntityCacheKey(typeof(TEntity), id), () => repository.GetById(id));
         }
     }
 }

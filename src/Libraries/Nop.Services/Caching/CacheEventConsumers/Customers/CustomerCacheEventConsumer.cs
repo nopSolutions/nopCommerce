@@ -28,7 +28,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Customers
         {
             RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerCustomerRolesPrefixCacheKey, false);
             RemoveByPrefix(NopCustomerServiceCachingDefaults.CustomerAddressesPrefixCacheKey, false);
-            RemoveByPrefix(NopNewsCachingDefaults.ShoppingCartPrefixCacheKey, false);
+            RemoveByPrefix(NopOrderCachingDefaults.ShoppingCartPrefixCacheKey, false);
         }
 
         #endregion

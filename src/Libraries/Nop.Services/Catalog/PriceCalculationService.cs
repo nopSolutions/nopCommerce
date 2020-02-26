@@ -370,6 +370,7 @@ namespace Nop.Services.Catalog
                 quantity,
                 string.Join(",", _customerService.GetCustomerRoleIds(customer)),
                 _storeContext.CurrentStore.Id);
+
             var cacheTime = _catalogSettings.CacheProductPrices ? 60 : 0;
             //we do not cache price for rental products
             //otherwise, it can cause memory leaks (to store all possible date period combinations)

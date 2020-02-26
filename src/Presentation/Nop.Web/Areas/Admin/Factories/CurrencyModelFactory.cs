@@ -93,7 +93,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var exchangeRates = _currencyService.GetCurrencyLiveRates();
 
             //filter by existing currencies
-            var currencies = _currencyService.GetAllCurrencies(true, loadCacheableCopy: false);
+            var currencies = _currencyService.GetAllCurrencies(true);
             exchangeRates = exchangeRates
                 .Where(rate => currencies
                     .Any(currency => currency.CurrencyCode.Equals(rate.CurrencyCode, StringComparison.InvariantCultureIgnoreCase))).ToList();
@@ -140,7 +140,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get currencies
-            var currencies = _currencyService.GetAllCurrencies(showHidden: true, loadCacheableCopy: false).ToPagedList(searchModel);
+            var currencies = _currencyService.GetAllCurrencies(showHidden: true).ToPagedList(searchModel);
 
             //prepare list model
             var model = new CurrencyListModel().PrepareToGrid(searchModel, currencies, () =>

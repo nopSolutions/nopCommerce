@@ -1,12 +1,12 @@
 ﻿using System;
-using FluentAssertions;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Moq;
-using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
+using Nop.Data;
 using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Catalog;
 using NUnit.Framework;
@@ -69,7 +69,7 @@ namespace Nop.Services.Tests.Catalog
 
             _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new Mock<ICacheKeyFactory>().Object, null,
                 null, null, null, null, null, null, null, null, null, null, _productRepository.Object, null, null, null, null, null, null, _productWarehouseInventoryRepository.Object, null, null, null, null, null, null,
-                null, null, null, new LocalizationSettings());
+                null, null, null, null, new LocalizationSettings());
         }
 
         #endregion
@@ -329,8 +329,8 @@ namespace Nop.Services.Tests.Catalog
             _productService.GetRentalPeriods(product, new DateTime(2014, 3, 5), new DateTime(2014, 3, 7)).Should().Be(1);
             //3 days
             _productService.GetRentalPeriods(product, new DateTime(2014, 3, 5), new DateTime(2014, 3, 8)).Should().Be(2);
-
         }
+
         [Test]
         public void Can_calculate_rental_periods_for_weeks()
         {
@@ -369,8 +369,8 @@ namespace Nop.Services.Tests.Catalog
             _productService.GetRentalPeriods(product, new DateTime(2014, 3, 5), new DateTime(2014, 3, 19)).Should().Be(1);
             //3 weeks
             _productService.GetRentalPeriods(product, new DateTime(2014, 3, 5), new DateTime(2014, 3, 26)).Should().Be(2);
-
         }
+
         [Test]
         public void Can_calculate_rental_periods_for_months()
         {
@@ -408,8 +408,7 @@ namespace Nop.Services.Tests.Catalog
             _productService.GetRentalPeriods(product, new DateTime(1900, 1, 1), new DateTime(1901, 1, 1)).Should().Be(12);
             _productService.GetRentalPeriods(product, new DateTime(1900, 1, 1), new DateTime(1911, 1, 1)).Should().Be(132);
             _productService.GetRentalPeriods(product, new DateTime(1900, 8, 31), new DateTime(1901, 8, 30)).Should().Be(12);
-
-
+            
             //rental period length = 2 months
             product.RentalPriceLength = 2;
             //the same date
@@ -425,6 +424,7 @@ namespace Nop.Services.Tests.Catalog
             //3 months
             _productService.GetRentalPeriods(product, new DateTime(2014, 3, 5), new DateTime(2014, 5, 8)).Should().Be(2);
         }
+
         [Test]
         public void Can_calculate_rental_periods_for_years()
         {
@@ -453,7 +453,6 @@ namespace Nop.Services.Tests.Catalog
             _productService.GetRentalPeriods(product, new DateTime(2014, 3, 5), new DateTime(2015, 3, 7)).Should().Be(1);
             //more than two year
             _productService.GetRentalPeriods(product, new DateTime(2014, 3, 5), new DateTime(2016, 3, 7)).Should().Be(2);
-
         } 
 
         #endregion

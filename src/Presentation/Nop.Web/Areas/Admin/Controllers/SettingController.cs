@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
@@ -30,6 +29,7 @@ using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
+using Nop.Services.Defaults;
 using Nop.Services.Gdpr;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -191,6 +191,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Blog(BlogSettingsModel model)
         {
@@ -235,6 +236,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Vendor(VendorSettingsModel model)
         {
@@ -282,6 +284,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Forum(ForumSettingsModel model)
         {
@@ -341,6 +344,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult News(NewsSettingsModel model)
         {
@@ -386,6 +390,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Shipping(ShippingSettingsModel model)
         {
@@ -462,6 +467,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Tax(TaxSettingsModel model)
         {
@@ -546,6 +552,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Catalog(CatalogSettingsModel model)
         {
@@ -594,6 +601,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.SearchPageAllowCustomersToSelectPageSize, model.SearchPageAllowCustomersToSelectPageSize_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.SearchPagePageSizeOptions, model.SearchPagePageSizeOptions_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ProductSearchAutoCompleteEnabled, model.ProductSearchAutoCompleteEnabled_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ProductSearchEnabled, model.ProductSearchEnabled_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ProductSearchAutoCompleteNumberOfProducts, model.ProductSearchAutoCompleteNumberOfProducts_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ShowProductImagesInSearchAutoComplete, model.ShowProductImagesInSearchAutoComplete_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ShowLinkToAllResultInSearchAutoComplete, model.ShowLinkToAllResultInSearchAutoComplete_OverrideForStore, storeScope, false);
@@ -645,6 +653,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return RedirectToAction("Catalog");
         }
+
         [HttpPost]
         public virtual IActionResult SortOptionsList(SortOptionSearchModel searchModel)
         {
@@ -656,6 +665,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return Json(model);
         }
+
         [HttpPost]
         public virtual IActionResult SortOptionUpdate(SortOptionModel model)
         {
@@ -690,6 +700,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult RewardPoints(RewardPointsSettingsModel model)
         {
@@ -754,6 +765,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Order(OrderSettingsModel model)
         {
@@ -841,6 +853,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult ShoppingCart(ShoppingCartSettingsModel model)
         {
@@ -896,6 +909,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         [FormValueRequired("save")]
         public virtual IActionResult Media(MediaSettingsModel model)
@@ -937,6 +951,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return RedirectToAction("Media");
         }
+
         [HttpPost, ActionName("Media")]
         [FormValueRequired("change-picture-storage")]
         public virtual IActionResult ChangePictureStorage()
@@ -975,6 +990,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult CustomerUser(CustomerUserSettingsModel model)
         {
@@ -1044,6 +1060,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Gdpr(GdprSettingsModel model)
         {
@@ -1073,6 +1090,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return RedirectToAction("Gdpr");
         }
+
         [HttpPost]
         public virtual IActionResult GdprConsentList(GdprConsentSearchModel searchModel)
         {
@@ -1084,6 +1102,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return Json(model);
         }
+
         public virtual IActionResult CreateGdprConsent()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -1120,6 +1139,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //if we got this far, something failed, redisplay form
             return View(model);
         }
+
         public virtual IActionResult EditGdprConsent(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -1135,6 +1155,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual IActionResult EditGdprConsent(GdprConsentModel model, bool continueEditing)
         {
@@ -1165,6 +1186,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //if we got this far, something failed, redisplay form
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult DeleteGdprConsent(int id)
         {
@@ -1199,6 +1221,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         [FormValueRequired("save")]
         public virtual IActionResult GeneralCommon(GeneralCommonSettingsModel model)
@@ -1324,8 +1347,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (!string.IsNullOrWhiteSpace(s))
                         securitySettings.AdminAreaAllowedIpAddresses.Add(s.Trim());
             securitySettings.ForceSslForAllPages = model.SecuritySettings.ForceSslForAllPages;
-            securitySettings.EnableXsrfProtectionForAdminArea = model.SecuritySettings.EnableXsrfProtectionForAdminArea;
-            securitySettings.EnableXsrfProtectionForPublicStore = model.SecuritySettings.EnableXsrfProtectionForPublicStore;
             securitySettings.HoneypotEnabled = model.SecuritySettings.HoneypotEnabled;
             _settingService.SaveSetting(securitySettings);
 
@@ -1502,6 +1523,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return RedirectToAction("GeneralCommon");
         }
+
         [HttpPost, ActionName("GeneralCommon")]
         [FormValueRequired("changeencryptionkey")]
         public virtual IActionResult ChangeEncryptionKey(GeneralCommonSettingsModel model)
@@ -1581,6 +1603,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return RedirectToAction("GeneralCommon");
         }
+
         [HttpPost, ActionName("GeneralCommon")]
         [FormValueRequired("togglefulltext")]
         public virtual IActionResult ToggleFullText(GeneralCommonSettingsModel model)
@@ -1704,6 +1727,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult AllSettings(SettingSearchModel searchModel)
         {
@@ -1715,6 +1739,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return Json(model);
         }
+
         [HttpPost]
         public virtual IActionResult SettingUpdate(SettingModel model)
         {
@@ -1739,6 +1764,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //setting name has been changed
                 _settingService.DeleteSetting(setting);
             }
+
             _settingService.SetSetting(model.Name, model.Value, setting.StoreId);
 
             //activity log
@@ -1746,6 +1772,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return new NullJsonResult();
         }
+
         [HttpPost]
         public virtual IActionResult SettingAdd(SettingModel model)
         {
@@ -1771,6 +1798,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return Json(new { Result = true });
         }
+
         [HttpPost]
         public virtual IActionResult SettingDelete(int id)
         {

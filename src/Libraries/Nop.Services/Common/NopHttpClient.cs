@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Core.Rss;
+using Nop.Services.Defaults;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Common

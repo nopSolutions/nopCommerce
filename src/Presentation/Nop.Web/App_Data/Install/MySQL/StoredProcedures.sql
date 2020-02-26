@@ -660,7 +660,20 @@ BEGIN
     end if;
     
     #filter by specification attribution options
-    # wtf??
+    
+    IF `FilteredSpecs` REGEXP '^([[:digit:]](,?))+$' then
+		SET  @sql_command = concat(@sql_command, '
+			AND (p.Id in (
+					select psa.ProductId 
+					from `ProductSpecificationAttribute` as psa 
+					where psa.Id in (
+						select sao.SpecificationAttributeId 
+						from `SpecificationAttributeOption` as sao 
+						where sao.Id in (', `FilteredSpecs`, ')
+					)
+                )
+			)');
+    end if;
     
 	#sorting
     SET @sql_orderby = '';

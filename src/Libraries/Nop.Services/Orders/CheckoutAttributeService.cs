@@ -85,7 +85,7 @@ namespace Nop.Services.Orders
         /// <returns>Checkout attributes</returns>
         public virtual IList<CheckoutAttribute> GetAllCheckoutAttributes(int storeId = 0, bool excludeShippableAttributes = false)
         {
-            var key = string.Format(NopNewsCachingDefaults.CheckoutAttributesAllCacheKey, storeId, excludeShippableAttributes);
+            var key = string.Format(NopOrderCachingDefaults.CheckoutAttributesAllCacheKey, storeId, excludeShippableAttributes);
             return _cacheManager.Get(key, () =>
             {
                 var query = from ca in _checkoutAttributeRepository.Table
@@ -119,7 +119,7 @@ namespace Nop.Services.Orders
             if (checkoutAttributeId == 0)
                 return null;
 
-            var key = string.Format(NopNewsCachingDefaults.CheckoutAttributesByIdCacheKey, checkoutAttributeId);
+            var key = string.Format(NopOrderCachingDefaults.CheckoutAttributesByIdCacheKey, checkoutAttributeId);
 
             return _checkoutAttributeRepository.ToCachedGetById(checkoutAttributeId, key);
         }
@@ -197,7 +197,7 @@ namespace Nop.Services.Orders
         /// <returns>Checkout attribute values</returns>
         public virtual IList<CheckoutAttributeValue> GetCheckoutAttributeValues(int checkoutAttributeId)
         {
-            var key = string.Format(NopNewsCachingDefaults.CheckoutAttributeValuesAllCacheKey, checkoutAttributeId);
+            var key = string.Format(NopOrderCachingDefaults.CheckoutAttributeValuesAllCacheKey, checkoutAttributeId);
 
             var query = from cav in _checkoutAttributeValueRepository.Table
                 orderby cav.DisplayOrder, cav.Id
@@ -218,7 +218,7 @@ namespace Nop.Services.Orders
             if (checkoutAttributeValueId == 0)
                 return null;
 
-            var key = string.Format(NopNewsCachingDefaults.CheckoutAttributeValuesByIdCacheKey, checkoutAttributeValueId);
+            var key = string.Format(NopOrderCachingDefaults.CheckoutAttributeValuesByIdCacheKey, checkoutAttributeValueId);
 
             return _checkoutAttributeValueRepository.ToCachedGetById(checkoutAttributeValueId, key);
         }

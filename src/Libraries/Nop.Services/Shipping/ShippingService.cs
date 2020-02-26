@@ -332,7 +332,8 @@ namespace Nop.Services.Shipping
             var query = from wh in _warehouseRepository.Table
                         orderby wh.Name
                         select wh;
-            var warehouses = query.ToList();
+            var warehouses = query.ToCachedList(NopShippingCachingDefaults.WarehousesAllCacheKey);
+
             return warehouses;
         }
 

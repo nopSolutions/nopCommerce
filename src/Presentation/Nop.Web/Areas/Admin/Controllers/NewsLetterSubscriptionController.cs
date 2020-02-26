@@ -117,7 +117,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
-        [HttpPost, ActionName("List")]
+        [HttpPost, ActionName("ExportCSV")]
         [FormValueRequired("exportcsv")]
         public virtual IActionResult ExportCsv(NewsletterSubscriptionSearchModel model)
         {

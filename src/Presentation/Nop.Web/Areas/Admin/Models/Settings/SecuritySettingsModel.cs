@@ -21,12 +21,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.ForceSslForAllPages")]
         public bool ForceSslForAllPages { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForAdminArea")]
-        public bool EnableXsrfProtectionForAdminArea { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForPublicStore")]
-        public bool EnableXsrfProtectionForPublicStore { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled")]
         public bool HoneypotEnabled { get; set; }
 

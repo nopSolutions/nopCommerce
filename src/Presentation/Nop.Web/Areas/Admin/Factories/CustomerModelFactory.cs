@@ -582,6 +582,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             searchModel.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             searchModel.AvatarEnabled = _customerSettings.AllowCustomersToUploadAvatars;
+            searchModel.FirstNameEnabled = _customerSettings.FirstNameEnabled;
+            searchModel.LastNameEnabled = _customerSettings.LastNameEnabled;
             searchModel.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             searchModel.CompanyEnabled = _customerSettings.CompanyEnabled;
             searchModel.PhoneEnabled = _customerSettings.PhoneEnabled;
@@ -719,7 +721,9 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.SelectedCustomerRoleIds = _customerService.GetCustomerRoleIds(customer).ToList();
                     model.RegisteredInStore = _storeService.GetAllStores()
                         .FirstOrDefault(store => store.Id == customer.RegisteredInStoreId)?.Name ?? string.Empty;
-
+                    model.DisplayRegisteredInStore = model.Id > 0 && !string.IsNullOrEmpty(model.RegisteredInStore) &&
+                        _storeService.GetAllStores().Select(x => x.Id).Count() > 1;
+                   
                     //prepare model affiliate
                     var affiliate = _affiliateService.GetAffiliateById(customer.AffiliateId);
                     if (affiliate != null)
@@ -764,6 +768,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
+            model.FirstNameEnabled = _customerSettings.FirstNameEnabled;
+            model.LastNameEnabled = _customerSettings.LastNameEnabled;
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.CompanyEnabled = _customerSettings.CompanyEnabled;

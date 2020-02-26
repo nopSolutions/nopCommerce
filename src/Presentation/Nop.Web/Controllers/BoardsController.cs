@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Security;
 using Nop.Core.Rss;
@@ -20,6 +19,7 @@ using Nop.Web.Models.Boards;
 namespace Nop.Web.Controllers
 {
     [HttpsRequirement(SslRequirement.No)]
+    [AutoValidateAntiforgeryToken]
     public partial class BoardsController : BasePublicController
     {
         #region Fields
@@ -195,6 +195,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult ForumWatch(int id)
         {
             var watchTopic = _localizationService.GetResource("Forum.WatchForum");
@@ -256,6 +257,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult TopicWatch(int id)
         {
             var watchTopic = _localizationService.GetResource("Forum.WatchTopic");
@@ -308,8 +310,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        [PublicAntiForgery]
+        [HttpPost]        
         public virtual IActionResult TopicMove(TopicMoveModel model)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -330,7 +331,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         public virtual IActionResult TopicDelete(int id)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -380,7 +380,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         [ValidateCaptcha]
         public virtual IActionResult TopicCreate(EditForumTopicModel model, bool captchaValid)
         {
@@ -505,7 +504,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         [ValidateCaptcha]
         public virtual IActionResult TopicEdit(EditForumTopicModel model, bool captchaValid)
         {
@@ -627,7 +625,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         public virtual IActionResult PostDelete(int id)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -688,7 +685,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         [ValidateCaptcha]
         public virtual IActionResult PostCreate(EditForumPostModel model, bool captchaValid)
         {
@@ -763,13 +759,13 @@ namespace Nop.Web.Controllers
 
                     var pageSize = _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10;
 
-                    var pageIndex = (_forumService.CalculateTopicPageIndex(forumPost.TopicId, pageSize, forumPost.Id) + 1);
+                    var pageIndex = _forumService.CalculateTopicPageIndex(forumPost.TopicId, pageSize, forumPost.Id) + 1;
                     var url = string.Empty;
                     if (pageIndex > 1)
                         url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = _forumService.GetTopicSeName(forumTopic), pageNumber = pageIndex });
                     else
                         url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = _forumService.GetTopicSeName(forumTopic) });
-                    return Redirect($"{url}#{forumPost.Id}");
+                    return LocalRedirect($"{url}#{forumPost.Id}");
                 }
                 catch (Exception ex)
                 {
@@ -800,7 +796,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         [ValidateCaptcha]
         public virtual IActionResult PostEdit(EditForumPostModel model, bool captchaValid)
         {
@@ -884,7 +879,7 @@ namespace Nop.Web.Controllers
                     {
                         url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = _forumService.GetTopicSeName(forumTopic) });
                     }
-                    return Redirect($"{url}#{forumPost.Id}");
+                    return LocalRedirect($"{url}#{forumPost.Id}");
                 }
                 catch (Exception ex)
                 {
@@ -918,6 +913,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("CustomerForumSubscriptions")]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult CustomerForumSubscriptionsPOST(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)

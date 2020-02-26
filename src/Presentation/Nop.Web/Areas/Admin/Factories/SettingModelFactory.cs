@@ -476,8 +476,6 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 EncryptionKey = securitySettings.EncryptionKey,
                 ForceSslForAllPages = securitySettings.ForceSslForAllPages,
-                EnableXsrfProtectionForAdminArea = securitySettings.EnableXsrfProtectionForAdminArea,
-                EnableXsrfProtectionForPublicStore = securitySettings.EnableXsrfProtectionForPublicStore,
                 HoneypotEnabled = securitySettings.HoneypotEnabled
             };
 

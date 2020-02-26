@@ -91,13 +91,7 @@ namespace Nop.Core.Configuration
         /// Gets or sets a value indicating whether a store owner can install sample data during installation
         /// </summary>
         public bool DisableSampleDataDuringInstallation { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to use fast installation. 
-        /// By default this setting should always be set to "False" (only for advanced users)
-        /// </summary>
-        public bool UseFastInstallationService { get; set; }
-
+       
         /// <summary>
         /// Gets or sets a list of plugins ignored during nopCommerce installation
         /// </summary>

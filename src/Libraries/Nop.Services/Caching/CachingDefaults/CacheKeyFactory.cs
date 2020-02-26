@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Nop.Core.Caching;
+using Nop.Services.Defaults;
 using Nop.Services.Security;
 
 namespace Nop.Services.Caching.CachingDefaults

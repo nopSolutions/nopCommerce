@@ -1,6 +1,6 @@
 ﻿using Moq;
 using Nop.Core;
-using Nop.Data;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Discounts;
@@ -8,6 +8,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
+using Nop.Data;
 using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -51,6 +52,7 @@ namespace Nop.Services.Tests
             IRepository<StoreMapping> storeMappingRepository = null,
             IRepository<TierPrice> tierPriceRepository = null,
             IRepository<Warehouse> warehouseRepository = null,
+            IStaticCacheManager staticCacheManager = null,
             IStoreService storeService = null,
             IStoreMappingService storeMappingService = null,
             IWorkContext workContext = null,
@@ -84,6 +86,7 @@ namespace Nop.Services.Tests
                 storeMappingRepository.FakeRepoNullPropagation(),
                 tierPriceRepository.FakeRepoNullPropagation(),
                 warehouseRepository.FakeRepoNullPropagation(),
+                staticCacheManager ?? new TestCacheManager(),
                 storeService ?? new Mock<IStoreService>().Object,
                 storeMappingService ?? new Mock<IStoreMappingService>().Object,
                 workContext ?? new Mock<IWorkContext>().Object,

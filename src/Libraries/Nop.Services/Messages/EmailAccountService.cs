@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -140,7 +141,9 @@ namespace Nop.Services.Messages
             var query = from ea in _emailAccountRepository.Table
                         orderby ea.Id
                         select ea;
-            var emailAccounts = query.ToList();
+
+            var emailAccounts = query.ToCachedList(NopMessageCachingDefaults.EmailAccountsAllCacheKey);
+
             return emailAccounts;
         }
 

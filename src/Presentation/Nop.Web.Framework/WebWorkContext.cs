@@ -39,6 +39,7 @@ namespace Nop.Web.Framework
         private readonly IStoreMappingService _storeMappingService;
         private readonly IUserAgentHelper _userAgentHelper;
         private readonly IVendorService _vendorService;
+        private readonly IWebHelper _webHelper;
         private readonly LocalizationSettings _localizationSettings;
         private readonly TaxSettings _taxSettings;
 
@@ -64,6 +65,7 @@ namespace Nop.Web.Framework
             IStoreMappingService storeMappingService,
             IUserAgentHelper userAgentHelper,
             IVendorService vendorService,
+            IWebHelper webHelper,
             LocalizationSettings localizationSettings,
             TaxSettings taxSettings)
         {
@@ -78,6 +80,7 @@ namespace Nop.Web.Framework
             _storeMappingService = storeMappingService;
             _userAgentHelper = userAgentHelper;
             _vendorService = vendorService;
+            _webHelper = webHelper;
             _localizationSettings = localizationSettings;
             _taxSettings = taxSettings;
         }
@@ -122,7 +125,7 @@ namespace Nop.Web.Framework
             {
                 HttpOnly = true,
                 Expires = cookieExpiresDate,
-                Secure = _httpContextAccessor.HttpContext.Request.IsHttps
+                Secure = _webHelper.IsCurrentConnectionSecured()
             };
             _httpContextAccessor.HttpContext.Response.Cookies.Append(cookieName, customerGuid.ToString(), options);
         }

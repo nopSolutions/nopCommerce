@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -61,6 +62,7 @@ namespace Nop.Services.Catalog
         protected readonly IRepository<StoreMapping> _storeMappingRepository;
         protected readonly IRepository<TierPrice> _tierPriceRepository;
         protected readonly IRepository<Warehouse> _warehouseRepository;
+        protected readonly IStaticCacheManager _cacheManager;
         protected readonly IStoreMappingService _storeMappingService;
         protected readonly IStoreService _storeService;
         protected readonly IWorkContext _workContext;
@@ -99,6 +101,7 @@ namespace Nop.Services.Catalog
             IRepository<StoreMapping> storeMappingRepository,
             IRepository<TierPrice> tierPriceRepository,
             IRepository<Warehouse> warehouseRepositor,
+            IStaticCacheManager cacheManager,
             IStoreService storeService,
             IStoreMappingService storeMappingService,
             IWorkContext workContext,
@@ -133,6 +136,7 @@ namespace Nop.Services.Catalog
             _storeMappingRepository = storeMappingRepository;
             _tierPriceRepository = tierPriceRepository;
             _warehouseRepository = warehouseRepositor;
+            _cacheManager = cacheManager;
             _storeMappingService = storeMappingService;
             _storeService = storeService;
             _workContext = workContext;
@@ -480,17 +484,23 @@ namespace Nop.Services.Catalog
                         select p;
             }
 
+            var allowedCustomerRolesIds = new List<int>();
+
             if (!_catalogSettings.IgnoreAcl)
             {
                 //Access control list. Allowed customer roles
-                var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
+                allowedCustomerRolesIds.AddRange(_customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
 
                 query = from p in query
                         join acl in _aclRepository.Table
                         on new { c1 = p.Id, c2 = nameof(Product) } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into p_acl
                         from acl in p_acl.DefaultIfEmpty()
-                        where !p.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
+                        where !p.SubjectToAcl || allowedCustomerRolesIds.ToArray().Contains(acl.CustomerRoleId)
                         select p;
+            }
+            else
+            {
+                allowedCustomerRolesIds.Add(0);
             }
 
             if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
@@ -503,8 +513,14 @@ namespace Nop.Services.Catalog
                         select p;
             }
 
+            var cacheKey = string.Format(NopCatalogCachingDefaults.CategoryNumberOfProductsModelKey,
+                _cacheKeyFactory.CreateIdsHash(allowedCustomerRolesIds),
+                storeId,
+                categoryIds != null && categoryIds.Any() ? _cacheKeyFactory.CreateIdsHash(categoryIds) : "0");
+
             //only distinct products
-            var result = query.Select(p => p.Id).Distinct().Count();
+            var result = _cacheManager.Get(cacheKey, () => query.Select(p => p.Id).Distinct().Count());
+
             return result;
         }
 
@@ -1753,7 +1769,8 @@ namespace Nop.Services.Catalog
                         (showHidden || p.Published)
                         orderby rp.DisplayOrder, rp.Id
                         select rp;
-            var relatedProducts = query.ToList();
+
+            var relatedProducts = query.ToCachedList(string.Format(NopCatalogCachingDefaults.ProductsRelatedIdsKey, productId1, showHidden));
 
             return relatedProducts;
         }
@@ -2019,7 +2036,8 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         public virtual IList<TierPrice> GetTierPricesByProduct(int productId)
         {
-            return _tierPriceRepository.Table.Where(tp => tp.ProductId == productId).ToList();
+            return _tierPriceRepository.Table.Where(tp => tp.ProductId == productId)
+                .ToCachedList(string.Format(NopCatalogCachingDefaults.ProductTierPrices, productId));
         }
 
         /// <summary>
@@ -2133,7 +2151,9 @@ namespace Nop.Services.Catalog
                         where pp.ProductId == productId
                         orderby pp.DisplayOrder, pp.Id
                         select pp;
+
             var productPictures = query.ToList();
+
             return productPictures;
         }
 

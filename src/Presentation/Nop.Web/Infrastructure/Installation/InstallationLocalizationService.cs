@@ -22,7 +22,8 @@ namespace Nop.Web.Infrastructure.Installation
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly INopFileProvider _fileProvider;
-        
+        private readonly IWebHelper _webHelper;
+
         private IList<InstallationLanguage> _availableLanguages;
 
         #endregion
@@ -30,10 +31,12 @@ namespace Nop.Web.Infrastructure.Installation
         #region Ctor
 
         public InstallationLocalizationService(IHttpContextAccessor httpContextAccessor,
-            INopFileProvider fileProvider)
+            INopFileProvider fileProvider,
+            IWebHelper webHelper)
         {
             _httpContextAccessor = httpContextAccessor;
             _fileProvider = fileProvider;
+            _webHelper = webHelper;
         }
 
         #endregion
@@ -116,7 +119,8 @@ namespace Nop.Web.Infrastructure.Installation
             var cookieOptions = new CookieOptions
             {
                 Expires = DateTime.Now.AddHours(24),
-                HttpOnly = true
+                HttpOnly = true,
+                Secure = _webHelper.IsCurrentConnectionSecured()
             };
             var cookieName = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.InstallationLanguageCookie}";
             httpContext.Response.Cookies.Delete(cookieName);

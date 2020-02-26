@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Domain.Shipping;
+using Nop.Services.Caching.CachingDefaults;
 
 namespace Nop.Services.Caching.CacheEventConsumers.Shipping
 {
@@ -7,5 +8,9 @@ namespace Nop.Services.Caching.CacheEventConsumers.Shipping
     /// </summary>
     public partial class ProductAvailabilityRangeCacheEventConsumer : CacheEventConsumer<ProductAvailabilityRange>
     {
+        protected override void ClearCache(ProductAvailabilityRange entity)
+        {
+            RemoveByPrefix(NopShippingCachingDefaults.ProductAvailabilityPrefixCacheKey);
+        }
     }
 }

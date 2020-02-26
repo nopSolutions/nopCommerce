@@ -267,7 +267,8 @@ namespace Nop.Services.Orders
                 var requiredProductQuantity = 1;
 
                 UpdateShoppingCartItem(customer, cartItem.Id, cartItem.AttributesXml, cartItem.CustomerEnteredPrice,
-                    quantity: cartItem.Quantity - shoppingCartItem.Quantity * requiredProductQuantity, resetCheckoutData: false);
+                    quantity: cartItem.Quantity - shoppingCartItem.Quantity * requiredProductQuantity,
+                    resetCheckoutData: false);
             }
         }
 
@@ -657,10 +658,7 @@ namespace Nop.Services.Orders
             if (createdToUtc.HasValue)
                 items = items.Where(item => createdToUtc.Value >= item.CreatedOnUtc);
 
-            var key = _cacheKeyFactory.CreateCacheKey(NopNewsCachingDefaults.ShoppingCartCacheKey, customer.Id, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
-
-            if (string.IsNullOrEmpty(key))
-                return items.ToList();
+            var key = _cacheKeyFactory.CreateCacheKey(NopOrderCachingDefaults.ShoppingCartCacheKey, customer.Id, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
 
             return _cacheManager.Get(key, () => items.ToList());
         }

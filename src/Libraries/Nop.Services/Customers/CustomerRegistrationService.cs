@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
+using Nop.Services.Defaults;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Messages;

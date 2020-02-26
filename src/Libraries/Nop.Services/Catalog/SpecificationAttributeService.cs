@@ -87,7 +87,9 @@ namespace Nop.Services.Catalog
             var query = from sa in _specificationAttributeRepository.Table
                         orderby sa.DisplayOrder, sa.Id
                         select sa;
-            var specificationAttributes = new PagedList<SpecificationAttribute>(query, pageIndex, pageSize);
+
+            var specificationAttributes = query.ToCachedPagedList(NopCatalogCachingDefaults.SpecAttributesAllCacheKey, pageIndex, pageSize);
+
             return specificationAttributes;
         }
 
@@ -218,7 +220,9 @@ namespace Nop.Services.Catalog
                         orderby sao.DisplayOrder, sao.Id
                         where sao.SpecificationAttributeId == specificationAttributeId
                         select sao;
-            var specificationAttributeOptions = query.ToList();
+
+            var specificationAttributeOptions = query.ToCachedList(string.Format(NopCatalogCachingDefaults.SpecAttributesOptionsCacheKey, specificationAttributeId));
+
             return specificationAttributeOptions;
         }
 

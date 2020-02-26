@@ -124,6 +124,18 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.GenderEnabled")]
         public bool GenderEnabled { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.FirstNameEnabled")]
+        public bool FirstNameEnabled { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.FirstNameRequired")]
+        public bool FirstNameRequired { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.LastNameEnabled")]
+        public bool LastNameEnabled { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.LastNameRequired")]
+        public bool LastNameRequired { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.DateOfBirthEnabled")]
         public bool DateOfBirthEnabled { get; set; }
 

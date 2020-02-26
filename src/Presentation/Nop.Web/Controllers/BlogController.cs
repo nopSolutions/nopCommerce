@@ -26,6 +26,7 @@ using Nop.Web.Models.Blogs;
 namespace Nop.Web.Controllers
 {
     [HttpsRequirement(SslRequirement.No)]
+    [AutoValidateAntiforgeryToken]
     public partial class BlogController : BasePublicController
     {
         #region Fields
@@ -170,8 +171,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("BlogPost")]
-        [PublicAntiForgery]
+        [HttpPost, ActionName("BlogPost")]        
         [FormValueRequired("add-comment")]
         [ValidateCaptcha]
         public virtual IActionResult BlogCommentAdd(int blogPostId, BlogPostModel model, bool captchaValid)

@@ -93,12 +93,12 @@ namespace Nop.Services.Tests.Catalog
                 .Returns(GetMockDiscountProductMapping);
 
             var shipmentRepository = new Mock<IRepository<Shipment>>();
-
+            
             _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new Mock<ICacheKeyFactory>().Object, _customerService,
                 null, null, null, null, null, null, null, null, null, _discountProductMappingRepository.Object,
                 _productRepository.Object, null, null, null, null, null, null, null, null, shipmentRepository.Object,
                 null, null, _tierPriceRepository.Object, null,
-                null, null, null, new LocalizationSettings());
+                null, null, null, null, new LocalizationSettings());
 
             _productAttributeParser = new Mock<IProductAttributeParser>();
 
@@ -383,7 +383,7 @@ namespace Nop.Services.Tests.Catalog
         [TestCase(12.01, 13.00, RoundingType.Rounding1Up)]
         [TestCase(12.99, 13.00, RoundingType.Rounding1Up)]
         [TestCase(12.00, 12.00, RoundingType.Rounding1Up)]
-        public void can_round(decimal valueToRoundig, decimal roundedValue, RoundingType roundingType)
+        public void Can_round(decimal valueToRoundig, decimal roundedValue, RoundingType roundingType)
         {
             _priceCalcService.Round(valueToRoundig, roundingType).Should().Be(roundedValue);
         }

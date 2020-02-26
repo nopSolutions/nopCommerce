@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using LinqToDB;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Blogs;
@@ -36,6 +34,7 @@ using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Blogs;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -44,7 +43,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.News;
-using Nop.Services.Seo;
+using NopSeoDefaults = Nop.Services.Defaults.NopSeoDefaults;
 
 namespace Nop.Services.Installation
 {
@@ -260,7 +259,10 @@ namespace Nop.Services.Installation
 
         protected virtual void InsertInstallationData<T>(params T[] entities) where T : BaseEntity
         {
-            _dataProvider.BulkInsertEntities(entities);
+            foreach (var entity in entities)
+            {
+                InsertInstallationData(entity);
+            }
         }
 
         protected virtual SpecificationAttributeOption GetSpecificationAttributeOption(string specAttributeName, string specAttributeOptionName)
@@ -686,8 +688,6 @@ namespace Nop.Services.Installation
                 Published = true
             };
 
-            _countryRepository.Insert(cUsa);
-
             var cCanada = new Country
             {
                 Name = "Canada",
@@ -701,11 +701,11 @@ namespace Nop.Services.Installation
                 Published = true
             };
 
-            _countryRepository.Insert(cCanada);
-
-            //other countries
             var countries = new List<Country>
             {
+                cUsa,
+                cCanada,
+                //other countries
                 new Country
                 {
                     Name = "Argentina",
@@ -4478,8 +4478,6 @@ namespace Nop.Services.Installation
                 IsSystemRole = true,
                 SystemName = NopCustomerDefaults.AdministratorsRoleName
             };
-            _customerRoleRepository.Insert(crAdministrators);
-
             var crForumModerators = new CustomerRole
             {
                 Name = "Forum Moderators",
@@ -4487,8 +4485,6 @@ namespace Nop.Services.Installation
                 IsSystemRole = true,
                 SystemName = NopCustomerDefaults.ForumModeratorsRoleName
             };
-            _customerRoleRepository.Insert(crForumModerators);
-
             var crRegistered = new CustomerRole
             {
                 Name = "Registered",
@@ -4496,8 +4492,6 @@ namespace Nop.Services.Installation
                 IsSystemRole = true,
                 SystemName = NopCustomerDefaults.RegisteredRoleName
             };
-            _customerRoleRepository.Insert(crRegistered);
-
             var crGuests = new CustomerRole
             {
                 Name = "Guests",
@@ -4505,8 +4499,6 @@ namespace Nop.Services.Installation
                 IsSystemRole = true,
                 SystemName = NopCustomerDefaults.GuestsRoleName
             };
-            _customerRoleRepository.Insert(crGuests);
-
             var crVendors = new CustomerRole
             {
                 Name = "Vendors",
@@ -4514,7 +4506,15 @@ namespace Nop.Services.Installation
                 IsSystemRole = true,
                 SystemName = NopCustomerDefaults.VendorsRoleName
             };
-            _customerRoleRepository.Insert(crVendors);
+            var customerRoles = new List<CustomerRole>
+            {
+                crAdministrators,
+                crForumModerators,
+                crRegistered,
+                crGuests,
+                crVendors
+            };
+            _customerRoleRepository.Insert(customerRoles);
 
             //default store 
             var defaultStore = _storeRepository.Table.FirstOrDefault();
@@ -4573,7 +4573,7 @@ namespace Nop.Services.Installation
             //set hashed admin password
             var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
             customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
-                PasswordFormat.Hashed, defaultUserPassword, null, NopCustomerServiceDefaults.DefaultHashedPasswordFormat));
+                 PasswordFormat.Hashed, defaultUserPassword, null, NopCustomerServiceDefaults.DefaultHashedPasswordFormat));
 
             //search engine (crawler) built-in user
             var searchEngineUser = new Customer
@@ -4622,8 +4622,8 @@ namespace Nop.Services.Installation
             //first order
             var firstCustomer = _customerRepository.Table.First(c => c.Email == "steve_gates@nopCommerce.com");
 
-            var firstCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(firstCustomer.BillingAddressId)));
-            var firstCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(firstCustomer.ShippingAddressId)));
+            var firstCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(firstCustomer.BillingAddressId)));
+            var firstCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(firstCustomer.ShippingAddressId)));
 
             var firstOrder = new Order
             {
@@ -4709,7 +4709,7 @@ namespace Nop.Services.Installation
             _orderItemRepository.Insert(firstOrderItem1);
 
             //item Leica T Mirrorless Digital Camera
-            var firstOrderItem2 = new OrderItem
+            var fierstOrderItem2 = new OrderItem
             {
                 OrderItemGuid = Guid.NewGuid(),
                 OrderId = firstOrder.Id,
@@ -4731,7 +4731,7 @@ namespace Nop.Services.Installation
                 RentalStartDateUtc = null,
                 RentalEndDateUtc = null
             };
-            _orderItemRepository.Insert(firstOrderItem2);
+            _orderItemRepository.Insert(fierstOrderItem2);
 
             //item $25 Virtual Gift Card
             var firstOrderItem3 = new OrderItem
@@ -4792,8 +4792,8 @@ namespace Nop.Services.Installation
             //second order
             var secondCustomer = _customerRepository.Table.First(c => c.Email == "arthur_holmes@nopCommerce.com");
 
-            var secondCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(secondCustomer.BillingAddressId)));
-            var secondCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(secondCustomer.ShippingAddressId)));
+            var secondCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(secondCustomer.BillingAddressId)));
+            var secondCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(secondCustomer.ShippingAddressId)));
 
             var secondOrder = new Order
             {
@@ -4914,7 +4914,7 @@ namespace Nop.Services.Installation
             //third order
             var thirdCustomer = _customerRepository.Table.First(c => c.Email == "james_pan@nopCommerce.com");
 
-            var thirdCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(thirdCustomer.BillingAddressId)));
+            var thirdCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(thirdCustomer.BillingAddressId)));
 
             var thirdOrder = new Order
             {
@@ -5059,10 +5059,10 @@ namespace Nop.Services.Installation
             //fourth order
             var fourthCustomer = _customerRepository.Table.First(c => c.Email == "brenda_lindgren@nopCommerce.com");
 
-            var fourthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fourthCustomer.BillingAddressId)));
-            var fourthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fourthCustomer.ShippingAddressId)));
-            var fourthCustomerPickupAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fourthCustomer.ShippingAddressId)));
-
+            var fourthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fourthCustomer.BillingAddressId)));
+            var fourthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fourthCustomer.ShippingAddressId)));
+            var fourthCustomerPickupAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fourthCustomer.ShippingAddressId)));
+            
             var fourthOrder = new Order
             {
                 StoreId = defaultStore.Id,
@@ -5274,8 +5274,8 @@ namespace Nop.Services.Installation
             //fifth order
             var fifthCustomer = _customerRepository.Table.First(c => c.Email == "victoria_victoria@nopCommerce.com");
 
-            var fifthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fifthCustomer.BillingAddressId)));
-            var fifthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.GetById(fifthCustomer.ShippingAddressId)));
+            var fifthCustomerBillingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fifthCustomer.BillingAddressId)));
+            var fifthCustomerShippingAddress = InsertInstallationData(_addressService.CloneAddress(_addressRepository.ToCachedGetById(fifthCustomer.ShippingAddressId)));
 
             var fifthOrder = new Order
             {
@@ -6069,11 +6069,8 @@ namespace Nop.Services.Installation
             };
             _topicRepository.Insert(topics);
 
-            var sysNames = topics.Select(x => x.SystemName);
-            var isertedTopics = _topicRepository.Table.Where(t => sysNames.Contains(t.SystemName));
-
             //search engine names
-            foreach (var topic in isertedTopics)
+            foreach (var topic in topics)
             {
                 _urlRecordRepository.Insert(new UrlRecord
                 {
@@ -6165,6 +6162,7 @@ namespace Nop.Services.Installation
                 WwwRequirement = WwwRequirement.NoMatter,
                 TwitterMetaTags = true,
                 OpenGraphMetaTags = true,
+                MicrodataEnabled = true,
                 ReservedUrlRecordSlugs = new List<string>
                 {
                     "admin",
@@ -6286,6 +6284,7 @@ namespace Nop.Services.Installation
                 CompareProductsEnabled = true,
                 CompareProductsNumber = 4,
                 ProductSearchAutoCompleteEnabled = true,
+                ProductSearchEnabled = true,
                 ProductSearchAutoCompleteNumberOfProducts = 10,
                 ShowLinkToAllResultInSearchAutoComplete = false,
                 ProductSearchTermMinimumLength = 3,
@@ -6378,6 +6377,10 @@ namespace Nop.Services.Installation
                 HideBackInStockSubscriptionsTab = false,
                 DownloadableProductsValidateUser = false,
                 CustomerNameFormat = CustomerNameFormat.ShowFirstName,
+                FirstNameEnabled = true,
+                FirstNameRequired = true,
+                LastNameEnabled = true,
+                LastNameRequired = true,
                 GenderEnabled = true,
                 DateOfBirthEnabled = true,
                 DateOfBirthRequired = false,
@@ -6403,6 +6406,7 @@ namespace Nop.Services.Installation
                 OnlineCustomerMinutes = 20,
                 StoreLastVisitedPage = false,
                 StoreIpAddresses = true,
+                LastActivityMinutes = 15,
                 SuffixDeletedCustomers = false,
                 EnteringEmailTwice = false,
                 RequireRegistrationForDownloadableProducts = false,
@@ -6576,8 +6580,6 @@ namespace Nop.Services.Installation
                 ForceSslForAllPages = true,
                 EncryptionKey = CommonHelper.GenerateRandomDigitCode(16),
                 AdminAreaAllowedIpAddresses = null,
-                EnableXsrfProtectionForAdminArea = true,
-                EnableXsrfProtectionForPublicStore = true,
                 HoneypotEnabled = false,
                 HoneypotInputName = "hpinput",
                 AllowNonAsciiCharactersInHeaders = true
@@ -6782,6 +6784,7 @@ namespace Nop.Services.Installation
                 ReCaptchaDefaultLanguage = string.Empty,
                 ReCaptchaPrivateKey = string.Empty,
                 ReCaptchaPublicKey = string.Empty,
+                ReCaptchaRequestTimeout = 20,
                 ReCaptchaTheme = string.Empty,
                 AutomaticallyChooseLanguage = true,
                 Enabled = false,
@@ -10966,36 +10969,38 @@ namespace Nop.Services.Installation
             _relatedProductRepository.Insert(relatedProducts);
 
             //reviews
-            var random = new Random();
-            foreach (var product in allProducts)
+            using (var random = new SecureRandomNumberGenerator())
             {
-                if (product.ProductType != ProductType.SimpleProduct)
-                    continue;
-
-                //only 3 of 4 products will have reviews
-                if (random.Next(4) == 3)
-                    continue;
-
-                //rating from 4 to 5
-                var rating = random.Next(4, 6);
-
-                InsertInstallationData(new ProductReview
+                foreach (var product in allProducts)
                 {
-                    CustomerId = defaultCustomer.Id,
-                    ProductId = product.Id,
-                    StoreId = defaultStore.Id,
-                    IsApproved = true,
-                    Title = "Some sample review",
-                    ReviewText = $"This sample review is for the {product.Name}. I've been waiting for this product to be available. It is priced just right.",
-                    //random (4 or 5)
-                    Rating = rating,
-                    HelpfulYesTotal = 0,
-                    HelpfulNoTotal = 0,
-                    CreatedOnUtc = DateTime.UtcNow
-                });
+                    if (product.ProductType != ProductType.SimpleProduct)
+                        continue;
 
-                product.ApprovedRatingSum = rating;
-                //product.ApprovedTotalReviews = _dbContext.Set<ProductReview>().Count(r => r.ProductId == product.Id);
+                    //only 3 of 4 products will have reviews
+                    if (random.Next(4) == 3)
+                        continue;
+
+                    //rating from 4 to 5
+                    var rating = random.Next(4, 6);
+
+                    InsertInstallationData(new ProductReview
+                    {
+                        CustomerId = defaultCustomer.Id,
+                        ProductId = product.Id,
+                        StoreId = defaultStore.Id,
+                        IsApproved = true,
+                        Title = "Some sample review",
+                        ReviewText = $"This sample review is for the {product.Name}. I've been waiting for this product to be available. It is priced just right.",
+                        //random (4 or 5)
+                        Rating = rating,
+                        HelpfulYesTotal = 0,
+                        HelpfulNoTotal = 0,
+                        CreatedOnUtc = DateTime.UtcNow
+                    });
+
+                    product.ApprovedRatingSum = rating;
+                    //product.ApprovedTotalReviews = _dbContext.Set<ProductReview>().Count(r => r.ProductId == product.Id);
+                }
             }
 
             _productRepository.Update(allProducts);
@@ -11112,44 +11117,42 @@ namespace Nop.Services.Installation
 
             var blogService = EngineContext.Current.Resolve<IBlogService>();
 
-            var blogPost = new BlogPost
+            var blogPosts = new List<BlogPost>
             {
-                AllowComments = true,
-                LanguageId = defaultLanguage.Id,
-                Title = "How a blog can help your growing e-Commerce business",
-                BodyOverview = "<p>When you start an online business, your main aim is to sell the products, right? As a business owner, you want to showcase your store to more audience. So, you decide to go on social media, why? Because everyone is doing it, then why shouldn&rsquo;t you? It is tempting as everyone is aware of the hype that it is the best way to market your brand.</p><p>Do you know having a blog for your online store can be very helpful? Many businesses do not understand the importance of having a blog because they don&rsquo;t have time to post quality content.</p><p>Today, we will talk about how a blog can play an important role for the growth of your e-Commerce business. Later, we will also discuss some tips that will be helpful to you for writing business related blog posts.</p>",
-                Body = "<p>When you start an online business, your main aim is to sell the products, right? As a business owner, you want to showcase your store to more audience. So, you decide to go on social media, why? Because everyone is doing it, then why shouldn&rsquo;t you? It is tempting as everyone is aware of the hype that it is the best way to market your brand.</p><p>Do you know having a blog for your online store can be very helpful? Many businesses do not understand the importance of having a blog because they don&rsquo;t have time to post quality content.</p><p>Today, we will talk about how a blog can play an important role for the growth of your e-Commerce business. Later, we will also discuss some tips that will be helpful to you for writing business related blog posts.</p><h3>1) Blog is useful in educating your customers</h3><p>Blogging is one of the best way by which you can educate your customers about your products/services that you offer. This helps you as a business owner to bring more value to your brand. When you provide useful information to the customers about your products, they are more likely to buy products from you. You can use your blog for providing tutorials in regard to the use of your products.</p><p><strong>For example:</strong> If you have an online store that offers computer parts. You can write tutorials about how to build a computer or how to make your computer&rsquo;s performance better. While talking about these things, you can mention products in the tutorials and provide link to your products within the blog post from your website. Your potential customers might get different ideas of using your product and will likely to buy products from your online store.</p><h3>2) Blog helps your business in Search Engine Optimization (SEO)</h3><p>Blog posts create more internal links to your website which helps a lot in SEO. Blog is a great way to have quality content on your website related to your products/services which is indexed by all major search engines like Google, Bing and Yahoo. The more original content you write in your blog post, the better ranking you will get in search engines. SEO is an on-going process and posting blog posts regularly keeps your site active all the time which is beneficial when it comes to search engine optimization.</p><p><strong>For example:</strong> Let&rsquo;s say you sell &ldquo;Sony Television Model XYZ&rdquo; and you regularly publish blog posts about your product. Now, whenever someone searches for &ldquo;Sony Television Model XYZ&rdquo;, Google will crawl on your website knowing that you have something to do with this particular product. Hence, your website will show up on the search result page whenever this item is being searched.</p><h3>3) Blog helps in boosting your sales by convincing the potential customers to buy</h3><p>If you own an online business, there are so many ways you can share different stories with your audience in regard your products/services that you offer. Talk about how you started your business, share stories that educate your audience about what&rsquo;s new in your industry, share stories about how your product/service was beneficial to someone or share anything that you think your audience might find interesting (it does not have to be related to your product). This kind of blogging shows that you are an expert in your industry and interested in educating your audience. It sets you apart in the competitive market. This gives you an opportunity to showcase your expertise by educating the visitors and it can turn your audience into buyers.</p><p><strong>Fun Fact:</strong> Did you know that 92% of companies who decided to blog acquired customers through their blog?</p><p><a href=\"https://www.nopcommerce.com/\">nopCommerce</a> is great e-Commerce solution that also offers a variety of CMS features including blog. A store owner has full access for managing the blog posts and related comments.</p>",
-                Tags = "e-commerce, blog, money",
-                CreatedOnUtc = DateTime.UtcNow
+                new BlogPost
+                {
+                    AllowComments = true,
+                    LanguageId = defaultLanguage.Id,
+                    Title = "How a blog can help your growing e-Commerce business",
+                    BodyOverview = "<p>When you start an online business, your main aim is to sell the products, right? As a business owner, you want to showcase your store to more audience. So, you decide to go on social media, why? Because everyone is doing it, then why shouldn&rsquo;t you? It is tempting as everyone is aware of the hype that it is the best way to market your brand.</p><p>Do you know having a blog for your online store can be very helpful? Many businesses do not understand the importance of having a blog because they don&rsquo;t have time to post quality content.</p><p>Today, we will talk about how a blog can play an important role for the growth of your e-Commerce business. Later, we will also discuss some tips that will be helpful to you for writing business related blog posts.</p>",
+                    Body = "<p>When you start an online business, your main aim is to sell the products, right? As a business owner, you want to showcase your store to more audience. So, you decide to go on social media, why? Because everyone is doing it, then why shouldn&rsquo;t you? It is tempting as everyone is aware of the hype that it is the best way to market your brand.</p><p>Do you know having a blog for your online store can be very helpful? Many businesses do not understand the importance of having a blog because they don&rsquo;t have time to post quality content.</p><p>Today, we will talk about how a blog can play an important role for the growth of your e-Commerce business. Later, we will also discuss some tips that will be helpful to you for writing business related blog posts.</p><h3>1) Blog is useful in educating your customers</h3><p>Blogging is one of the best way by which you can educate your customers about your products/services that you offer. This helps you as a business owner to bring more value to your brand. When you provide useful information to the customers about your products, they are more likely to buy products from you. You can use your blog for providing tutorials in regard to the use of your products.</p><p><strong>For example:</strong> If you have an online store that offers computer parts. You can write tutorials about how to build a computer or how to make your computer&rsquo;s performance better. While talking about these things, you can mention products in the tutorials and provide link to your products within the blog post from your website. Your potential customers might get different ideas of using your product and will likely to buy products from your online store.</p><h3>2) Blog helps your business in Search Engine Optimization (SEO)</h3><p>Blog posts create more internal links to your website which helps a lot in SEO. Blog is a great way to have quality content on your website related to your products/services which is indexed by all major search engines like Google, Bing and Yahoo. The more original content you write in your blog post, the better ranking you will get in search engines. SEO is an on-going process and posting blog posts regularly keeps your site active all the time which is beneficial when it comes to search engine optimization.</p><p><strong>For example:</strong> Let&rsquo;s say you sell &ldquo;Sony Television Model XYZ&rdquo; and you regularly publish blog posts about your product. Now, whenever someone searches for &ldquo;Sony Television Model XYZ&rdquo;, Google will crawl on your website knowing that you have something to do with this particular product. Hence, your website will show up on the search result page whenever this item is being searched.</p><h3>3) Blog helps in boosting your sales by convincing the potential customers to buy</h3><p>If you own an online business, there are so many ways you can share different stories with your audience in regard your products/services that you offer. Talk about how you started your business, share stories that educate your audience about what&rsquo;s new in your industry, share stories about how your product/service was beneficial to someone or share anything that you think your audience might find interesting (it does not have to be related to your product). This kind of blogging shows that you are an expert in your industry and interested in educating your audience. It sets you apart in the competitive market. This gives you an opportunity to showcase your expertise by educating the visitors and it can turn your audience into buyers.</p><p><strong>Fun Fact:</strong> Did you know that 92% of companies who decided to blog acquired customers through their blog?</p><p><a href=\"https://www.nopcommerce.com/\">nopCommerce</a> is great e-Commerce solution that also offers a variety of CMS features including blog. A store owner has full access for managing the blog posts and related comments.</p>",
+                    Tags = "e-commerce, blog, moey",
+                    CreatedOnUtc = DateTime.UtcNow
+                },
+                new BlogPost
+                {
+                    AllowComments = true,
+                    LanguageId = defaultLanguage.Id,
+                    Title = "Why your online store needs a wish list",
+                    BodyOverview = "<p>What comes to your mind, when you hear the term&rdquo; wish list&rdquo;? The application of this feature is exactly how it sounds like: a list of things that you wish to get. As an online store owner, would you like your customers to be able to save products in a wish list so that they review or buy them later? Would you like your customers to be able to share their wish list with friends and family for gift giving?</p><p>Offering your customers a feature of wish list as part of shopping cart is a great way to build loyalty to your store site. Having the feature of wish list on a store site allows online businesses to engage with their customers in a smart way as it allows the shoppers to create a list of what they desire and their preferences for future purchase.</p>",
+                    Body = "<p>What comes to your mind, when you hear the term&rdquo; wish list&rdquo;? The application of this feature is exactly how it sounds like: a list of things that you wish to get. As an online store owner, would you like your customers to be able to save products in a wish list so that they review or buy them later? Would you like your customers to be able to share their wish list with friends and family for gift giving?</p><p>Offering your customers a feature of wish list as part of shopping cart is a great way to build loyalty to your store site. Having the feature of wish list on a store site allows online businesses to engage with their customers in a smart way as it allows the shoppers to create a list of what they desire and their preferences for future purchase.</p><p>Does every e-Commerce store needs a wish list? The answer to this question in most cases is yes, because of the following reasons:</p><p><strong>Understanding the needs of your customers</strong> - A wish list is a great way to know what is in your customer&rsquo;s mind. Try to think the purchase history as a small portion of the customer&rsquo;s preferences. But, the wish list is like a wide open door that can give any online business a lot of valuable information about their customer and what they like or desire.</p><p><strong>Shoppers like to share their wish list with friends and family</strong> - Providing your customers a way to email their wish list to their friends and family is a pleasant way to make online shopping enjoyable for the shoppers. It is always a good idea to make the wish list sharable by a unique link so that it can be easily shared though different channels like email or on social media sites.</p><p><strong>Wish list can be a great marketing tool</strong> &ndash; Another way to look at wish list is a great marketing tool because it is extremely targeted and the recipients are always motivated to use it. For example: when your younger brother tells you that his wish list is on a certain e-Commerce store. What is the first thing you are going to do? You are most likely to visit the e-Commerce store, check out the wish list and end up buying something for your younger brother.</p><p>So, how a wish list is a marketing tool? The reason is quite simple, it introduce your online store to new customers just how it is explained in the above example.</p><p><strong>Encourage customers to return to the store site</strong> &ndash; Having a feature of wish list on the store site can increase the return traffic because it encourages customers to come back and buy later. Allowing the customers to save the wish list to their online accounts gives them a reason return to the store site and login to the account at any time to view or edit the wish list items.</p><p><strong>Wish list can be used for gifts for different occasions like weddings or birthdays. So, what kind of benefits a gift-giver gets from a wish list?</strong></p><ul><li>It gives them a surety that they didn&rsquo;t buy a wrong gift</li><li>It guarantees that the recipient will like the gift</li><li>It avoids any awkward moments when the recipient unwraps the gift and as a gift-giver you got something that the recipient do not want</li></ul><p><strong>Wish list is a great feature to have on a store site &ndash; So, what kind of benefits a business owner gets from a wish list</strong></p><ul><li>It is a great way to advertise an online store as many people do prefer to shop where their friend or family shop online</li><li>It allows the current customers to return to the store site and open doors for the new customers</li><li>It allows store admins to track what&rsquo;s in customers wish list and run promotions accordingly to target specific customer segments</li></ul><p><a href=\"https://www.nopcommerce.com/\">nopCommerce</a> offers the feature of wish list that allows customers to create a list of products that they desire or planning to buy in future.</p>",
+                    Tags = "e-commerce, nopCommerce, sample tag, money",
+                    CreatedOnUtc = DateTime.UtcNow.AddSeconds(1)
+                }
             };
 
-            _blogPostRepository.Insert(blogPost);
-
-            var blogPostWishList = new BlogPost
-            {
-                AllowComments = true,
-                LanguageId = defaultLanguage.Id,
-                Title = "Why your online store needs a wish list",
-                BodyOverview = "<p>What comes to your mind, when you hear the term&rdquo; wish list&rdquo;? The application of this feature is exactly how it sounds like: a list of things that you wish to get. As an online store owner, would you like your customers to be able to save products in a wish list so that they review or buy them later? Would you like your customers to be able to share their wish list with friends and family for gift giving?</p><p>Offering your customers a feature of wish list as part of shopping cart is a great way to build loyalty to your store site. Having the feature of wish list on a store site allows online businesses to engage with their customers in a smart way as it allows the shoppers to create a list of what they desire and their preferences for future purchase.</p>",
-                Body = "<p>What comes to your mind, when you hear the term&rdquo; wish list&rdquo;? The application of this feature is exactly how it sounds like: a list of things that you wish to get. As an online store owner, would you like your customers to be able to save products in a wish list so that they review or buy them later? Would you like your customers to be able to share their wish list with friends and family for gift giving?</p><p>Offering your customers a feature of wish list as part of shopping cart is a great way to build loyalty to your store site. Having the feature of wish list on a store site allows online businesses to engage with their customers in a smart way as it allows the shoppers to create a list of what they desire and their preferences for future purchase.</p><p>Does every e-Commerce store needs a wish list? The answer to this question in most cases is yes, because of the following reasons:</p><p><strong>Understanding the needs of your customers</strong> - A wish list is a great way to know what is in your customer&rsquo;s mind. Try to think the purchase history as a small portion of the customer&rsquo;s preferences. But, the wish list is like a wide open door that can give any online business a lot of valuable information about their customer and what they like or desire.</p><p><strong>Shoppers like to share their wish list with friends and family</strong> - Providing your customers a way to email their wish list to their friends and family is a pleasant way to make online shopping enjoyable for the shoppers. It is always a good idea to make the wish list sharable by a unique link so that it can be easily shared though different channels like email or on social media sites.</p><p><strong>Wish list can be a great marketing tool</strong> &ndash; Another way to look at wish list is a great marketing tool because it is extremely targeted and the recipients are always motivated to use it. For example: when your younger brother tells you that his wish list is on a certain e-Commerce store. What is the first thing you are going to do? You are most likely to visit the e-Commerce store, check out the wish list and end up buying something for your younger brother.</p><p>So, how a wish list is a marketing tool? The reason is quite simple, it introduce your online store to new customers just how it is explained in the above example.</p><p><strong>Encourage customers to return to the store site</strong> &ndash; Having a feature of wish list on the store site can increase the return traffic because it encourages customers to come back and buy later. Allowing the customers to save the wish list to their online accounts gives them a reason return to the store site and login to the account at any time to view or edit the wish list items.</p><p><strong>Wish list can be used for gifts for different occasions like weddings or birthdays. So, what kind of benefits a gift-giver gets from a wish list?</strong></p><ul><li>It gives them a surety that they didn&rsquo;t buy a wrong gift</li><li>It guarantees that the recipient will like the gift</li><li>It avoids any awkward moments when the recipient unwraps the gift and as a gift-giver you got something that the recipient do not want</li></ul><p><strong>Wish list is a great feature to have on a store site &ndash; So, what kind of benefits a business owner gets from a wish list</strong></p><ul><li>It is a great way to advertise an online store as many people do prefer to shop where their friend or family shop online</li><li>It allows the current customers to return to the store site and open doors for the new customers</li><li>It allows store admins to track what&rsquo;s in customers wish list and run promotions accordingly to target specific customer segments</li></ul><p><a href=\"https://www.nopcommerce.com/\">nopCommerce</a> offers the feature of wish list that allows customers to create a list of products that they desire or planning to buy in future.</p>",
-                Tags = "e-commerce, nopCommerce, sample tag, money",
-                CreatedOnUtc = DateTime.UtcNow.AddSeconds(1)
-            };
-
-            _blogPostRepository.Insert(blogPostWishList);
-
-            var blogPosts = new List<BlogPost> { blogPost, blogPostWishList };
+            _blogPostRepository.Insert(blogPosts);
 
             //search engine names
-            foreach (var bp in blogPosts)
+            foreach (var blogPost in blogPosts)
             {
                 _urlRecordRepository.Insert(new UrlRecord
                 {
-                    EntityId = bp.Id,
+                    EntityId = blogPost.Id,
                     EntityName = nameof(BlogPost),
-                    LanguageId = bp.LanguageId,
+                    LanguageId = blogPost.LanguageId,
                     IsActive = true,
-                    Slug = ValidateSeName(bp, bp.Title)
+                    Slug = ValidateSeName(blogPost, blogPost.Title)
                 });
             }
 
@@ -11163,16 +11166,20 @@ namespace Nop.Services.Installation
             if (defaultStore == null)
                 throw new Exception("No default store could be loaded");
 
-            InsertInstallationData(blogPosts.Select(bp =>
-            new BlogComment
+            foreach (var blogPost in blogPosts)
             {
-                BlogPostId = bp.Id,
-                CustomerId = defaultCustomer.Id,
-                CommentText = "This is a sample comment for this blog post",
-                IsApproved = true,
-                StoreId = defaultStore.Id,
-                CreatedOnUtc = DateTime.UtcNow
-            }).ToArray());
+                blogService.InsertBlogComment(new BlogComment
+                {
+                    BlogPostId = blogPost.Id,
+                    CustomerId = defaultCustomer.Id,
+                    CommentText = "This is a sample comment for this blog post",
+                    IsApproved = true,
+                    StoreId = defaultStore.Id,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
+            }
+
+            _blogPostRepository.Update(blogPosts);
         }
 
         protected virtual void InstallNews(string defaultUserEmail)
@@ -11219,10 +11226,8 @@ namespace Nop.Services.Installation
             };
             _newsItemRepository.Insert(news);
 
-            var insertedNews = _newsItemRepository.Table.ToList();
-
             //search engine names
-            foreach (var newsItem in insertedNews)
+            foreach (var newsItem in news)
             {
                 _urlRecordRepository.Insert(new UrlRecord
                 {
@@ -11244,7 +11249,7 @@ namespace Nop.Services.Installation
             if (defaultStore == null)
                 throw new Exception("No default store could be loaded");
 
-            foreach (var newsItem in insertedNews)
+            foreach (var newsItem in news)
             {
                 newsService.InsertNewsComment(new NewsComment
                 {
@@ -11664,7 +11669,7 @@ namespace Nop.Services.Installation
                     Enabled = true,
                     Name = "Delete a news"
                 },
-                new ActivityLogType
+                 new ActivityLogType
                 {
                     SystemKeyword = "DeleteNewsComment",
                     Enabled = true,
@@ -11790,7 +11795,7 @@ namespace Nop.Services.Installation
                     Enabled = true,
                     Name = "Edit an address attribute"
                 },
-                new ActivityLogType
+                 new ActivityLogType
                 {
                     SystemKeyword = "EditAddressAttributeValue",
                     Enabled = true,

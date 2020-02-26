@@ -59,7 +59,7 @@ namespace Nop.Services.Tests
                 aclService ?? new Mock<IAclService>().Object,
                 actionContextAccessor ?? new Mock<IActionContextAccessor>().Object,
                 cacheKeyFactory ?? new Mock<ICacheKeyFactory>().Object,
-                cacheManager ?? new Mock<ICacheManager>().Object,
+                cacheManager ?? new TestCacheManager(),
                 checkoutAttributeParser ?? new Mock<ICheckoutAttributeParser>().Object,
                 checkoutAttributeService ?? new Mock<ICheckoutAttributeService>().Object,
                 currencyService ?? new Mock<ICurrencyService>().Object,
