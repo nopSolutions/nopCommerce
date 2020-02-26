@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 using EasyCaching.Core;
 using EasyCaching.InMemory;
 using FluentValidation.AspNetCore;
@@ -15,6 +17,7 @@ using Microsoft.Azure.KeyVault;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.WebEncoders;
 using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json.Serialization;
 using Nop.Core;
@@ -68,6 +71,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //add hosting configuration parameters
             services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
 
+            //configure web encoder options for non-english characher encoding
+            services.Configure<WebEncoderOptions>(options => options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All));
+
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
 
@@ -81,7 +87,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             //create engine and configure service provider
             var engine = EngineContext.Create();
             var serviceProvider = engine.ConfigureServices(services, configuration, nopConfig);
-            
+
             //initialize and start schedule tasks
             TaskManager.Instance.Initialize();
             TaskManager.Instance.Start();
@@ -99,7 +105,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
-        /// Create, bind and register as service the specified configuration parameters 
+        /// Create, bind and register as service the specified configuration parameters
         /// </summary>
         /// <typeparam name="TConfig">Configuration parameters</typeparam>
         /// <param name="services">Collection of service descriptors</param>
@@ -215,7 +221,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
                 var tokenProvider = new AzureServiceTokenProvider();
                 var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(tokenProvider.KeyVaultTokenCallback));
-                    
+
                 dataProtectionBuilder.ProtectKeysWithAzureKeyVault(keyVaultClient, nopConfig.AzureKeyVaultIdForDataProtectionKeys);
             }
             else
