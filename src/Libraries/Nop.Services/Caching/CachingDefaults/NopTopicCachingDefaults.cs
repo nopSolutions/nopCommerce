@@ -22,41 +22,36 @@
         /// {0} : store ID
         /// {1} : show hidden?
         /// {2} : include in top menu?
-        /// {3} : customer role IDs
+        /// {3} : customer role IDs hash
         /// </remarks>
-        public static string TopicsAllWithACLCacheKey => "Nop.topics.acl-{0}-{1}-{2}-{3}";
+        public static string TopicsAllWithACLCacheKey => "Nop.topics.all.acl-{0}-{1}-{2}-{3}";
 
         /// <summary>
-        /// Gets a key for caching
+        /// Gets a pattern to clear cache
         /// </summary>
-        /// <remarks>
-        /// {0} : topic ID
-        /// </remarks>
-        public static string TopicsByIdCacheKey => "Nop.topics.id-{0}";
-
+        public static string TopicsAllPrefixCacheKey => "Nop.topics.all";
+        
         /// <summary>
         /// Gets a key for caching
         /// </summary>
         /// <remarks>
         /// {0} : topic system name
         /// {1} : store id
-        /// {2} : comma separated list of customer roles
+        /// {2} : customer roles Ids hash
         /// </remarks>
-        public static string TopicBySystemName => "Nop.topics.systemName-{0}-{1}-{2}";
+        public static string TopicBySystemNameCacheKey => "Nop.topics.systemName-{0}-{1}-{2}";
 
         /// <summary>
-        /// Gets a pattern to clear cache
+        /// Gets a key for caching
         /// </summary>
-        public static string TopicsPrefixCacheKey => "Nop.topics.";
+        /// <remarks>
+        /// {0} : topic system name
+        /// </remarks>
+        public static string TopicBySystemNamePrefixCacheKey => "Nop.topics.systemName-{0}";
 
         /// <summary>
         /// Gets a key for caching
         /// </summary>
         public static string TopicTemplatesAllCacheKey => "Nop.topictemplates.all";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string TopicTemplatesPrefixCacheKey => "Nop.topictemplates.";
     }
 }

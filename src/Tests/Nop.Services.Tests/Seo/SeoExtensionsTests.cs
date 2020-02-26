@@ -2,10 +2,9 @@
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Data;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using NUnit.Framework;
@@ -26,14 +25,14 @@ namespace Nop.Services.Tests.Seo
         [SetUp]
         public void SetUp()
         {
-            _languageService=new Mock<ILanguageService>();
-            _urlRecordRepository=new Mock<IRepository<UrlRecord>>();
-            _cacheManager=new Mock<IStaticCacheManager>();
-            _workContext=new Mock<IWorkContext>();
-            _localizationSettings=new LocalizationSettings();
-            _seoSettings=new SeoSettings();
+            _languageService = new Mock<ILanguageService>();
+            _urlRecordRepository = new Mock<IRepository<UrlRecord>>();
+            _cacheManager = new Mock<IStaticCacheManager>();
+            _workContext = new Mock<IWorkContext>();
+            _localizationSettings = new LocalizationSettings();
+            _seoSettings = new SeoSettings();
 
-            _urlRecordService = new UrlRecordService(new Mock<ICacheKeyFactory>().Object, _languageService.Object, _urlRecordRepository.Object,
+            _urlRecordService = new UrlRecordService(_languageService.Object, _urlRecordRepository.Object,
                 _cacheManager.Object, _workContext.Object, _localizationSettings, _seoSettings);
         }
 
@@ -46,7 +45,8 @@ namespace Nop.Services.Tests.Seo
         [Test]
         public void Should_allow_all_latin_chars()
         {
-            _urlRecordService.GetSeName("abcdefghijklmnopqrstuvwxyz1234567890", false, false).Should().Be("abcdefghijklmnopqrstuvwxyz1234567890");
+            _urlRecordService.GetSeName("abcdefghijklmnopqrstuvwxyz1234567890", false, false).Should()
+                .Be("abcdefghijklmnopqrstuvwxyz1234567890");
         }
 
         [Test]
@@ -79,6 +79,3 @@ namespace Nop.Services.Tests.Seo
         }
     }
 }
-
-
-

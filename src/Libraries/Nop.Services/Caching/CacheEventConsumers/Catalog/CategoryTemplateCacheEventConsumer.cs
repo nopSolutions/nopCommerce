@@ -14,7 +14,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
         /// <param name="entity">Entity</param>
         protected override void ClearCache(CategoryTemplate entity)
         {
-            RemoveByPrefix(NopCatalogCachingDefaults.CategoryTemplatesPrefixCacheKey);
+            Remove(NopCatalogCachingDefaults.CategoryTemplatesAllCacheKey);
         }
     }
 }

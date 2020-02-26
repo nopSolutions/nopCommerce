@@ -12,12 +12,7 @@
         /// {0} : discount id
         /// </remarks>
         public static string DiscountRequirementModelCacheKey => "Nop.discounts.requirements-{0}";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string DiscountRequirementPrefixCacheKey => "Nop.discounts.requirements";
-
+        
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -46,6 +41,14 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
+        /// <remarks>
+        /// {0} : discount id
+        /// </remarks>
+        public static string DiscountCategoryIdsByDiscountPrefixCacheKey => "Nop.discounts.categoryids-{0}";
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
         public static string DiscountCategoryIdsPrefixCacheKey => "Nop.discounts.categoryids";
 
         /// <summary>
@@ -57,6 +60,14 @@
         /// {2} : current store ID
         /// </remarks>
         public static string DiscountManufacturerIdsModelCacheKey => "Nop.discounts.manufacturerids-{0}-{1}-{2}";
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        /// <remarks>
+        /// {0} : discount id
+        /// </remarks>
+        public static string DiscountManufacturerIdsByDiscountPrefixCacheKey => "Nop.discounts.manufacturerids-{0}";
 
         /// <summary>
         /// Gets a key pattern to clear cache

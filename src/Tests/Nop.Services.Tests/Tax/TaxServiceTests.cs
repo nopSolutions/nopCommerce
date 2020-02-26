@@ -11,7 +11,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
-using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -87,11 +86,7 @@ namespace Nop.Services.Tests.Tax
             _customerCustomerRoleMappingRepo.Setup(r => r.Table).Returns(mappings.AsQueryable());
             _customerCustomerRoleMappingRepo.Setup(r => r.Insert(It.IsAny<CustomerCustomerRoleMapping>())).Callback(
                 (CustomerCustomerRoleMapping ccrm) => { mappings.Add(ccrm); });
-
-
-
-
-
+            
             _stateProvinceService = new Mock<IStateProvinceService>();
             _logger = new Mock<ILogger>();
             _webHelper = new Mock<IWebHelper>();
@@ -105,8 +100,7 @@ namespace Nop.Services.Tests.Tax
             _taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
 
             _customerService = new CustomerService(new CustomerSettings(),
-                new Mock<ICacheKeyFactory>().Object,
-                new Mock<ICacheManager>().Object,
+                new TestCacheManager(), 
                 null,
                 _eventPublisher.Object,
                 _genericAttributeService.Object,

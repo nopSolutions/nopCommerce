@@ -129,7 +129,7 @@ namespace Nop.Services.Messages
             if (string.IsNullOrWhiteSpace(messageTemplateName))
                 throw new ArgumentException(nameof(messageTemplateName));
 
-            var key = string.Format(NopMessageCachingDefaults.MessageTemplatesByNameCacheKey, messageTemplateName, storeId ?? 0);
+            var key = NopMessageCachingDefaults.MessageTemplatesByNameCacheKey.ToCacheKey(messageTemplateName, storeId);
             return _cacheManager.Get(key, () =>
             {
                 //get message templates with the passed name

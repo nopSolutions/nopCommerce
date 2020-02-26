@@ -22,7 +22,7 @@ namespace Nop.Services.Catalog
 
         private readonly CatalogSettings _catalogSettings;
         private readonly ICustomerService _customerService;
-        private readonly INopDataProvider _dataProvider;
+        private readonly IDataProvider _dataProvider;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
@@ -36,7 +36,7 @@ namespace Nop.Services.Catalog
 
         public ProductTagService(CatalogSettings catalogSettings,
             ICustomerService customerService,
-            INopDataProvider dataProvider,
+            IDataProvider dataProvider,
             IEventPublisher eventPublisher,
             IRepository<ProductProductTagMapping> productProductTagMappingRepository,
             IRepository<ProductTag> productTagRepository,
@@ -93,8 +93,8 @@ namespace Nop.Services.Catalog
                 allowedCustomerRolesIds = string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
             }
 
-            var key = string.Format(NopCatalogCachingDefaults.ProductTagCountCacheKey, storeId, allowedCustomerRolesIds, showHidden);
-
+            var key = NopCatalogCachingDefaults.ProductTagCountCacheKey.ToCacheKey(storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer), showHidden);
+           
             return _staticCacheManager.Get(key, () =>
             {
                 //prepare input parameters
@@ -103,8 +103,8 @@ namespace Nop.Services.Catalog
 
                 //invoke stored procedure
                 return _dataProvider.QueryProc<ProductTagWithCount>("ProductTagCountLoadAll",
-                    pStoreId,
-                    pAllowedCustomerRoleIds)
+                        pStoreId,
+                        pAllowedCustomerRoleIds)
                     .ToDictionary(item => item.ProductTagId, item => item.ProductCount);
             });
         }
@@ -112,7 +112,7 @@ namespace Nop.Services.Catalog
         #endregion
 
         #region Methods
-
+        
         /// <summary>
         /// Delete a product tag
         /// </summary>
@@ -123,7 +123,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productTag));
 
             _productTagRepository.Delete(productTag);
-
+            
             //event notification
             _eventPublisher.EntityDeleted(productTag);
         }
@@ -162,13 +162,13 @@ namespace Nop.Services.Catalog
         /// <returns>Product tags</returns>
         public virtual IList<ProductTag> GetAllProductTagsByProductId(int productId)
         {
-            var key = string.Format(NopCatalogCachingDefaults.ProductTagAllByProductIdCacheKey, productId);
+            var key = NopCatalogCachingDefaults.ProductTagAllByProductIdCacheKey.ToCacheKey(productId);
 
             var query = from pt in _productTagRepository.Table
-                        join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId
-                        where ppt.ProductId == productId
-                        orderby pt.Id
-                        select pt;
+                join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId
+                where ppt.ProductId == productId
+                orderby pt.Id
+                select pt;
 
             var productTags = query.ToCachedList(key);
 
@@ -244,7 +244,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(productTag));
 
             _productTagRepository.Insert(productTag);
-
+            
             //event notification
             _eventPublisher.EntityInserted(productTag);
         }
@@ -276,7 +276,7 @@ namespace Nop.Services.Catalog
 
             var seName = _urlRecordService.ValidateSeName(productTag, string.Empty, productTag.Name, true);
             _urlRecordService.SaveSlug(productTag, seName, 0);
-
+            
             //event notification
             _eventPublisher.EntityUpdated(productTag);
         }

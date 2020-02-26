@@ -8,9 +8,13 @@ namespace Nop.Services.Caching.CacheEventConsumers.Gdpr
     /// </summary>
     public partial class GdprConsentCacheEventConsumer : CacheEventConsumer<GdprConsent>
     {
+        /// <summary>
+        /// Clear cache data
+        /// </summary>
+        /// <param name="entity">Entity</param>
         protected override void ClearCache(GdprConsent entity)
         {
-            RemoveByPrefix(NopGdprCachingDefaults.ConsentsPrefixCacheKey);
+            Remove(NopGdprCachingDefaults.ConsentsAllCacheKey);
         }
     }
 }

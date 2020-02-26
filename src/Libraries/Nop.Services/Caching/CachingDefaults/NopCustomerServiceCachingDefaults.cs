@@ -18,34 +18,8 @@
         /// <remarks>
         /// {0} : customer attribute ID
         /// </remarks>
-        public static string CustomerAttributesByIdCacheKey => "Nop.customerattribute.id-{0}";
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer attribute ID
-        /// </remarks>
         public static string CustomerAttributeValuesAllCacheKey => "Nop.customerattributevalue.all-{0}";
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : customer attribute value ID
-        /// </remarks>
-        public static string CustomerAttributeValuesByIdCacheKey => "Nop.customerattributevalue.id-{0}";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string CustomerAttributesPrefixCacheKey => "Nop.customerattribute.";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string CustomerAttributeValuesPrefixCacheKey => "Nop.customerattributevalue.";
-
+        
         #endregion
 
         #region Customer roles
@@ -118,6 +92,8 @@
 
         #endregion
 
+        #region Customer password
+        
         /// <summary>
         /// Gets a key for caching current customer password lifetime
         /// </summary>
@@ -125,5 +101,7 @@
         /// {0} : customer identifier
         /// </remarks>
         public static string CustomerPasswordLifetimeCacheKey => "Nop.customers.passwordlifetime-{0}";
+
+        #endregion
     }
 }
