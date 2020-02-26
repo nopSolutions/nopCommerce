@@ -166,7 +166,12 @@ namespace Nop.Data
         bool BackupSupported { get; }
 
         /// <summary>
-        /// Gets a maximum length of the data for HASHBYTES functions, returns 0 if HASHBYTES function is not supported
+        /// Name of database provider
+        /// </summary>
+        string DataProviderName { get; }
+
+        /// <summary>
+        /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited
         /// </summary>
         int SupportedLengthOfBinaryHash { get; }
 

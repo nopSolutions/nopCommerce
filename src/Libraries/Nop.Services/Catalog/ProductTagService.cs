@@ -22,7 +22,7 @@ namespace Nop.Services.Catalog
 
         private readonly CatalogSettings _catalogSettings;
         private readonly ICustomerService _customerService;
-        private readonly IDataProvider _dataProvider;
+        private readonly INopDataProvider _dataProvider;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
@@ -36,7 +36,7 @@ namespace Nop.Services.Catalog
 
         public ProductTagService(CatalogSettings catalogSettings,
             ICustomerService customerService,
-            IDataProvider dataProvider,
+            INopDataProvider dataProvider,
             IEventPublisher eventPublisher,
             IRepository<ProductProductTagMapping> productProductTagMappingRepository,
             IRepository<ProductTag> productTagRepository,
@@ -94,7 +94,7 @@ namespace Nop.Services.Catalog
             }
 
             var key = NopCatalogCachingDefaults.ProductTagCountCacheKey.ToCacheKey(storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer), showHidden);
-           
+
             return _staticCacheManager.Get(key, () =>
             {
                 //prepare input parameters
