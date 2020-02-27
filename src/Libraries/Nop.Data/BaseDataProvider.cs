@@ -258,6 +258,11 @@ namespace Nop.Data
 
         protected string CurrentConnectionString => DataSettingsManager.LoadSettings().ConnectionString;
 
+        /// <summary>
+        /// Name of database provider
+        /// </summary>
+        public string DataProviderName => LinqToDbDataProvider.Name;
+
         #endregion
     }
 }

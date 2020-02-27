@@ -71,11 +71,8 @@ namespace Nop.Services.Directory
         {
             if (currencyId == 0)
                 return null;
-
-            //cacheable copy key
-            var key = string.Format(NopDirectoryCachingDefaults.CurrenciesByIdCacheKey, currencyId);
-
-            return _currencyRepository.ToCachedGetById(currencyId, key);
+            
+            return _currencyRepository.ToCachedGetById(currencyId);
         }
 
         /// <summary>

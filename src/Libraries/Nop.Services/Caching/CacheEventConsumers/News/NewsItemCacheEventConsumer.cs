@@ -14,7 +14,9 @@ namespace Nop.Services.Caching.CacheEventConsumers.News
         /// <param name="entity">Entity</param>
         protected override void ClearCache(NewsItem entity)
         {
-            RemoveByPrefix(NopNewsCachingDefaults.NewsCommentsPrefixCacheKey);
+            var prefix = NopNewsCachingDefaults.NewsCommentsNumberPrefixCacheKey.ToCacheKey(entity);
+
+            RemoveByPrefix(prefix);
         }
     }
 }

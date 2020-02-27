@@ -2,7 +2,6 @@
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
-using Nop.Services.Caching.CachingDefaults;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework.Factories;
 using Nop.Web.Infrastructure.Installation;
@@ -30,7 +29,6 @@ namespace Nop.Web.Infrastructure
             builder.RegisterType<DiscountSupportedModelFactory>().As<IDiscountSupportedModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<LocalizedModelFactory>().As<ILocalizedModelFactory>().InstancePerLifetimeScope();
             builder.RegisterType<StoreMappingSupportedModelFactory>().As<IStoreMappingSupportedModelFactory>().InstancePerLifetimeScope();
-            builder.RegisterType<CacheKeyFactory>().As<ICacheKeyFactory>().InstancePerLifetimeScope();
 
             //admin factories
             builder.RegisterType<BaseAdminModelFactory>().As<IBaseAdminModelFactory>().InstancePerLifetimeScope();

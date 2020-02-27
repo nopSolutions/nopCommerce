@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using LinqToDB;
-using LinqToDB.Common;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.DataProvider.MySql;
@@ -322,9 +320,9 @@ namespace Nop.Data
         protected override IDataProvider LinqToDbDataProvider => new MySqlDataProvider();
 
         /// <summary>
-        /// Gets a maximum length of the data for HASHBYTES functions, returns 0 if HASHBYTES function is not supported
+        /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited
         /// </summary>
-        public int SupportedLengthOfBinaryHash { get; } = 8000; //for SQL Server 2008 and above HASHBYTES function has a limit of 8000 characters.
+        public int SupportedLengthOfBinaryHash { get; } = 0;
 
         #endregion
     }

@@ -18,7 +18,10 @@
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string BlogCommentsPrefixCacheKey => "Nop.blog.comments";
+        /// <remarks>
+        /// {0} : blog post ID
+        /// </remarks>
+        public static string BlogCommentsNumberPrefixCacheKey => "Nop.blog.comments.number-{0}";
 
         /// <summary>
         /// Key for blog tag list model

@@ -26,8 +26,9 @@
         /// </summary>
         /// <param name="data">The data for calculating the hash</param>
         /// <param name="hashAlgorithm">Hash algorithm</param>
+        /// <param name="trimByteCount">The number of bytes, which will be used in the hash algorithm; leave 0 to use all array</param>
         /// <returns>Data hash</returns>
-        string CreateHash(byte[] data, string hashAlgorithm);
+        string CreateHash(byte[] data, string hashAlgorithm, int trimByteCount = 0);
 
         /// <summary>
         /// Encrypt text

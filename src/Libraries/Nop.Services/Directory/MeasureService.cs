@@ -68,9 +68,7 @@ namespace Nop.Services.Directory
             if (measureDimensionId == 0)
                 return null;
 
-            var key = string.Format(NopDirectoryCachingDefaults.MeasureDimensionsByIdCacheKey, measureDimensionId);
-
-            return _measureDimensionRepository.ToCachedGetById(measureDimensionId, key);
+            return _measureDimensionRepository.ToCachedGetById(measureDimensionId);
         }
 
         /// <summary>
@@ -243,9 +241,7 @@ namespace Nop.Services.Directory
             if (measureWeightId == 0)
                 return null;
 
-            var key = string.Format(NopDirectoryCachingDefaults.MeasureWeightsByIdCacheKey, measureWeightId);
-
-            return _measureWeightRepository.ToCachedGetById(measureWeightId, key);
+            return _measureWeightRepository.ToCachedGetById(measureWeightId);
         }
 
         /// <summary>

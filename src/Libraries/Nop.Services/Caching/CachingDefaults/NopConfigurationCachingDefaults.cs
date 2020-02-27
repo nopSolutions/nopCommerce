@@ -8,7 +8,7 @@
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static string SettingsAllAsDictionaryCacheKey => "Nop.setting.all.";
+        public static string SettingsAllAsDictionaryCacheKey => "Nop.setting.all.as.dictionary";
 
         /// <summary>
         /// Gets a key for caching

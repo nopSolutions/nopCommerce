@@ -10,7 +10,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Orders
     {
         protected override void ClearCache(ReturnRequestReason entity)
         {
-            RemoveByPrefix(NopOrderCachingDefaults.ReturnRequestReasonPrefixCacheKey);
+            Remove(NopOrderCachingDefaults.ReturnRequestReasonAllCacheKey);
         }
     }
 }

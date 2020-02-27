@@ -367,10 +367,10 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(discount));
 
             var discountId = discount.Id;
-            var cacheKey = string.Format(NopDiscountCachingDefaults.DiscountCategoryIdsModelCacheKey,
+            var cacheKey = NopDiscountCachingDefaults.DiscountCategoryIdsModelCacheKey.ToCacheKey(
                 discountId,
-                string.Join(",", _customerService.GetCustomerRoleIds(customer)),
-                _storeContext.CurrentStore.Id);
+                _customerService.GetCustomerRoleIds(customer),
+                _storeContext.CurrentStore);
 
             var result = _staticCacheManager.Get(cacheKey, () =>
             {
@@ -429,9 +429,7 @@ namespace Nop.Services.Catalog
             if (categoryId == 0)
                 return null;
 
-            var key = string.Format(NopCatalogCachingDefaults.CategoriesByIdCacheKey, categoryId);
-
-            return _categoryRepository.ToCachedGetById(categoryId, key);
+            return _categoryRepository.ToCachedGetById(categoryId);
         }
 
         /// <summary>
@@ -574,7 +572,7 @@ namespace Nop.Services.Catalog
             if (categoryId == 0)
                 return new PagedList<ProductCategory>(new List<ProductCategory>(), pageIndex, pageSize);
 
-            var key = string.Format(NopCatalogCachingDefaults.ProductCategoriesAllByCategoryIdCacheKey, showHidden, categoryId,
+            var key = string.Format(NopCatalogCachingDefaults.ProductCategoriesAllByCategoryIdCacheKey, categoryId, showHidden,
                 pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
 
             var query = from pc in _productCategoryRepository.Table
@@ -665,8 +663,8 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return new List<ProductCategory>();
 
-            var key = string.Format(NopCatalogCachingDefaults.ProductCategoriesAllByProductIdCacheKey, showHidden,
-                productId, _workContext.CurrentCustomer.Id, storeId);
+            var key = NopCatalogCachingDefaults.ProductCategoriesAllByProductIdCacheKey.ToCacheKey(productId,
+                showHidden, _workContext.CurrentCustomer.Id, storeId);
 
             var query = from pc in _productCategoryRepository.Table
                 join c in _categoryRepository.Table on pc.CategoryId equals c.Id
@@ -876,11 +874,11 @@ namespace Nop.Services.Catalog
             if (category == null)
                 throw new ArgumentNullException(nameof(category));
 
-            var breadcrumbCacheKey = string.Format(NopCatalogCachingDefaults.CategoryBreadcrumbKey,
-                category.Id,
-                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
-                _storeContext.CurrentStore.Id,
-                _workContext.WorkingLanguage.Id);
+            var breadcrumbCacheKey = NopCatalogCachingDefaults.CategoryBreadcrumbKey.ToCacheKey(
+                category,
+                _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer),
+                _storeContext.CurrentStore,
+                _workContext.WorkingLanguage);
 
             return _staticCacheManager.Get(breadcrumbCacheKey, () =>
             {

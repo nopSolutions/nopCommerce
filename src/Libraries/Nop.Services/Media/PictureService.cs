@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using LinqToDB;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -709,7 +710,7 @@ namespace Nop.Services.Media
 
             query = query.OrderByDescending(p => p.Id);
 
-            var key = string.Format(NopMediaCachingDefaults.PicturesByVirtualPathCacheKey, virtualPath);
+            var key = NopMediaCachingDefaults.PicturesByVirtualPathCacheKey.ToCacheKey(virtualPath);
 
             var pics = query.ToCachedPagedList(key, pageIndex, pageSize);
 
@@ -1017,18 +1018,18 @@ namespace Nop.Services.Media
         /// <returns></returns>
         public IDictionary<int, string> GetPicturesHash(int[] picturesIds)
         {
-            var supportedLengthOfBinaryHash = _dataProvider.SupportedLengthOfBinaryHash;
-
-            if (supportedLengthOfBinaryHash == 0 || !picturesIds.Any())
+            if (!picturesIds.Any())
                 return new Dictionary<int, string>();
 
-            return _dataProvider.GetTable<PictureBinary>()
+            var test = _dataProvider.GetTable<PictureBinary>()            
                     .Where(p => picturesIds.Contains(p.PictureId))
                     .Select(x => new
                     {
                         PictureId = x.PictureId,
-                        Hash = x.BinaryData.Hash(supportedLengthOfBinaryHash)
-                    }).ToDictionary(p => p.PictureId, p => p.Hash);
+                        Hash = SQLFunctions.Hash(x.BinaryData, _dataProvider.SupportedLengthOfBinaryHash)
+                    });
+
+            return test.ToDictionary(p => p.PictureId, p => p.Hash);
         }
 
         /// <summary>

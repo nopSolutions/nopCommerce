@@ -177,7 +177,7 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping methods</returns>
         public virtual IList<ShippingMethod> GetAllShippingMethods(int? filterByCountryId = null)
         {
-            var key = string.Format(NopShippingCachingDefaults.ShippingMethodsAllCacheKey, filterByCountryId ?? 0);
+            var key = NopShippingCachingDefaults.ShippingMethodsAllCacheKey.ToCacheKey(filterByCountryId);
             
             if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
             {
@@ -318,9 +318,7 @@ namespace Nop.Services.Shipping
             if (warehouseId == 0)
                 return null;
 
-            var key = string.Format(NopShippingCachingDefaults.WarehousesByIdCacheKey, warehouseId);
-
-            return _warehouseRepository.ToCachedGetById(warehouseId, key);
+            return _warehouseRepository.ToCachedGetById(warehouseId);
         }
 
         /// <summary>
