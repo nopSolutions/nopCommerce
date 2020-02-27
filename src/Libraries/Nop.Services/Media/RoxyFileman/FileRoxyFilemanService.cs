@@ -30,12 +30,12 @@ namespace Nop.Services.Media.RoxyFileman
 
         #region Ctor
 
-        public FileRoxyFilemanService(IHostingEnvironment hostingEnvironment,
+        public FileRoxyFilemanService(IWebHostEnvironment webHostEnvironment,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
             IWebHelper webHelper,
             IWorkContext workContext,
-            MediaSettings mediaSettings) : base(hostingEnvironment, httpContextAccessor, fileProvider, webHelper, workContext, mediaSettings)
+            MediaSettings mediaSettings) : base(webHostEnvironment, httpContextAccessor, fileProvider, webHelper, workContext, mediaSettings)
         {
             _fileRootPath = null;
         }

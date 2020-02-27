@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -20,6 +19,12 @@ namespace Nop.Core.Infrastructure
     /// </summary>
     public class NopEngine : IEngine
     {
+        #region Fields
+
+        private ITypeFinder _typeFinder;
+
+        #endregion
+
         #region Properties
 
         /// <summary>
@@ -37,6 +42,8 @@ namespace Nop.Core.Infrastructure
         /// <returns>IServiceProvider</returns>
         protected IServiceProvider GetServiceProvider()
         {
+            if (ServiceProvider == null)
+                return null;
             var accessor = ServiceProvider?.GetService<IHttpContextAccessor>();
             var context = accessor?.HttpContext;
             return context?.RequestServices ?? ServiceProvider;
@@ -66,24 +73,18 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Register dependencies
         /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        /// <param name="typeFinder">Type finder</param>
+        /// <param name="containerBuilder">Container builder</param>
         /// <param name="nopConfig">Nop configuration parameters</param>
-        protected virtual IServiceProvider RegisterDependencies(IServiceCollection services, ITypeFinder typeFinder, NopConfig nopConfig)
+        public virtual void RegisterDependencies(ContainerBuilder containerBuilder, NopConfig nopConfig)
         {
-            var containerBuilder = new ContainerBuilder();
-
             //register engine
             containerBuilder.RegisterInstance(this).As<IEngine>().SingleInstance();
 
             //register type finder
-            containerBuilder.RegisterInstance(typeFinder).As<ITypeFinder>().SingleInstance();
-
-            //populate Autofac container builder with the set of registered service descriptors
-            containerBuilder.Populate(services);
+            containerBuilder.RegisterInstance(_typeFinder).As<ITypeFinder>().SingleInstance();
 
             //find dependency registrars provided by other assemblies
-            var dependencyRegistrars = typeFinder.FindClassesOfType<IDependencyRegistrar>();
+            var dependencyRegistrars = _typeFinder.FindClassesOfType<IDependencyRegistrar>();
 
             //create and sort instances of dependency registrars
             var instances = dependencyRegistrars
@@ -92,12 +93,7 @@ namespace Nop.Core.Infrastructure
 
             //register all provided dependencies
             foreach (var dependencyRegistrar in instances)
-                dependencyRegistrar.Register(containerBuilder, typeFinder, nopConfig);
-
-            //create service provider
-            _serviceProvider = new AutofacServiceProvider(containerBuilder.Build());
-
-            return _serviceProvider;
+                dependencyRegistrar.Register(containerBuilder, _typeFinder, nopConfig);
         }
 
         /// <summary>
@@ -137,6 +133,8 @@ namespace Nop.Core.Infrastructure
 
             //get assembly from TypeFinder
             var tf = Resolve<ITypeFinder>();
+            if (tf == null)
+                return null;
             assembly = tf.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
             return assembly;
         }
@@ -151,12 +149,11 @@ namespace Nop.Core.Infrastructure
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration of the application</param>
         /// <param name="nopConfig">Nop configuration parameters</param>
-        /// <returns>Service provider</returns>
-        public IServiceProvider ConfigureServices(IServiceCollection services, IConfiguration configuration, NopConfig nopConfig)
+        public void ConfigureServices(IServiceCollection services, IConfiguration configuration, NopConfig nopConfig)
         {
             //find startup configurations provided by other assemblies
-            var typeFinder = new WebAppTypeFinder();
-            var startupConfigurations = typeFinder.FindClassesOfType<INopStartup>();
+            _typeFinder = new WebAppTypeFinder();
+            var startupConfigurations = _typeFinder.FindClassesOfType<INopStartup>();
 
             //create and sort instances of startup configurations
             var instances = startupConfigurations
@@ -168,18 +165,13 @@ namespace Nop.Core.Infrastructure
                 instance.ConfigureServices(services, configuration);
 
             //register mapper configurations
-            AddAutoMapper(services, typeFinder);
-
-            //register dependencies
-            RegisterDependencies(services, typeFinder, nopConfig);
+            AddAutoMapper(services, _typeFinder);
 
             //run startup tasks
-            RunStartupTasks(typeFinder);
+            RunStartupTasks(_typeFinder);
 
             //resolve assemblies here. otherwise, plugins can throw an exception when rendering views
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-
-            return _serviceProvider;
         }
 
         /// <summary>
@@ -188,6 +180,8 @@ namespace Nop.Core.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void ConfigureRequestPipeline(IApplicationBuilder application)
         {
+            _serviceProvider = application.ApplicationServices;
+
             //find startup configurations provided by other assemblies
             var typeFinder = Resolve<ITypeFinder>();
             var startupConfigurations = typeFinder.FindClassesOfType<INopStartup>();
@@ -219,7 +213,10 @@ namespace Nop.Core.Infrastructure
         /// <returns>Resolved service</returns>
         public object Resolve(Type type)
         {
-            return GetServiceProvider()?.GetService(type);
+            var sp = GetServiceProvider();
+            if (sp == null)
+                return null;
+            return sp.GetService(type);
         }
 
         /// <summary>

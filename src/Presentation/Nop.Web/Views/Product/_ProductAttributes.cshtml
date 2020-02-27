@@ -127,12 +127,12 @@
                             break;
                         case AttributeControlType.TextBox:
                             {
-                                <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" value="@attribute.DefaultValue" />
+                                <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" value="@(attribute.DefaultValue)" />
                             }
                             break;
                         case AttributeControlType.MultilineTextbox:
                             {
-                                <textarea cols="20" id="@(controlId)" name="@(controlId)">@attribute.DefaultValue</textarea>
+                                <textarea cols="20" id="@(controlId)" name="@(controlId)">@(attribute.DefaultValue)</textarea>
                             }
                             break;
                         case AttributeControlType.Datepicker:
@@ -143,9 +143,9 @@
                                     asp-year-name="@(controlId + "_year")"
                                     asp-begin-year="@(DateTime.Now.Year)"
                                     asp-end-year="@(DateTime.Now.Year + catalogSettings.CountDisplayedYearsDatePicker)"
-                                    asp-selected-day="@attribute.SelectedDay"
-                                    asp-selected-month="@attribute.SelectedMonth"
-                                    asp-selected-year="@attribute.SelectedYear"
+                                    asp-selected-day="@(attribute.SelectedDay)"
+                                    asp-selected-month="@(attribute.SelectedMonth)"
+                                    asp-selected-year="@(attribute.SelectedYear)"
                                 />
                             }
                             break;

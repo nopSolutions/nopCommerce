@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Hosting;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
@@ -30,7 +31,7 @@ namespace Nop.Web.Framework.UI
         private readonly BundleFileProcessor _processor;
         private readonly CommonSettings _commonSettings;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly INopFileProvider _fileProvider;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IUrlHelperFactory _urlHelperFactory;
@@ -59,7 +60,7 @@ namespace Nop.Web.Framework.UI
         public PageHeadBuilder(
             CommonSettings commonSettings,
             IActionContextAccessor actionContextAccessor,
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment webHostEnvironment,
             INopFileProvider fileProvider,
             IStaticCacheManager cacheManager,
             IUrlHelperFactory urlHelperFactory,
@@ -70,7 +71,7 @@ namespace Nop.Web.Framework.UI
             _processor = new BundleFileProcessor();
             _commonSettings = commonSettings;
             _actionContextAccessor = actionContextAccessor;
-            _hostingEnvironment = hostingEnvironment;
+            _webHostEnvironment = webHostEnvironment;
             _fileProvider = fileProvider;
             _cacheManager = cacheManager;            
             _urlHelperFactory = urlHelperFactory;
@@ -329,7 +330,7 @@ namespace Nop.Web.Framework.UI
 
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
-            var debugModel = _hostingEnvironment.IsDevelopment();
+            var debugModel = _webHostEnvironment.IsDevelopment();
 
             if (!bundleFiles.HasValue)
             {
@@ -365,7 +366,7 @@ namespace Nop.Web.Framework.UI
 
                         //check whether this file exists, if not it should be stored into /wwwroot directory
                         if (!_fileProvider.FileExists(_fileProvider.MapPath(path)))
-                            src = _fileProvider.Combine(_hostingEnvironment.WebRootPath, _fileProvider.Combine(src.Split("/").ToArray()));
+                            src = _fileProvider.Combine(_webHostEnvironment.WebRootPath, _fileProvider.Combine(src.Split("/").ToArray()));
                         else
                             src = _fileProvider.MapPath(path);
 
@@ -374,7 +375,7 @@ namespace Nop.Web.Framework.UI
 
                     //output file
                     var outputFileName = GetBundleFileName(partsToBundle.Select(x => debugModel ? x.DebugSrc : x.Src).ToArray());
-                    bundle.OutputFileName = _fileProvider.Combine(_hostingEnvironment.WebRootPath, "bundles", outputFileName + ".js");
+                    bundle.OutputFileName = _fileProvider.Combine(_webHostEnvironment.WebRootPath, "bundles", outputFileName + ".js");
                     //save
                     var configFilePath = _fileProvider.MapPath($"/{outputFileName}.json");
                     bundle.FileName = configFilePath;
@@ -546,7 +547,7 @@ namespace Nop.Web.Framework.UI
 
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
-            var debugModel = _hostingEnvironment.IsDevelopment();
+            var debugModel = _webHostEnvironment.IsDevelopment();
 
             if (!bundleFiles.HasValue)
             {
@@ -587,14 +588,14 @@ namespace Nop.Web.Framework.UI
 
                         //check whether this file exists 
                         if (!_fileProvider.FileExists(_fileProvider.MapPath(path)))
-                            src = _fileProvider.Combine(_hostingEnvironment.WebRootPath, _fileProvider.Combine(src.Split("/").ToArray()));
+                            src = _fileProvider.Combine(_webHostEnvironment.WebRootPath, _fileProvider.Combine(src.Split("/").ToArray()));
                         else
                             src = _fileProvider.MapPath(path);
                         bundle.InputFiles.Add(src);
                     }
                     //output file
                     var outputFileName = GetBundleFileName(partsToBundle.Select(x => { return debugModel ? x.DebugSrc : x.Src; }).ToArray());
-                    bundle.OutputFileName = _fileProvider.Combine(_hostingEnvironment.WebRootPath, "bundles", outputFileName + ".css");
+                    bundle.OutputFileName = _fileProvider.Combine(_webHostEnvironment.WebRootPath, "bundles", outputFileName + ".css");
                     //save
                     var configFilePath = _fileProvider.MapPath($"/{outputFileName}.json");
                     bundle.FileName = configFilePath;

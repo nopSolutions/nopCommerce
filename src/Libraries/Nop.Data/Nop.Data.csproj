@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
@@ -16,8 +16,8 @@
   <ItemGroup>
     <PackageReference Include="FluentMigrator" Version="3.2.1" />
     <PackageReference Include="FluentMigrator.Runner" Version="3.2.1" />
-    <PackageReference Include="linq2db" Version="2.9.3" />
-    <PackageReference Include="MySql.Data" Version="8.0.18" />
+    <PackageReference Include="linq2db" Version="2.9.6" />
+    <PackageReference Include="MySql.Data" Version="8.0.19" />
   </ItemGroup>
 
   <ItemGroup>

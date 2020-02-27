@@ -40,12 +40,12 @@ namespace Nop.Services.Media.RoxyFileman
 
         public DatabaseRoxyFilemanService(IPictureService pictureService,
             IRepository<Picture> pictureRepository,
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment webHostEnvironment,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
             IWebHelper webHelper,
             IWorkContext workContext,
-            MediaSettings mediaSettings) : base(hostingEnvironment, httpContextAccessor, fileProvider, webHelper, workContext, mediaSettings)
+            MediaSettings mediaSettings) : base(webHostEnvironment, httpContextAccessor, fileProvider, webHelper, workContext, mediaSettings)
         {
             _pictureService = pictureService;
             _pictureRepository = pictureRepository;

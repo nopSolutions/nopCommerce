@@ -42,6 +42,15 @@ namespace Nop.Core.Caching
             if (cacheTime <= 0)
                 return acquire();
 
+            if (acquire() != null && acquire().GetType().IsGenericType)
+            {
+                var genericType = acquire().GetType().GetGenericTypeDefinition();
+                if (genericType.FullName.StartsWith("System.Linq.Enumerable"))
+                {
+                    return acquire();
+                }
+            }
+
             return _provider.Get(key, acquire, TimeSpan.FromMinutes(cacheTime ?? NopCachingDefaults.CacheTime))
                 .Value;
         }
