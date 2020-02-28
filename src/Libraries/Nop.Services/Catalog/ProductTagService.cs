@@ -4,6 +4,8 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Caching.Extensions;
@@ -26,6 +28,9 @@ namespace Nop.Services.Catalog
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
+        private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<AclRecord> _aclRecordRepository;
+        private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
@@ -40,6 +45,9 @@ namespace Nop.Services.Catalog
             IEventPublisher eventPublisher,
             IRepository<ProductProductTagMapping> productProductTagMappingRepository,
             IRepository<ProductTag> productTagRepository,
+            IRepository<Product> productRepository,
+            IRepository<AclRecord> aclRecordRepository,
+            IRepository<StoreMapping> storeMappingRepository,
             IStaticCacheManager staticCacheManager,
             IUrlRecordService urlRecordService,
             IWorkContext workContext)
@@ -50,6 +58,9 @@ namespace Nop.Services.Catalog
             _eventPublisher = eventPublisher;
             _productProductTagMappingRepository = productProductTagMappingRepository;
             _productTagRepository = productTagRepository;
+            _productRepository = productRepository;
+            _aclRecordRepository = aclRecordRepository;
+            _storeMappingRepository = storeMappingRepository;
             _staticCacheManager = staticCacheManager;
             _urlRecordService = urlRecordService;
             _workContext = workContext;
@@ -85,27 +96,52 @@ namespace Nop.Services.Catalog
         /// <returns>Dictionary of "product tag ID : product count"</returns>
         private Dictionary<int, int> GetProductCount(int storeId, bool showHidden)
         {
-            var allowedCustomerRolesIds = string.Empty;
+            var allowedCustomerRolesIds = new int[] {};
+            
             if (!showHidden && !_catalogSettings.IgnoreAcl)
             {
                 //Access control list. Allowed customer roles
                 //pass customer role identifiers as comma-delimited string
-                allowedCustomerRolesIds = string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+                allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
             }
 
             var key = NopCatalogCachingDefaults.ProductTagCountCacheKey.ToCacheKey(storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer), showHidden);
 
             return _staticCacheManager.Get(key, () =>
             {
-                //prepare input parameters
-                var pStoreId = SqlParameterHelper.GetInt32Parameter("StoreId", storeId);
-                var pAllowedCustomerRoleIds = SqlParameterHelper.GetStringParameter("AllowedCustomerRoleIds", allowedCustomerRolesIds);
+                var filter =
+                    from pt in _productTagRepository.Table
+                    from pptm in _productProductTagMappingRepository.Table.Where(x => x.ProductTagId == pt.Id).DefaultIfEmpty()
+                    from p in _productRepository.Table.Where(x => x.Id == pptm.ProductId).DefaultIfEmpty()
+                    where !p.Deleted && p.Published
+                    select new {pt, pptm, p};
 
-                //invoke stored procedure
-                return _dataProvider.QueryProc<ProductTagWithCount>("ProductTagCountLoadAll",
-                        pStoreId,
-                        pAllowedCustomerRoleIds)
-                    .ToDictionary(item => item.ProductTagId, item => item.ProductCount);
+                if (storeId != 0)
+                {
+                    filter = filter.Where(_ =>
+                        !_.p.LimitedToStores ||
+                        _storeMappingRepository.Table.Any(sm => sm.StoreId == storeId && sm.EntityId == _.p.Id && sm.EntityName == "Product")
+                    );
+                }
+
+                if (allowedCustomerRolesIds.Length > 0)
+                {
+                    filter = filter.Where(_ => 
+                        !_.p.SubjectToAcl ||
+                        _aclRecordRepository.Table.Any(acl => allowedCustomerRolesIds.Contains(acl.CustomerRoleId) && acl.EntityId == _.p.Id && acl.EntityName == "Product")
+                    );
+                }
+                
+                var query = filter
+                    .GroupBy(_ => _.pt.Id)
+                    .OrderBy(g => g.Key)
+                    .Select(g => new
+                    {
+                        ProductTagId = g.Key,
+                        ProductCount = g.Count(),
+                    });
+
+                return query.ToDictionary(_ => _.ProductTagId, _ => _.ProductCount);
             });
         }
 
