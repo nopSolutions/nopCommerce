@@ -3,6 +3,7 @@ CREATE FUNCTION `Check_Exists_FullText_Index`(
 	`TableName` 	varchar(200),
 	`IndexName` 	varchar(200)
 ) RETURNS tinyint(1)
+READS SQL DATA 
 sql security invoker
 BEGIN
 
@@ -23,6 +24,7 @@ CREATE PROCEDURE `CategoryLoadAllPaged`(
 	`PageSize`				int,
     OUT `TotalRecords`		int
 )
+READS SQL DATA 
 sql security invoker
 BEGIN
 	Set @lengthId = (select CHAR_LENGTH(MAX(Id)) FROM Category);
@@ -37,18 +39,18 @@ BEGIN
 	with recursive CategoryTree AS
 	(
 	  SELECT id, cast(concat(LPAD(DisplayOrder, @lengthOrder, '0'), '-' , LPAD(Id, @lengthId, '0'))  as char(500)) as `Order`
-		FROM category
+		FROM Category
 		WHERE ParentCategoryId = 0
 	  UNION ALL
 	  SELECT c.id, concat(sc.`Order`, '|', LPAD(c.DisplayOrder, @lengthOrder, '0'), '-' , LPAD(c.Id, @lengthId, '0')) as `Order`
 		FROM CategoryTree AS sc 
-		  JOIN category AS c ON sc.id = c.ParentCategoryId
+		  JOIN Category AS c ON sc.id = c.ParentCategoryId
 	)
     select *
     from CategoryTree;
     
 	select c.`Id`, c.`Name`, ct.`Order` 
-		from category c
+		from Category c
 			inner join `OrderedCategories` as ct on c.Id = ct.Id
 		#filter results
 		where not c.Deleted
@@ -57,12 +59,12 @@ BEGIN
             and (ShowHidden OR COALESCE(`CustomerRoleIds`, '') = '' OR not c.SubjectToAcl
 				OR EXISTS (
 					select 1 
-                    from aclRecord as acl 
+                    from AclRecord as acl 
                     where find_in_set(acl.CustomerRoleId, CustomerRoleIds) 
 						and acl.`EntityId` = c.`Id` AND acl.`EntityName` = 'Category')
 			)
             and (not StoreId OR not c.`LimitedToStores`
-				OR EXISTS (SELECT 1 FROM storemapping sm
+				OR EXISTS (SELECT 1 FROM StoreMapping sm
 					WHERE sm.`EntityId` = c.`Id` AND sm.`EntityName` = 'Category' AND sm.`StoreId` = StoreId
 				)
 			)
@@ -83,6 +85,7 @@ CREATE PROCEDURE `Create_FullText_Index`(
 		`IndexName` 	varchar(200),
     out `Result` 		bool
 )
+MODIFIES SQL DATA 
 sql security invoker
 BEGIN
 	set `Result` = true;
@@ -106,6 +109,7 @@ CREATE PROCEDURE `DeleteGuests`(
 	CreatedToUtc datetime,
 	out TotalRecordsDeleted int
 )
+MODIFIES SQL DATA 
 sql security invoker
 BEGIN
 	create temporary table tmp_guests (CustomerId int);
@@ -177,6 +181,7 @@ CREATE PROCEDURE `Drop_FullText_Index`(
 		`IndexName` 	varchar(200),
     out `Result` 		bool
 )
+MODIFIES SQL DATA 
 sql security invoker
 BEGIN
 	set `Result` = true;
@@ -195,6 +200,7 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE `FullText_Disable`()
+MODIFIES SQL DATA 
 sql security invoker
 BEGIN
     call `Drop_FullText_Index`('Product', 'FT_IX_Product_Description', @drop_result);
@@ -206,6 +212,7 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE `FullText_Enable`()
+MODIFIES SQL DATA 
 sql security invoker
 BEGIN
 	CALL `Create_FullText_Index`('Product', 'ShortDescription, FullDescription', 'FT_IX_Product_Description',  @result);
@@ -217,6 +224,7 @@ DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE `FullText_IsSupported`()
+DETERMINISTIC 
 sql security invoker
 BEGIN
 	select true;
@@ -228,6 +236,7 @@ CREATE PROCEDURE `ProductTagCountLoadAll`(
 	`StoreId` 					int,
 	`AllowedCustomerRoleIds`	text	#a list of customer role IDs (comma-separated list) for which a product should be shown (if a subject to ACL)
 )
+READS SQL DATA 
 sql security invoker
 BEGIN
 	#filter by customer role IDs (access control list)	
@@ -245,7 +254,7 @@ BEGIN
 		AND (length(`AllowedCustomerRoleIds`) = 0 or (not p.SubjectToAcl 
 			OR EXISTS (
 					select 1 
-                    from aclRecord as acl 
+                    from AclRecord as acl 
                     where find_in_set(acl.CustomerRoleId, `AllowedCustomerRoleIds`) 
 						and acl.`EntityId` = p.`Id` AND acl.`EntityName` = 'Product')
 			))
@@ -287,6 +296,7 @@ CREATE PROCEDURE `ProductLoadAllPaged`(
 	out	`FilterableSpecificationAttributeOptionIds` 		text, 				#the specification attribute option identifiers applied to loaded products (all pages). returned as a comma separated list of identifiers
 	out	`TotalRecords`										int
 )
+    READS SQL DATA 
     SQL SECURITY INVOKER
 BEGIN
 	DECLARE `SearchKeywords` bit default false;
