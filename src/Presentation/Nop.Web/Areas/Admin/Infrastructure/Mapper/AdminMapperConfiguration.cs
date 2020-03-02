@@ -1197,6 +1197,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.DeleteGiftCardUsageHistory_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DisableBillingAddressCheckoutStep_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.DisableOrderCompletedPage_OverrideForStore, options => options.Ignore())
+                .ForMember(model => model.DisplayPickupInStoreOnShippingMethodPage_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.ExportWithProducts_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.IsReOrderAllowed_OverrideForStore, options => options.Ignore())
                 .ForMember(model => model.MinOrderSubtotalAmountIncludingTax_OverrideForStore, options => options.Ignore())

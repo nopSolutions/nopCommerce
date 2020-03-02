@@ -99,4 +99,14 @@
             <span asp-validation-for="DisableOrderCompletedPage"></span>
         </div>
     </div>
+    <div class="form-group advanced-setting">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="DisplayPickupInStoreOnShippingMethodPage_OverrideForStore" asp-input="DisplayPickupInStoreOnShippingMethodPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+            <nop-label asp-for="DisplayPickupInStoreOnShippingMethodPage"/>
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayPickupInStoreOnShippingMethodPage"/>
+            <span asp-validation-for="DisplayPickupInStoreOnShippingMethodPage"></span>
+        </div>
+    </div>
 </div>

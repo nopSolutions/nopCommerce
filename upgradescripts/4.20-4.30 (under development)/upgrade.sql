@@ -352,6 +352,12 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.TopicName">
     <Value>Name</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DisplayPickupInStoreOnShippingMethodPage">
+    <Value>Display "Pickup in store" on "Shipping method" page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DisplayPickupInStoreOnShippingMethodPage.Hint">
+    <Value>Display "Pickup in store" options on "Shipping method" page; otherwise display on the "Shipping address" page.</Value>
+  </LocaleResource>
 </Language>
 '
 

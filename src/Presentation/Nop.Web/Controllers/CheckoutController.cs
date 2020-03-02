@@ -166,6 +166,60 @@ namespace Nop.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Parses the value indicating whether the "pickup in store" is allowed
+        /// </summary>
+        /// <param name="form">The form</param>
+        /// <returns>The value indicating whether the "pickup in store" is allowed</returns>
+        protected virtual bool ParsePickupInStore(IFormCollection form)
+        {
+            var pickupInStore = false;
+
+            var pickupInStoreParameter = form["PickupInStore"].FirstOrDefault();
+            if (!string.IsNullOrWhiteSpace(pickupInStoreParameter))
+                bool.TryParse(pickupInStoreParameter, out pickupInStore);
+
+            return pickupInStore;
+        }
+
+        /// <summary>
+        /// Parses the pickup option
+        /// </summary>
+        /// <param name="form">The form</param>
+        /// <returns>The pickup option</returns>
+        protected virtual PickupPoint ParsePickupOption(IFormCollection form)
+        {
+            var pickupPoint = form["pickup-points-id"].ToString().Split(new[] { "___" }, StringSplitOptions.None);
+            var pickupPoints = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddressId ?? 0,
+                _workContext.CurrentCustomer, pickupPoint[1], _storeContext.CurrentStore.Id).PickupPoints.ToList();
+            var selectedPoint = pickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint[0]));
+            if (selectedPoint == null)
+                throw new Exception("Pickup point is not allowed");
+
+            return selectedPoint;
+        }
+
+        /// <summary>
+        /// Saves the pickup option
+        /// </summary>
+        /// <param name="pickupPoint">The pickup option</param>
+        protected virtual void SavePickupOption(PickupPoint pickupPoint)
+        {
+            //no shipping address selected
+            _workContext.CurrentCustomer.ShippingAddressId = null;
+            _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
+            var pickUpInStoreShippingOption = new ShippingOption
+            {
+                Name = string.Format(_localizationService.GetResource("Checkout.PickupPoints.Name"), pickupPoint.Name),
+                Rate = pickupPoint.PickupFee,
+                Description = pickupPoint.Description,
+                ShippingRateComputationMethodSystemName = pickupPoint.ProviderSystemName
+            };
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedShippingOptionAttribute, pickUpInStoreShippingOption, _storeContext.CurrentStore.Id);
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedPickupPointAttribute, pickupPoint, _storeContext.CurrentStore.Id);
+        }
+
         #endregion
 
         #region Methods (common)
@@ -511,34 +565,16 @@ namespace Nop.Web.Controllers
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                 return RedirectToRoute("CheckoutShippingMethod");
             }
-
+            
             //pickup point
-            if (_shippingSettings.AllowPickupInStore)
+            if (_shippingSettings.AllowPickupInStore && !_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
             {
-                if (model.PickupInStore)
+                var pickupInStore = ParsePickupInStore(form);
+                if (pickupInStore)
                 {
-                    //no shipping address selected
-                    _workContext.CurrentCustomer.ShippingAddressId = null;
-                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
-
-                    var pickupPoint = form["pickup-points-id"].ToString().Split(new[] { "___" }, StringSplitOptions.None);
-                    var pickupPoints = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddressId ?? 0,
-                        _workContext.CurrentCustomer, pickupPoint[1], _storeContext.CurrentStore.Id).PickupPoints.ToList();
-                    var selectedPoint = pickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint[0]));
-                    if (selectedPoint == null)
-                        return RedirectToRoute("CheckoutShippingAddress");
-
-                    var pickUpInStoreShippingOption = new ShippingOption
-                    {
-                        Name = string.Format(_localizationService.GetResource("Checkout.PickupPoints.Name"), selectedPoint.Name),
-                        Rate = selectedPoint.PickupFee,
-                        Description = selectedPoint.Description,
-                        ShippingRateComputationMethodSystemName = selectedPoint.ProviderSystemName
-                    };
-
-                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedShippingOptionAttribute, pickUpInStoreShippingOption, _storeContext.CurrentStore.Id);
-                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedPickupPointAttribute, selectedPoint, _storeContext.CurrentStore.Id);
-
+                    var pickupOption = ParsePickupOption(form);
+                    SavePickupOption(pickupOption);
+                    
                     return RedirectToRoute("CheckoutPaymentMethod");
                 }
 
@@ -639,7 +675,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("ShippingMethod")]
         [FormValueRequired("nextstep")]
-        public virtual IActionResult SelectShippingMethod(string shippingoption)
+        public virtual IActionResult SelectShippingMethod(string shippingoption, IFormCollection form)
         {
             //validation
             if (_orderSettings.CheckoutDisabled)
@@ -661,6 +697,22 @@ namespace Nop.Web.Controllers
                 _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer,
                     NopCustomerDefaults.SelectedShippingOptionAttribute, null, _storeContext.CurrentStore.Id);
                 return RedirectToRoute("CheckoutPaymentMethod");
+            }
+
+            //pickup point
+            if (_shippingSettings.AllowPickupInStore && _orderSettings.DisplayPickupInStoreOnShippingMethodPage)
+            {
+                var pickupInStore = ParsePickupInStore(form);
+                if (pickupInStore)
+                {
+                    var pickupOption = ParsePickupOption(form);
+                    SavePickupOption(pickupOption);
+
+                    return RedirectToRoute("CheckoutPaymentMethod");
+                }
+
+                //set value indicating that "pick up in store" option has not been chosen
+                _genericAttributeService.SaveAttribute<PickupPoint>(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedPickupPointAttribute, null, _storeContext.CurrentStore.Id);
             }
 
             //parse selected method 
@@ -1321,32 +1373,14 @@ namespace Nop.Web.Controllers
                     throw new Exception("Shipping is not required");
 
                 //pickup point
-                if (_shippingSettings.AllowPickupInStore)
+                if (_shippingSettings.AllowPickupInStore && !_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
                 {
-                    if (model.PickupInStore)
+                    var pickupInStore = ParsePickupInStore(form);
+                    if (pickupInStore)
                     {
-                        //no shipping address selected
-                        _workContext.CurrentCustomer.ShippingAddressId = null;
-                        _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                        var pickupOption = ParsePickupOption(form);
+                        SavePickupOption(pickupOption);
 
-                        var pickupPoint = form["pickup-points-id"].ToString().Split(new[] { "___" }, StringSplitOptions.None);
-                        var pickupPoints = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddressId ?? 0,
-                            _workContext.CurrentCustomer, pickupPoint[1], _storeContext.CurrentStore.Id).PickupPoints.ToList();
-                        var selectedPoint = pickupPoints.FirstOrDefault(x => x.Id.Equals(pickupPoint[0]));
-                        if (selectedPoint == null)
-                            throw new Exception("Pickup point is not allowed");
-
-                        var pickUpInStoreShippingOption = new ShippingOption
-                        {
-                            Name = string.Format(_localizationService.GetResource("Checkout.PickupPoints.Name"), selectedPoint.Name),
-                            Rate = selectedPoint.PickupFee,
-                            Description = selectedPoint.Description,
-                            ShippingRateComputationMethodSystemName = selectedPoint.ProviderSystemName
-                        };
-                        _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedShippingOptionAttribute, pickUpInStoreShippingOption, _storeContext.CurrentStore.Id);
-                        _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedPickupPointAttribute, selectedPoint, _storeContext.CurrentStore.Id);
-
-                        //load next step
                         return OpcLoadStepAfterShippingMethod(cart);
                     }
 
@@ -1430,7 +1464,7 @@ namespace Nop.Web.Controllers
         }
 
         [IgnoreAntiforgeryToken]
-        public virtual IActionResult OpcSaveShippingMethod(string shippingoption)
+        public virtual IActionResult OpcSaveShippingMethod(string shippingoption, IFormCollection form)
         {
             try
             {
@@ -1451,6 +1485,22 @@ namespace Nop.Web.Controllers
 
                 if (!_shoppingCartService.ShoppingCartRequiresShipping(cart))
                     throw new Exception("Shipping is not required");
+
+                //pickup point
+                if (_shippingSettings.AllowPickupInStore && _orderSettings.DisplayPickupInStoreOnShippingMethodPage)
+                {
+                    var pickupInStore = ParsePickupInStore(form);
+                    if (pickupInStore)
+                    {
+                        var pickupOption = ParsePickupOption(form);
+                        SavePickupOption(pickupOption);
+
+                        return OpcLoadStepAfterShippingMethod(cart);
+                    }
+
+                    //set value indicating that "pick up in store" option has not been chosen
+                    _genericAttributeService.SaveAttribute<PickupPoint>(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedPickupPointAttribute, null, _storeContext.CurrentStore.Id);
+                }
 
                 //parse selected method 
                 if (string.IsNullOrEmpty(shippingoption))
