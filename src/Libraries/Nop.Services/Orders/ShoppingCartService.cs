@@ -301,7 +301,7 @@ namespace Nop.Services.Orders
 
             var cartItems = query.ToList();
             foreach (var cartItem in cartItems)
-                _sciRepository.Delete(cartItem);
+                DeleteShoppingCartItem(cartItem);
             return cartItems.Count;
         }
 
