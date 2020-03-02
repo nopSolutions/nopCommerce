@@ -245,12 +245,12 @@ namespace Nop.Data
 
         protected abstract IDataProvider LinqToDbDataProvider { get; }
 
-        protected static MappingSchema AdditionalSchema
+        protected MappingSchema AdditionalSchema
         {
             get
             {
                 if (Singleton<MappingSchema>.Instance is null)
-                    Singleton<MappingSchema>.Instance = new MappingSchema { MetadataReader = new FluentMigratorMetadataReader() };
+                    Singleton<MappingSchema>.Instance = new MappingSchema(ConfigurationName) { MetadataReader = new FluentMigratorMetadataReader() };
 
                 return Singleton<MappingSchema>.Instance;
             }
@@ -261,7 +261,7 @@ namespace Nop.Data
         /// <summary>
         /// Name of database provider
         /// </summary>
-        public string DataProviderName => LinqToDbDataProvider.Name;
+        public string ConfigurationName => LinqToDbDataProvider.Name;
 
         #endregion
     }

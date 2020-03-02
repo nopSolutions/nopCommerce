@@ -168,7 +168,7 @@ namespace Nop.Data
         /// <summary>
         /// Name of database provider
         /// </summary>
-        string DataProviderName { get; }
+        string ConfigurationName { get; }
 
         /// <summary>
         /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited
