@@ -19,14 +19,8 @@ namespace Nop.Data.Mapping.Builders.Common
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(Address.CountryId))
-                    .AsInt32()
-                    .Nullable()
-                    .ForeignKey<Country>()
-                .WithColumn(nameof(Address.StateProvinceId))
-                    .AsInt32()
-                    .Nullable()
-                    .ForeignKey<StateProvince>();
+                .WithColumn(nameof(Address.CountryId)).AsInt32().Nullable().ForeignKey<Country>()
+                .WithColumn(nameof(Address.StateProvinceId)).AsInt32().Nullable().ForeignKey<StateProvince>();
         }
 
         #endregion

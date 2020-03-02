@@ -19,13 +19,8 @@ namespace Nop.Data.Mapping.Builders.Catalog
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(TierPrice.CustomerRoleId))
-                    .AsInt32()
-                    .Nullable()
-                    .ForeignKey<CustomerRole>()
-                .WithColumn(nameof(TierPrice.ProductId))
-                    .AsInt32()
-                    .ForeignKey<Product>();
+                .WithColumn(nameof(TierPrice.CustomerRoleId)).AsInt32().Nullable().ForeignKey<CustomerRole>()
+                .WithColumn(nameof(TierPrice.ProductId)).AsInt32().ForeignKey<Product>();
         }
 
         #endregion

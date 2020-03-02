@@ -19,12 +19,8 @@ namespace Nop.Data.Mapping.Builders.Orders
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(OrderItem.OrderId))
-                   .AsInt32()
-                   .ForeignKey<Order>()
-                .WithColumn(nameof(OrderItem.ProductId))
-                   .AsInt32()
-                   .ForeignKey<Product>();
+                .WithColumn(nameof(OrderItem.OrderId)).AsInt32().ForeignKey<Order>()
+                .WithColumn(nameof(OrderItem.ProductId)).AsInt32().ForeignKey<Product>();
         }
 
         #endregion

@@ -20,9 +20,7 @@ namespace Nop.Data.Mapping.Builders.Security
         {
             table
                 .WithColumn(nameof(AclRecord.EntityName)).AsString(400).NotNullable()
-                .WithColumn(nameof(AclRecord.CustomerRoleId))
-                    .AsInt32()
-                    .ForeignKey<CustomerRole>();
+                .WithColumn(nameof(AclRecord.CustomerRoleId)).AsInt32().ForeignKey<CustomerRole>();
         }
 
         #endregion

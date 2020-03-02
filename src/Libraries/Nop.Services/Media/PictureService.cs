@@ -89,6 +89,13 @@ namespace Nop.Services.Media
 
         #region Utilities
 
+        // For SQL Server 2014 (12.x) and earlier, allowed input values are limited to 8000 bytes. 
+        // https://docs.microsoft.com/en-us/sql/t-sql/functions/hashbytes-transact-sql
+        [Sql.Expression(ProviderName.SqlServer, "HASHBYTES('SHA2_512', substring({0}, 0, {1}))", ServerSideOnly = true)]
+        [Sql.Expression("SHA2({0}, 512)", ServerSideOnly = true)]
+        protected virtual string Hash(byte[] binaryData, int limit)
+            => throw new InvalidOperationException("This function should be used only in database code");
+
         /// <summary>
         /// Calculates picture dimensions whilst maintaining aspect
         /// </summary>
@@ -1025,8 +1032,8 @@ namespace Nop.Services.Media
                     .Where(p => picturesIds.Contains(p.PictureId))
                     .Select(x => new
                     {
-                        PictureId = x.PictureId,
-                        Hash = SQLFunctions.Hash(x.BinaryData, _dataProvider.SupportedLengthOfBinaryHash)
+                        x.PictureId,
+                        Hash = Hash(x.BinaryData, _dataProvider.SupportedLengthOfBinaryHash)
                     });
 
             return test.ToDictionary(p => p.PictureId, p => p.Hash);

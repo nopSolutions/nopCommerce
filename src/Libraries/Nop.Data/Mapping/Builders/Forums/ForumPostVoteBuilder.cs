@@ -17,10 +17,7 @@ namespace Nop.Data.Mapping.Builders.Forums
         /// <param name="table">Create table expression builder</param>
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
-            table
-                .WithColumn(nameof(ForumPostVote.ForumPostId))
-                    .AsInt32()
-                    .ForeignKey<ForumPost>();
+            table.WithColumn(nameof(ForumPostVote.ForumPostId)).AsInt32().ForeignKey<ForumPost>();
         }
 
         #endregion

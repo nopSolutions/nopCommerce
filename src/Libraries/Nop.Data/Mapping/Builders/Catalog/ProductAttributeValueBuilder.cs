@@ -20,9 +20,7 @@ namespace Nop.Data.Mapping.Builders.Catalog
             table
                 .WithColumn(nameof(ProductAttributeValue.Name)).AsString(400).NotNullable()
                 .WithColumn(nameof(ProductAttributeValue.ColorSquaresRgb)).AsString(100).Nullable()
-                .WithColumn(nameof(ProductAttributeValue.ProductAttributeMappingId))
-                    .AsInt32()
-                    .ForeignKey<ProductAttributeMapping>();
+                .WithColumn(nameof(ProductAttributeValue.ProductAttributeMappingId)).AsInt32().ForeignKey<ProductAttributeMapping>();
         }
 
         #endregion

@@ -1,11 +1,11 @@
-using FluentMigrator;
+﻿using FluentMigrator;
 using Nop.Data.Migrations;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
 
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Data
 {
     [NopMigration("2020/02/03 08:40:55:1687541")]
-    [Tags(NopMigrationTags.Schema)]
+    [Tags(NopMigrationTags.SCHEMA)]
     public class SchemaMigration : AutoReversingMigration
     {
         protected IMigrationManager _migrationManager;

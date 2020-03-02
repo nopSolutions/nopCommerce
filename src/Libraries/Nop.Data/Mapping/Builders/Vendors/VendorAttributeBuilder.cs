@@ -16,8 +16,7 @@ namespace Nop.Data.Mapping.Builders.Vendors
         /// <param name="table">Create table expression builder</param>
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
-            table
-                .WithColumn(nameof(VendorAttribute.Name)).AsString(400).NotNullable();
+            table.WithColumn(nameof(VendorAttribute.Name)).AsString(400).NotNullable();
         }
 
         #endregion

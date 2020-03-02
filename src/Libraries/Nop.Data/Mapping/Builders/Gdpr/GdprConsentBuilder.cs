@@ -16,8 +16,7 @@ namespace Nop.Data.Mapping.Builders.Gdpr
         /// <param name="table">Create table expression builder</param>
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
-            table
-                .WithColumn(nameof(GdprConsent.Message)).AsString(int.MaxValue).NotNullable();
+            table.WithColumn(nameof(GdprConsent.Message)).AsString(int.MaxValue).NotNullable();
         }
 
         #endregion

@@ -19,14 +19,10 @@ namespace Nop.Data.Mapping.Builders.Customers
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(CustomerAddressMapping.AddressId))
-                    .AsInt32()
-                    .ForeignKey<Address>()
-                    .PrimaryKey()
-                .WithColumn(nameof(CustomerAddressMapping.CustomerId))
-                    .AsInt32()
-                    .ForeignKey<Customer>()
-                    .PrimaryKey();
+                .WithColumn(NameCompatibilityManager.GetColumnName(typeof(CustomerAddressMapping), nameof(CustomerAddressMapping.AddressId)))
+                    .AsInt32().ForeignKey<Address>().PrimaryKey()
+                .WithColumn(NameCompatibilityManager.GetColumnName(typeof(CustomerAddressMapping), nameof(CustomerAddressMapping.CustomerId)))
+                    .AsInt32().ForeignKey<Customer>().PrimaryKey();
         }
 
         #endregion

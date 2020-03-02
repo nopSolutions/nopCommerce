@@ -20,9 +20,7 @@ namespace Nop.Data.Mapping.Builders.Polls
         {
             table
                 .WithColumn(nameof(Poll.Name)).AsString(int.MaxValue).NotNullable()
-                .WithColumn(nameof(Poll.LanguageId))
-                    .AsInt32()
-                    .ForeignKey<Language>();
+                .WithColumn(nameof(Poll.LanguageId)).AsInt32().ForeignKey<Language>();
         }
 
         #endregion

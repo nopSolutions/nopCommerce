@@ -214,7 +214,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                _dataProvider.BackupDatabase(_maintenanceService.GetNewBackupFilePath());
+                _dataProvider.BackupDatabase(_maintenanceService.CreateNewBackupFilePath());
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.BackupCreated"));
             }
             catch (Exception exc)

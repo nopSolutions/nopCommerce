@@ -20,12 +20,8 @@ namespace Nop.Data.Mapping.Builders.Forums
         {
             table
                 .WithColumn(nameof(ForumTopic.Subject)).AsString(450).NotNullable()
-                .WithColumn(nameof(ForumTopic.CustomerId))
-                    .AsInt32()
-                    .ForeignKey<Customer>()
-                .WithColumn(nameof(ForumTopic.ForumId))
-                    .AsInt32()
-                    .ForeignKey<Forum>();
+                .WithColumn(nameof(ForumTopic.CustomerId)).AsInt32().ForeignKey<Customer>()
+                .WithColumn(nameof(ForumTopic.ForumId)).AsInt32().ForeignKey<Forum>();
         }
 
         #endregion

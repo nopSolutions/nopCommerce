@@ -59,15 +59,11 @@ namespace Nop.Data.Migrations
         public IForeignKeyExpression Apply(IForeignKeyExpression expression)
         {
             if (string.IsNullOrEmpty(expression.ForeignKey.Name))
-            {
-                
                 expression.ForeignKey.Name = GetForeignKeyName(expression.ForeignKey);
-            }
-            
+
             return expression;
         }
 
         #endregion
-        
     }
 }

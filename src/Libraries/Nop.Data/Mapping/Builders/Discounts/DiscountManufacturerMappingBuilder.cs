@@ -19,14 +19,10 @@ namespace Nop.Data.Mapping.Builders.Discounts
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(DiscountCategoryMapping.DiscountId))
-                    .AsInt32()
-                    .PrimaryKey()
-                    .ForeignKey<Discount>()
-                .WithColumn(nameof(DiscountCategoryMapping.EntityId))
-                    .AsInt32()
-                    .PrimaryKey()
-                    .ForeignKey<Manufacturer>();
+                .WithColumn(NameCompatibilityManager.GetColumnName(typeof(DiscountManufacturerMapping), nameof(DiscountManufacturerMapping.DiscountId)))
+                    .AsInt32().PrimaryKey().ForeignKey<Discount>()
+                .WithColumn(NameCompatibilityManager.GetColumnName(typeof(DiscountManufacturerMapping), nameof(DiscountManufacturerMapping.EntityId)))
+                    .AsInt32().PrimaryKey().ForeignKey<Manufacturer>();
         }
 
         #endregion

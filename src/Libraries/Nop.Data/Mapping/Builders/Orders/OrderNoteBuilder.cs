@@ -19,9 +19,7 @@ namespace Nop.Data.Mapping.Builders.Orders
         {
             table
                 .WithColumn(nameof(OrderNote.Note)).AsString(int.MaxValue).NotNullable()
-                .WithColumn(nameof(OrderNote.OrderId))
-                   .AsInt32()
-                   .ForeignKey<Order>();
+                .WithColumn(nameof(OrderNote.OrderId)).AsInt32().ForeignKey<Order>();
         }
 
         #endregion

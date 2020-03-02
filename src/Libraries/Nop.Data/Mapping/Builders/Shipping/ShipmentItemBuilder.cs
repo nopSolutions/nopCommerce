@@ -17,10 +17,7 @@ namespace Nop.Data.Mapping.Builders.Shipping
         /// <param name="table">Create table expression builder</param>
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
-            table
-                .WithColumn(nameof(ShipmentItem.ShipmentId))
-                    .AsInt32()
-                    .ForeignKey<Shipment>();
+            table.WithColumn(nameof(ShipmentItem.ShipmentId)).AsInt32().ForeignKey<Shipment>();
         }
 
         #endregion

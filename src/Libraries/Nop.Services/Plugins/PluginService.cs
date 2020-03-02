@@ -6,7 +6,6 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
-using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
@@ -164,7 +163,7 @@ namespace Nop.Services.Plugins
         protected virtual void InsertPluginData(Type pluginType)
         {
             var assembly = Assembly.GetAssembly(pluginType);
-            _migrationManager.ApplyUpMigrations(assembly, NopMigrationTags.Schema);
+            _migrationManager.ApplyUpMigrations(assembly, NopMigrationTags.SCHEMA);
         }
 
         #endregion

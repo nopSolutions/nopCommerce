@@ -20,10 +20,7 @@ namespace Nop.Data.Mapping.Builders.Affiliates
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(Affiliate.AddressId))
-                    .AsInt32()
-                    .ForeignKey<Address>()
-                    .OnDelete(Rule.None);
+                .WithColumn(nameof(Affiliate.AddressId)).AsInt32().ForeignKey<Address>().OnDelete(Rule.None);
         }
 
         #endregion

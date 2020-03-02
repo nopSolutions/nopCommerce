@@ -1,6 +1,6 @@
 ﻿using FluentMigrator.Builders.Create.Table;
 
-namespace Nop.Data.Migrations.Builders
+namespace Nop.Data.Mapping.Builders
 {
     /// <summary>
     /// Represents database entity builder

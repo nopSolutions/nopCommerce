@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -14,22 +14,24 @@ using FluentMigrator.Runner;
 using FluentMigrator.Runner.Initialization;
 using Nop.Core;
 using Nop.Core.Infrastructure;
-using Nop.Data.Extensions;
-using Nop.Data.Migrations.Builders;
+using Nop.Data.Mapping;
+using Nop.Data.Mapping.Builders;
 
-/// <summary>
-/// Represents the migration manager
-/// </summary>
 namespace Nop.Data.Migrations
 {
-    public class MigrationManager : IMigrationManager
+    /// <summary>
+    /// Represents the migration manager
+    /// </summary>
+    public partial class MigrationManager : IMigrationManager
     {
         #region Fields
 
-        protected IFilteringMigrationSource _filteringMigrationSource;
-        protected IMigrationRunner _migrationRunner;
-        protected IMigrationRunnerConventions _migrationRunnerConventions;
-        private IMigrationContext _migrationContext;
+        private readonly Dictionary<Type, Action<ICreateTableColumnAsTypeSyntax>> _typeMapping;
+        private readonly IFilteringMigrationSource _filteringMigrationSource;
+        private readonly IMigrationRunner _migrationRunner;
+        private readonly IMigrationRunnerConventions _migrationRunnerConventions;
+        private readonly IMigrationContext _migrationContext;
+        private readonly ITypeFinder _typeFinder;
 
         #endregion
 
@@ -39,17 +41,57 @@ namespace Nop.Data.Migrations
             IFilteringMigrationSource filteringMigrationSource,
             IMigrationRunner migrationRunner,
             IMigrationRunnerConventions migrationRunnerConventions,
-            IMigrationContext migrationContext)
+            IMigrationContext migrationContext,
+            ITypeFinder typeFinder)
         {
+            _typeMapping = new Dictionary<Type, Action<ICreateTableColumnAsTypeSyntax>>()
+            {
+                [typeof(int)] = c => c.AsInt32(),
+                [typeof(string)] = c => c.AsString(int.MaxValue).Nullable(),
+                [typeof(bool)] = c => c.AsBoolean(),
+                [typeof(decimal)] = c => c.AsDecimal(18, 4),
+                [typeof(DateTime)] = c => c.AsDateTime(),
+                [typeof(byte[])] = c => c.AsBinary(int.MaxValue),
+                [typeof(Guid)] = c => c.AsGuid()
+            };
+
             _filteringMigrationSource = filteringMigrationSource;
             _migrationRunner = migrationRunner;
             _migrationRunnerConventions = migrationRunnerConventions;
             _migrationContext = migrationContext;
+            _typeFinder = typeFinder;
         }
 
         #endregion
 
         #region Utils
+
+        /// <summary>
+        /// Defines the column specifications by default
+        /// </summary>
+        /// <param name="type">Type of entity</param>
+        /// <param name="create">An expression builder for a FluentMigrator.Expressions.CreateTableExpression</param>
+        /// <param name="propertyInfo">Property info</param>
+        /// <param name="canBeNullable">The value indicating whether this column is nullable</param>
+        protected virtual void WithSelfType(Type type, CreateTableExpressionBuilder create, PropertyInfo propertyInfo, bool canBeNullable = false)
+        {
+            var propType = propertyInfo.PropertyType;
+
+            if (Nullable.GetUnderlyingType(propType) is Type uType)
+            {
+                propType = uType;
+                canBeNullable = true;
+            }
+
+            if (!_typeMapping.ContainsKey(propType))
+                return;
+
+            var column = create.WithColumn(NameCompatibilityManager.GetColumnName(type, propertyInfo.Name));
+            _typeMapping[propType](column);
+
+            if (canBeNullable)
+                create.Nullable();
+        }
 
         /// <summary>
         /// Retrieves expressions for building an entity table
@@ -58,14 +100,12 @@ namespace Nop.Data.Migrations
         /// <param name="builder">An expression builder for a FluentMigrator.Expressions.CreateTableExpression</param>
         protected void RetrieveTableExpressions(Type type, CreateTableExpressionBuilder builder)
         {
-            var tp = new AppDomainTypeFinder()
+            var tp = _typeFinder
                 .FindClassesOfType(typeof(IEntityBuilder))
-                .FirstOrDefault(t => t.BaseType.GetGenericArguments().Contains(type));
+                .FirstOrDefault(t => t.BaseType?.GetGenericArguments().Contains(type) ?? false);
 
             if (tp != null)
-            {
-                ((IEntityBuilder)Activator.CreateInstance(tp)).MapEntity(builder);
-            }
+                (EngineContext.Current.Resolve(tp) as IEntityBuilder)?.MapEntity(builder);
 
             var expression = builder.Expression;
 
@@ -88,14 +128,11 @@ namespace Nop.Data.Migrations
             var propertiesToAutoMap = type
                 .GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public)
                 .Where(p =>
-                    !expression.Columns.Any(x => x.Name.Equals(p.Name, StringComparison.OrdinalIgnoreCase)));
-
-            if (propertiesToAutoMap is null || propertiesToAutoMap.Count() == 0)
-                return;
+                    !expression.Columns.Any(x => x.Name.Equals(NameCompatibilityManager.GetColumnName(type, p.Name), StringComparison.OrdinalIgnoreCase)));
 
             foreach (var prop in propertiesToAutoMap)
             {
-                builder.WithSelfType(prop.Name, prop.PropertyType);
+                WithSelfType(type, builder, prop);
             }
         }
 
@@ -107,9 +144,9 @@ namespace Nop.Data.Migrations
         /// <returns>The instances for found types implementing FluentMigrator.IMigration</returns>
         private IEnumerable<IMigration> GetMigrations(Assembly assembly, params string[] tags)
         {
-            return _filteringMigrationSource.GetMigrations(
-                t => (assembly == null || t.Assembly == assembly) &&
-                    (tags == null || _migrationRunnerConventions.HasRequestedTags(t, tags, true)));
+            return _filteringMigrationSource.GetMigrations(t =>
+                (assembly == null || t.Assembly == assembly) &&
+                (tags == null || _migrationRunnerConventions.HasRequestedTags(t, tags, true)));
         }
 
         /// <summary>
@@ -118,9 +155,7 @@ namespace Nop.Data.Migrations
         /// <returns>The context of a migration while collecting up/down expressions</returns>
         protected IMigrationContext CreateNullMigrationContext()
         {
-            return new MigrationContext(
-                new NullIfDatabaseProcessor(),
-                _migrationContext.ServiceProvider, null, null);
+            return new MigrationContext(new NullIfDatabaseProcessor(), _migrationContext.ServiceProvider, null, null);
         }
 
         #endregion
@@ -163,15 +198,14 @@ namespace Nop.Data.Migrations
         /// Retrieves expressions into ICreateExpressionRoot
         /// </summary>
         /// <param name="expressionRoot">The root expression for a CREATE operation</param>
-        /// <param name="tableName">Specified table name; pass null to use the name of a type</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public virtual void BuildTable<TEntity>(ICreateExpressionRoot expressionRoot, string tableName = null)
+        public virtual void BuildTable<TEntity>(ICreateExpressionRoot expressionRoot)
         {
-            var tblName = string.IsNullOrEmpty(tableName) ? typeof(TEntity).Name : tableName;
+            var type = typeof(TEntity);
 
-            var builder = expressionRoot.Table(tblName) as CreateTableExpressionBuilder;
+            var builder = expressionRoot.Table(NameCompatibilityManager.GetTableName(type)) as CreateTableExpressionBuilder;
 
-            RetrieveTableExpressions(typeof(TEntity), builder);
+            RetrieveTableExpressions(type, builder);
         }
 
         /// <summary>
@@ -181,7 +215,7 @@ namespace Nop.Data.Migrations
         /// <returns>Expression to create a table</returns>
         public virtual CreateTableExpression GetCreateTableExpression(Type type)
         {
-            var expression = new CreateTableExpression { TableName = type.Name };
+            var expression = new CreateTableExpression { TableName = NameCompatibilityManager.GetTableName(type) };
             var builder = new CreateTableExpressionBuilder(expression, CreateNullMigrationContext());
 
             RetrieveTableExpressions(type, builder);

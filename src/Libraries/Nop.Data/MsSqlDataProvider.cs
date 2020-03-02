@@ -21,11 +21,6 @@ namespace Nop.Data
     /// </summary>
     public partial class MsSqlNopDataProvider : BaseDataProvider, INopDataProvider
     {
-        public MsSqlNopDataProvider()
-        {
-
-        }
-
         #region Utils
 
         /// <summary>
@@ -79,11 +74,21 @@ namespace Nop.Data
 
         #region Methods
 
+        /// <summary>
+        /// Creates a connection to a database
+        /// </summary>
+        /// <param name="connectionString">Connection string</param>
+        /// <returns>Connection to a database</returns>
         public override IDbConnection CreateDbConnection(string connectionString = null)
         {
             return new SqlConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : CurrentConnectionString);
         }
 
+        /// <summary>
+        /// Create the database
+        /// </summary>
+        /// <param name="collation">Collation</param>
+        /// <param name="triesToConnect">Count of tries to connect to the database after creating; set 0 if no need to connect after creating</param>
         public void CreateDatabase(string collation, int triesToConnect = 10)
         {
             if (IsDatabaseExists())
@@ -150,16 +155,7 @@ namespace Nop.Data
                 return false;
             }
         }
-
-        /// <summary>
-        /// Check whether backups are supported
-        /// </summary>
-        protected void CheckBackupSupported()
-        {
-            if (!BackupSupported)
-                throw new DataException("This database does not support backup");
-        }
-
+        
         /// <summary>
         /// Execute commands from a file with SQL script against the context database
         /// </summary>
@@ -181,7 +177,7 @@ namespace Nop.Data
         public void ExecuteSqlScript(string sql)
         {
             var sqlCommands = GetCommandsFromScript(sql);
-            using (var currentConnection = CreateDataContext())
+            using (var currentConnection = CreateDataConnection())
             {
                 foreach (var command in sqlCommands)
                     currentConnection.Execute(command);
@@ -194,7 +190,7 @@ namespace Nop.Data
         public void InitializeDatabase()
         {
             var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
-            migrationManager.ApplyUpMigrations(null, NopMigrationTags.Schema);
+            migrationManager.ApplyUpMigrations(null, NopMigrationTags.SCHEMA);
 
             //create stored procedures 
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
@@ -208,7 +204,7 @@ namespace Nop.Data
         /// <returns>Integer identity; null if cannot get the result</returns>
         public virtual int? GetTableIdent<T>() where T : BaseEntity
         {
-            using (var currentConnection = CreateDataContext())
+            using (var currentConnection = CreateDataConnection())
             {
                 var tableName = currentConnection.GetTable<T>().TableName;
 
@@ -226,7 +222,7 @@ namespace Nop.Data
         /// <param name="ident">Identity value</param>
         public virtual void SetTableIdent<T>(int ident) where T : BaseEntity
         {
-            using (var currentConnection = CreateDataContext())
+            using (var currentConnection = CreateDataConnection())
             {
                 var currentIdent = GetTableIdent<T>();
                 if (!currentIdent.HasValue || ident <= currentIdent.Value)
@@ -243,10 +239,7 @@ namespace Nop.Data
         /// </summary>
         public virtual void BackupDatabase(string fileName)
         {
-            CheckBackupSupported();
-            //var fileName = _fileProvider.Combine(GetBackupDirectoryPath(), $"database_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(10)}.{NopCommonDefaults.DbBackupFileExtension}");
-
-            using (var currentConnection = CreateDataContext())
+            using (var currentConnection = CreateDataConnection())
             {
                 var commandText = $"BACKUP DATABASE [{currentConnection.Connection.Database}] TO DISK = '{fileName}' WITH FORMAT";
                 currentConnection.Execute(commandText);
@@ -259,9 +252,7 @@ namespace Nop.Data
         /// <param name="backupFileName">The name of the backup file</param>
         public virtual void RestoreDatabase(string backupFileName)
         {
-            CheckBackupSupported();
-
-            using (var currentConnection = CreateDataContext())
+            using (var currentConnection = CreateDataConnection())
             {
                 var commandText = string.Format(
                     "DECLARE @ErrorMessage NVARCHAR(4000)\n" +
@@ -289,7 +280,7 @@ namespace Nop.Data
         /// </summary>
         public virtual void ReIndexTables()
         {
-            using (var currentConnection = CreateDataContext())
+            using (var currentConnection = CreateDataConnection())
             {
                 var commandText = $@"
                         DECLARE @TableName sysname 
@@ -311,6 +302,11 @@ namespace Nop.Data
             }
         }
 
+        /// <summary>
+        /// Build the connection string
+        /// </summary>
+        /// <param name="nopConnectionString">Connection string info</param>
+        /// <returns>Connection string</returns>
         public virtual string BuildConnectionString(INopConnectionStringInfo nopConnectionString)
         {
             if (nopConnectionString is null)
@@ -333,6 +329,15 @@ namespace Nop.Data
             return builder.ConnectionString;
         }
 
+        /// <summary>
+        /// Gets the name of a foreign key
+        /// </summary>
+        /// <param name="foreignTable">Foreign key table</param>
+        /// <param name="foreignColumn">Foreign key column name</param>
+        /// <param name="primaryTable">Primary table</param>
+        /// <param name="primaryColumn">Primary key column name</param>
+        /// <param name="isShort">Indicates whether to use short form</param>
+        /// <returns>Name of a foreign key</returns>
         public virtual string GetForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn, bool isShort = true)
         {
             var sb = new StringBuilder();
@@ -345,10 +350,16 @@ namespace Nop.Data
                 ? $"{foreignColumn}_{primaryTable}{primaryColumn}"
                 : $"{foreignColumn}_{primaryTable}_{primaryColumn}");
 
-
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Gets the name of an index
+        /// </summary>
+        /// <param name="targetTable">Target table name</param>
+        /// <param name="targetColumn">Target column name</param>
+        /// <param name="isShort">Indicates whether to use short form</param>
+        /// <returns>Name of an index</returns>
         public virtual string GetIndexName(string targetTable, string targetColumn, bool isShort = true)
         {
             return $"IX_{targetTable}_{targetColumn}";
@@ -357,12 +368,10 @@ namespace Nop.Data
         #endregion
 
         #region Properties
-        
-        /// <summary>
-        /// Gets a value indicating whether this data provider supports backup
-        /// </summary>
-        public bool BackupSupported { get; } = true;
 
+        /// <summary>
+        /// Sql server data provider
+        /// </summary>
         protected override IDataProvider LinqToDbDataProvider => new SqlServerDataProvider(ProviderName.SqlServer2008, SqlServerVersion.v2008);
 
         /// <summary>

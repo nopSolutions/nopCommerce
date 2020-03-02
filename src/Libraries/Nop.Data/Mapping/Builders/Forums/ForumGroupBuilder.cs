@@ -16,8 +16,7 @@ namespace Nop.Data.Mapping.Builders.Forums
         /// <param name="table">Create table expression builder</param>
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
-            table
-               .WithColumn(nameof(ForumGroup.Name)).AsString(200).NotNullable();
+            table.WithColumn(nameof(ForumGroup.Name)).AsString(200).NotNullable();
         }
 
         #endregion

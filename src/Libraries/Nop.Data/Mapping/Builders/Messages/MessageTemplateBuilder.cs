@@ -21,11 +21,7 @@ namespace Nop.Data.Mapping.Builders.Messages
                 .WithColumn(nameof(MessageTemplate.Name)).AsString(200).NotNullable()
                 .WithColumn(nameof(MessageTemplate.BccEmailAddresses)).AsString(200).Nullable()
                 .WithColumn(nameof(MessageTemplate.Subject)).AsString(1000).Nullable()
-                .WithColumn(nameof(MessageTemplate.EmailAccountId))
-                    .AsInt32()
-                    .ForeignKey<EmailAccount>();
-
-            //builder.Ignore(template => template.DelayPeriod);
+                .WithColumn(nameof(MessageTemplate.EmailAccountId)).AsInt32().ForeignKey<EmailAccount>();
         }
 
         #endregion

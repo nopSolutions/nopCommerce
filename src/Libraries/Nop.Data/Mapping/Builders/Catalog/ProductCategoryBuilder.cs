@@ -18,12 +18,8 @@ namespace Nop.Data.Mapping.Builders.Catalog
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(ProductCategory.CategoryId))
-                    .AsInt32()
-                    .ForeignKey<Category>()
-                .WithColumn(nameof(ProductCategory.ProductId))
-                    .AsInt32()
-                    .ForeignKey<Product>();
+                .WithColumn(nameof(ProductCategory.CategoryId)).AsInt32().ForeignKey<Category>()
+                .WithColumn(nameof(ProductCategory.ProductId)).AsInt32().ForeignKey<Product>();
         }
 
         #endregion
