@@ -331,6 +331,24 @@ set @resources='
   <LocaleResource Name="Forum.Post.IsNotUseful">
     <Value>This post/answer is not useful</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteAlreadySentQueuedEmails">
+    <Value>Delete already sent emails</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteAlreadySentQueuedEmails.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteAlreadySentQueuedEmails.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteAlreadySentQueuedEmails.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteAlreadySentQueuedEmails.StartDate.Hint">
+    <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteAlreadySentQueuedEmails.TotalDeleted">
+    <Value>{0} emails were deleted</Value>
+  </LocaleResource>
 </Language>
 '
 
