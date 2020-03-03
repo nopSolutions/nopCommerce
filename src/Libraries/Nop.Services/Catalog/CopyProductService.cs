@@ -108,7 +108,7 @@ namespace Nop.Services.Catalog
                     string.Format(NopCatalogDefaults.ProductCopyNameTemplate, associatedProduct.Name),
                     isPublished, copyImages, false);
                 associatedProductCopy.ParentGroupedProductId = productCopy.Id;
-                _productService.UpdateProduct(productCopy);
+                _productService.UpdateProduct(associatedProductCopy);
             }
         }
 
