@@ -304,10 +304,10 @@
     <Value>Country is required</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Fields.County">
-    <Value>County</Value>
+    <Value>County / Region</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Fields.County.Required">
-    <Value>County is required.</Value>
+    <Value>County / Region is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Fields.DateOfBirth">
     <Value>Date of birth</Value>
@@ -1165,10 +1165,10 @@
     <Value>Country is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Address.Fields.County">
-    <Value>County</Value>
+    <Value>County / Region</Value>
   </LocaleResource>
   <LocaleResource Name="Address.Fields.County.Required">
-    <Value>County is required.</Value>
+    <Value>County / Region is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Address.Fields.Email">
     <Value>Email</Value>
@@ -1366,13 +1366,13 @@
     <Value>Country is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.Fields.County">
-    <Value>County</Value>
+    <Value>County / Region</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.Fields.County.Hint">
-    <Value>Enter county.</Value>
+    <Value>Enter county / region.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.Fields.County.Required">
-    <Value>County is required.</Value>
+    <Value>County / Region is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.Fields.Email">
     <Value>Email</Value>
@@ -5749,16 +5749,16 @@
     <Value>Set if 'Country' is enabled.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyEnabled">
-    <Value>'County' enabled</Value>
+    <Value>'County / Region' enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyEnabled.Hint">
-    <Value>Set if 'County' is enabled.</Value>
+    <Value>Set if 'County / Region' is enabled.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyRequired">
-    <Value>'County' required</Value>
+    <Value>'County / Region' required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyRequired.Hint">
-    <Value>Check if 'County' is required.</Value>
+    <Value>Check if 'County / Region' is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.Description">
     <Value>You can create and manage the address form fields available during checkout.</Value>
@@ -5929,16 +5929,16 @@
     <Value>Check if 'Country' is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyEnabled">
-    <Value>'County' enabled</Value>
+    <Value>'County / Region' enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyEnabled.Hint">
-    <Value>Set if 'County' is enabled.</Value>
+    <Value>Set if 'County / Region' is enabled.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyRequired">
-    <Value>'County' required</Value>
+    <Value>'County / Region' required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyRequired.Hint">
-    <Value>Check if 'County' is required.</Value>
+    <Value>Check if 'County / Region' is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CustomerFormFields">
     <Value>Customer form fields</Value>
@@ -10444,13 +10444,13 @@
     <Value>The country.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.County">
-    <Value>County</Value>
+    <Value>County / Region</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.County.Hint">
-    <Value>The county.</Value>
+    <Value>The county / Region.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.County.Required">
-    <Value>County is required.</Value>
+    <Value>County / Region is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.CreatedOn">
     <Value>Created on</Value>
@@ -11308,7 +11308,7 @@
     <Value>Country</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Address.County">
-    <Value>County</Value>
+    <Value>County / Region</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Address.EditAddress">
     <Value>Edit address</Value>
@@ -12109,10 +12109,10 @@
     <Value>Search by a specific country.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.List.County">
-    <Value>County</Value>
+    <Value>County / Region</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.List.County.Hint">
-    <Value>Search by a specific county.</Value>
+    <Value>Search by a specific county / region.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.List.EndDate">
     <Value>End date</Value>
