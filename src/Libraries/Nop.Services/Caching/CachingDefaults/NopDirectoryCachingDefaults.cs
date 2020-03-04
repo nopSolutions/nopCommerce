@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Caching.CachingDefaults
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Caching.CachingDefaults
 {
     /// <summary>
     /// Represents default values related to directory services
@@ -13,7 +15,7 @@
         /// <remarks>
         /// {0} : Two letter ISO code
         /// </remarks>
-        public static string CountriesByTwoLetterCodeCacheKey => "Nop.country.twoletter-{0}";
+        public static CacheKey CountriesByTwoLetterCodeCacheKey => new CacheKey("Nop.country.twoletter-{0}", CountriesPrefixCacheKey);
 
         /// <summary>
         /// Gets a key for caching
@@ -21,7 +23,7 @@
         /// <remarks>
         /// {0} : Two letter ISO code
         /// </remarks>
-        public static string CountriesByThreeLetterCodeCacheKey => "Nop.country.threeletter-{0}";
+        public static CacheKey CountriesByThreeLetterCodeCacheKey => new CacheKey("Nop.country.threeletter-{0}", CountriesPrefixCacheKey);
 
         /// <summary>
         /// Gets a key for caching
@@ -30,7 +32,7 @@
         /// {0} : language ID
         /// {1} : show hidden records?
         /// </remarks>
-        public static string CountriesAllCacheKey => "Nop.country.all-{0}-{1}";
+        public static CacheKey CountriesAllCacheKey => new CacheKey("Nop.country.all-{0}-{1}", CountriesPrefixCacheKey);
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -47,7 +49,7 @@
         /// <remarks>
         /// {0} : show hidden records?
         /// </remarks>
-        public static string CurrenciesAllCacheKey => "Nop.currency.all-{0}";
+        public static CacheKey CurrenciesAllCacheKey => new CacheKey("Nop.currency.all-{0}", CurrenciesAllPrefixCacheKey);
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -61,12 +63,12 @@
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static string MeasureDimensionsAllCacheKey => "Nop.measuredimension.all";
+        public static CacheKey MeasureDimensionsAllCacheKey => new CacheKey("Nop.measuredimension.all");
 
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static string MeasureWeightsAllCacheKey => "Nop.measureweight.all";
+        public static CacheKey MeasureWeightsAllCacheKey => new CacheKey("Nop.measureweight.all");
 
         #endregion
 
@@ -80,7 +82,7 @@
         /// {1} : language ID
         /// {2} : show hidden records?
         /// </remarks>
-        public static string StateProvincesByCountryCacheKey => "Nop.stateprovince.all-{0}-{1}-{2}";
+        public static CacheKey StateProvincesByCountryCacheKey => new CacheKey("Nop.stateprovince.all-{0}-{1}-{2}", StateProvincesPrefixCacheKey);
 
         /// <summary>
         /// Gets a key for caching
@@ -88,7 +90,7 @@
         /// <remarks>
         /// {0} : show hidden records?
         /// </remarks>
-        public static string StateProvincesAllCacheKey => "Nop.stateprovince.all-{0}";
+        public static CacheKey StateProvincesAllCacheKey => new CacheKey("Nop.stateprovince.all-{0}", StateProvincesPrefixCacheKey);
 
         /// <summary>
         /// Gets a key for caching
@@ -97,7 +99,7 @@
         /// {0} : abbreviation
         /// {1} : country ID
         /// </remarks>
-        public static string StateProvincesByAbbreviationCacheKey => "Nop.stateprovince.abbreviationcountryid-{0}-{1}";
+        public static CacheKey StateProvincesByAbbreviationCacheKey => new CacheKey("Nop.stateprovince.abbreviationcountryid-{0}-{1}", StateProvincesPrefixCacheKey);
         
         /// <summary>
         /// Gets a key pattern to clear cache

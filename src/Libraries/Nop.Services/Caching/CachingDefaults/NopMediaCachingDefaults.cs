@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Caching.CachingDefaults
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Caching.CachingDefaults
 {
     /// <summary>
     /// Represents default values related to media services
@@ -11,7 +13,7 @@
         /// <remarks>
         /// {0} : thumb file name
         /// </remarks>
-        public static string ThumbExistsCacheKey => "Nop.azure.thumb.exists-{0}";
+        public static CacheKey ThumbExistsCacheKey => new CacheKey("Nop.azure.thumb.exists-{0}", ThumbsExistsPrefixCacheKey);
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -24,6 +26,6 @@
         /// <remarks>
         /// {0} : virtual path
         /// </remarks>
-        public static string PicturesByVirtualPathCacheKey => "Nop.pictures.virtualpath-{0}";
+        public static CacheKey PicturesByVirtualPathCacheKey => new CacheKey("Nop.pictures.virtualpath-{0}");
     }
 }

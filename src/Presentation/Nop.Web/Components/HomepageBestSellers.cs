@@ -49,7 +49,7 @@ namespace Nop.Web.Components
                 return Content("");
 
             //load and cache report
-            var report = _cacheManager.Get(string.Format(NopModelCacheDefaults.HomepageBestsellersIdsKey, _storeContext.CurrentStore.Id),
+            var report = _cacheManager.Get(NopModelCacheDefaults.HomepageBestsellersIdsKey.FillCacheKey(_storeContext.CurrentStore.Id),
                 () => _orderReportService.BestSellersReport(
                         storeId: _storeContext.CurrentStore.Id,
                         pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)

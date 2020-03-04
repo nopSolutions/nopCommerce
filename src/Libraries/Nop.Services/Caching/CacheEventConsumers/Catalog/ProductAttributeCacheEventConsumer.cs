@@ -18,13 +18,13 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
             if (entityEventType == EntityEventType.Delete)
             {
                 RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributeMappingsPrefixCacheKey);
-                RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributeValuesPrefixCacheKey);
-                RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributeCombinationsPrefixCacheKey);
+                RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributeValuesAllPrefixCacheKey);
+                RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributeCombinationsAllPrefixCacheKey);
             }
 
             RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributesAllPrefixCacheKey);
 
-            var cacheKey = NopCatalogCachingDefaults.ProductsByProductAtributeCacheKey.ToCacheKey(entity);
+            var cacheKey = NopCatalogCachingDefaults.ProductsByProductAtributeCacheKey.FillCacheKey(entity);
             Remove(cacheKey);
         }
     }

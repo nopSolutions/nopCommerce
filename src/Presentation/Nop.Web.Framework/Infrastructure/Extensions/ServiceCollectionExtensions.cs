@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
-using EasyCaching.Core;
-using EasyCaching.InMemory;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -409,20 +407,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     settings.CollapseTagsWithoutContent = true;
                 });
         }
-
-        /// <summary>
-        /// Add and configure EasyCaching service
-        /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        public static void AddEasyCaching(this IServiceCollection services)
-        {
-            services.AddEasyCaching(option =>
-            {
-                //use memory cache
-                option.UseInMemory("nopCommerce_memory_cache");
-            });
-        }
-
+        
         /// <summary>
         /// Add and configure default HTTP clients
         /// </summary>

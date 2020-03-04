@@ -64,7 +64,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         /// <returns>Tax rates</returns>
         public virtual IPagedList<TaxRate> GetAllTaxRates(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var key = string.Format(ModelCacheEventConsumer.TAXRATE_ALL_KEY, pageIndex, pageSize);
+            var key = ModelCacheEventConsumer.TAXRATE_ALL_KEY.FillCacheKey(pageIndex, pageSize);
             return _cacheManager.Get(key, () =>
             {
                 var query = from tr in _taxRateRepository.Table

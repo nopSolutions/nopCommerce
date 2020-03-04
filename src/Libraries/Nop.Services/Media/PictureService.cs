@@ -708,7 +708,7 @@ namespace Nop.Services.Media
 
             query = query.OrderByDescending(p => p.Id);
 
-            var key = NopMediaCachingDefaults.PicturesByVirtualPathCacheKey.ToCacheKey(virtualPath);
+            var key = NopMediaCachingDefaults.PicturesByVirtualPathCacheKey.FillCacheKey(virtualPath);
 
             var pics = query.ToCachedPagedList(key, pageIndex, pageSize);
 

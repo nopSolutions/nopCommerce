@@ -17,11 +17,11 @@ namespace Nop.Services.Caching.CacheEventConsumers.Stores
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
 
-            var key = NopStoreCachingDefaults.StoreMappingsByEntityIdNameCacheKey.ToCacheKey(entityId, entityName);
+            var key = NopStoreCachingDefaults.StoreMappingsByEntityIdNameCacheKey.FillCacheKey(entityId, entityName);
 
             Remove(key);
 
-            key = NopStoreCachingDefaults.StoreMappingIdsByEntityIdNameCacheKey.ToCacheKey(entityId, entityName);
+            key = NopStoreCachingDefaults.StoreMappingIdsByEntityIdNameCacheKey.FillCacheKey(entityId, entityName);
             
             Remove(key);
         }

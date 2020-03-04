@@ -16,7 +16,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Media
         {
             RemoveByPrefix(NopMediaCachingDefaults.ThumbsExistsPrefixCacheKey);
             
-            var cacheKey = NopMediaCachingDefaults.PicturesByVirtualPathCacheKey.ToCacheKey(entity.VirtualPath);
+            var cacheKey = NopMediaCachingDefaults.PicturesByVirtualPathCacheKey.FillCacheKey(entity.VirtualPath);
             Remove(cacheKey);
         }
     }

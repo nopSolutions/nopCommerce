@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Caching.CachingDefaults
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Caching.CachingDefaults
 {
     /// <summary>
     /// Represents default values related to orders services
@@ -14,7 +16,7 @@
         /// {0} : store ID
         /// {1} : A value indicating whether we should exclude shippable attributes
         /// </remarks>
-        public static string CheckoutAttributesAllCacheKey => "Nop.checkoutattribute.all-{0}-{1}";
+        public static CacheKey CheckoutAttributesAllCacheKey => new CacheKey("Nop.checkoutattribute.all-{0}-{1}", CheckoutAttributesAllPrefixCacheKey);
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -27,7 +29,7 @@
         /// <remarks>
         /// {0} : checkout attribute ID
         /// </remarks>
-        public static string CheckoutAttributeValuesAllCacheKey => "Nop.checkoutattributevalue.all-{0}";
+        public static CacheKey CheckoutAttributeValuesAllCacheKey => new CacheKey("Nop.checkoutattributevalue.all-{0}");
         
         #endregion
 
@@ -44,7 +46,7 @@
         /// {4} : created from date
         /// {5} : created to date
         /// </remarks>
-        public static string ShoppingCartCacheKey => "Nop.shoppingcart-{0}-{1}-{2}-{3}-{4}-{5}";
+        public static CacheKey ShoppingCartCacheKey => new CacheKey("Nop.shoppingcart-{0}-{1}-{2}-{3}-{4}-{5}", ShoppingCartPrefixCacheKey);
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -60,14 +62,14 @@
         /// </summary>
         /// <remarks>
         /// </remarks>
-        public static string ReturnRequestReasonAllCacheKey => "Nop.returnrequestreason.all";
+        public static CacheKey ReturnRequestReasonAllCacheKey => new CacheKey("Nop.returnrequestreason.all");
         
         /// <summary>
         /// Gets a key for caching
         /// </summary>
         /// <remarks>
         /// </remarks>
-        public static string ReturnRequestActionAllCacheKey => "Nop.returnrequestactions.all";
+        public static CacheKey ReturnRequestActionAllCacheKey => new CacheKey("Nop.returnrequestactions.all");
         
         #endregion
     }

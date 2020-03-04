@@ -374,7 +374,7 @@ namespace Nop.Services.Forums
         /// <returns>Forums</returns>
         public virtual IList<Forum> GetAllForumsByGroupId(int forumGroupId)
         {
-            var key = NopForumCachingDefaults.ForumAllByForumGroupIdCacheKey.ToCacheKey(forumGroupId);
+            var key = NopForumCachingDefaults.ForumAllByForumGroupIdCacheKey.FillCacheKey(forumGroupId);
 
             var query = from f in _forumRepository.Table
                 orderby f.DisplayOrder, f.Id

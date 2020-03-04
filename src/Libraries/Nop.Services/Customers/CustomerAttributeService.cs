@@ -130,7 +130,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer attribute values</returns>
         public virtual IList<CustomerAttributeValue> GetCustomerAttributeValues(int customerAttributeId)
         {
-            var key = NopCustomerServiceCachingDefaults.CustomerAttributeValuesAllCacheKey.ToCacheKey(customerAttributeId);
+            var key = NopCustomerServiceCachingDefaults.CustomerAttributeValuesAllCacheKey.FillCacheKey(customerAttributeId);
 
             var query = from cav in _customerAttributeValueRepository.Table
                 orderby cav.DisplayOrder, cav.Id

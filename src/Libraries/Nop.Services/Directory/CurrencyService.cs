@@ -104,7 +104,7 @@ namespace Nop.Services.Directory
             query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
 
             //cacheable copy
-            var key = string.Format(NopDirectoryCachingDefaults.CurrenciesAllCacheKey, showHidden);
+            var key = NopDirectoryCachingDefaults.CurrenciesAllCacheKey.FillCacheKey(showHidden);
 
             var currencies = query.ToCachedList(key);
 

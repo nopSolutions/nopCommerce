@@ -130,7 +130,7 @@ namespace Nop.Services.Common
         /// <returns>Address attribute values</returns>
         public virtual IList<AddressAttributeValue> GetAddressAttributeValues(int addressAttributeId)
         {
-            var key = NopCommonCachingDefaults.AddressAttributeValuesAllCacheKey.ToCacheKey(addressAttributeId);
+            var key = NopCommonCachingDefaults.AddressAttributeValuesAllCacheKey.FillCacheKey(addressAttributeId);
 
             var query = from aav in _addressAttributeValueRepository.Table
                 orderby aav.DisplayOrder, aav.Id

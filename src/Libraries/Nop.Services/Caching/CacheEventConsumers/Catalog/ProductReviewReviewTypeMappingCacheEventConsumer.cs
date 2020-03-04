@@ -14,9 +14,9 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
         /// <param name="entity">Entity</param>
         protected override void ClearCache(ProductReviewReviewTypeMapping entity)
         {
-            Remove(NopCatalogCachingDefaults.ReviewTypeAllKey);
+            Remove(NopCatalogCachingDefaults.ReviewTypeAllCacheKey);
 
-            var cacheKey = NopCatalogCachingDefaults.ProductReviewReviewTypeMappingAllKey.ToCacheKey(entity.ProductReviewId);
+            var cacheKey = NopCatalogCachingDefaults.ProductReviewReviewTypeMappingAllCacheKey.FillCacheKey(entity.ProductReviewId);
             Remove(cacheKey);
         }
     }

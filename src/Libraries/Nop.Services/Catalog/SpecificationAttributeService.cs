@@ -104,7 +104,7 @@ namespace Nop.Services.Catalog
                 join sao in _specificationAttributeOptionRepository.Table on sa.Id equals sao.SpecificationAttributeId
                 select sa;
 
-            return query.ToCachedList(NopCatalogCachingDefaults.SpecAttributesWithOptionsKey);
+            return query.ToCachedList(NopCatalogCachingDefaults.SpecAttributesWithOptionsCacheKey);
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace Nop.Services.Catalog
                         where sao.SpecificationAttributeId == specificationAttributeId
                         select sao;
 
-            var specificationAttributeOptions = query.ToCachedList(NopCatalogCachingDefaults.SpecAttributesOptionsCacheKey.ToCacheKey(specificationAttributeId));
+            var specificationAttributeOptions = query.ToCachedList(NopCatalogCachingDefaults.SpecAttributesOptionsCacheKey.FillCacheKey(specificationAttributeId));
 
             return specificationAttributeOptions;
         }
@@ -320,7 +320,7 @@ namespace Nop.Services.Catalog
         {
             var allowFilteringCacheStr = allowFiltering.HasValue ? allowFiltering.ToString() : "null";
             var showOnProductPageCacheStr = showOnProductPage.HasValue ? showOnProductPage.ToString() : "null";
-            var key = NopCatalogCachingDefaults.ProductSpecificationAttributeAllByProductIdCacheKey.ToCacheKey(
+            var key = NopCatalogCachingDefaults.ProductSpecificationAttributeAllByProductIdCacheKey.FillCacheKey(
                 productId, specificationAttributeOptionId, allowFilteringCacheStr, showOnProductPageCacheStr);
 
             var query = _productSpecificationAttributeRepository.Table;

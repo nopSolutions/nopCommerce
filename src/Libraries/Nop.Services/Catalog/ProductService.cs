@@ -385,7 +385,7 @@ namespace Nop.Services.Catalog
             if (productIds == null || productIds.Length == 0)
                 return new List<Product>();
 
-            var key = NopCatalogCachingDefaults.ProductsByIdsCacheKey.ToCacheKey(productIds);
+            var key = NopCatalogCachingDefaults.ProductsByIdsCacheKey.FillCacheKey(productIds);
 
             var query = from p in _productRepository.Table
                         where productIds.Contains(p.Id) && !p.Deleted
@@ -510,7 +510,7 @@ namespace Nop.Services.Catalog
             }
 
             var cacheKey = NopCatalogCachingDefaults.CategoryNumberOfProductsCacheKey
-                .ToCacheKey(allowedCustomerRolesIds, storeId, categoryIds);
+                .FillCacheKey(allowedCustomerRolesIds, storeId, categoryIds);
 
             //only distinct products
             var result = _cacheManager.Get(cacheKey, () => query.Select(p => p.Id).Distinct().Count());
@@ -795,7 +795,7 @@ namespace Nop.Services.Catalog
                 orderby p.Name
                 select p;
 
-            var key = NopCatalogCachingDefaults.ProductsByProductAtributeCacheKey.ToCacheKey(productAttributeId);
+            var key = NopCatalogCachingDefaults.ProductsByProductAtributeCacheKey.FillCacheKey(productAttributeId);
 
             var products = query.ToCachedPagedList(key, pageIndex, pageSize);
 
@@ -1764,7 +1764,7 @@ namespace Nop.Services.Catalog
                         orderby rp.DisplayOrder, rp.Id
                         select rp;
 
-            var relatedProducts = query.ToCachedList(NopCatalogCachingDefaults.ProductsRelatedKey.ToCacheKey(productId, showHidden));
+            var relatedProducts = query.ToCachedList(NopCatalogCachingDefaults.ProductsRelatedCacheKey.FillCacheKey(productId, showHidden));
 
             return relatedProducts;
         }
@@ -2031,7 +2031,7 @@ namespace Nop.Services.Catalog
         public virtual IList<TierPrice> GetTierPricesByProduct(int productId)
         {
             return _tierPriceRepository.Table.Where(tp => tp.ProductId == productId)
-                .ToCachedList(NopCatalogCachingDefaults.ProductTierPrices.ToCacheKey(productId));
+                .ToCachedList(NopCatalogCachingDefaults.ProductTierPricesCacheKey.FillCacheKey(productId));
         }
 
         /// <summary>

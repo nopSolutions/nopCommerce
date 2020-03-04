@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Caching.CachingDefaults
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Caching.CachingDefaults
 {
     /// <summary>
     /// Represents default values related to forums services
@@ -8,7 +10,7 @@
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static string ForumGroupAllCacheKey => "Nop.forumgroup.all";
+        public static CacheKey ForumGroupAllCacheKey => new CacheKey("Nop.forumgroup.all");
         
         /// <summary>
         /// Gets a key for caching
@@ -16,6 +18,6 @@
         /// <remarks>
         /// {0} : forum group ID
         /// </remarks>
-        public static string ForumAllByForumGroupIdCacheKey => "Nop.forum.allbyforumgroupid-{0}";
+        public static CacheKey ForumAllByForumGroupIdCacheKey => new CacheKey("Nop.forum.allbyforumgroupid-{0}");
     }
 }

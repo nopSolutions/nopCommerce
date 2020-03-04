@@ -382,8 +382,11 @@ namespace Nop.Web.Framework.UI
                     //performance optimization. do not bundle and minify for each HTTP request
                     //we periodically re-check already bundles file
                     //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
-                    var cacheKey = $"Nop.minification.shouldrebuild.js-{outputFileName}";
-                    var shouldRebuild = _cacheManager.Get(cacheKey, () => true, RECHECK_BUNDLED_FILES_PERIOD);
+                    var cacheKey = new CacheKey($"Nop.minification.shouldrebuild.js-{outputFileName}")
+                    {
+                        CacheTime = RECHECK_BUNDLED_FILES_PERIOD
+                    };
+                    var shouldRebuild = _cacheManager.Get(cacheKey, () => true);
 
                     if (shouldRebuild)
                     {
@@ -396,7 +399,7 @@ namespace Nop.Web.Framework.UI
                             _processor.Process(configFilePath, new List<Bundle> {bundle});
                         }
 
-                        _cacheManager.Set(cacheKey, false, RECHECK_BUNDLED_FILES_PERIOD);
+                        _cacheManager.Set(cacheKey, false);
                     }
 
                     //render
@@ -602,8 +605,11 @@ namespace Nop.Web.Framework.UI
                     //performance optimization. do not bundle and minify for each HTTP request
                     //we periodically re-check already bundles file
                     //so if we have minification enabled, it could take up to several minutes to see changes in updated resource files (or just reset the cache or restart the site)
-                    var cacheKey = $"Nop.minification.shouldrebuild.css-{outputFileName}";
-                    var shouldRebuild = _cacheManager.Get(cacheKey, () => true, RECHECK_BUNDLED_FILES_PERIOD);
+                    var cacheKey = new CacheKey($"Nop.minification.shouldrebuild.css-{outputFileName}")
+                    {
+                        CacheTime = RECHECK_BUNDLED_FILES_PERIOD
+                    };
+                    var shouldRebuild = _cacheManager.Get(cacheKey, () => true);
 
                     if (shouldRebuild)
                     {
@@ -616,7 +622,7 @@ namespace Nop.Web.Framework.UI
                             _processor.Process(configFilePath, new List<Bundle> {bundle});
                         }
 
-                        _cacheManager.Set(cacheKey, false, RECHECK_BUNDLED_FILES_PERIOD);
+                        _cacheManager.Set(cacheKey, false);
                     }
 
                     //render

@@ -93,7 +93,7 @@ namespace Nop.Services.Catalog
                 allowedCustomerRolesIds = string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
             }
 
-            var key = NopCatalogCachingDefaults.ProductTagCountCacheKey.ToCacheKey(storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer), showHidden);
+            var key = NopCatalogCachingDefaults.ProductTagCountCacheKey.FillCacheKey(storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer), showHidden);
            
             return _staticCacheManager.Get(key, () =>
             {
@@ -162,7 +162,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product tags</returns>
         public virtual IList<ProductTag> GetAllProductTagsByProductId(int productId)
         {
-            var key = NopCatalogCachingDefaults.ProductTagAllByProductIdCacheKey.ToCacheKey(productId);
+            var key = NopCatalogCachingDefaults.ProductTagAllByProductIdCacheKey.FillCacheKey(productId);
 
             var query = from pt in _productTagRepository.Table
                 join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId

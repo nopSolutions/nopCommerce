@@ -14,7 +14,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Blogs
         /// <param name="entity">Entity</param>
         protected override void ClearCache(BlogPost entity)
         {
-            RemoveByPrefix(NopBlogsCachingDefaults.BlogPrefixCacheKey);
+            RemoveByPrefix(NopBlogsCachingDefaults.BlogTagsPrefixCacheKey);
         }
     }
 }
