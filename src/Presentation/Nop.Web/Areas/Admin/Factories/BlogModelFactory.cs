@@ -176,7 +176,10 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //set default values for the new model
             if (blogPost == null)
+            {
                 model.AllowComments = true;
+                model.IncludeInSitemap = true;
+            }
 
             //prepare available languages
             _baseAdminModelFactory.PrepareLanguages(model.AvailableLanguages, false);
