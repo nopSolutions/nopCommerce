@@ -670,17 +670,16 @@ BEGIN
     end if;
     
     #filter by specification attribution options
-    
     IF `FilteredSpecs` REGEXP '^([[:digit:]](,?))+$' then
 		SET  @sql_command = concat(@sql_command, '
 			AND (p.Id in (
 					select psa.ProductId 
 					from `ProductSpecificationAttribute` as psa 
-					where psa.Id in (
+                    INNER JOIN (
 						select sao.SpecificationAttributeId 
 						from `SpecificationAttributeOption` as sao 
 						where sao.Id in (', `FilteredSpecs`, ')
-					)
+						) as sa on sa.SpecificationAttributeId = psa.Id
                 )
 			)');
     end if;
