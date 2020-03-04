@@ -372,8 +372,8 @@ namespace Nop.Data
         /// <summary>
         /// Sql server data provider
         /// </summary>
-        protected override IDataProvider LinqToDbDataProvider => new SqlServerDataProvider(ProviderName.SqlServer2008, SqlServerVersion.v2008);
-
+        protected override IDataProvider LinqToDbDataProvider => new SqlServerDataProvider(ProviderName.SqlServer, SqlServerVersion.v2008);
+        
         /// <summary>
         /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited
         /// </summary>

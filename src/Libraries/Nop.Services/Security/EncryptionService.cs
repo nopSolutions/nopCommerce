@@ -107,17 +107,17 @@ namespace Nop.Services.Security
             if (algorithm == null)
                 throw new ArgumentException("Unrecognized hash name");
 
-            if(trimByteCount != 0)
+            if (trimByteCount > 0 && data.Length > trimByteCount)
             {
-                var newArray = new byte[trimByteCount];
-                Array.Copy(data, newArray, trimByteCount);
+                var newData = new byte[trimByteCount];
+                Array.Copy(data, newData, trimByteCount);
 
-                return BitConverter.ToString(algorithm.ComputeHash(newArray)).Replace("-", string.Empty);
+                return BitConverter.ToString(algorithm.ComputeHash(newData)).Replace("-", string.Empty);
             }
             else
             {
                 return BitConverter.ToString(algorithm.ComputeHash(data)).Replace("-", string.Empty);
-            }   
+            }
         }
 
         /// <summary>
