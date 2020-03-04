@@ -400,7 +400,7 @@ namespace Nop.Plugin.Payments.Qualpay.Services
                         shippingAddr2: shippingAddress.Address2,
                         shippingCity: shippingAddress.City,
                         shippingState: _stateProvinceService.GetStateProvinceByAddress(shippingAddress)?.Abbreviation,
-                        shippingCountryCode: _countryService.GetCountryByAddress(shippingAddress)?.ThreeLetterIsoCode,
+                        shippingCountryCode: _countryService.GetCountryByAddress(shippingAddress)?.NumericIsoCode.ToString(),
                         shippingZip: shippingAddress.ZipPostalCode,
                         shippingFirmName: shippingAddress.Company
                     )
