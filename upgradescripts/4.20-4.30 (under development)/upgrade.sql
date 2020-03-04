@@ -263,64 +263,64 @@ set @resources='
     <Value>Check to enabled the search box.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Fields.County">
-    <Value>County / Region</Value>
+    <Value>County / region</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Fields.County.Required">
-    <Value>County / Region is required.</Value>
+    <Value>County / region is required.</Value>
   </LocaleResource>
    <LocaleResource Name="Address.Fields.County">
-    <Value>County / Region</Value>
+    <Value>County / region</Value>
   </LocaleResource>
   <LocaleResource Name="Address.Fields.County.Required">
-    <Value>County / Region is required.</Value>
+    <Value>County / region is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.Fields.County">
-    <Value>County / Region</Value>
+    <Value>County / region</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.Fields.County.Hint">
     <Value>Enter county / region.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.Fields.County.Required">
-    <Value>County / Region is required.</Value>
+    <Value>County / region is required.</Value>
   </LocaleResource>
    <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyEnabled">
-    <Value>''County / Region'' enabled</Value>
+    <Value>''County / region'' enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyEnabled.Hint">
-    <Value>Set if ''County / Region'' is enabled.</Value>
+    <Value>Set if ''County / region'' is enabled.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyRequired">
-    <Value>''County / Region'' required</Value>
+    <Value>''County / region'' required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyRequired.Hint">
-    <Value>Check if ''County / Region'' is required.</Value>
+    <Value>Check if ''County / region'' is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyEnabled">
-    <Value>''County / Region'' enabled</Value>
+    <Value>''County / region'' enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyEnabled.Hint">
-    <Value>Set if ''County / Region'' is enabled.</Value>
+    <Value>Set if ''County / region'' is enabled.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyRequired">
-    <Value>''County / Region'' required</Value>
+    <Value>''County / region'' required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyRequired.Hint">
-    <Value>Check if ''County / Region'' is required.</Value>
+    <Value>Check if ''County / region'' is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.County">
-    <Value>County / Region</Value>
+    <Value>County / region</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.County.Hint">
-    <Value>The county / Region.</Value>
+    <Value>The county / region.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.County.Required">
-    <Value>County / Region is required.</Value>
+    <Value>County / region is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Address.County">
-    <Value>County / Region</Value>
+    <Value>County / region</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.List.County">
-    <Value>County / Region</Value>
+    <Value>County / region</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.List.County.Hint">
     <Value>Search by a specific county / region.</Value>
