@@ -20,7 +20,6 @@ using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Security;
 using Nop.Core.Http;
 using Nop.Core.Infrastructure;
 using Nop.Core.Redis;
@@ -29,10 +28,7 @@ using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
 using Nop.Services.Common;
-using Nop.Services.Logging;
-using Nop.Services.Plugins;
 using Nop.Services.Security;
-using Nop.Services.Tasks;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Mvc.Routing;
 using Nop.Web.Framework.Security.Captcha;
@@ -133,7 +129,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.Cookie.Name = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.AntiforgeryCookie}";
 
                 //whether to allow the use of anti-forgery cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<IStoreContext>().CurrentStore.SslEnabled
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
         }
@@ -150,7 +146,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.Cookie.HttpOnly = true;
 
                 //whether to allow the use of session values from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<IStoreContext>().CurrentStore.SslEnabled
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
         }
@@ -238,7 +234,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.AccessDeniedPath = NopAuthenticationDefaults.AccessDeniedPath;
 
                 //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<IStoreContext>().CurrentStore.SslEnabled
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
 
@@ -251,7 +247,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.AccessDeniedPath = NopAuthenticationDefaults.AccessDeniedPath;
 
                 //whether to allow the use of authentication cookies from SSL protected page on the other store pages which are not
-                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<IStoreContext>().CurrentStore.SslEnabled
                     ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
             });
 
@@ -291,7 +287,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     options.Cookie.Name = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.TempDataCookie}";
 
                     //whether to allow the use of cookies from SSL protected page on the other store pages which are not
-                    options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<SecuritySettings>().ForceSslForAllPages
+                    options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<IStoreContext>().CurrentStore.SslEnabled
                         ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
                 });
             }

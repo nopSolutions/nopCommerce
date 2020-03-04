@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Nop.Core;
-using Nop.Core.Domain.Security;
 using Nop.Data;
-using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Framework.Mvc.Filters
 {
@@ -15,32 +12,14 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// </summary>
     public sealed class HttpsRequirementAttribute : TypeFilterAttribute
     {
-        #region Fields
-
-        private readonly SslRequirement _sslRequirement;
-
-        #endregion
-
         #region Ctor
 
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
-        /// <param name="sslRequirement">Whether the page should be secured</param>
-        public HttpsRequirementAttribute(SslRequirement sslRequirement) : base(typeof(HttpsRequirementFilter))
+        public HttpsRequirementAttribute() : base(typeof(HttpsRequirementFilter))
         {
-            _sslRequirement = sslRequirement;
-            Arguments = new object[] { sslRequirement };
         }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets a value indicating whether the page should be secured
-        /// </summary>
-        public SslRequirement SslRequirement => _sslRequirement;
 
         #endregion
 
@@ -53,24 +32,17 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private SslRequirement _sslRequirement;
             private readonly IStoreContext _storeContext;
             private readonly IWebHelper _webHelper;
-            private readonly SecuritySettings _securitySettings;
 
             #endregion
 
             #region Ctor
 
-            public HttpsRequirementFilter(SslRequirement sslRequirement,
-                IStoreContext storeContext,
-                IWebHelper webHelper,
-                SecuritySettings securitySettings)
+            public HttpsRequirementFilter(IStoreContext storeContext, IWebHelper webHelper)
             {
-                _sslRequirement = sslRequirement;
                 _storeContext = storeContext;
                 _webHelper = webHelper;
-                _securitySettings = securitySettings;
             }
 
             #endregion
@@ -88,7 +60,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 var currentConnectionSecured = _webHelper.IsCurrentConnectionSecured();
 
                 //page should be secured, so redirect (permanent) to HTTPS version of page
-                if (useSsl && !currentConnectionSecured && _storeContext.CurrentStore.SslEnabled)
+                if (useSsl && !currentConnectionSecured)
                     filterContext.Result = new RedirectResult(_webHelper.GetThisPageUrl(true, true), true);
 
                 //page shouldn't be secured, so redirect (permanent) to HTTP version of page
@@ -119,33 +91,7 @@ namespace Nop.Web.Framework.Mvc.Filters
                 if (!DataSettingsManager.DatabaseIsInstalled)
                     return;
 
-                //check whether this filter has been overridden for the Action
-                var actionFilter = filterContext.ActionDescriptor.FilterDescriptors
-                    .Where(filterDescriptor => filterDescriptor.Scope == FilterScope.Action)
-                    .Select(filterDescriptor => filterDescriptor.Filter).OfType<HttpsRequirementAttribute>().FirstOrDefault();
-
-                var sslRequirement = actionFilter?.SslRequirement ?? _sslRequirement;
-
-                //whether all pages will be forced to use SSL no matter of the passed value
-                if (_securitySettings.ForceSslForAllPages)
-                    sslRequirement = SslRequirement.Yes;
-
-                switch (sslRequirement)
-                {
-                    case SslRequirement.Yes:
-                        //redirect to HTTPS page
-                        RedirectRequest(filterContext, true);
-                        break;
-                    case SslRequirement.No:
-                        //redirect to HTTP page
-                        RedirectRequest(filterContext, false);
-                        break;
-                    case SslRequirement.NoMatter:
-                        //do nothing
-                        break;
-                    default:
-                        throw new NopException("Not supported SslRequirement parameter");
-                }
+                RedirectRequest(filterContext, _storeContext.CurrentStore.SslEnabled);
             }
 
             #endregion

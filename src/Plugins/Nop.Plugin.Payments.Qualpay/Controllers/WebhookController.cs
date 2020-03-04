@@ -7,7 +7,6 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.Payments.Qualpay.Controllers
 {
@@ -38,7 +37,7 @@ namespace Nop.Plugin.Payments.Qualpay.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public IActionResult WebhookHandler()
         {
             try

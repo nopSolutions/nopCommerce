@@ -11,12 +11,11 @@ using Nop.Services.Logging;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 using Nop.Web.Models.PrivateMessages;
 
 namespace Nop.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.Yes)]
+    [HttpsRequirement]
     public partial class PrivateMessagesController : BasePublicController
     {
         #region Fields

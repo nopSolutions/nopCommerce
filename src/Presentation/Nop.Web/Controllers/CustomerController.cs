@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +37,6 @@ using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Validators;
 using Nop.Web.Models.Customer;
 
@@ -368,7 +367,7 @@ namespace Nop.Web.Controllers
 
         #region Login / logout
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         //available even when navigation is not allowed
@@ -509,7 +508,7 @@ namespace Nop.Web.Controllers
 
         #region Password recovery
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult PasswordRecovery()
@@ -562,7 +561,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult PasswordRecoveryConfirm(string token, string email, Guid guid)
@@ -660,7 +659,7 @@ namespace Nop.Web.Controllers
 
         #region Register
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult Register()
@@ -1017,7 +1016,7 @@ namespace Nop.Web.Controllers
             return Json(new { Available = usernameAvailable, Text = statusText });
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult AccountActivation(string token, string email, Guid guid)
@@ -1062,7 +1061,7 @@ namespace Nop.Web.Controllers
 
         #region My account / Info
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult Info()
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1271,7 +1270,7 @@ namespace Nop.Web.Controllers
             });
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
         public virtual IActionResult EmailRevalidation(string token, string email, Guid guid)
@@ -1333,7 +1332,7 @@ namespace Nop.Web.Controllers
 
         #region My account / Addresses
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult Addresses()
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1344,7 +1343,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult AddressDelete(int addressId)
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1369,7 +1368,7 @@ namespace Nop.Web.Controllers
             });
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult AddressAdd()
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1429,7 +1428,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult AddressEdit(int addressId)
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1496,7 +1495,7 @@ namespace Nop.Web.Controllers
 
         #region My account / Downloadable products
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult DownloadableProducts()
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1528,7 +1527,7 @@ namespace Nop.Web.Controllers
 
         #region My account / Change password
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult ChangePassword()
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1575,7 +1574,7 @@ namespace Nop.Web.Controllers
 
         #region My account / Avatar
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult Avatar()
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1666,7 +1665,7 @@ namespace Nop.Web.Controllers
 
         #region GDPR tools
 
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         public virtual IActionResult GdprTools()
         {
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
@@ -1721,7 +1720,7 @@ namespace Nop.Web.Controllers
         #region Check gift card balance
 
         //check gift card balance page
-        [HttpsRequirement(SslRequirement.Yes)]
+        [HttpsRequirement]
         //available even when a store is closed
         [CheckAccessClosedStore(true)]
         public virtual IActionResult CheckGiftCardBalance()

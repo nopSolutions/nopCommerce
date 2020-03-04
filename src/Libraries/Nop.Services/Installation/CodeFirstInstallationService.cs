@@ -6576,7 +6576,6 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new SecuritySettings
             {
-                ForceSslForAllPages = true,
                 EncryptionKey = CommonHelper.GenerateRandomDigitCode(16),
                 AdminAreaAllowedIpAddresses = null,
                 HoneypotEnabled = false,

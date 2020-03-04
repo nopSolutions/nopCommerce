@@ -20,12 +20,10 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 using Nop.Web.Models.Blogs;
 
 namespace Nop.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.No)]
     [AutoValidateAntiforgeryToken]
     public partial class BlogController : BasePublicController
     {

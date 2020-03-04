@@ -13,12 +13,10 @@ using Nop.Services.Localization;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 using Nop.Web.Models.Boards;
 
 namespace Nop.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.No)]
     [AutoValidateAntiforgeryToken]
     public partial class BoardsController : BasePublicController
     {

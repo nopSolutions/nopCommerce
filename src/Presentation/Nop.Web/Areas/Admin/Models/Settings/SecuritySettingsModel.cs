@@ -18,9 +18,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.AdminAreaAllowedIpAddresses")]
         public string AdminAreaAllowedIpAddresses { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.ForceSslForAllPages")]
-        public bool ForceSslForAllPages { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled")]
         public bool HoneypotEnabled { get; set; }
 

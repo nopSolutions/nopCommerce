@@ -6,12 +6,11 @@ using Nop.Core.Infrastructure;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
     [Area(AreaNames.Admin)]
-    [HttpsRequirement(SslRequirement.Yes)]
+    [HttpsRequirement]
     [AutoValidateAntiforgeryToken]
     [ValidateIpAddress]
     [AuthorizeAdmin]

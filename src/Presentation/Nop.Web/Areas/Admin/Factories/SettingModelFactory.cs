@@ -475,7 +475,6 @@ namespace Nop.Web.Areas.Admin.Factories
             var model = new SecuritySettingsModel
             {
                 EncryptionKey = securitySettings.EncryptionKey,
-                ForceSslForAllPages = securitySettings.ForceSslForAllPages,
                 HoneypotEnabled = securitySettings.HoneypotEnabled
             };
 

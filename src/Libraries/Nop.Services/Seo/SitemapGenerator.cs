@@ -175,7 +175,7 @@ namespace Nop.Services.Seo
         /// <returns>Protocol name as string</returns>
         protected virtual string GetHttpProtocol()
         {
-            return _securitySettings.ForceSslForAllPages ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
+            return _storeContext.CurrentStore.SslEnabled ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
         }
 
         /// <summary>

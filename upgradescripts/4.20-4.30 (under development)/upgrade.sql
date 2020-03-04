@@ -454,6 +454,12 @@ set @resources='
   <LocaleResource Name="BackInStockSubscriptions.Notification.Unsubscribed">
     <Value>Unsubscribed</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ForceSslForAllPages">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ForceSslForAllPages.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2510,3 +2516,8 @@ INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (63
 INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196961091647941, CAST(N'2020-03-18T07:23:32.000' AS DateTime), N'AddGetLowStockProductsIX')
 INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196961091647942, CAST(N'2020-03-18T07:23:32.000' AS DateTime), N'AddPMMProductManufacturerIX')
 INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637200411689037680, CAST(N'2020-03-18T07:23:32.000' AS DateTime), N'AddOrderRewardPointsHistoryFK')
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'securitysettings.forcesslforallpages'
+GO

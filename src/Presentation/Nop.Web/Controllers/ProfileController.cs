@@ -4,12 +4,9 @@ using Nop.Services.Customers;
 using Nop.Services.Security;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.No)]
     public partial class ProfileController : BasePublicController
     {
         private readonly CustomerSettings _customerSettings;
