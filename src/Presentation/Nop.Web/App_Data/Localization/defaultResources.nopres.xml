@@ -15819,6 +15819,12 @@
   <LocaleResource Name="Forum.PostLinkTitle">
     <Value>Link to this post</Value>
   </LocaleResource>
+  <LocaleResource Name="Forum.Post.IsUseful">
+    <Value>This post/answer is useful</Value>
+  </LocaleResource>
+  <LocaleResource Name="Forum.Post.IsNotUseful">
+    <Value>This post/answer is not useful</Value>
+  </LocaleResource>
   <LocaleResource Name="Forum.Posts">
     <Value>Posts</Value>
   </LocaleResource>
