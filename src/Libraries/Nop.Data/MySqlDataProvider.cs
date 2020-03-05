@@ -295,7 +295,8 @@ namespace Nop.Data
             var builder = new MySqlConnectionStringBuilder
             {
                 Server = nopConnectionString.ServerName,
-                Database = nopConnectionString.DatabaseName,
+                //Cast DatabaseName to lowercase to avoid case-sensitivity problems
+                Database = nopConnectionString.DatabaseName.ToLower(),
                 AllowUserVariables = true,
                 UserID = nopConnectionString.Username,
                 Password = nopConnectionString.Password,
