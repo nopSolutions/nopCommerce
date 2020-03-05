@@ -1036,7 +1036,7 @@ namespace Nop.Services.Media
             if (!picturesIds.Any())
                 return new Dictionary<int, string>();
 
-            var test = _dataProvider.GetTable<PictureBinary>()
+            var hashes = _dataProvider.GetTable<PictureBinary>()
                     .Where(p => picturesIds.Contains(p.PictureId))
                     .Select(x => new
                     {
@@ -1044,7 +1044,7 @@ namespace Nop.Services.Media
                         Hash = Hash(x.BinaryData, _dataProvider.SupportedLengthOfBinaryHash)
                     });
 
-            return test.ToDictionary(p => p.PictureId, p => p.Hash);
+            return hashes.ToDictionary(p => p.PictureId, p => p.Hash);
         }
 
         /// <summary>
