@@ -73,7 +73,7 @@ namespace Nop.Data.Migrations
         /// <param name="create">An expression builder for a FluentMigrator.Expressions.CreateTableExpression</param>
         /// <param name="propertyInfo">Property info</param>
         /// <param name="canBeNullable">The value indicating whether this column is nullable</param>
-        protected virtual void WithSelfType(Type type, CreateTableExpressionBuilder create, PropertyInfo propertyInfo, bool canBeNullable = false)
+        protected virtual void DefineByOwnType(Type type, CreateTableExpressionBuilder create, PropertyInfo propertyInfo, bool canBeNullable = false)
         {
             var propType = propertyInfo.PropertyType;
 
@@ -132,7 +132,7 @@ namespace Nop.Data.Migrations
 
             foreach (var prop in propertiesToAutoMap)
             {
-                WithSelfType(type, builder, prop);
+                DefineByOwnType(type, builder, prop);
             }
         }
 

@@ -70,85 +70,85 @@ namespace Nop.Data.Mapping
         /// Gets column name for mapping with the entity's property
         /// </summary>
         /// <param name="type">Type of entity</param>
-        /// <param name="propetyName">Propety name</param>
+        /// <param name="propertyName">Property name</param>
         /// <returns>Column name</returns>
-        public static string GetColumnName(Type type, string propetyName)
+        public static string GetColumnName(Type type, string propertyName)
         {
-            var clumnName = propetyName;
+            var columnName = propertyName;
 
             if (typeof(Customer) == type)
             {
-                if (clumnName.Equals("BillingAddressId"))
-                    clumnName = "BillingAddress_Id";
-                if (clumnName.Equals("ShippingAddressId"))
-                    clumnName = "ShippingAddress_Id";
+                if (columnName.Equals("BillingAddressId"))
+                    columnName = "BillingAddress_Id";
+                if (columnName.Equals("ShippingAddressId"))
+                    columnName = "ShippingAddress_Id";
             }
 
             if (typeof(CustomerCustomerRoleMapping) == type)
             {
-                if (clumnName.Equals("CustomerId"))
-                    clumnName = "Customer_Id";
-                if (clumnName.Equals("CustomerRoleId"))
-                    clumnName = "CustomerRole_Id";
+                if (columnName.Equals("CustomerId"))
+                    columnName = "Customer_Id";
+                if (columnName.Equals("CustomerRoleId"))
+                    columnName = "CustomerRole_Id";
             }
 
             if (typeof(PermissionRecordCustomerRoleMapping) == type)
             {
-                if (clumnName.Equals("PermissionRecordId"))
-                    clumnName = "PermissionRecord_Id";
-                if (clumnName.Equals("CustomerRoleId"))
-                    clumnName = "CustomerRole_Id";
+                if (columnName.Equals("PermissionRecordId"))
+                    columnName = "PermissionRecord_Id";
+                if (columnName.Equals("CustomerRoleId"))
+                    columnName = "CustomerRole_Id";
             }
 
             if (typeof(ProductProductTagMapping) == type)
             {
-                if (clumnName.Equals("ProductId"))
-                    clumnName = "Product_Id";
-                if (clumnName.Equals("ProductTagId"))
-                    clumnName = "ProductTag_Id";
+                if (columnName.Equals("ProductId"))
+                    columnName = "Product_Id";
+                if (columnName.Equals("ProductTagId"))
+                    columnName = "ProductTag_Id";
             }
 
             if (typeof(DiscountCategoryMapping) == type)
             {
-                if (clumnName.Equals("DiscountId"))
-                    clumnName = "Discount_Id";
-                if (clumnName.Equals("EntityId"))
-                    clumnName = "Category_Id";
+                if (columnName.Equals("DiscountId"))
+                    columnName = "Discount_Id";
+                if (columnName.Equals("EntityId"))
+                    columnName = "Category_Id";
             }
 
             if (typeof(DiscountManufacturerMapping) == type)
             {
-                if (clumnName.Equals("DiscountId"))
-                    clumnName = "Discount_Id";
-                if (clumnName.Equals("EntityId"))
-                    clumnName = "Manufacturer_Id";
+                if (columnName.Equals("DiscountId"))
+                    columnName = "Discount_Id";
+                if (columnName.Equals("EntityId"))
+                    columnName = "Manufacturer_Id";
             }
 
             if (typeof(DiscountProductMapping) == type)
             {
-                if (clumnName.Equals("DiscountId"))
-                    clumnName = "Discount_Id";
-                if (clumnName.Equals("EntityId"))
-                    clumnName = "Product_Id";
+                if (columnName.Equals("DiscountId"))
+                    columnName = "Discount_Id";
+                if (columnName.Equals("EntityId"))
+                    columnName = "Product_Id";
             }
 
             if (typeof(CustomerAddressMapping) == type)
             {
-                if (clumnName.Equals("AddressId"))
-                    clumnName = "Address_Id";
-                if (clumnName.Equals("CustomerId"))
-                    clumnName = "Customer_Id";
+                if (columnName.Equals("AddressId"))
+                    columnName = "Address_Id";
+                if (columnName.Equals("CustomerId"))
+                    columnName = "Customer_Id";
             }
 
             if (typeof(ShippingMethodCountryMapping) == type)
             {
-                if (clumnName.Equals("ShippingMethodId"))
-                    clumnName = "ShippingMethod_Id";
-                if (clumnName.Equals("CountryId"))
-                    clumnName = "Country_Id";
+                if (columnName.Equals("ShippingMethodId"))
+                    columnName = "ShippingMethod_Id";
+                if (columnName.Equals("CountryId"))
+                    columnName = "Country_Id";
             }
 
-            return clumnName;
+            return columnName;
         }
 
         #endregion
