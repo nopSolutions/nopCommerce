@@ -8,16 +8,19 @@ namespace Nop.Web
     {
         public static void Main(string[] args)
         {
-            var host = Host.CreateDefaultBuilder(args)
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureWebHostDefaults(webHostBuilder => {
-                    webHostBuilder
-                      .UseIISIntegration()
-                      .UseStartup<Startup>();
-                })
-                .Build();
+            CreateHostBuilder(args).Build().Run();
+        }
 
-            host.Run();
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder
+                        .UseIISIntegration()
+                        .UseStartup<Startup>();
+                });
         }
     }
 }

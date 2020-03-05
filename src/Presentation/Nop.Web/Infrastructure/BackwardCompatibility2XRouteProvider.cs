@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Web.Infrastructure
@@ -17,42 +17,42 @@ namespace Nop.Web.Infrastructure
         /// <summary>
         /// Register routes
         /// </summary>
-        /// <param name="routeBuilder">Route builder</param>
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        /// <param name="endpointRouteBuilder">Route builder</param>
+        public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
             if (DataSettingsManager.DatabaseIsInstalled && !EngineContext.Current.Resolve<CommonSettings>().SupportPreviousNopcommerceVersions)
                 return;
 
             //products
-            routeBuilder.MapLocalizedRoute("", "p/{productId:min(0)}/{SeName?}",
+            endpointRouteBuilder.MapControllerRoute("", "p/{productId:min(0)}/{SeName?}",
                 new { controller = "BackwardCompatibility2X", action = "RedirectProductById" });
 
             //categories
-            routeBuilder.MapLocalizedRoute("", "c/{categoryId:min(0)}/{SeName?}",
+            endpointRouteBuilder.MapControllerRoute("", "c/{categoryId:min(0)}/{SeName?}",
                 new { controller = "BackwardCompatibility2X", action = "RedirectCategoryById" });
 
             //manufacturers
-            routeBuilder.MapLocalizedRoute("", "m/{manufacturerId:min(0)}/{SeName?}",
+            endpointRouteBuilder.MapControllerRoute("", "m/{manufacturerId:min(0)}/{SeName?}",
                 new { controller = "BackwardCompatibility2X", action = "RedirectManufacturerById" });
 
             //news
-            routeBuilder.MapLocalizedRoute("", "news/{newsItemId:min(0)}/{SeName?}",
+            endpointRouteBuilder.MapControllerRoute("", "news/{newsItemId:min(0)}/{SeName?}",
                 new { controller = "BackwardCompatibility2X", action = "RedirectNewsItemById" });
 
             //blog
-            routeBuilder.MapLocalizedRoute("", "blog/{blogPostId:min(0)}/{SeName?}",
+            endpointRouteBuilder.MapControllerRoute("", "blog/{blogPostId:min(0)}/{SeName?}",
                 new { controller = "BackwardCompatibility2X", action = "RedirectBlogPostById" });
 
             //topic
-            routeBuilder.MapLocalizedRoute("", "t/{SystemName}",
+            endpointRouteBuilder.MapControllerRoute("", "t/{SystemName}",
                 new { controller = "BackwardCompatibility2X", action = "RedirectTopicBySystemName" });
 
             //vendors
-            routeBuilder.MapLocalizedRoute("", "vendor/{vendorId:min(0)}/{SeName?}",
+            endpointRouteBuilder.MapControllerRoute("", "vendor/{vendorId:min(0)}/{SeName?}",
                 new { controller = "BackwardCompatibility2X", action = "RedirectVendorById" });
 
             //product tags
-            routeBuilder.MapLocalizedRoute("", "producttag/{productTagId:min(0)}/{SeName?}",
+            endpointRouteBuilder.MapControllerRoute("", "producttag/{productTagId:min(0)}/{SeName?}",
                 new { controller = "BackwardCompatibility2X", action = "RedirectProductTagById" });
         }
 

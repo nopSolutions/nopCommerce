@@ -335,7 +335,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 options.SupportedCultures = cultures;
                 options.DefaultRequestCulture = new RequestCulture(cultures.FirstOrDefault());
             });
-        }
+        }       
 
         /// <summary>
         /// Set current culture info
@@ -351,15 +351,19 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
-        /// Configure MVC routing
+        /// Configure Endpoints routing
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseNopMvc(this IApplicationBuilder application)
+        public static void UseNopEndpoints(this IApplicationBuilder application)
         {
-            application.UseMvc(routeBuilder =>
+            //Add the EndpointRoutingMiddleware
+            application.UseRouting();
+
+            //Execute the endpoint selected by the routing middleware
+            application.UseEndpoints(endpoints =>
             {
                 //register all routes
-                EngineContext.Current.Resolve<IRoutePublisher>().RegisterRoutes(routeBuilder);
+                EngineContext.Current.Resolve<IRoutePublisher>().RegisterRoutes(endpoints);
             });
         }
 

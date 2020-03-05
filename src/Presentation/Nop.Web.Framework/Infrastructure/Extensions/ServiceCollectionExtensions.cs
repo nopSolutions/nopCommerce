@@ -273,14 +273,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         public static IMvcBuilder AddNopMvc(this IServiceCollection services)
         {
             //add basic MVC feature
-            var mvcBuilder = services.AddMvc();
-            //var mvcBuilder = services.AddControllersWithViews();
-
-            //we use legacy (from previous versions) routing logic
-            mvcBuilder.AddMvcOptions(options => options.EnableEndpointRouting = false);
-
-            //sets the default value of settings on MvcOptions to match the behavior of asp.net core mvc 2.2
-            mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            var mvcBuilder = services.AddControllersWithViews();
 
             mvcBuilder.AddRazorRuntimeCompilation();
 
@@ -303,7 +296,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 });
             }
 
-            //services.AddRazorPages();
+            services.AddRazorPages();
 
             //MVC now serializes JSON with camel case names by default, use this code to avoid it
             mvcBuilder.AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
