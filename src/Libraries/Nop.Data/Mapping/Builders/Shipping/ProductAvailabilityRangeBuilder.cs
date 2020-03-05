@@ -16,8 +16,7 @@ namespace Nop.Data.Mapping.Builders.Shipping
         /// <param name="table">Create table expression builder</param>
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
-            table
-                .WithColumn(nameof(ProductAvailabilityRange.Name)).AsString(400).NotNullable();
+            table.WithColumn(nameof(ProductAvailabilityRange.Name)).AsString(400).NotNullable();
         }
 
         #endregion

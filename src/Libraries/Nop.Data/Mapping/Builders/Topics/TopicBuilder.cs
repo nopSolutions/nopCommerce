@@ -17,10 +17,7 @@ namespace Nop.Data.Mapping.Builders.Topics
         /// <param name="table">Create table expression builder</param>
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
-            table
-                .WithColumn(nameof(Topic.TopicTemplateId))
-                    .AsInt32()
-                    .ForeignKey<TopicTemplate>();
+            table.WithColumn(nameof(Topic.TopicTemplateId)).AsInt32().ForeignKey<TopicTemplate>();
         }
 
         #endregion

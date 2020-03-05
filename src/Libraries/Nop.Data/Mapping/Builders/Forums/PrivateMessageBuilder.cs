@@ -22,14 +22,8 @@ namespace Nop.Data.Mapping.Builders.Forums
             table
                 .WithColumn(nameof(PrivateMessage.Subject)).AsString(450).NotNullable()
                 .WithColumn(nameof(PrivateMessage.Text)).AsString(int.MaxValue).NotNullable()
-                .WithColumn(nameof(PrivateMessage.FromCustomerId))
-                    .AsInt32()
-                    .ForeignKey<Customer>()
-                    .OnDelete(Rule.None)
-                .WithColumn(nameof(PrivateMessage.ToCustomerId))
-                    .AsInt32()
-                    .ForeignKey<Customer>()
-                    .OnDelete(Rule.None);
+                .WithColumn(nameof(PrivateMessage.FromCustomerId)).AsInt32().ForeignKey<Customer>().OnDelete(Rule.None)
+                .WithColumn(nameof(PrivateMessage.ToCustomerId)).AsInt32().ForeignKey<Customer>().OnDelete(Rule.None);
         }
 
         #endregion

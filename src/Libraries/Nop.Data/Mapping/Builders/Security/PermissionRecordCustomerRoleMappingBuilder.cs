@@ -19,14 +19,10 @@ namespace Nop.Data.Mapping.Builders.Security
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(PermissionRecordCustomerRoleMapping.PermissionRecordId))
-                    .AsInt32()
-                    .PrimaryKey()
-                    .ForeignKey<PermissionRecord>()
-                .WithColumn(nameof(PermissionRecordCustomerRoleMapping.CustomerRoleId))
-                    .AsInt32()
-                    .PrimaryKey()
-                    .ForeignKey<CustomerRole>();
+                .WithColumn(NameCompatibilityManager.GetColumnName(typeof(PermissionRecordCustomerRoleMapping), nameof(PermissionRecordCustomerRoleMapping.PermissionRecordId)))
+                    .AsInt32().PrimaryKey().ForeignKey<PermissionRecord>()
+                .WithColumn(NameCompatibilityManager.GetColumnName(typeof(PermissionRecordCustomerRoleMapping), nameof(PermissionRecordCustomerRoleMapping.CustomerRoleId)))
+                    .AsInt32().PrimaryKey().ForeignKey<CustomerRole>();
         }
 
         #endregion

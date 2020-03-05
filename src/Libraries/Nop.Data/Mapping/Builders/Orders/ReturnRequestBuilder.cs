@@ -21,9 +21,7 @@ namespace Nop.Data.Mapping.Builders.Orders
             table
                 .WithColumn(nameof(ReturnRequest.ReasonForReturn)).AsString(int.MaxValue).NotNullable()
                 .WithColumn(nameof(ReturnRequest.RequestedAction)).AsString(int.MaxValue).NotNullable()
-                .WithColumn(nameof(ReturnRequest.CustomerId))
-                    .AsInt32()
-                    .ForeignKey<Customer>();
+                .WithColumn(nameof(ReturnRequest.CustomerId)).AsInt32().ForeignKey<Customer>();
         }
 
         #endregion

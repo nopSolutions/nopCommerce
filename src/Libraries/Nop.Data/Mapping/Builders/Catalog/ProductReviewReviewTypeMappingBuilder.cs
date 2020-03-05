@@ -18,12 +18,8 @@ namespace Nop.Data.Mapping.Builders.Catalog
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(ProductReviewReviewTypeMapping.ProductReviewId))
-                    .AsInt32()
-                    .ForeignKey<ProductReview>()
-                .WithColumn(nameof(ProductReviewReviewTypeMapping.ReviewTypeId))
-                    .AsInt32()
-                    .ForeignKey<ReviewType>();
+                .WithColumn(nameof(ProductReviewReviewTypeMapping.ProductReviewId)).AsInt32().ForeignKey<ProductReview>()
+                .WithColumn(nameof(ProductReviewReviewTypeMapping.ReviewTypeId)).AsInt32().ForeignKey<ReviewType>();
         }
 
         #endregion

@@ -18,11 +18,7 @@ namespace Nop.Data.Mapping.Builders.Media
         /// <param name="table">Create table expression builder</param>
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
-            table
-                .WithColumn(nameof(PictureBinary.PictureId))
-                .AsInt32()
-                .ForeignKey<Picture>()
-                .OnDelete(Rule.Cascade);
+            table.WithColumn(nameof(PictureBinary.PictureId)).AsInt32().ForeignKey<Picture>().OnDelete(Rule.Cascade);
         }
 
         #endregion

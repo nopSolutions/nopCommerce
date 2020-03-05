@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Reflection;
 using FluentMigrator.Builders.Create;
 using FluentMigrator.Expressions;
-using FluentMigrator.Infrastructure;
 
 namespace Nop.Data.Migrations
 {
@@ -32,9 +30,8 @@ namespace Nop.Data.Migrations
         /// Retrieves expressions into ICreateExpressionRoot
         /// </summary>
         /// <param name="expressionRoot">The root expression for a CREATE operation</param>
-        /// <param name="tableName">Specified table name; pass null to use the name of a type</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        void BuildTable<TEntity>(ICreateExpressionRoot expressionRoot, string tableName = null);
+        void BuildTable<TEntity>(ICreateExpressionRoot expressionRoot);
 
         /// <summary>
         /// Gets create table expression for entity type

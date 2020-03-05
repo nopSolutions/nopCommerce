@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using FluentMigrator.Expressions;
-using FluentMigrator.Infrastructure;
 using FluentMigrator.Model;
 using FluentMigrator.Runner.Conventions;
 
@@ -50,9 +49,7 @@ namespace Nop.Data.Migrations
         public IIndexExpression Apply(IIndexExpression expression)
         {
             if (string.IsNullOrEmpty(expression.Index.Name))
-            {
                 expression.Index.Name = GetIndexName(expression.Index);
-            }
 
             return expression;
         }

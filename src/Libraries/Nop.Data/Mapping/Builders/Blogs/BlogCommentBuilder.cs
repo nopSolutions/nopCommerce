@@ -20,15 +20,9 @@ namespace Nop.Data.Mapping.Builders.Blogs
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(BlogComment.StoreId))
-                    .AsInt32()
-                    .ForeignKey<Store>()
-                .WithColumn(nameof(BlogComment.CustomerId))
-                    .AsInt32()
-                    .ForeignKey<Customer>()
-                .WithColumn(nameof(BlogComment.BlogPostId))
-                    .AsInt32()
-                    .ForeignKey<BlogPost>();
+                .WithColumn(nameof(BlogComment.StoreId)).AsInt32().ForeignKey<Store>()
+                .WithColumn(nameof(BlogComment.CustomerId)).AsInt32().ForeignKey<Customer>()
+                .WithColumn(nameof(BlogComment.BlogPostId)).AsInt32().ForeignKey<BlogPost>();
         }
 
         #endregion

@@ -47,16 +47,20 @@ namespace Nop.Data
             }
         }
 
-        #endregion
-
-        #region Methods
-
-        public virtual DataConnection CreateDataContext()
+        /// <summary>
+        /// Creates the database connection
+        /// </summary>
+        protected virtual DataConnection CreateDataConnection()
         {
-            return CreateDataContext(LinqToDbDataProvider);
+            return CreateDataConnection(LinqToDbDataProvider);
         }
 
-        public DataConnection CreateDataContext(IDataProvider dataProvider)
+        /// <summary>
+        /// Creates the database connection
+        /// </summary>
+        /// <param name="dataProvider">Data provider</param>
+        /// <returns>Database connection</returns>
+        protected virtual DataConnection CreateDataConnection(IDataProvider dataProvider)
         {
             if (dataProvider is null)
                 throw new ArgumentNullException(nameof(dataProvider));
@@ -66,6 +70,10 @@ namespace Nop.Data
 
             return dataContext;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Returns mapped entity descriptor.
@@ -96,7 +104,7 @@ namespace Nop.Data
         /// <returns>Inserted entity</returns>
         public TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using (var dataContext = CreateDataContext())
+            using (var dataContext = CreateDataConnection())
             {
                 entity.Id = dataContext.InsertWithInt32Identity(entity);
                 return entity;
@@ -111,7 +119,7 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Entity type</typeparam>
         public void UpdateEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using (var dataContext = CreateDataContext())
+            using (var dataContext = CreateDataConnection())
             {
                 dataContext.Update(entity);
             }
@@ -125,7 +133,7 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Entity type</typeparam>
         public void DeleteEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using (var dataContext = CreateDataContext())
+            using (var dataContext = CreateDataConnection())
             {
                 dataContext.Delete(entity);
             }
@@ -138,26 +146,26 @@ namespace Nop.Data
         /// <typeparam name="TEntity"></typeparam>
         public void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
         {
-            using (var dataContext = CreateDataContext(LinqToDbDataProvider))
+            using (var dataContext = CreateDataConnection(LinqToDbDataProvider))
             {
-                dataContext.BulkCopy(new LinqToDB.Data.BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
+                dataContext.BulkCopy(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
             }
         }
 
         /// <summary>
-        /// Executes command asynchronously and returns number of affected records.
+        /// Executes command returns number of affected records.
         /// </summary>
         /// <param name="sqlStatement">Command text</param>
-        /// <param name="parameters">Command parameters</param>
+        /// <param name="dataParameters">Command parameters</param>
         /// <returns>Number of records, affected by command execution.</returns>
-        public int ExecuteNonQuery(string sqlStatement, params DataParameter[] parameters)
+        public int ExecuteNonQuery(string sqlStatement, params DataParameter[] dataParameters)
         {
-            using (var dataContext = CreateDataContext())
+            using (var dataContext = CreateDataConnection())
             {
-                var command = new CommandInfo(dataContext, sqlStatement, parameters);
+                var command = new CommandInfo(dataContext, sqlStatement, dataParameters);
                 var affectedRecords = command.Execute();
 
-                UpdateOutputParameters(dataContext, parameters);
+                UpdateOutputParameters(dataContext, dataParameters);
 
                 return affectedRecords;
             }
@@ -167,13 +175,13 @@ namespace Nop.Data
         /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
         /// single value
         /// </summary>
-        /// <typeparam name="TEntity">Result record type</typeparam>
+        /// <typeparam name="T">Result record type</typeparam>
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Resulting value</returns>
         public T ExecuteStoredProcedure<T>(string procedureName, params DataParameter[] parameters)
         {
-            using (var dataContext = CreateDataContext())
+            using (var dataContext = CreateDataConnection())
             {
                 var command = new CommandInfo(dataContext, procedureName, parameters);
 
@@ -188,13 +196,12 @@ namespace Nop.Data
         /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
         /// number of affected records.
         /// </summary>
-        /// <typeparam name="TEntity">Result record type</typeparam>
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Number of records, affected by command execution.</returns>
         public int ExecuteStoredProcedure(string procedureName, params DataParameter[] parameters)
         {
-            using (var dataContext = CreateDataContext())
+            using (var dataContext = CreateDataConnection())
             {
                 var command = new CommandInfo(dataContext, procedureName, parameters);
 
@@ -209,18 +216,18 @@ namespace Nop.Data
         /// Executes command using System.Data.CommandType.StoredProcedure command type and
         /// returns results as collection of values of specified type
         /// </summary>
-        /// <typeparam name="TEntity">Result record type</typeparam>
+        /// <typeparam name="T">Result record type</typeparam>
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Returns collection of query result records</returns>
-        public IList<TEntity> QueryProc<TEntity>(string procedureName, params DataParameter[] parameters) where TEntity : BaseEntity
+        public IList<T> QueryProc<T>(string procedureName, params DataParameter[] parameters)
         {
-            using (var dataContext = CreateDataContext())
+            using (var dataContext = CreateDataConnection())
             {
                 var command = new CommandInfo(dataContext, procedureName, parameters);
-                var rez = command.QueryProc<TEntity>().ToList();
+                var rez = command.QueryProc<T>()?.ToList();
                 UpdateOutputParameters(dataContext, parameters);
-                return rez ?? new List<TEntity>();
+                return rez ?? new List<T>();
             }
         }
 
@@ -233,7 +240,7 @@ namespace Nop.Data
         /// <returns>Collection of values of specified type</returns>
         public IList<T> Query<T>(string sql, params DataParameter[] parameters)
         {
-            using (var dataContext = CreateDataContext())
+            using (var dataContext = CreateDataConnection())
             {
                 return dataContext.Query<T>(sql, parameters)?.ToList() ?? new List<T>();
             }
@@ -243,19 +250,30 @@ namespace Nop.Data
 
         #region Properties
 
+        /// <summary>
+        /// Linq2Db data provider
+        /// </summary>
         protected abstract IDataProvider LinqToDbDataProvider { get; }
 
+        /// <summary>
+        /// Additional mapping schema
+        /// </summary>
         protected MappingSchema AdditionalSchema
         {
             get
             {
-                if (Singleton<MappingSchema>.Instance is null)
-                    Singleton<MappingSchema>.Instance = new MappingSchema(ConfigurationName) { MetadataReader = new FluentMigratorMetadataReader() };
+                if (!(Singleton<MappingSchema>.Instance is null))
+                    return Singleton<MappingSchema>.Instance;
+
+                Singleton<MappingSchema>.Instance = new MappingSchema(ConfigurationName) { MetadataReader = new FluentMigratorMetadataReader() };
 
                 return Singleton<MappingSchema>.Instance;
             }
         }
 
+        /// <summary>
+        /// Database connection string
+        /// </summary>
         protected string CurrentConnectionString => DataSettingsManager.LoadSettings().ConnectionString;
 
         /// <summary>

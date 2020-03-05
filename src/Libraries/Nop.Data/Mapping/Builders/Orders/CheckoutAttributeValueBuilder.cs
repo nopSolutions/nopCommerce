@@ -20,9 +20,7 @@ namespace Nop.Data.Mapping.Builders.Orders
             table
                 .WithColumn(nameof(CheckoutAttributeValue.Name)).AsString(400).NotNullable()
                 .WithColumn(nameof(CheckoutAttributeValue.ColorSquaresRgb)).AsString(100).Nullable()
-                .WithColumn(nameof(CheckoutAttributeValue.CheckoutAttributeId))
-                    .AsInt32()
-                    .ForeignKey<CheckoutAttribute>();
+                .WithColumn(nameof(CheckoutAttributeValue.CheckoutAttributeId)).AsInt32().ForeignKey<CheckoutAttribute>();
         }
 
         #endregion

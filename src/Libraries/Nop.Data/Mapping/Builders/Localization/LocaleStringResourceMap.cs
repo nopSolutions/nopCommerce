@@ -20,9 +20,7 @@ namespace Nop.Data.Mapping.Builders.Localization
             table
                 .WithColumn(nameof(LocaleStringResource.ResourceName)).AsString(200).NotNullable()
                 .WithColumn(nameof(LocaleStringResource.ResourceValue)).AsString(int.MaxValue).NotNullable()
-                .WithColumn(nameof(LocaleStringResource.LanguageId))
-                    .AsInt32()
-                    .ForeignKey<Language>();
+                .WithColumn(nameof(LocaleStringResource.LanguageId)).AsInt32().ForeignKey<Language>();
         }
 
         #endregion

@@ -21,9 +21,7 @@ namespace Nop.Data.Mapping.Builders.Localization
                 .WithColumn(nameof(LocalizedProperty.LocaleKeyGroup)).AsString(400).NotNullable()
                 .WithColumn(nameof(LocalizedProperty.LocaleKey)).AsString(400).NotNullable()
                 .WithColumn(nameof(LocalizedProperty.LocaleValue)).AsString(int.MaxValue).NotNullable()
-                .WithColumn(nameof(LocalizedProperty.LanguageId))
-                    .AsInt32()
-                    .ForeignKey<Language>();
+                .WithColumn(nameof(LocalizedProperty.LanguageId)).AsInt32().ForeignKey<Language>();
         }
 
         #endregion

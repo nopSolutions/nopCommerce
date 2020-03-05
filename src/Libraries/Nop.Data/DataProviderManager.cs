@@ -8,22 +8,6 @@ namespace Nop.Data
     /// </summary>
     public partial class DataProviderManager : IDataProviderManager
     {
-        #region Properties
-
-        /// <summary>
-        /// Gets data provider
-        /// </summary>
-        public INopDataProvider DataProvider
-        {
-            get
-            {
-                var dataProviderType = Singleton<DataSettings>.Instance.DataProvider;
-                return GetDataProvider(dataProviderType);
-            }
-        }
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -41,6 +25,23 @@ namespace Nop.Data
                     return new MySqlNopDataProvider();
                 default:
                     throw new NopException($"Not supported data provider name: '{dataProviderType}'");
+            }
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets data provider
+        /// </summary>
+        public INopDataProvider DataProvider
+        {
+            get
+            {
+                var dataProviderType = Singleton<DataSettings>.Instance.DataProvider;
+
+                return GetDataProvider(dataProviderType);
             }
         }
 

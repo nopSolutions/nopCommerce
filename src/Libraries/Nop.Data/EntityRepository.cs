@@ -14,16 +14,19 @@ namespace Nop.Data
     /// <typeparam name="TEntity">Entity type</typeparam>
     public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
     {
-        private INopDataProvider _dataProvider;
+        #region Fields
+
+        private readonly INopDataProvider _dataProvider;
+        private ITable<TEntity> _entities;
+
+        #endregion
+
+        #region Ctor
 
         public EntityRepository(INopDataProvider dataProvider)
         {
             _dataProvider = dataProvider;
         }
-
-        #region Fields
-
-        private ITable<TEntity> _entities;
 
         #endregion
 
@@ -62,15 +65,8 @@ namespace Nop.Data
 
             using (var transaction = new TransactionScope())
             {
-                try
-                {
-                    _dataProvider.BulkInsertEntities(entities);
-                    transaction.Complete();
-                }
-                catch (System.Exception)
-                {
-                    throw;
-                }
+                _dataProvider.BulkInsertEntities(entities);
+                transaction.Complete();
             }
         }
 
@@ -85,6 +81,7 @@ namespace Nop.Data
             return _dataProvider.GetTable<TEntity>()
                 .FirstOrDefault(e => e.Id == Convert.ToInt32(entity.Id));
         }
+
         /// <summary>
         /// Update entity
         /// </summary>

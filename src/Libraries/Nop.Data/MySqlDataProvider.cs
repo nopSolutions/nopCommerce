@@ -20,16 +20,7 @@ namespace Nop.Data
     public class MySqlNopDataProvider : BaseDataProvider, INopDataProvider
     {
         #region Utils
-
-        /// <summary>
-        /// Check whether backups are supported
-        /// </summary>
-        protected void CheckBackupSupported()
-        {
-            if (!BackupSupported)
-                throw new DataException("This database does not support backup");
-        }
-
+        
         protected MySqlConnectionStringBuilder GetConnectionStringBuilder()
         {
             return new MySqlConnectionStringBuilder(CurrentConnectionString);
@@ -46,7 +37,7 @@ namespace Nop.Data
 
             var batches = Regex.Split(sql, @"DELIMITER \;", RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
-            if (batches?.Length > 0)
+            if (batches.Length > 0)
             {
                 commands.AddRange(
                     batches
@@ -56,12 +47,11 @@ namespace Nop.Data
                             b = Regex.Replace(b, @"(DELIMITER )?\$\$", string.Empty);
                             b = Regex.Replace(b, @"#(.*?)\r?\n", "/* $1 */");
                             b = Regex.Replace(b, @"(\r?\n)|(\t)", " ");
-                            return b;
-                        }
-                    )
 
-                );
+                            return b;
+                        }));
             }
+
             return commands;
         }
 
@@ -79,13 +69,24 @@ namespace Nop.Data
             ExecuteSqlScript(fileProvider.ReadAllText(filePath, Encoding.Default));
         }
 
-        #endregion
+        /// <summary>
+        /// Creates the database connection
+        /// </summary>
+        protected override DataConnection CreateDataConnection()
+        {
+            var dataContext = CreateDataConnection(LinqToDbDataProvider);
 
-        #region Methods
+            ConfigureDataContext(dataContext);
 
+            return dataContext;
+        }
+
+        /// <summary>
+        /// Configures the data context
+        /// </summary>
+        /// <param name="dataContext">Data context to configure</param>
         public virtual void ConfigureDataContext(IDataContext dataContext)
         {
-
             AdditionalSchema.SetDataType(
                 typeof(Guid),
                 new SqlDataType(DataType.NChar, typeof(Guid), 36));
@@ -93,15 +94,15 @@ namespace Nop.Data
             AdditionalSchema.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
         }
 
-        public override DataConnection CreateDataContext()
-        {
-            var dataContext = CreateDataContext(LinqToDbDataProvider);
+        #endregion
 
-            ConfigureDataContext(dataContext);
+        #region Methods
 
-            return dataContext;
-        }
-
+        /// <summary>
+        /// Creates a connection to a database
+        /// </summary>
+        /// <param name="connectionString">Connection string</param>
+        /// <returns>Connection to a database</returns>
         public override IDbConnection CreateDbConnection(string connectionString = null)
         {
             return new MySqlConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : CurrentConnectionString);
@@ -131,7 +132,7 @@ namespace Nop.Data
                 if (!string.IsNullOrWhiteSpace(collation))
                     query = $"{query} COLLATE {collation}";
 
-                var command = connection.CreateCommand(); //TODO
+                var command = connection.CreateCommand();
                 command.CommandText = query;
                 command.Connection.Open();
 
@@ -187,7 +188,7 @@ namespace Nop.Data
         public void ExecuteSqlScript(string sql)
         {
             var sqlCommands = GetCommandsFromScript(sql);
-            using (var currentConnection = CreateDataContext())
+            using (var currentConnection = CreateDataConnection())
             {
                 foreach (var command in sqlCommands)
                     currentConnection.Execute(command);
@@ -200,7 +201,7 @@ namespace Nop.Data
         public void InitializeDatabase()
         {
             var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
-            migrationManager.ApplyUpMigrations(null, NopMigrationTags.Schema);
+            migrationManager.ApplyUpMigrations(null, NopMigrationTags.SCHEMA);
 
             //create stored procedures 
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
@@ -214,7 +215,7 @@ namespace Nop.Data
         /// <returns>Integer identity; null if cannot get the result</returns>
         public virtual int? GetTableIdent<T>() where T : BaseEntity
         {
-            using (var currentConnection = CreateDataContext())
+            using (var currentConnection = CreateDataConnection())
             {
                 var tableName = currentConnection.GetTable<T>().TableName;
                 var databaseName = currentConnection.Connection.Database;
@@ -237,7 +238,7 @@ namespace Nop.Data
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
-            using (var currentConnection = CreateDataContext())
+            using (var currentConnection = CreateDataConnection())
             {
                 var tableName = currentConnection.GetTable<T>().TableName;
 
@@ -250,7 +251,7 @@ namespace Nop.Data
         /// </summary>
         public virtual void BackupDatabase(string fileName)
         {
-            //nothing
+            throw new DataException("This database provider does not support backup");
         }
 
         /// <summary>
@@ -259,7 +260,7 @@ namespace Nop.Data
         /// <param name="backupFileName">The name of the backup file</param>
         public virtual void RestoreDatabase(string backupFileName)
         {
-            //nothing
+            throw new DataException("This database provider does not support backup");
         }
 
         /// <summary>
@@ -267,17 +268,22 @@ namespace Nop.Data
         /// </summary>
         public virtual void ReIndexTables()
         {
-            using (var currentConnection = CreateDataContext())
+            using (var currentConnection = CreateDataConnection())
             {
                 var tables = currentConnection.Query<string>($"SHOW TABLES FROM `{currentConnection.Connection.Database}`").ToList();
 
-                if (tables?.Count > 0)
+                if (tables.Count > 0)
                 {
                     currentConnection.Execute($"OPTIMIZE TABLE `{string.Join("`, `", tables)}`");
                 }
             }
         }
 
+        /// <summary>
+        /// Build the connection string
+        /// </summary>
+        /// <param name="nopConnectionString">Connection string info</param>
+        /// <returns>Connection string</returns>
         public virtual string BuildConnectionString(INopConnectionStringInfo nopConnectionString)
         {
             if (nopConnectionString is null)
@@ -298,14 +304,30 @@ namespace Nop.Data
             return builder.ConnectionString;
         }
 
+        /// <summary>
+        /// Gets the name of a foreign key
+        /// </summary>
+        /// <param name="foreignTable">Foreign key table</param>
+        /// <param name="foreignColumn">Foreign key column name</param>
+        /// <param name="primaryTable">Primary table</param>
+        /// <param name="primaryColumn">Primary key column name</param>
+        /// <param name="isShort">Indicates whether to use short form</param>
+        /// <returns>Name of a foreign key</returns>
         public virtual string GetForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn, bool isShort = true)
         {
-            return $"FK_{Guid.NewGuid().ToString("D")}";
+            return $"FK_{Guid.NewGuid():D}";
         }
 
+        /// <summary>
+        /// Gets the name of an index
+        /// </summary>
+        /// <param name="targetTable">Target table name</param>
+        /// <param name="targetColumn">Target column name</param>
+        /// <param name="isShort">Indicates whether to use short form</param>
+        /// <returns>Name of an index</returns>
         public virtual string GetIndexName(string targetTable, string targetColumn, bool isShort = true)
         {
-            return $"IX_{Guid.NewGuid().ToString("D")}";
+            return $"IX_{Guid.NewGuid():D}";
         }
 
         #endregion
@@ -313,10 +335,8 @@ namespace Nop.Data
         #region Properties
 
         /// <summary>
-        /// Gets a value indicating whether this data provider supports backup
+        /// MySql data provider
         /// </summary>
-        public bool BackupSupported { get; } = false;
-
         protected override IDataProvider LinqToDbDataProvider => new MySqlDataProvider();
 
         /// <summary>

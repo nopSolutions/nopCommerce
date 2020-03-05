@@ -17,10 +17,7 @@ namespace Nop.Data.Mapping.Builders.Orders
         /// <param name="table">Create table expression builder</param>
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
-            table
-                .WithColumn(nameof(RecurringPayment.InitialOrderId))
-                    .AsInt32()
-                    .ForeignKey<Order>();
+            table.WithColumn(nameof(RecurringPayment.InitialOrderId)).AsInt32().ForeignKey<Order>();
         }
 
         #endregion

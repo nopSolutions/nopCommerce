@@ -72,8 +72,12 @@ namespace Nop.Services.Common
         {
             return _fileProvider.Combine(GetBackupDirectoryPath(), backupFileName);
         }
-        
-        public virtual string GetNewBackupFilePath()
+
+        /// <summary>
+        /// Creates a path to a new database backup file
+        /// </summary>
+        /// <returns>Path to a new database backup file</returns>
+        public virtual string CreateNewBackupFilePath()
         {
             return _fileProvider.Combine(GetBackupDirectoryPath(), $"database_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}_{CommonHelper.GenerateRandomDigitCode(10)}.{NopCommonDefaults.DbBackupFileExtension}");
         }

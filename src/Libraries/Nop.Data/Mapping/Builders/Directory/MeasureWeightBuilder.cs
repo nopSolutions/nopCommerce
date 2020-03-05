@@ -17,9 +17,9 @@ namespace Nop.Data.Mapping.Builders.Directory
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-            .WithColumn(nameof(MeasureWeight.Name)).AsString(100).NotNullable()
-            .WithColumn(nameof(MeasureWeight.SystemKeyword)).AsString(100).NotNullable()
-            .WithColumn(nameof(MeasureWeight.Ratio)).AsDecimal(18, 8);
+                .WithColumn(nameof(MeasureWeight.Name)).AsString(100).NotNullable()
+                .WithColumn(nameof(MeasureWeight.SystemKeyword)).AsString(100).NotNullable()
+                .WithColumn(nameof(MeasureWeight.Ratio)).AsDecimal(18, 8);
         }
 
         #endregion

@@ -18,11 +18,8 @@ namespace Nop.Data.Mapping.Builders.Customers
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(CustomerAttributeValue.Name))
-                    .AsString(400).NotNullable()
-                .WithColumn(nameof(CustomerAttributeValue.CustomerAttributeId))
-                    .AsInt32()
-                    .ForeignKey<CustomerAttribute>();
+                .WithColumn(nameof(CustomerAttributeValue.Name)).AsString(400).NotNullable()
+                .WithColumn(nameof(CustomerAttributeValue.CustomerAttributeId)).AsInt32().ForeignKey<CustomerAttribute>();
         }
 
         #endregion

@@ -41,14 +41,12 @@ namespace Nop.Data.Mapping
                 var tableExpr = Expressions.GetOrAdd(type, entityType => _migrationManager.GetCreateTableExpression(entityType));
 
                 if (typeof(T) == typeof(TableAttribute))
-                {
-                    return new TableAttribute(tableExpr.TableName) { Schema = tableExpr.SchemaName };
-                }
+                    return new TableAttribute(tableExpr.TableName) {Schema = tableExpr.SchemaName};
 
                 if (typeof(T) != typeof(ColumnAttribute))
                     return null;
 
-                var column = tableExpr.Columns.SingleOrDefault(cd => cd.Name.Equals(memberInfo.Name, StringComparison.OrdinalIgnoreCase));
+                var column = tableExpr.Columns.SingleOrDefault(cd => cd.Name.Equals(NameCompatibilityManager.GetColumnName(type, memberInfo.Name), StringComparison.OrdinalIgnoreCase));
 
                 if (column is null)
                     return null;

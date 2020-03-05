@@ -21,6 +21,11 @@ namespace Nop.Data
         /// <param name="triesToConnect">Count of tries to connect to the database after creating; set 0 if no need to connect after creating</param>
         void CreateDatabase(string collation, int triesToConnect = 10);
 
+        /// <summary>
+        /// Creates a connection to a database
+        /// </summary>
+        /// <param name="connectionString">Connection string</param>
+        /// <returns>Connection to a database</returns>
         IDbConnection CreateDbConnection(string connectionString);
 
         /// <summary>
@@ -59,10 +64,32 @@ namespace Nop.Data
         /// <param name="entities">Collection of Entities</param>
         void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity;
 
+        /// <summary>
+        /// Gets the name of a foreign key
+        /// </summary>
+        /// <param name="foreignTable">Foreign key table</param>
+        /// <param name="foreignColumn">Foreign key column name</param>
+        /// <param name="primaryTable">Primary table</param>
+        /// <param name="primaryColumn">Primary key column name</param>
+        /// <param name="isShort">Indicates whether to use short form</param>
+        /// <returns>Name of a foreign key</returns>
         string GetForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn, bool isShort = true);
 
+        /// <summary>
+        /// Gets the name of an index
+        /// </summary>
+        /// <param name="targetTable">Target table name</param>
+        /// <param name="targetColumn">Target column name</param>
+        /// <param name="isShort">Indicates whether to use short form</param>
+        /// <returns>Name of an index</returns>
         string GetIndexName(string targetTable, string targetColumn, bool isShort = true);
 
+        /// <summary>
+        /// Returns queryable source for specified mapping class for current connection,
+        /// mapped to database table or view.
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>Queryable source</returns>
         ITable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity;
 
         /// <summary>
@@ -115,7 +142,7 @@ namespace Nop.Data
         /// <returns>Mapped entity descriptor</returns>
         EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity;
         
-                /// <summary>
+        /// <summary>
         /// Executes command using System.Data.CommandType.StoredProcedure command type and
         /// returns results as collection of values of specified type
         /// </summary>
@@ -123,7 +150,7 @@ namespace Nop.Data
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Returns collection of query result records</returns>
-        IList<TEntity> QueryProc<TEntity>(string procedureName, params DataParameter[] parameters) where TEntity : BaseEntity;
+        IList<T> QueryProc<T>(string procedureName, params DataParameter[] parameters);
 
         /// <summary>
         /// Executes command and returns results as collection of values of specified type
@@ -134,13 +161,19 @@ namespace Nop.Data
         /// <returns>Returns collection of query result records</returns>
         IList<T> Query<T>(string sql, params DataParameter[] parameters);
 
+        /// <summary>
+        /// Executes command and returns number of affected records.
+        /// </summary>
+        /// <param name="sqlStatement">Command text</param>
+        /// <param name="dataParameters">Command parameters</param>
+        /// <returns>Number of records, affected by command execution.</returns>
         int ExecuteNonQuery(string sqlStatement, params DataParameter[] dataParameters);
 
         /// <summary>
         /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
         /// single value
         /// </summary>
-        /// <typeparam name="TEntity">Result record type</typeparam>
+        /// <typeparam name="T">Result record type</typeparam>
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Resulting value</returns>
@@ -150,7 +183,6 @@ namespace Nop.Data
         /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
         /// number of affected records.
         /// </summary>
-        /// <typeparam name="TEntity">Result record type</typeparam>
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Returns collection of query result records</returns>
@@ -159,11 +191,6 @@ namespace Nop.Data
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// Gets a value indicating whether this data provider supports backup
-        /// </summary>
-        bool BackupSupported { get; }
 
         /// <summary>
         /// Name of database provider

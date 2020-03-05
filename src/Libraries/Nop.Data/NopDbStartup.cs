@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
-using Nop.Data.Extensions;
 using Nop.Data.Migrations;
 
 namespace Nop.Data
@@ -39,10 +38,10 @@ namespace Nop.Data
                 .AddScoped<IMigrationManager, MigrationManager>()
                 .AddSingleton<IConventionSet, NopConventionSet>()
                 .ConfigureRunner(rb =>
-                    rb.SetServers()
-                    .WithVersionTable(new MigrationVersionInfo())
-                    // define the assembly containing the migrations
-                    .ScanIn(mAssemblies).For.Migrations());
+                    rb.AddSqlServer().AddMySql5()
+                        .WithVersionTable(new MigrationVersionInfo())
+                        // define the assembly containing the migrations
+                        .ScanIn(mAssemblies).For.Migrations());
         }
 
         /// <summary>
@@ -51,7 +50,6 @@ namespace Nop.Data
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-
         }
 
         /// <summary>

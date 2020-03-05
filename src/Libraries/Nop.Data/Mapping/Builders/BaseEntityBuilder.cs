@@ -1,6 +1,5 @@
 ﻿using FluentMigrator.Builders.Create.Table;
 using Nop.Core;
-using Nop.Data.Migrations.Builders;
 
 namespace Nop.Data.Mapping.Builders
 {

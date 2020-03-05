@@ -19,12 +19,8 @@ namespace Nop.Data.Mapping.Builders.Polls
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(PollVotingRecord.PollAnswerId))
-                    .AsInt32()
-                    .ForeignKey<PollAnswer>()
-                .WithColumn(nameof(PollVotingRecord.CustomerId))
-                    .AsInt32()
-                    .ForeignKey<Customer>();
+                .WithColumn(nameof(PollVotingRecord.PollAnswerId)).AsInt32().ForeignKey<PollAnswer>()
+                .WithColumn(nameof(PollVotingRecord.CustomerId)).AsInt32().ForeignKey<Customer>();
         }
 
         #endregion

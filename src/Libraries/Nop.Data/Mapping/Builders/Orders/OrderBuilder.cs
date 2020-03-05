@@ -21,21 +21,10 @@ namespace Nop.Data.Mapping.Builders.Orders
         {
             table
                 .WithColumn(nameof(Order.CustomOrderNumber)).AsString(int.MaxValue).NotNullable()
-                .WithColumn(nameof(Order.BillingAddressId))
-                    .AsInt32()
-                    .ForeignKey<Address>()
-                .WithColumn(nameof(Order.CustomerId))
-                    .AsInt32()
-                    .ForeignKey<Customer>()
-                .WithColumn(nameof(Order.PickupAddressId))
-                    .AsInt32()
-                    .Nullable()
-                    .ForeignKey<Address>()
-                .WithColumn(nameof(Order.ShippingAddressId))
-                    .AsInt32()
-                    .Nullable()
-                    .ForeignKey<Address>();
-
+                .WithColumn(nameof(Order.BillingAddressId)).AsInt32().ForeignKey<Address>()
+                .WithColumn(nameof(Order.CustomerId)).AsInt32().ForeignKey<Customer>()
+                .WithColumn(nameof(Order.PickupAddressId)).AsInt32().Nullable().ForeignKey<Address>()
+                .WithColumn(nameof(Order.ShippingAddressId)).AsInt32().Nullable().ForeignKey<Address>();
         }
 
         #endregion

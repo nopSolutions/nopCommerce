@@ -19,9 +19,7 @@ namespace Nop.Data.Mapping.Builders.Forums
         {
             table
                 .WithColumn(nameof(Forum.Name)).AsString(200).NotNullable()
-                .WithColumn(nameof(Forum.ForumGroupId))
-                    .AsInt32()
-                    .ForeignKey<ForumGroup>();
+                .WithColumn(nameof(Forum.ForumGroupId)).AsInt32().ForeignKey<ForumGroup>();
         }
 
         #endregion

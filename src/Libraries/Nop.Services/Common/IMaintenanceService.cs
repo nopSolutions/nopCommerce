@@ -13,7 +13,11 @@ namespace Nop.Services.Common
         /// <returns>Backup file collection</returns>
         IList<string> GetAllBackupFiles();
 
-        string GetNewBackupFilePath();
+        /// <summary>
+        /// Creates a path to a new database backup file
+        /// </summary>
+        /// <returns>Path to a new database backup file</returns>
+        string CreateNewBackupFilePath();
 
         /// <summary>
         /// Returns the path to the backup file

@@ -19,9 +19,7 @@ namespace Nop.Data.Mapping.Builders.Common
         {
             table
                 .WithColumn(nameof(AddressAttributeValue.Name)).AsString(400).NotNullable()
-                .WithColumn(nameof(AddressAttributeValue.AddressAttributeId))
-                    .AsInt32()
-                    .ForeignKey<AddressAttribute>();
+                .WithColumn(nameof(AddressAttributeValue.AddressAttributeId)).AsInt32().ForeignKey<AddressAttribute>();
         }
 
         #endregion

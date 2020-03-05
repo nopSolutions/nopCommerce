@@ -19,9 +19,7 @@ namespace Nop.Data.Mapping.Builders.Catalog
         {
             table
                 .WithColumn(nameof(PredefinedProductAttributeValue)).AsString(400).NotNullable()
-                .WithColumn(nameof(PredefinedProductAttributeValue.ProductAttributeId))
-                .AsInt32()
-                .ForeignKey<ProductAttribute>();
+                .WithColumn(nameof(PredefinedProductAttributeValue.ProductAttributeId)).AsInt32().ForeignKey<ProductAttribute>();
         }
 
         #endregion

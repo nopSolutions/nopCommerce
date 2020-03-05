@@ -20,12 +20,8 @@ namespace Nop.Data.Mapping.Builders.Orders
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(ShoppingCartItem.CustomerId))
-                    .AsInt32()
-                    .ForeignKey<Customer>()
-                .WithColumn(nameof(ShoppingCartItem.ProductId))
-                    .AsInt32()
-                    .ForeignKey<Product>();
+                .WithColumn(nameof(ShoppingCartItem.CustomerId)).AsInt32().ForeignKey<Customer>()
+                .WithColumn(nameof(ShoppingCartItem.ProductId)).AsInt32().ForeignKey<Product>();
         }
 
         #endregion

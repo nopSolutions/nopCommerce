@@ -1,4 +1,4 @@
-using FluentMigrator;
+﻿using FluentMigrator;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -24,21 +24,27 @@ using Nop.Core.Domain.Tasks;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
-using Nop.Data.Migrations.Builders;
 
 namespace Nop.Data.Migrations
 {
     [NopMigration("2020/01/31 11:24:16:2551771")]
-    [Tags(NopMigrationTags.Schema)]
+    [Tags(NopMigrationTags.SCHEMA)]
     public class SchemaMigration : AutoReversingMigration
     {
-        protected IMigrationManager _migrationManager;
+        private readonly IMigrationManager _migrationManager;
 
         public SchemaMigration(IMigrationManager migrationManager)
         {
             _migrationManager = migrationManager;
         }
 
+        /// <summary>
+        /// Collect the UP migration expressions
+        /// <remarks>
+        /// We use an explicit table creation order instead of an automatic one
+        /// due to problems creating relationships between tables
+        /// </remarks>
+        /// </summary>
         public override void Up()
         {
             _migrationManager.BuildTable<AddressAttribute>(Create);

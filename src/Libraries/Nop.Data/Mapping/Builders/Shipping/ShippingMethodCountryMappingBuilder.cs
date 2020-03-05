@@ -19,14 +19,10 @@ namespace Nop.Data.Mapping.Builders.Shipping
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(ShippingMethodCountryMapping.ShippingMethodId))
-                    .AsInt32()
-                    .PrimaryKey()
-                    .ForeignKey<ShippingMethod>()
-                .WithColumn(nameof(ShippingMethodCountryMapping.CountryId))
-                    .AsInt32()
-                    .PrimaryKey()
-                    .ForeignKey<Country>();
+                .WithColumn(NameCompatibilityManager.GetColumnName(typeof(ShippingMethodCountryMapping), nameof(ShippingMethodCountryMapping.ShippingMethodId)))
+                    .AsInt32().PrimaryKey().ForeignKey<ShippingMethod>()
+                .WithColumn(NameCompatibilityManager.GetColumnName(typeof(ShippingMethodCountryMapping), nameof(ShippingMethodCountryMapping.CountryId)))
+                    .AsInt32().PrimaryKey().ForeignKey<Country>();
         }
 
         #endregion
