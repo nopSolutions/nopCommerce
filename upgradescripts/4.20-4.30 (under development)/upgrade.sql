@@ -926,7 +926,7 @@ BEGIN
 			AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
 			AND ( (lp.LocaleKey = N''Name'''
 		IF @UseFullTextSearch = 1
-			SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
+			SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords)) '
 		ELSE
 			SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0) '
 
@@ -936,7 +936,7 @@ BEGIN
 			SET @sql = @sql + '
 				OR (lp.LocaleKey = N''ShortDescription'''
 			IF @UseFullTextSearch = 1
-				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
+				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords)) '
 			ELSE
 				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0) '
 
@@ -944,7 +944,7 @@ BEGIN
 			SET @sql = @sql + '
 				OR (lp.LocaleKey = N''FullDescription'''
 			IF @UseFullTextSearch = 1
-				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
+				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords)) '
 			ELSE
 				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0) '
 		END
