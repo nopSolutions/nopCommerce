@@ -197,9 +197,7 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException(nameof(targetCurrencyCode));
 
             var result = amount;
-            if (sourceCurrencyCode.Id == targetCurrencyCode.Id)
-                return result;
-
+            
             if (result == decimal.Zero || sourceCurrencyCode.Id == targetCurrencyCode.Id)
                 return result;
 
