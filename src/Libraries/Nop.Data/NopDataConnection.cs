@@ -17,7 +17,7 @@ namespace Nop.Data
         ///when installing we should set CommandTimeout to a long span of time
         ///
         public NopDataConnection()
-        this(40*60)
+        :this(40*60)
         {
         }
         public NopDataConnection(int cmdTimeout)
