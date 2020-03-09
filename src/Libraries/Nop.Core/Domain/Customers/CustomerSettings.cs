@@ -1,4 +1,4 @@
-﻿using Nop.Core.Configuration;
+using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Customers
 {
@@ -11,6 +11,11 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether usernames are used instead of emails
         /// </summary>
         public bool UsernamesEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether usernames are used to login instead of emails
+        /// </summary>
+        public bool LoginUsernamesEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether users can check the availability of usernames (when registering or changing on the 'My Account' page)
