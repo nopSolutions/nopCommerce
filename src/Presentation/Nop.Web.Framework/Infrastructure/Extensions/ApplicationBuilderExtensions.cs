@@ -48,19 +48,19 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
         {
             var engine = EngineContext.Current;
 
+            //before installing, Logger and PluginService are both unavailable.
             //further actions are performed only when the database is installed
             if (DataSettingsManager.DatabaseIsInstalled)
             {
                 //initialize and start schedule tasks
                 Services.Tasks.TaskManager.Instance.Initialize();
                 Services.Tasks.TaskManager.Instance.Start();
+                //log application start
+                engine.Resolve<ILogger>().Information("Application started");
+
+                //install plugins
+                engine.Resolve<IPluginService>().InstallPlugins();
             }
-
-            //log application start
-            engine.Resolve<ILogger>().Information("Application started");
-
-            //install plugins
-            engine.Resolve<IPluginService>().InstallPlugins();
         }
 
         /// <summary>
