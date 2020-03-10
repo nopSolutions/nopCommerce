@@ -268,10 +268,7 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Is caption
         /// </summary>
-        public bool IsCaption
-        {
-            get { return _properties.Values.All(p => p.IsCaption); }
-        }
+        public bool IsCaption => _properties.Values.All(p => p.IsCaption);
 
         /// <summary>
         /// Gets a value indicating whether need create dropdown list for export

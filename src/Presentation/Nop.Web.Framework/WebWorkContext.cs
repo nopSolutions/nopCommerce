@@ -274,10 +274,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Gets the original customer (in case the current one is impersonated)
         /// </summary>
-        public virtual Customer OriginalCustomerIfImpersonated
-        {
-            get { return _originalCustomerIfImpersonated; }
-        }
+        public virtual Customer OriginalCustomerIfImpersonated => _originalCustomerIfImpersonated;
 
         /// <summary>
         /// Gets the current vendor (logged-in manager)
