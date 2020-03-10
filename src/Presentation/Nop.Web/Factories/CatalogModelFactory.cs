@@ -723,16 +723,12 @@ namespace Nop.Web.Factories
 
                 var xsSubmit = new XmlSerializer(typeof(List<CategorySimpleModel>));
 
-                using (var strWriter = new StringWriter())
-                {
-                    using (var writer = XmlWriter.Create(strWriter))
-                    {
-                        xsSubmit.Serialize(writer, categories);
-                        var xml = strWriter.ToString();
+                using var strWriter = new StringWriter();
+                using var writer = XmlWriter.Create(strWriter);
+                xsSubmit.Serialize(writer, categories);
+                var xml = strWriter.ToString();
 
-                        return XDocument.Parse(xml);
-                    }
-                }
+                return XDocument.Parse(xml);
             });
         }
 

@@ -435,10 +435,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 if (importxmlfile != null && importxmlfile.Length > 0)
                 {
-                    using (var sr = new StreamReader(importxmlfile.OpenReadStream(), Encoding.UTF8))
-                    {
-                        _localizationService.ImportResourcesFromXml(language, sr);
-                    }
+                    using var sr = new StreamReader(importxmlfile.OpenReadStream(), Encoding.UTF8);
+                    _localizationService.ImportResourcesFromXml(language, sr);
                 }
                 else
                 {

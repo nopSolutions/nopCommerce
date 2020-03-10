@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Nop.Core.Infrastructure;
 
@@ -77,7 +76,7 @@ namespace Nop.Core
         /// <returns>true if the string is a valid IpAddress and false if it's not</returns>
         public static bool IsValidIpAddress(string ipAddress)
         {
-            return IPAddress.TryParse(ipAddress, out IPAddress _);
+            return IPAddress.TryParse(ipAddress, out var _);
         }
 
         /// <summary>
@@ -87,13 +86,11 @@ namespace Nop.Core
         /// <returns>Result string</returns>
         public static string GenerateRandomDigitCode(int length)
         {
-            using (var random = new SecureRandomNumberGenerator())
-            {
-                var str = string.Empty;
-                for (var i = 0; i < length; i++)
-                    str = string.Concat(str, random.Next(10).ToString());
-                return str;
-            }
+            using var random = new SecureRandomNumberGenerator();
+            var str = string.Empty;
+            for (var i = 0; i < length; i++)
+                str = string.Concat(str, random.Next(10).ToString());
+            return str;
         }
 
         /// <summary>
@@ -104,10 +101,8 @@ namespace Nop.Core
         /// <returns>Result</returns>
         public static int GenerateRandomInteger(int min = 0, int max = int.MaxValue)
         {
-            using (var random = new SecureRandomNumberGenerator())
-            {
-                return random.Next(min, max);
-            }
+            using var random = new SecureRandomNumberGenerator();
+            return random.Next(min, max);
         }
 
         /// <summary>

@@ -372,30 +372,28 @@ namespace Nop.Services.Localization
         {
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
-            using (var stream = new MemoryStream())
+            using var stream = new MemoryStream();
+            using (var xmlWriter = new XmlTextWriter(stream, Encoding.UTF8))
             {
-                using (var xmlWriter = new XmlTextWriter(stream, Encoding.UTF8))
+                xmlWriter.WriteStartDocument();
+                xmlWriter.WriteStartElement("Language");
+                xmlWriter.WriteAttributeString("Name", language.Name);
+                xmlWriter.WriteAttributeString("SupportedVersion", NopVersion.CurrentVersion);
+
+                var resources = GetAllResources(language.Id);
+                foreach (var resource in resources)
                 {
-                    xmlWriter.WriteStartDocument();
-                    xmlWriter.WriteStartElement("Language");
-                    xmlWriter.WriteAttributeString("Name", language.Name);
-                    xmlWriter.WriteAttributeString("SupportedVersion", NopVersion.CurrentVersion);
-
-                    var resources = GetAllResources(language.Id);
-                    foreach (var resource in resources)
-                    {
-                        xmlWriter.WriteStartElement("LocaleResource");
-                        xmlWriter.WriteAttributeString("Name", resource.ResourceName);
-                        xmlWriter.WriteElementString("Value", null, resource.ResourceValue);
-                        xmlWriter.WriteEndElement();
-                    }
-
+                    xmlWriter.WriteStartElement("LocaleResource");
+                    xmlWriter.WriteAttributeString("Name", resource.ResourceName);
+                    xmlWriter.WriteElementString("Value", null, resource.ResourceValue);
                     xmlWriter.WriteEndElement();
-                    xmlWriter.WriteEndDocument();
                 }
 
-                return Encoding.UTF8.GetString(stream.ToArray());
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndDocument();
             }
+
+            return Encoding.UTF8.GetString(stream.ToArray());
         }
 
         /// <summary>

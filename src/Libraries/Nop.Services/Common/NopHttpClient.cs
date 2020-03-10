@@ -99,8 +99,8 @@ namespace Nop.Services.Common
                 language).ToLowerInvariant();
 
             //get news feed
-            using (var stream = await _httpClient.GetStreamAsync(url))
-                return await RssFeed.LoadAsync(stream);
+            using var stream = await _httpClient.GetStreamAsync(url);
+            return await RssFeed.LoadAsync(stream);
         }
 
         /// <summary>

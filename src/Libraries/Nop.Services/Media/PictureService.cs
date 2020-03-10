@@ -366,38 +366,36 @@ namespace Nop.Services.Media
         /// <returns>Image binary data</returns>
         protected virtual byte[] EncodeImage<T>(Image<T> image, IImageFormat imageFormat, int? quality = null) where T : struct, IPixel<T>
         {
-            using (var stream = new MemoryStream())
+            using var stream = new MemoryStream();
+            var imageEncoder = Default.ImageFormatsManager.FindEncoder(imageFormat);
+            switch (imageEncoder)
             {
-                var imageEncoder = Default.ImageFormatsManager.FindEncoder(imageFormat);
-                switch (imageEncoder)
-                {
-                    case JpegEncoder jpegEncoder:
-                        jpegEncoder.Subsample = JpegSubsample.Ratio444;
-                        jpegEncoder.Quality = quality ?? _mediaSettings.DefaultImageQuality;
-                        jpegEncoder.Encode(image, stream);
-                        break;
+                case JpegEncoder jpegEncoder:
+                    jpegEncoder.Subsample = JpegSubsample.Ratio444;
+                    jpegEncoder.Quality = quality ?? _mediaSettings.DefaultImageQuality;
+                    jpegEncoder.Encode(image, stream);
+                    break;
 
-                    case PngEncoder pngEncoder:
-                        pngEncoder.ColorType = PngColorType.RgbWithAlpha;
-                        pngEncoder.Encode(image, stream);
-                        break;
+                case PngEncoder pngEncoder:
+                    pngEncoder.ColorType = PngColorType.RgbWithAlpha;
+                    pngEncoder.Encode(image, stream);
+                    break;
 
-                    case BmpEncoder bmpEncoder:
-                        bmpEncoder.BitsPerPixel = BmpBitsPerPixel.Pixel32;
-                        bmpEncoder.Encode(image, stream);
-                        break;
+                case BmpEncoder bmpEncoder:
+                    bmpEncoder.BitsPerPixel = BmpBitsPerPixel.Pixel32;
+                    bmpEncoder.Encode(image, stream);
+                    break;
 
-                    case GifEncoder gifEncoder:
-                        gifEncoder.Encode(image, stream);
-                        break;
+                case GifEncoder gifEncoder:
+                    gifEncoder.Encode(image, stream);
+                    break;
 
-                    default:
-                        imageEncoder.Encode(image, stream);
-                        break;
-                }
-
-                return stream.ToArray();
+                default:
+                    imageEncoder.Encode(image, stream);
+                    break;
             }
+
+            return stream.ToArray();
         }
 
         #endregion
@@ -496,16 +494,14 @@ namespace Nop.Services.Media
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
                 if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                 {
-                    using (var image = Image.Load(filePath, out var imageFormat))
+                    using var image = Image.Load(filePath, out var imageFormat);
+                    image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
                     {
-                        image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
-                        {
-                            Mode = ResizeMode.Max,
-                            Size = CalculateDimensions(image.Size(), targetSize)
-                        }));
-                        var pictureBinary = EncodeImage(image, imageFormat);
-                        SaveThumb(thumbFilePath, thumbFileName, imageFormat.DefaultMimeType, pictureBinary);
-                    }
+                        Mode = ResizeMode.Max,
+                        Size = CalculateDimensions(image.Size(), targetSize)
+                    }));
+                    var pictureBinary = EncodeImage(image, imageFormat);
+                    SaveThumb(thumbFilePath, thumbFileName, imageFormat.DefaultMimeType, pictureBinary);
                 }
 
                 var url = GetThumbUrl(thumbFileName, storeLocation);
@@ -610,16 +606,14 @@ namespace Nop.Services.Media
                     if (targetSize != 0)
                     {
                         //resizing required
-                        using (var image = Image.Load(pictureBinary, out var imageFormat))
+                        using var image = Image.Load(pictureBinary, out var imageFormat);
+                        image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
                         {
-                            image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
-                            {
-                                Mode = ResizeMode.Max,
-                                Size = CalculateDimensions(image.Size(), targetSize)
-                            }));
+                            Mode = ResizeMode.Max,
+                            Size = CalculateDimensions(image.Size(), targetSize)
+                        }));
 
-                            pictureBinaryResized = EncodeImage(image, imageFormat);
-                        }
+                        pictureBinaryResized = EncodeImage(image, imageFormat);
                     }
                     else
                     {
@@ -993,20 +987,18 @@ namespace Nop.Services.Media
         /// <returns>Picture binary or throws an exception</returns>
         public virtual byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
         {
-            using (var image = Image.Load(pictureBinary, out var imageFormat))
+            using var image = Image.Load(pictureBinary, out var imageFormat);
+            //resize the image in accordance with the maximum size
+            if (Math.Max(image.Height, image.Width) > _mediaSettings.MaximumImageSize)
             {
-                //resize the image in accordance with the maximum size
-                if (Math.Max(image.Height, image.Width) > _mediaSettings.MaximumImageSize)
+                image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
                 {
-                    image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
-                    {
-                        Mode = ResizeMode.Max,
-                        Size = new Size(_mediaSettings.MaximumImageSize)
-                    }));
-                }
-
-                return EncodeImage(image, imageFormat);
+                    Mode = ResizeMode.Max,
+                    Size = new Size(_mediaSettings.MaximumImageSize)
+                }));
             }
+
+            return EncodeImage(image, imageFormat);
         }
 
         /// <summary>

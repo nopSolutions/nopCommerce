@@ -639,10 +639,8 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         {
             try
             {
-                using (var streamReader = new StreamReader(Request.Body))
-                {
-                    _sendinBlueEmailManager.UnsubscribeWebhook(streamReader.ReadToEnd());
-                }
+                using var streamReader = new StreamReader(Request.Body);
+                _sendinBlueEmailManager.UnsubscribeWebhook(streamReader.ReadToEnd());
             }
             catch (Exception ex)
             {
