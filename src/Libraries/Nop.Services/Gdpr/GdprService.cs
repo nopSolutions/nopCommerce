@@ -173,15 +173,12 @@ namespace Nop.Services.Gdpr
             if (log == null)
                 return null;
 
-            switch (log.RequestType)
+            return log.RequestType switch
             {
-                case GdprRequestType.ConsentAgree:
-                    return true;
-                case GdprRequestType.ConsentDisagree:
-                    return false;
-                default:
-                    return null;
-            }
+                GdprRequestType.ConsentAgree => true,
+                GdprRequestType.ConsentDisagree => false,
+                _ => null,
+            };
         }
         #endregion
 

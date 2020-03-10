@@ -103,15 +103,12 @@ namespace Nop.Services.Media.RoxyFileman
         protected virtual ImageFormat GetImageFormat(string path)
         {
             var fileExtension = _fileProvider.GetFileExtension(path).ToLower();
-            switch (fileExtension)
+            return fileExtension switch
             {
-                case ".png":
-                    return ImageFormat.Png;
-                case ".gif":
-                    return ImageFormat.Gif;
-                default:
-                    return ImageFormat.Jpeg;
-            }
+                ".png" => ImageFormat.Png,
+                ".gif" => ImageFormat.Gif,
+                _ => ImageFormat.Jpeg,
+            };
         }
 
         /// <summary>

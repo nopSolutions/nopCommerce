@@ -63,20 +63,13 @@ namespace Nop.Services.Plugins
             if (pluginDescriptor == null)
                 throw new ArgumentNullException(nameof(pluginDescriptor));
 
-            switch (loadMode)
+            return loadMode switch
             {
-                case LoadPluginsMode.All:
-                    return true;
-
-                case LoadPluginsMode.InstalledOnly:
-                    return pluginDescriptor.Installed;
-
-                case LoadPluginsMode.NotInstalledOnly:
-                    return !pluginDescriptor.Installed;
-
-                default:
-                    throw new NotSupportedException(nameof(loadMode));
-            }
+                LoadPluginsMode.All => true,
+                LoadPluginsMode.InstalledOnly => pluginDescriptor.Installed,
+                LoadPluginsMode.NotInstalledOnly => !pluginDescriptor.Installed,
+                _ => throw new NotSupportedException(nameof(loadMode)),
+            };
         }
 
         /// <summary>

@@ -259,24 +259,13 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 switch (activity.Status.Type)
                 {
                     case "I":
-                        switch (activity.Status.Code)
+                        eventName = activity.Status.Code switch
                         {
-                            case "DP":
-                                eventName = "Plugins.Shipping.Tracker.Departed";
-                                break;
-
-                            case "EP":
-                                eventName = "Plugins.Shipping.Tracker.ExportScanned";
-                                break;
-
-                            case "OR":
-                                eventName = "Plugins.Shipping.Tracker.OriginScanned";
-                                break;
-
-                            default:
-                                eventName = "Plugins.Shipping.Tracker.Arrived";
-                                break;
-                        }
+                            "DP" => "Plugins.Shipping.Tracker.Departed",
+                            "EP" => "Plugins.Shipping.Tracker.ExportScanned",
+                            "OR" => "Plugins.Shipping.Tracker.OriginScanned",
+                            _ => "Plugins.Shipping.Tracker.Arrived",
+                        };
                         break;
 
                     case "X":
@@ -453,22 +442,12 @@ namespace Nop.Plugin.Shipping.UPS.Services
             }
 
             //set packages details
-            switch (_upsSettings.PackingType)
+            request.Shipment.Package = _upsSettings.PackingType switch
             {
-                case PackingType.PackByOneItemPerPackage:
-                    request.Shipment.Package = GetPackagesForOneItemPerPackage(shippingOptionRequest).ToArray();
-                    break;
-
-                case PackingType.PackByVolume:
-                    request.Shipment.Package = GetPackagesByCubicRoot(shippingOptionRequest).ToArray();
-                    break;
-
-                case PackingType.PackByDimensions:
-                default:
-                    request.Shipment.Package = GetPackagesByDimensions(shippingOptionRequest).ToArray();
-                    break;
-            }
-
+                PackingType.PackByOneItemPerPackage => GetPackagesForOneItemPerPackage(shippingOptionRequest).ToArray(),
+                PackingType.PackByVolume => GetPackagesByCubicRoot(shippingOptionRequest).ToArray(),
+                _ => GetPackagesByDimensions(shippingOptionRequest).ToArray(),
+            };
             return request;
         }
 
