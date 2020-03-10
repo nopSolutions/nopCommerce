@@ -249,7 +249,7 @@ namespace Nop.Services.Localization
         /// <returns>Locale string resources</returns>
         public virtual Dictionary<string, KeyValuePair<int, string>> GetAllResourceValues(int languageId, bool? loadPublicLocales)
         {
-            var key = NopLocalizationCachingDefaults.LocaleStringResourcesAllCacheKey.ToCacheKey(languageId);
+            var key = NopLocalizationCachingDefaults.LocaleStringResourcesAllCacheKey.FillCacheKey(languageId);
 
             //get all locale string resources by language identifier
             if (!loadPublicLocales.HasValue || _cacheManager.IsSet(key))
@@ -267,14 +267,14 @@ namespace Nop.Services.Localization
                 });
 
                 //remove separated resource 
-                _cacheManager.Remove(NopLocalizationCachingDefaults.LocaleStringResourcesAllPublicCacheKey.ToCacheKey(languageId));
-                _cacheManager.Remove(NopLocalizationCachingDefaults.LocaleStringResourcesAllAdminCacheKey.ToCacheKey(languageId));
+                _cacheManager.Remove(NopLocalizationCachingDefaults.LocaleStringResourcesAllPublicCacheKey.FillCacheKey(languageId));
+                _cacheManager.Remove(NopLocalizationCachingDefaults.LocaleStringResourcesAllAdminCacheKey.FillCacheKey(languageId));
 
                 return rez;
             }
 
             //performance optimization of the site startup
-            key = (loadPublicLocales.Value ? NopLocalizationCachingDefaults.LocaleStringResourcesAllPublicCacheKey : NopLocalizationCachingDefaults.LocaleStringResourcesAllAdminCacheKey).ToCacheKey(languageId);
+            key = (loadPublicLocales.Value ? NopLocalizationCachingDefaults.LocaleStringResourcesAllPublicCacheKey : NopLocalizationCachingDefaults.LocaleStringResourcesAllAdminCacheKey).FillCacheKey(languageId);
 
             return _cacheManager.Get(key, () =>
             {
@@ -331,7 +331,7 @@ namespace Nop.Services.Localization
             {
                 //gradual loading
                 var key = NopLocalizationCachingDefaults.LocaleStringResourcesByResourceNameCacheKey
-                    .ToCacheKey(languageId, resourceKey);
+                    .FillCacheKey(languageId, resourceKey);
 
                 var query = from l in _lsrRepository.Table
                     where l.ResourceName == resourceKey

@@ -21,7 +21,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// {0} : page index
         /// {1} : page size
         /// </remarks>
-        private const string SHIPPINGBYWEIGHTBYTOTAL_ALL_KEY = "Nop.shippingbyweightbytotal.all-{0}-{1}";
+        private readonly CacheKey _shippingByWeightByTotalAllKey = new CacheKey("Nop.shippingbyweightbytotal.all-{0}-{1}", SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY);
         private const string SHIPPINGBYWEIGHTBYTOTAL_PATTERN_KEY = "Nop.shippingbyweightbytotal.";
 
         #endregion
@@ -54,7 +54,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
         /// <returns>List of the shipping by weight record</returns>
         public virtual IPagedList<ShippingByWeightByTotalRecord> GetAll(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var key = string.Format(SHIPPINGBYWEIGHTBYTOTAL_ALL_KEY, pageIndex, pageSize);
+            var key = _shippingByWeightByTotalAllKey.FillCacheKey(pageIndex, pageSize);
             return _cacheManager.Get(key, () =>
             {
                 var query = from sbw in _sbwtRepository.Table

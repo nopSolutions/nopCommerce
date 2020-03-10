@@ -75,7 +75,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
 
         protected string GetPictureUrl(int pictureId)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY, 
+            var cacheKey = ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY.FillCacheKey( 
                 pictureId, _webHelper.IsCurrentConnectionSecured() ? Uri.UriSchemeHttps : Uri.UriSchemeHttp);
 
             return _cacheManager.Get(cacheKey, () =>

@@ -55,7 +55,7 @@ namespace Nop.Services.Caching.CacheEventConsumers
         /// </summary>
         /// <param name="cacheKey">Key of cached item</param>
         /// <param name="useStaticCache">Indicates whether to use the statistical cache</param>
-        protected virtual void Remove(string cacheKey, bool useStaticCache = true)
+        protected virtual void Remove(CacheKey cacheKey, bool useStaticCache = true)
         {
             if (useStaticCache)
                 _staticCacheManager.Remove(cacheKey);
@@ -81,7 +81,7 @@ namespace Nop.Services.Caching.CacheEventConsumers
         {
             var entity = eventMessage.Entity;
 
-            _staticCacheManager.Remove(entity.EntityCacheKey);
+            _staticCacheManager.Remove(new CacheKey(entity.EntityCacheKey));
             ClearCache(eventMessage.Entity, EntityEventType.Update);
         }
 
@@ -93,7 +93,7 @@ namespace Nop.Services.Caching.CacheEventConsumers
         {
             var entity = eventMessage.Entity;
 
-            _staticCacheManager.Remove(entity.EntityCacheKey);
+            _staticCacheManager.Remove(new CacheKey(entity.EntityCacheKey));
             ClearCache(eventMessage.Entity, EntityEventType.Delete);
         }
 

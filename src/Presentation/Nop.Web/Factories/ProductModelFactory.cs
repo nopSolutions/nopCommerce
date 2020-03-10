@@ -164,7 +164,7 @@ namespace Nop.Web.Factories
 
             if (_catalogSettings.ShowProductReviewsPerStore)
             {
-                var cacheKey = string.Format(NopModelCacheDefaults.ProductReviewsModelKey, product.Id, _storeContext.CurrentStore.Id);
+                var cacheKey = NopModelCacheDefaults.ProductReviewsModelKey.FillCacheKey(product.Id, _storeContext.CurrentStore.Id);
 
                 productReview = _cacheManager.Get(cacheKey, () =>
                 {
@@ -440,7 +440,7 @@ namespace Nop.Web.Factories
             var pictureSize = productThumbPictureSize ?? _mediaSettings.ProductThumbPictureSize;
 
             //prepare picture model
-            var cacheKey = string.Format(NopModelCacheDefaults.ProductDefaultPictureModelKey,
+            var cacheKey = NopModelCacheDefaults.ProductDefaultPictureModelKey.FillCacheKey(
                 product.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(),
                 _storeContext.CurrentStore.Id);
 
@@ -781,10 +781,12 @@ namespace Nop.Web.Factories
                         //"image square" picture (with with "image squares" attribute type only)
                         if (attributeValue.ImageSquaresPictureId > 0)
                         {
-                            var productAttributeImageSquarePictureCacheKey = string.Format(NopModelCacheDefaults.ProductAttributeImageSquarePictureModelKey,
-                                   attributeValue.ImageSquaresPictureId,
-                                   _webHelper.IsCurrentConnectionSecured(),
-                                   _storeContext.CurrentStore.Id);
+                            var productAttributeImageSquarePictureCacheKey = NopModelCacheDefaults
+                                .ProductAttributeImageSquarePictureModelKey
+                                .FillCacheKey(
+                                    attributeValue.ImageSquaresPictureId,
+                                    _webHelper.IsCurrentConnectionSecured(),
+                                    _storeContext.CurrentStore.Id);
                             valueModel.ImageSquaresPictureModel = _cacheManager.Get(productAttributeImageSquarePictureCacheKey, () =>
                             {
                                 var imageSquaresPicture = _pictureService.GetPictureById(attributeValue.ImageSquaresPictureId);
@@ -985,7 +987,7 @@ namespace Nop.Web.Factories
                 _mediaSettings.ProductDetailsPictureSize;
 
             //prepare picture models
-            var productPicturesCacheKey = string.Format(NopModelCacheDefaults.ProductDetailsPicturesModelKey, product.Id, defaultPictureSize, isAssociatedProduct, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+            var productPicturesCacheKey = NopModelCacheDefaults.ProductDetailsPicturesModelKey.FillCacheKey(product.Id, defaultPictureSize, isAssociatedProduct, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
             var cachedPictures = _cacheManager.Get(productPicturesCacheKey, () =>
             {
                 var productName = _localizationService.GetLocalized(product, x => x.Name);

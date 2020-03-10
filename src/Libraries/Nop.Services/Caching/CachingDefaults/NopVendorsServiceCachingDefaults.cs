@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Caching.CachingDefaults
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Caching.CachingDefaults
 {
     /// <summary>
     /// Represents default values related to vendor services
@@ -8,7 +10,7 @@
         /// <summary>
         /// Gets a key for caching all vendor attributes
         /// </summary>
-        public static string VendorAttributesAllCacheKey => "Nop.vendorattribute.all";
+        public static CacheKey VendorAttributesAllCacheKey => new CacheKey("Nop.vendorattribute.all");
        
         /// <summary>
         /// Gets a key for caching vendor attribute values of the vendor attribute
@@ -16,6 +18,6 @@
         /// <remarks>
         /// {0} : vendor attribute ID
         /// </remarks>
-        public static string VendorAttributeValuesAllCacheKey => "Nop.vendorattributevalue.all-{0}";
+        public static CacheKey VendorAttributeValuesAllCacheKey => new CacheKey("Nop.vendorattributevalue.all-{0}");
     }
 }

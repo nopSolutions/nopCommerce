@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Caching.CachingDefaults
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Caching.CachingDefaults
 {
     /// <summary>
     /// Represents default values related to stores services
@@ -14,7 +16,7 @@
         /// {0} : entity ID
         /// {1} : entity name
         /// </remarks>
-        public static string StoreMappingIdsByEntityIdNameCacheKey => "Nop.storemapping.ids.entityid-name-{0}-{1}";
+        public static CacheKey StoreMappingIdsByEntityIdNameCacheKey => new CacheKey("Nop.storemapping.ids.entityid-name-{0}-{1}");
 
         /// <summary>
         /// Gets a key for caching
@@ -23,7 +25,7 @@
         /// {0} : entity ID
         /// {1} : entity name
         /// </remarks>
-        public static string StoreMappingsByEntityIdNameCacheKey => "Nop.storemapping.entityid-name-{0}-{1}";
+        public static CacheKey StoreMappingsByEntityIdNameCacheKey => new CacheKey("Nop.storemapping.entityid-name-{0}-{1}");
 
         #endregion
 
@@ -32,7 +34,7 @@
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static string StoresAllCacheKey => "Nop.stores.all";
+        public static CacheKey StoresAllCacheKey => new CacheKey("Nop.stores.all");
         
         #endregion
     }

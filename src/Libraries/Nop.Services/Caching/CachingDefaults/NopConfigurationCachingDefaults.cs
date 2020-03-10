@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Caching.CachingDefaults
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Caching.CachingDefaults
 {
     /// <summary>
     /// Represents default values related to configuration services
@@ -8,12 +10,12 @@
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static string SettingsAllAsDictionaryCacheKey => "Nop.setting.all.as.dictionary";
+        public static CacheKey SettingsAllAsDictionaryCacheKey => new CacheKey("Nop.setting.all.as.dictionary", SettingsPrefixCacheKey);
 
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static string SettingsAllCacheKey => "Nop.setting.all";
+        public static CacheKey SettingsAllCacheKey => new CacheKey("Nop.setting.all", SettingsPrefixCacheKey);
 
         /// <summary>
         /// Gets a key pattern to clear cache

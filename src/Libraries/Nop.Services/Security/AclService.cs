@@ -168,7 +168,7 @@ namespace Nop.Services.Security
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
 
-            var key = NopSecurityCachingDefaults.AclRecordByEntityIdNameCacheKey.ToCacheKey(entityId, entityName);
+            var key = NopSecurityCachingDefaults.AclRecordByEntityIdNameCacheKey.FillCacheKey(entityId, entityName);
 
             var query = from ur in _aclRecordRepository.Table
                 where ur.EntityId == entityId &&

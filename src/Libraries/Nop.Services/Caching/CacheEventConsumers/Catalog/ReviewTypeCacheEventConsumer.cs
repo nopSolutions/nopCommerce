@@ -16,9 +16,9 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
         protected override void ClearCache(ReviewType entity, EntityEventType entityEventType)
         {
             if (entityEventType == EntityEventType.Delete)
-                RemoveByPrefix(NopCatalogCachingDefaults.ProductReviewReviewTypeMappingPrefixCacheKey);
+                RemoveByPrefix(NopCatalogCachingDefaults.ProductReviewReviewTypeMappingAllPrefixCacheKey);
 
-            Remove(NopCatalogCachingDefaults.ReviewTypeAllKey);
+            Remove(NopCatalogCachingDefaults.ReviewTypeAllCacheKey);
         }
     }
 }

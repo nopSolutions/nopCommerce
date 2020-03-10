@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Caching.CachingDefaults
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Caching.CachingDefaults
 {
     /// <summary>
     /// Represents default values related to topic services
@@ -13,7 +15,7 @@
         /// {1} : show hidden?
         /// {2} : include in top menu?
         /// </remarks>
-        public static string TopicsAllCacheKey => "Nop.topics.all-{0}-{1}-{2}";
+        public static CacheKey TopicsAllCacheKey => new CacheKey("Nop.topics.all-{0}-{1}-{2}", TopicsAllPrefixCacheKey);
 
         /// <summary>
         /// Gets a key for caching
@@ -24,7 +26,7 @@
         /// {2} : include in top menu?
         /// {3} : customer role IDs hash
         /// </remarks>
-        public static string TopicsAllWithACLCacheKey => "Nop.topics.all.acl-{0}-{1}-{2}-{3}";
+        public static CacheKey TopicsAllWithACLCacheKey => new CacheKey("Nop.topics.all.acl-{0}-{1}-{2}-{3}", TopicsAllPrefixCacheKey);
 
         /// <summary>
         /// Gets a pattern to clear cache
@@ -39,7 +41,7 @@
         /// {1} : store id
         /// {2} : customer roles Ids hash
         /// </remarks>
-        public static string TopicBySystemNameCacheKey => "Nop.topics.systemName-{0}-{1}-{2}";
+        public static CacheKey TopicBySystemNameCacheKey => new CacheKey("Nop.topics.systemName-{0}-{1}-{2}", TopicBySystemNamePrefixCacheKey);
 
         /// <summary>
         /// Gets a key for caching
@@ -52,6 +54,6 @@
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static string TopicTemplatesAllCacheKey => "Nop.topictemplates.all";
+        public static CacheKey TopicTemplatesAllCacheKey => new CacheKey("Nop.topictemplates.all");
     }
 }

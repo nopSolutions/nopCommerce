@@ -1156,7 +1156,7 @@ namespace Nop.Services.Seo
         {
             var query = _urlRecordRepository.Table;
 
-            var key = NopSeoCachingDefaults.UrlRecordByIdsCacheKey.ToCacheKey(urlRecordIds);
+            var key = NopSeoCachingDefaults.UrlRecordByIdsCacheKey.FillCacheKey(urlRecordIds);
 
             return query.Where(p => urlRecordIds.Contains(p.Id)).ToCachedList(key);
         }
@@ -1208,7 +1208,7 @@ namespace Nop.Services.Seo
             if (string.IsNullOrEmpty(slug))
                 return null;
             
-            var key = NopSeoCachingDefaults.UrlRecordBySlugCacheKey.ToCacheKey(slug);
+            var key = NopSeoCachingDefaults.UrlRecordBySlugCacheKey.FillCacheKey(slug);
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
             {
                 return _cacheManager.Get(key, () =>
@@ -1267,7 +1267,7 @@ namespace Nop.Services.Seo
         public virtual string GetActiveSlug(int entityId, string entityName, int languageId)
         {
             //gradual loading
-            var key = NopSeoCachingDefaults.UrlRecordActiveByIdNameLanguageCacheKey.ToCacheKey(entityId, entityName, languageId);
+            var key = NopSeoCachingDefaults.UrlRecordActiveByIdNameLanguageCacheKey.FillCacheKey(entityId, entityName, languageId);
 
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
             {

@@ -57,7 +57,7 @@ namespace Nop.Services.Security
         /// <returns>Permissions</returns>
         protected virtual IList<PermissionRecord> GetPermissionRecordsByCustomerRoleId(int customerRoleId)
         {
-            var key = NopSecurityCachingDefaults.PermissionsAllByCustomerRoleIdCacheKey.ToCacheKey(customerRoleId);
+            var key = NopSecurityCachingDefaults.PermissionsAllByCustomerRoleIdCacheKey.FillCacheKey(customerRoleId);
 
             var query = from pr in _permissionRecordRepository.Table
                 join prcrm in _permissionRecordCustomerRoleMappingRepository.Table on pr.Id equals prcrm
@@ -307,7 +307,7 @@ namespace Nop.Services.Security
             if (string.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
 
-            var key = NopSecurityCachingDefaults.PermissionsAllowedCacheKey.ToCacheKey(permissionRecordSystemName, customerRoleId);
+            var key = NopSecurityCachingDefaults.PermissionsAllowedCacheKey.FillCacheKey(permissionRecordSystemName, customerRoleId);
             return _staticCacheManager.Get(key, () =>
             {
                 var permissions = GetPermissionRecordsByCustomerRoleId(customerRoleId);

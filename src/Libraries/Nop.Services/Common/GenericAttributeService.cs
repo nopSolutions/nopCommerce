@@ -121,7 +121,7 @@ namespace Nop.Services.Common
         /// <returns>Get attributes</returns>
         public virtual IList<GenericAttribute> GetAttributesForEntity(int entityId, string keyGroup)
         {
-            var key = NopCommonCachingDefaults.GenericAttributeCacheKey.ToCacheKey(entityId, keyGroup);
+            var key = NopCommonCachingDefaults.GenericAttributeCacheKey.FillCacheKey(entityId, keyGroup);
 
             var query = from ga in _genericAttributeRepository.Table
                 where ga.EntityId == entityId &&

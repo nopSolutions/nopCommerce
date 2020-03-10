@@ -15,7 +15,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Discounts
         protected override void ClearCache(Discount entity)
         {
             RemoveByPrefix(NopDiscountCachingDefaults.DiscountAllPrefixCacheKey);
-            var cacheKey = NopDiscountCachingDefaults.DiscountRequirementModelCacheKey.ToCacheKey(entity);
+            var cacheKey = NopDiscountCachingDefaults.DiscountRequirementModelCacheKey.FillCacheKey(entity);
             Remove(cacheKey);
 
             var prefix = NopDiscountCachingDefaults.DiscountCategoryIdsByDiscountPrefixCacheKey.ToCacheKey(entity);

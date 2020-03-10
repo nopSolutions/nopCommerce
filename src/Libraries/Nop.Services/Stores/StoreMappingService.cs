@@ -84,7 +84,7 @@ namespace Nop.Services.Stores
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
 
-            var key = NopStoreCachingDefaults.StoreMappingsByEntityIdNameCacheKey.ToCacheKey(entityId, entityName);
+            var key = NopStoreCachingDefaults.StoreMappingsByEntityIdNameCacheKey.FillCacheKey(entityId, entityName);
 
             var query = from sm in _storeMappingRepository.Table
                         where sm.EntityId == entityId &&
@@ -152,7 +152,7 @@ namespace Nop.Services.Stores
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
 
-            var key = NopStoreCachingDefaults.StoreMappingIdsByEntityIdNameCacheKey.ToCacheKey(entityId, entityName);
+            var key = NopStoreCachingDefaults.StoreMappingIdsByEntityIdNameCacheKey.FillCacheKey(entityId, entityName);
 
             var query = from sm in _storeMappingRepository.Table
                 where sm.EntityId == entityId &&

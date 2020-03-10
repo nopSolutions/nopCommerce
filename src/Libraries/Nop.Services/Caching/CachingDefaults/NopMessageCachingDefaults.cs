@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Caching.CachingDefaults
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Caching.CachingDefaults
 {
     /// <summary>
     /// Represents default values related to messages services
@@ -11,7 +13,7 @@
         /// <remarks>
         /// {0} : store ID
         /// </remarks>
-        public static string MessageTemplatesAllCacheKey => "Nop.messagetemplate.all-{0}";
+        public static CacheKey MessageTemplatesAllCacheKey => new CacheKey("Nop.messagetemplate.all-{0}", MessageTemplatesAllPrefixCacheKey);
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -25,7 +27,7 @@
         /// {0} : template name
         /// {1} : store ID
         /// </remarks>
-        public static string MessageTemplatesByNameCacheKey => "Nop.messagetemplate.name-{0}-{1}";
+        public static CacheKey MessageTemplatesByNameCacheKey => new CacheKey("Nop.messagetemplate.name-{0}-{1}", MessageTemplatesByNamePrefixCacheKey);
 
         /// <summary>
         /// Gets a key for caching
@@ -41,6 +43,6 @@
         /// <remarks>
         /// {0} : store ID
         /// </remarks>
-        public static string EmailAccountsAllCacheKey => "Nop.emailaccounts.all";
+        public static CacheKey EmailAccountsAllCacheKey => new CacheKey("Nop.emailaccounts.all");
     }
 }
