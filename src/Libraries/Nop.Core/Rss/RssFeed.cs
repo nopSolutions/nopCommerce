@@ -90,7 +90,7 @@ namespace Nop.Core.Rss
         {
             try
             {
-                var document = await XDocument.LoadAsync(stream, LoadOptions.None, default(CancellationToken));
+                var document = await XDocument.LoadAsync(stream, LoadOptions.None, default);
 
                 var channel = document.Root?.Element(NopRssDefaults.Channel);
 

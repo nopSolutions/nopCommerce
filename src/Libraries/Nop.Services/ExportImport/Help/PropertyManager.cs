@@ -90,7 +90,7 @@ namespace Nop.Services.ExportImport.Help
                     xlPackage.Save();
                 }
 
-                CurrentObject = default(T);
+                CurrentObject = default;
                 return stream.ToArray();
             }
         }

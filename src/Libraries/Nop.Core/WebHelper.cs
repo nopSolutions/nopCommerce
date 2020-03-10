@@ -392,10 +392,10 @@ namespace Nop.Core
         public virtual T QueryString<T>(string name)
         {
             if (!IsRequestAvailable())
-                return default(T);
+                return default;
 
             if (StringValues.IsNullOrEmpty(_httpContextAccessor.HttpContext.Request.Query[name]))
-                return default(T);
+                return default;
 
             return CommonHelper.To<T>(_httpContextAccessor.HttpContext.Request.Query[name].ToString());
         }

@@ -21,7 +21,7 @@ namespace Nop.Services.Tests.Configuration
             throw new InvalidOperationException("Get setting by id is not supported");
         }
 
-        public override T GetSettingByKey<T>(string key, T defaultValue = default(T),
+        public override T GetSettingByKey<T>(string key, T defaultValue = default,
             int storeId = 0, bool loadSharedValueIfNotFound = false)
         {
 

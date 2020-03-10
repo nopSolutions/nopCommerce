@@ -353,7 +353,7 @@ namespace Nop.Web.Framework.Infrastructure
                             throw;
                     }
 
-                    return default(TSettings);
+                    return default;
                 })
                 .InstancePerLifetimeScope()
                 .CreateRegistration();

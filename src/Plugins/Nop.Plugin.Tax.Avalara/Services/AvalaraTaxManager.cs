@@ -136,7 +136,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 //log errors
                 _logger.Error($"Avalara tax provider error. {errorMessage}", exception, _workContext.CurrentCustomer);
 
-                return default(T);
+                return default;
             }
         }
 
