@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{E4ACA93B-D3DE-4557-B069-F1DB42925A4B}"
 EndProject
@@ -62,6 +62,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.Plugin.Tax.Avalara", "Plugins\Nop.Plugin.Tax.Avalara\Nop.Plugin.Tax.Avalara.csproj", "{2426B75D-23D4-41EF-8924-47650C8A18C7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.Plugin.Shipping.ShipStation", "Plugins\Nop.Plugin.Shipping.ShipStation\Nop.Plugin.Shipping.ShipStation.csproj", "{83F05E8D-2D6C-41FC-A95C-9621ED358615}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nop.Plugin.Payments.PayPalSmartPaymentButtons", "Plugins\Nop.Plugin.Payments.PayPalSmartPaymentButtons\Nop.Plugin.Payments.PayPalSmartPaymentButtons.csproj", "{FAC5F9D0-2C2B-4296-B079-E723EA8A320C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -353,6 +355,18 @@ Global
 		{83F05E8D-2D6C-41FC-A95C-9621ED358615}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{83F05E8D-2D6C-41FC-A95C-9621ED358615}.Release|x86.ActiveCfg = Release|Any CPU
 		{83F05E8D-2D6C-41FC-A95C-9621ED358615}.Release|x86.Build.0 = Release|Any CPU
+		{FAC5F9D0-2C2B-4296-B079-E723EA8A320C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAC5F9D0-2C2B-4296-B079-E723EA8A320C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAC5F9D0-2C2B-4296-B079-E723EA8A320C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FAC5F9D0-2C2B-4296-B079-E723EA8A320C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FAC5F9D0-2C2B-4296-B079-E723EA8A320C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FAC5F9D0-2C2B-4296-B079-E723EA8A320C}.Debug|x86.Build.0 = Debug|Any CPU
+		{FAC5F9D0-2C2B-4296-B079-E723EA8A320C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAC5F9D0-2C2B-4296-B079-E723EA8A320C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAC5F9D0-2C2B-4296-B079-E723EA8A320C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FAC5F9D0-2C2B-4296-B079-E723EA8A320C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FAC5F9D0-2C2B-4296-B079-E723EA8A320C}.Release|x86.ActiveCfg = Release|Any CPU
+		{FAC5F9D0-2C2B-4296-B079-E723EA8A320C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -384,6 +398,7 @@ Global
 		{7B08DACB-8E11-416D-9DDF-B0EEF847A8ED} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{2426B75D-23D4-41EF-8924-47650C8A18C7} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{83F05E8D-2D6C-41FC-A95C-9621ED358615} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
+		{FAC5F9D0-2C2B-4296-B079-E723EA8A320C} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE72A8B2-332A-4175-9319-6726D36E9D25}

@@ -13,14 +13,13 @@
 @inject Nop.Services.Localization.ILanguageService languageService
 @using System.Globalization
 @using Nop.Core.Caching
-@using Nop.Web.Framework.UI;
-@using Nop.Core.Caching;
 @using Nop.Core.Domain
 @using Nop.Core.Domain.Localization
 @using Nop.Services.Customers
 @using Nop.Services.Defaults
 @using Nop.Services.Helpers
-@using Nop.Services.Security;
+@using Nop.Services.Security
+@using Nop.Web.Framework.UI
 
 @{
     var returnUrl = webHelper.GetRawUrl(Context.Request);
