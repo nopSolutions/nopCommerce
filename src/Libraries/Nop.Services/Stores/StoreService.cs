@@ -76,9 +76,7 @@ namespace Nop.Services.Stores
             if (storeId == 0)
                 return null;
 
-            var key = string.Format(NopStoreCachingDefaults.StoresByIdCacheKey, storeId);
-
-            var store = _storeRepository.ToCachedGetById(storeId, key);
+            var store = _storeRepository.ToCachedGetById(storeId);
 
             return store;
         }

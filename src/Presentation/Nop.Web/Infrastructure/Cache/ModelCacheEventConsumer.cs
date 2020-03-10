@@ -157,7 +157,7 @@ namespace Nop.Web.Infrastructure.Cache
         {
             //clear models which depend on settings
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.ManufacturerNavigationPrefixCacheKey); //depends on CatalogSettings.ManufacturersBlockItemsToDisplay
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.VendorNavigationPrefixCacheKey); //depends on VendorSettings.VendorBlockItemsToDisplay
+            _cacheManager.Remove(NopModelCacheDefaults.VendorNavigationModelKey); //depends on VendorSettings.VendorBlockItemsToDisplay
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryAllPrefixCacheKey); //depends on CatalogSettings.ShowCategoryProductNumber and CatalogSettings.ShowCategoryProductNumberIncludingSubcategories
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.CategoryXmlAllPrefixCacheKey);
             _cacheManager.RemoveByPrefix(NopModelCacheDefaults.HomepageBestsellersIdsPrefixCacheKey); //depends on CatalogSettings.NumberOfBestsellersOnHomepage
@@ -175,18 +175,18 @@ namespace Nop.Web.Infrastructure.Cache
 
         public void HandleEvent(EntityInsertedEvent<Vendor> eventMessage)
         {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.VendorNavigationPrefixCacheKey);
+            _cacheManager.Remove(NopModelCacheDefaults.VendorNavigationModelKey);
         }
 
         public void HandleEvent(EntityUpdatedEvent<Vendor> eventMessage)
         {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.VendorNavigationPrefixCacheKey);
+            _cacheManager.Remove(NopModelCacheDefaults.VendorNavigationModelKey);
             _cacheManager.RemoveByPrefix(string.Format(NopModelCacheDefaults.VendorPicturePrefixCacheKeyById, eventMessage.Entity.Id));
         }
 
         public void HandleEvent(EntityDeletedEvent<Vendor> eventMessage)
         {
-            _cacheManager.RemoveByPrefix(NopModelCacheDefaults.VendorNavigationPrefixCacheKey);
+            _cacheManager.Remove(NopModelCacheDefaults.VendorNavigationModelKey);
         }
 
         #endregion

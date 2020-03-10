@@ -71,11 +71,8 @@ namespace Nop.Services.Directory
         {
             if (currencyId == 0)
                 return null;
-
-            //cacheable copy key
-            var key = string.Format(NopDirectoryCachingDefaults.CurrenciesByIdCacheKey, currencyId);
-
-            return _currencyRepository.ToCachedGetById(currencyId, key);
+            
+            return _currencyRepository.ToCachedGetById(currencyId);
         }
 
         /// <summary>
@@ -107,7 +104,7 @@ namespace Nop.Services.Directory
             query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
 
             //cacheable copy
-            var key = string.Format(NopDirectoryCachingDefaults.CurrenciesAllCacheKey, showHidden);
+            var key = NopDirectoryCachingDefaults.CurrenciesAllCacheKey.FillCacheKey(showHidden);
 
             var currencies = query.ToCachedList(key);
 
@@ -200,9 +197,7 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException(nameof(targetCurrencyCode));
 
             var result = amount;
-            if (sourceCurrencyCode.Id == targetCurrencyCode.Id)
-                return result;
-
+            
             if (result == decimal.Zero || sourceCurrencyCode.Id == targetCurrencyCode.Id)
                 return result;
 

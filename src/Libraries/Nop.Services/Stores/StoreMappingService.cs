@@ -28,7 +28,7 @@ namespace Nop.Services.Stores
         #region Ctor
 
         public StoreMappingService(CatalogSettings catalogSettings,
-            IEventPublisher eventPublisher,
+        IEventPublisher eventPublisher,
             IRepository<StoreMapping> storeMappingRepository,
             IStoreContext storeContext)
         {
@@ -84,11 +84,15 @@ namespace Nop.Services.Stores
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
 
+            var key = NopStoreCachingDefaults.StoreMappingsByEntityIdNameCacheKey.FillCacheKey(entityId, entityName);
+
             var query = from sm in _storeMappingRepository.Table
                         where sm.EntityId == entityId &&
                         sm.EntityName == entityName
                         select sm;
-            var storeMappings = query.ToList();
+
+            var storeMappings = query.ToCachedList(key);
+
             return storeMappings;
         }
 
@@ -148,7 +152,7 @@ namespace Nop.Services.Stores
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
 
-            var key = string.Format(NopStoreCachingDefaults.StoreMappingByEntityIdNameCacheKey, entityId, entityName);
+            var key = NopStoreCachingDefaults.StoreMappingIdsByEntityIdNameCacheKey.FillCacheKey(entityId, entityName);
 
             var query = from sm in _storeMappingRepository.Table
                 where sm.EntityId == entityId &&

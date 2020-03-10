@@ -211,7 +211,7 @@ namespace Nop.Services.Media
             }
             while (continuationToken != null);
 
-            _cacheManager.RemoveByPrefix(NopMediaCachingDefaults.ThumbsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopMediaCachingDefaults.ThumbsExistsPrefixCacheKey);
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace Nop.Services.Media
         {
             try
             {
-                var key = string.Format(NopMediaCachingDefaults.ThumbExistsCacheKey, thumbFileName);
+                var key = NopMediaCachingDefaults.ThumbExistsCacheKey.FillCacheKey(thumbFileName);
                 return await _cacheManager.GetAsync(key, async () =>
                 {
                     //GetBlockBlobReference doesn't need to be async since it doesn't contact the server yet
@@ -261,7 +261,7 @@ namespace Nop.Services.Media
 
             await blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length);
 
-            _cacheManager.RemoveByPrefix(NopMediaCachingDefaults.ThumbsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopMediaCachingDefaults.ThumbsExistsPrefixCacheKey);
         }
 
         #endregion

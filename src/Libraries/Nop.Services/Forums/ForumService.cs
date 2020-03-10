@@ -11,10 +11,10 @@ using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Defaults;
 using Nop.Services.Events;
 using Nop.Services.Messages;
 using Nop.Services.Seo;
-using NopSeoDefaults = Nop.Services.Defaults.NopSeoDefaults;
 
 namespace Nop.Services.Forums
 {
@@ -374,7 +374,7 @@ namespace Nop.Services.Forums
         /// <returns>Forums</returns>
         public virtual IList<Forum> GetAllForumsByGroupId(int forumGroupId)
         {
-            var key = string.Format(NopForumCachingDefaults.ForumAllByForumGroupIdCacheKey, forumGroupId);
+            var key = NopForumCachingDefaults.ForumAllByForumGroupIdCacheKey.FillCacheKey(forumGroupId);
 
             var query = from f in _forumRepository.Table
                 orderby f.DisplayOrder, f.Id

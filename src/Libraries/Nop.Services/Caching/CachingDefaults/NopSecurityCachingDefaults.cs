@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Caching.CachingDefaults
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Caching.CachingDefaults
 {
     /// <summary>
     /// Represents default values related to security services
@@ -14,12 +16,7 @@
         /// {0} : entity ID
         /// {1} : entity name
         /// </remarks>
-        public static string AclRecordByEntityIdNameCacheKey => "Nop.aclrecord.entityid-name-{0}-{1}";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string AclRecordPrefixCacheKey => "Nop.aclrecord.";
+        public static CacheKey AclRecordByEntityIdNameCacheKey => new CacheKey("Nop.aclrecord.entityid-name-{0}-{1}");
 
         #endregion
 
@@ -29,10 +26,18 @@
         /// Gets a key for caching
         /// </summary>
         /// <remarks>
-        /// {0} : customer role ID
-        /// {1} : permission system name
+        /// {0} : permission system name
+        /// {1} : customer role ID
         /// </remarks>
-        public static string PermissionsAllowedCacheKey => "Nop.permission.allowed-{0}-{1}";
+        public static CacheKey PermissionsAllowedCacheKey => new CacheKey("Nop.permission.allowed-{0}-{1}", PermissionsAllowedPrefixCacheKey);
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : permission system name
+        /// </remarks>
+        public static string PermissionsAllowedPrefixCacheKey => "Nop.permission.allowed-{0}";
 
         /// <summary>
         /// Gets a key for caching
@@ -40,12 +45,12 @@
         /// <remarks>
         /// {0} : customer role ID
         /// </remarks>
-        public static string PermissionsAllByCustomerRoleIdCacheKey => "Nop.permission.allbycustomerroleid-{0}";
+        public static CacheKey PermissionsAllByCustomerRoleIdCacheKey => new CacheKey("Nop.permission.allbycustomerroleid-{0}", PermissionsAllByCustomerRoleIdPrefixCacheKey);
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string PermissionsPrefixCacheKey => "Nop.permission.";
+        public static string PermissionsAllByCustomerRoleIdPrefixCacheKey => "Nop.permission.allbycustomerroleid";
 
         #endregion
     }

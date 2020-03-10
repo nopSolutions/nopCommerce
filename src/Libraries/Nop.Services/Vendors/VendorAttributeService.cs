@@ -47,7 +47,7 @@ namespace Nop.Services.Vendors
         {
             return _vendorAttributeRepository.Table
                 .OrderBy(vendorAttribute => vendorAttribute.DisplayOrder).ThenBy(vendorAttribute => vendorAttribute.Id)
-                .ToCachedList(NopVendorsServiceCachingDefaults.VendorAttributesAllCacheKey);
+                .ToCachedList(NopVendorCachingDefaults.VendorAttributesAllCacheKey);
         }
 
         /// <summary>
@@ -60,9 +60,7 @@ namespace Nop.Services.Vendors
             if (vendorAttributeId == 0)
                 return null;
 
-            var key = string.Format(NopVendorsServiceCachingDefaults.VendorAttributesByIdCacheKey, vendorAttributeId);
-
-            return _vendorAttributeRepository.ToCachedGetById(vendorAttributeId, key);
+            return _vendorAttributeRepository.ToCachedGetById(vendorAttributeId);
         }
 
         /// <summary>
@@ -121,12 +119,12 @@ namespace Nop.Services.Vendors
         /// <returns>Vendor attribute values</returns>
         public virtual IList<VendorAttributeValue> GetVendorAttributeValues(int vendorAttributeId)
         {
-            var key = string.Format(NopVendorsServiceCachingDefaults.VendorAttributeValuesAllCacheKey, vendorAttributeId);
+            var key = NopVendorCachingDefaults.VendorAttributeValuesAllCacheKey.FillCacheKey(vendorAttributeId);
 
             return _vendorAttributeValueRepository.Table
+                .Where(vendorAttributeValue => vendorAttributeValue.VendorAttributeId == vendorAttributeId)
                 .OrderBy(vendorAttributeValue => vendorAttributeValue.DisplayOrder)
                 .ThenBy(vendorAttributeValue => vendorAttributeValue.Id)
-                .Where(vendorAttributeValue => vendorAttributeValue.VendorAttributeId == vendorAttributeId)
                 .ToCachedList(key);
         }
 
@@ -140,9 +138,7 @@ namespace Nop.Services.Vendors
             if (vendorAttributeValueId == 0)
                 return null;
 
-            var key = string.Format(NopVendorsServiceCachingDefaults.VendorAttributeValuesByIdCacheKey, vendorAttributeValueId);
-
-            return _vendorAttributeValueRepository.ToCachedGetById(vendorAttributeValueId, key);
+            return _vendorAttributeValueRepository.ToCachedGetById(vendorAttributeValueId);
         }
 
         /// <summary>

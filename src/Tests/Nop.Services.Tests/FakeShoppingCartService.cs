@@ -3,10 +3,9 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -29,7 +28,6 @@ namespace Nop.Services.Tests
         public FakeShoppingCartService(CatalogSettings catalogSettings = null,
             IAclService aclService = null,
             IActionContextAccessor actionContextAccessor = null,
-            ICacheKeyFactory cacheKeyFactory = null,
             ICacheManager cacheManager = null,
             ICheckoutAttributeParser checkoutAttributeParser = null,
             ICheckoutAttributeService checkoutAttributeService = null,
@@ -58,7 +56,6 @@ namespace Nop.Services.Tests
                 catalogSettings ?? new CatalogSettings(),
                 aclService ?? new Mock<IAclService>().Object,
                 actionContextAccessor ?? new Mock<IActionContextAccessor>().Object,
-                cacheKeyFactory ?? new Mock<ICacheKeyFactory>().Object,
                 cacheManager ?? new TestCacheManager(),
                 checkoutAttributeParser ?? new Mock<ICheckoutAttributeParser>().Object,
                 checkoutAttributeService ?? new Mock<ICheckoutAttributeService>().Object,

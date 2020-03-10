@@ -8,9 +8,13 @@ namespace Nop.Services.Caching.CacheEventConsumers.Shipping
     /// </summary>
     public partial class ProductAvailabilityRangeCacheEventConsumer : CacheEventConsumer<ProductAvailabilityRange>
     {
+        /// <summary>
+        /// Clear cache data
+        /// </summary>
+        /// <param name="entity">Entity</param>
         protected override void ClearCache(ProductAvailabilityRange entity)
         {
-            RemoveByPrefix(NopShippingCachingDefaults.ProductAvailabilityPrefixCacheKey);
+            Remove(NopShippingCachingDefaults.ProductAvailabilityAllCacheKey);
         }
     }
 }

@@ -129,7 +129,7 @@ namespace Nop.Services.Messages
             if (string.IsNullOrWhiteSpace(messageTemplateName))
                 throw new ArgumentException(nameof(messageTemplateName));
 
-            var key = string.Format(NopMessageCachingDefaults.MessageTemplatesByNameCacheKey, messageTemplateName, storeId ?? 0);
+            var key = NopMessageCachingDefaults.MessageTemplatesByNameCacheKey.FillCacheKey(messageTemplateName, storeId);
             return _cacheManager.Get(key, () =>
             {
                 //get message templates with the passed name
@@ -152,7 +152,7 @@ namespace Nop.Services.Messages
         /// <returns>Message template list</returns>
         public virtual IList<MessageTemplate> GetAllMessageTemplates(int storeId)
         {
-            var key = string.Format(NopMessageCachingDefaults.MessageTemplatesAllCacheKey, storeId);
+            var key = NopMessageCachingDefaults.MessageTemplatesAllCacheKey.FillCacheKey(storeId);
 
             var query = _messageTemplateRepository.Table;
             query = query.OrderBy(t => t.Name);

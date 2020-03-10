@@ -92,7 +92,7 @@ namespace Nop.Services.Localization
             query = query.OrderBy(l => l.DisplayOrder).ThenBy(l => l.Id);
 
             //cacheable copy
-            var key = string.Format(NopLocalizationCachingDefaults.LanguagesAllCacheKey, storeId, showHidden);
+            var key = NopLocalizationCachingDefaults.LanguagesAllCacheKey.FillCacheKey(storeId, showHidden);
             
             var languages = _cacheManager.Get(key, () =>
             {
@@ -122,10 +122,7 @@ namespace Nop.Services.Localization
             if (languageId == 0)
                 return null;
 
-            //cacheable copy key
-            var key = string.Format(NopLocalizationCachingDefaults.LanguagesByIdCacheKey, languageId);
-
-            return _languageRepository.ToCachedGetById(languageId, key);
+            return _languageRepository.ToCachedGetById(languageId);
         }
 
         /// <summary>

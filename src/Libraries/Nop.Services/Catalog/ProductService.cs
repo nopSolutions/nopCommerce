@@ -36,7 +36,6 @@ namespace Nop.Services.Catalog
         protected readonly CatalogSettings _catalogSettings;
         protected readonly CommonSettings _commonSettings;
         protected readonly IAclService _aclService;
-        protected readonly ICacheKeyFactory _cacheKeyFactory;
         protected readonly ICustomerService _customerService;
         protected readonly IDataProvider _dataProvider;
         protected readonly IDateRangeService _dateRangeService;
@@ -75,7 +74,6 @@ namespace Nop.Services.Catalog
         public ProductService(CatalogSettings catalogSettings,
             CommonSettings commonSettings,
             IAclService aclService,
-            ICacheKeyFactory cacheKeyFactory,
             ICustomerService customerService,
             IDataProvider dataProvider,
             IDateRangeService dateRangeService,
@@ -110,7 +108,6 @@ namespace Nop.Services.Catalog
             _catalogSettings = catalogSettings;
             _commonSettings = commonSettings;
             _aclService = aclService;
-            _cacheKeyFactory = cacheKeyFactory;
             _customerService = customerService;
             _dataProvider = dataProvider;
             _dateRangeService = dateRangeService;
@@ -375,8 +372,7 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return null;
 
-            var key = string.Format(NopCatalogCachingDefaults.ProductsByIdCacheKey, productId);
-            return _productRepository.ToCachedGetById(productId, key);
+            return _productRepository.ToCachedGetById(productId);
         }
 
         /// <summary>
@@ -389,7 +385,7 @@ namespace Nop.Services.Catalog
             if (productIds == null || productIds.Length == 0)
                 return new List<Product>();
 
-            var key = string.Format(NopCatalogCachingDefaults.ProductsByIdsCacheKey, _cacheKeyFactory.CreateIdsHash(productIds));
+            var key = NopCatalogCachingDefaults.ProductsByIdsCacheKey.FillCacheKey(productIds);
 
             var query = from p in _productRepository.Table
                         where productIds.Contains(p.Id) && !p.Deleted
@@ -513,10 +509,8 @@ namespace Nop.Services.Catalog
                         select p;
             }
 
-            var cacheKey = string.Format(NopCatalogCachingDefaults.CategoryNumberOfProductsModelKey,
-                _cacheKeyFactory.CreateIdsHash(allowedCustomerRolesIds),
-                storeId,
-                categoryIds != null && categoryIds.Any() ? _cacheKeyFactory.CreateIdsHash(categoryIds) : "0");
+            var cacheKey = NopCatalogCachingDefaults.CategoryNumberOfProductsCacheKey
+                .FillCacheKey(allowedCustomerRolesIds, storeId, categoryIds);
 
             //only distinct products
             var result = _cacheManager.Get(cacheKey, () => query.Select(p => p.Id).Distinct().Count());
@@ -801,7 +795,7 @@ namespace Nop.Services.Catalog
                 orderby p.Name
                 select p;
 
-            var key = string.Format(NopCatalogCachingDefaults.ProductsByProductAtributeCacheKey, productAttributeId);
+            var key = NopCatalogCachingDefaults.ProductsByProductAtributeCacheKey.FillCacheKey(productAttributeId);
 
             var products = query.ToCachedPagedList(key, pageIndex, pageSize);
 
@@ -949,7 +943,7 @@ namespace Nop.Services.Catalog
                 join p in _productRepository.Table on pac.ProductId equals p.Id
                 where
                     //filter by combinations with stock quantity less than the minimum
-                    pac.StockQuantity <= 0 &&
+                    pac.StockQuantity < pac.NotifyAdminForQuantityBelow  &&
                     //filter by products with tracking inventory by attributes
                     p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
                     //ignore deleted products
@@ -1757,20 +1751,20 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets related products by product identifier
         /// </summary>
-        /// <param name="productId1">The first product identifier</param>
+        /// <param name="productId">The first product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Related products</returns>
-        public virtual IList<RelatedProduct> GetRelatedProductsByProductId1(int productId1, bool showHidden = false)
+        public virtual IList<RelatedProduct> GetRelatedProductsByProductId1(int productId, bool showHidden = false)
         {
             var query = from rp in _relatedProductRepository.Table
                         join p in _productRepository.Table on rp.ProductId2 equals p.Id
-                        where rp.ProductId1 == productId1 &&
+                        where rp.ProductId1 == productId &&
                         !p.Deleted &&
                         (showHidden || p.Published)
                         orderby rp.DisplayOrder, rp.Id
                         select rp;
 
-            var relatedProducts = query.ToCachedList(string.Format(NopCatalogCachingDefaults.ProductsRelatedIdsKey, productId1, showHidden));
+            var relatedProducts = query.ToCachedList(NopCatalogCachingDefaults.ProductsRelatedCacheKey.FillCacheKey(productId, showHidden));
 
             return relatedProducts;
         }
@@ -2037,7 +2031,7 @@ namespace Nop.Services.Catalog
         public virtual IList<TierPrice> GetTierPricesByProduct(int productId)
         {
             return _tierPriceRepository.Table.Where(tp => tp.ProductId == productId)
-                .ToCachedList(string.Format(NopCatalogCachingDefaults.ProductTierPrices, productId));
+                .ToCachedList(NopCatalogCachingDefaults.ProductTierPricesCacheKey.FillCacheKey(productId));
         }
 
         /// <summary>
@@ -2583,7 +2577,7 @@ namespace Nop.Services.Catalog
         /// Updates a records to manage product inventory per warehouse
         /// </summary>
         /// <param name="pwis">Records to manage product inventory per warehouse</param>
-        public virtual void UpdateProductWarehouseInventory(IEnumerable<ProductWarehouseInventory> pwis)
+        public virtual void UpdateProductWarehouseInventory(IList<ProductWarehouseInventory> pwis)
         {
             if (pwis == null)
                 throw new ArgumentNullException(nameof(pwis));

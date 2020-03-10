@@ -75,9 +75,7 @@ namespace Nop.Services.Customers
             if (customerAttributeId == 0)
                 return null;
 
-            var key = string.Format(NopCustomerServiceCachingDefaults.CustomerAttributesByIdCacheKey, customerAttributeId);
-
-            return _customerAttributeRepository.ToCachedGetById(customerAttributeId, key);
+            return _customerAttributeRepository.ToCachedGetById(customerAttributeId);
         }
 
         /// <summary>
@@ -132,7 +130,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer attribute values</returns>
         public virtual IList<CustomerAttributeValue> GetCustomerAttributeValues(int customerAttributeId)
         {
-            var key = string.Format(NopCustomerServiceCachingDefaults.CustomerAttributeValuesAllCacheKey, customerAttributeId);
+            var key = NopCustomerServiceCachingDefaults.CustomerAttributeValuesAllCacheKey.FillCacheKey(customerAttributeId);
 
             var query = from cav in _customerAttributeValueRepository.Table
                 orderby cav.DisplayOrder, cav.Id
@@ -153,9 +151,7 @@ namespace Nop.Services.Customers
             if (customerAttributeValueId == 0)
                 return null;
 
-            var key = string.Format(NopCustomerServiceCachingDefaults.CustomerAttributeValuesByIdCacheKey, customerAttributeValueId);
-
-            return _customerAttributeValueRepository.ToCachedGetById(customerAttributeValueId, key);
+            return _customerAttributeValueRepository.ToCachedGetById(customerAttributeValueId);
         }
 
         /// <summary>

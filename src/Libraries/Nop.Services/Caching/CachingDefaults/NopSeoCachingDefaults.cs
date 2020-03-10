@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Caching.CachingDefaults
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Caching.CachingDefaults
 {
     /// <summary>
     /// Represents default values related to SEO services
@@ -6,6 +8,11 @@
     public static partial class NopSeoCachingDefaults
     {
         #region URL records
+        
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        public static CacheKey UrlRecordAllCacheKey => new CacheKey("Nop.urlrecord.all");
 
         /// <summary>
         /// Gets a key for caching
@@ -15,12 +22,7 @@
         /// {1} : entity name
         /// {2} : language ID
         /// </remarks>
-        public static string UrlRecordActiveByIdNameLanguageCacheKey => "Nop.urlrecord.active.id-name-language-{0}-{1}-{2}";
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        public static string UrlRecordAllCacheKey => "Nop.urlrecord.all";
+        public static CacheKey UrlRecordActiveByIdNameLanguageCacheKey => new CacheKey("Nop.urlrecord.active.id-name-language-{0}-{1}-{2}");
 
         /// <summary>
         /// Gets a key for caching
@@ -28,7 +30,12 @@
         /// <remarks>
         /// {0} : IDs hash
         /// </remarks>
-        public static string UrlRecordByIdsCacheKey => "Nop.urlrecord.byids-{0}";
+        public static CacheKey UrlRecordByIdsCacheKey => new CacheKey("Nop.urlrecord.byids-{0}", UrlRecordByIdsPrefixCacheKey);
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string UrlRecordByIdsPrefixCacheKey => "Nop.urlrecord.byids";
 
         /// <summary>
         /// Gets a key for caching
@@ -36,12 +43,7 @@
         /// <remarks>
         /// {0} : slug
         /// </remarks>
-        public static string UrlRecordBySlugCacheKey => "Nop.urlrecord.active.slug-{0}";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string UrlRecordPrefixCacheKey => "Nop.urlrecord.";
+        public static CacheKey UrlRecordBySlugCacheKey => new CacheKey("Nop.urlrecord.active.slug-{0}");
 
         #endregion
     }

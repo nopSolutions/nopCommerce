@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Caching.CachingDefaults
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Caching.CachingDefaults
 {
     /// <summary>
     /// Represents default values related to orders services
@@ -12,9 +14,14 @@
         /// </summary>
         /// <remarks>
         /// {0} : store ID
-        /// {1} : >A value indicating whether we should exclude shippable attributes
+        /// {1} : A value indicating whether we should exclude shippable attributes
         /// </remarks>
-        public static string CheckoutAttributesAllCacheKey => "Nop.checkoutattribute.all-{0}-{1}";
+        public static CacheKey CheckoutAttributesAllCacheKey => new CacheKey("Nop.checkoutattribute.all-{0}-{1}", CheckoutAttributesAllPrefixCacheKey);
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string CheckoutAttributesAllPrefixCacheKey => "Nop.checkoutattribute.all";
 
         /// <summary>
         /// Gets a key for caching
@@ -22,34 +29,8 @@
         /// <remarks>
         /// {0} : checkout attribute ID
         /// </remarks>
-        public static string CheckoutAttributesByIdCacheKey => "Nop.checkoutattribute.id-{0}";
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : checkout attribute ID
-        /// </remarks>
-        public static string CheckoutAttributeValuesAllCacheKey => "Nop.checkoutattributevalue.all-{0}";
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : checkout attribute value ID
-        /// </remarks>
-        public static string CheckoutAttributeValuesByIdCacheKey => "Nop.checkoutattributevalue.id-{0}";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string CheckoutAttributesPrefixCacheKey => "Nop.checkoutattribute.";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string CheckoutAttributeValuesPrefixCacheKey => "Nop.checkoutattributevalue.";
-
+        public static CacheKey CheckoutAttributeValuesAllCacheKey => new CacheKey("Nop.checkoutattributevalue.all-{0}");
+        
         #endregion
 
         #region ShoppingCart
@@ -65,7 +46,7 @@
         /// {4} : created from date
         /// {5} : created to date
         /// </remarks>
-        public static string ShoppingCartCacheKey => "Nop.shoppingcart-{0}-{1}-{2}-{3}-{4}-{5}";
+        public static CacheKey ShoppingCartCacheKey => new CacheKey("Nop.shoppingcart-{0}-{1}-{2}-{3}-{4}-{5}", ShoppingCartPrefixCacheKey);
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -81,27 +62,15 @@
         /// </summary>
         /// <remarks>
         /// </remarks>
-        public static string ReturnRequestReasonAllCacheKey => "Nop.returnrequestreason.all";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string ReturnRequestReasonPrefixCacheKey => "Nop.returnrequestreason.";
-
+        public static CacheKey ReturnRequestReasonAllCacheKey => new CacheKey("Nop.returnrequestreason.all");
+        
         /// <summary>
         /// Gets a key for caching
         /// </summary>
         /// <remarks>
         /// </remarks>
-        public static string ReturnRequestActionAllCacheKey => "Nop.returnrequestactions.all";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string ReturnRequestActionPrefixCacheKey => "Nop.returnrequestactions.";
-
+        public static CacheKey ReturnRequestActionAllCacheKey => new CacheKey("Nop.returnrequestactions.all");
+        
         #endregion
-
-
     }
 }

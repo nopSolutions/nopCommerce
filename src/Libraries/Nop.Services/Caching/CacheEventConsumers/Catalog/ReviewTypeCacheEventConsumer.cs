@@ -9,12 +9,16 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
     public partial class ReviewTypeCacheEventConsumer : CacheEventConsumer<ReviewType>
     {
         /// <summary>
-        /// Clear cache data
+        /// entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(ReviewType entity)
+        /// <param name="entityEventType">Entity event type</param>
+        protected override void ClearCache(ReviewType entity, EntityEventType entityEventType)
         {
-            RemoveByPrefix(NopCatalogCachingDefaults.ReviewTypeByPrefixCacheKey);
+            if (entityEventType == EntityEventType.Delete)
+                RemoveByPrefix(NopCatalogCachingDefaults.ProductReviewReviewTypeMappingAllPrefixCacheKey);
+
+            Remove(NopCatalogCachingDefaults.ReviewTypeAllCacheKey);
         }
     }
 }

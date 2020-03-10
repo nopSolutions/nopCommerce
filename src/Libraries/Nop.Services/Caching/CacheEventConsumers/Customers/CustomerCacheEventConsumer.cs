@@ -17,7 +17,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Customers
         /// <param name="eventMessage">Event message</param>
         public void HandleEvent(CustomerPasswordChangedEvent eventMessage)
         {
-            Remove(string.Format(NopCustomerServiceCachingDefaults.CustomerPasswordLifetimeCacheKey, eventMessage.Password.CustomerId));
+            Remove(NopCustomerServiceCachingDefaults.CustomerPasswordLifetimeCacheKey.FillCacheKey(eventMessage.Password.CustomerId));
         }
 
         /// <summary>

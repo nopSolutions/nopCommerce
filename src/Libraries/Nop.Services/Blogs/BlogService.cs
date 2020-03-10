@@ -168,7 +168,7 @@ namespace Nop.Services.Blogs
         /// <returns>Blog post tags</returns>
         public virtual IList<BlogPostTag> GetAllBlogPostTags(int storeId, int languageId, bool showHidden = false)
         {
-            var cacheKey = string.Format(NopBlogsCachingDefaults.BlogTagsModelKey, languageId, storeId);
+            var cacheKey = NopBlogsCachingDefaults.BlogTagsModelCacheKey.FillCacheKey(languageId, storeId);
 
             var blogPostTags = _cacheManager.Get(cacheKey, () =>
             {
@@ -392,7 +392,7 @@ namespace Nop.Services.Blogs
             if (isApproved.HasValue)
                 query = query.Where(comment => comment.IsApproved == isApproved.Value);
 
-            var cacheKey = string.Format(NopBlogsCachingDefaults.BlogCommentsNumberKey, blogPost.Id, storeId, true);
+            var cacheKey = NopBlogsCachingDefaults.BlogCommentsNumberCacheKey.FillCacheKey(blogPost, storeId, true);
             
             return _cacheManager.Get(cacheKey, () => query.Count());
         }

@@ -91,9 +91,7 @@ namespace Nop.Services.Topics
             if (topicId == 0)
                 return null;
 
-            var key = string.Format(NopTopicCachingDefaults.TopicsByIdCacheKey, topicId);
-
-            return _topicRepository.ToCachedGetById(topicId, key);
+            return _topicRepository.ToCachedGetById(topicId);
         }
 
         /// <summary>
@@ -108,8 +106,7 @@ namespace Nop.Services.Topics
             if (string.IsNullOrEmpty(systemName))
                 return null;
 
-            var cacheKey = string.Format(NopTopicCachingDefaults.TopicBySystemName,
-                systemName, storeId, string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)));
+            var cacheKey = NopTopicCachingDefaults.TopicBySystemNameCacheKey.FillCacheKey(systemName, storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
 
             var topic = _cacheManager.Get(cacheKey, () =>
             {
@@ -147,8 +144,8 @@ namespace Nop.Services.Topics
         /// <returns>Topics</returns>
         public virtual IList<Topic> GetAllTopics(int storeId, bool ignorAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false)
         {
-            var key = ignorAcl ? string.Format(NopTopicCachingDefaults.TopicsAllCacheKey, storeId, showHidden, onlyIncludedInTopMenu) :
-                string.Format(NopTopicCachingDefaults.TopicsAllWithACLCacheKey, storeId, showHidden, onlyIncludedInTopMenu, string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)));
+            var key = ignorAcl ? NopTopicCachingDefaults.TopicsAllCacheKey.FillCacheKey(storeId, showHidden, onlyIncludedInTopMenu) :
+                NopTopicCachingDefaults.TopicsAllWithACLCacheKey.FillCacheKey(storeId, showHidden, onlyIncludedInTopMenu, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
 
             var query = _topicRepository.Table;
             query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);

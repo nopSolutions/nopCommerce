@@ -5,7 +5,7 @@
 @inject INopFileProvider fileProvider;
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment WebHostEnvironment
 @using System.Globalization
-@using Nop.Core.Caching
+@using Nop.Services.Defaults
 @using Nop.Web.Framework.UI;
 @using Nop.Core;
 @using Nop.Core.Domain.Localization
@@ -20,7 +20,7 @@
     //Code to get check if current cultures scripts are exists. If not, select parent cultures scripts
     string GetDefaultLocale()
     {
-        var localePattern = NopCommonDefaults.LocalePatternPath;        
+        var localePattern = NopCommonDefaults.LocalePatternPath;
         var cultureToUse = NopCommonDefaults.DefaultLocalePattern; //Default regionalisation to use
 
         if (fileProvider.DirectoryExists(fileProvider.Combine(WebHostEnvironment.WebRootPath, string.Format(localePattern, currentCulture.Name))))
@@ -77,8 +77,8 @@
     Html.AppendScriptParts("~/lib/jquery-migrate/jquery-migrate-3.1.0.min.js");
     Html.AppendScriptParts($"~/lib/jquery-ui/jquery-ui-{jQueryUI}/jquery-ui-{jQueryUI}.custom.min.js");
 
-    // this file can be downloaded from : 
-    // https://github.com/johnnyreilly/jquery-validation-globalize 
+    // this file can be downloaded from :
+    // https://github.com/johnnyreilly/jquery-validation-globalize
     //Html.AppendScriptParts("https://cdn.jsdelivr.net/gh/johnnyreilly/jquery-validation-globalize@1.0.0/jquery.validate.globalize.min.js");
     Html.AppendScriptParts("~/lib/jquery-validate/jquery.validate.globalize-1.0.0.min.js");
 
@@ -88,7 +88,7 @@
     Html.AppendScriptParts("~/lib/globalize/dist/globalize/number.min.js");
     Html.AppendScriptParts("~/lib/globalize/dist/globalize.min.js");
 
-    // cldr scripts (needed for globalize)    
+    // cldr scripts (needed for globalize)
     Html.AppendScriptParts("~/lib/cldr/dist/cldr/supplemental.min.js");
     Html.AppendScriptParts("~/lib/cldr/dist/cldr/event.min.js");
     Html.AppendScriptParts("~/lib/cldr/dist/cldr.min.js");
@@ -114,21 +114,21 @@
     eventPublisher.Publish(new PageRenderingEvent(this.Html));
 }
 <!DOCTYPE html>
-<html lang="@languageService.GetTwoLetterIsoLanguageName(workContext.WorkingLanguage)"@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
-    <head>
-        <title>@adminPageTitle</title>
-        <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-        @*Google Font*@
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-        <script>
+<html lang="@languageService.GetTwoLetterIsoLanguageName(workContext.WorkingLanguage)" @(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
+<head>
+    <title>@adminPageTitle</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    @*Google Font*@
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <script>
             var rootAppPath = '@(Url.Content("~/"))';
-        </script>
-        @Html.NopHeadCustom()
-        @Html.NopCssFiles(ResourceLocation.Head, false)
-        @Html.NopScripts(ResourceLocation.Head, false)
-    </head>
-    <body class="hold-transition skin-blue sidebar-collapse">
-        <script type="text/javascript">
+    </script>
+    @Html.NopHeadCustom()
+    @Html.NopCssFiles(ResourceLocation.Head, false)
+    @Html.NopScripts(ResourceLocation.Head, false)
+</head>
+<body class="hold-transition skin-blue sidebar-collapse">
+    <script type="text/javascript">
             var culture = "@GetDefaultLocale()";
 
             //load cldr for current culture
@@ -149,26 +149,26 @@
             }).then(Globalize.load).then(function () {
                 Globalize.locale(culture);
             });
-        </script>
-        <script>
+    </script>
+    <script>
             kendo.culture("@(currentKendoCulture)");
-        </script>
-        <div class="wrapper">
-            <div class="content-wrapper">
-                @await Html.PartialAsync("~/Areas/Admin/Views/Shared/Notifications.cshtml")
-                <div>
-                    <nop-antiforgery-token />
-                    @RenderBody()
-                </div>
+    </script>
+    <div class="wrapper">
+        <div class="content-wrapper">
+            @await Html.PartialAsync("~/Areas/Admin/Views/Shared/Notifications.cshtml")
+            <div>
+                <nop-antiforgery-token />
+                @RenderBody()
             </div>
         </div>
-        @Html.NopCssFiles(ResourceLocation.Footer)
-        @Html.NopScripts(ResourceLocation.Footer)
-        <script>
-            $(document).ready(function () {
-                //enable tooltips
-                $('[data-toggle="tooltip"]').tooltip();
-            });
-        </script>
-    </body>
+    </div>
+    @Html.NopCssFiles(ResourceLocation.Footer)
+    @Html.NopScripts(ResourceLocation.Footer)
+    <script>
+        $(document).ready(function () {
+            //enable tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+</body>
 </html>

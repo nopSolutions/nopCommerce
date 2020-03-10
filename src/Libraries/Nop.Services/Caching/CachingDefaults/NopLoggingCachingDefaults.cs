@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Caching.CachingDefaults
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Caching.CachingDefaults
 {
     /// <summary>
     /// Represents default values related to logging services
@@ -8,11 +10,6 @@
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static string ActivityTypeAllCacheKey => "Nop.activitytype.all";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string ActivityTypePrefixCacheKey => "Nop.activitytype.";
+        public static CacheKey ActivityTypeAllCacheKey => new CacheKey("Nop.activitytype.all");
     }
 }

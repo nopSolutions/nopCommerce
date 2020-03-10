@@ -74,9 +74,7 @@ namespace Nop.Services.Tax
             if (taxCategoryId == 0)
                 return null;
 
-            var key = string.Format(NopTaxCachingDefaults.TaxCategoriesByIdCacheKey, taxCategoryId);
-
-            return _taxCategoryRepository.ToCachedGetById(taxCategoryId, key);
+            return _taxCategoryRepository.ToCachedGetById(taxCategoryId);
         }
 
         /// <summary>

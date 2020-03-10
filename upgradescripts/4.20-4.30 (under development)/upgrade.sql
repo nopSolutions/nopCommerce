@@ -262,6 +262,69 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchEnabled.Hint">
     <Value>Check to enabled the search box.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Fields.County">
+    <Value>County / region</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.County.Required">
+    <Value>County / region is required.</Value>
+  </LocaleResource>
+   <LocaleResource Name="Address.Fields.County">
+    <Value>County / region</Value>
+  </LocaleResource>
+  <LocaleResource Name="Address.Fields.County.Required">
+    <Value>County / region is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.Fields.County">
+    <Value>County / region</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.Fields.County.Hint">
+    <Value>Enter county / region.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.Fields.County.Required">
+    <Value>County / region is required.</Value>
+  </LocaleResource>
+   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyEnabled">
+    <Value>''County / region'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyEnabled.Hint">
+    <Value>Set if ''County / region'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyRequired">
+    <Value>''County / region'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountyRequired.Hint">
+    <Value>Check if ''County / region'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyEnabled">
+    <Value>''County / region'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyEnabled.Hint">
+    <Value>Set if ''County / region'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyRequired">
+    <Value>''County / region'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountyRequired.Hint">
+    <Value>Check if ''County / region'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.County">
+    <Value>County / region</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.County.Hint">
+    <Value>The county / region.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.County.Required">
+    <Value>County / region is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Address.County">
+    <Value>County / region</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.County">
+    <Value>County / region</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.County.Hint">
+    <Value>Search by a specific county / region.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -863,7 +926,7 @@ BEGIN
 			AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
 			AND ( (lp.LocaleKey = N''Name'''
 		IF @UseFullTextSearch = 1
-			SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
+			SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords)) '
 		ELSE
 			SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0) '
 
@@ -873,7 +936,7 @@ BEGIN
 			SET @sql = @sql + '
 				OR (lp.LocaleKey = N''ShortDescription'''
 			IF @UseFullTextSearch = 1
-				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
+				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords)) '
 			ELSE
 				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0) '
 
@@ -881,7 +944,7 @@ BEGIN
 			SET @sql = @sql + '
 				OR (lp.LocaleKey = N''FullDescription'''
 			IF @UseFullTextSearch = 1
-				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
+				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords)) '
 			ELSE
 				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0) '
 		END
@@ -1427,4 +1490,3 @@ BEGIN
     VALUES (N'customersettings.lastactivityminutes', '15', 0)
 END
 GO
-

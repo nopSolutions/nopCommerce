@@ -113,8 +113,8 @@ namespace Nop.Services.Localization
         /// <returns>Found localized value</returns>
         public virtual string GetLocalizedValue(int languageId, int entityId, string localeKeyGroup, string localeKey)
         {
-            var key = string.Format(NopLocalizationCachingDefaults.LocalizedPropertyCacheKey, languageId, entityId,
-                localeKeyGroup, localeKey);
+            var key = NopLocalizationCachingDefaults.LocalizedPropertyCacheKey
+                .FillCacheKey(languageId, entityId, localeKeyGroup, localeKey);
 
             return _cacheManager.Get(key, () =>
             {

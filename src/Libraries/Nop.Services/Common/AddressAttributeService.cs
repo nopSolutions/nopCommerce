@@ -75,9 +75,7 @@ namespace Nop.Services.Common
             if (addressAttributeId == 0)
                 return null;
 
-            var key = string.Format(NopCommonCachingDefaults.AddressAttributesByIdCacheKey, addressAttributeId);
-
-            return _addressAttributeRepository.ToCachedGetById(addressAttributeId, key);
+            return _addressAttributeRepository.ToCachedGetById(addressAttributeId);
         }
 
         /// <summary>
@@ -132,7 +130,7 @@ namespace Nop.Services.Common
         /// <returns>Address attribute values</returns>
         public virtual IList<AddressAttributeValue> GetAddressAttributeValues(int addressAttributeId)
         {
-            var key = string.Format(NopCommonCachingDefaults.AddressAttributeValuesAllCacheKey, addressAttributeId);
+            var key = NopCommonCachingDefaults.AddressAttributeValuesAllCacheKey.FillCacheKey(addressAttributeId);
 
             var query = from aav in _addressAttributeValueRepository.Table
                 orderby aav.DisplayOrder, aav.Id
@@ -153,8 +151,7 @@ namespace Nop.Services.Common
             if (addressAttributeValueId == 0)
                 return null;
 
-            var key = string.Format(NopCommonCachingDefaults.AddressAttributeValuesByIdCacheKey, addressAttributeValueId);
-            return _addressAttributeValueRepository.ToCachedGetById(addressAttributeValueId, key);
+            return _addressAttributeValueRepository.ToCachedGetById(addressAttributeValueId);
         }
 
         /// <summary>

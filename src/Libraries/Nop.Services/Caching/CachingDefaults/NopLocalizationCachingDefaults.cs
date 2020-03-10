@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Caching.CachingDefaults
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Caching.CachingDefaults
 {
     /// <summary>
     /// Represents default values related to localization services
@@ -11,23 +13,23 @@
         /// Gets a key for caching
         /// </summary>
         /// <remarks>
-        /// {0} : language ID
-        /// </remarks>
-        public static string LanguagesByIdCacheKey => "Nop.language.id-{0}";
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
         /// {0} : store ID
         /// {1} : show hidden records?
         /// </remarks>
-        public static string LanguagesAllCacheKey => "Nop.language.all-{0}-{1}";
+        public static CacheKey LanguagesAllCacheKey => new CacheKey("Nop.language.all-{0}-{1}", LanguagesByStoreIdPrefixCacheKey, LanguagesAllPrefixCacheKey);
 
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
-        public static string LanguagesPrefixCacheKey => "Nop.language.";
+        /// <remarks>
+        /// {0} : store ID
+        /// </remarks>
+        public static string LanguagesByStoreIdPrefixCacheKey => "Nop.language.all-{0}";
+
+        /// <summary>
+        /// Gets a key pattern to clear cache
+        /// </summary>
+        public static string LanguagesAllPrefixCacheKey => "Nop.language.all";
 
         #endregion
 
@@ -39,7 +41,7 @@
         /// <remarks>
         /// {0} : language ID
         /// </remarks>
-        public static string LocaleStringResourcesAllPublicCacheKey => "Nop.lsr.all.public-{0}";
+        public static CacheKey LocaleStringResourcesAllPublicCacheKey => new CacheKey("Nop.lsr.all.public-{0}", LocaleStringResourcesPrefixCacheKey);
 
         /// <summary>
         /// Gets a key for caching
@@ -47,7 +49,7 @@
         /// <remarks>
         /// {0} : language ID
         /// </remarks>
-        public static string LocaleStringResourcesAllCacheKey => "Nop.lsr.all-{0}";
+        public static CacheKey LocaleStringResourcesAllAdminCacheKey => new CacheKey("Nop.lsr.all.admin-{0}", LocaleStringResourcesPrefixCacheKey);
 
         /// <summary>
         /// Gets a key for caching
@@ -55,7 +57,7 @@
         /// <remarks>
         /// {0} : language ID
         /// </remarks>
-        public static string LocaleStringResourcesAllAdminCacheKey => "Nop.lsr.all.admin-{0}";
+        public static CacheKey LocaleStringResourcesAllCacheKey => new CacheKey("Nop.lsr.all-{0}", LocaleStringResourcesPrefixCacheKey);
 
         /// <summary>
         /// Gets a key for caching
@@ -64,7 +66,15 @@
         /// {0} : language ID
         /// {1} : resource key
         /// </remarks>
-        public static string LocaleStringResourcesByResourceNameCacheKey => "Nop.lsr.{0}-{1}";
+        public static CacheKey LocaleStringResourcesByResourceNameCacheKey => new CacheKey("Nop.lsr.{0}-{1}", LocaleStringResourcesByResourceNamePrefixCacheKey, LocaleStringResourcesPrefixCacheKey);
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : language ID
+        /// </remarks>
+        public static string LocaleStringResourcesByResourceNamePrefixCacheKey => "Nop.lsr.{0}";
 
         /// <summary>
         /// Gets a key pattern to clear cache
@@ -84,18 +94,13 @@
         /// {2} : locale key group
         /// {3} : locale key
         /// </remarks>
-        public static string LocalizedPropertyCacheKey => "Nop.localizedproperty.value-{0}-{1}-{2}-{3}";
+        public static CacheKey LocalizedPropertyCacheKey => new CacheKey("Nop.localizedproperty.value-{0}-{1}-{2}-{3}");
 
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static string LocalizedPropertyAllCacheKey => "Nop.localizedproperty.all";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string LocalizedPropertyPrefixCacheKey => "Nop.localizedproperty.";
-
+        public static CacheKey LocalizedPropertyAllCacheKey => new CacheKey("Nop.localizedproperty.all");
+        
         #endregion
     }
 }
