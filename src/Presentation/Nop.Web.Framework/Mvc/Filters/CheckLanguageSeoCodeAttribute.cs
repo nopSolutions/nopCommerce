@@ -34,7 +34,6 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly ILanguageService _languageService;
             private readonly IWebHelper _webHelper;
             private readonly IWorkContext _workContext;
             private readonly LocalizationSettings _localizationSettings;
@@ -43,12 +42,11 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             #region Ctor
 
-            public CheckLanguageSeoCodeFilter(ILanguageService languageService,
+            public CheckLanguageSeoCodeFilter(
                 IWebHelper webHelper,
                 IWorkContext workContext,
                 LocalizationSettings localizationSettings)
             {
-                _languageService = languageService;
                 _webHelper = webHelper;
                 _workContext = workContext;
                 _localizationSettings = localizationSettings;
