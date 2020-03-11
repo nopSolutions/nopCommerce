@@ -21,6 +21,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         private readonly TaxTransactionLogService _taxTransactionLogService;
 
         private AvaTaxClient _serviceClient;
+        private bool _disposed;
 
         #endregion
 
@@ -437,8 +438,23 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// </summary>
         public void Dispose()
         {
-            if (_serviceClient != null)
-                _serviceClient.CallCompleted -= OnCallCompleted;
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern.
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                if (_serviceClient != null)
+                    _serviceClient.CallCompleted -= OnCallCompleted;
+            }
+
+            _disposed = true;
         }
 
         #endregion
