@@ -141,14 +141,12 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                             OriginalQueryString = originalQueryString.HasValue ? originalQueryString.Value : null
                         });
 
-                        //get new path
-                        context.HttpContext.Request.Path = "/page-not-found";
-                        context.HttpContext.Request.QueryString = QueryString.Empty;
-
                         try
                         {
+                            //get new path
+                            var pageNotFoundPath = "/page-not-found";
                             //re-execute request with new path
-                            await context.Next(context.HttpContext);
+                            context.HttpContext.Response.Redirect(context.HttpContext.Request.PathBase + pageNotFoundPath);
                         }
                         finally
                         {
@@ -158,6 +156,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                             context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(null);
                         }
                     }
+                    await Task.CompletedTask;
                 }
             });
         }
