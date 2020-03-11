@@ -247,7 +247,7 @@ namespace Nop.Services.Orders
                         SumRefundedAmount = r.OrederRefundedAmountSum
                 }).FirstOrDefault();
 
-            item = item ?? new OrderAverageReportLine
+            item ??= new OrderAverageReportLine
             {
                 CountOrders = 0,
                 SumShippingExclTax = decimal.Zero,

@@ -1435,7 +1435,7 @@ namespace Nop.Services.Seo
         public virtual string GetSeName(int entityId, string entityName, int? languageId = null,
             bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true)
         {
-            languageId = languageId ?? _workContext.WorkingLanguage.Id;
+            languageId ??= _workContext.WorkingLanguage.Id;
             var result = string.Empty;
             
             if (languageId > 0)

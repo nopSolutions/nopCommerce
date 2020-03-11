@@ -151,7 +151,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (poll != null)
             {
                 //fill in model values from the entity
-                model = model ?? poll.ToModel<PollModel>();
+                model ??= poll.ToModel<PollModel>();
 
                 model.StartDateUtc = poll.StartDateUtc;
                 model.EndDateUtc = poll.EndDateUtc;

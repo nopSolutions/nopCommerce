@@ -172,7 +172,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (productReview != null)
             {
                 //fill in model values from the entity
-                model = model ?? new ProductReviewModel
+                model ??= new ProductReviewModel
                 {
                     Id = productReview.Id,
                     StoreName = _storeService.GetStoreById(productReview.StoreId)?.Name,

@@ -122,7 +122,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>Path</returns>
         protected virtual string GetFullPath(string virtualPath)
         {
-            virtualPath = virtualPath ?? string.Empty;
+            virtualPath ??= string.Empty;
             if (!virtualPath.StartsWith("/"))
                 virtualPath = "/" + virtualPath;
             virtualPath = virtualPath.TrimEnd('/');
@@ -235,7 +235,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>Path</returns>
         protected virtual string GetVirtualPath(string path)
         {
-            path = path ?? string.Empty;
+            path ??= string.Empty;
 
             var rootDirectory = GetRootDirectory();
             if (!path.StartsWith(rootDirectory))

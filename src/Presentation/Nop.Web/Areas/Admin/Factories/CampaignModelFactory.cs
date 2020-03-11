@@ -121,7 +121,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             if (campaign != null)
             {
-                model = model ?? campaign.ToModel<CampaignModel>();
+                model ??= campaign.ToModel<CampaignModel>();
                 if (campaign.DontSendBeforeDateUtc.HasValue)
                     model.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
             }

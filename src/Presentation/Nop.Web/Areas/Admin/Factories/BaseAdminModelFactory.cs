@@ -135,7 +135,7 @@ namespace Nop.Web.Areas.Admin.Factories
             const string value = "0";
 
             //prepare item text
-            defaultItemText = defaultItemText ?? _localizationService.GetResource("Admin.Common.All");
+            defaultItemText ??= _localizationService.GetResource("Admin.Common.All");
 
             //insert this default item at first
             items.Insert(0, new SelectListItem { Text = defaultItemText, Value = value });

@@ -1106,7 +1106,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 }
 
                 //or create new one
-                currentSender = currentSender ?? senders.Senders.FirstOrDefault();
+                currentSender ??= senders.Senders.FirstOrDefault();
                 var relay = accountClient.GetAccount().Relay;
                 var newEmailAccount = new EmailAccount
                 {

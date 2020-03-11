@@ -598,7 +598,7 @@ namespace Nop.Services.Shipping
         /// <returns></returns>
         public virtual Warehouse GetNearestWarehouse(Address address, IList<Warehouse> warehouses = null)
         {
-            warehouses = warehouses ?? GetAllWarehouses();
+            warehouses ??= GetAllWarehouses();
 
             //no address specified. return any
             if (address == null)

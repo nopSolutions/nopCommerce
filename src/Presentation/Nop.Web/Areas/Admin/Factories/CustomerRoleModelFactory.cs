@@ -112,7 +112,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customerRole != null)
             {
                 //fill in model values from the entity
-                model = model ?? customerRole.ToModel<CustomerRoleModel>();
+                model ??= customerRole.ToModel<CustomerRoleModel>();
                 model.PurchasedWithProductName = _productService.GetProductById(customerRole.PurchasedWithProductId)?.Name;
             }
 

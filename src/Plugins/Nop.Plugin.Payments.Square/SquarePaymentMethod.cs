@@ -341,7 +341,7 @@ namespace Nop.Plugin.Payments.Square
                         //remove the value from payment custom values, since it is no longer needed
                         paymentRequest.CustomValues.Remove(postalCodeKey);
 
-                        cardRequest.BillingAddress = cardRequest.BillingAddress ?? new SquareModel.Address();
+                        cardRequest.BillingAddress ??= new SquareModel.Address();
                         cardRequest.BillingAddress.PostalCode = postalCode.ToString();
                     }
 

@@ -256,7 +256,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (discount != null)
             {
                 //fill in model values from the entity
-                model = model ?? discount.ToModel<DiscountModel>();
+                model ??= discount.ToModel<DiscountModel>();
 
                 //prepare available discount requirement rules
                 var discountRules = _discountPluginManager.LoadAllPlugins();

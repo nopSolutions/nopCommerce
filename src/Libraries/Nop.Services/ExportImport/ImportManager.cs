@@ -533,7 +533,7 @@ namespace Nop.Services.ExportImport
 
             isNew = category == null;
 
-            category = category ?? new Category();
+            category ??= new Category();
 
             curentCategoryBreadCrumb = string.Empty;
 
@@ -1270,7 +1270,7 @@ namespace Nop.Services.ExportImport
 
                 var isNew = product == null;
 
-                product = product ?? new Product();
+                product ??= new Product();
 
                 //some of previous values
                 var previousStockQuantity = product.StockQuantity;
@@ -1949,7 +1949,7 @@ namespace Nop.Services.ExportImport
 
                 var isNew = manufacturer == null;
 
-                manufacturer = manufacturer ?? new Manufacturer();
+                manufacturer ??= new Manufacturer();
 
                 if (isNew)
                 {

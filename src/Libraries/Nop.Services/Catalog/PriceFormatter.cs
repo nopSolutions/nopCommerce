@@ -432,7 +432,7 @@ namespace Nop.Services.Catalog
             if (referenceUnit == null)
                 return null;
 
-            productPrice = productPrice ?? product.Price;
+            productPrice ??= product.Price;
 
             var basePrice = productPrice.Value /
                 //do not round. otherwise, it can cause issues

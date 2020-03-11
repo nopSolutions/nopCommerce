@@ -590,7 +590,7 @@ namespace Nop.Services.Media
                 //check, if the file was created, while we were waiting for the release of the mutex.
                 if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                 {
-                    pictureBinary = pictureBinary ?? LoadPictureBinary(picture);
+                    pictureBinary ??= LoadPictureBinary(picture);
 
                     if ((pictureBinary?.Length ?? 0) == 0)
                         return showDefaultPicture ? GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation) : string.Empty;
