@@ -28,6 +28,7 @@ namespace Nop.Services.Customers
         #region Fields
 
         private readonly CustomerSettings _customerSettings;
+        private readonly ICacheManager _cacheManager;
         private readonly IDataProvider _dataProvider;
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -47,6 +48,7 @@ namespace Nop.Services.Customers
         #region Ctor
 
         public CustomerService(CustomerSettings customerSettings,
+            ICacheManager cacheManager,
             IDataProvider dataProvider,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
@@ -62,6 +64,7 @@ namespace Nop.Services.Customers
             ShoppingCartSettings shoppingCartSettings)
         {
             _customerSettings = customerSettings;
+            _cacheManager = cacheManager;
             _dataProvider = dataProvider;
             _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
@@ -1439,7 +1442,7 @@ namespace Nop.Services.Customers
 
             var key = NopCustomerServiceCachingDefaults.CustomerAddressesByCustomerIdCacheKey.FillCacheKey(customerId);
 
-            return query.ToCachedList(key);
+            return _cacheManager.Get(key, () => query.ToList());
         }
 
         /// <summary>
