@@ -400,8 +400,10 @@ namespace Nop.Services.Seo
         {
             var urlHelper = GetUrlHelper();
 
-            using var writer = new XmlTextWriter(stream, Encoding.UTF8);
-            writer.Formatting = Formatting.Indented;
+            using var writer = new XmlTextWriter(stream, Encoding.UTF8)
+            {
+                Formatting = Formatting.Indented
+            };
             writer.WriteStartDocument();
             writer.WriteStartElement("sitemapindex");
             writer.WriteAttributeString("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
@@ -431,8 +433,10 @@ namespace Nop.Services.Seo
         /// <param name="sitemapUrls">List of sitemap URLs</param>
         protected virtual void WriteSitemap(Stream stream, IList<SitemapUrl> sitemapUrls)
         {
-            using var writer = new XmlTextWriter(stream, Encoding.UTF8);
-            writer.Formatting = Formatting.Indented;
+            using var writer = new XmlTextWriter(stream, Encoding.UTF8)
+            {
+                Formatting = Formatting.Indented
+            };
             writer.WriteStartDocument();
             writer.WriteStartElement("urlset");
             writer.WriteAttributeString("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");

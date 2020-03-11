@@ -573,31 +573,33 @@ namespace Nop.Web.Factories
             var rewardPoints = _rewardPointService.GetRewardPointsHistory(customer.Id, store.Id, true, pageIndex: --page ?? 0, pageSize: pageSize);
 
             //prepare model
-            var model = new CustomerRewardPointsModel();
-            model.RewardPoints = rewardPoints.Select(historyEntry =>
+            var model = new CustomerRewardPointsModel
             {
-                var activatingDate = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
-                return new CustomerRewardPointsModel.RewardPointsHistoryModel
+                RewardPoints = rewardPoints.Select(historyEntry =>
                 {
-                    Points = historyEntry.Points,
-                    PointsBalance = historyEntry.PointsBalance.HasValue ? historyEntry.PointsBalance.ToString()
-                        : string.Format(_localizationService.GetResource("RewardPoints.ActivatedLater"), activatingDate),
-                    Message = historyEntry.Message,
-                    CreatedOn = activatingDate,
-                    EndDate = !historyEntry.EndDateUtc.HasValue ? null :
-                        (DateTime?)_dateTimeHelper.ConvertToUserTime(historyEntry.EndDateUtc.Value, DateTimeKind.Utc)
-                };
-            }).ToList();
+                    var activatingDate = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
+                    return new CustomerRewardPointsModel.RewardPointsHistoryModel
+                    {
+                        Points = historyEntry.Points,
+                        PointsBalance = historyEntry.PointsBalance.HasValue ? historyEntry.PointsBalance.ToString()
+                            : string.Format(_localizationService.GetResource("RewardPoints.ActivatedLater"), activatingDate),
+                        Message = historyEntry.Message,
+                        CreatedOn = activatingDate,
+                        EndDate = !historyEntry.EndDateUtc.HasValue ? null :
+                            (DateTime?)_dateTimeHelper.ConvertToUserTime(historyEntry.EndDateUtc.Value, DateTimeKind.Utc)
+                    };
+                }).ToList(),
 
-            model.PagerModel = new PagerModel
-            {
-                PageSize = rewardPoints.PageSize,
-                TotalRecords = rewardPoints.TotalCount,
-                PageIndex = rewardPoints.PageIndex,
-                ShowTotalSummary = true,
-                RouteActionName = "CustomerRewardPointsPaged",
-                UseRouteLinks = true,
-                RouteValues = new RewardPointsRouteValues { pageNumber = page ?? 0 }
+                PagerModel = new PagerModel
+                {
+                    PageSize = rewardPoints.PageSize,
+                    TotalRecords = rewardPoints.TotalCount,
+                    PageIndex = rewardPoints.PageIndex,
+                    ShowTotalSummary = true,
+                    RouteActionName = "CustomerRewardPointsPaged",
+                    UseRouteLinks = true,
+                    RouteValues = new RewardPointsRouteValues { pageNumber = page ?? 0 }
+                }
             };
 
             //current amount/balance
