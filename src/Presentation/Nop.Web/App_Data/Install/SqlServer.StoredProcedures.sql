@@ -124,6 +124,11 @@ BEGIN
 					set @fulltext_keywords = ' "' + @Keywords + '*" '
 				ELSE
 				BEGIN		
+                    DECLARE @len_keywords INT
+					DECLARE @len_nvarchar INT
+					SET @len_keywords = 0
+					SET @len_nvarchar = DATALENGTH(CONVERT(NVARCHAR(MAX), 'a'))
+
 					DECLARE @first BIT
 					SET  @first = 1			
 					WHILE @index > 0
@@ -133,14 +138,19 @@ BEGIN
 						ELSE
 							SET @first = 0
 
+                        --LEN excludes trailing spaces. That is why we use DATALENGTH
+						--see https://docs.microsoft.com/sql/t-sql/functions/len-transact-sql?view=sqlallproducts-allversions for more ditails
+						SET @len_keywords = DATALENGTH(@Keywords) / @len_nvarchar
+
 						SET @fulltext_keywords = @fulltext_keywords + '"' + SUBSTRING(@Keywords, 1, @index - 1) + '*"'					
-						SET @Keywords = SUBSTRING(@Keywords, @index + 1, LEN(@Keywords) - @index)						
+						SET @Keywords = SUBSTRING(@Keywords, @index + 1, @len_keywords - @index)						
 						SET @index = CHARINDEX(' ', @Keywords, 0)
 					end
 					
 					-- add the last field
+                    SET @len_keywords = DATALENGTH(@Keywords) / @len_nvarchar
 					IF LEN(@fulltext_keywords) > 0
-						SET @fulltext_keywords = @fulltext_keywords + ' ' + @concat_term + ' ' + '"' + SUBSTRING(@Keywords, 1, LEN(@Keywords)) + '*"'	
+						SET @fulltext_keywords = @fulltext_keywords + ' ' + @concat_term + ' ' + '"' + SUBSTRING(@Keywords, 1, @len_keywords) + '*"'	
 				END
 				SET @Keywords = @fulltext_keywords
 			END
@@ -200,7 +210,7 @@ BEGIN
 			AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
 			AND ( (lp.LocaleKey = N''Name'''
 		IF @UseFullTextSearch = 1
-			SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
+			SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords)) '
 		ELSE
 			SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0) '
 
@@ -210,7 +220,7 @@ BEGIN
 			SET @sql = @sql + '
 				OR (lp.LocaleKey = N''ShortDescription'''
 			IF @UseFullTextSearch = 1
-				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
+				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords)) '
 			ELSE
 				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0) '
 
@@ -218,7 +228,7 @@ BEGIN
 			SET @sql = @sql + '
 				OR (lp.LocaleKey = N''FullDescription'''
 			IF @UseFullTextSearch = 1
-				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
+				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords)) '
 			ELSE
 				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0) '
 		END
