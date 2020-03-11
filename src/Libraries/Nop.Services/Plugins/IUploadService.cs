@@ -22,6 +22,12 @@ namespace Nop.Services.Plugins
         void UploadIconsArchive(IFormFile archivefile);
 
         /// <summary>
+        /// Upload single favicon
+        /// </summary>
+        /// <param name="favicon">Favicon</param>
+        void UploadFavicon(IFormFile favicon);
+
+        /// <summary>
         /// Upload locale pattern for ccurrent culture
         /// </summary>
         void UploadLocalePattern();

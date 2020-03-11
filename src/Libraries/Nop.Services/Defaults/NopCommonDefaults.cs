@@ -44,6 +44,11 @@
         public static string HeadCodeFileName => "html_code.html";
 
         /// <summary>
+        ///  Gets a head link for the favicon
+        /// </summary>
+        public static string SingleFaviconHeadLink => "<link rel=\"shortcut icon\" href=\"\\icons\\icons_{0}\\{1}\">";
+
+        /// <summary>
         /// Gets a path to the favicon and app icons
         /// </summary>
         public static string FaviconAndAppIconsPath => "icons\\icons_{0}";

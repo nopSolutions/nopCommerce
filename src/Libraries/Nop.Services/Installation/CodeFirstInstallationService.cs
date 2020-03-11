@@ -12215,6 +12215,12 @@ namespace Nop.Services.Installation
                     SystemKeyword = "UploadNewTheme",
                     Enabled = true,
                     Name = "Upload a theme"
+                },
+                new ActivityLogType
+                {
+                    SystemKeyword = "UploadIcons",
+                    Enabled = true,
+                    Name = "Upload a favicon and app icons"
                 }
             };
             _activityLogTypeRepository.Insert(activityLogTypes);

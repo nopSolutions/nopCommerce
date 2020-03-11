@@ -553,6 +553,27 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingEnabled.Hint">
     <Value>Check to allow customers to estimate shipping on product and shopping cart pages.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIconsArchive">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIconsArchive.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIcons">
+    <Value>Upload single icon or icons archive</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIcons.FileExtensions">
+    <Value>Ico or zip file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIcons.Hint">
+    <Value>Upload single icon or archive with favicon and app icons for different operating systems and devices. You can see an example of the favicon and app icons archive in /icons/samples in the root of the site. Your favicon and app icons path is "/icons/icons_{0}"</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.UploadNewIconsArchive">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.UploadNewIcons">
+    <Value>Uploaded a new favicon and app icons for store (ID = ''{0}'')</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2630,5 +2651,19 @@ and NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[StorePic
 BEGIN
 	ALTER TABLE [StorePickupPoint]
 	ADD TransitDays int NULL
+END
+GO
+GO
+
+IF EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'UploadIconsArchive')
+BEGIN
+    UPDATE [ActivityLogType]
+    SET [SystemKeyword] = N'UploadIcons', [Name] = N'Upload a favicon and app icons'
+    WHERE [SystemKeyword] = N'UploadIconsArchive'
+END
+ELSE IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'UploadIcons')
+BEGIN
+   INSERT INTO [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+   VALUES (N'UploadIcons', N'Upload a favicon and app icons', 'true')
 END
 GO

@@ -1665,48 +1665,58 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult UploadIconsArchive(IFormFile archivefile)
+        public virtual IActionResult UploadIcons(IFormFile iconsFile)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             try
             {
-                if (archivefile == null || archivefile.Length == 0)
+                if (iconsFile == null || iconsFile.Length == 0)
                 {
                     _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
                     return RedirectToAction("GeneralCommon");
                 }
 
-                _uploadService.UploadIconsArchive(archivefile);
-
                 //load settings for a chosen store scope
                 var storeScope = _storeContext.ActiveStoreScopeConfiguration;
                 var commonSettings = _settingService.LoadSetting<CommonSettings>(storeScope);
 
-                var headCodePath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.ActiveStoreScopeConfiguration), NopCommonDefaults.HeadCodeFileName);
-
-                if (!_fileProvider.FileExists(headCodePath))
+                switch (_fileProvider.GetFileExtension(iconsFile.FileName))
                 {
-                    throw new Exception(string.Format(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.MissingFile"), NopCommonDefaults.HeadCodeFileName));
-                }
+                    case ".ico":
+                        _uploadService.UploadFavicon(iconsFile);
+                        commonSettings.FaviconAndAppIconsHeadCode = string.Format(NopCommonDefaults.SingleFaviconHeadLink, storeScope, iconsFile.FileName);
 
-                using (var sr = new StreamReader(headCodePath))
-                {
-                    commonSettings.FaviconAndAppIconsHeadCode = sr.ReadToEnd();
+                        break;
+
+                    case ".zip":
+                        _uploadService.UploadIconsArchive(iconsFile);
+
+                        var headCodePath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, storeScope), NopCommonDefaults.HeadCodeFileName);
+                        if (!_fileProvider.FileExists(headCodePath))
+                            throw new Exception(string.Format(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.MissingFile"), NopCommonDefaults.HeadCodeFileName));
+
+                        using (var sr = new StreamReader(headCodePath))
+                            commonSettings.FaviconAndAppIconsHeadCode = sr.ReadToEnd();
+
+                        break;
+
+                    default:
+                        throw new InvalidOperationException("File is not supported.");
                 }
 
                 _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.FaviconAndAppIconsHeadCode, true, storeScope);
 
                 //delete old favicon icon if exist
-                var oldFaviconIconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.OldFaviconIconName, _storeContext.ActiveStoreScopeConfiguration));
+                var oldFaviconIconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.OldFaviconIconName, storeScope));
                 if (_fileProvider.FileExists(oldFaviconIconPath))
                 {
                     _fileProvider.DeleteFile(oldFaviconIconPath);
                 }
 
                 //activity log
-                _customerActivityService.InsertActivity("UploadIconsArchive", string.Format(_localizationService.GetResource("ActivityLog.UploadNewIconsArchive"), _storeContext.ActiveStoreScopeConfiguration));
+                _customerActivityService.InsertActivity("UploadIcons", string.Format(_localizationService.GetResource("ActivityLog.UploadNewIcons"), storeScope));
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.FaviconAndAppIcons.Uploaded"));
             }
             catch (Exception exc)

@@ -265,6 +265,25 @@ namespace Nop.Services.Plugins
             return descriptors;
         }
 
+        /// <summary>
+        /// Creates the directory if not exist; otherwise deletes and creates directory 
+        /// </summary>
+        /// <param name="path"></param>
+        protected virtual void CreateDirectory(string path)
+        {
+            //if the folder does not exist, create it
+            //if the folder is already there - we delete it (since the pictures in the folder are in the unpacked version, there will be many files and it is easier for us to delete the folder than to delete all the files one by one) and create a new
+            if (!_fileProvider.DirectoryExists(path))
+            {
+                _fileProvider.CreateDirectory(path);
+            }
+            else
+            {
+                _fileProvider.DeleteDirectory(path);
+                _fileProvider.CreateDirectory(path);
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -331,22 +350,12 @@ namespace Nop.Services.Plugins
             {
                 //only zip archives are supported
                 if (!_fileProvider.GetFileExtension(archivefile.FileName)?.Equals(".zip", StringComparison.InvariantCultureIgnoreCase) ?? true)
-                    throw new Exception("Only zip archives are supported");
+                    throw new Exception("Only zip archives are supported (*.zip)");
 
                 //check if there is a folder for favicon and app icons for the current store (all store icons folders are in wwwroot/icons and are called icons_{storeId})
-                //if the folder does not exist, create it
-                //if the folder is already there - we delete it (since the pictures in the folder are in the unpacked version, there will be many files and it is easier for us to delete the folder than to delete all the files one by one) and create anew
                 var storeIconsPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.ActiveStoreScopeConfiguration));
 
-                if (!_fileProvider.DirectoryExists(storeIconsPath))
-                {
-                    _fileProvider.CreateDirectory(storeIconsPath);
-                }
-                else
-                {
-                    _fileProvider.DeleteDirectory(storeIconsPath);
-                    _fileProvider.CreateDirectory(storeIconsPath);
-                }
+                CreateDirectory(storeIconsPath);
 
                 zipFilePath = _fileProvider.Combine(storeIconsPath, archivefile.FileName);
                 using (var fileStream = new FileStream(zipFilePath, FileMode.Create))
@@ -360,6 +369,29 @@ namespace Nop.Services.Plugins
                 if (!string.IsNullOrEmpty(zipFilePath))
                     _fileProvider.DeleteFile(zipFilePath);
             }
+        }
+
+        /// <summary>
+        /// Upload single favicon
+        /// </summary>
+        /// <param name="favicon">Favicon</param>
+        public virtual void UploadFavicon(IFormFile favicon)
+        {
+            if (favicon == null)
+                throw new ArgumentNullException(nameof(favicon));
+
+            //only icons are supported
+            if (!_fileProvider.GetFileExtension(favicon.FileName)?.Equals(".ico", StringComparison.InvariantCultureIgnoreCase) ?? true)
+                throw new Exception("Only icons are supported (*.ico)");
+
+            //check if there is a folder for favicon (favicon folder is in wwwroot/icons and is called icons_{storeId})
+            var storeFaviconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.ActiveStoreScopeConfiguration));
+
+            CreateDirectory(storeFaviconPath);
+
+            var faviconPath = _fileProvider.Combine(storeFaviconPath, favicon.FileName);
+            using (var fileStream = new FileStream(faviconPath, FileMode.Create))
+                favicon.CopyTo(fileStream);
         }
 
         /// <summary>
