@@ -100,6 +100,7 @@ namespace Nop.Services.Tests.Tax
             _taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
 
             _customerService = new CustomerService(new CustomerSettings(),
+                new TestCacheManager(), 
                 null,
                 _eventPublisher.Object,
                 _genericAttributeService.Object,
