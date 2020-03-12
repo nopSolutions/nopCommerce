@@ -41,6 +41,7 @@ namespace Nop.Services.Customers
         private readonly IRepository<GenericAttribute> _gaRepository;
         private readonly IRepository<ShoppingCartItem> _shoppingCartRepository;
         private readonly IStaticCacheManager _staticCacheManager;
+        private readonly IStoreContext _storeContext;
         private readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
@@ -61,6 +62,7 @@ namespace Nop.Services.Customers
             IRepository<GenericAttribute> gaRepository,
             IRepository<ShoppingCartItem> shoppingCartRepository,
             IStaticCacheManager staticCacheManager,
+            IStoreContext storeContext,
             ShoppingCartSettings shoppingCartSettings)
         {
             _customerSettings = customerSettings;
@@ -77,6 +79,7 @@ namespace Nop.Services.Customers
             _gaRepository = gaRepository;
             _shoppingCartRepository = shoppingCartRepository;
             _staticCacheManager = staticCacheManager;
+            _storeContext = storeContext;
             _shoppingCartSettings = shoppingCartSettings;
         }
 
@@ -456,6 +459,80 @@ namespace Nop.Services.Customers
                         select c;
             var customer = query.FirstOrDefault();
             return customer;
+        }
+
+        /// <summary>
+        /// Gets built-in system record used for background tasks
+        /// </summary>
+        /// <returns>A customer object</returns>
+        public virtual Customer GetOrCreateBackgroundTaskUser()
+        {
+            var backgroundTaskUser = GetCustomerBySystemName(NopCustomerDefaults.BackgroundTaskCustomerName);
+
+            if(backgroundTaskUser is null)
+            {
+                //If for any reason the system user isn't in the database, then we add it
+                backgroundTaskUser = new Customer
+                {
+                    Email = "builtin@background-task-record.com",
+                    CustomerGuid = Guid.NewGuid(),
+                    AdminComment = "Built-in system record used for background tasks.",
+                    Active = true,
+                    IsSystemAccount = true,
+                    SystemName = NopCustomerDefaults.BackgroundTaskCustomerName,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    LastActivityDateUtc = DateTime.UtcNow,
+                    RegisteredInStoreId = _storeContext.CurrentStore.Id
+                };
+                
+                InsertCustomer(backgroundTaskUser);
+
+                var guestRole = GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
+
+                if(guestRole is null)
+                    throw new NopException("'Guests' role could not be loaded");
+
+                AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRoleId = guestRole.Id, CustomerId = backgroundTaskUser.Id });
+            }
+
+            return backgroundTaskUser;
+        }
+
+        /// <summary>
+        /// Gets built-in system guest record used for requests from search engines
+        /// </summary>
+        /// <returns>A customer object</returns>
+        public virtual Customer GetOrCreateSearchEngineUser()
+        {
+            var searchEngineUser = GetCustomerBySystemName(NopCustomerDefaults.SearchEngineCustomerName);
+
+            if(searchEngineUser is null)
+            {
+                //If for any reason the system user isn't in the database, then we add it
+                searchEngineUser = new Customer
+                {
+                    Email = "builtin@search_engine_record.com",
+                    CustomerGuid = Guid.NewGuid(),
+                    AdminComment = "Built-in system guest record used for requests from search engines.",
+                    Active = true,
+                    IsSystemAccount = true,
+                    SystemName = NopCustomerDefaults.SearchEngineCustomerName,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    LastActivityDateUtc = DateTime.UtcNow,
+                    RegisteredInStoreId = _storeContext.CurrentStore.Id
+                };
+                
+                InsertCustomer(searchEngineUser);
+
+                var guestRole = GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
+
+                if(guestRole is null)
+                    throw new NopException("'Guests' role could not be loaded");
+
+                AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRoleId = guestRole.Id, CustomerId = searchEngineUser.Id });
+            }
+
+            return searchEngineUser;
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using Moq;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -26,6 +27,7 @@ namespace Nop.Services.Tests
             IRepository<CustomerRole> customerRoleRepository = null,
             IRepository<GenericAttribute> gaRepository = null,
             IRepository<ShoppingCartItem> shoppingCartRepository = null,
+            IStoreContext storeContext = null,
             ShoppingCartSettings shoppingCartSettings = null) : base(
             customerSettings ?? new CustomerSettings(),
             cacheManager ?? new TestCacheManager(),
@@ -41,6 +43,7 @@ namespace Nop.Services.Tests
             gaRepository.FakeRepoNullPropagation(),
             shoppingCartRepository.FakeRepoNullPropagation(),
             new TestCacheManager(),
+            storeContext ?? new Mock<IStoreContext>().Object,
             shoppingCartSettings ?? new ShoppingCartSettings())
         {
         }

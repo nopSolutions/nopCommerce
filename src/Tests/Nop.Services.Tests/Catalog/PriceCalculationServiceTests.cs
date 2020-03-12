@@ -78,7 +78,7 @@ namespace Nop.Services.Tests.Catalog
 
             _customerService = new CustomerService(null, new TestCacheManager(),  null, null, null, null, null,
                 null, _customerCustomerRoleMappingRepository.Object, null, _customerRoleRepository.Object, null, null,
-                null, null);
+                null, _storeContext.Object, null);
 
             _manufacturerService = new Mock<IManufacturerService>();
 
