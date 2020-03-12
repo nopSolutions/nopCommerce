@@ -38,8 +38,7 @@ namespace Nop.Data
                 .AddScoped<IMigrationManager, MigrationManager>()
                 .AddSingleton<IConventionSet, NopConventionSet>()
                 .ConfigureRunner(rb =>
-                    rb.AddSqlServer().AddMySql5()
-                        .WithVersionTable(new MigrationVersionInfo())
+                    rb.WithVersionTable(new MigrationVersionInfo()).AddSqlServer().AddMySql5()
                         // define the assembly containing the migrations
                         .ScanIn(mAssemblies).For.Migrations());
         }
