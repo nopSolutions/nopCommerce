@@ -325,6 +325,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.List.County.Hint">
     <Value>Search by a specific county / region.</Value>
   </LocaleResource>
+  <LocaleResource Name="Forum.Post.IsUseful">
+    <Value>This post/answer is useful</Value>
+  </LocaleResource>
+  <LocaleResource Name="Forum.Post.IsNotUseful">
+    <Value>This post/answer is not useful</Value>
+  </LocaleResource>
 </Language>
 '
 
