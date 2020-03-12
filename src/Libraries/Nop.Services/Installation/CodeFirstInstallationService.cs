@@ -514,10 +514,8 @@ namespace Nop.Services.Installation
             foreach (var filePath in _fileProvider.EnumerateFiles(directoryPath, pattern))
             {
                 var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-                using (var streamReader = new StreamReader(filePath))
-                {
-                    localizationService.ImportResourcesFromXml(language, streamReader);
-                }
+                using var streamReader = new StreamReader(filePath);
+                localizationService.ImportResourcesFromXml(language, streamReader);
             }
         }
 

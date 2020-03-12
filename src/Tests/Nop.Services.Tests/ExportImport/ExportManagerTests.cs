@@ -230,7 +230,7 @@ namespace Nop.Services.Tests.ExportImport
                     continue;
 
                 var objectPropertyValue = objectProperty.GetValue(actual);
-                objectPropertyValue = objectPropertyValue ?? string.Empty;
+                objectPropertyValue ??= string.Empty;
 
                 if (objectProperty.PropertyType == typeof(Guid))
                 {

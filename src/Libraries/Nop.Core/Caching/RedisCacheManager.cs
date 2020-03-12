@@ -86,12 +86,12 @@ namespace Nop.Core.Caching
             //get serialized item from cache
             var serializedItem = await _db.StringGetAsync(key.Key);
             if (!serializedItem.HasValue)
-                return default(T);
+                return default;
 
             //deserialize item
             var item = JsonConvert.DeserializeObject<T>(serializedItem);
             if (item == null)
-                return default(T);
+                return default;
 
             //set item in the per-request cache
             _perRequestCacheManager.Set(key, item);
@@ -180,12 +180,12 @@ namespace Nop.Core.Caching
             //get serialized item from cache
             var serializedItem = _db.StringGet(key.Key);
             if (!serializedItem.HasValue)
-                return default(T);
+                return default;
 
             //deserialize item
             var item = JsonConvert.DeserializeObject<T>(serializedItem);
             if (item == null)
-                return default(T);
+                return default;
 
             //set item in the per-request cache
             _perRequestCacheManager.Set(key, item);

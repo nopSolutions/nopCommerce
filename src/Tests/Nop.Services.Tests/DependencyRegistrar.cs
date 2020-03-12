@@ -1,4 +1,4 @@
-using Autofac;
+﻿using Autofac;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
@@ -28,10 +28,7 @@ namespace Nop.Services.Tests
         /// <summary>
         /// Order of this dependency registrar implementation
         /// </summary>
-        public int Order
-        {
-            get { return 0; }
-        }
+        public int Order => 0;
     }
 
 }

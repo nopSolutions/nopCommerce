@@ -175,7 +175,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (currency != null)
             {
                 //fill in model values from the entity
-                model = model ?? currency.ToModel<CurrencyModel>();
+                model ??= currency.ToModel<CurrencyModel>();
 
                 //convert dates to the user time
                 model.CreatedOn = _dateTimeHelper.ConvertToUserTime(currency.CreatedOnUtc, DateTimeKind.Utc);

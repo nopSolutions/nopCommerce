@@ -161,8 +161,7 @@ namespace Nop.Services.Directory
             var exchangeRateProvider = _exchangeRatePluginManager.LoadPrimaryPlugin()
                 ?? throw new Exception("Active exchange rate provider cannot be loaded");
 
-            currencyCode = currencyCode
-                ?? GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId)?.CurrencyCode
+            currencyCode ??= GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId)?.CurrencyCode
                 ?? throw new NopException("Primary exchange rate currency is not set");
 
             return exchangeRateProvider.GetCurrencyLiveRates(currencyCode);

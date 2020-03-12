@@ -193,11 +193,9 @@ namespace Nop.Services.Messages
             message.Body = multipart;
 
             //send email
-            using (var smtpClient = _smtpBuilder.Build(emailAccount))
-            {
-                smtpClient.Send(message);
-                smtpClient.Disconnect(true);
-            }
+            using var smtpClient = _smtpBuilder.Build(emailAccount);
+            smtpClient.Send(message);
+            smtpClient.Disconnect(true);
         }
 
         #endregion

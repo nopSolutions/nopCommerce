@@ -40,12 +40,12 @@ namespace Nop.Services.Media.RoxyFileman
 
         public DatabaseRoxyFilemanService(IPictureService pictureService,
             IRepository<Picture> pictureRepository,
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment webHostEnvironment,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
             IWebHelper webHelper,
             IWorkContext workContext,
-            MediaSettings mediaSettings) : base(hostingEnvironment, httpContextAccessor, fileProvider, webHelper, workContext, mediaSettings)
+            MediaSettings mediaSettings) : base(webHostEnvironment, httpContextAccessor, fileProvider, webHelper, workContext, mediaSettings)
         {
             _pictureService = pictureService;
             _pictureRepository = pictureRepository;
@@ -145,38 +145,36 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>Image binary data</returns>
         protected virtual byte[] EncodeImage<T>(Image<T> image, IImageFormat imageFormat, int? quality = null) where T : struct, IPixel<T>
         {
-            using (var stream = new MemoryStream())
+            using var stream = new MemoryStream();
+            var imageEncoder = Default.ImageFormatsManager.FindEncoder(imageFormat);
+            switch (imageEncoder)
             {
-                var imageEncoder = Default.ImageFormatsManager.FindEncoder(imageFormat);
-                switch (imageEncoder)
-                {
-                    case JpegEncoder jpegEncoder:
-                        jpegEncoder.Subsample = JpegSubsample.Ratio444;
-                        jpegEncoder.Quality = quality ?? _mediaSettings.DefaultImageQuality;
-                        jpegEncoder.Encode(image, stream);
-                        break;
+                case JpegEncoder jpegEncoder:
+                    jpegEncoder.Subsample = JpegSubsample.Ratio444;
+                    jpegEncoder.Quality = quality ?? _mediaSettings.DefaultImageQuality;
+                    jpegEncoder.Encode(image, stream);
+                    break;
 
-                    case PngEncoder pngEncoder:
-                        pngEncoder.ColorType = PngColorType.RgbWithAlpha;
-                        pngEncoder.Encode(image, stream);
-                        break;
+                case PngEncoder pngEncoder:
+                    pngEncoder.ColorType = PngColorType.RgbWithAlpha;
+                    pngEncoder.Encode(image, stream);
+                    break;
 
-                    case BmpEncoder bmpEncoder:
-                        bmpEncoder.BitsPerPixel = BmpBitsPerPixel.Pixel32;
-                        bmpEncoder.Encode(image, stream);
-                        break;
+                case BmpEncoder bmpEncoder:
+                    bmpEncoder.BitsPerPixel = BmpBitsPerPixel.Pixel32;
+                    bmpEncoder.Encode(image, stream);
+                    break;
 
-                    case GifEncoder gifEncoder:
-                        gifEncoder.Encode(image, stream);
-                        break;
+                case GifEncoder gifEncoder:
+                    gifEncoder.Encode(image, stream);
+                    break;
 
-                    default:
-                        imageEncoder.Encode(image, stream);
-                        break;
-                }
-
-                return stream.ToArray();
+                default:
+                    imageEncoder.Encode(image, stream);
+                    break;
             }
+
+            return stream.ToArray();
         }
 
         /// <summary>
@@ -277,45 +275,41 @@ namespace Nop.Services.Media.RoxyFileman
 
             //the named mutex helps to avoid creating the same files in different threads,
             //and does not decrease performance significantly, because the code is blocked only for the specific file.
-            using (var mutex = new Mutex(false, thumbFileName))
+            using var mutex = new Mutex(false, thumbFileName);
+            if (_fileProvider.FileExists(thumbFilePath))
+                return;
+
+            mutex.WaitOne();
+
+            //check, if the file was created, while we were waiting for the release of the mutex.
+            if (!_fileProvider.FileExists(thumbFilePath))
             {
-                if (_fileProvider.FileExists(thumbFilePath))
-                    return;
-
-                mutex.WaitOne();
-
-                //check, if the file was created, while we were waiting for the release of the mutex.
-                if (!_fileProvider.FileExists(thumbFilePath))
+                byte[] pictureBinaryResized;
+                if (targetSize != 0)
                 {
-                    byte[] pictureBinaryResized;
-                    if (targetSize != 0)
+                    //resizing required
+                    using var image = Image.Load(pictureBinary, out var imageFormat);
+                    var size = image.Size();
+
+                    image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
                     {
-                        //resizing required
-                        using (var image = Image.Load(pictureBinary, out var imageFormat))
-                        {
-                            var size = image.Size();
+                        Mode = ResizeMode.Max,
+                        Size = CalculateDimensions(size, targetSize)
+                    }));
 
-                            image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
-                            {
-                                Mode = ResizeMode.Max,
-                                Size = CalculateDimensions(size, targetSize)
-                            }));
-
-                            pictureBinaryResized = EncodeImage(image, imageFormat);
-                        }
-                    }
-                    else
-                    {
-                        //create a copy of pictureBinary
-                        pictureBinaryResized = pictureBinary.ToArray();
-                    }
-
-                    //save
-                    _fileProvider.WriteAllBytes(thumbFilePath, pictureBinaryResized);
+                    pictureBinaryResized = EncodeImage(image, imageFormat);
+                }
+                else
+                {
+                    //create a copy of pictureBinary
+                    pictureBinaryResized = pictureBinary.ToArray();
                 }
 
-                mutex.ReleaseMutex();
+                //save
+                _fileProvider.WriteAllBytes(thumbFilePath, pictureBinaryResized);
             }
+
+            mutex.ReleaseMutex();
         }
 
         /// <summary>
@@ -529,10 +523,8 @@ namespace Nop.Services.Media.RoxyFileman
                         //In this case, it is not relevant. The input is not supplied by user.
                         if (GetFileType(new FileInfo(uniqueFileName).Extension) != "image")
                         {
-                            using (var stream = new FileStream(destinationFile, FileMode.OpenOrCreate))
-                            {
-                                formFile.CopyTo(stream);
-                            }
+                            using var stream = new FileStream(destinationFile, FileMode.OpenOrCreate);
+                            formFile.CopyTo(stream);
                         }
                         else
                         {

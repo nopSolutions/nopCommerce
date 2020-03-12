@@ -8,7 +8,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
@@ -49,7 +48,6 @@ namespace Nop.Services.Messages
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly ITokenizer _tokenizer;
-        private readonly LocalizationSettings _localizationSettings;
 
         #endregion
 
@@ -71,8 +69,7 @@ namespace Nop.Services.Messages
             IQueuedEmailService queuedEmailService,
             IStoreContext storeContext,
             IStoreService storeService,
-            ITokenizer tokenizer,
-            LocalizationSettings localizationSettings)
+            ITokenizer tokenizer)
         {
             _commonSettings = commonSettings;
             _emailAccountSettings = emailAccountSettings;
@@ -91,7 +88,6 @@ namespace Nop.Services.Messages
             _storeContext = storeContext;
             _storeService = storeService;
             _tokenizer = tokenizer;
-            _localizationSettings = localizationSettings;
         }
 
         #endregion

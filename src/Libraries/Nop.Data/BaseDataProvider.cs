@@ -41,22 +41,20 @@ namespace Nop.Data
         {
             DataConnection.DefaultSettings = Singleton<DataSettings>.Instance;
 
-            using (var currentConnection = new NopDataConnection())
+            using var currentConnection = new NopDataConnection();
+            ConfigureDataContext(currentConnection);
+
+            //find database mapping configuration by other assemblies
+            var typeFinder = new AppDomainTypeFinder();
+
+            var typeConfigurations = assembly != null
+                ? typeFinder.FindClassesOfType<IMappingConfiguration>(new List<Assembly> { assembly }).ToList()
+                : typeFinder.FindClassesOfType<IMappingConfiguration>().ToList();
+
+            foreach (var typeConfiguration in typeConfigurations)
             {
-                ConfigureDataContext(currentConnection);
-
-                //find database mapping configuration by other assemblies
-                var typeFinder = new AppDomainTypeFinder();
-
-                var typeConfigurations = assembly != null
-                    ? typeFinder.FindClassesOfType<IMappingConfiguration>(new List<Assembly> {assembly}).ToList()
-                    : typeFinder.FindClassesOfType<IMappingConfiguration>().ToList();
-
-                foreach (var typeConfiguration in typeConfigurations)
-                {
-                    var mappingConfiguration = (IMappingConfiguration)Activator.CreateInstance(typeConfiguration);
-                    mappingConfiguration.CreateTableIfNotExists(currentConnection);
-                }
+                var mappingConfiguration = (IMappingConfiguration)Activator.CreateInstance(typeConfiguration);
+                mappingConfiguration.CreateTableIfNotExists(currentConnection);
             }
         }
 
@@ -162,10 +160,8 @@ namespace Nop.Data
         /// <returns>Mapped entity descriptor</returns>
         public virtual EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity 
         {
-            using (var currentConnection = new NopDataConnection())
-            {
-                return currentConnection.MappingSchema.GetEntityDescriptor(typeof(TEntity));
-            }
+            using var currentConnection = new NopDataConnection();
+            return currentConnection.MappingSchema.GetEntityDescriptor(typeof(TEntity));
         }
 
         /// <summary>
@@ -176,12 +172,10 @@ namespace Nop.Data
         /// <returns>Copy of the passed entity</returns>
         public virtual TEntity LoadOriginalCopy<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using (var currentConnection = new NopDataConnection())
-            {
-                var entities = currentConnection.GetTable<TEntity>();
+            using var currentConnection = new NopDataConnection();
+            var entities = currentConnection.GetTable<TEntity>();
 
-                return entities.FirstOrDefault(e => e.Id == Convert.ToInt32(entity.Id));
-            }
+            return entities.FirstOrDefault(e => e.Id == Convert.ToInt32(entity.Id));
         }
 
         /// <summary>
@@ -192,12 +186,10 @@ namespace Nop.Data
         /// <returns>Entity</returns>
         public virtual TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using (var currentConnection = new NopDataConnection())
-            {
-                entity.Id = currentConnection.InsertWithInt32Identity(entity);
+            using var currentConnection = new NopDataConnection();
+            entity.Id = currentConnection.InsertWithInt32Identity(entity);
 
-                return entity;
-            }
+            return entity;
         }
 
         /// <summary>
@@ -210,10 +202,8 @@ namespace Nop.Data
         /// <returns>Returns collection of query result records</returns>
         public virtual IList<T> QueryProc<T>(string procedureName, params DataParameter[] parameters)
         {
-            using (var currentConnection = new NopDataConnection())
-            {
-                return currentConnection.ExecuteStoredProcedure<T>(procedureName, parameters) ?? new List<T>();
-            }
+            using var currentConnection = new NopDataConnection();
+            return currentConnection.ExecuteStoredProcedure<T>(procedureName, parameters) ?? new List<T>();
         }
 
         /// <summary>
@@ -225,10 +215,8 @@ namespace Nop.Data
         /// <returns>Collection of values of specified type</returns>
         public virtual IList<T> Query<T>(string sql, params DataParameter[] parameters)
         {
-            using (var currentConnection = new NopDataConnection())
-            {
-                return currentConnection.Query<T>(sql, parameters)?.ToList() ?? new List<T>();
-            }
+            using var currentConnection = new NopDataConnection();
+            return currentConnection.Query<T>(sql, parameters)?.ToList() ?? new List<T>();
         }
 
         #endregion

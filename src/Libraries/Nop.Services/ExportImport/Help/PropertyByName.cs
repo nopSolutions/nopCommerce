@@ -58,7 +58,7 @@ namespace Nop.Services.ExportImport.Help
             get
             {
                 if (PropertyValue == null || !int.TryParse(PropertyValue.ToString(), out var rez))
-                    return default(int);
+                    return default;
                 return rez;
             }
         }
@@ -71,7 +71,7 @@ namespace Nop.Services.ExportImport.Help
             get
             {
                 if (PropertyValue == null || !bool.TryParse(PropertyValue.ToString(), out var rez))
-                    return default(bool);
+                    return default;
                 return rez;
             }
         }
@@ -89,7 +89,7 @@ namespace Nop.Services.ExportImport.Help
             get
             {
                 if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out var rez))
-                    return default(decimal);
+                    return default;
                 return rez;
             }
         }
@@ -115,7 +115,7 @@ namespace Nop.Services.ExportImport.Help
             get
             {
                 if (PropertyValue == null || !double.TryParse(PropertyValue.ToString(), out var rez))
-                    return default(double);
+                    return default;
                 return rez;
             }
         }

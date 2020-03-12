@@ -52,21 +52,15 @@ namespace Nop.Services.Caching.CachingDefaults
         /// <returns>Cache parameter</returns>
         private static object CreateCacheKeyParameters(object parameter)
         {
-            switch (parameter)
+            return parameter switch
             {
-                case null:
-                    return "null";
-                case IEnumerable<int> ids:
-                    return CreateIdsHash(ids);
-                case IEnumerable<BaseEntity> entities:
-                    return CreateIdsHash(entities.Select(e => e.Id));
-                case BaseEntity entity:
-                    return entity.Id;
-                case decimal param:
-                    return param.ToString(CultureInfo.InvariantCulture);
-            }
-
-            return parameter;
+                null => "null",
+                IEnumerable<int> ids => CreateIdsHash(ids),
+                IEnumerable<BaseEntity> entities => CreateIdsHash(entities.Select(e => e.Id)),
+                BaseEntity entity => entity.Id,
+                decimal param => param.ToString(CultureInfo.InvariantCulture),
+                _ => parameter,
+            };
         }
 
         /// <summary>

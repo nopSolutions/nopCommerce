@@ -206,7 +206,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (state != null)
             {
                 //fill in model values from the entity
-                model = model ?? state.ToModel<StateProvinceModel>();
+                model ??= state.ToModel<StateProvinceModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

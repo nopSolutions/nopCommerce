@@ -255,7 +255,7 @@ namespace Nop.Services.Configuration
         /// <param name="storeId">Store identifier</param>
         /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all stores) value should be loaded if a value specific for a certain is not found</param>
         /// <returns>Setting value</returns>
-        public virtual T GetSettingByKey<T>(string key, T defaultValue = default(T),
+        public virtual T GetSettingByKey<T>(string key, T defaultValue = default,
             int storeId = 0, bool loadSharedValueIfNotFound = false)
         {
             if (string.IsNullOrEmpty(key))

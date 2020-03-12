@@ -15,15 +15,12 @@ namespace Nop.Core.Domain.Messages
         /// <returns>Value of message delay in hours</returns>
         public static int ToHours(this MessageDelayPeriod period, int value)
         {
-            switch (period)
+            return period switch
             {
-                case MessageDelayPeriod.Hours:
-                    return value;
-                case MessageDelayPeriod.Days:
-                    return value * 24;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(period));
-            }
+                MessageDelayPeriod.Hours => value,
+                MessageDelayPeriod.Days => value * 24,
+                _ => throw new ArgumentOutOfRangeException(nameof(period)),
+            };
         }
     }
 }

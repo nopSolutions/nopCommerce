@@ -304,7 +304,7 @@ namespace Nop.Plugin.Payments.Qualpay.Services
             var taxAmount = _orderTotalCalculationService.GetTaxTotal(shoppingCart, shippingRateComputationMethods);
 
             //define function to create item
-            Domain.LineItem createItem(decimal price, string description, string productCode, int quantity = 1)
+            static Domain.LineItem createItem(decimal price, string description, string productCode, int quantity = 1)
             {
                 return new Domain.LineItem
                 {

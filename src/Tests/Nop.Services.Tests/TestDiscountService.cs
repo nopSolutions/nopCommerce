@@ -88,7 +88,7 @@ namespace Nop.Services.Tests
             _discounts.Clear();
         }
 
-        public static IDiscountService Init(IQueryable<Discount> discounts = default(IQueryable<Discount>), IQueryable<DiscountProductMapping> productDiscountMapping = null)
+        public static IDiscountService Init(IQueryable<Discount> discounts = default, IQueryable<DiscountProductMapping> productDiscountMapping = null)
         {
             var cacheManager = new TestCacheManager();
             var discountRepo = new Mock<IRepository<Discount>>();

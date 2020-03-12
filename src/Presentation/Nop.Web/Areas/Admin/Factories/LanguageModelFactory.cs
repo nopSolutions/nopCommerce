@@ -121,7 +121,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (language != null)
             {
                 //fill in model values from the entity
-                model = model ?? language.ToModel<LanguageModel>();
+                model ??= language.ToModel<LanguageModel>();
 
                 //prepare nested search model
                 PrepareLocaleResourceSearchModel(model.LocaleResourceSearchModel, language);

@@ -167,7 +167,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (giftCard != null)
             {
                 //fill in model values from the entity
-                model = model ?? giftCard.ToModel<GiftCardModel>();
+                model ??= giftCard.ToModel<GiftCardModel>();
 
                 var order = _orderService.GetOrderByOrderItem(giftCard.PurchasedWithOrderItemId ?? 0);
 

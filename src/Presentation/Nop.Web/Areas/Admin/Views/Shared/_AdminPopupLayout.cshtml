@@ -3,7 +3,7 @@
 @inject CommonSettings commonSettings
 @inject IEventPublisher eventPublisher
 @inject INopFileProvider fileProvider;
-@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment HostingEnvironment
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment WebHostEnvironment
 @using System.Globalization
 @using Nop.Services.Defaults
 @using Nop.Web.Framework.UI;
@@ -22,9 +22,9 @@
         var localePattern = NopCommonDefaults.LocalePatternPath;
         var cultureToUse = NopCommonDefaults.DefaultLocalePattern; //Default regionalisation to use
 
-        if (fileProvider.DirectoryExists(fileProvider.Combine(HostingEnvironment.WebRootPath, string.Format(localePattern, currentCulture.Name))))
+        if (fileProvider.DirectoryExists(fileProvider.Combine(WebHostEnvironment.WebRootPath, string.Format(localePattern, currentCulture.Name))))
             cultureToUse = currentCulture.Name;
-        else if (fileProvider.DirectoryExists(fileProvider.Combine(HostingEnvironment.WebRootPath, string.Format(localePattern, currentCulture.TwoLetterISOLanguageName))))
+        else if (fileProvider.DirectoryExists(fileProvider.Combine(WebHostEnvironment.WebRootPath, string.Format(localePattern, currentCulture.TwoLetterISOLanguageName))))
             cultureToUse = currentCulture.TwoLetterISOLanguageName;
 
         return cultureToUse;

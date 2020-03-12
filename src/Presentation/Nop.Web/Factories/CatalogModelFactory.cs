@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.XPath;
 using System.Xml.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -722,16 +723,12 @@ namespace Nop.Web.Factories
 
                 var xsSubmit = new XmlSerializer(typeof(List<CategorySimpleModel>));
 
-                using (var strWriter = new StringWriter())
-                {
-                    using (var writer = XmlWriter.Create(strWriter))
-                    {
-                        xsSubmit.Serialize(writer, categories);
-                        var xml = strWriter.ToString();
+                using var strWriter = new StringWriter();
+                using var writer = XmlWriter.Create(strWriter);
+                xsSubmit.Serialize(writer, categories);
+                var xml = strWriter.ToString();
 
-                        return XDocument.Parse(xml);
-                    }
-                }
+                return XDocument.Parse(xml);
             });
         }
 
@@ -743,7 +740,7 @@ namespace Nop.Web.Factories
         {
             var doc = PrepareCategoryXmlDocument();
 
-            var models = from xe in doc.Element("ArrayOfCategorySimpleModel").Elements("CategorySimpleModel")
+            var models = from xe in doc.Root.XPathSelectElements("CategorySimpleModel")
                          select GetCategorySimpleModel(xe);
 
             return models.ToList();
@@ -758,11 +755,11 @@ namespace Nop.Web.Factories
         {
             var doc = PrepareCategoryXmlDocument();
 
-            var model = from xe in doc.Descendants("CategorySimpleModel")
-                        where xe.Element("Id").Value == id.ToString()
+            var model = from xe in doc.Root.XPathSelectElements("CategorySimpleModel")
+                        where xe.XPathSelectElement("Id").Value == id.ToString()
                         select xe;
 
-            var models = from xe in model.First().Elements("SubCategories").Elements("CategorySimpleModel")
+            var models = from xe in model.First().XPathSelectElements("SubCategories/CategorySimpleModel")
                          select GetCategorySimpleModel(xe);
 
             return models.ToList();
@@ -1475,17 +1472,17 @@ namespace Nop.Web.Factories
 
             return new CategorySimpleModel
             {
-                Id = Convert.ToInt32(elem.Element("Id").Value),
-                Name = elem.Element("Name").Value,
-                SeName = elem.Element("SeName").Value,
+                Id = int.Parse(elem.XPathSelectElement("Id").Value),
+                Name = elem.XPathSelectElement("Name").Value,
+                SeName = elem.XPathSelectElement("SeName").Value,
 
-                NumberOfProducts = !string.IsNullOrEmpty(elem.Element("NumberOfProducts").Value)
-                    ? Convert.ToInt32(elem.Element("NumberOfProducts").Value)
+                NumberOfProducts = !string.IsNullOrEmpty(elem.XPathSelectElement("NumberOfProducts").Value)
+                    ? int.Parse(elem.XPathSelectElement("NumberOfProducts").Value)
                     : (int?)null,
 
-                IncludeInTopMenu = Convert.ToBoolean(elem.Element("IncludeInTopMenu").Value),
-                HaveSubCategories = Convert.ToBoolean(elem.Element("HaveSubCategories").Value),
-                Route = urlHelper.RouteUrl("Category", new { SeName = elem.Element("SeName").Value })
+                IncludeInTopMenu = bool.Parse(elem.XPathSelectElement("IncludeInTopMenu").Value),
+                HaveSubCategories = bool.Parse(elem.XPathSelectElement("HaveSubCategories").Value),
+                Route = urlHelper.RouteUrl("Category", new { SeName = elem.XPathSelectElement("SeName").Value })
             };
         }
 

@@ -2,7 +2,6 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Orders;
-using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -21,7 +20,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly INotificationService _notificationService;
@@ -36,7 +34,6 @@ namespace Nop.Web.Areas.Admin.Controllers
         #region Ctor
 
         public ReturnRequestController(ICustomerActivityService customerActivityService,
-            ICustomerService customerService,
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
             INotificationService notificationService,
@@ -47,7 +44,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             IWorkflowMessageService workflowMessageService)
         {
             _customerActivityService = customerActivityService;
-            _customerService = customerService;
             _localizationService = localizationService;
             _localizedEntityService = localizedEntityService;
             _notificationService = notificationService;

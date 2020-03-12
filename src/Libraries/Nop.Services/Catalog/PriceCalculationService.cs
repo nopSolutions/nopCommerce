@@ -503,7 +503,7 @@ namespace Nop.Services.Catalog
             //we use this method because some currencies (e.g. Gungarian Forint or Swiss Franc) use non-standard rules for rounding
             //you can implement any rounding logic here
 
-            currency = currency ?? _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            currency ??= _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
 
             return Round(value, currency.RoundingType);
         }

@@ -54,7 +54,7 @@ namespace Nop.Web.Framework.Extensions
             if (localizationSupported)
             {
                 var tabStrip = new StringBuilder();
-                var cssClassWithSpace = !String.IsNullOrEmpty(cssClass) ? " " + cssClass : null;
+                var cssClassWithSpace = !string.IsNullOrEmpty(cssClass) ? " " + cssClass : null;
                 tabStrip.AppendLine($"<div id=\"{name}\" class=\"nav-tabs-custom nav-tabs-localized-fields{cssClassWithSpace}\">");
                 
                 //render input contains selected tab name
@@ -248,12 +248,10 @@ namespace Nop.Web.Framework.Extensions
         /// <returns>Result</returns>
         public static string RenderHtmlContent(this IHtmlContent htmlContent)
         {
-            using (var writer = new StringWriter())
-            {
-                htmlContent.WriteTo(writer, HtmlEncoder.Default);
-                var htmlOutput = writer.ToString();
-                return htmlOutput;
-            }
+            using var writer = new StringWriter();
+            htmlContent.WriteTo(writer, HtmlEncoder.Default);
+            var htmlOutput = writer.ToString();
+            return htmlOutput;
         }
 
         /// <summary>
@@ -263,11 +261,9 @@ namespace Nop.Web.Framework.Extensions
         /// <returns>String</returns>
         public static string ToHtmlString(this IHtmlContent tag)
         {
-            using (var writer = new StringWriter())
-            {
-                tag.WriteTo(writer, HtmlEncoder.Default);
-                return writer.ToString();
-            }
+            using var writer = new StringWriter();
+            tag.WriteTo(writer, HtmlEncoder.Default);
+            return writer.ToString();
         }
 
         #endregion

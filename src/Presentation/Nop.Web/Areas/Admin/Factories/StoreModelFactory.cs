@@ -94,7 +94,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (store != null)
             {
                 //fill in model values from the entity
-                model = model ?? store.ToModel<StoreModel>();
+                model ??= store.ToModel<StoreModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

@@ -68,7 +68,7 @@ namespace Nop.Services.Common
         /// <param name="storeId">Load a value specific for a certain store; pass 0 to load a value shared for all stores</param>
         /// <param name="defaultValue">Default value</param>
         /// <returns>Attribute</returns>
-        TPropType GetAttribute<TPropType>(BaseEntity entity, string key, int storeId = 0, TPropType defaultValue = default(TPropType));
+        TPropType GetAttribute<TPropType>(BaseEntity entity, string key, int storeId = 0, TPropType defaultValue = default);
 
         /// <summary>
         /// Get an attribute of an entity
@@ -79,7 +79,7 @@ namespace Nop.Services.Common
         /// <param name="storeId">Load a value specific for a certain store; pass 0 to load a value shared for all stores</param>
         /// <param name="defaultValue">Default value</param>
         /// <returns>Attribute</returns>
-        TPropType GetAttribute<TEntity, TPropType>(int entityId, string key, int storeId = 0, TPropType defaultValue = default(TPropType))
+        TPropType GetAttribute<TEntity, TPropType>(int entityId, string key, int storeId = 0, TPropType defaultValue = default)
             where TEntity : BaseEntity;
     }
 }

@@ -193,7 +193,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (checkoutAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? checkoutAttribute.ToModel<CheckoutAttributeModel>();
+                model ??= checkoutAttribute.ToModel<CheckoutAttributeModel>();
 
                 //prepare nested search model
                 PrepareCheckoutAttributeValueSearchModel(model.CheckoutAttributeValueSearchModel, checkoutAttribute);
@@ -289,7 +289,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (checkoutAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = model ?? checkoutAttributeValue.ToModel<CheckoutAttributeValueModel>();
+                model ??= checkoutAttributeValue.ToModel<CheckoutAttributeValueModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

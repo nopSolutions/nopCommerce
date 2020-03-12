@@ -50,20 +50,18 @@ namespace Nop.Services.Plugins
         /// <returns>List of an uploaded item</returns>
         protected virtual IList<UploadedItem> GetUploadedItems(string archivePath)
         {
-            using (var archive = ZipFile.OpenRead(archivePath))
-            {
-                //try to get the entry containing information about the uploaded items 
-                var uploadedItemsFileEntry = archive.Entries
-                    .FirstOrDefault(entry => entry.Name.Equals(NopPluginDefaults.UploadedItemsFileName, StringComparison.InvariantCultureIgnoreCase)
-                        && string.IsNullOrEmpty(_fileProvider.GetDirectoryName(entry.FullName)));
-                if (uploadedItemsFileEntry == null)
-                    return null;
+            using var archive = ZipFile.OpenRead(archivePath);
+            //try to get the entry containing information about the uploaded items 
+            var uploadedItemsFileEntry = archive.Entries
+                .FirstOrDefault(entry => entry.Name.Equals(NopPluginDefaults.UploadedItemsFileName, StringComparison.InvariantCultureIgnoreCase)
+                    && string.IsNullOrEmpty(_fileProvider.GetDirectoryName(entry.FullName)));
+            if (uploadedItemsFileEntry == null)
+                return null;
 
-                //read the content of this entry if exists
-                using (var unzippedEntryStream = uploadedItemsFileEntry.Open())
-                using (var reader = new StreamReader(unzippedEntryStream))
-                    return JsonConvert.DeserializeObject<IList<UploadedItem>>(reader.ReadToEnd());
-            }
+            //read the content of this entry if exists
+            using var unzippedEntryStream = uploadedItemsFileEntry.Open();
+            using var reader = new StreamReader(unzippedEntryStream);
+            return JsonConvert.DeserializeObject<IList<UploadedItem>>(reader.ReadToEnd());
         }
 
         /// <summary>
@@ -112,27 +110,23 @@ namespace Nop.Services.Plugins
                     if (!isPluginDescriptor && !isThemeDescriptor)
                         continue;
 
-                    using (var unzippedEntryStream = entry.Open())
+                    using var unzippedEntryStream = entry.Open();
+                    using var reader = new StreamReader(unzippedEntryStream);
+                    //whether a plugin is upload 
+                    if (isPluginDescriptor)
                     {
-                        using (var reader = new StreamReader(unzippedEntryStream))
-                        {
-                            //whether a plugin is upload 
-                            if (isPluginDescriptor)
-                            {
-                                descriptor = PluginDescriptor.GetPluginDescriptorFromText(reader.ReadToEnd());
+                        descriptor = PluginDescriptor.GetPluginDescriptorFromText(reader.ReadToEnd());
 
-                                //ensure that the plugin current version is supported
-                                if (!((PluginDescriptor)descriptor).SupportedVersions.Contains(NopVersion.CurrentVersion))
-                                    throw new Exception($"This plugin doesn't support the current version - {NopVersion.CurrentVersion}");
-                            }
-
-                            //or whether a theme is upload 
-                            if (isThemeDescriptor)
-                                descriptor = _themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
-
-                            break;
-                        }
+                        //ensure that the plugin current version is supported
+                        if (!((PluginDescriptor)descriptor).SupportedVersions.Contains(NopVersion.CurrentVersion))
+                            throw new Exception($"This plugin doesn't support the current version - {NopVersion.CurrentVersion}");
                     }
+
+                    //or whether a theme is upload 
+                    if (isThemeDescriptor)
+                        descriptor = _themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
+
+                    break;
                 }
             }
 
@@ -207,16 +201,14 @@ namespace Nop.Services.Plugins
                     IDescriptor descriptor = null;
                     using (var unzippedEntryStream = descriptorEntry.Open())
                     {
-                        using (var reader = new StreamReader(unzippedEntryStream))
-                        {
-                            //whether a plugin is upload 
-                            if (item.Type == UploadedItemType.Plugin)
-                                descriptor = PluginDescriptor.GetPluginDescriptorFromText(reader.ReadToEnd());
+                        using var reader = new StreamReader(unzippedEntryStream);
+                        //whether a plugin is upload 
+                        if (item.Type == UploadedItemType.Plugin)
+                            descriptor = PluginDescriptor.GetPluginDescriptorFromText(reader.ReadToEnd());
 
-                            //or whether a theme is upload 
-                            if (item.Type == UploadedItemType.Theme)
-                                descriptor = _themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
-                        }
+                        //or whether a theme is upload 
+                        if (item.Type == UploadedItemType.Theme)
+                            descriptor = _themeProvider.GetThemeDescriptorFromText(reader.ReadToEnd());
                     }
 
                     if (descriptor == null)
