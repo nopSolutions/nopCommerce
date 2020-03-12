@@ -120,9 +120,9 @@ BEGIN
 		LEFT JOIN `ShoppingCartItem` sci ON sci.`CustomerId` = c.`Id`
 		INNER JOIN (
 			#guests only
-			SELECT ccrm.`CustomerId` 
-			FROM `CustomerCustomerRoleMapping` ccrm
-				INNER JOIN `CustomerRole` cr ON cr.`Id` = ccrm.`CustomerRoleId`
+			SELECT ccrm.`Customer_Id` 
+			FROM `Customer_CustomerRole_Mapping` ccrm
+				INNER JOIN `CustomerRole` cr ON cr.`Id` = ccrm.`CustomerRole_Id`
 			WHERE cr.`SystemName` = 'Guests'
 		) g ON g.`CustomerId` = c.`Id`
 		LEFT JOIN `Order` o ON o.`CustomerId` = c.`Id`
@@ -131,8 +131,8 @@ BEGIN
 		LEFT JOIN `ProductReview` pr ON pr.`CustomerId` = c.`Id`
 		LEFT JOIN `ProductReviewHelpfulness` prh ON prh.`CustomerId` = c.`Id`
 		LEFT JOIN `PollVotingRecord` pvr ON pvr.`CustomerId` = c.`Id`
-		LEFT JOIN `ForumTopic` ft ON ft.`CustomerId` = c.`Id`
-		LEFT JOIN `ForumPost` fp ON fp.`CustomerId` = c.`Id`
+		LEFT JOIN `Forums_Topic` ft ON ft.`CustomerId` = c.`Id`
+		LEFT JOIN `Forums_Post` fp ON fp.`CustomerId` = c.`Id`
 	WHERE 1 = 1
 		#no orders
 		AND (o.Id is null)
@@ -242,8 +242,8 @@ BEGIN
 	#filter by customer role IDs (access control list)	
 	SELECT pt.Id as `ProductTagId`, COUNT(p.Id) as `ProductCount`
 	FROM ProductTag pt
-	LEFT JOIN ProductProductTagMapping pptm ON pt.`Id` = pptm.`ProductTagId`
-	LEFT JOIN Product p ON pptm.`ProductId` = p.`Id`
+	LEFT JOIN Product_ProductTag_Mapping pptm ON pt.`Id` = pptm.`ProductTag_Id`
+	LEFT JOIN Product p ON pptm.`Product_Id` = p.`Id`
 	WHERE
 		not p.`Deleted`
 		AND p.Published
@@ -456,15 +456,15 @@ BEGIN
 			#product tags (exact match)
 			SET @sql_command = concat(@sql_command, '
 			UNION
-			SELECT pptm.ProductId
-			FROM ProductProductTagMapping pptm INNER JOIN ProductTag pt ON pt.Id = pptm.ProductTagId
+			SELECT pptm.Product_Id
+			FROM Product_ProductTag_Mapping pptm INNER JOIN ProductTag pt ON pt.Id = pptm.ProductTag_Id
 			WHERE pt.`Name` = @OriginalKeywords ');
 
 			#localized product tags
 			SET @sql_command = concat(@sql_command, '
 			UNION
-			SELECT pptm.ProductId
-			FROM LocalizedProperty lp INNER JOIN ProductProductTagMapping pptm ON lp.EntityId = pptm.ProductTagId
+			SELECT pptm.Product_Id
+			FROM LocalizedProperty lp INNER JOIN Product_ProductTag_Mapping pptm ON lp.EntityId = pptm.ProductTag_Id
 			WHERE
 				lp.LocaleKeyGroup = N''ProductTag''
 				AND lp.LanguageId = ', `LanguageId`, '
@@ -496,20 +496,20 @@ BEGIN
     
     IF `CategoryIds` REGEXP '^([[:digit:]](,?))+$' then
 		SET @sql_command = concat(@sql_command, '
-		INNER JOIN ProductCategory pcm
+		INNER JOIN Product_Category_Mapping pcm
 			ON p.Id = pcm.ProductId');
 	END if;
     
     IF `ManufacturerId` > 0 then
 		SET @sql_command = concat(@sql_command, '
-		INNER JOIN ProductManufacturer pmm
+		INNER JOIN Product_Manufacturer_Mapping pmm
 			ON p.Id = pmm.ProductId');
 	END if;
     
     IF COALESCE(`ProductTagId`, 0) != 0 then
 		SET @sql_command = concat(@sql_command, '
-		INNER JOIN ProductProductTagMapping pptm
-			ON p.Id = pptm.ProductId');
+		INNER JOIN Product_ProductTag_Mapping pptm
+			ON p.Id = pptm.Product_Id');
 	END if;
     
     #searching by keywords
@@ -589,7 +589,7 @@ BEGIN
     #filter by product tag
 	IF COALESCE(`ProductTagId`, 0) != 0 then
 		SET  @sql_command = concat(@sql_command, '
-			AND pptm.ProductTagId = ', `ProductTagId`);
+			AND pptm.ProductTag_Id = ', `ProductTagId`);
 	END if;
 	
 	#"Published" property
@@ -653,7 +653,7 @@ BEGIN
     IF `LoadFilterableSpecificationAttributeOptionIds` then
         SET @sql_filterableSpecs = concat('
 	        SELECT group_concat(DISTINCT `psam`.SpecificationAttributeOptionId separator '','')
-	        FROM `ProductSpecificationAttribute` `psam`
+	        FROM `Product_SpecificationAttribute_Mapping` `psam`
 	            WHERE `psam`.`AllowFiltering`
 	            AND `psam`.`ProductId` IN (', @sql_command, ') into @FilterableSpecs');
                 
@@ -674,7 +674,7 @@ BEGIN
 		SET  @sql_command = concat(@sql_command, '
 			AND (p.Id in (
 					select psa.ProductId 
-					from `ProductSpecificationAttribute` as psa 
+					from `Product_SpecificationAttribute_Mapping` as psa 
                     INNER JOIN (
 						select sao.SpecificationAttributeId 
 						from `SpecificationAttributeOption` as sao 
