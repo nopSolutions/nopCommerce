@@ -267,10 +267,10 @@ namespace Nop.Services.Installation
 
         protected virtual SpecificationAttributeOption GetSpecificationAttributeOption(string specAttributeName, string specAttributeOptionName)
         {
-            var specificationAttribute = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize");
+            var specificationAttribute = _specificationAttributeRepository.Table.Single(sa => sa.Name == specAttributeName);
 
             var specificationAttributeOption = _specificationAttributeOptionRepository.Table.Single(sao =>
-                sao.Name == "13.0''" && sao.SpecificationAttributeId == specificationAttribute.Id);
+                sao.Name == specAttributeOptionName && sao.SpecificationAttributeId == specificationAttribute.Id);
 
             return specificationAttributeOption;
         }
