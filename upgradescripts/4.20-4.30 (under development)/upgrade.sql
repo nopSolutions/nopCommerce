@@ -349,6 +349,9 @@ set @resources='
   <LocaleResource Name="Admin.System.Maintenance.DeleteAlreadySentQueuedEmails.TotalDeleted">
     <Value>{0} emails were deleted</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.TopicName">
+    <Value>Name</Value>
+  </LocaleResource>
 </Language>
 '
 
