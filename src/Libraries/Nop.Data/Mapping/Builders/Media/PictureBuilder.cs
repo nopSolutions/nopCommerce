@@ -18,7 +18,7 @@ namespace Nop.Data.Mapping.Builders.Media
         {
             table
                 .WithColumn(nameof(Picture.MimeType)).AsString(40).NotNullable()
-                .WithColumn(nameof(Picture.SeoFilename)).AsString(300).NotNullable();
+                .WithColumn(nameof(Picture.SeoFilename)).AsString(300).Nullable();
         }
 
         #endregion

@@ -47,6 +47,7 @@ namespace Nop.Data.Migrations
         public override void Up()
         {
             _migrationManager.BuildTable<AddressAttribute>(Create);
+            _migrationManager.BuildTable<AddressAttributeValue>(Create);
             _migrationManager.BuildTable<GenericAttribute>(Create);
             _migrationManager.BuildTable<SearchTerm>(Create);
             _migrationManager.BuildTable<Country>(Create);
@@ -124,7 +125,6 @@ namespace Nop.Data.Migrations
             _migrationManager.BuildTable<ManufacturerTemplate>(Create);
 
             _migrationManager.BuildTable<ProductManufacturer>(Create);
-
             _migrationManager.BuildTable<ProductProductTagMapping>(Create);
             _migrationManager.BuildTable<ProductReview>(Create);
 
@@ -161,6 +161,7 @@ namespace Nop.Data.Migrations
             _migrationManager.BuildTable<DiscountProductMapping>(Create);
             _migrationManager.BuildTable<DiscountRequirement>(Create);
             _migrationManager.BuildTable<DiscountUsageHistory>(Create);
+            _migrationManager.BuildTable<DiscountManufacturerMapping>(Create);
 
             _migrationManager.BuildTable<PrivateMessage>(Create);
             _migrationManager.BuildTable<ForumGroup>(Create);

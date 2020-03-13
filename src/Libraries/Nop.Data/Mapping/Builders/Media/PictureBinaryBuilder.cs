@@ -1,5 +1,4 @@
-﻿using System.Data;
-using FluentMigrator.Builders.Create.Table;
+﻿using FluentMigrator.Builders.Create.Table;
 using Nop.Core.Domain.Media;
 using Nop.Data.Extensions;
 
@@ -18,7 +17,7 @@ namespace Nop.Data.Mapping.Builders.Media
         /// <param name="table">Create table expression builder</param>
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
-            table.WithColumn(nameof(PictureBinary.PictureId)).AsInt32().ForeignKey<Picture>().OnDelete(Rule.Cascade);
+            table.WithColumn(nameof(PictureBinary.PictureId)).AsInt32().ForeignKey<Picture>();
         }
 
         #endregion

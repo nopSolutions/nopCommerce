@@ -1,4 +1,5 @@
-﻿using FluentMigrator.Builders.Create.Table;
+﻿using System.Data;
+using FluentMigrator.Builders.Create.Table;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Shipping;
 using Nop.Data.Extensions;
@@ -20,7 +21,7 @@ namespace Nop.Data.Mapping.Builders.Catalog
         {
             table
                 .WithColumn(nameof(StockQuantityHistory.ProductId)).AsInt32().ForeignKey<Product>()
-                .WithColumn(nameof(StockQuantityHistory.WarehouseId)).AsInt32().Nullable().ForeignKey<Warehouse>();
+                .WithColumn(nameof(StockQuantityHistory.WarehouseId)).AsInt32().Nullable().ForeignKey<Warehouse>(onDelete: Rule.None);
         }
 
         #endregion

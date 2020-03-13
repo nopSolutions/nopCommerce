@@ -70,21 +70,5 @@ namespace Nop.Core.Domain.Forums
             get => (ForumTopicType)TopicTypeId;
             set => TopicTypeId = (int)value;
         }
-
-        /// <summary>
-        /// Gets the number of replies
-        /// </summary>
-        public int NumReplies
-        {
-            get
-            {
-                var result = 0;
-
-                if (NumPosts > 0)
-                    result = NumPosts - 1;
-
-                return result;
-            }
-        }
     }
 }

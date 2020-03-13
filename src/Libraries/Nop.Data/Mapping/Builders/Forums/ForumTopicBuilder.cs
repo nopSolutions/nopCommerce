@@ -1,4 +1,5 @@
-﻿using FluentMigrator.Builders.Create.Table;
+﻿using System.Data;
+using FluentMigrator.Builders.Create.Table;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Data.Extensions;
@@ -20,7 +21,7 @@ namespace Nop.Data.Mapping.Builders.Forums
         {
             table
                 .WithColumn(nameof(ForumTopic.Subject)).AsString(450).NotNullable()
-                .WithColumn(nameof(ForumTopic.CustomerId)).AsInt32().ForeignKey<Customer>()
+                .WithColumn(nameof(ForumTopic.CustomerId)).AsInt32().ForeignKey<Customer>(onDelete: Rule.None)
                 .WithColumn(nameof(ForumTopic.ForumId)).AsInt32().ForeignKey<Forum>();
         }
 

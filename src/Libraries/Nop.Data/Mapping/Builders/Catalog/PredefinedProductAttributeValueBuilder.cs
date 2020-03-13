@@ -18,7 +18,7 @@ namespace Nop.Data.Mapping.Builders.Catalog
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(PredefinedProductAttributeValue)).AsString(400).NotNullable()
+                .WithColumn(nameof(PredefinedProductAttributeValue.Name)).AsString(400).NotNullable()
                 .WithColumn(nameof(PredefinedProductAttributeValue.ProductAttributeId)).AsInt32().ForeignKey<ProductAttribute>();
         }
 

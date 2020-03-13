@@ -19,7 +19,7 @@ namespace Nop.Data.Mapping.Builders.Localization
             table
                 .WithColumn(nameof(Language.Name)).AsString(100).NotNullable()
                 .WithColumn(nameof(Language.LanguageCulture)).AsString(20).NotNullable()
-                .WithColumn(nameof(Language.UniqueSeoCode)).AsFixedLengthString(2)
+                .WithColumn(nameof(Language.UniqueSeoCode)).AsString(2).Nullable()
                 .WithColumn(nameof(Language.FlagImageFileName)).AsString(50).Nullable();
         }
 

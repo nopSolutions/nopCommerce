@@ -109,7 +109,7 @@ namespace Nop.Web.Controllers
             foreach (var topic in topics)
             {
                 var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = _forumService.GetTopicSeName(topic) }, _webHelper.CurrentRequestProtocol);
-                var content = $"{repliesText}: {topic.NumReplies.ToString()}, {viewsText}: {topic.Views.ToString()}";
+                var content = $"{repliesText}: {(topic.NumPosts > 0 ? topic.NumPosts - 1 : 0)}, {viewsText}: {topic.Views.ToString()}";
 
                 items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl),
                     $"urn:store:{_storeContext.CurrentStore.Id}:activeDiscussions:topic:{topic.Id}", topic.LastPostTime ?? topic.UpdatedOnUtc));
@@ -181,7 +181,7 @@ namespace Nop.Web.Controllers
                 foreach (var topic in topics)
                 {
                     var topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = _forumService.GetTopicSeName(topic) }, _webHelper.CurrentRequestProtocol);
-                    var content = $"{repliesText}: {topic.NumReplies}, {viewsText}: {topic.Views}";
+                    var content = $"{repliesText}: {(topic.NumPosts > 0 ? topic.NumPosts - 1 : 0)}, {viewsText}: {topic.Views}";
 
                     items.Add(new RssItem(topic.Subject, content, new Uri(topicUrl), $"urn:store:{_storeContext.CurrentStore.Id}:forum:topic:{topic.Id}", topic.LastPostTime ?? topic.UpdatedOnUtc));
                 }

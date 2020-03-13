@@ -17,7 +17,7 @@ namespace Nop.Data.Mapping.Builders.Messages
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(EmailAccount.DisplayName)).AsString(255).NotNullable()
+                .WithColumn(nameof(EmailAccount.DisplayName)).AsString(255).Nullable()
                 .WithColumn(nameof(EmailAccount.Email)).AsString(255).NotNullable()
                 .WithColumn(nameof(EmailAccount.Host)).AsString(255).NotNullable()
                 .WithColumn(nameof(EmailAccount.Username)).AsString(255).NotNullable()

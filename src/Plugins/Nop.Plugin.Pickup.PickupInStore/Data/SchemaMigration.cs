@@ -4,7 +4,7 @@ using Nop.Plugin.Pickup.PickupInStore.Domain;
 
 namespace Nop.Plugin.Pickup.PickupInStore.Data
 {
-    [NopMigration("2020/02/03 09:30:01.429")]
+    [NopMigration("2020/02/03 09:30:17:6455422")]
     public class SchemaMigration : AutoReversingMigration
     {
         protected IMigrationManager _migrationManager;

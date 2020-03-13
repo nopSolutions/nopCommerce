@@ -18,7 +18,7 @@ namespace Nop.Data.Mapping.Builders.Common
         {
             table
                 .WithColumn(nameof(GenericAttribute.KeyGroup)).AsString(400).NotNullable()
-                .WithColumn(nameof(GenericAttribute.Key)).AsString(int.MaxValue).NotNullable()
+                .WithColumn(nameof(GenericAttribute.Key)).AsString(400).NotNullable()
                 .WithColumn(nameof(GenericAttribute.Value)).AsString(int.MaxValue).NotNullable();
         }
 

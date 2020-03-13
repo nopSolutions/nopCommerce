@@ -1,4 +1,5 @@
-﻿using FluentMigrator.Builders.Create.Table;
+﻿using System.Data;
+using FluentMigrator.Builders.Create.Table;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Data.Extensions;
@@ -19,8 +20,8 @@ namespace Nop.Data.Mapping.Builders.Common
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(Address.CountryId)).AsInt32().Nullable().ForeignKey<Country>()
-                .WithColumn(nameof(Address.StateProvinceId)).AsInt32().Nullable().ForeignKey<StateProvince>();
+                .WithColumn(nameof(Address.CountryId)).AsInt32().Nullable().ForeignKey<Country>(onDelete: Rule.None)
+                .WithColumn(nameof(Address.StateProvinceId)).AsInt32().Nullable().ForeignKey<StateProvince>(onDelete: Rule.None);
         }
 
         #endregion

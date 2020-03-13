@@ -1,4 +1,5 @@
-﻿using FluentMigrator.Builders.Create.Table;
+﻿using System.Data;
+using FluentMigrator.Builders.Create.Table;
 using Nop.Core.Domain.Messages;
 using Nop.Data.Extensions;
 
@@ -21,7 +22,7 @@ namespace Nop.Data.Mapping.Builders.Messages
                 .WithColumn(nameof(MessageTemplate.Name)).AsString(200).NotNullable()
                 .WithColumn(nameof(MessageTemplate.BccEmailAddresses)).AsString(200).Nullable()
                 .WithColumn(nameof(MessageTemplate.Subject)).AsString(1000).Nullable()
-                .WithColumn(nameof(MessageTemplate.EmailAccountId)).AsInt32().ForeignKey<EmailAccount>();
+                .WithColumn(nameof(MessageTemplate.EmailAccountId)).AsInt32().ForeignKey<EmailAccount>(onDelete: Rule.None);
         }
 
         #endregion

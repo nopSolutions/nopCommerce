@@ -16,8 +16,8 @@ namespace Nop.Data.Mapping.Builders.Directory
         /// <param name="table">Create table expression builder</param>
         public override void MapEntity(CreateTableExpressionBuilder table) => table
             .WithColumn(nameof(Country.Name)).AsString(100).NotNullable()
-            .WithColumn(nameof(Country.TwoLetterIsoCode)).AsFixedLengthString(2)
-            .WithColumn(nameof(Country.ThreeLetterIsoCode)).AsFixedLengthString(3);
+            .WithColumn(nameof(Country.TwoLetterIsoCode)).AsString(2).Nullable()
+            .WithColumn(nameof(Country.ThreeLetterIsoCode)).AsString(3).Nullable();
 
         #endregion
     }

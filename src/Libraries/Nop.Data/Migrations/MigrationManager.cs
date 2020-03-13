@@ -13,6 +13,7 @@ using FluentMigrator.Model;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Initialization;
 using Nop.Core;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Infrastructure;
 using Nop.Data.Mapping;
 using Nop.Data.Mapping.Builders;
@@ -88,6 +89,9 @@ namespace Nop.Data.Migrations
 
             if (!_typeMapping.ContainsKey(propType))
                 return;
+            
+            if (type == typeof(string) || propType.FindInterfaces((t, o) => t.FullName?.Equals(o.ToString(), StringComparison.InvariantCultureIgnoreCase) ?? false, "System.Collections.IEnumerable").Any())
+                canBeNullable = true;
 
             var column = create.WithColumn(NameCompatibilityManager.GetColumnName(type, propertyInfo.Name));
             _typeMapping[propType](column);
@@ -129,7 +133,7 @@ namespace Nop.Data.Migrations
             }
 
             var propertiesToAutoMap = type
-                .GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public)
+                .GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.SetProperty)
                 .Where(p =>
                     !expression.Columns.Any(x => x.Name.Equals(NameCompatibilityManager.GetColumnName(type, p.Name), StringComparison.OrdinalIgnoreCase)));
 
@@ -143,13 +147,12 @@ namespace Nop.Data.Migrations
         /// Returns the instances for found types implementing FluentMigrator.IMigration
         /// </summary>
         /// <param name="assembly"></param>
-        /// <param name="tags">The list of tags to check against</param>
         /// <returns>The instances for found types implementing FluentMigrator.IMigration</returns>
         private IEnumerable<IMigrationInfo> GetMigrations(Assembly assembly)
         {
             var migrations = _filteringMigrationSource.GetMigrations(t => assembly == null || t.Assembly == assembly) ?? Enumerable.Empty<IMigration>();
 
-            return migrations.Select(m => _migrationRunnerConventions.GetMigrationInfoForMigration(m));
+            return migrations.Select(m => _migrationRunnerConventions.GetMigrationInfoForMigration(m)).OrderBy(migration => migration.Version);
         }
 
         /// <summary>
@@ -187,7 +190,7 @@ namespace Nop.Data.Migrations
         /// leave null to search migration on the whole application pull</param>
         public void ApplyDownMigrations(Assembly assembly = null)
         {
-            var migrations = GetMigrations(assembly);
+            var migrations = GetMigrations(assembly).Reverse();
 
             foreach (var migrationInfo in migrations)
             {

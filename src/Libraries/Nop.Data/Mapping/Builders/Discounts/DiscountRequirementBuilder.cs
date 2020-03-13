@@ -1,5 +1,7 @@
-﻿using FluentMigrator.Builders.Create.Table;
+﻿using System.Data;
+using FluentMigrator.Builders.Create.Table;
 using Nop.Core.Domain.Discounts;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Builders.Discounts
 {
@@ -16,6 +18,9 @@ namespace Nop.Data.Mapping.Builders.Discounts
         /// <param name="table">Create table expression builder</param>
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
+            table
+                .WithColumn(nameof(DiscountRequirement.DiscountId)).AsInt32().ForeignKey<Discount>()
+                .WithColumn(nameof(DiscountRequirement.ParentId)).AsInt32().Nullable().ForeignKey<DiscountRequirement>(onDelete: Rule.None);
         }
 
         #endregion
