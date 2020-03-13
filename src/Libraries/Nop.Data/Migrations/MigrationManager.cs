@@ -52,7 +52,7 @@ namespace Nop.Data.Migrations
                 [typeof(string)] = c => c.AsString(int.MaxValue).Nullable(),
                 [typeof(bool)] = c => c.AsBoolean(),
                 [typeof(decimal)] = c => c.AsDecimal(18, 4),
-                [typeof(DateTime)] = c => c.AsDateTime(),
+                [typeof(DateTime)] = c => c.AsDateTime2(),
                 [typeof(byte[])] = c => c.AsBinary(int.MaxValue),
                 [typeof(Guid)] = c => c.AsGuid()
             };
@@ -108,7 +108,7 @@ namespace Nop.Data.Migrations
                 .FirstOrDefault(t => t.BaseType?.GetGenericArguments().Contains(type) ?? false);
 
             if (tp != null)
-                (EngineContext.Current.Resolve(tp) as IEntityBuilder)?.MapEntity(builder);
+                (EngineContext.Current.ResolveUnregistered(tp) as IEntityBuilder)?.MapEntity(builder);
 
             var expression = builder.Expression;
 
