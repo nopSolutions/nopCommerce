@@ -52,22 +52,18 @@ namespace Nop.Services.Helpers
             if (!string.IsNullOrEmpty(crawlerOnlyUserAgentStringsPath) && _fileProvider.FileExists(crawlerOnlyUserAgentStringsPath))
             {
                 //try to load crawler list from crawlers only file
-                using (var sr = new StreamReader(crawlerOnlyUserAgentStringsPath))
-                {
-                    crawlerItems = XDocument.Load(sr).Root?.Elements("browscapitem").ToList();
-                }
+                using var sr = new StreamReader(crawlerOnlyUserAgentStringsPath);
+                crawlerItems = XDocument.Load(sr).Root?.Elements("browscapitem").ToList();
             }
 
             if (crawlerItems == null || !crawlerItems.Any())
             {
                 //try to load crawler list from full user agents file
-                using (var sr = new StreamReader(userAgentStringsPath))
-                {
-                    crawlerItems = XDocument.Load(sr).Root?.Element("browsercapitems")?.Elements("browscapitem")
-                        //only crawlers
-                        .Where(IsBrowscapItemIsCrawler).ToList();
-                    needSaveCrawlerOnly = true;
-                }
+                using var sr = new StreamReader(userAgentStringsPath);
+                crawlerItems = XDocument.Load(sr).Root?.Element("browsercapitems")?.Elements("browscapitem")
+                    //only crawlers
+                    .Where(IsBrowscapItemIsCrawler).ToList();
+                needSaveCrawlerOnly = true;
             }
 
             if (crawlerItems == null || !crawlerItems.Any())
@@ -86,24 +82,22 @@ namespace Nop.Services.Helpers
                 return;
 
             //try to write crawlers file
-            using (var sw = new StreamWriter(crawlerOnlyUserAgentStringsPath))
+            using var sw = new StreamWriter(crawlerOnlyUserAgentStringsPath);
+            var root = new XElement("browsercapitems");
+
+            foreach (var crawler in crawlerItems)
             {
-                var root = new XElement("browsercapitems");
-
-                foreach (var crawler in crawlerItems)
+                foreach (var element in crawler.Elements().ToList())
                 {
-                    foreach (var element in crawler.Elements().ToList())
-                    {
-                        if ((element.Attribute("name")?.Value.ToLower() ?? string.Empty) == "crawler")
-                            continue;
-                        element.Remove();
-                    }
-
-                    root.Add(crawler);
+                    if ((element.Attribute("name")?.Value.ToLower() ?? string.Empty) == "crawler")
+                        continue;
+                    element.Remove();
                 }
 
-                root.Save(sw);
+                root.Add(crawler);
             }
+
+            root.Save(sw);
         }
         
         /// <summary>

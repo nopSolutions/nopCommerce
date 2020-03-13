@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Nop.Web.Framework.Seo
+﻿namespace Nop.Web.Framework.Mvc.Routing
 {
-     public static partial class NopPathRouteDefaults
+    public static partial class NopPathRouteDefaults
     {
         /// <summary>
         /// Gets default key for action field

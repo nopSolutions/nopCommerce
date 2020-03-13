@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -7,7 +6,6 @@ using Nop.Core;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
 using Nop.Services.Localization;
-using Nop.Web.Framework.Localization;
 
 namespace Nop.Web.Framework.Mvc.Filters
 {
@@ -36,7 +34,6 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Fields
 
-            private readonly ILanguageService _languageService;
             private readonly IWebHelper _webHelper;
             private readonly IWorkContext _workContext;
             private readonly LocalizationSettings _localizationSettings;
@@ -45,12 +42,11 @@ namespace Nop.Web.Framework.Mvc.Filters
 
             #region Ctor
 
-            public CheckLanguageSeoCodeFilter(ILanguageService languageService,
+            public CheckLanguageSeoCodeFilter(
                 IWebHelper webHelper,
                 IWorkContext workContext,
                 LocalizationSettings localizationSettings)
             {
-                _languageService = languageService;
                 _webHelper = webHelper;
                 _workContext = workContext;
                 _localizationSettings = localizationSettings;
@@ -82,11 +78,11 @@ namespace Nop.Web.Framework.Mvc.Filters
                 //whether SEO friendly URLs are enabled
                 if (!_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
                     return;
-                                
-                //ensure that this route is registered and localizable (LocalizedRoute in RouteProvider)
-                if (context.RouteData?.Routers == null || !context.RouteData.Routers.ToList().Any(r => r is LocalizedRoute))
-                    return;
 
+                //ensure that this route is registered and localizable (LocalizedRoute in RouteProvider)
+                if (context.RouteData.Values["language"] == null)
+                    return;
+                
                 //check whether current page URL is already localized URL
                 var pageUrl = _webHelper.GetRawUrl(context.HttpContext.Request);
                 if (pageUrl.IsLocalizedUrl(context.HttpContext.Request.PathBase, true, out var _))

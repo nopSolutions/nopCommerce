@@ -343,7 +343,7 @@ columns: [
                 case RenderCheckBox checkBox:
                     <text>
                     render: function (data, type, row, meta) {
-                        return (data == true)
+                        return (data === true)
                             ? '<input name="@checkBox.Name" value="' + row.@checkBox.PropertyKeyName + '" type="checkbox" class="checkboxGroups" checked="checked" />'
                             : '<input name="@checkBox.Name" value="' + row.@checkBox.PropertyKeyName + '" type="checkbox" class="checkboxGroups" />';
                     },

@@ -1085,7 +1085,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (order != null)
             {
                 //fill in model values from the entity
-                model = model ?? new OrderModel
+                model ??= new OrderModel
                 {
                     Id = order.Id,
                     OrderStatusId = order.OrderStatusId,
@@ -1423,7 +1423,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (shipment != null)
             {
                 //fill in model values from the entity
-                model = model ?? shipment.ToModel<ShipmentModel>();
+                model ??= shipment.ToModel<ShipmentModel>();
 
                 model.CanShip = !shipment.ShippedDateUtc.HasValue;
                 model.CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue;

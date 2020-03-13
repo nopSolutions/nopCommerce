@@ -78,7 +78,7 @@ namespace Nop.Services.Directory
         /// <returns>Countries</returns>
         public virtual IList<Country> GetAllCountries(int languageId = 0, bool showHidden = false)
         {
-            var key = NopDirectoryCachingDefaults.CountriesAllCacheKey.ToCacheKey(languageId, showHidden);
+            var key = NopDirectoryCachingDefaults.CountriesAllCacheKey.FillCacheKey(languageId, showHidden);
             return _cacheManager.Get(key, () =>
             {
                 var query = _countryRepository.Table;
@@ -196,7 +196,7 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(twoLetterIsoCode))
                 return null;
 
-            var key = NopDirectoryCachingDefaults.CountriesByTwoLetterCodeCacheKey.ToCacheKey(twoLetterIsoCode);
+            var key = NopDirectoryCachingDefaults.CountriesByTwoLetterCodeCacheKey.FillCacheKey(twoLetterIsoCode);
 
             var query = from c in _countryRepository.Table
                 where c.TwoLetterIsoCode == twoLetterIsoCode
@@ -215,7 +215,7 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(threeLetterIsoCode))
                 return null;
 
-            var key = NopDirectoryCachingDefaults.CountriesByThreeLetterCodeCacheKey.ToCacheKey(threeLetterIsoCode);
+            var key = NopDirectoryCachingDefaults.CountriesByThreeLetterCodeCacheKey.FillCacheKey(threeLetterIsoCode);
 
             var query = from c in _countryRepository.Table
                 where c.ThreeLetterIsoCode == threeLetterIsoCode

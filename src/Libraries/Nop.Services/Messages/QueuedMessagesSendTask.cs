@@ -77,7 +77,7 @@ namespace Nop.Services.Messages
                 }
                 finally
                 {
-                    queuedEmail.SentTries = queuedEmail.SentTries + 1;
+                    queuedEmail.SentTries += 1;
                     _queuedEmailService.UpdateQueuedEmail(queuedEmail);
                 }
             }

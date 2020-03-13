@@ -114,7 +114,7 @@ namespace Nop.Services.Localization
         public virtual string GetLocalizedValue(int languageId, int entityId, string localeKeyGroup, string localeKey)
         {
             var key = NopLocalizationCachingDefaults.LocalizedPropertyCacheKey
-                .ToCacheKey(languageId, entityId, localeKeyGroup, localeKey);
+                .FillCacheKey(languageId, entityId, localeKeyGroup, localeKey);
 
             return _cacheManager.Get(key, () =>
             {

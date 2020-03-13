@@ -85,7 +85,7 @@ namespace Nop.Services.Orders
         /// <returns>Checkout attributes</returns>
         public virtual IList<CheckoutAttribute> GetAllCheckoutAttributes(int storeId = 0, bool excludeShippableAttributes = false)
         {
-            var key = string.Format(NopOrderCachingDefaults.CheckoutAttributesAllCacheKey, storeId, excludeShippableAttributes);
+            var key = NopOrderCachingDefaults.CheckoutAttributesAllCacheKey.FillCacheKey(storeId, excludeShippableAttributes);
             return _cacheManager.Get(key, () =>
             {
                 var query = from ca in _checkoutAttributeRepository.Table
@@ -195,7 +195,7 @@ namespace Nop.Services.Orders
         /// <returns>Checkout attribute values</returns>
         public virtual IList<CheckoutAttributeValue> GetCheckoutAttributeValues(int checkoutAttributeId)
         {
-            var key = string.Format(NopOrderCachingDefaults.CheckoutAttributeValuesAllCacheKey, checkoutAttributeId);
+            var key = NopOrderCachingDefaults.CheckoutAttributeValuesAllCacheKey.FillCacheKey(checkoutAttributeId);
 
             var query = from cav in _checkoutAttributeValueRepository.Table
                 orderby cav.DisplayOrder, cav.Id

@@ -243,7 +243,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     else
                     {
                         //otherwise cart is updated
-                        shoppingCartGuid = shoppingCartGuid ?? Guid.NewGuid();
+                        shoppingCartGuid ??= Guid.NewGuid();
                     }
                     trackEvent.EventName = SendinBlueDefaults.CartUpdatedEventName;
                     trackEvent.EventData = new { id = $"cart:{shoppingCartGuid}", data = cartData };
@@ -251,7 +251,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 else
                 {
                     //there are no items in the cart, so the cart is deleted
-                    shoppingCartGuid = shoppingCartGuid ?? Guid.NewGuid();
+                    shoppingCartGuid ??= Guid.NewGuid();
                     trackEvent.EventName = SendinBlueDefaults.CartDeletedEventName;
                     trackEvent.EventData = new { id = $"cart:{shoppingCartGuid}" };
                 }

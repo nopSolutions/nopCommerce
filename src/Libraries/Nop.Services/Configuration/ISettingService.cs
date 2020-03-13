@@ -48,7 +48,7 @@ namespace Nop.Services.Configuration
         /// <param name="defaultValue">Default value</param>
         /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all stores) value should be loaded if a value specific for a certain is not found</param>
         /// <returns>Setting value</returns>
-        T GetSettingByKey<T>(string key, T defaultValue = default(T),
+        T GetSettingByKey<T>(string key, T defaultValue = default,
             int storeId = 0, bool loadSharedValueIfNotFound = false);
 
         /// <summary>

@@ -61,7 +61,7 @@ namespace Nop.Web.Framework.Localization
 
             //add language code to page URL in case if it's localized URL
             var path = context.HttpContext.Request.Path.Value;
-            if (path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language language))
+            if (path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out var language))
                 data.VirtualPath = $"/{language.UniqueSeoCode}{data.VirtualPath}";
 
             return data;
@@ -79,7 +79,7 @@ namespace Nop.Web.Framework.Localization
 
             //if path isn't localized, no special action required
             var path = context.HttpContext.Request.Path.Value;
-            if (!path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out Language _))
+            if (!path.IsLocalizedUrl(context.HttpContext.Request.PathBase, false, out var _))
                 return base.RouteAsync(context);
 
             //remove language code and application path from the path

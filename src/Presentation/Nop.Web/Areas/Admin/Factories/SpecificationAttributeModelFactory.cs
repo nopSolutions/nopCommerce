@@ -143,7 +143,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (specificationAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? specificationAttribute.ToModel<SpecificationAttributeModel>();
+                model ??= specificationAttribute.ToModel<SpecificationAttributeModel>();
 
                 //prepare nested search models
                 PrepareSpecificationAttributeOptionSearchModel(model.SpecificationAttributeOptionSearchModel, specificationAttribute);
@@ -221,7 +221,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (specificationAttributeOption != null)
             {
                 //fill in model values from the entity
-                model = model ?? specificationAttributeOption.ToModel<SpecificationAttributeOptionModel>();
+                model ??= specificationAttributeOption.ToModel<SpecificationAttributeOptionModel>();
 
                 model.EnableColorSquaresRgb = !string.IsNullOrEmpty(specificationAttributeOption.ColorSquaresRgb);
 

@@ -121,23 +121,14 @@ namespace Nop.Plugin.Payments.Square
         /// <returns>Payment status</returns>
         private PaymentStatus GetPaymentStatus(string status)
         {
-            switch (status)
+            return status switch
             {
-                case SquarePaymentDefaults.TENDERCARDDETAILS_AUTHORIZED_STATUS:
-                    return PaymentStatus.Authorized;
-
-                case SquarePaymentDefaults.TENDERCARDDETAILS_CAPTURED_STATUS:
-                    return PaymentStatus.Paid;
-
-                case SquarePaymentDefaults.TENDERCARDDETAILS_FAILED_STATUS:
-                    return PaymentStatus.Pending;
-
-                case SquarePaymentDefaults.TENDERCARDDETAILS_VOIDED_STATUS:
-                    return PaymentStatus.Voided;
-
-                default:
-                    return PaymentStatus.Pending;
-            }
+                SquarePaymentDefaults.TENDERCARDDETAILS_AUTHORIZED_STATUS => PaymentStatus.Authorized,
+                SquarePaymentDefaults.TENDERCARDDETAILS_CAPTURED_STATUS => PaymentStatus.Paid,
+                SquarePaymentDefaults.TENDERCARDDETAILS_FAILED_STATUS => PaymentStatus.Pending,
+                SquarePaymentDefaults.TENDERCARDDETAILS_VOIDED_STATUS => PaymentStatus.Voided,
+                _ => PaymentStatus.Pending,
+            };
         }
 
         /// <summary>
@@ -350,7 +341,7 @@ namespace Nop.Plugin.Payments.Square
                         //remove the value from payment custom values, since it is no longer needed
                         paymentRequest.CustomValues.Remove(postalCodeKey);
 
-                        cardRequest.BillingAddress = cardRequest.BillingAddress ?? new SquareModel.Address();
+                        cardRequest.BillingAddress ??= new SquareModel.Address();
                         cardRequest.BillingAddress.PostalCode = postalCode.ToString();
                     }
 

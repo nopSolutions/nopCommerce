@@ -12,6 +12,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services;
+using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -134,7 +135,7 @@ namespace Nop.Web.Areas.Admin.Factories
             const string value = "0";
 
             //prepare item text
-            defaultItemText = defaultItemText ?? _localizationService.GetResource("Admin.Common.All");
+            defaultItemText ??= _localizationService.GetResource("Admin.Common.All");
 
             //insert this default item at first
             items.Insert(0, new SelectListItem { Text = defaultItemText, Value = value });
@@ -147,7 +148,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Category list</returns>
         protected virtual List<SelectListItem> GetCategoryList(bool showHidden = true)
         {
-            var cacheKey = string.Format(NopModelCacheDefaults.CategoriesListKey, showHidden);
+            var cacheKey =NopModelCacheDefaults.CategoriesListKey.FillCacheKey(showHidden);
             var listItems = _cacheManager.Get(cacheKey, () =>
             {
                 var categories = _categoryService.GetAllCategories(showHidden: showHidden);
@@ -179,7 +180,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Manufacturer list</returns>
         protected virtual List<SelectListItem> GetManufacturerList(bool showHidden = true)
         {
-            var cacheKey = string.Format(NopModelCacheDefaults.ManufacturersListKey, showHidden);
+            var cacheKey = NopModelCacheDefaults.ManufacturersListKey.FillCacheKey(showHidden);
             var listItems = _cacheManager.Get(cacheKey, () =>
             {
                 var manufacturers = _manufacturerService.GetAllManufacturers(showHidden: showHidden);
@@ -211,7 +212,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Vendor list</returns>
         protected virtual List<SelectListItem> GetVendorList(bool showHidden = true)
         {
-            var cacheKey = string.Format(NopModelCacheDefaults.VendorsListKey, showHidden);
+            var cacheKey = NopModelCacheDefaults.VendorsListKey.FillCacheKey(showHidden);
             var listItems = _cacheManager.Get(cacheKey, () =>
             {
                 var vendors = _vendorService.GetAllVendors(showHidden: showHidden);

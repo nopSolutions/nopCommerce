@@ -349,7 +349,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var cacheKey = NopCatalogCachingDefaults.ProductPriceCacheKey.ToCacheKey(
+            var cacheKey = NopCatalogCachingDefaults.ProductPriceCacheKey.FillCacheKey(
                 product,
                 overriddenProductPrice,
                 additionalCharge,
@@ -363,6 +363,8 @@ namespace Nop.Services.Catalog
             //otherwise, it can cause memory leaks (to store all possible date period combinations)
             if (product.IsRental)
                 cacheTime = 0;
+
+            cacheKey.CacheTime = cacheTime;
 
             decimal rezPrice;
             (rezPrice, discountAmount, appliedDiscounts) = _cacheManager.Get(cacheKey, () =>
@@ -403,7 +405,7 @@ namespace Nop.Services.Catalog
                     price = decimal.Zero;
 
                 return (price, appliedDiscountAmount, discounts);
-            }, cacheTime);
+            });
 
             return rezPrice;
         }
@@ -501,7 +503,7 @@ namespace Nop.Services.Catalog
             //we use this method because some currencies (e.g. Gungarian Forint or Swiss Franc) use non-standard rules for rounding
             //you can implement any rounding logic here
 
-            currency = currency ?? _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            currency ??= _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
 
             return Round(value, currency.RoundingType);
         }

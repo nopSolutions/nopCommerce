@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Caching.CachingDefaults
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Caching.CachingDefaults
 {
     /// <summary>
     /// Represents default values related to orders services
@@ -13,7 +15,7 @@
         /// {1} : store ID
         /// {2} : are only approved comments?
         /// </remarks>
-        public static string NewsCommentsNumberKey => "Nop.news.comments.number-{0}-{1}-{2}";
+        public static CacheKey NewsCommentsNumberCacheKey => new CacheKey("Nop.news.comments.number-{0}-{1}-{2}", NewsCommentsNumberPrefixCacheKey);
 
         /// <summary>
         /// Gets a key pattern to clear cache

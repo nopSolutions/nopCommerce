@@ -4,7 +4,6 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
@@ -56,8 +55,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             IStoreService storeService,
             IQueuedEmailService queuedEmailService,
             ITokenizer tokenizer,
-            SendinBlueManager sendinBlueEmailManager,
-            LocalizationSettings localizationSettings)
+            SendinBlueManager sendinBlueEmailManager)
             : base(commonSettings,
                 emailAccountSettings,
                 addressService,
@@ -74,8 +72,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 queuedEmailService,
                 storeContext,
                 storeService,
-                tokenizer,
-                localizationSettings)
+                tokenizer)
         {
             _emailAccountService = emailAccountService;
             _genericAttributeService = genericAttributeService;

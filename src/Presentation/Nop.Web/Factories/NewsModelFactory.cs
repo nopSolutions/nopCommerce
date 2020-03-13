@@ -163,7 +163,7 @@ namespace Nop.Web.Factories
         /// <returns>Home page news items model</returns>
         public virtual HomepageNewsItemsModel PrepareHomepageNewsItemsModel()
         {
-            var cacheKey = string.Format(NopModelCacheDefaults.HomepageNewsModelKey, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cacheKey = NopModelCacheDefaults.HomepageNewsModelKey.FillCacheKey(_workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id, 0, _newsSettings.MainPageNewsCount);

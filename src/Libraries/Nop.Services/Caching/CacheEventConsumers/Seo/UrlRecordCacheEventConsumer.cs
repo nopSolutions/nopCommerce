@@ -16,13 +16,13 @@ namespace Nop.Services.Caching.CacheEventConsumers.Seo
         {
             Remove(NopSeoCachingDefaults.UrlRecordAllCacheKey);
 
-            var cacheKey = NopSeoCachingDefaults.UrlRecordActiveByIdNameLanguageCacheKey.ToCacheKey(entity.EntityId,
+            var cacheKey = NopSeoCachingDefaults.UrlRecordActiveByIdNameLanguageCacheKey.FillCacheKey(entity.EntityId,
                 entity.EntityName, entity.LanguageId);
             Remove(cacheKey);
 
             RemoveByPrefix(NopSeoCachingDefaults.UrlRecordByIdsPrefixCacheKey);
 
-            cacheKey = NopSeoCachingDefaults.UrlRecordBySlugCacheKey.ToCacheKey(entity.Slug);
+            cacheKey = NopSeoCachingDefaults.UrlRecordBySlugCacheKey.FillCacheKey(entity.Slug);
             Remove(cacheKey);
         }
     }

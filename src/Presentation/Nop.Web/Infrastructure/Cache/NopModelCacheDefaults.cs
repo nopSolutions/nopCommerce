@@ -1,4 +1,6 @@
-﻿namespace Nop.Web.Infrastructure.Cache
+﻿using Nop.Core.Caching;
+
+namespace Nop.Web.Infrastructure.Cache
 {
     public static partial class NopModelCacheDefaults
     {
@@ -11,14 +13,13 @@
         /// {2} : roles of the current user
         /// {3} : current store ID
         /// </remarks>
-        public static string ManufacturerNavigationModelKey => "Nop.pres.manufacturer.navigation-{0}-{1}-{2}-{3}";
+        public static CacheKey ManufacturerNavigationModelKey => new CacheKey("Nop.pres.manufacturer.navigation-{0}-{1}-{2}-{3}", ManufacturerNavigationPrefixCacheKey);
         public static string ManufacturerNavigationPrefixCacheKey => "Nop.pres.manufacturer.navigation";
 
         /// <summary>
         /// Key for VendorNavigationModel caching
         /// </summary>
-        public static string VendorNavigationModelKey => "Nop.pres.vendor.navigation";
-        public static string VendorNavigationPrefixCacheKey => "Nop.pres.vendor.navigation";
+        public static CacheKey VendorNavigationModelKey => new CacheKey("Nop.pres.vendor.navigation");
 
         /// <summary>
         /// Key for caching of a value indicating whether a manufacturer has featured products
@@ -28,7 +29,7 @@
         /// {1} : roles of the current user
         /// {2} : current store ID
         /// </remarks>
-        public static string ManufacturerHasFeaturedProductsKey => "Nop.pres.manufacturer.hasfeaturedproducts-{0}-{1}-{2}";
+        public static CacheKey ManufacturerHasFeaturedProductsKey => new CacheKey("Nop.pres.manufacturer.hasfeaturedproducts-{0}-{1}-{2}", ManufacturerHasFeaturedProductsPrefixCacheKeyById);
         public static string ManufacturerHasFeaturedProductsPrefixCacheKeyById => "Nop.pres.manufacturer.hasfeaturedproducts-{0}-";
 
         /// <summary>
@@ -39,7 +40,7 @@
         /// {1} : comma separated list of customer roles
         /// {2} : current store ID
         /// </remarks>
-        public static string CategoryAllModelKey => "Nop.pres.category.all-{0}-{1}-{2}";
+        public static CacheKey CategoryAllModelKey => new CacheKey("Nop.pres.category.all-{0}-{1}-{2}", CategoryAllPrefixCacheKey);
         public static string CategoryAllPrefixCacheKey => "Nop.pres.category.all";
 
         /// <summary>
@@ -50,7 +51,7 @@
         /// {1} : roles of the current user
         /// {2} : current store ID
         /// </remarks>
-        public static string CategoryHasFeaturedProductsKey => "Nop.pres.category.hasfeaturedproducts-{0}-{1}-{2}";
+        public static CacheKey CategoryHasFeaturedProductsKey => new CacheKey("Nop.pres.category.hasfeaturedproducts-{0}-{1}-{2}", CategoryHasFeaturedProductsPrefixCacheKeyById);
         public static string CategoryHasFeaturedProductsPrefixCacheKeyById => "Nop.pres.category.hasfeaturedproducts-{0}-";
         
         /// <summary>
@@ -61,7 +62,7 @@
         /// {1} : language ID
         /// {2} : is connection SSL secured (included in a category picture URL)
         /// </remarks>
-        public static string CategoryHomepageKey => "Nop.pres.category.homepage-{0}-{1}-{2}";
+        public static CacheKey CategoryHomepageKey => new CacheKey("Nop.pres.category.homepage-{0}-{1}-{2}", CategoryHomepagePrefixCacheKey);
         public static string CategoryHomepagePrefixCacheKey => "Nop.pres.category.homepage";
 
         /// <summary>
@@ -72,7 +73,7 @@
         /// {1} : comma separated list of customer roles
         /// {2} : current store ID
         /// </remarks>
-        public static string CategoryXmlAllModelKey => "Nop.pres.categoryXml.all-{0}-{1}-{2}";
+        public static CacheKey CategoryXmlAllModelKey => new CacheKey("Nop.pres.categoryXml.all-{0}-{1}-{2}", CategoryXmlAllPrefixCacheKey);
         public static string CategoryXmlAllPrefixCacheKey => "Nop.pres.categoryXml.all";
 
         /// <summary>
@@ -82,7 +83,7 @@
         /// {0} : comma separated list of specification attribute option IDs
         /// {1} : language id
         /// </remarks>
-        public static string SpecsFilterModelKey => "Nop.pres.filter.specs-{0}-{1}";
+        public static CacheKey SpecsFilterModelKey => new CacheKey("Nop.pres.filter.specs-{0}-{1}", SpecsFilterPrefixCacheKey);
         public static string SpecsFilterPrefixCacheKey => "Nop.pres.filter.specs";
 
         /// <summary>
@@ -91,7 +92,7 @@
         /// <remarks>
         /// {0} : current store ID
         /// </remarks>
-        public static string HomepageBestsellersIdsKey => "Nop.pres.bestsellers.homepage-{0}";
+        public static CacheKey HomepageBestsellersIdsKey => new CacheKey("Nop.pres.bestsellers.homepage-{0}", HomepageBestsellersIdsPrefixCacheKey);
         public static string HomepageBestsellersIdsPrefixCacheKey => "Nop.pres.bestsellers.homepage";
 
         /// <summary>
@@ -101,7 +102,7 @@
         /// {0} : current product id
         /// {1} : current store ID
         /// </remarks>
-        public static string ProductsAlsoPurchasedIdsKey => "Nop.pres.alsopuchased-{0}-{1}";
+        public static CacheKey ProductsAlsoPurchasedIdsKey => new CacheKey("Nop.pres.alsopuchased-{0}-{1}", ProductsAlsoPurchasedIdsPrefixCacheKey);
         public static string ProductsAlsoPurchasedIdsPrefixCacheKey => "Nop.pres.alsopuchased";
 
         /// <summary>
@@ -115,7 +116,7 @@
         /// {4} : is connection SSL secured?
         /// {5} : current store ID
         /// </remarks>
-        public static string ProductDefaultPictureModelKey => "Nop.pres.product.detailspictures-{0}-{1}-{2}-{3}-{4}-{5}";
+        public static CacheKey ProductDefaultPictureModelKey => new CacheKey("Nop.pres.product.detailspictures-{0}-{1}-{2}-{3}-{4}-{5}", ProductDefaultPicturePrefixCacheKey, ProductDefaultPicturePrefixCacheKeyById);
         public static string ProductDefaultPicturePrefixCacheKey => "Nop.pres.product.detailspictures";
         public static string ProductDefaultPicturePrefixCacheKeyById => "Nop.pres.product.detailspictures-{0}-";
 
@@ -130,7 +131,7 @@
         /// {4} : is connection SSL secured?
         /// {5} : current store ID
         /// </remarks>
-        public static string ProductDetailsPicturesModelKey => "Nop.pres.product.picture-{0}-{1}-{2}-{3}-{4}-{5}";
+        public static CacheKey ProductDetailsPicturesModelKey => new CacheKey("Nop.pres.product.picture-{0}-{1}-{2}-{3}-{4}-{5}", ProductDetailsPicturesPrefixCacheKey, ProductDetailsPicturesPrefixCacheKeyById);
         public static string ProductDetailsPicturesPrefixCacheKey => "Nop.pres.product.picture";
         public static string ProductDetailsPicturesPrefixCacheKeyById => "Nop.pres.product.picture-{0}-";
 
@@ -141,7 +142,7 @@
         /// {0} : product id
         /// {1} : current store ID
         /// </remarks>
-        public static string ProductReviewsModelKey => "Nop.pres.product.reviews-{0}-{1}";
+        public static CacheKey ProductReviewsModelKey => new CacheKey("Nop.pres.product.reviews-{0}-{1}", ProductReviewsPrefixCacheKey, ProductReviewsPrefixCacheKeyById);
         public static string ProductReviewsPrefixCacheKey => "Nop.pres.product.reviews";
         public static string ProductReviewsPrefixCacheKeyById => "Nop.pres.product.reviews-{0}-";
 
@@ -153,7 +154,7 @@
         /// {1} : is connection SSL secured?
         /// {2} : current store ID
         /// </remarks>
-        public static string ProductAttributePictureModelKey => "Nop.pres.productattribute.picture-{0}-{1}-{2}";
+        public static CacheKey ProductAttributePictureModelKey => new CacheKey("Nop.pres.productattribute.picture-{0}-{1}-{2}", ProductAttributePicturePrefixCacheKey);
         public static string ProductAttributePicturePrefixCacheKey => "Nop.pres.productattribute.picture";
 
         /// <summary>
@@ -164,7 +165,7 @@
         /// {1} : is connection SSL secured?
         /// {2} : current store ID
         /// </remarks>
-        public static string ProductAttributeImageSquarePictureModelKey => "Nop.pres.productattribute.imagesquare.picture-{0}-{1}-{2}";
+        public static CacheKey ProductAttributeImageSquarePictureModelKey => new CacheKey("Nop.pres.productattribute.imagesquare.picture-{0}-{1}-{2}", ProductAttributeImageSquarePicturePrefixCacheKey);
         public static string ProductAttributeImageSquarePicturePrefixCacheKey => "Nop.pres.productattribute.imagesquare.picture";
 
         /// <summary>
@@ -178,7 +179,7 @@
         /// {4} : is connection SSL secured?
         /// {5} : current store ID
         /// </remarks>
-        public static string CategoryPictureModelKey => "Nop.pres.category.picture-{0}-{1}-{2}-{3}-{4}-{5}";
+        public static CacheKey CategoryPictureModelKey => new CacheKey("Nop.pres.category.picture-{0}-{1}-{2}-{3}-{4}-{5}", CategoryPicturePrefixCacheKey, CategoryPicturePrefixCacheKeyById);
         public static string CategoryPicturePrefixCacheKey => "Nop.pres.category.picture";
         public static string CategoryPicturePrefixCacheKeyById => "Nop.pres.category.picture-{0}-";
 
@@ -193,7 +194,7 @@
         /// {4} : is connection SSL secured?
         /// {5} : current store ID
         /// </remarks>
-        public static string ManufacturerPictureModelKey => "Nop.pres.manufacturer.picture-{0}-{1}-{2}-{3}-{4}-{5}";
+        public static CacheKey ManufacturerPictureModelKey => new CacheKey("Nop.pres.manufacturer.picture-{0}-{1}-{2}-{3}-{4}-{5}", ManufacturerPicturePrefixCacheKey, ManufacturerPicturePrefixCacheKeyById);
         public static string ManufacturerPicturePrefixCacheKey => "Nop.pres.manufacturer.picture";
         public static string ManufacturerPicturePrefixCacheKeyById => "Nop.pres.manufacturer.picture-{0}-";
 
@@ -208,7 +209,7 @@
         /// {4} : is connection SSL secured?
         /// {5} : current store ID
         /// </remarks>
-        public static string VendorPictureModelKey => "Nop.pres.vendor.picture-{0}-{1}-{2}-{3}-{4}-{5}";
+        public static CacheKey VendorPictureModelKey => new CacheKey("Nop.pres.vendor.picture-{0}-{1}-{2}-{3}-{4}-{5}", VendorPicturePrefixCacheKey, VendorPicturePrefixCacheKeyById);
         public static string VendorPicturePrefixCacheKey => "Nop.pres.vendor.picture";
         public static string VendorPicturePrefixCacheKeyById => "Nop.pres.vendor.picture-{0}-";
 
@@ -225,7 +226,7 @@
         /// {4} : is connection SSL secured?
         /// {5} : current store ID
         /// </remarks>
-        public static string CartPictureModelKey => "Nop.pres.cart.picture-{0}-{1}-{2}-{3}-{4}-{5}";
+        public static CacheKey CartPictureModelKey => new CacheKey("Nop.pres.cart.picture-{0}-{1}-{2}-{3}-{4}-{5}", CartPicturePrefixCacheKey);
         public static string CartPicturePrefixCacheKey => "Nop.pres.cart.picture";
 
         /// <summary>
@@ -235,7 +236,7 @@
         /// {0} : language ID
         /// {1} : current store ID
         /// </remarks>
-        public static string HomepagePollsModelKey => "Nop.pres.poll.homepage-{0}-{1}";
+        public static CacheKey HomepagePollsModelKey => new CacheKey("Nop.pres.poll.homepage-{0}-{1}", PollsPrefixCacheKey);
         /// <summary>
         /// Key for polls by system name
         /// </summary>
@@ -244,7 +245,7 @@
         /// {1} : language ID
         /// {2} : current store ID
         /// </remarks>
-        public static string PollBySystemNameModelKey => "Nop.pres.poll.systemname-{0}-{1}-{2}";
+        public static CacheKey PollBySystemNameModelKey => new CacheKey("Nop.pres.poll.systemname-{0}-{1}-{2}", PollsPrefixCacheKey);
         public static string PollsPrefixCacheKey => "Nop.pres.poll";
 
         /// <summary>
@@ -254,7 +255,7 @@
         /// {0} : language ID
         /// {1} : current store ID
         /// </remarks>
-        public static string BlogMonthsModelKey => "Nop.pres.blog.months-{0}-{1}";
+        public static CacheKey BlogMonthsModelKey => new CacheKey("Nop.pres.blog.months-{0}-{1}", BlogPrefixCacheKey);
         public static string BlogPrefixCacheKey => "Nop.pres.blog";
         
         /// <summary>
@@ -264,7 +265,7 @@
         /// {0} : language ID
         /// {1} : current store ID
         /// </remarks>
-        public static string HomepageNewsModelKey => "Nop.pres.news.homepage-{0}-{1}";
+        public static CacheKey HomepageNewsModelKey => new CacheKey("Nop.pres.news.homepage-{0}-{1}", NewsPrefixCacheKey);
         public static string NewsPrefixCacheKey => "Nop.pres.news";
 
         /// <summary>
@@ -275,7 +276,7 @@
         /// {1} : current theme
         /// {2} : is connection SSL secured (included in a picture URL)
         /// </remarks>
-        public static string StoreLogoPath => "Nop.pres.logo-{0}-{1}-{2}";
+        public static CacheKey StoreLogoPath => new CacheKey("Nop.pres.logo-{0}-{1}-{2}", StoreLogoPathPrefixCacheKey);
         public static string StoreLogoPathPrefixCacheKey => "Nop.pres.logo";
 
         /// <summary>
@@ -286,7 +287,7 @@
         /// {1} : roles of the current user
         /// {2} : current store ID
         /// </remarks>
-        public static string SitemapPageModelKey => "Nop.pres.sitemap.page-{0}-{1}-{2}";
+        public static CacheKey SitemapPageModelKey => new CacheKey("Nop.pres.sitemap.page-{0}-{1}-{2}", SitemapPrefixCacheKey);
         /// <summary>
         /// Key for sitemap on the sitemap SEO page
         /// </summary>
@@ -296,7 +297,7 @@
         /// {2} : roles of the current user
         /// {3} : current store ID
         /// </remarks>
-        public static string SitemapSeoModelKey => "Nop.pres.sitemap.seo-{0}-{1}-{2}-{3}";
+        public static CacheKey SitemapSeoModelKey => new CacheKey("Nop.pres.sitemap.seo-{0}-{1}-{2}-{3}", SitemapPrefixCacheKey);
         public static string SitemapPrefixCacheKey => "Nop.pres.sitemap";
 
         /// <summary>
@@ -308,7 +309,7 @@
         /// {2} : widget zone
         /// {3} : current theme name
         /// </remarks>
-        public static string WidgetModelKey => "Nop.pres.widget-{0}-{1}-{2}-{3}";
+        public static CacheKey WidgetModelKey => new CacheKey("Nop.pres.widget-{0}-{1}-{2}-{3}", WidgetPrefixCacheKey);
         public static string WidgetPrefixCacheKey => "Nop.pres.widget";
 
     }

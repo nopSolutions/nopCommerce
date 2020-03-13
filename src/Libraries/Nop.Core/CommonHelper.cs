@@ -4,8 +4,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Reflection;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Nop.Core.Infrastructure;
 
@@ -77,7 +75,7 @@ namespace Nop.Core
         /// <returns>true if the string is a valid IpAddress and false if it's not</returns>
         public static bool IsValidIpAddress(string ipAddress)
         {
-            return IPAddress.TryParse(ipAddress, out IPAddress _);
+            return IPAddress.TryParse(ipAddress, out var _);
         }
 
         /// <summary>
@@ -87,13 +85,11 @@ namespace Nop.Core
         /// <returns>Result string</returns>
         public static string GenerateRandomDigitCode(int length)
         {
-            using (var random = new SecureRandomNumberGenerator())
-            {
-                var str = string.Empty;
-                for (var i = 0; i < length; i++)
-                    str = string.Concat(str, random.Next(10).ToString());
-                return str;
-            }
+            using var random = new SecureRandomNumberGenerator();
+            var str = string.Empty;
+            for (var i = 0; i < length; i++)
+                str = string.Concat(str, random.Next(10).ToString());
+            return str;
         }
 
         /// <summary>
@@ -104,10 +100,8 @@ namespace Nop.Core
         /// <returns>Result</returns>
         public static int GenerateRandomInteger(int min = 0, int max = int.MaxValue)
         {
-            using (var random = new SecureRandomNumberGenerator())
-            {
-                return random.Next(min, max);
-            }
+            using var random = new SecureRandomNumberGenerator();
+            return random.Next(min, max);
         }
 
         /// <summary>
@@ -299,44 +293,6 @@ namespace Nop.Core
             if (startDate > endDate.AddYears(-age))
                 age--;
             return age;
-        }
-
-        /// <summary>
-        /// Get private fields property value
-        /// </summary>
-        /// <param name="target">Target object</param>
-        /// <param name="fieldName">Field name</param>
-        /// <returns>Value</returns>
-        public static object GetPrivateFieldValue(object target, string fieldName)
-        {
-            if (target == null)
-            {
-                throw new ArgumentNullException(nameof(target), "The assignment target cannot be null.");
-            }
-
-            if (string.IsNullOrEmpty(fieldName))
-            {
-                throw new ArgumentException("fieldName", "The field name cannot be null or empty.");
-            }
-
-            var t = target.GetType();
-            FieldInfo fi = null;
-
-            while (t != null)
-            {
-                fi = t.GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
-
-                if (fi != null) break;
-
-                t = t.BaseType;
-            }
-
-            if (fi == null)
-            {
-                throw new Exception($"Field '{fieldName}' not found in type hierarchy.");
-            }
-
-            return fi.GetValue(target);
         }
 
         #endregion

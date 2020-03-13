@@ -1840,7 +1840,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (productAttributeMapping != null)
             {
                 //fill in model values from the entity
-                model = model ?? new ProductAttributeMappingModel
+                model ??= new ProductAttributeMappingModel
                 {
                     Id = productAttributeMapping.Id
                 };
@@ -1970,7 +1970,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (productAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = model ?? new ProductAttributeValueModel
+                model ??= new ProductAttributeValueModel
                 {
                     ProductAttributeMappingId = productAttributeValue.ProductAttributeMappingId,
                     AttributeValueTypeId = productAttributeValue.AttributeValueTypeId,
@@ -2167,7 +2167,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (productAttributeCombination != null)
             {
                 //fill in model values from the entity
-                model = model ?? new ProductAttributeCombinationModel
+                model ??= new ProductAttributeCombinationModel
                 {
                     AllowOutOfStockOrders = productAttributeCombination.AllowOutOfStockOrders,
                     AttributesXml = productAttributeCombination.AttributesXml,

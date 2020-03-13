@@ -677,7 +677,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customer != null)
             {
                 //fill in model values from the entity
-                model = model ?? new CustomerModel();
+                model ??= new CustomerModel();
 
                 model.Id = customer.Id;
                 model.DisplayVatNumber = _taxSettings.EuVatEnabled;
@@ -923,7 +923,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (address != null)
             {
                 //fill in model values from the entity
-                model = model ?? new CustomerAddressModel();
+                model ??= new CustomerAddressModel();
 
                 //whether to fill in some of properties
                 if (!excludeProperties)

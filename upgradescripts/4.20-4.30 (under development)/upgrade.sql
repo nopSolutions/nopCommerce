@@ -325,6 +325,33 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.List.County.Hint">
     <Value>Search by a specific county / region.</Value>
   </LocaleResource>
+  <LocaleResource Name="Forum.Post.IsUseful">
+    <Value>This post/answer is useful</Value>
+  </LocaleResource>
+  <LocaleResource Name="Forum.Post.IsNotUseful">
+    <Value>This post/answer is not useful</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteAlreadySentQueuedEmails">
+    <Value>Delete already sent emails</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteAlreadySentQueuedEmails.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteAlreadySentQueuedEmails.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteAlreadySentQueuedEmails.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteAlreadySentQueuedEmails.StartDate.Hint">
+    <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteAlreadySentQueuedEmails.TotalDeleted">
+    <Value>{0} emails were deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.TopicName">
+    <Value>Name</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1497,4 +1524,790 @@ BEGIN
     INSERT [LocaleStringResource] ([ResourceValue], [ResourceName], [LanguageId])
     VALUES (N'All categories', 'search.allcategories', 1)
 END
+GO
+
+-- update the "ProductLoadAllPaged" stored procedure
+ALTER PROCEDURE [ProductLoadAllPaged]
+(
+	@CategoryIds		nvarchar(MAX) = null,	--a list of category IDs (comma-separated list). e.g. 1,2,3
+	@ManufacturerId		int = 0,
+	@StoreId			int = 0,
+	@VendorId			int = 0,
+	@WarehouseId		int = 0,
+	@ProductTypeId		int = null, --product type identifier, null - load all products
+	@VisibleIndividuallyOnly bit = 0, 	--0 - load all products , 1 - "visible indivially" only
+	@MarkedAsNewOnly	bit = 0, 	--0 - load all products , 1 - "marked as new" only
+	@ProductTagId		int = 0,
+	@FeaturedProducts	bit = null,	--0 featured only , 1 not featured only, null - load all products
+	@PriceMin			decimal(18, 4) = null,
+	@PriceMax			decimal(18, 4) = null,
+	@Keywords			nvarchar(4000) = null,
+	@SearchDescriptions bit = 0, --a value indicating whether to search by a specified "keyword" in product descriptions
+	@SearchManufacturerPartNumber bit = 0, -- a value indicating whether to search by a specified "keyword" in manufacturer part number
+	@SearchSku			bit = 0, --a value indicating whether to search by a specified "keyword" in product SKU
+	@SearchProductTags  bit = 0, --a value indicating whether to search by a specified "keyword" in product tags
+	@UseFullTextSearch  bit = 0,
+	@FullTextMode		int = 0, --0 - using CONTAINS with <prefix_term>, 5 - using CONTAINS and OR with <prefix_term>, 10 - using CONTAINS and AND with <prefix_term>
+	@FilteredSpecs		nvarchar(MAX) = null,	--filter by specification attribute options (comma-separated list of IDs). e.g. 14,15,16
+	@LanguageId			int = 0,
+	@OrderBy			int = 0, --0 - position, 5 - Name: A to Z, 6 - Name: Z to A, 10 - Price: Low to High, 11 - Price: High to Low, 15 - creation date
+	@AllowedCustomerRoleIds	nvarchar(MAX) = null,	--a list of customer role IDs (comma-separated list) for which a product should be shown (if a subject to ACL)
+	@PageIndex			int = 0, 
+	@PageSize			int = 2147483644,
+	@ShowHidden			bit = 0,
+	@OverridePublished	bit = null, --null - process "Published" property according to "showHidden" parameter, true - load only "Published" products, false - load only "Unpublished" products
+	@LoadFilterableSpecificationAttributeOptionIds bit = 0, --a value indicating whether we should load the specification attribute option identifiers applied to loaded products (all pages)
+	@FilterableSpecificationAttributeOptionIds nvarchar(MAX) = null OUTPUT, --the specification attribute option identifiers applied to loaded products (all pages). returned as a comma separated list of identifiers
+	@TotalRecords		int = null OUTPUT
+)
+AS
+BEGIN	
+	/* Products that filtered by keywords */
+	CREATE TABLE #KeywordProducts
+	(
+		[ProductId] int NOT NULL
+	)
+
+	DECLARE
+		@SearchKeywords bit,
+		@OriginalKeywords nvarchar(4000),
+		@sql nvarchar(max),
+		@sql_orderby nvarchar(max)
+
+	SET NOCOUNT ON
+	
+	--filter by keywords
+	SET @Keywords = isnull(@Keywords, '')
+	SET @Keywords = rtrim(ltrim(@Keywords))
+	SET @OriginalKeywords = @Keywords
+	IF ISNULL(@Keywords, '') != ''
+	BEGIN
+		SET @SearchKeywords = 1
+		
+		IF @UseFullTextSearch = 1
+		BEGIN
+			--remove wrong chars (' ")
+			SET @Keywords = REPLACE(@Keywords, '''', '')
+			SET @Keywords = REPLACE(@Keywords, '"', '')
+			
+			--full-text search
+			IF @FullTextMode = 0 
+			BEGIN
+				--0 - using CONTAINS with <prefix_term>
+				SET @Keywords = ' "' + @Keywords + '*" '
+			END
+			ELSE
+			BEGIN
+				--5 - using CONTAINS and OR with <prefix_term>
+				--10 - using CONTAINS and AND with <prefix_term>
+
+				--clean multiple spaces
+				WHILE CHARINDEX('  ', @Keywords) > 0 
+					SET @Keywords = REPLACE(@Keywords, '  ', ' ')
+
+				DECLARE @concat_term nvarchar(100)				
+				IF @FullTextMode = 5 --5 - using CONTAINS and OR with <prefix_term>
+				BEGIN
+					SET @concat_term = 'OR'
+				END 
+				IF @FullTextMode = 10 --10 - using CONTAINS and AND with <prefix_term>
+				BEGIN
+					SET @concat_term = 'AND'
+				END
+
+				--now let's build search string
+				declare @fulltext_keywords nvarchar(4000)
+				set @fulltext_keywords = N''
+				declare @index int		
+		
+				set @index = CHARINDEX(' ', @Keywords, 0)
+
+				-- if index = 0, then only one field was passed
+				IF(@index = 0)
+					set @fulltext_keywords = ' "' + @Keywords + '*" '
+				ELSE
+				BEGIN		
+                    DECLARE @len_keywords INT
+					DECLARE @len_nvarchar INT
+					SET @len_keywords = 0
+					SET @len_nvarchar = DATALENGTH(CONVERT(NVARCHAR(MAX), 'a'))
+
+					DECLARE @first BIT
+					SET  @first = 1			
+					WHILE @index > 0
+					BEGIN
+						IF (@first = 0)
+							SET @fulltext_keywords = @fulltext_keywords + ' ' + @concat_term + ' '
+						ELSE
+							SET @first = 0
+
+                        --LEN excludes trailing spaces. That is why we use DATALENGTH
+						--see https://docs.microsoft.com/sql/t-sql/functions/len-transact-sql?view=sqlallproducts-allversions for more ditails
+						SET @len_keywords = DATALENGTH(@Keywords) / @len_nvarchar
+
+						SET @fulltext_keywords = @fulltext_keywords + '"' + SUBSTRING(@Keywords, 1, @index - 1) + '*"'					
+						SET @Keywords = SUBSTRING(@Keywords, @index + 1, @len_keywords - @index)						
+						SET @index = CHARINDEX(' ', @Keywords, 0)
+					end
+					
+					-- add the last field
+                    SET @len_keywords = DATALENGTH(@Keywords) / @len_nvarchar
+					IF LEN(@fulltext_keywords) > 0
+						SET @fulltext_keywords = @fulltext_keywords + ' ' + @concat_term + ' ' + '"' + SUBSTRING(@Keywords, 1, @len_keywords) + '*"'	
+				END
+				SET @Keywords = @fulltext_keywords
+			END
+		END
+		ELSE
+		BEGIN
+			--usual search by PATINDEX
+			SET @Keywords = '%' + @Keywords + '%'
+		END
+		--PRINT @Keywords
+
+		--product name
+		SET @sql = '
+		INSERT INTO #KeywordProducts ([ProductId])
+		SELECT p.Id
+		FROM Product p with (NOLOCK)
+		WHERE '
+		IF @UseFullTextSearch = 1
+			SET @sql = @sql + 'CONTAINS(p.[Name], @Keywords) '
+		ELSE
+			SET @sql = @sql + 'PATINDEX(@Keywords, p.[Name]) > 0 '
+
+		IF @SearchDescriptions = 1
+		BEGIN
+			--product short description
+			IF @UseFullTextSearch = 1
+			BEGIN
+				SET @sql = @sql + 'OR CONTAINS(p.[ShortDescription], @Keywords) '
+				SET @sql = @sql + 'OR CONTAINS(p.[FullDescription], @Keywords) '
+			END
+			ELSE
+			BEGIN
+				SET @sql = @sql + 'OR PATINDEX(@Keywords, p.[ShortDescription]) > 0 '
+				SET @sql = @sql + 'OR PATINDEX(@Keywords, p.[FullDescription]) > 0 '
+			END
+		END
+
+		--manufacturer part number (exact match)
+		IF @SearchManufacturerPartNumber = 1
+		BEGIN
+			SET @sql = @sql + 'OR p.[ManufacturerPartNumber] = @OriginalKeywords '
+		END
+
+		--SKU (exact match)
+		IF @SearchSku = 1
+		BEGIN
+			SET @sql = @sql + 'OR p.[Sku] = @OriginalKeywords '
+		END
+
+		--localized product name
+		SET @sql = @sql + '
+		UNION
+		SELECT lp.EntityId
+		FROM LocalizedProperty lp with (NOLOCK)
+		WHERE
+			lp.LocaleKeyGroup = N''Product''
+			AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
+			AND ( (lp.LocaleKey = N''Name'''
+		IF @UseFullTextSearch = 1
+			SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords)) '
+		ELSE
+			SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0) '
+
+		IF @SearchDescriptions = 1
+		BEGIN
+			--localized product short description
+			SET @sql = @sql + '
+				OR (lp.LocaleKey = N''ShortDescription'''
+			IF @UseFullTextSearch = 1
+				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords)) '
+			ELSE
+				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0) '
+
+			--localized product full description
+			SET @sql = @sql + '
+				OR (lp.LocaleKey = N''FullDescription'''
+			IF @UseFullTextSearch = 1
+				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords)) '
+			ELSE
+				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0) '
+		END
+
+		SET @sql = @sql + ' ) '
+
+		IF @SearchProductTags = 1
+		BEGIN
+			--product tags (exact match)
+			SET @sql = @sql + '
+			UNION
+			SELECT pptm.Product_Id
+			FROM Product_ProductTag_Mapping pptm with(NOLOCK) INNER JOIN ProductTag pt with(NOLOCK) ON pt.Id = pptm.ProductTag_Id
+			WHERE pt.[Name] = @OriginalKeywords '
+
+			--localized product tags
+			SET @sql = @sql + '
+			UNION
+			SELECT pptm.Product_Id
+			FROM LocalizedProperty lp with (NOLOCK) INNER JOIN Product_ProductTag_Mapping pptm with(NOLOCK) ON lp.EntityId = pptm.ProductTag_Id
+			WHERE
+				lp.LocaleKeyGroup = N''ProductTag''
+				AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
+				AND lp.LocaleKey = N''Name''
+				AND lp.[LocaleValue] = @OriginalKeywords '
+		END
+
+		--PRINT (@sql)
+		EXEC sp_executesql @sql, N'@Keywords nvarchar(4000), @OriginalKeywords nvarchar(4000)', @Keywords, @OriginalKeywords
+
+	END
+	ELSE
+	BEGIN
+		SET @SearchKeywords = 0
+	END
+
+	--filter by category IDs
+	SET @CategoryIds = isnull(@CategoryIds, '')	
+	CREATE TABLE #FilteredCategoryIds
+	(
+		CategoryId int not null
+	)
+	INSERT INTO #FilteredCategoryIds (CategoryId)
+	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@CategoryIds, ',')	
+	DECLARE @CategoryIdsCount int	
+	SET @CategoryIdsCount = (SELECT COUNT(1) FROM #FilteredCategoryIds)
+
+	--filter by customer role IDs (access control list)
+	SET @AllowedCustomerRoleIds = isnull(@AllowedCustomerRoleIds, '')	
+	CREATE TABLE #FilteredCustomerRoleIds
+	(
+		CustomerRoleId int not null
+	)
+	INSERT INTO #FilteredCustomerRoleIds (CustomerRoleId)
+	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@AllowedCustomerRoleIds, ',')
+	DECLARE @FilteredCustomerRoleIdsCount int	
+	SET @FilteredCustomerRoleIdsCount = (SELECT COUNT(1) FROM #FilteredCustomerRoleIds)
+	
+	--paging
+	DECLARE @PageLowerBound int
+	DECLARE @PageUpperBound int
+	DECLARE @RowsToReturn int
+	SET @RowsToReturn = @PageSize * (@PageIndex + 1)	
+	SET @PageLowerBound = @PageSize * @PageIndex
+	SET @PageUpperBound = @PageLowerBound + @PageSize + 1
+	
+	CREATE TABLE #DisplayOrderTmp 
+	(
+		[Id] int IDENTITY (1, 1) NOT NULL,
+		[ProductId] int NOT NULL
+	)
+
+	SET @sql = '
+	SELECT p.Id
+	FROM
+		Product p with (NOLOCK)'
+	
+	IF @CategoryIdsCount > 0
+	BEGIN
+		SET @sql = @sql + '
+		INNER JOIN Product_Category_Mapping pcm with (NOLOCK)
+			ON p.Id = pcm.ProductId'
+	END
+	
+	IF @ManufacturerId > 0
+	BEGIN
+		SET @sql = @sql + '
+		INNER JOIN Product_Manufacturer_Mapping pmm with (NOLOCK)
+			ON p.Id = pmm.ProductId'
+	END
+	
+	IF ISNULL(@ProductTagId, 0) != 0
+	BEGIN
+		SET @sql = @sql + '
+		INNER JOIN Product_ProductTag_Mapping pptm with (NOLOCK)
+			ON p.Id = pptm.Product_Id'
+	END
+	
+	--searching by keywords
+	IF @SearchKeywords = 1
+	BEGIN
+		SET @sql = @sql + '
+		JOIN #KeywordProducts kp
+			ON  p.Id = kp.ProductId'
+	END
+	
+	SET @sql = @sql + '
+	WHERE
+		p.Deleted = 0'
+	
+	--filter by category
+	IF @CategoryIdsCount > 0
+	BEGIN
+		SET @sql = @sql + '
+		AND pcm.CategoryId IN ('
+		
+		SET @sql = @sql + + CAST(@CategoryIds AS nvarchar(max))
+
+		SET @sql = @sql + ')'
+
+		IF @FeaturedProducts IS NOT NULL
+		BEGIN
+			SET @sql = @sql + '
+		AND pcm.IsFeaturedProduct = ' + CAST(@FeaturedProducts AS nvarchar(max))
+		END
+	END
+	
+	--filter by manufacturer
+	IF @ManufacturerId > 0
+	BEGIN
+		SET @sql = @sql + '
+		AND pmm.ManufacturerId = ' + CAST(@ManufacturerId AS nvarchar(max))
+		
+		IF @FeaturedProducts IS NOT NULL
+		BEGIN
+			SET @sql = @sql + '
+		AND pmm.IsFeaturedProduct = ' + CAST(@FeaturedProducts AS nvarchar(max))
+		END
+	END
+	
+	--filter by vendor
+	IF @VendorId > 0
+	BEGIN
+		SET @sql = @sql + '
+		AND p.VendorId = ' + CAST(@VendorId AS nvarchar(max))
+	END
+	
+	--filter by warehouse
+	IF @WarehouseId > 0
+	BEGIN
+		--we should also ensure that 'ManageInventoryMethodId' is set to 'ManageStock' (1)
+		--but we skip it in order to prevent hard-coded values (e.g. 1) and for better performance
+		SET @sql = @sql + '
+		AND  
+			(
+				(p.UseMultipleWarehouses = 0 AND
+					p.WarehouseId = ' + CAST(@WarehouseId AS nvarchar(max)) + ')
+				OR
+				(p.UseMultipleWarehouses > 0 AND
+					EXISTS (SELECT 1 FROM ProductWarehouseInventory [pwi]
+					WHERE [pwi].WarehouseId = ' + CAST(@WarehouseId AS nvarchar(max)) + ' AND [pwi].ProductId = p.Id))
+			)'
+	END
+	
+	--filter by product type
+	IF @ProductTypeId is not null
+	BEGIN
+		SET @sql = @sql + '
+		AND p.ProductTypeId = ' + CAST(@ProductTypeId AS nvarchar(max))
+	END
+	
+	--filter by "visible individually"
+	IF @VisibleIndividuallyOnly = 1
+	BEGIN
+		SET @sql = @sql + '
+		AND p.VisibleIndividually = 1'
+	END
+	
+	--filter by "marked as new"
+	IF @MarkedAsNewOnly = 1
+	BEGIN
+		SET @sql = @sql + '
+		AND p.MarkAsNew = 1
+		AND (getutcdate() BETWEEN ISNULL(p.MarkAsNewStartDateTimeUtc, ''1/1/1900'') and ISNULL(p.MarkAsNewEndDateTimeUtc, ''1/1/2999''))'
+	END
+	
+	--filter by product tag
+	IF ISNULL(@ProductTagId, 0) != 0
+	BEGIN
+		SET @sql = @sql + '
+		AND pptm.ProductTag_Id = ' + CAST(@ProductTagId AS nvarchar(max))
+	END
+	
+	--"Published" property
+	IF (@OverridePublished is null)
+	BEGIN
+		--process according to "showHidden"
+		IF @ShowHidden = 0
+		BEGIN
+			SET @sql = @sql + '
+			AND p.Published = 1'
+		END
+	END
+	ELSE IF (@OverridePublished = 1)
+	BEGIN
+		--published only
+		SET @sql = @sql + '
+		AND p.Published = 1'
+	END
+	ELSE IF (@OverridePublished = 0)
+	BEGIN
+		--unpublished only
+		SET @sql = @sql + '
+		AND p.Published = 0'
+	END
+	
+	--show hidden
+	IF @ShowHidden = 0
+	BEGIN
+		SET @sql = @sql + '
+		AND p.Deleted = 0
+		AND (getutcdate() BETWEEN ISNULL(p.AvailableStartDateTimeUtc, ''1/1/1900'') and ISNULL(p.AvailableEndDateTimeUtc, ''1/1/2999''))'
+	END
+	
+	--min price
+	IF @PriceMin is not null
+	BEGIN
+		SET @sql = @sql + '
+		AND (p.Price >= ' + CAST(@PriceMin AS nvarchar(max)) + ')'
+	END
+	
+	--max price
+	IF @PriceMax is not null
+	BEGIN
+		SET @sql = @sql + '
+		AND (p.Price <= ' + CAST(@PriceMax AS nvarchar(max)) + ')'
+	END
+	
+	--show hidden and ACL
+	IF  @ShowHidden = 0 and @FilteredCustomerRoleIdsCount > 0
+	BEGIN
+		SET @sql = @sql + '
+		AND (p.SubjectToAcl = 0 OR EXISTS (
+			SELECT 1 FROM #FilteredCustomerRoleIds [fcr]
+			WHERE
+				[fcr].CustomerRoleId IN (
+					SELECT [acl].CustomerRoleId
+					FROM [AclRecord] acl with (NOLOCK)
+					WHERE [acl].EntityId = p.Id AND [acl].EntityName = ''Product''
+				)
+			))'
+	END
+	
+	--filter by store
+	IF @StoreId > 0
+	BEGIN
+		SET @sql = @sql + '
+		AND (p.LimitedToStores = 0 OR EXISTS (
+			SELECT 1 FROM [StoreMapping] sm with (NOLOCK)
+			WHERE [sm].EntityId = p.Id AND [sm].EntityName = ''Product'' and [sm].StoreId=' + CAST(@StoreId AS nvarchar(max)) + '
+			))'
+	END
+	
+    --prepare filterable specification attribute option identifier (if requested)
+    IF @LoadFilterableSpecificationAttributeOptionIds = 1
+	BEGIN		
+		CREATE TABLE #FilterableSpecs 
+		(
+			[SpecificationAttributeOptionId] int NOT NULL
+		)
+        DECLARE @sql_filterableSpecs nvarchar(max)
+        SET @sql_filterableSpecs = '
+	        INSERT INTO #FilterableSpecs ([SpecificationAttributeOptionId])
+	        SELECT DISTINCT [psam].SpecificationAttributeOptionId
+	        FROM [Product_SpecificationAttribute_Mapping] [psam] WITH (NOLOCK)
+	            WHERE [psam].[AllowFiltering] = 1
+	            AND [psam].[ProductId] IN (' + @sql + ')'
+
+        EXEC sp_executesql @sql_filterableSpecs
+
+		--build comma separated list of filterable identifiers
+		SELECT @FilterableSpecificationAttributeOptionIds = COALESCE(@FilterableSpecificationAttributeOptionIds + ',' , '') + CAST(SpecificationAttributeOptionId as nvarchar(4000))
+		FROM #FilterableSpecs
+
+		DROP TABLE #FilterableSpecs
+ 	END
+
+	--filter by specification attribution options
+	SET @FilteredSpecs = isnull(@FilteredSpecs, '')	
+	CREATE TABLE #FilteredSpecs
+	(
+		SpecificationAttributeOptionId int not null
+	)
+	INSERT INTO #FilteredSpecs (SpecificationAttributeOptionId)
+	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@FilteredSpecs, ',') 
+
+    CREATE TABLE #FilteredSpecsWithAttributes
+	(
+        SpecificationAttributeId int not null,
+		SpecificationAttributeOptionId int not null
+	)
+	INSERT INTO #FilteredSpecsWithAttributes (SpecificationAttributeId, SpecificationAttributeOptionId)
+	SELECT sao.SpecificationAttributeId, fs.SpecificationAttributeOptionId
+    FROM #FilteredSpecs fs INNER JOIN SpecificationAttributeOption sao ON sao.Id = fs.SpecificationAttributeOptionId
+    ORDER BY sao.SpecificationAttributeId 
+
+    DECLARE @SpecAttributesCount int	
+	SET @SpecAttributesCount = (SELECT COUNT(1) FROM #FilteredSpecsWithAttributes)
+	IF @SpecAttributesCount > 0
+	BEGIN
+		--do it for each specified specification option
+		DECLARE @SpecificationAttributeOptionId int
+        DECLARE @SpecificationAttributeId int
+        DECLARE @LastSpecificationAttributeId int
+        SET @LastSpecificationAttributeId = 0
+		DECLARE cur_SpecificationAttributeOption CURSOR FOR
+		SELECT SpecificationAttributeId, SpecificationAttributeOptionId
+		FROM #FilteredSpecsWithAttributes
+
+		OPEN cur_SpecificationAttributeOption
+        FOREACH:
+            FETCH NEXT FROM cur_SpecificationAttributeOption INTO @SpecificationAttributeId, @SpecificationAttributeOptionId
+            IF (@LastSpecificationAttributeId <> 0 AND @SpecificationAttributeId <> @LastSpecificationAttributeId OR @@FETCH_STATUS <> 0) 
+			    SET @sql = @sql + '
+        AND p.Id in (select psam.ProductId from [Product_SpecificationAttribute_Mapping] psam with (NOLOCK) where psam.AllowFiltering = 1 and psam.SpecificationAttributeOptionId IN (SELECT SpecificationAttributeOptionId FROM #FilteredSpecsWithAttributes WHERE SpecificationAttributeId = ' + CAST(@LastSpecificationAttributeId AS nvarchar(max)) + '))'
+            SET @LastSpecificationAttributeId = @SpecificationAttributeId
+		IF @@FETCH_STATUS = 0 GOTO FOREACH
+		CLOSE cur_SpecificationAttributeOption
+		DEALLOCATE cur_SpecificationAttributeOption
+	END
+
+	--sorting
+	SET @sql_orderby = ''	
+	IF @OrderBy = 5 /* Name: A to Z */
+		SET @sql_orderby = ' p.[Name] ASC'
+	ELSE IF @OrderBy = 6 /* Name: Z to A */
+		SET @sql_orderby = ' p.[Name] DESC'
+	ELSE IF @OrderBy = 10 /* Price: Low to High */
+		SET @sql_orderby = ' p.[Price] ASC'
+	ELSE IF @OrderBy = 11 /* Price: High to Low */
+		SET @sql_orderby = ' p.[Price] DESC'
+	ELSE IF @OrderBy = 15 /* creation date */
+		SET @sql_orderby = ' p.[CreatedOnUtc] DESC'
+	ELSE /* default sorting, 0 (position) */
+	BEGIN
+		--category position (display order)
+		IF @CategoryIdsCount > 0 SET @sql_orderby = ' pcm.DisplayOrder ASC'
+		
+		--manufacturer position (display order)
+		IF @ManufacturerId > 0
+		BEGIN
+			IF LEN(@sql_orderby) > 0 SET @sql_orderby = @sql_orderby + ', '
+			SET @sql_orderby = @sql_orderby + ' pmm.DisplayOrder ASC'
+		END
+		
+		--name
+		IF LEN(@sql_orderby) > 0 SET @sql_orderby = @sql_orderby + ', '
+		SET @sql_orderby = @sql_orderby + ' p.[Name] ASC'
+	END
+	
+	SET @sql = @sql + '
+	ORDER BY' + @sql_orderby
+	
+    SET @sql = '
+    INSERT INTO #DisplayOrderTmp ([ProductId])' + @sql
+
+	--PRINT (@sql)
+	EXEC sp_executesql @sql
+
+	DROP TABLE #FilteredCategoryIds
+	DROP TABLE #FilteredSpecs
+    DROP TABLE #FilteredSpecsWithAttributes
+	DROP TABLE #FilteredCustomerRoleIds
+	DROP TABLE #KeywordProducts
+
+	CREATE TABLE #PageIndex 
+	(
+		[IndexId] int IDENTITY (1, 1) NOT NULL,
+		[ProductId] int NOT NULL
+	)
+	INSERT INTO #PageIndex ([ProductId])
+	SELECT ProductId
+	FROM #DisplayOrderTmp
+	GROUP BY ProductId
+	ORDER BY min([Id])
+
+	--total records
+	SET @TotalRecords = @@rowcount
+	
+	DROP TABLE #DisplayOrderTmp
+
+	--return products
+	SELECT TOP (@RowsToReturn)
+		p.*
+	FROM
+		#PageIndex [pi]
+		INNER JOIN Product p with (NOLOCK) on p.Id = [pi].[ProductId]
+	WHERE
+		[pi].IndexId > @PageLowerBound AND 
+		[pi].IndexId < @PageUpperBound
+	ORDER BY
+		[pi].IndexId
+	
+	DROP TABLE #PageIndex
+END
+GO	
+
+--update fluent migration versions
+DELETE FROM [MigrationVersionInfo] WHERE [Description] in ('AddProductAttributeValueProductAttributeMappingFK', 'AddProductCategoryCategoryFK', 'AddProductCategoryProductFK', 'AddProductManufacturerManufacturerFK', 'AddProductManufacturerProductFK', 'AddProductPictureProductPictureFK', 'AddProductPictureProductProductFK', 'AddAddProductProductTagProductFK', 'AddAddProductProductTagProductTagFK', 'AddProductReviewHelpfulnessProductReviewFK', 'AddProductReviewProductFK', 'AddProductReviewCustomerFK', 'AddProductReviewStoreFK', 'AddProductReviewReviewTypeMappingProductReviewFK', 'AddProductReviewReviewTypeMappingReviewTypeFK', 'AddProductSpecificationAttributeSpecificationAttributeOptionFK', 'AddProductSpecificationAttributeProductFK', 'AddProductWarehouseInventoryProductFK', 'AddProductWarehouseInventoryWarehouseFK', 'AddSpecificationAttributeOptionSpecificationAttributeFK', 'AddStockQuantityHistoryProductFK', 'AddStockQuantityHistoryWarehouseFK', 'AddTierPriceProductFK', 'AddTierPriceCustomerRoleFK', 'AddAddressAttributeValueAddressAttributeValueFk', 'AddAddressCountryFK', 'AddAddressStateProvinceFK', 'AddCustomerAddressCustomerFK', 'AddCustomerAddressAddressFK', 'AddCustomerAttributeValueCustomerAttributeFK', 'AddCustomerCustomerRoleCustomerFK', 'AddCustomerCustomerRoleCustomerRoleFK', 'AddCustomerBillingAddressFK', 'AddCustomerShippingAddressFK', 'AddCustomerPasswordCustomerFK', 'AddExternalAuthenticationRecordCustomerFK', 'AddRewardPointsHistoryCustomerFK', 'AddRewardPointsHistoryOrderFK', 'AddStateProvinceCountryFK', 'AddDiscountCategoryDiscountFK', 'AddDiscountCategoryCategoryFK', 'AddDiscountManufacturerDiscountFK', 'AddDiscountManufacturerManufacturerFK', 'AddDiscountProductDiscountFK', 'AddDiscountProductProductFK', 'AddDiscountUsageHistoryDiscountFK', 'AddDiscountUsageHistoryOrderFK', 'AddForumForumGroupFK', 'AddForumPostForumTopicFK', 'AddForumPostCustomerFK', 'AddForumPostVoteForumPostFK', 'AddForumSubscriptionCustomerFK', 'AddForumTopicForumFK', 'AddForumTopicCustomerFK', 'AddPrivateMessageFromCustomerFK', 'AddPrivateMessageToCustomerFK', 'AddLocaleStringResourceLanguageFK', 'AddLocalizedPropertyLanguageFK', 'AddActivityLogActivityLogTypeFK', 'AddActivityLogCustomerFK', 'AddLogCustomerFK', 'AddPictureBinaryPictureFK', 'AddQueuedEmailEmailAccountFK', 'AddNewsCommentNewsItemFK', 'AddNewsCommentCustomerFK', 'AddNewsCommentStoreFK', 'AddNewsItemLanguageFK', 'AddCheckoutAttributeValueCheckoutAttributeFK', 'AddGiftCardOrderItemFK', 'AddGiftCardUsageHistoryGiftCardFK', 'AddGiftCardUsageHistoryOrderFK', 'AddOrderItemOrderFK', 'AddOrderItemProductFK', 'AddOrderCustomerFK', 'AddOrderBillingAddressFK', 'AddOrderShippingAddressFK', 'AddOrderPickupAddressFK', 'AddOrderNoteOrderFK', 'AddRecurringPaymentHistoryRecurringPaymentFK', 'AddRecurringPaymentOrderFK', 'AddReturnRequestCustomerFK', 'AddShoppingCartItemCustomerFK', 'AddShoppingCartItemProductFK', 'AddPollAnswerPollFK', 'AddPollLanguageFK', 'AddPollVotingRecordPollAnswerFK', 'AddPollVotingRecordCustomerFK', 'AddAclRecordCustomerRoleFK', 'AddPermissionRecordCustomerRoleCustomerRoleFK', 'AddPermissionRecordCustomerRolePermissionRecordFK', 'AddShipmentItemShipmentFK', 'AddShipmentOrderFK', 'AddShippingMethodCountryCountryFK', 'AddShippingMethodCountryShippingMethodFK', 'AddStoreMappingStoreFK', 'AddVendorAttributeValueVendorAttributeFK', 'AddVendorNoteVendorFK', 'AddAffiliateAddressFK', 'AddBlogCommentBlogPostFK', 'AddBlogCommentCustomerFK', 'AddBlogCommentStoreFK', 'AddBlogPostLanguageFK', 'AddBackInStockSubscriptionProductFK', 'AddBackInStockSubscriptionCustomerFK', 'AddPredefinedProductAttributeValueProductAttributeFK', 'AddProductAttributeMappingProductFK', 'AddProductAttributeMappingProductAttributeFK', 'AddDiscountRequirementDiscountFK', 'AddDiscountRequirementDiscountRequirementFK', 'AddOrderRewardPointsHistoryFK', 'AddProductAttributeCombinationProductFk', 'AddPCMProductIdExtendedIX', 'AddPMMProductIdExtendedIX', 'AddPSAMAllowFilteringIX', 'AddPSAMSpecificationAttributeOptionIdAllowFilteringIX', 'AddQueuedEmailSentOnUtcDontSendBeforeDateUtcExtendedIX', 'AddProductVisibleIndividuallyPublishedDeletedExtendedIX', 'AddCategoryDeletedExtendedIX', 'AddLocaleStringResourceIX', 'AddProductPriceDatesEtcIX', 'AddCountryDisplayOrderIX', 'AddLogCreatedOnUtcIX', 'AddCustomerEmailIX', 'AddCustomerUsernameIX', 'AddCustomerCustomerGuidIX', 'AddCustomerSystemNameIX', 'AddCustomerCreatedOnUtcIX', 'AddGenericAttributeEntityIdKeyGroupIX', 'AddQueuedEmailCreatedOnUtcIX', 'AddOrderCreatedOnUtcIX', 'AddLanguageDisplayOrderIX', 'AddNewsletterSubscriptionEmailStoreIdIX', 'AddShoppingCartItemShoppingCartTypeIdCustomerIdIX', 'AddRelatedProductProductId1IX', 'AddProductAttributeValueProductAttributeMappingIdDisplayOrderIX', 'AddProductProductAttributeMappingProductIdDisplayOrderIX', 'AddManufacturerDisplayOrderIX', 'AddCategoryDisplayOrderIX', 'AddCategoryParentCategoryIdIX', 'AddForumsGroupDisplayOrderIX', 'AddForumsForumDisplayOrderIX', 'AddForumsSubscriptionForumIdIX', 'AddForumsSubscriptionTopicIdIX', 'AddProductDeletedPublishedIX', 'AddProductPublishedIX', 'AddProductShowOnHomepageIX', 'AddProductParentGroupedProductIdIX', 'AddProductVisibleIndividuallyIX', 'AddPCMProductCategoryIX', 'AddCurrencyDisplayOrderIX', 'AddProductTagNameIX', 'AddActivityLogCreatedOnUtcIX', 'AddUrlRecordSlugIX', 'AddUrlRecordCustom1IX', 'AddAclRecordEntityIdEntityNameIX', 'AddStoreMappingEntityIdEntityNameIX', 'AddCategoryLimitedToStoresIX', 'AddManufacturerLimitedToStoresIX', 'AddProductLimitedToStoresIX', 'AddCategorSubjectToAclIX', 'AddManufacturerSubjectToAclIX', 'AddProductSubjectToAclIX', 'AddProductCategoryMappingIsFeaturedProductIX', 'AddProductManufacturerMappingIsFeaturedProductIX', 'AddCustomerCustomerRoleMappingCustomerIdIX', 'AddProductDeleteIdIX', 'AddGetLowStockProductsIX', 'AddPMMProductManufacturerIX');
+
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:28.0000000' AS DateTime2), N'AddProductAttributeValueProductAttributeMappingFK', 637097184507544540)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:28.0000000' AS DateTime2), N'AddProductCategoryCategoryFK', 637097186625689396)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:28.0000000' AS DateTime2), N'AddProductCategoryProductFK', 637097186625689397)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:28.0000000' AS DateTime2), N'AddProductManufacturerManufacturerFK', 637097188539067594)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:28.0000000' AS DateTime2), N'AddProductManufacturerProductFK', 637097188539067595)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:28.0000000' AS DateTime2), N'AddProductPictureProductPictureFK', 637097195662625749)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:28.0000000' AS DateTime2), N'AddProductPictureProductProductFK', 637097195662625750)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:28.0000000' AS DateTime2), N'AddAddProductProductTagProductFK', 637097199880193450)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:28.0000000' AS DateTime2), N'AddAddProductProductTagProductTagFK', 637097199880193451)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:28.0000000' AS DateTime2), N'AddProductReviewHelpfulnessProductReviewFK', 637097207558603530)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:28.0000000' AS DateTime2), N'AddProductReviewProductFK', 637097207998948304)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:28.0000000' AS DateTime2), N'AddProductReviewCustomerFK', 637097207998948305)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:28.0000000' AS DateTime2), N'AddProductReviewStoreFK', 637097207998948306)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:28.0000000' AS DateTime2), N'AddProductReviewReviewTypeMappingProductReviewFK', 637097211602513441)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:28.0000000' AS DateTime2), N'AddProductReviewReviewTypeMappingReviewTypeFK', 637097211602513442)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:28.0000000' AS DateTime2), N'AddProductSpecificationAttributeSpecificationAttributeOptionFK', 637097213462261985)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:28.0000000' AS DateTime2), N'AddProductSpecificationAttributeProductFK', 637097213462261986)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:28.0000000' AS DateTime2), N'AddProductWarehouseInventoryProductFK', 637097218980051780)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:28.0000000' AS DateTime2), N'AddProductWarehouseInventoryWarehouseFK', 637097218980051781)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddSpecificationAttributeOptionSpecificationAttributeFK', 637097221366619708)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddStockQuantityHistoryProductFK', 637097224165419186)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddStockQuantityHistoryWarehouseFK', 637097224165419187)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddTierPriceProductFK', 637097225438051844)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddTierPriceCustomerRoleFK', 637097225438051845)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddAddressAttributeValueAddressAttributeValueFk', 637097261526459118)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddAddressCountryFK', 637097264240659480)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddAddressStateProvinceFK', 637097264240659481)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddCustomerAddressCustomerFK', 637097266595245358)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddCustomerAddressAddressFK', 637097266595245359)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddCustomerAttributeValueCustomerAttributeFK', 637097269504308129)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddCustomerCustomerRoleCustomerFK', 637097271237489896)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddCustomerCustomerRoleCustomerRoleFK', 637097271237489897)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddCustomerBillingAddressFK', 637097273651641381)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddCustomerShippingAddressFK', 637097273651641382)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddCustomerPasswordCustomerFK', 637097275461276491)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddExternalAuthenticationRecordCustomerFK', 637097276449096139)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddRewardPointsHistoryCustomerFK', 637097277252342366)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddRewardPointsHistoryOrderFK', 637097277252342367)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddStateProvinceCountryFK', 637097281433797964)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddDiscountCategoryDiscountFK', 637097339695936887)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddDiscountCategoryCategoryFK', 637097339695936888)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddDiscountManufacturerDiscountFK', 637097342149883528)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddDiscountManufacturerManufacturerFK', 637097342149883529)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddDiscountProductDiscountFK', 637097346951975256)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddDiscountProductProductFK', 637097346951975257)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddDiscountUsageHistoryDiscountFK', 637097348041180783)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:29.0000000' AS DateTime2), N'AddDiscountUsageHistoryOrderFK', 637097348041180784)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddForumForumGroupFK', 637097351627313370)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddForumPostForumTopicFK', 637097352463004325)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddForumPostCustomerFK', 637097352463004326)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddForumPostVoteForumPostFK', 637097355633262801)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddForumSubscriptionCustomerFK', 637097356387699848)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddForumTopicForumFK', 637097357101910240)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddForumTopicCustomerFK', 637097357101910241)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddPrivateMessageFromCustomerFK', 637097358373669695)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddPrivateMessageToCustomerFK', 637097358373669696)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddLocaleStringResourceLanguageFK', 637097360951964555)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddLocalizedPropertyLanguageFK', 637097361590515436)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddActivityLogActivityLogTypeFK', 637097362508380329)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddActivityLogCustomerFK', 637097362508380330)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddLogCustomerFK', 637097363893561926)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddPictureBinaryPictureFK', 637097364695631609)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddQueuedEmailEmailAccountFK', 637097365031655781)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddNewsCommentNewsItemFK', 637097366362530772)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddNewsCommentCustomerFK', 637097366362530773)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddNewsCommentStoreFK', 637097366362530774)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddNewsItemLanguageFK', 637097368094361423)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddCheckoutAttributeValueCheckoutAttributeFK', 637097369078553212)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddGiftCardOrderItemFK', 637097370922130581)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddGiftCardUsageHistoryGiftCardFK', 637097371156452475)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddGiftCardUsageHistoryOrderFK', 637097371156452476)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddOrderItemOrderFK', 637097372609436788)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddOrderItemProductFK', 637097372609436789)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddOrderCustomerFK', 637097373896028942)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddOrderBillingAddressFK', 637097373896028943)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddOrderShippingAddressFK', 637097373896028944)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddOrderPickupAddressFK', 637097373896028945)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:30.0000000' AS DateTime2), N'AddOrderNoteOrderFK', 637097376997123308)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddRecurringPaymentHistoryRecurringPaymentFK', 637097378210887644)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddRecurringPaymentOrderFK', 637097379410960207)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddReturnRequestCustomerFK', 637097380291248082)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddShoppingCartItemCustomerFK', 637097381093371767)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddShoppingCartItemProductFK', 637097381093371768)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddPollAnswerPollFK', 637097383487520229)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddPollLanguageFK', 637097384025962851)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddPollVotingRecordPollAnswerFK', 637097385036693383)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddPollVotingRecordCustomerFK', 637097385036693384)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddAclRecordCustomerRoleFK', 637097386436073081)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddPermissionRecordCustomerRoleCustomerRoleFK', 637097387107801301)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddPermissionRecordCustomerRolePermissionRecordFK', 637097387107801302)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddShipmentItemShipmentFK', 637097388921984734)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddShipmentOrderFK', 637097389681126845)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddShippingMethodCountryCountryFK', 637097390410528356)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddShippingMethodCountryShippingMethodFK', 637097390410528357)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddStoreMappingStoreFK', 637097391639005655)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddVendorAttributeValueVendorAttributeFK', 637097392346411077)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddVendorNoteVendorFK', 637097392991868645)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddAffiliateAddressFK', 637097594562551771)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddBlogCommentBlogPostFK', 637097605404497785)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddBlogCommentCustomerFK', 637097605404497786)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddBlogCommentStoreFK', 637097605404497787)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddBlogPostLanguageFK', 637097607595956342)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddBackInStockSubscriptionProductFK', 637097608748261630)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddBackInStockSubscriptionCustomerFK', 637097608748261631)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddPredefinedProductAttributeValueProductAttributeFK', 637097611590754490)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddProductAttributeMappingProductFK', 637097615386806324)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddProductAttributeMappingProductAttributeFK', 637097615386806325)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddDiscountRequirementDiscountFK', 637117958520043560)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddDiscountRequirementDiscountRequirementFK', 637117958520043561)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:31.0000000' AS DateTime2), N'AddOrderRewardPointsHistoryFK', 637120677617140897)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddProductAttributeCombinationProductFk', 637120678600830411)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddPCMProductIdExtendedIX', 637123105559280389)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddPMMProductIdExtendedIX', 637123105559280390)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddPSAMAllowFilteringIX', 637123105559280391)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddPSAMSpecificationAttributeOptionIdAllowFilteringIX', 637123105559280392)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddQueuedEmailSentOnUtcDontSendBeforeDateUtcExtendedIX', 637123105559280393)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddProductVisibleIndividuallyPublishedDeletedExtendedIX', 637123105559280394)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddCategoryDeletedExtendedIX', 637123105559280395)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddLocaleStringResourceIX', 637123449689037677)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddProductPriceDatesEtcIX', 637123449689037678)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddCountryDisplayOrderIX', 637123449689037679)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddLogCreatedOnUtcIX', 637123449689037680)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddCustomerEmailIX', 637123449689037681)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddCustomerUsernameIX', 637123449689037682)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddCustomerCustomerGuidIX', 637123449689037683)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddCustomerSystemNameIX', 637123449689037684)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddCustomerCreatedOnUtcIX', 637123449689037685)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddGenericAttributeEntityIdKeyGroupIX', 637123449689037686)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddQueuedEmailCreatedOnUtcIX', 637123449689037687)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddOrderCreatedOnUtcIX', 637123449689037688)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddLanguageDisplayOrderIX', 637123449689037689)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddNewsletterSubscriptionEmailStoreIdIX', 637123449689037690)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddShoppingCartItemShoppingCartTypeIdCustomerIdIX', 637123449689037691)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddRelatedProductProductId1IX', 637123449689037692)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddProductAttributeValueProductAttributeMappingIdDisplayOrderIX', 637123449689037693)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddProductProductAttributeMappingProductIdDisplayOrderIX', 637123449689037694)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddManufacturerDisplayOrderIX', 637123449689037695)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddCategoryDisplayOrderIX', 637123449689037696)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddCategoryParentCategoryIdIX', 637123449689037697)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddForumsGroupDisplayOrderIX', 637123449689037698)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddForumsForumDisplayOrderIX', 637123449689037699)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddForumsSubscriptionForumIdIX', 637123449689037700)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddForumsSubscriptionTopicIdIX', 637123449689037701)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddProductDeletedPublishedIX', 637123449689037702)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddProductPublishedIX', 637123449689037703)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddProductShowOnHomepageIX', 637123449689037704)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddProductParentGroupedProductIdIX', 637123449689037705)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddProductVisibleIndividuallyIX', 637123449689037706)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddPCMProductCategoryIX', 637123449689037707)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddCurrencyDisplayOrderIX', 637123449689037708)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddProductTagNameIX', 637123521091647925)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddActivityLogCreatedOnUtcIX', 637123521091647926)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddUrlRecordSlugIX', 637123521091647927)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddUrlRecordCustom1IX', 637123521091647928)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddAclRecordEntityIdEntityNameIX', 637123521091647929)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddStoreMappingEntityIdEntityNameIX', 637123521091647930)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddCategoryLimitedToStoresIX', 637123521091647931)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddManufacturerLimitedToStoresIX', 637123521091647932)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddProductLimitedToStoresIX', 637123521091647933)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddCategorSubjectToAclIX', 637123521091647934)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddManufacturerSubjectToAclIX', 637123521091647935)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddProductSubjectToAclIX', 637123521091647936)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddProductCategoryMappingIsFeaturedProductIX', 637123521091647937)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddProductManufacturerMappingIsFeaturedProductIX', 637123521091647938)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddCustomerCustomerRoleMappingCustomerIdIX', 637123521091647939)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:32.0000000' AS DateTime2), N'AddProductDeleteIdIX', 637123521091647940)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:33.0000000' AS DateTime2), N'AddGetLowStockProductsIX', 637123521091647941)
+INSERT [dbo].[MigrationVersionInfo] ([AppliedOn], [Description], [Version]) VALUES (CAST(N'2020-03-10T15:24:33.0000000' AS DateTime2), N'AddPMMProductManufacturerIX', 637123521091647942)
 GO

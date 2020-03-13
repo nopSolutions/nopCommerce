@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Caching.CachingDefaults
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Caching.CachingDefaults
 {
     /// <summary>
     /// Represents default values related to tax services
@@ -8,6 +10,6 @@
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static string TaxCategoriesAllCacheKey => "Nop.taxcategory.all";
+        public static CacheKey TaxCategoriesAllCacheKey => new CacheKey("Nop.taxcategory.all");
     }
 }

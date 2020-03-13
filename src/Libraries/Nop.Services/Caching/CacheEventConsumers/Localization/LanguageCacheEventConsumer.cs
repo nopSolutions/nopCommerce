@@ -14,9 +14,9 @@ namespace Nop.Services.Caching.CacheEventConsumers.Localization
         /// <param name="entity">Entity</param>
         protected override void ClearCache(Language entity)
         {
-            Remove(NopLocalizationCachingDefaults.LocaleStringResourcesAllPublicCacheKey.ToCacheKey(entity));
-            Remove(NopLocalizationCachingDefaults.LocaleStringResourcesAllAdminCacheKey.ToCacheKey(entity));
-            Remove(NopLocalizationCachingDefaults.LocaleStringResourcesAllCacheKey.ToCacheKey(entity));
+            Remove(NopLocalizationCachingDefaults.LocaleStringResourcesAllPublicCacheKey.FillCacheKey(entity));
+            Remove(NopLocalizationCachingDefaults.LocaleStringResourcesAllAdminCacheKey.FillCacheKey(entity));
+            Remove(NopLocalizationCachingDefaults.LocaleStringResourcesAllCacheKey.FillCacheKey(entity));
 
             var prefix = NopLocalizationCachingDefaults.LocaleStringResourcesByResourceNamePrefixCacheKey.ToCacheKey(entity);
             RemoveByPrefix(prefix);

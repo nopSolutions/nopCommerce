@@ -141,7 +141,7 @@ namespace Nop.Web.Framework
 
             //whether the requsted URL is localized
             var path = _httpContextAccessor.HttpContext.Request.Path.Value;
-            if (!path.IsLocalizedUrl(_httpContextAccessor.HttpContext.Request.PathBase, false, out Language language))
+            if (!path.IsLocalizedUrl(_httpContextAccessor.HttpContext.Request.PathBase, false, out var language))
                 return null;
 
             //check language availability
@@ -237,7 +237,7 @@ namespace Nop.Web.Framework
                     var customerCookie = GetCustomerCookie();
                     if (!string.IsNullOrEmpty(customerCookie))
                     {
-                        if (Guid.TryParse(customerCookie, out Guid customerGuid))
+                        if (Guid.TryParse(customerCookie, out var customerGuid))
                         {
                             //get customer from cookie (should not be registered)
                             var customerByCookie = _customerService.GetCustomerByGuid(customerGuid);
@@ -274,10 +274,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Gets the original customer (in case the current one is impersonated)
         /// </summary>
-        public virtual Customer OriginalCustomerIfImpersonated
-        {
-            get { return _originalCustomerIfImpersonated; }
-        }
+        public virtual Customer OriginalCustomerIfImpersonated => _originalCustomerIfImpersonated;
 
         /// <summary>
         /// Gets the current vendor (logged-in manager)

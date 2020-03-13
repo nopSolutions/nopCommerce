@@ -14,7 +14,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Discounts
         /// <param name="entity">Entity</param>
         protected override void ClearCache(DiscountRequirement entity)
         {
-            var cacheKey = NopDiscountCachingDefaults.DiscountRequirementModelCacheKey.ToCacheKey(entity.DiscountId);
+            var cacheKey = NopDiscountCachingDefaults.DiscountRequirementModelCacheKey.FillCacheKey(entity.DiscountId);
             Remove(cacheKey);
         }
     }

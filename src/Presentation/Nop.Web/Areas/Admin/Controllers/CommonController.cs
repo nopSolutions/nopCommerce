@@ -16,8 +16,8 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Common;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Controllers;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -41,6 +41,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly INopFileProvider _fileProvider;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
+        private readonly IQueuedEmailService _queuedEmailService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStaticCacheManager _cacheManager;
         private readonly IUrlRecordService _urlRecordService;
@@ -61,6 +62,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             INopFileProvider fileProvider,
             INotificationService notificationService,
             IPermissionService permissionService,
+            IQueuedEmailService queuedEmailService,
             IShoppingCartService shoppingCartService,
             IStaticCacheManager cacheManager,
             IUrlRecordService urlRecordService,
@@ -77,6 +79,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _fileProvider = fileProvider;
             _notificationService = notificationService;
             _permissionService = permissionService;
+            _queuedEmailService = queuedEmailService;
             _shoppingCartService = shoppingCartService;
             _cacheManager = cacheManager;
             _urlRecordService = urlRecordService;
@@ -285,6 +288,24 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             model = _commonModelFactory.PrepareMaintenanceModel(model);
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Maintenance")]
+        [FormValueRequired("delete-already-sent-queued-emails")]
+        public virtual IActionResult MaintenanceDeleteAlreadySentQueuedEmails(MaintenanceModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
+            var startDateValue = model.DeleteAlreadySentQueuedEmails.StartDate == null ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteAlreadySentQueuedEmails.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+
+            var endDateValue = model.DeleteAlreadySentQueuedEmails.EndDate == null ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteAlreadySentQueuedEmails.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            model.DeleteAlreadySentQueuedEmails.NumberOfDeletedEmails = _queuedEmailService.DeleteAlreadySentEmails(startDateValue, endDateValue);
 
             return View(model);
         }

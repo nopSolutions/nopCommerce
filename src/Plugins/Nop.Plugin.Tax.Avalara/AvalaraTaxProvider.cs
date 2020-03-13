@@ -519,7 +519,7 @@ namespace Nop.Plugin.Tax.Avalara
                 return new CalculateTaxResult { Errors = new[] { "Address is not set" } };
 
             //construct a cache key
-            var cacheKey = string.Format(AvalaraTaxDefaults.TaxRateCacheKey,
+            var cacheKey = AvalaraTaxDefaults.TaxRateCacheKey.FillCacheKey(
                 calculateTaxRequest.Address.Address1,
                 calculateTaxRequest.Address.City,
                 calculateTaxRequest.Address.StateProvinceId ?? 0,
@@ -537,7 +537,7 @@ namespace Nop.Plugin.Tax.Avalara
                 return new CalculateTaxResult { Errors = new[] { "No response from the service" }.ToList() };
 
             //tax rate successfully received, so cache it
-            _cacheManager.Set(cacheKey, totalTax.Value, 60);
+            _cacheManager.Set(cacheKey, totalTax.Value);
 
             return new CalculateTaxResult { TaxRate = totalTax.Value };
         }

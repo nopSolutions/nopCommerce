@@ -8,7 +8,7 @@
 @inject LocalizationSettings localizationSettings
 @inject StoreInformationSettings storeInformationSettings
 @inject INopFileProvider fileProvider;
-@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment HostingEnvironment
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment WebHostEnvironment
 @inject Nop.Services.Common.IGenericAttributeService genericAttributeService
 @inject Nop.Services.Localization.ILanguageService languageService
 @using System.Globalization
@@ -36,9 +36,9 @@
         
         var cultureToUse = NopCommonDefaults.DefaultLocalePattern; //Default regionalisation to use
 
-        if (fileProvider.DirectoryExists(fileProvider.Combine(HostingEnvironment.WebRootPath, string.Format(localePattern, currentCulture.Name))))
+        if (fileProvider.DirectoryExists(fileProvider.Combine(WebHostEnvironment.WebRootPath, string.Format(localePattern, currentCulture.Name))))
             cultureToUse = currentCulture.Name;
-        else if (fileProvider.DirectoryExists(fileProvider.Combine(HostingEnvironment.WebRootPath, string.Format(localePattern, currentCulture.TwoLetterISOLanguageName))))
+        else if (fileProvider.DirectoryExists(fileProvider.Combine(WebHostEnvironment.WebRootPath, string.Format(localePattern, currentCulture.TwoLetterISOLanguageName))))
             cultureToUse = currentCulture.TwoLetterISOLanguageName;
 
         return cultureToUse;
@@ -241,11 +241,11 @@
                                 {
                                     <li class="dropdown">
                                         <a href="#" data-toggle="dropdown"><i class="fa fa-gears"></i></a>
-                                        <ul class="maintenance-menu dropdown-menu bg-light-blue" role="menu">
+                                        <ul class="maintenance-menu dropdown-menu bg-dark" role="menu">
                                             <li>
                                                 <form asp-controller="Common" asp-action="ClearCache" asp-area="@AreaNames.Admin">
                                                     <input name="returnurl" type="hidden" value="@returnUrl">
-                                                    <button type="submit" class="bg-light-blue">
+                                                    <button type="submit" class="bg-dark">
                                                         <span>@T("Admin.Header.ClearCache")</span>
                                                     </button>
                                                 </form>
@@ -253,7 +253,7 @@
                                             <li>
                                                 <form asp-controller="Common" asp-action="RestartApplication" asp-area="@AreaNames.Admin">
                                                     <input name="returnurl" type="hidden" value="@returnUrl">
-                                                    <button id="restart-application" type="submit" class="bg-light-blue">
+                                                    <button id="restart-application" type="submit" class="bg-dark">
                                                         <span>@T("Admin.Header.RestartApplication")</span>
                                                     </button>
                                                     <script>

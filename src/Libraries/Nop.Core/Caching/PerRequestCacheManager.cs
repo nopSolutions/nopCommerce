@@ -38,7 +38,7 @@ namespace Nop.Core.Caching
 
         #region Fields
         // Flag: Has Dispose already been called?
-        private bool _disposed = false;
+        private bool _disposed;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ReaderWriterLockSlim _locker;
 
@@ -52,9 +52,8 @@ namespace Nop.Core.Caching
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Cache key</param>
         /// <param name="acquire">Function to load item if it's not in the cache yet</param>
-        /// <param name="cacheTime">Cache time in minutes; pass 0 to do not cache; pass null to use the default time</param>
         /// <returns>The cached value associated with the specified key</returns>
-        public virtual T Get<T>(string key, Func<T> acquire, int? cacheTime = null)
+        public virtual T Get<T>(CacheKey key, Func<T> acquire)
         {
             IDictionary<object, object> items;
 
@@ -68,32 +67,31 @@ namespace Nop.Core.Caching
                     return acquire();
 
                 //item already is in cache, so return it
-                if (items[key] != null)
-                    return (T)items[key];
+                if (items[key.Key] != null)
+                    return (T)items[key.Key];
             }
             
             //or create it using passed function
             var result = acquire();
             
-            if (result == null || (cacheTime ?? NopCachingDefaults.CacheTime) <= 0) 
+            if (result == null || key.CacheTime <= 0) 
                 return result;
 
             //and set in cache (if cache time is defined)
             using (new ReaderWriteLockDisposable(_locker))
             {
-                items[key] = result;
+                items[key.Key] = result;
             }
 
             return result;
         }
-
+        
         /// <summary>
         /// Adds the specified key and object to the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
-        /// <param name="cacheTime">Cache time in minutes</param>
-        public virtual void Set(string key, object data, int cacheTime)
+        public virtual void Set(CacheKey key, object data)
         {
             if (data == null)
                 return;
@@ -104,7 +102,7 @@ namespace Nop.Core.Caching
                 if (items == null)
                     return;
 
-                items[key] = data;
+                items[key.Key] = data;
             }
         }
 
@@ -113,12 +111,12 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <returns>True if item already is in cache; otherwise false</returns>
-        public virtual bool IsSet(string key)
+        public virtual bool IsSet(CacheKey key)
         {
             using (new ReaderWriteLockDisposable(_locker, ReaderWriteLockType.Read))
             {
                 var items = GetItems();
-                return items?[key] != null;
+                return items?[key.Key] != null;
             }
         }
 
@@ -126,12 +124,12 @@ namespace Nop.Core.Caching
         /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
-        public virtual void Remove(string key)
+        public virtual void Remove(CacheKey key)
         {
             using (new ReaderWriteLockDisposable(_locker))
             {
                 var items = GetItems();
-                items?.Remove(key);
+                items?.Remove(key.Key);
             }
         }
 

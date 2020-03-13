@@ -67,13 +67,11 @@ namespace Nop.Services.Logging
         /// <returns>Result</returns>
         public virtual bool IsEnabled(LogLevel level)
         {
-            switch (level)
+            return level switch
             {
-                case LogLevel.Debug:
-                    return false;
-                default:
-                    return true;
-            }
+                LogLevel.Debug => false,
+                _ => true,
+            };
         }
 
         /// <summary>

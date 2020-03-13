@@ -164,7 +164,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in model values from the entity
-            model = model ?? new ReturnRequestModel
+            model ??= new ReturnRequestModel
             {
                 Id = returnRequest.Id,
                 CustomNumber = returnRequest.CustomNumber,
@@ -257,7 +257,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (returnRequestReason != null)
             {
                 //fill in model values from the entity
-                model = model ?? returnRequestReason.ToModel<ReturnRequestReasonModel>();
+                model ??= returnRequestReason.ToModel<ReturnRequestReasonModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -326,7 +326,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (returnRequestAction != null)
             {
                 //fill in model values from the entity
-                model = model ?? returnRequestAction.ToModel<ReturnRequestActionModel>();
+                model ??= returnRequestAction.ToModel<ReturnRequestActionModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

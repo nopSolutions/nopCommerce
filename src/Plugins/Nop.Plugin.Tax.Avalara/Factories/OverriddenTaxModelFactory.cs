@@ -3,7 +3,6 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Plugin.Tax.Avalara.Services;
 using Nop.Services.Common;
-using Nop.Services.Localization;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Tax;
@@ -30,10 +29,9 @@ namespace Nop.Plugin.Tax.Avalara.Factories
 
         public OverriddenTaxModelFactory(AvalaraTaxManager avalaraTaxManager,
             IGenericAttributeService genericAttributeService,
-            ILocalizationService localizationService,
             IStaticCacheManager cacheManager,
             ITaxCategoryService taxCategoryService,
-            ITaxPluginManager taxPluginManager) : base(localizationService,
+            ITaxPluginManager taxPluginManager) : base(
                 taxCategoryService,
                 taxPluginManager)
         {

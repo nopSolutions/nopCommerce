@@ -22,7 +22,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// {1} : page size
         /// {2} : current store ID
         /// </remarks>
-        private const string PICKUP_POINT_ALL_KEY = "Nop.pickuppoint.all-{0}-{1}-{2}";
+        private CacheKey PICKUP_POINT_ALL_KEY = new CacheKey("Nop.pickuppoint.all-{0}-{1}-{2}");
         private const string PICKUP_POINT_PATTERN_KEY = "Nop.pickuppoint.";
        
         #endregion
@@ -61,7 +61,7 @@ namespace Nop.Plugin.Pickup.PickupInStore.Services
         /// <returns>Pickup points</returns>
         public virtual IPagedList<StorePickupPoint> GetAllStorePickupPoints(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var key = string.Format(PICKUP_POINT_ALL_KEY, pageIndex, pageSize, storeId);
+            var key = PICKUP_POINT_ALL_KEY.FillCacheKey(pageIndex, pageSize, storeId);
             return _cacheManager.Get(key, () =>
             {
                 var query = _storePickupPointRepository.Table;

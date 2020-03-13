@@ -17,6 +17,6 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// The singleton instance for the specified type T. Only one instance (at the time) of this dictionary for each type of T.
         /// </summary>
-        public new static IDictionary<TKey, TValue> Instance => Singleton<Dictionary<TKey, TValue>>.Instance;
+        public static new IDictionary<TKey, TValue> Instance => Singleton<Dictionary<TKey, TValue>>.Instance;
     }
 }

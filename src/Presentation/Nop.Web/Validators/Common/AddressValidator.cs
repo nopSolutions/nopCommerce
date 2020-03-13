@@ -40,7 +40,7 @@ namespace Nop.Web.Validators.Common
                 RuleFor(x => x.StateProvinceId).Must((x, context) =>
                 {
                     //does selected country has states?
-                    var countryId = x.CountryId.HasValue ? x.CountryId.Value : 0;
+                    var countryId = x.CountryId ?? 0;
                     var hasStates = stateProvinceService.GetStateProvincesByCountryId(countryId).Any();
 
                     if (hasStates)

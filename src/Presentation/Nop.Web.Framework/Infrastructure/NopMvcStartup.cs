@@ -43,8 +43,8 @@ namespace Nop.Web.Framework.Infrastructure
             //use WebMarkupMin
             application.UseNopWebMarkupMin();
 
-            //MVC routing
-            application.UseNopMvc();
+            //Endpoints routing
+            application.UseNopEndpoints();
         }
 
         /// <summary>

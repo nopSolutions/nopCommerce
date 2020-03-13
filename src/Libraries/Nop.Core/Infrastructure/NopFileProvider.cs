@@ -18,11 +18,11 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Initializes a new instance of a NopFileProvider
         /// </summary>
-        /// <param name="hostingEnvironment">Hosting environment</param>
-        public NopFileProvider(IHostingEnvironment hostingEnvironment)
-            : base(File.Exists(hostingEnvironment.WebRootPath) ? Path.GetDirectoryName(hostingEnvironment.WebRootPath) : hostingEnvironment.WebRootPath)
+        /// <param name="webHostEnvironment">Hosting environment</param>
+        public NopFileProvider(IWebHostEnvironment webHostEnvironment)
+            : base(File.Exists(webHostEnvironment.WebRootPath) ? Path.GetDirectoryName(webHostEnvironment.WebRootPath) : webHostEnvironment.WebRootPath)
         {
-            var path = hostingEnvironment.ContentRootPath ?? string.Empty;
+            var path = webHostEnvironment.ContentRootPath ?? string.Empty;
             if (File.Exists(path))
                 path = Path.GetDirectoryName(path);
 
@@ -502,13 +502,9 @@ namespace Nop.Core.Infrastructure
         /// <returns>A string containing all lines of the file</returns>
         public virtual string ReadAllText(string path, Encoding encoding)
         {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                using (var streamReader = new StreamReader(fileStream, encoding))
-                {
-                    return streamReader.ReadToEnd();
-                }
-            }
+            using var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var streamReader = new StreamReader(fileStream, encoding);
+            return streamReader.ReadToEnd();
         }
 
         /// <summary>

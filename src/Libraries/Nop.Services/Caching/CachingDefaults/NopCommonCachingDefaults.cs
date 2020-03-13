@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Caching.CachingDefaults
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Caching.CachingDefaults
 {
     /// <summary>
     /// Represents default values related to common services
@@ -10,7 +12,7 @@
         /// <summary>
         /// Gets a key for caching
         /// </summary>
-        public static string AddressAttributesAllCacheKey => "Nop.addressattribute.all";
+        public static CacheKey AddressAttributesAllCacheKey => new CacheKey("Nop.addressattribute.all");
         
         /// <summary>
         /// Gets a key for caching
@@ -18,7 +20,7 @@
         /// <remarks>
         /// {0} : address attribute ID
         /// </remarks>
-        public static string AddressAttributeValuesAllCacheKey => "Nop.addressattributevalue.all-{0}";
+        public static CacheKey AddressAttributeValuesAllCacheKey => new CacheKey("Nop.addressattributevalue.all-{0}");
        
         #endregion
         
@@ -31,7 +33,7 @@
         /// {0} : entity ID
         /// {1} : key group
         /// </remarks>
-        public static string GenericAttributeCacheKey => "Nop.genericattribute.{0}-{1}";
+        public static CacheKey GenericAttributeCacheKey => new CacheKey("Nop.genericattribute.{0}-{1}");
 
         #endregion
     }

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
-using EasyCaching.Core;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 
 namespace Nop.Core.Caching
 {
@@ -12,17 +15,20 @@ namespace Nop.Core.Caching
         #region Fields
 
         // Flag: Has Dispose already been called?
-        private bool _disposed = false;
+        private bool _disposed;
 
-        private readonly IEasyCachingProvider _provider;
+        private readonly IMemoryCache _memoryCache;
+
+        private static readonly ConcurrentDictionary<string, CancellationTokenSource>  _prefixes = new ConcurrentDictionary<string, CancellationTokenSource>();
+        private static CancellationTokenSource _clearToken = new CancellationTokenSource();
 
         #endregion
 
         #region Ctor
 
-        public MemoryCacheManager(IEasyCachingProvider provider)
+        public MemoryCacheManager(IMemoryCache memoryCache)
         {
-            _provider = provider;
+            _memoryCache = memoryCache;
         }
 
         #endregion
@@ -35,15 +41,53 @@ namespace Nop.Core.Caching
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Cache key</param>
         /// <param name="acquire">Function to load item if it's not in the cache yet</param>
-        /// <param name="cacheTime">Cache time in minutes; pass 0 to do not cache; pass null to use the default time</param>
         /// <returns>The cached value associated with the specified key</returns>
-        public T Get<T>(string key, Func<T> acquire, int? cacheTime = null)
+        public T Get<T>(CacheKey key, Func<T> acquire)
         {
-            if (cacheTime <= 0)
+            if (key.CacheTime <= 0)
                 return acquire();
 
-            return _provider.Get(key, acquire, TimeSpan.FromMinutes(cacheTime ?? NopCachingDefaults.CacheTime))
-                .Value;
+            return _memoryCache.GetOrCreate(key.Key, entry =>
+            {
+                SetupEntry(entry, key);
+
+                return acquire();
+            });
+        }
+
+        private void SetupEntry(ICacheEntry entry, CacheKey key)
+        {
+            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(key.CacheTime);
+            entry.AddExpirationToken(new CancellationChangeToken(_clearToken.Token));
+
+            foreach (var keyPrefix in key.Prefixes)
+            {
+                var tokenSource = _prefixes.GetOrAdd(keyPrefix, new CancellationTokenSource());
+
+                entry.AddExpirationToken(new CancellationChangeToken(tokenSource.Token));
+            }
+        }
+
+        private void SetupEntry(MemoryCacheEntryOptions entry, CacheKey key)
+        {
+            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(key.CacheTime);
+            entry.AddExpirationToken(new CancellationChangeToken(_clearToken.Token));
+
+            foreach (var keyPrefix in key.Prefixes)
+            {
+                var tokenSource = _prefixes.GetOrAdd(keyPrefix, new CancellationTokenSource());
+
+                entry.AddExpirationToken(new CancellationChangeToken(tokenSource.Token));
+            }
+        }
+
+        /// <summary>
+        /// Removes the value with the specified key from the cache
+        /// </summary>
+        /// <param name="key">Key of cached item</param>
+        public void Remove(CacheKey key)
+        {
+            _memoryCache.Remove(key.Key);
         }
 
         /// <summary>
@@ -52,15 +96,18 @@ namespace Nop.Core.Caching
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Cache key</param>
         /// <param name="acquire">Function to load item if it's not in the cache yet</param>
-        /// <param name="cacheTime">Cache time in minutes; pass 0 to do not cache; pass null to use the default time</param>
         /// <returns>The cached value associated with the specified key</returns>
-        public async Task<T> GetAsync<T>(string key, Func<Task<T>> acquire, int? cacheTime = null)
+        public async Task<T> GetAsync<T>(CacheKey key, Func<Task<T>> acquire)
         {
-            if (cacheTime <= 0)
+            if (key.CacheTime <= 0)
                 return await acquire();
 
-            var t = await _provider.GetAsync(key, acquire, TimeSpan.FromMinutes(cacheTime ?? NopCachingDefaults.CacheTime));
-            return t.Value;
+            return await _memoryCache.GetOrCreateAsync(key.Key, async entry =>
+            {
+                SetupEntry(entry, key);
+
+                return await acquire();
+            });
         }
 
         /// <summary>
@@ -68,13 +115,15 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
-        /// <param name="cacheTime">Cache time in minutes</param>
-        public void Set(string key, object data, int cacheTime)
+        public void Set(CacheKey key, object data)
         {
-            if (cacheTime <= 0)
+            if (key.CacheTime <= 0)
                 return;
 
-            _provider.Set(key, data, TimeSpan.FromMinutes(cacheTime));
+            var option = new MemoryCacheEntryOptions();
+            SetupEntry(option, key);
+
+            _memoryCache.Set(key.Key, data, option);
         }
 
         /// <summary>
@@ -82,9 +131,9 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <returns>True if item already is in cache; otherwise false</returns>
-        public bool IsSet(string key)
+        public bool IsSet(CacheKey key)
         {
-            return _provider.Exists(key);
+            return _memoryCache.TryGetValue(key.Key, out _);
         }
 
         /// <summary>
@@ -97,12 +146,12 @@ namespace Nop.Core.Caching
         public bool PerformActionWithLock(string key, TimeSpan expirationTime, Action action)
         {
             //ensure that lock is acquired
-            if (_provider.Exists(key))
+            if (IsSet(new CacheKey(key)))
                 return false;
 
             try
             {
-                _provider.Set(key, key, expirationTime);
+                _memoryCache.Set(key, key, expirationTime);
 
                 //perform action
                 action();
@@ -122,7 +171,7 @@ namespace Nop.Core.Caching
         /// <param name="key">Key of cached item</param>
         public void Remove(string key)
         {
-            _provider.Remove(key);
+            _memoryCache.Remove(key);
         }
 
         /// <summary>
@@ -131,7 +180,9 @@ namespace Nop.Core.Caching
         /// <param name="prefix">String key prefix</param>
         public void RemoveByPrefix(string prefix)
         {
-            _provider.RemoveByPrefix(prefix);
+            _prefixes.TryRemove(prefix, out var tokenSource);
+            tokenSource?.Cancel();
+            tokenSource?.Dispose();
         }
 
         /// <summary>
@@ -139,7 +190,10 @@ namespace Nop.Core.Caching
         /// </summary>
         public void Clear()
         {
-            _provider.Flush();
+            _clearToken.Cancel();
+            _clearToken.Dispose();
+
+            _clearToken = new CancellationTokenSource();
         }
 
         /// <summary>
@@ -159,7 +213,7 @@ namespace Nop.Core.Caching
 
             if (disposing)
             {
-                //nothing special
+                _memoryCache.Dispose();
             }
 
             _disposed = true;

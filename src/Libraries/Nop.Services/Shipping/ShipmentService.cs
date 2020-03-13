@@ -106,6 +106,10 @@ namespace Nop.Services.Shipping
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _shipmentRepository.Table;
+
+            if(orderId > 0)
+                query = query.Where(o => o.OrderId == orderId);
+
             if (!string.IsNullOrEmpty(trackingNumber))
                 query = query.Where(s => s.TrackingNumber.Contains(trackingNumber));
 

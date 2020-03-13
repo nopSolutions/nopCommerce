@@ -92,7 +92,7 @@ namespace Nop.Services.Localization
             query = query.OrderBy(l => l.DisplayOrder).ThenBy(l => l.Id);
 
             //cacheable copy
-            var key = NopLocalizationCachingDefaults.LanguagesAllCacheKey.ToCacheKey(storeId, showHidden);
+            var key = NopLocalizationCachingDefaults.LanguagesAllCacheKey.FillCacheKey(storeId, showHidden);
             
             var languages = _cacheManager.Get(key, () =>
             {

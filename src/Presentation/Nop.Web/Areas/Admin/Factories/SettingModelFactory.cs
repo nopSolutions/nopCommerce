@@ -1400,7 +1400,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             if (gdprConsent != null)
             {
-                model = model ?? gdprConsent.ToModel<GdprConsentModel>();
+                model ??= gdprConsent.ToModel<GdprConsentModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
