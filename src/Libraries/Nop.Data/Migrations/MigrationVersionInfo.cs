@@ -7,7 +7,7 @@ namespace Nop.Data.Migrations
     /// <summary>
     /// The migration version table
     /// </summary>
-    public class MigrationVersionInfo : BaseEntity, IVersionTableMetaData
+    public class MigrationVersionInfo : IVersionTableMetaData
     {
         #region Ctor
 

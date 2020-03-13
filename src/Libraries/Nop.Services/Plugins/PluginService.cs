@@ -163,7 +163,7 @@ namespace Nop.Services.Plugins
         protected virtual void InsertPluginData(Type pluginType)
         {
             var assembly = Assembly.GetAssembly(pluginType);
-            _migrationManager.ApplyUpMigrations(assembly, NopMigrationTags.SCHEMA);
+            _migrationManager.ApplyUpMigrations(assembly);
         }
 
         #endregion

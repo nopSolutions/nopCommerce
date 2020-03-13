@@ -155,7 +155,7 @@ namespace Nop.Data
                 return false;
             }
         }
-        
+
         /// <summary>
         /// Execute commands from a file with SQL script against the context database
         /// </summary>
@@ -190,7 +190,7 @@ namespace Nop.Data
         public void InitializeDatabase()
         {
             var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
-            migrationManager.ApplyUpMigrations(null, NopMigrationTags.SCHEMA);
+            migrationManager.ApplyUpMigrations();
 
             //create stored procedures 
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
@@ -373,7 +373,7 @@ namespace Nop.Data
         /// Sql server data provider
         /// </summary>
         protected override IDataProvider LinqToDbDataProvider => new SqlServerDataProvider(ProviderName.SqlServer, SqlServerVersion.v2008);
-        
+
         /// <summary>
         /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited
         /// </summary>

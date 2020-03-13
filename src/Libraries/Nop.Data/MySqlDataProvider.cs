@@ -201,7 +201,7 @@ namespace Nop.Data
         public void InitializeDatabase()
         {
             var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
-            migrationManager.ApplyUpMigrations(null, NopMigrationTags.SCHEMA);
+            migrationManager.ApplyUpMigrations();
 
             //create stored procedures 
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();

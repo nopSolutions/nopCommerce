@@ -32,6 +32,7 @@ namespace Nop.Data.Migrations
         private readonly IMigrationRunnerConventions _migrationRunnerConventions;
         private readonly IMigrationContext _migrationContext;
         private readonly ITypeFinder _typeFinder;
+        private readonly IVersionLoader _versionLoader;
 
         #endregion
 
@@ -42,7 +43,8 @@ namespace Nop.Data.Migrations
             IMigrationRunner migrationRunner,
             IMigrationRunnerConventions migrationRunnerConventions,
             IMigrationContext migrationContext,
-            ITypeFinder typeFinder)
+            ITypeFinder typeFinder,
+            IVersionLoader versionLoader)
         {
             _typeMapping = new Dictionary<Type, Action<ICreateTableColumnAsTypeSyntax>>()
             {
@@ -60,6 +62,7 @@ namespace Nop.Data.Migrations
             _migrationRunnerConventions = migrationRunnerConventions;
             _migrationContext = migrationContext;
             _typeFinder = typeFinder;
+            _versionLoader = versionLoader;
         }
 
         #endregion
@@ -142,11 +145,11 @@ namespace Nop.Data.Migrations
         /// <param name="assembly"></param>
         /// <param name="tags">The list of tags to check against</param>
         /// <returns>The instances for found types implementing FluentMigrator.IMigration</returns>
-        private IEnumerable<IMigration> GetMigrations(Assembly assembly, params string[] tags)
+        private IEnumerable<IMigrationInfo> GetMigrations(Assembly assembly)
         {
-            return _filteringMigrationSource.GetMigrations(t =>
-                (assembly == null || t.Assembly == assembly) &&
-                (tags == null || _migrationRunnerConventions.HasRequestedTags(t, tags, true)));
+            var migrations = _filteringMigrationSource.GetMigrations(t => assembly == null || t.Assembly == assembly) ?? Enumerable.Empty<IMigration>();
+
+            return migrations.Select(m => _migrationRunnerConventions.GetMigrationInfoForMigration(m));
         }
 
         /// <summary>
@@ -167,14 +170,13 @@ namespace Nop.Data.Migrations
         /// </summary>
         /// <param name="assembly">Assembly to find the migration;
         /// leave null to search migration on the whole application pull</param>
-        /// <param name="tags">Migration tags for filtering</param>
-        public void ApplyUpMigrations(Assembly assembly = null, params string[] tags)
+        public void ApplyUpMigrations(Assembly assembly = null)
         {
-            var migrations = GetMigrations(assembly, tags);
+            var migrations = GetMigrations(assembly);
 
-            foreach (var migration in migrations)
+            foreach (var migrationInfo in migrations)
             {
-                _migrationRunner.Up(migration);
+                _migrationRunner.MigrateUp(migrationInfo.Version);
             }
         }
 
@@ -183,14 +185,14 @@ namespace Nop.Data.Migrations
         /// </summary>
         /// <param name="assembly">Assembly to find the migration;
         /// leave null to search migration on the whole application pull</param>
-        /// <param name="tags">Migration tags for filtering</param>
-        public void ApplyDownMigrations(Assembly assembly = null, params string[] tags)
+        public void ApplyDownMigrations(Assembly assembly = null)
         {
-            var migrations = GetMigrations(assembly, tags);
+            var migrations = GetMigrations(assembly);
 
-            foreach (var migration in migrations)
+            foreach (var migrationInfo in migrations)
             {
-                _migrationRunner.Down(migration);
+                _migrationRunner.Down(migrationInfo.Migration);
+                _versionLoader.DeleteVersion(migrationInfo.Version);
             }
         }
 

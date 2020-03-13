@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq.Expressions;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
@@ -56,6 +58,20 @@ namespace Nop.Data
         /// <param name="entity">Entity for delete operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
         void DeleteEntity<TEntity>(TEntity entity) where TEntity : BaseEntity;
+
+        /// <summary>
+        /// Performs delete records in a table
+        /// </summary>
+        /// <param name="entities">Entities for delete operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        void BulkDeleteEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity;
+
+        /// <summary>
+        /// Performs delete records in a table by a condition
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        void BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity;
 
         /// <summary>
         /// Performs bulk insert entities operation
@@ -141,7 +157,7 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Type of entity</typeparam>
         /// <returns>Mapped entity descriptor</returns>
         EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity;
-        
+
         /// <summary>
         /// Executes command using System.Data.CommandType.StoredProcedure command type and
         /// returns results as collection of values of specified type

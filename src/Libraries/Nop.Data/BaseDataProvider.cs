@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
@@ -140,10 +141,40 @@ namespace Nop.Data
         }
 
         /// <summary>
+        /// Performs delete records in a table
+        /// </summary>
+        /// <param name="entities">Entities for delete operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public void BulkDeleteEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        {
+            using (var dataContext = CreateDataConnection())
+            {
+                dataContext.GetTable<TEntity>()
+                    .Where(e => e.Id.In(entities.Select(x => x.Id)))
+                    .Delete();
+            }
+        }
+
+        /// <summary>
+        /// Performs delete records in a table by a condition
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public void BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
+        {
+            using (var dataContext = CreateDataConnection())
+            {
+                dataContext.GetTable<TEntity>()
+                    .Where(predicate)
+                    .Delete();
+            }
+        }
+
+        /// <summary>
         /// Performs bulk insert operation for entity colllection.
         /// </summary>
-        /// <param name="entities"></param>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entities">Entities for insert operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
         public void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
         {
             using (var dataContext = CreateDataConnection(LinqToDbDataProvider))

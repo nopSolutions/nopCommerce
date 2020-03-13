@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using LinqToDB.Data;
 using Nop.Core;
 
@@ -63,6 +65,12 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entities">Entities</param>
         void Delete(IEnumerable<TEntity> entities);
+
+        /// <summary>
+        /// Delete entities
+        /// </summary>
+        /// <param name="entities">Entities</param>
+        void Delete(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Executes command using System.Data.CommandType.StoredProcedure command type

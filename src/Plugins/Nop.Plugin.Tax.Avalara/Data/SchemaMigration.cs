@@ -5,7 +5,6 @@ using Nop.Plugin.Tax.Avalara.Domain;
 namespace Nop.Plugin.Tax.Avalara.Data
 {
     [NopMigration("2020/02/03 09:09:17.214")]
-    [Tags(NopMigrationTags.SCHEMA)]
     public class SchemaMigration : AutoReversingMigration
     {
         protected IMigrationManager _migrationManager;

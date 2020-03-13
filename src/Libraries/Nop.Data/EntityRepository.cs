@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Transactions;
 using LinqToDB;
 using LinqToDB.Data;
@@ -120,6 +121,7 @@ namespace Nop.Data
 
             _dataProvider.DeleteEntity(entity);
         }
+        
 
         /// <summary>
         /// Delete entities
@@ -130,10 +132,19 @@ namespace Nop.Data
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            foreach (var entity in entities)
-            {
-                Delete(entity);
-            }
+            _dataProvider.BulkDeleteEntities(entities);
+        }
+
+        /// <summary>
+        /// Delete entities
+        /// </summary>
+        /// <param name="entities">Entities</param>
+        public virtual void Delete(Expression<Func<TEntity, bool>> predicate)
+        {
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            _dataProvider.BulkDeleteEntities(predicate);
         }
 
         /// <summary>
