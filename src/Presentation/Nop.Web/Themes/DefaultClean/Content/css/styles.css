@@ -876,8 +876,14 @@ label, label + * {
 	color: #fff;
 	text-transform: uppercase;
 }
+.search-box .search-box-category {
+  float: left;
+  min-width: 150px;
+  height: 36px;
+  margin: 0 -1px 0 0;
+}
 .search-box .search-box-button:hover {
-	background-color: #248ece;
+  background-color: #248ece;
 }
 .search-box .ui-autocomplete-loading {
 	background: #fff url('../images/ajax-loader-small.gif') right center no-repeat;
@@ -5418,9 +5424,9 @@ pre {
 .search-box input.search-box-text {
 	width: 280px;
 }
-.ui-autocomplete {
-	width: 280px !important;
-}
+  .ui-autocomplete {
+    width: 280px !important;
+  }
 .ui-autocomplete img {
 	display: inline;
 }
@@ -6413,7 +6419,8 @@ pre {
 	vertical-align: middle;
 }
 .search-box input.search-box-text,
-.search-box .search-box-button {
+.search-box .search-box-button,
+.search-box .search-box-category{
 	height: 40px;
 }
 

@@ -17616,6 +17616,9 @@
   <LocaleResource Name="Search.SearchBox.Tooltip">
     <Value>Search store</Value>
   </LocaleResource>
+  <LocaleResource Name="Search.AllCategories">
+    <Value>All categories</Value>
+  </LocaleResource>
   <LocaleResource Name="Search.SearchInDescriptions">
     <Value>Search In product descriptions</Value>
   </LocaleResource>

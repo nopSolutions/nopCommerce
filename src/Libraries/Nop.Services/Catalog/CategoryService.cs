@@ -20,6 +20,11 @@ using Nop.Services.Stores;
 
 namespace Nop.Services.Catalog
 {
+
+    public static class CategoryServiceConstants
+    {
+        public const int ALL_CATEGORY_ID = 0;
+    }
     /// <summary>
     /// Category service
     /// </summary>

@@ -1490,3 +1490,11 @@ BEGIN
     VALUES (N'customersettings.lastactivityminutes', '15', 0)
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [LocaleStringResource] WHERE [ResourceName] = N'search.allcategories')
+BEGIN
+    INSERT [LocaleStringResource] ([ResourceValue], [ResourceName], [LanguageId])
+    VALUES (N'All categories', 'search.allcategories', 1)
+END
+GO

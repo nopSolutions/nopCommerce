@@ -1,13 +1,14 @@
 ﻿@model SearchBoxModel
-<form asp-route="ProductSearch" method="get" id="small-search-box-form">
-    @if (Model.ShowSearchBox)
-    {
-        <input type="text" class="search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="@T("Search.SearchBox.Tooltip")" aria-label="@T("Search.SearchBox.Text.Label")" />
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SearchBoxBeforeSearchButton })
-        <input type="submit" class="button-1 search-box-button" value="@T("Search.Button")"/>
-        @if (Model.SearchTermMinimumLength > 0)
+    <form asp-route="ProductSearch" method="get" id="small-search-box-form">
+        @if (Model.ShowSearchBox)
         {
-            <script asp-location="Footer">
+            <input type="text" class="search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="@T("Search.SearchBox.Tooltip")" aria-label="@T("Search.SearchBox.Text.Label")" />
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SearchBoxBeforeSearchButton })
+            @Html.DropDownList("cid", Model.AvailableCategoryOptions, new { aria_label = T("Search.SearchBox.CategorySelect.AllCategories"), @class="search-box-category" })
+            <input type="submit" class="button-1 search-box-button" value="@T("Search.Button")" />
+            @if (Model.SearchTermMinimumLength > 0)
+            {
+                <script asp-location="Footer">
                 $("#small-search-box-form").on("submit", function(event) {
                     if ($("#small-searchterms").val() == "") {
                         alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Search.EnterSearchTerms").Text))');
@@ -15,24 +16,30 @@
                         event.preventDefault();
                     }
                 });
-            </script>
-        }
+                </script>
+            }
 
-        @if (Model.AutoCompleteEnabled)
-        {
-            <script asp-location="Footer">
+            @if (Model.AutoCompleteEnabled)
+            {
+    <script asp-location="Footer">
                 $(document).ready(function() {
                     var showLinkToResultSearch;
                     var searchText;
+
                     $('#small-searchterms').autocomplete({
-                            delay: 500,
-                            minLength: @(Model.SearchTermMinimumLength.ToString()),
-                            source: '@(Url.RouteUrl("ProductSearchAutoComplete"))',
-                            appendTo: '.search-box',
-                            select: function(event, ui) {
-                                $("#small-searchterms").val(ui.item.label);
-                                setLocation(ui.item.producturl);
-                                return false;
+                        delay: 500,
+                        minLength: @(Model.SearchTermMinimumLength.ToString()),
+                        source: function (request, response) {
+                            $.getJSON(
+                                '@(Url.RouteUrl("ProductSearchAutoComplete"))',
+                                { term: request.term, cid: $('#cid').val() },
+                                response);
+                        },
+                        appendTo: '.search-box',
+                        select: function(event, ui) {
+                            $("#small-searchterms").val(ui.item.label);
+                            setLocation(ui.item.producturl);
+                            return false;
                         },
                         //append link to the end of list
                         open: function(event, ui) {
@@ -54,8 +61,8 @@
                             .appendTo(ul);
                     };
                 });
-            </script>
+    </script>
+            }
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SearchBox })
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.SearchBox })
-    }
-</form>
+    </form>

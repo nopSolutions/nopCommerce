@@ -1455,12 +1455,22 @@ namespace Nop.Web.Factories
         /// <returns>Search box model</returns>
         public virtual SearchBoxModel PrepareSearchBoxModel()
         {
+            var availableCategories = new List<SelectListItem>();
+            String allCategoriesText = _localizationService.GetResource("search.allcategories");
+            availableCategories.Add(new SelectListItem(allCategoriesText, CategoryServiceConstants.ALL_CATEGORY_ID.ToString(), true));
+            var allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
+            foreach(var category in allCategories)
+            {
+                availableCategories.Add(new SelectListItem(category.Name, category.Id.ToString(), false));
+            }
+
             var model = new SearchBoxModel
             {
                 AutoCompleteEnabled = _catalogSettings.ProductSearchAutoCompleteEnabled,
                 ShowProductImagesInSearchAutoComplete = _catalogSettings.ShowProductImagesInSearchAutoComplete,
                 SearchTermMinimumLength = _catalogSettings.ProductSearchTermMinimumLength,
-                ShowSearchBox = _catalogSettings.ProductSearchEnabled
+                ShowSearchBox = _catalogSettings.ProductSearchEnabled,
+                AvailableCategoryOptions = availableCategories
             };
             return model;
         }
