@@ -25,6 +25,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Misc.SendinBlue.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class SendinBlueController : BasePluginController
     {
         #region Fields
@@ -622,12 +623,12 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
                 _logger.Information(logInfo);
 
                 //display info on configuration page in case of the manually synchronization
-                _cacheManager.Set(SendinBlueDefaults.SyncKeyCache, logInfo, 60);
+                _cacheManager.Set(SendinBlueDefaults.SyncKeyCache, logInfo);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex.Message, ex);
-                _cacheManager.Set(SendinBlueDefaults.SyncKeyCache, ex.Message, 60);
+                _cacheManager.Set(SendinBlueDefaults.SyncKeyCache, ex.Message);
             }
 
             return Ok();
@@ -638,10 +639,8 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         {
             try
             {
-                using (var streamReader = new StreamReader(Request.Body))
-                {
-                    _sendinBlueEmailManager.UnsubscribeWebhook(streamReader.ReadToEnd());
-                }
+                using var streamReader = new StreamReader(Request.Body);
+                _sendinBlueEmailManager.UnsubscribeWebhook(streamReader.ReadToEnd());
             }
             catch (Exception ex)
             {

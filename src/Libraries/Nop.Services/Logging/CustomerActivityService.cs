@@ -220,7 +220,7 @@ namespace Nop.Services.Logging
             if (activityLogId == 0)
                 return null;
 
-            return _activityLogRepository.ToCachedGetById(activityLogId);
+            return _activityLogRepository.GetById(activityLogId);
         }
 
         /// <summary>

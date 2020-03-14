@@ -149,17 +149,15 @@ namespace Nop.Core.Redis
         public bool PerformActionWithLock(string resource, TimeSpan expirationTime, Action action)
         {
             //use RedLock library
-            using (var redisLock = _redisLockFactory.CreateLock(resource, expirationTime))
-            {
-                //ensure that lock is acquired
-                if (!redisLock.IsAcquired)
-                    return false;
+            using var redisLock = _redisLockFactory.CreateLock(resource, expirationTime);
+            //ensure that lock is acquired
+            if (!redisLock.IsAcquired)
+                return false;
 
-                //perform action
-                action();
+            //perform action
+            action();
 
-                return true;
-            }
+            return true;
         }
 
         /// <summary>

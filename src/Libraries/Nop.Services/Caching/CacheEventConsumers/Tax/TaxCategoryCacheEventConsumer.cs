@@ -14,7 +14,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Tax
         /// <param name="entity">Entity</param>
         protected override void ClearCache(TaxCategory entity)
         {
-            RemoveByPrefix(NopTaxCachingDefaults.TaxCategoriesPrefixCacheKey);
+            Remove(NopTaxCachingDefaults.TaxCategoriesAllCacheKey);
         }
     }
 }

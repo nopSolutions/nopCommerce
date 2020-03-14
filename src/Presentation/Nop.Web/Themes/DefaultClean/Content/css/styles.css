@@ -5867,7 +5867,10 @@ pre {
 	overflow: hidden;
 }
 .checkout-page .address-item {
-	float: left;
+	display: inline-block;
+  *display: inline;
+  vertical-align: top;
+  zoom: 1;
 	width: 48%;
 	margin: 0 1% 40px;
 }

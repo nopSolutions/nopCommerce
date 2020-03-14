@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -118,17 +117,10 @@ namespace Nop.Services.Catalog
                 var productCategoryIds = new List<int>();
                 if (discountCategoryIds.Any())
                 {
-                    //load identifier of categories of this product
-                    var cacheKey = string.Format(NopCatalogCachingDefaults.ProductCategoryIdsModelCacheKey,
-                        product.Id,
-                        string.Join(",", _customerService.GetCustomerRoleIds(customer)),
-                        _storeContext.CurrentStore.Id);
-
-                    productCategoryIds = _cacheManager.Get(cacheKey, () =>
-                        _categoryService
+                    productCategoryIds = _categoryService
                         .GetProductCategoriesByProductId(product.Id)
                         .Select(x => x.CategoryId)
-                        .ToList());
+                        .ToList();
                 }
 
                 foreach (var categoryId in productCategoryIds)
@@ -166,16 +158,11 @@ namespace Nop.Services.Catalog
                 var productManufacturerIds = new List<int>();
                 if (discountManufacturerIds.Any())
                 {
-                    //load identifier of manufacturers of this product
-                    var cacheKey = string.Format(NopCatalogCachingDefaults.ProductManufacturerIdsModelCacheKey,
-                        product.Id,
-                        string.Join(",", _customerService.GetCustomerRoleIds(customer)),
-                        _storeContext.CurrentStore.Id);
-                    productManufacturerIds = _cacheManager.Get(cacheKey, () =>
+                    productManufacturerIds = 
                         _manufacturerService
                         .GetProductManufacturersByProductId(product.Id)
                         .Select(x => x.ManufacturerId)
-                        .ToList());
+                        .ToList();
                 }
 
                 foreach (var manufacturerId in productManufacturerIds)
@@ -362,19 +349,22 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var cacheKey = string.Format(NopCatalogCachingDefaults.ProductPriceModelCacheKey,
-                product.Id,
-                overriddenProductPrice?.ToString(CultureInfo.InvariantCulture),
-                additionalCharge.ToString(CultureInfo.InvariantCulture),
+            var cacheKey = NopCatalogCachingDefaults.ProductPriceCacheKey.FillCacheKey(
+                product,
+                overriddenProductPrice,
+                additionalCharge,
                 includeDiscounts,
                 quantity,
-                string.Join(",", _customerService.GetCustomerRoleIds(customer)),
-                _storeContext.CurrentStore.Id);
-            var cacheTime = _catalogSettings.CacheProductPrices ? 60 : 0;
+                _customerService.GetCustomerRoleIds(customer),
+                _storeContext.CurrentStore);
+
+            var cacheTime = _catalogSettings.CacheProductPrices ? NopCachingDefaults.CacheTime : 0;
             //we do not cache price for rental products
             //otherwise, it can cause memory leaks (to store all possible date period combinations)
             if (product.IsRental)
                 cacheTime = 0;
+
+            cacheKey.CacheTime = cacheTime;
 
             decimal rezPrice;
             (rezPrice, discountAmount, appliedDiscounts) = _cacheManager.Get(cacheKey, () =>
@@ -415,7 +405,7 @@ namespace Nop.Services.Catalog
                     price = decimal.Zero;
 
                 return (price, appliedDiscountAmount, discounts);
-            }, cacheTime);
+            });
 
             return rezPrice;
         }
@@ -513,7 +503,7 @@ namespace Nop.Services.Catalog
             //we use this method because some currencies (e.g. Gungarian Forint or Swiss Franc) use non-standard rules for rounding
             //you can implement any rounding logic here
 
-            currency = currency ?? _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            currency ??= _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
 
             return Round(value, currency.RoundingType);
         }

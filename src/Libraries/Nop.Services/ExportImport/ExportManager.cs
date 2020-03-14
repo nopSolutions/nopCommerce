@@ -483,49 +483,47 @@ namespace Nop.Services.ExportImport
             var productAttributeManager = GetProductAttributeManager();
             var specificationAttributeManager = GetSpecificationAttributeManager();
 
-            using (var stream = new MemoryStream())
+            using var stream = new MemoryStream();
+            // ok, we can run the real code of the sample now
+            using (var xlPackage = new ExcelPackage(stream))
             {
-                // ok, we can run the real code of the sample now
-                using (var xlPackage = new ExcelPackage(stream))
+                // uncomment this line if you want the XML written out to the outputDir
+                //xlPackage.DebugMode = true; 
+
+                // get handles to the worksheets
+                var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(Product).Name);
+                var fpWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductsFilters");
+                fpWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+                var fbaWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductAttributesFilters");
+                fbaWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+                var fsaWorksheet = xlPackage.Workbook.Worksheets.Add("DataForSpecificationAttributesFilters");
+                fsaWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+
+                //create Headers and format them 
+                var manager = new PropertyManager<Product>(properties, _catalogSettings);
+                manager.WriteCaption(worksheet);
+
+                var row = 2;
+                foreach (var item in itemsToExport)
                 {
-                    // uncomment this line if you want the XML written out to the outputDir
-                    //xlPackage.DebugMode = true; 
+                    manager.CurrentObject = item;
+                    manager.WriteToXlsx(worksheet, row++, fWorksheet: fpWorksheet);
 
-                    // get handles to the worksheets
-                    var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(Product).Name);
-                    var fpWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductsFilters");
-                    fpWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
-                    var fbaWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductAttributesFilters");
-                    fbaWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
-                    var fsaWorksheet = xlPackage.Workbook.Worksheets.Add("DataForSpecificationAttributesFilters");
-                    fsaWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
-
-                    //create Headers and format them 
-                    var manager = new PropertyManager<Product>(properties, _catalogSettings);
-                    manager.WriteCaption(worksheet);
-
-                    var row = 2;
-                    foreach (var item in itemsToExport)
+                    if (_catalogSettings.ExportImportProductAttributes)
                     {
-                        manager.CurrentObject = item;
-                        manager.WriteToXlsx(worksheet, row++, fWorksheet: fpWorksheet);
-
-                        if (_catalogSettings.ExportImportProductAttributes)
-                        {
-                            row = ExportProductAttributes(item, productAttributeManager, worksheet, row, fbaWorksheet);
-                        }
-
-                        if (_catalogSettings.ExportImportProductSpecificationAttributes)
-                        {
-                            row = ExportSpecificationAttributes(item, specificationAttributeManager, worksheet, row, fsaWorksheet);
-                        }
+                        row = ExportProductAttributes(item, productAttributeManager, worksheet, row, fbaWorksheet);
                     }
 
-                    xlPackage.Save();
+                    if (_catalogSettings.ExportImportProductSpecificationAttributes)
+                    {
+                        row = ExportSpecificationAttributes(item, specificationAttributeManager, worksheet, row, fsaWorksheet);
+                    }
                 }
 
-                return stream.ToArray();
+                xlPackage.Save();
             }
+
+            return stream.ToArray();
         }
 
         private int ExportProductAttributes(Product item, PropertyManager<ExportProductAttribute> attributeManager, ExcelWorksheet worksheet, int row, ExcelWorksheet faWorksheet)
@@ -659,56 +657,54 @@ namespace Nop.Services.ExportImport
 
             var orderItemsManager = new PropertyManager<OrderItem>(orderItemProperties, _catalogSettings);
 
-            using (var stream = new MemoryStream())
+            using var stream = new MemoryStream();
+            // ok, we can run the real code of the sample now
+            using (var xlPackage = new ExcelPackage(stream))
             {
-                // ok, we can run the real code of the sample now
-                using (var xlPackage = new ExcelPackage(stream))
+                // uncomment this line if you want the XML written out to the outputDir
+                //xlPackage.DebugMode = true; 
+
+                // get handles to the worksheets
+                var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(Order).Name);
+                var fpWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductsFilters");
+                fpWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+
+                //create Headers and format them 
+                var manager = new PropertyManager<Order>(properties, _catalogSettings);
+                manager.WriteCaption(worksheet);
+
+                var row = 2;
+                foreach (var order in itemsToExport)
                 {
-                    // uncomment this line if you want the XML written out to the outputDir
-                    //xlPackage.DebugMode = true; 
+                    manager.CurrentObject = order;
+                    manager.WriteToXlsx(worksheet, row++);
 
-                    // get handles to the worksheets
-                    var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(Order).Name);
-                    var fpWorksheet = xlPackage.Workbook.Worksheets.Add("DataForProductsFilters");
-                    fpWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+                    //a vendor should have access only to his products
+                    var orderItems = _orderService.GetOrderItems(order.Id, vendorId: _workContext.CurrentVendor?.Id ?? 0);
 
-                    //create Headers and format them 
-                    var manager = new PropertyManager<Order>(properties, _catalogSettings);
-                    manager.WriteCaption(worksheet);
+                    if (!orderItems.Any())
+                        continue;
 
-                    var row = 2;
-                    foreach (var order in itemsToExport)
+                    orderItemsManager.WriteCaption(worksheet, row, 2);
+                    worksheet.Row(row).OutlineLevel = 1;
+                    worksheet.Row(row).Collapsed = true;
+
+                    foreach (var orederItem in orderItems)
                     {
-                        manager.CurrentObject = order;
-                        manager.WriteToXlsx(worksheet, row++);
-
-                        //a vendor should have access only to his products
-                        var orderItems = _orderService.GetOrderItems(order.Id, vendorId: _workContext.CurrentVendor?.Id ?? 0);
-
-                        if (!orderItems.Any())
-                            continue;
-
-                        orderItemsManager.WriteCaption(worksheet, row, 2);
+                        row++;
+                        orderItemsManager.CurrentObject = orederItem;
+                        orderItemsManager.WriteToXlsx(worksheet, row, 2, fpWorksheet);
                         worksheet.Row(row).OutlineLevel = 1;
                         worksheet.Row(row).Collapsed = true;
-
-                        foreach (var orederItem in orderItems)
-                        {
-                            row++;
-                            orderItemsManager.CurrentObject = orederItem;
-                            orderItemsManager.WriteToXlsx(worksheet, row, 2, fpWorksheet);
-                            worksheet.Row(row).OutlineLevel = 1;
-                            worksheet.Row(row).Collapsed = true;
-                        }
-
-                        row++;
                     }
 
-                    xlPackage.Save();
+                    row++;
                 }
 
-                return stream.ToArray();
+                xlPackage.Save();
             }
+
+            return stream.ToArray();
         }
 
         private string GetCustomCustomerAttributes(Customer customer)
@@ -1803,8 +1799,8 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Customer>("Email", p => p.Email),
                 new PropertyByName<Customer>("Username", p => p.Username, !_customerSettings.UsernamesEnabled), 
                 //attributes
-                new PropertyByName<Customer>("First name", p => _genericAttributeService.GetAttribute<string>(p, NopCustomerDefaults.FirstNameAttribute)),
-                new PropertyByName<Customer>("Last name", p => _genericAttributeService.GetAttribute<string>(p, NopCustomerDefaults.LastNameAttribute)),
+                new PropertyByName<Customer>("First name", p => _genericAttributeService.GetAttribute<string>(p, NopCustomerDefaults.FirstNameAttribute), !_customerSettings.FirstNameEnabled),
+                new PropertyByName<Customer>("Last name", p => _genericAttributeService.GetAttribute<string>(p, NopCustomerDefaults.LastNameAttribute), !_customerSettings.LastNameEnabled),
                 new PropertyByName<Customer>("Gender", p => _genericAttributeService.GetAttribute<string>(p, NopCustomerDefaults.GenderAttribute), !_customerSettings.GenderEnabled),
                 new PropertyByName<Customer>("Date of birth", p => _genericAttributeService.GetAttribute<string>(p, NopCustomerDefaults.DateOfBirthAttribute), !_customerSettings.DateOfBirthEnabled),
                 new PropertyByName<Customer>("Company", p => _genericAttributeService.GetAttribute<string>(p, NopCustomerDefaults.CompanyAttribute), !_customerSettings.CompanyEnabled),
@@ -1914,121 +1910,119 @@ namespace Nop.Services.ExportImport
 
             var gdprLog = _gdprService.GetAllLog(customer.Id);
 
-            using (var stream = new MemoryStream())
+            using var stream = new MemoryStream();
+            // ok, we can run the real code of the sample now
+            using (var xlPackage = new ExcelPackage(stream))
             {
-                // ok, we can run the real code of the sample now
-                using (var xlPackage = new ExcelPackage(stream))
+                // uncomment this line if you want the XML written out to the outputDir
+                //xlPackage.DebugMode = true; 
+
+                // get handles to the worksheets
+                var customerInfoWorksheet = xlPackage.Workbook.Worksheets.Add("Customer info");
+                var fWorksheet = xlPackage.Workbook.Worksheets.Add("DataForFilters");
+                fWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+
+                //customer info and customer attributes
+                var customerInfoRow = 2;
+                customerManager.CurrentObject = customer;
+                customerManager.WriteCaption(customerInfoWorksheet);
+                customerManager.WriteToXlsx(customerInfoWorksheet, customerInfoRow);
+
+                //customer addresses
+                if (_customerService.GetAddressesByCustomerId(customer.Id) is IList<Address> addresses && addresses.Any())
                 {
-                    // uncomment this line if you want the XML written out to the outputDir
-                    //xlPackage.DebugMode = true; 
+                    customerInfoRow += 2;
 
-                    // get handles to the worksheets
-                    var customerInfoWorksheet = xlPackage.Workbook.Worksheets.Add("Customer info");
-                    var fWorksheet = xlPackage.Workbook.Worksheets.Add("DataForFilters");
-                    fWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+                    var cell = customerInfoWorksheet.Cells[customerInfoRow, 1];
+                    cell.Value = "Address List";
+                    customerInfoRow += 1;
+                    addressManager.SetCaptionStyle(cell);
+                    addressManager.WriteCaption(customerInfoWorksheet, customerInfoRow);
 
-                    //customer info and customer attributes
-                    var customerInfoRow = 2;
-                    customerManager.CurrentObject = customer;
-                    customerManager.WriteCaption(customerInfoWorksheet);
-                    customerManager.WriteToXlsx(customerInfoWorksheet, customerInfoRow);
-
-                    //customer addresses
-                    if (_customerService.GetAddressesByCustomerId(customer.Id) is IList<Address> addresses && addresses.Any())
+                    foreach (var customerAddress in addresses)
                     {
-                        customerInfoRow += 2;
-
-                        var cell = customerInfoWorksheet.Cells[customerInfoRow, 1];
-                        cell.Value = "Address List";
                         customerInfoRow += 1;
-                        addressManager.SetCaptionStyle(cell);
-                        addressManager.WriteCaption(customerInfoWorksheet, customerInfoRow);
-
-                        foreach (var customerAddress in addresses)
-                        {
-                            customerInfoRow += 1;
-                            addressManager.CurrentObject = customerAddress;
-                            addressManager.WriteToXlsx(customerInfoWorksheet, customerInfoRow);
-                        }
+                        addressManager.CurrentObject = customerAddress;
+                        addressManager.WriteToXlsx(customerInfoWorksheet, customerInfoRow);
                     }
-
-                    //customer orders
-                    if (orders.Any())
-                    {
-                        var ordersWorksheet = xlPackage.Workbook.Worksheets.Add("Orders");
-
-                        orderManager.WriteCaption(ordersWorksheet);
-
-                        var orderRow = 1;
-
-                        foreach (var order in orders)
-                        {
-                            orderRow += 1;
-                            orderManager.CurrentObject = order;
-                            orderManager.WriteToXlsx(ordersWorksheet, orderRow);
-
-                            //products
-                            var orederItems = _orderService.GetOrderItems(order.Id);
-
-                            if (!orederItems.Any())
-                                continue;
-
-                            orderRow += 1;
-
-                            orderItemsManager.WriteCaption(ordersWorksheet, orderRow, 2);
-                            ordersWorksheet.Row(orderRow).OutlineLevel = 1;
-                            ordersWorksheet.Row(orderRow).Collapsed = true;
-
-                            foreach (var orederItem in orederItems)
-                            {
-                                orderRow++;
-                                orderItemsManager.CurrentObject = orederItem;
-                                orderItemsManager.WriteToXlsx(ordersWorksheet, orderRow, 2, fWorksheet);
-                                ordersWorksheet.Row(orderRow).OutlineLevel = 1;
-                                ordersWorksheet.Row(orderRow).Collapsed = true;
-                            }
-                        }
-                    }
-
-                    //customer private messages
-                    if (pmList?.Any() ?? false)
-                    {
-                        var privateMessageWorksheet = xlPackage.Workbook.Worksheets.Add("Private messages");
-                        privateMessageManager.WriteCaption(privateMessageWorksheet);
-
-                        var privateMessageRow = 1;
-
-                        foreach (var privateMessage in pmList)
-                        {
-                            privateMessageRow += 1;
-
-                            privateMessageManager.CurrentObject = privateMessage;
-                            privateMessageManager.WriteToXlsx(privateMessageWorksheet, privateMessageRow);
-                        }
-                    }
-
-                    //customer GDPR logs
-                    if (gdprLog.Any())
-                    {
-                        var gdprLogWorksheet = xlPackage.Workbook.Worksheets.Add("GDPR requests (log)");
-                        gdprLogManager.WriteCaption(gdprLogWorksheet);
-
-                        var gdprLogRow = 1;
-
-                        foreach (var log in gdprLog)
-                        {
-                            gdprLogRow += 1;
-
-                            gdprLogManager.CurrentObject = log;
-                            gdprLogManager.WriteToXlsx(gdprLogWorksheet, gdprLogRow);
-                        }
-                    }
-
-                    xlPackage.Save();
                 }
 
-                return stream.ToArray();
+                //customer orders
+                if (orders.Any())
+                {
+                    var ordersWorksheet = xlPackage.Workbook.Worksheets.Add("Orders");
+
+                    orderManager.WriteCaption(ordersWorksheet);
+
+                    var orderRow = 1;
+
+                    foreach (var order in orders)
+                    {
+                        orderRow += 1;
+                        orderManager.CurrentObject = order;
+                        orderManager.WriteToXlsx(ordersWorksheet, orderRow);
+
+                        //products
+                        var orederItems = _orderService.GetOrderItems(order.Id);
+
+                        if (!orederItems.Any())
+                            continue;
+
+                        orderRow += 1;
+
+                        orderItemsManager.WriteCaption(ordersWorksheet, orderRow, 2);
+                        ordersWorksheet.Row(orderRow).OutlineLevel = 1;
+                        ordersWorksheet.Row(orderRow).Collapsed = true;
+
+                        foreach (var orederItem in orederItems)
+                        {
+                            orderRow++;
+                            orderItemsManager.CurrentObject = orederItem;
+                            orderItemsManager.WriteToXlsx(ordersWorksheet, orderRow, 2, fWorksheet);
+                            ordersWorksheet.Row(orderRow).OutlineLevel = 1;
+                            ordersWorksheet.Row(orderRow).Collapsed = true;
+                        }
+                    }
+                }
+
+                //customer private messages
+                if (pmList?.Any() ?? false)
+                {
+                    var privateMessageWorksheet = xlPackage.Workbook.Worksheets.Add("Private messages");
+                    privateMessageManager.WriteCaption(privateMessageWorksheet);
+
+                    var privateMessageRow = 1;
+
+                    foreach (var privateMessage in pmList)
+                    {
+                        privateMessageRow += 1;
+
+                        privateMessageManager.CurrentObject = privateMessage;
+                        privateMessageManager.WriteToXlsx(privateMessageWorksheet, privateMessageRow);
+                    }
+                }
+
+                //customer GDPR logs
+                if (gdprLog.Any())
+                {
+                    var gdprLogWorksheet = xlPackage.Workbook.Worksheets.Add("GDPR requests (log)");
+                    gdprLogManager.WriteCaption(gdprLogWorksheet);
+
+                    var gdprLogRow = 1;
+
+                    foreach (var log in gdprLog)
+                    {
+                        gdprLogRow += 1;
+
+                        gdprLogManager.CurrentObject = log;
+                        gdprLogManager.WriteToXlsx(gdprLogWorksheet, gdprLogRow);
+                    }
+                }
+
+                xlPackage.Save();
             }
+
+            return stream.ToArray();
         }
 
         #endregion

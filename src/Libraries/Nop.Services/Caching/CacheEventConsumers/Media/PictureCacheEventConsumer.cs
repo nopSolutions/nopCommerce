@@ -14,8 +14,10 @@ namespace Nop.Services.Caching.CacheEventConsumers.Media
         /// <param name="entity">Entity</param>
         protected override void ClearCache(Picture entity)
         {
-            RemoveByPrefix(NopMediaCachingDefaults.ThumbsPrefixCacheKey);
-            RemoveByPrefix(NopMediaCachingDefaults.PicturesPrefixCacheKey);
+            RemoveByPrefix(NopMediaCachingDefaults.ThumbsExistsPrefixCacheKey);
+            
+            var cacheKey = NopMediaCachingDefaults.PicturesByVirtualPathCacheKey.FillCacheKey(entity.VirtualPath);
+            Remove(cacheKey);
         }
     }
 }

@@ -66,32 +66,25 @@ namespace Nop.Services.Directory
         /// Gets a currency
         /// </summary>
         /// <param name="currencyId">Currency identifier</param>
-        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Currency</returns>
-        public virtual Currency GetCurrencyById(int currencyId, bool loadCacheableCopy = true)
+        public virtual Currency GetCurrencyById(int currencyId)
         {
             if (currencyId == 0)
                 return null;
-
-            //cacheable copy key
-            var key = string.Format(NopDirectoryCachingDefaults.CurrenciesByIdCacheKey, currencyId);
-
-            return loadCacheableCopy
-                ? _currencyRepository.ToCachedGetById(currencyId, key)
-                : _currencyRepository.ToCachedGetById(currencyId);
+            
+            return _currencyRepository.ToCachedGetById(currencyId);
         }
 
         /// <summary>
         /// Gets a currency by code
         /// </summary>
         /// <param name="currencyCode">Currency code</param>
-        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Currency</returns>
-        public virtual Currency GetCurrencyByCode(string currencyCode, bool loadCacheableCopy = true)
+        public virtual Currency GetCurrencyByCode(string currencyCode)
         {
             if (string.IsNullOrEmpty(currencyCode))
                 return null;
-            return GetAllCurrencies(true, loadCacheableCopy: loadCacheableCopy)
+            return GetAllCurrencies(true)
                 .FirstOrDefault(c => c.CurrencyCode.ToLower() == currencyCode.ToLower());
         }
 
@@ -100,10 +93,8 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Currencies</returns>
-        public virtual IList<Currency> GetAllCurrencies(bool showHidden = false, int storeId = 0,
-            bool loadCacheableCopy = true)
+        public virtual IList<Currency> GetAllCurrencies(bool showHidden = false, int storeId = 0)
         {
             var query = _currencyRepository.Table;
 
@@ -113,9 +104,9 @@ namespace Nop.Services.Directory
             query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
 
             //cacheable copy
-            var key = string.Format(NopDirectoryCachingDefaults.CurrenciesAllCacheKey, showHidden);
+            var key = NopDirectoryCachingDefaults.CurrenciesAllCacheKey.FillCacheKey(showHidden);
 
-            var currencies = loadCacheableCopy ? query.ToCachedList(key) : query.ToList();
+            var currencies = query.ToCachedList(key);
 
             //store mapping
             if (storeId > 0)
@@ -170,8 +161,7 @@ namespace Nop.Services.Directory
             var exchangeRateProvider = _exchangeRatePluginManager.LoadPrimaryPlugin()
                 ?? throw new Exception("Active exchange rate provider cannot be loaded");
 
-            currencyCode = currencyCode
-                ?? GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId)?.CurrencyCode
+            currencyCode ??= GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId)?.CurrencyCode
                 ?? throw new NopException("Primary exchange rate currency is not set");
 
             return exchangeRateProvider.GetCurrencyLiveRates(currencyCode);
@@ -206,9 +196,7 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException(nameof(targetCurrencyCode));
 
             var result = amount;
-            if (sourceCurrencyCode.Id == targetCurrencyCode.Id)
-                return result;
-
+            
             if (result == decimal.Zero || sourceCurrencyCode.Id == targetCurrencyCode.Id)
                 return result;
 

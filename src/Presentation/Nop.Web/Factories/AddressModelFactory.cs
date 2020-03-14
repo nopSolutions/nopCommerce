@@ -97,7 +97,7 @@ namespace Nop.Web.Factories
                 //set already selected attributes
                 var selectedAddressAttributes = !string.IsNullOrEmpty(overrideAttributesXml) ?
                     overrideAttributesXml :
-                    (address != null ? address.CustomAttributes : null);
+                    address?.CustomAttributes;
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -246,7 +246,7 @@ namespace Nop.Web.Factories
                 {
                     var languageId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
                     var states = _stateProvinceService
-                        .GetStateProvincesByCountryId(model.CountryId.HasValue ? model.CountryId.Value : 0, languageId)
+                        .GetStateProvincesByCountryId(model.CountryId ?? 0, languageId)
                         .ToList();
                     if (states.Any())
                     {

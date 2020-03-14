@@ -46,13 +46,6 @@ namespace Nop.Services.Localization
             bool logIfNotFound = true);
 
         /// <summary>
-        /// Gets all locale string resources by language identifier
-        /// </summary>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Locale string resources</returns>
-        IList<LocaleStringResource> GetAllResources(int languageId);
-
-        /// <summary>
         /// Inserts a locale string resource
         /// </summary>
         /// <param name="localeStringResource">Locale string resource</param>

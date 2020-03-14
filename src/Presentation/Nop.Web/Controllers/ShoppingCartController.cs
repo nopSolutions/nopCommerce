@@ -10,7 +10,6 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
@@ -40,6 +39,7 @@ using Nop.Web.Models.ShoppingCart;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class ShoppingCartController : BasePublicController
     {
         #region Fields
@@ -182,6 +182,7 @@ namespace Nop.Web.Controllers
                                         attribute, selectedAttributeId.ToString());
                             }
                         }
+
                         break;
                     case AttributeControlType.Checkboxes:
                         {
@@ -197,6 +198,7 @@ namespace Nop.Web.Controllers
                                 }
                             }
                         }
+
                         break;
                     case AttributeControlType.ReadonlyCheckboxes:
                         {
@@ -211,6 +213,7 @@ namespace Nop.Web.Controllers
                                             attribute, selectedAttributeId.ToString());
                             }
                         }
+
                         break;
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
@@ -223,6 +226,7 @@ namespace Nop.Web.Controllers
                                     attribute, enteredText);
                             }
                         }
+
                         break;
                     case AttributeControlType.Datepicker:
                         {
@@ -234,17 +238,20 @@ namespace Nop.Web.Controllers
                             {
                                 selectedDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(date));
                             }
-                            catch { }
-                            if (selectedDate.HasValue)
+                            catch
                             {
+                                // ignored
+                            }
+
+                            if (selectedDate.HasValue)
                                 attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml,
                                     attribute, selectedDate.Value.ToString("D"));
-                            }
                         }
+
                         break;
                     case AttributeControlType.FileUpload:
                         {
-                            Guid.TryParse(form[controlId], out Guid downloadGuid);
+                            Guid.TryParse(form[controlId], out var downloadGuid);
                             var download = _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
@@ -252,6 +259,7 @@ namespace Nop.Web.Controllers
                                            attribute, download.DownloadGuid.ToString());
                             }
                         }
+
                         break;
                     default:
                         break;
@@ -314,6 +322,7 @@ namespace Nop.Web.Controllers
             }
             catch
             {
+                // ignored
             }
         }
 
@@ -321,11 +330,11 @@ namespace Nop.Web.Controllers
         {
             if (!product.IsGiftCard) return;
 
-            var recipientName = "";
-            var recipientEmail = "";
-            var senderName = "";
-            var senderEmail = "";
-            var giftCardMessage = "";
+            var recipientName = string.Empty;
+            var recipientEmail = string.Empty;
+            var senderName = string.Empty;
+            var senderEmail = string.Empty;
+            var giftCardMessage = string.Empty;
             foreach (var formKey in form.Keys)
             {
                 if (formKey.Equals($"giftcard_{product.Id}.RecipientName", StringComparison.InvariantCultureIgnoreCase))
@@ -333,21 +342,25 @@ namespace Nop.Web.Controllers
                     recipientName = form[formKey];
                     continue;
                 }
+
                 if (formKey.Equals($"giftcard_{product.Id}.RecipientEmail", StringComparison.InvariantCultureIgnoreCase))
                 {
                     recipientEmail = form[formKey];
                     continue;
                 }
+
                 if (formKey.Equals($"giftcard_{product.Id}.SenderName", StringComparison.InvariantCultureIgnoreCase))
                 {
                     senderName = form[formKey];
                     continue;
                 }
+
                 if (formKey.Equals($"giftcard_{product.Id}.SenderEmail", StringComparison.InvariantCultureIgnoreCase))
                 {
                     senderEmail = form[formKey];
                     continue;
                 }
+
                 if (formKey.Equals($"giftcard_{product.Id}.Message", StringComparison.InvariantCultureIgnoreCase))
                 {
                     giftCardMessage = form[formKey];
@@ -389,6 +402,7 @@ namespace Nop.Web.Controllers
                                 }
                             }
                         }
+
                         break;
                     case AttributeControlType.Checkboxes:
                         {
@@ -414,6 +428,7 @@ namespace Nop.Web.Controllers
                                 }
                             }
                         }
+
                         break;
                     case AttributeControlType.ReadonlyCheckboxes:
                         {
@@ -435,6 +450,7 @@ namespace Nop.Web.Controllers
                                     attribute, selectedAttributeId.ToString(), quantity > 1 ? (int?)quantity : null);
                             }
                         }
+
                         break;
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
@@ -447,6 +463,7 @@ namespace Nop.Web.Controllers
                                     attribute, enteredText);
                             }
                         }
+
                         break;
                     case AttributeControlType.Datepicker:
                         {
@@ -460,17 +477,20 @@ namespace Nop.Web.Controllers
                             }
                             catch
                             {
+                                // ignored
                             }
+
                             if (selectedDate.HasValue)
                             {
                                 attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                     attribute, selectedDate.Value.ToString("D"));
                             }
                         }
+
                         break;
                     case AttributeControlType.FileUpload:
                         {
-                            Guid.TryParse(form[controlId], out Guid downloadGuid);
+                            Guid.TryParse(form[controlId], out var downloadGuid);
                             var download = _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
@@ -478,11 +498,13 @@ namespace Nop.Web.Controllers
                                     attribute, download.DownloadGuid.ToString());
                             }
                         }
+
                         break;
                     default:
                         break;
                 }
             }
+
             //validate conditional attributes (if specified)
             foreach (var attribute in productAttributes)
             {
@@ -492,6 +514,7 @@ namespace Nop.Web.Controllers
                     attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
                 }
             }
+
             return attributesXml;
         }
 
@@ -580,6 +603,7 @@ namespace Nop.Web.Controllers
                             updatetopwishlistsectionhtml
                         });
                     }
+
                 case ShoppingCartType.ShoppingCart:
                 default:
                     {
@@ -605,7 +629,7 @@ namespace Nop.Web.Controllers
 
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
                             ? RenderViewComponentToString("FlyoutShoppingCart")
-                            : "";
+                            : string.Empty;
 
                         return Json(new
                         {
@@ -626,6 +650,7 @@ namespace Nop.Web.Controllers
         //add product to cart using AJAX
         //currently we use this method on catalog pages (category/manufacturer/etc)
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult AddProductToCart_Catalog(int productId, int shoppingCartTypeId,
             int quantity, bool forceredirection = false)
         {
@@ -711,6 +736,7 @@ namespace Nop.Web.Controllers
                     attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                         attribute, selectedAttributeId.ToString());
                 }
+
                 return attributesXml;
             });
 
@@ -782,6 +808,7 @@ namespace Nop.Web.Controllers
                             updatetopwishlistsectionhtml
                         });
                     }
+
                 case ShoppingCartType.ShoppingCart:
                 default:
                     {
@@ -806,7 +833,7 @@ namespace Nop.Web.Controllers
 
                         var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
                             ? RenderViewComponentToString("FlyoutShoppingCart")
-                            : "";
+                            : string.Empty;
 
                         return Json(new
                         {
@@ -822,6 +849,7 @@ namespace Nop.Web.Controllers
         //add product to cart using AJAX
         //currently we use this method on the product details pages
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult AddProductToCart_Details(int productId, int shoppingCartTypeId, IFormCollection form)
         {
             var product = _productService.GetProductById(productId);
@@ -851,6 +879,7 @@ namespace Nop.Web.Controllers
                     int.TryParse(form[formKey], out updatecartitemid);
                     break;
                 }
+
             ShoppingCartItem updatecartitem = null;
             if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
             {
@@ -886,7 +915,7 @@ namespace Nop.Web.Controllers
                 {
                     if (formKey.Equals($"addtocart_{productId}.CustomerEnteredPrice", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        if (decimal.TryParse(form[formKey], out decimal customerEnteredPrice))
+                        if (decimal.TryParse(form[formKey], out var customerEnteredPrice))
                             customerEnteredPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(customerEnteredPrice, _workContext.WorkingCurrency);
                         break;
                     }
@@ -928,6 +957,7 @@ namespace Nop.Web.Controllers
         //handle product attribute selection event. this way we return new price, overridden gtin/sku/mpn
         //currently we use this method on the product details pages
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult ProductDetails_AttributeChange(int productId, bool validateAttributeConditions,
             bool loadPicture, IFormCollection form)
         {
@@ -973,9 +1003,9 @@ namespace Nop.Web.Controllers
             }
 
             //price
-            var price = "";
+            var price = string.Empty;
             //base price
-            var basepricepangv = "";
+            var basepricepangv = string.Empty;
             if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices) && !product.CustomerEntersPrice)
             {
                 //we do not calculate price of "customer enters price" option is enabled
@@ -984,7 +1014,7 @@ namespace Nop.Web.Controllers
                     ShoppingCartType.ShoppingCart,
                     1, attributeXml, 0,
                     rentalStartDate, rentalEndDate,
-                    true, out decimal _, out _);
+                    true, out var _, out _);
                 var finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out var _);
                 var finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
                 price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
@@ -1030,7 +1060,7 @@ namespace Nop.Web.Controllers
 
                 if (pictureId > 0)
                 {
-                    var productAttributePictureCacheKey = string.Format(NopModelCacheDefaults.ProductAttributePictureModelKey,
+                    var productAttributePictureCacheKey = NopModelCacheDefaults.ProductAttributePictureModelKey.FillCacheKey(
                         pictureId, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                     var pictureModel = _cacheManager.Get(productAttributePictureCacheKey, () =>
                     {
@@ -1044,7 +1074,6 @@ namespace Nop.Web.Controllers
                     pictureFullSizeUrl = pictureModel.FullSizeImageUrl;
                     pictureDefaultSizeUrl = pictureModel.ImageUrl;
                 }
-
             }
 
             var isFreeShipping = product.IsFreeShipping;
@@ -1074,6 +1103,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult CheckoutAttributeChange(IFormCollection form, bool isEditable)
         {
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
@@ -1114,6 +1144,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult UploadFileProductAttribute(int attributeId)
         {
             var attribute = _productAttributeService.GetProductAttributeMappingById(attributeId);
@@ -1173,7 +1204,7 @@ namespace Nop.Web.Controllers
             {
                 DownloadGuid = Guid.NewGuid(),
                 UseDownloadUrl = false,
-                DownloadUrl = "",
+                DownloadUrl = string.Empty,
                 DownloadBinary = fileBinary,
                 ContentType = contentType,
                 //we store filename without extension for downloads
@@ -1195,6 +1226,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult UploadFileCheckoutAttribute(int attributeId)
         {
             var attribute = _checkoutAttributeService.GetCheckoutAttributeById(attributeId);
@@ -1254,7 +1286,7 @@ namespace Nop.Web.Controllers
             {
                 DownloadGuid = Guid.NewGuid(),
                 UseDownloadUrl = false,
-                DownloadUrl = "",
+                DownloadUrl = string.Empty,
                 DownloadBinary = fileBinary,
                 ContentType = contentType,
                 //we store filename without extension for downloads
@@ -1360,10 +1392,10 @@ namespace Nop.Web.Controllers
         public virtual IActionResult ContinueShopping()
         {
             var returnUrl = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer, NopCustomerDefaults.LastContinueShoppingPageAttribute, _storeContext.CurrentStore.Id);
+
             if (!string.IsNullOrEmpty(returnUrl))
-            {
                 return Redirect(returnUrl);
-            }
+
             return RedirectToRoute("Homepage");
         }
 
@@ -1518,7 +1550,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [PublicAntiForgery]
         [HttpPost]
         public virtual IActionResult GetEstimateShipping(int? countryId, int? stateProvinceId, string zipPostalCode, IFormCollection form)
         {
@@ -1643,8 +1674,7 @@ namespace Nop.Web.Controllers
                     foreach (var formKey in form.Keys)
                         if (formKey.Equals($"itemquantity{sci.Id}", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            int newQuantity;
-                            if (int.TryParse(form[formKey], out newQuantity))
+                            if (int.TryParse(form[formKey], out var newQuantity))
                             {
                                 var currSciWarnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
                                     sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice,
@@ -1652,6 +1682,7 @@ namespace Nop.Web.Controllers
                                     newQuantity, true);
                                 innerWarnings.Add(sci.Id, currSciWarnings);
                             }
+
                             break;
                         }
                 }
@@ -1674,6 +1705,7 @@ namespace Nop.Web.Controllers
                         if (!sciModel.Warnings.Contains(w))
                             sciModel.Warnings.Add(w);
             }
+
             return View(model);
         }
 
@@ -1720,6 +1752,7 @@ namespace Nop.Web.Controllers
                         //let's remove the item from wishlist
                         _shoppingCartService.DeleteShoppingCartItem(sci);
                     }
+
                     allWarnings.AddRange(warnings);
                 }
             }
@@ -1766,7 +1799,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("EmailWishlist")]
-        [PublicAntiForgery]
         [FormValueRequired("send-email")]
         [ValidateCaptcha]
         public virtual IActionResult EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid)
@@ -1782,13 +1814,13 @@ namespace Nop.Web.Controllers
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnEmailWishlistToFriendPage && !captchaValid)
             {
-                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
+                ModelState.AddModelError(string.Empty, _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
             //check whether the current customer is guest and ia allowed to email wishlist
             if (_customerService.IsGuest(_workContext.CurrentCustomer) && !_shoppingCartSettings.AllowAnonymousUsersToEmailWishlist)
             {
-                ModelState.AddModelError("", _localizationService.GetResource("Wishlist.EmailAFriend.OnlyRegisteredUsers"));
+                ModelState.AddModelError(string.Empty, _localizationService.GetResource("Wishlist.EmailAFriend.OnlyRegisteredUsers"));
             }
 
             if (ModelState.IsValid)
@@ -1806,6 +1838,7 @@ namespace Nop.Web.Controllers
 
             //If we got this far, something failed, redisplay form
             model = _shoppingCartModelFactory.PrepareWishlistEmailAFriendModel(model, true);
+
             return View(model);
         }
 

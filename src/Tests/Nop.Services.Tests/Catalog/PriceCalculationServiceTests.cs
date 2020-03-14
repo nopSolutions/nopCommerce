@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using System.Linq;
+using FluentAssertions;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -15,7 +14,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
@@ -63,26 +62,30 @@ namespace Nop.Services.Tests.Catalog
             _storeContext.Setup(x => x.CurrentStore).Returns(_store);
 
             _categoryService = new Mock<ICategoryService>();
-            
+
             _customerRoleRepository = new Mock<IRepository<CustomerRole>>();
             _customerRoleRepository.Setup(r => r.Table).Returns(GetMockCustomerRoles);
 
             _customerCustomerRoleMappingRepository = new Mock<IRepository<CustomerCustomerRoleMapping>>();
 
             var customerCustomerRoleMapping = new List<CustomerCustomerRoleMapping>();
-            _customerCustomerRoleMappingRepository.Setup(r => r.Table).Returns(customerCustomerRoleMapping.AsQueryable());
+            _customerCustomerRoleMappingRepository.Setup(r => r.Table)
+                .Returns(customerCustomerRoleMapping.AsQueryable());
 
             _customerCustomerRoleMappingRepository.Setup(r => r.Insert(It.IsAny<CustomerCustomerRoleMapping>()))
                 .Callback(
                     (CustomerCustomerRoleMapping ccrm) => { customerCustomerRoleMapping.Add(ccrm); });
 
-            _customerService = new CustomerService(null, new Mock<ICacheKeyFactory>().Object, new Mock<ICacheManager>().Object, null, null, null, null, null, null, _customerCustomerRoleMappingRepository.Object, null, _customerRoleRepository.Object, null, null, null, null);
+            _customerService = new CustomerService(null, new TestCacheManager(),  null, null, null, null, null,
+                null, _customerCustomerRoleMappingRepository.Object, null, _customerRoleRepository.Object, null, null,
+                null, null);
 
             _manufacturerService = new Mock<IManufacturerService>();
 
             _productRepository = new Mock<IRepository<Product>>();
             _productRepository.Setup(p => p.Table).Returns(GetMockProducts);
-            _productRepository.Setup(p => p.GetById(It.IsAny<int>())).Returns((int id) => GetMockProducts().FirstOrDefault(p => p.Id == id));
+            _productRepository.Setup(p => p.GetById(It.IsAny<int>()))
+                .Returns((int id) => GetMockProducts().FirstOrDefault(p => p.Id == id));
 
             _tierPriceRepository = new Mock<IRepository<TierPrice>>();
             _tierPriceRepository.Setup(t => t.Table).Returns(GetMockTierPrices);
@@ -94,11 +97,11 @@ namespace Nop.Services.Tests.Catalog
 
             var shipmentRepository = new Mock<IRepository<Shipment>>();
 
-            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new Mock<ICacheKeyFactory>().Object, _customerService,
+            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, _customerService,
                 null, null, null, null, null, null, null, null, null, _discountProductMappingRepository.Object,
                 _productRepository.Object, null, null, null, null, null, null, null, null, shipmentRepository.Object,
                 null, null, _tierPriceRepository.Object, null,
-                null, null, null, new LocalizationSettings());
+                null, null, null, null, new LocalizationSettings());
 
             _productAttributeParser = new Mock<IProductAttributeParser>();
 
@@ -108,14 +111,23 @@ namespace Nop.Services.Tests.Catalog
             _workContext = new Mock<IWorkContext>();
 
             _discountService = TestDiscountService.Init(
-                new List<Discount> { _mockDiscount }.AsQueryable(), 
+                new List<Discount>
+                {
+                    _mockDiscount
+                }.AsQueryable(),
                 new List<DiscountProductMapping>
                 {
-                    new DiscountProductMapping { DiscountId = 1, EntityId = 1 }
+                    new DiscountProductMapping
+                    {
+                        DiscountId = 1,
+                        EntityId = 1
+                    }
                 }.AsQueryable());
 
-            _priceCalcService = new PriceCalculationService(_catalogSettings, new CurrencySettings { PrimaryStoreCurrencyId = 1 }, _categoryService.Object,
-                _serviceProvider.CurrencyService.Object, _customerService, _discountService, _manufacturerService.Object, _productAttributeParser.Object,
+            _priceCalcService = new PriceCalculationService(_catalogSettings,
+                new CurrencySettings { PrimaryStoreCurrencyId = 1 }, _categoryService.Object,
+                _serviceProvider.CurrencyService.Object, _customerService, _discountService,
+                _manufacturerService.Object, _productAttributeParser.Object,
                 _productService, _cacheManager, _storeContext.Object, _workContext.Object);
 
             var nopEngine = new Mock<NopEngine>();
@@ -383,7 +395,7 @@ namespace Nop.Services.Tests.Catalog
         [TestCase(12.01, 13.00, RoundingType.Rounding1Up)]
         [TestCase(12.99, 13.00, RoundingType.Rounding1Up)]
         [TestCase(12.00, 12.00, RoundingType.Rounding1Up)]
-        public void can_round(decimal valueToRoundig, decimal roundedValue, RoundingType roundingType)
+        public void Can_round(decimal valueToRoundig, decimal roundedValue, RoundingType roundingType)
         {
             _priceCalcService.Round(valueToRoundig, roundingType).Should().Be(roundedValue);
         }

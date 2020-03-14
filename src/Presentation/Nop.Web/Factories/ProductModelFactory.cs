@@ -164,7 +164,7 @@ namespace Nop.Web.Factories
 
             if (_catalogSettings.ShowProductReviewsPerStore)
             {
-                var cacheKey = string.Format(NopModelCacheDefaults.ProductReviewsModelKey, product.Id, _storeContext.CurrentStore.Id);
+                var cacheKey = NopModelCacheDefaults.ProductReviewsModelKey.FillCacheKey(product.Id, _storeContext.CurrentStore.Id);
 
                 productReview = _cacheManager.Get(cacheKey, () =>
                 {
@@ -214,17 +214,15 @@ namespace Nop.Web.Factories
             switch (product.ProductType)
             {
                 case ProductType.GroupedProduct:
-                    {
-                        //grouped product
-                        PrepareGroupedProductOverviewPriceModel(product, priceModel);
-                    }
+                    //grouped product
+                    PrepareGroupedProductOverviewPriceModel(product, priceModel);
+
                     break;
                 case ProductType.SimpleProduct:
                 default:
-                    {
-                        //simple product
-                        PrepareSimpleProductOverviewPriceModel(product, priceModel);
-                    }
+                    //simple product
+                    PrepareSimpleProductOverviewPriceModel(product, priceModel);
+
                     break;
             }
 
@@ -442,7 +440,7 @@ namespace Nop.Web.Factories
             var pictureSize = productThumbPictureSize ?? _mediaSettings.ProductThumbPictureSize;
 
             //prepare picture model
-            var cacheKey = string.Format(NopModelCacheDefaults.ProductDefaultPictureModelKey,
+            var cacheKey = NopModelCacheDefaults.ProductDefaultPictureModelKey.FillCacheKey(
                 product.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(),
                 _storeContext.CurrentStore.Id);
 
@@ -481,42 +479,33 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var cacheKey = string.Format(NopModelCacheDefaults.ProductBreadcrumbModelKey,
-                    product.Id,
-                    _workContext.WorkingLanguage.Id,
-                    string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
-                    _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var breadcrumbModel = new ProductDetailsModel.ProductBreadcrumbModel
             {
-                var breadcrumbModel = new ProductDetailsModel.ProductBreadcrumbModel
-                {
-                    Enabled = _catalogSettings.CategoryBreadcrumbEnabled,
-                    ProductId = product.Id,
-                    ProductName = _localizationService.GetLocalized(product, x => x.Name),
-                    ProductSeName = _urlRecordService.GetSeName(product)
-                };
-                var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
-                if (!productCategories.Any())
-                    return breadcrumbModel;
-
-                var category = _categoryService.GetCategoryById(productCategories[0].CategoryId);
-                if (category == null)
-                    return breadcrumbModel;
-
-                foreach (var catBr in _categoryService.GetCategoryBreadCrumb(category))
-                {
-                    breadcrumbModel.CategoryBreadcrumb.Add(new CategorySimpleModel
-                    {
-                        Id = catBr.Id,
-                        Name = _localizationService.GetLocalized(catBr, x => x.Name),
-                        SeName = _urlRecordService.GetSeName(catBr),
-                        IncludeInTopMenu = catBr.IncludeInTopMenu
-                    });
-                }
-
+                Enabled = _catalogSettings.CategoryBreadcrumbEnabled,
+                ProductId = product.Id,
+                ProductName = _localizationService.GetLocalized(product, x => x.Name),
+                ProductSeName = _urlRecordService.GetSeName(product)
+            };
+            var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
+            if (!productCategories.Any())
                 return breadcrumbModel;
-            });
-            return cachedModel;
+
+            var category = _categoryService.GetCategoryById(productCategories[0].CategoryId);
+            if (category == null)
+                return breadcrumbModel;
+
+            foreach (var catBr in _categoryService.GetCategoryBreadCrumb(category))
+            {
+                breadcrumbModel.CategoryBreadcrumb.Add(new CategorySimpleModel
+                {
+                    Id = catBr.Id,
+                    Name = _localizationService.GetLocalized(catBr, x => x.Name),
+                    SeName = _urlRecordService.GetSeName(catBr),
+                    IncludeInTopMenu = catBr.IncludeInTopMenu
+                });
+            }
+
+            return breadcrumbModel;
         }
 
         /// <summary>
@@ -529,22 +518,17 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var productTagsCacheKey = string.Format(NopModelCacheDefaults.ProductTagByProductModelKey,
-                product.Id,
-                _workContext.WorkingLanguage.Id,
-                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
-                _storeContext.CurrentStore.Id);
-            var model = _cacheManager.Get(productTagsCacheKey, () =>
+            var model =
                 _productTagService.GetAllProductTagsByProductId(product.Id)
-                //filter by store
-                .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
-                .Select(x => new ProductTagModel
-                {
-                    Id = x.Id,
-                    Name = _localizationService.GetLocalized(x, y => y.Name),
-                    SeName = _urlRecordService.GetSeName(x),
-                    ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
-                }).ToList());
+                    //filter by store
+                    .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
+                    .Select(x => new ProductTagModel
+                    {
+                        Id = x.Id,
+                        Name = _localizationService.GetLocalized(x, y => y.Name),
+                        SeName = _urlRecordService.GetSeName(x),
+                        ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
+                    }).ToList();
 
             return model;
         }
@@ -797,10 +781,12 @@ namespace Nop.Web.Factories
                         //"image square" picture (with with "image squares" attribute type only)
                         if (attributeValue.ImageSquaresPictureId > 0)
                         {
-                            var productAttributeImageSquarePictureCacheKey = string.Format(NopModelCacheDefaults.ProductAttributeImageSquarePictureModelKey,
-                                   attributeValue.ImageSquaresPictureId,
-                                   _webHelper.IsCurrentConnectionSecured(),
-                                   _storeContext.CurrentStore.Id);
+                            var productAttributeImageSquarePictureCacheKey = NopModelCacheDefaults
+                                .ProductAttributeImageSquarePictureModelKey
+                                .FillCacheKey(
+                                    attributeValue.ImageSquaresPictureId,
+                                    _webHelper.IsCurrentConnectionSecured(),
+                                    _storeContext.CurrentStore.Id);
                             valueModel.ImageSquaresPictureModel = _cacheManager.Get(productAttributeImageSquarePictureCacheKey, () =>
                             {
                                 var imageSquaresPicture = _pictureService.GetPictureById(attributeValue.ImageSquaresPictureId);
@@ -854,6 +840,7 @@ namespace Nop.Web.Factories
                                             }
                                 }
                             }
+
                             break;
                         case AttributeControlType.ReadonlyCheckboxes:
                             {
@@ -871,6 +858,7 @@ namespace Nop.Web.Factories
                                     }
                                 }
                             }
+
                             break;
                         case AttributeControlType.TextBox:
                         case AttributeControlType.MultilineTextbox:
@@ -882,6 +870,7 @@ namespace Nop.Web.Factories
                                         attributeModel.DefaultValue = enteredText[0];
                                 }
                             }
+
                             break;
                         case AttributeControlType.Datepicker:
                             {
@@ -897,8 +886,8 @@ namespace Nop.Web.Factories
                                         attributeModel.SelectedYear = selectedDate.Year;
                                     }
                                 }
-
                             }
+
                             break;
                         case AttributeControlType.FileUpload:
                             {
@@ -911,6 +900,7 @@ namespace Nop.Web.Factories
                                         attributeModel.DefaultValue = download.DownloadGuid.ToString();
                                 }
                             }
+
                             break;
                         default:
                             break;
@@ -935,9 +925,11 @@ namespace Nop.Web.Factories
 
             var model = _productService.GetTierPrices(product, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
                    .Select(tierPrice =>
-                   {
-                       var priceBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product,
-                       _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts, tierPrice.Quantity), out var _);
+                {
+                    var priceBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product,
+                        _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts,
+                        tierPrice.Quantity), out var _);
+
                        var price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
 
                        return new ProductDetailsModel.TierPriceModel
@@ -960,27 +952,19 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var manufacturersCacheKey = string.Format(NopModelCacheDefaults.ProductManufacturersModelKey,
-                     product.Id,
-                     _workContext.WorkingLanguage.Id,
-                     string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
-                     _storeContext.CurrentStore.Id);
-            var model = _cacheManager.Get(manufacturersCacheKey,
-                () => _manufacturerService.GetProductManufacturersByProductId(product.Id)
-                    .Select(pm =>
+            var model = _manufacturerService.GetProductManufacturersByProductId(product.Id)
+                .Select(pm =>
+                {
+                    var manufacturer = _manufacturerService.GetManufacturerById(pm.ManufacturerId);
+                    var modelMan = new ManufacturerBriefInfoModel
                     {
-                        var manufacturer = _manufacturerService.GetManufacturerById(pm.ManufacturerId);
-                        var modelMan = new ManufacturerBriefInfoModel
-                        {
-                            Id = manufacturer.Id,
-                            Name = _localizationService.GetLocalized(manufacturer, x => x.Name),
-                            SeName = _urlRecordService.GetSeName(manufacturer)
-                        };
+                        Id = manufacturer.Id,
+                        Name = _localizationService.GetLocalized(manufacturer, x => x.Name),
+                        SeName = _urlRecordService.GetSeName(manufacturer)
+                    };
 
-                        return modelMan;
-                    })
-                    .ToList()
-                );
+                    return modelMan;
+                }).ToList();
 
             return model;
         }
@@ -1003,7 +987,7 @@ namespace Nop.Web.Factories
                 _mediaSettings.ProductDetailsPictureSize;
 
             //prepare picture models
-            var productPicturesCacheKey = string.Format(NopModelCacheDefaults.ProductDetailsPicturesModelKey, product.Id, defaultPictureSize, isAssociatedProduct, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+            var productPicturesCacheKey = NopModelCacheDefaults.ProductDetailsPicturesModelKey.FillCacheKey(product.Id, defaultPictureSize, isAssociatedProduct, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
             var cachedPictures = _cacheManager.Get(productPicturesCacheKey, () =>
             {
                 var productName = _localizationService.GetLocalized(product, x => x.Name);
@@ -1069,19 +1053,13 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var templateCacheKey = string.Format(NopModelCacheDefaults.ProductTemplateModelKey, product.ProductTemplateId);
-            var productTemplateViewPath = _cacheManager.Get(templateCacheKey, () =>
-            {
-                var template = _productTemplateService.GetProductTemplateById(product.ProductTemplateId) ??
-                               _productTemplateService.GetAllProductTemplates().FirstOrDefault();
+            var template = _productTemplateService.GetProductTemplateById(product.ProductTemplateId) ??
+                           _productTemplateService.GetAllProductTemplates().FirstOrDefault();
 
-                if (template == null)
-                    throw new Exception("No default template could be loaded");
+            if (template == null)
+                throw new Exception("No default template could be loaded");
 
-                return template.ViewPath;
-            });
-
-            return productTemplateViewPath;
+            return template.ViewPath;
         }
 
         /// <summary>
@@ -1142,6 +1120,7 @@ namespace Nop.Web.Factories
 
                 models.Add(model);
             }
+
             return models;
         }
 
@@ -1178,7 +1157,7 @@ namespace Nop.Web.Factories
                 ShowGtin = _catalogSettings.ShowGtin,
                 Gtin = product.Gtin,
                 ManageInventoryMethod = product.ManageInventoryMethod,
-                StockAvailability = _productService.FormatStockMessage(product, ""),
+                StockAvailability = _productService.FormatStockMessage(product, string.Empty),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
                 DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts,
                 AvailableEndDate = product.AvailableEndDateTimeUtc
@@ -1237,6 +1216,7 @@ namespace Nop.Web.Factories
                     //need to change the add this link to be https linked when the page is, so that the page doesn't ask about mixed mode when viewed in https...
                     shareCode = shareCode.Replace("http://", "https://");
                 }
+
                 model.PageShareCode = shareCode;
             }
 
@@ -1597,13 +1577,15 @@ namespace Nop.Web.Factories
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var cacheKey = string.Format(NopModelCacheDefaults.ProductSpecsModelKey, product.Id, _workContext.WorkingLanguage.Id);
-            return _cacheManager.Get(cacheKey, () =>
-                _specificationAttributeService.GetProductSpecificationAttributes(product.Id, 0, null, true)
+            return _specificationAttributeService.GetProductSpecificationAttributes(product.Id, 0, null, true)
                 .Select(psa =>
                 {
-                    var specAttributeOption = _specificationAttributeService.GetSpecificationAttributeOptionById(psa.SpecificationAttributeOptionId);
-                    var specAttribute = _specificationAttributeService.GetSpecificationAttributeById(specAttributeOption.SpecificationAttributeId);
+                    var specAttributeOption =
+                        _specificationAttributeService.GetSpecificationAttributeOptionById(
+                            psa.SpecificationAttributeOptionId);
+                    var specAttribute =
+                        _specificationAttributeService.GetSpecificationAttributeById(specAttributeOption
+                            .SpecificationAttributeId);
 
                     var m = new ProductSpecificationModel
                     {
@@ -1616,10 +1598,13 @@ namespace Nop.Web.Factories
                     switch (psa.AttributeType)
                     {
                         case SpecificationAttributeType.Option:
-                            m.ValueRaw = WebUtility.HtmlEncode(_localizationService.GetLocalized(specAttributeOption, x => x.Name));
+                            m.ValueRaw =
+                                WebUtility.HtmlEncode(
+                                    _localizationService.GetLocalized(specAttributeOption, x => x.Name));
                             break;
                         case SpecificationAttributeType.CustomText:
-                            m.ValueRaw = WebUtility.HtmlEncode(_localizationService.GetLocalized(psa, x => x.CustomValue));
+                            m.ValueRaw =
+                                WebUtility.HtmlEncode(_localizationService.GetLocalized(psa, x => x.CustomValue));
                             break;
                         case SpecificationAttributeType.CustomHtmlText:
                             m.ValueRaw = _localizationService.GetLocalized(psa, x => x.CustomValue);
@@ -1630,9 +1615,9 @@ namespace Nop.Web.Factories
                         default:
                             break;
                     }
+
                     return m;
-                }).ToList()
-            );
+                }).ToList();
         }
 
         #endregion

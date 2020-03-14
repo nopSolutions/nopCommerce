@@ -212,7 +212,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             //reward points
             SetRewardPoints(ref redeemedRewardPoints, ref redeemedRewardPointsAmount, useRewardPoints, customer, orderTotal);
 
-            orderTotal = orderTotal - redeemedRewardPointsAmount;
+            orderTotal -= redeemedRewardPointsAmount;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 orderTotal = _priceCalculationService.RoundPrice(orderTotal);
             return orderTotal;

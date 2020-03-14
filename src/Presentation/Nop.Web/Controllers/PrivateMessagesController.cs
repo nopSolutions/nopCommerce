@@ -74,7 +74,7 @@ namespace Nop.Web.Controllers
         }
         
         [HttpPost, FormValueRequired("delete-inbox"), ActionName("InboxUpdate")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual IActionResult DeleteInboxPM(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
@@ -102,7 +102,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, FormValueRequired("mark-unread"), ActionName("InboxUpdate")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual IActionResult MarkUnread(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
@@ -131,7 +131,7 @@ namespace Nop.Web.Controllers
 
         //updates sent items (deletes PrivateMessages)
         [HttpPost, FormValueRequired("delete-sent"), ActionName("SentUpdate")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual IActionResult DeleteSentPM(IFormCollection formCollection)
         {
             foreach (var key in formCollection.Keys)
@@ -182,7 +182,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual IActionResult SendPM(SendPrivateMessageModel model)
         {
             if (!_forumSettings.AllowPrivateMessages)

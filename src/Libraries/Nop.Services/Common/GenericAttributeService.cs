@@ -121,7 +121,7 @@ namespace Nop.Services.Common
         /// <returns>Get attributes</returns>
         public virtual IList<GenericAttribute> GetAttributesForEntity(int entityId, string keyGroup)
         {
-            var key = string.Format(NopCommonCachingDefaults.GenericAttributeCacheKey, entityId, keyGroup);
+            var key = NopCommonCachingDefaults.GenericAttributeCacheKey.FillCacheKey(entityId, keyGroup);
 
             var query = from ga in _genericAttributeRepository.Table
                 where ga.EntityId == entityId &&
@@ -200,7 +200,7 @@ namespace Nop.Services.Common
         /// <param name="storeId">Load a value specific for a certain store; pass 0 to load a value shared for all stores</param>
         /// <param name="defaultValue">Default value</param>
         /// <returns>Attribute</returns>
-        public virtual TPropType GetAttribute<TPropType>(BaseEntity entity, string key, int storeId = 0, TPropType defaultValue = default(TPropType))
+        public virtual TPropType GetAttribute<TPropType>(BaseEntity entity, string key, int storeId = 0, TPropType defaultValue = default)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -236,7 +236,7 @@ namespace Nop.Services.Common
         /// <param name="storeId">Load a value specific for a certain store; pass 0 to load a value shared for all stores</param>
         /// <param name="defaultValue">Default value</param>
         /// <returns>Attribute</returns>
-        public virtual TPropType GetAttribute<TEntity, TPropType>(int entityId, string key, int storeId = 0, TPropType defaultValue = default(TPropType))
+        public virtual TPropType GetAttribute<TEntity, TPropType>(int entityId, string key, int storeId = 0, TPropType defaultValue = default)
             where TEntity : BaseEntity
         {
             var entity = (TEntity)Activator.CreateInstance(typeof(TEntity));

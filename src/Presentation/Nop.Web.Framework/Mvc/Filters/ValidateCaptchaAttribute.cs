@@ -37,7 +37,6 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Constants
 
-            private const string CHALLENGE_FIELD_KEY = "recaptcha_challenge_field";
             private const string RESPONSE_FIELD_KEY = "recaptcha_response_field";
             private const string G_RESPONSE_FIELD_KEY = "g-recaptcha-response";
 

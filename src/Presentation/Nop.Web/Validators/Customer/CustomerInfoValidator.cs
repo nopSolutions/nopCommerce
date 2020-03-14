@@ -18,8 +18,14 @@ namespace Nop.Web.Validators.Customer
         {
             RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Email.Required"));
             RuleFor(x => x.Email).EmailAddress().WithMessage(localizationService.GetResource("Common.WrongEmail"));
-            RuleFor(x => x.FirstName).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.FirstName.Required"));
-            RuleFor(x => x.LastName).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.LastName.Required"));
+            if (customerSettings.FirstNameEnabled && customerSettings.FirstNameRequired)
+            {
+                RuleFor(x => x.FirstName).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.FirstName.Required"));
+            }
+            if (customerSettings.LastNameEnabled && customerSettings.LastNameRequired)
+            {
+                RuleFor(x => x.LastName).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.LastName.Required"));
+            }
 
             if (customerSettings.UsernamesEnabled && customerSettings.AllowUsersToChangeUsernames)
             {

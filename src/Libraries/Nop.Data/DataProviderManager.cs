@@ -33,13 +33,11 @@ namespace Nop.Data
         /// <returns></returns>
         public static IDataProvider GetDataProvider(DataProviderType dataProviderType)
         {
-            switch (dataProviderType)
+            return dataProviderType switch
             {
-                case DataProviderType.SqlServer:
-                    return new MsSqlDataProvider();
-                default:
-                    throw new NopException($"Not supported data provider name: '{dataProviderType}'");
-            }
+                DataProviderType.SqlServer => new MsSqlDataProvider(),
+                _ => throw new NopException($"Not supported data provider name: '{dataProviderType}'"),
+            };
         }
 
         #endregion

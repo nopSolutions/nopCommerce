@@ -14,9 +14,16 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
         /// <param name="entity">Entity</param>
         protected override void ClearCache(Product entity)
         {
-            RemoveByPrefix(NopCatalogCachingDefaults.ProductsPrefixCacheKey);
-            RemoveByPrefix(NopCatalogCachingDefaults.ProductPricePrefixCacheKey);
-            RemoveByPrefix(NopNewsCachingDefaults.ShoppingCartPrefixCacheKey);
+            var prefix = NopCatalogCachingDefaults.ProductManufacturersByProductPrefixCacheKey.ToCacheKey(entity);
+            RemoveByPrefix(prefix);
+
+            Remove(NopCatalogCachingDefaults.ProductsAllDisplayedOnHomepageCacheKey);
+            RemoveByPrefix(NopCatalogCachingDefaults.ProductsByIdsPrefixCacheKey);
+
+            prefix = NopCatalogCachingDefaults.ProductPricePrefixCacheKey.ToCacheKey(entity);
+            RemoveByPrefix(prefix);
+
+            RemoveByPrefix(NopOrderCachingDefaults.ShoppingCartPrefixCacheKey);
         }
     }
 }

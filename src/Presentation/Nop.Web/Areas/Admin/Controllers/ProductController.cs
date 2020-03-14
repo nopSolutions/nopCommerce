@@ -2072,7 +2072,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Export / Import
 
-        [HttpPost, ActionName("List")]
+        [HttpPost, ActionName("DownloadCatalogPDF")]
         [FormValueRequired("download-catalog-pdf")]
         public virtual IActionResult DownloadCatalogAsPdf(ProductSearchModel model)
         {
@@ -2128,7 +2128,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
-        [HttpPost, ActionName("List")]
+        [HttpPost, ActionName("ExportToXml")]
         [FormValueRequired("exportxml-all")]
         public virtual IActionResult ExportXmlAll(ProductSearchModel model)
         {
@@ -2205,7 +2205,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return File(Encoding.UTF8.GetBytes(xml), MimeTypes.ApplicationXml, "products.xml");
         }
 
-        [HttpPost, ActionName("List")]
+        [HttpPost, ActionName("ExportToExcel")]
         [FormValueRequired("exportexcel-all")]
         public virtual IActionResult ExportExcelAll(ProductSearchModel model)
         {

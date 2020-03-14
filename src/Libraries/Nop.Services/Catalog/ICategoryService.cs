@@ -3,7 +3,6 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
-using Nop.Services.Discounts;
 
 namespace Nop.Services.Catalog
 {
@@ -29,9 +28,8 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Categories</returns>
-        IList<Category> GetAllCategories(int storeId = 0, bool showHidden = false, bool loadCacheableCopy = true);
+        IList<Category> GetAllCategories(int storeId = 0, bool showHidden = false);
 
         /// <summary>
         /// Gets all categories

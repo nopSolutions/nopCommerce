@@ -92,6 +92,7 @@ namespace Nop.Services.Shipping
             /// Constructor
             /// </summary>
             /// <param name="sci">Shopping cart item</param>
+            /// <param name="product">Product</param>
             /// <param name="qty">Override "Quantity" property of shopping cart item</param>
             public PackageItem(ShoppingCartItem sci, Product product, int? qty = null)
             {

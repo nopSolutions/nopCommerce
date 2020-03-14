@@ -67,9 +67,7 @@ namespace Nop.Services.Directory
             if (stateProvinceId == 0)
                 return null;
 
-            var key = string.Format(NopDirectoryCachingDefaults.StateProvincesByIdCacheKey, stateProvinceId);
-
-            return _stateProvinceRepository.ToCachedGetById(stateProvinceId, key);
+            return _stateProvinceRepository.ToCachedGetById(stateProvinceId);
         }
 
         /// <summary>
@@ -83,8 +81,8 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(abbreviation))
                 return null;
 
-            var key = string.Format(NopDirectoryCachingDefaults.StateProvincesByAbbreviationCacheKey, abbreviation,
-                countryId ?? 0);
+            var key = NopDirectoryCachingDefaults.StateProvincesByAbbreviationCacheKey
+                .FillCacheKey(abbreviation, countryId ?? 0);
 
             var query = _stateProvinceRepository.Table.Where(state => state.Abbreviation == abbreviation);
 
@@ -114,7 +112,7 @@ namespace Nop.Services.Directory
         /// <returns>States</returns>
         public virtual IList<StateProvince> GetStateProvincesByCountryId(int countryId, int languageId = 0, bool showHidden = false)
         {
-            var key = string.Format(NopDirectoryCachingDefaults.StateProvincesAllCacheKey, countryId, languageId, showHidden);
+            var key = NopDirectoryCachingDefaults.StateProvincesByCountryCacheKey.FillCacheKey(countryId, languageId, showHidden);
             return _cacheManager.Get(key, () =>
             {
                 var query = from sp in _stateProvinceRepository.Table
@@ -148,7 +146,9 @@ namespace Nop.Services.Directory
                         orderby sp.CountryId, sp.DisplayOrder, sp.Name
                         where showHidden || sp.Published
                         select sp;
-            var stateProvinces = query.ToList();
+
+            var stateProvinces = query.ToCachedList(NopDirectoryCachingDefaults.StateProvincesAllCacheKey.FillCacheKey(showHidden));
+
             return stateProvinces;
         }
 

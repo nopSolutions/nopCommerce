@@ -87,7 +87,10 @@ namespace Nop.Services.Catalog
             var query = from sa in _specificationAttributeRepository.Table
                         orderby sa.DisplayOrder, sa.Id
                         select sa;
-            var specificationAttributes = new PagedList<SpecificationAttribute>(query, pageIndex, pageSize);
+
+            //TODO: issue 239, check caching. If so, then remove pageIndex and pageSize from others cache keys
+            var specificationAttributes = query.ToCachedPagedList(NopCatalogCachingDefaults.SpecAttributesAllCacheKey, pageIndex, pageSize);
+
             return specificationAttributes;
         }
 
@@ -101,7 +104,7 @@ namespace Nop.Services.Catalog
                 join sao in _specificationAttributeOptionRepository.Table on sa.Id equals sao.SpecificationAttributeId
                 select sa;
 
-            return query.ToCachedList(NopCatalogCachingDefaults.SpecAttributesWithOptionsKey);
+            return query.ToCachedList(NopCatalogCachingDefaults.SpecAttributesWithOptionsCacheKey);
         }
 
         /// <summary>
@@ -218,7 +221,9 @@ namespace Nop.Services.Catalog
                         orderby sao.DisplayOrder, sao.Id
                         where sao.SpecificationAttributeId == specificationAttributeId
                         select sao;
-            var specificationAttributeOptions = query.ToList();
+
+            var specificationAttributeOptions = query.ToCachedList(NopCatalogCachingDefaults.SpecAttributesOptionsCacheKey.FillCacheKey(specificationAttributeId));
+
             return specificationAttributeOptions;
         }
 
@@ -315,7 +320,7 @@ namespace Nop.Services.Catalog
         {
             var allowFilteringCacheStr = allowFiltering.HasValue ? allowFiltering.ToString() : "null";
             var showOnProductPageCacheStr = showOnProductPage.HasValue ? showOnProductPage.ToString() : "null";
-            var key = string.Format(NopCatalogCachingDefaults.ProductSpecificationAttributeAllByProductIdCacheKey,
+            var key = NopCatalogCachingDefaults.ProductSpecificationAttributeAllByProductIdCacheKey.FillCacheKey(
                 productId, specificationAttributeOptionId, allowFilteringCacheStr, showOnProductPageCacheStr);
 
             var query = _productSpecificationAttributeRepository.Table;

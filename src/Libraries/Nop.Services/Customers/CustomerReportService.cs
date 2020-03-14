@@ -87,18 +87,12 @@ namespace Nop.Services.Customers
                              OrderTotal = g.Sum(x => x.o.OrderTotal),
                              OrderCount = g.Count()
                          };
-            switch (orderBy)
+            query2 = orderBy switch
             {
-                case 1:
-                    query2 = query2.OrderByDescending(x => x.OrderTotal);
-                    break;
-                case 2:
-                    query2 = query2.OrderByDescending(x => x.OrderCount);
-                    break;
-                default:
-                    throw new ArgumentException("Wrong orderBy parameter", nameof(orderBy));
-            }
-
+                1 => query2.OrderByDescending(x => x.OrderTotal),
+                2 => query2.OrderByDescending(x => x.OrderCount),
+                _ => throw new ArgumentException("Wrong orderBy parameter", nameof(orderBy)),
+            };
             var tmp = new PagedList<dynamic>(query2, pageIndex, pageSize);
             return new PagedList<BestCustomerReportLine>(tmp.Select(x => new BestCustomerReportLine
             {

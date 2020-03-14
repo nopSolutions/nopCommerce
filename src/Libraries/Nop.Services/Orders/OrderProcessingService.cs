@@ -1878,20 +1878,14 @@ namespace Nop.Services.Orders
                     }
 
                     //payment type
-                    switch (_paymentService.GetRecurringPaymentType(processPaymentRequest.PaymentMethodSystemName))
+                    processPaymentResult = (_paymentService.GetRecurringPaymentType(processPaymentRequest.PaymentMethodSystemName)) switch
                     {
-                        case RecurringPaymentType.NotSupported:
-                            throw new NopException("Recurring payments are not supported by selected payment method");
-                        case RecurringPaymentType.Manual:
-                            processPaymentResult = _paymentService.ProcessRecurringPayment(processPaymentRequest);
-                            break;
-                        case RecurringPaymentType.Automatic:
-                            //payment is processed on payment gateway site, info about last transaction in paymentResult parameter
-                            processPaymentResult = paymentResult ?? new ProcessPaymentResult();
-                            break;
-                        default:
-                            throw new NopException("Not supported recurring payment type");
-                    }
+                        RecurringPaymentType.NotSupported => throw new NopException("Recurring payments are not supported by selected payment method"),
+                        RecurringPaymentType.Manual => _paymentService.ProcessRecurringPayment(processPaymentRequest),
+                        //payment is processed on payment gateway site, info about last transaction in paymentResult parameter
+                        RecurringPaymentType.Automatic => paymentResult ?? new ProcessPaymentResult(),
+                        _ => throw new NopException("Not supported recurring payment type"),
+                    };
                 }
                 else
                     processPaymentResult = paymentResult ?? new ProcessPaymentResult { NewPaymentStatus = PaymentStatus.Paid };
@@ -3153,23 +3147,14 @@ namespace Nop.Services.Orders
             //calculate next payment date
             if (historyCollection.Any())
             {
-                switch (recurringPayment.CyclePeriod)
+                result = recurringPayment.CyclePeriod switch
                 {
-                    case RecurringProductCyclePeriod.Days:
-                        result = recurringPayment.StartDateUtc.AddDays((double)recurringPayment.CycleLength * historyCollection.Count);
-                        break;
-                    case RecurringProductCyclePeriod.Weeks:
-                        result = recurringPayment.StartDateUtc.AddDays((double)(7 * recurringPayment.CycleLength) * historyCollection.Count);
-                        break;
-                    case RecurringProductCyclePeriod.Months:
-                        result = recurringPayment.StartDateUtc.AddMonths(recurringPayment.CycleLength * historyCollection.Count);
-                        break;
-                    case RecurringProductCyclePeriod.Years:
-                        result = recurringPayment.StartDateUtc.AddYears(recurringPayment.CycleLength * historyCollection.Count);
-                        break;
-                    default:
-                        throw new NopException("Not supported cycle period");
-                }
+                    RecurringProductCyclePeriod.Days => recurringPayment.StartDateUtc.AddDays((double)recurringPayment.CycleLength * historyCollection.Count),
+                    RecurringProductCyclePeriod.Weeks => recurringPayment.StartDateUtc.AddDays((double)(7 * recurringPayment.CycleLength) * historyCollection.Count),
+                    RecurringProductCyclePeriod.Months => recurringPayment.StartDateUtc.AddMonths(recurringPayment.CycleLength * historyCollection.Count),
+                    RecurringProductCyclePeriod.Years => recurringPayment.StartDateUtc.AddYears(recurringPayment.CycleLength * historyCollection.Count),
+                    _ => throw new NopException("Not supported cycle period"),
+                };
             }
             else
             {

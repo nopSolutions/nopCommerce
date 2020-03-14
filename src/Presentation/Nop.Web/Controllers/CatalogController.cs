@@ -136,6 +136,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult GetCatalogRoot()
         {
             var model = _catalogModelFactory.PrepareRootCategories();
@@ -144,6 +145,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult GetCatalogSubCategories(int id)
         {
             var model = _catalogModelFactory.PrepareSubCategories(id);

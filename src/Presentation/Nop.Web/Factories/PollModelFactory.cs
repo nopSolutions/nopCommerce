@@ -86,7 +86,7 @@ namespace Nop.Web.Factories
             if (string.IsNullOrWhiteSpace(systemKeyword))
                 return null;
 
-            var cacheKey = string.Format(NopModelCacheDefaults.PollBySystemNameModelKey, 
+            var cacheKey = NopModelCacheDefaults.PollBySystemNameModelKey.FillCacheKey(
                 systemKeyword, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
 
             var cachedModel = _cacheManager.Get(cacheKey, () =>
@@ -119,7 +119,7 @@ namespace Nop.Web.Factories
         /// <returns>List of the poll model</returns>
         public virtual List<PollModel> PrepareHomepagePollModels()
         {
-            var cacheKey = string.Format(NopModelCacheDefaults.HomepagePollsModelKey, 
+            var cacheKey = NopModelCacheDefaults.HomepagePollsModelKey.FillCacheKey(
                 _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
 
             var cachedPolls = _cacheManager.Get(cacheKey, () =>

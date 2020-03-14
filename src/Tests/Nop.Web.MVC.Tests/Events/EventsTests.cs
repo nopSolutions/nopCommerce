@@ -20,10 +20,10 @@ namespace Nop.Web.MVC.Tests.Events
         [OneTimeSetUp]
         public void SetUp()
         {
-            var hostingEnvironment = new Mock<IHostingEnvironment>();
-            hostingEnvironment.Setup(x => x.ContentRootPath).Returns(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            hostingEnvironment.Setup(x => x.WebRootPath).Returns(System.IO.Directory.GetCurrentDirectory());
-            CommonHelper.DefaultFileProvider = new NopFileProvider(hostingEnvironment.Object);
+            var webHostEnvironment = new Mock<IWebHostEnvironment>();
+            webHostEnvironment.Setup(x => x.ContentRootPath).Returns(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            webHostEnvironment.Setup(x => x.WebRootPath).Returns(System.IO.Directory.GetCurrentDirectory());
+            CommonHelper.DefaultFileProvider = new NopFileProvider(webHostEnvironment.Object);
 
             var nopEngine = new Mock<NopEngine>();
             var serviceProvider = new TestServiceProvider();

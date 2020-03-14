@@ -14,7 +14,9 @@ namespace Nop.Services.Caching.CacheEventConsumers.Messages
         /// <param name="entity">Entity</param>
         protected override void ClearCache(MessageTemplate entity)
         {
-            RemoveByPrefix(NopMessageCachingDefaults.MessageTemplatesPrefixCacheKey);
+            RemoveByPrefix(NopMessageCachingDefaults.MessageTemplatesAllPrefixCacheKey);
+            var prefix = NopMessageCachingDefaults.MessageTemplatesByNamePrefixCacheKey.ToCacheKey(entity.Name);
+            RemoveByPrefix(prefix);
         }
     }
 }

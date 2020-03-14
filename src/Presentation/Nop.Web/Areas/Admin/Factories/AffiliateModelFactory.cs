@@ -228,7 +228,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             if (affiliate != null)
             {
-                model = model ?? affiliate.ToModel<AffiliateModel>();
+                model ??= affiliate.ToModel<AffiliateModel>();
                 model.Url = _affiliateService.GenerateUrl(affiliate);
 
                 //prepare nested search models

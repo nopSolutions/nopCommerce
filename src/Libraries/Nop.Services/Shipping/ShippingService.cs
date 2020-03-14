@@ -177,7 +177,7 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping methods</returns>
         public virtual IList<ShippingMethod> GetAllShippingMethods(int? filterByCountryId = null)
         {
-            var key = string.Format(NopShippingCachingDefaults.ShippingMethodsAllCacheKey, filterByCountryId ?? 0);
+            var key = NopShippingCachingDefaults.ShippingMethodsAllCacheKey.FillCacheKey(filterByCountryId);
             
             if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
             {
@@ -318,9 +318,7 @@ namespace Nop.Services.Shipping
             if (warehouseId == 0)
                 return null;
 
-            var key = string.Format(NopShippingCachingDefaults.WarehousesByIdCacheKey, warehouseId);
-
-            return _warehouseRepository.ToCachedGetById(warehouseId, key);
+            return _warehouseRepository.ToCachedGetById(warehouseId);
         }
 
         /// <summary>
@@ -332,7 +330,8 @@ namespace Nop.Services.Shipping
             var query = from wh in _warehouseRepository.Table
                         orderby wh.Name
                         select wh;
-            var warehouses = query.ToList();
+            var warehouses = query.ToCachedList(NopShippingCachingDefaults.WarehousesAllCacheKey);
+
             return warehouses;
         }
 
@@ -599,7 +598,7 @@ namespace Nop.Services.Shipping
         /// <returns></returns>
         public virtual Warehouse GetNearestWarehouse(Address address, IList<Warehouse> warehouses = null)
         {
-            warehouses = warehouses ?? GetAllWarehouses();
+            warehouses ??= GetAllWarehouses();
 
             //no address specified. return any
             if (address == null)

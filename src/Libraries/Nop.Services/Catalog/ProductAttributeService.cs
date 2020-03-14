@@ -88,7 +88,7 @@ namespace Nop.Services.Catalog
         public virtual IPagedList<ProductAttribute> GetAllProductAttributes(int pageIndex = 0,
             int pageSize = int.MaxValue)
         {
-            var key = string.Format(NopCatalogCachingDefaults.ProductAttributesAllCacheKey, pageIndex, pageSize);
+            var key = NopCatalogCachingDefaults.ProductAttributesAllCacheKey.FillCacheKey(pageIndex, pageSize);
 
             var query = from pa in _productAttributeRepository.Table
                 orderby pa.Name
@@ -108,8 +108,7 @@ namespace Nop.Services.Catalog
             if (productAttributeId == 0)
                 return null;
 
-            var key = string.Format(NopCatalogCachingDefaults.ProductAttributesByIdCacheKey, productAttributeId);
-            return _productAttributeRepository.ToCachedGetById(productAttributeId, key);
+            return _productAttributeRepository.ToCachedGetById(productAttributeId);
         }
 
         /// <summary>
@@ -201,7 +200,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product attribute mapping collection</returns>
         public virtual IList<ProductAttributeMapping> GetProductAttributeMappingsByProductId(int productId)
         {
-            var allCacheKey = string.Format(NopCatalogCachingDefaults.ProductAttributeMappingsAllCacheKey, productId);
+            var allCacheKey = NopCatalogCachingDefaults.ProductAttributeMappingsAllCacheKey.FillCacheKey(productId);
 
             var query = from pam in _productAttributeMappingRepository.Table
                 orderby pam.DisplayOrder, pam.Id
@@ -223,9 +222,7 @@ namespace Nop.Services.Catalog
             if (productAttributeMappingId == 0)
                 return null;
 
-            var key = string.Format(NopCatalogCachingDefaults.ProductAttributeMappingsByIdCacheKey, productAttributeMappingId);
-
-            return _productAttributeMappingRepository.ToCachedGetById(productAttributeMappingId, key);
+            return _productAttributeMappingRepository.ToCachedGetById(productAttributeMappingId);
         }
 
         /// <summary>
@@ -284,7 +281,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product attribute mapping collection</returns>
         public virtual IList<ProductAttributeValue> GetProductAttributeValues(int productAttributeMappingId)
         {
-            var key = string.Format(NopCatalogCachingDefaults.ProductAttributeValuesAllCacheKey, productAttributeMappingId);
+            var key = NopCatalogCachingDefaults.ProductAttributeValuesAllCacheKey.FillCacheKey(productAttributeMappingId);
 
             var query = from pav in _productAttributeValueRepository.Table
                 orderby pav.DisplayOrder, pav.Id
@@ -305,9 +302,7 @@ namespace Nop.Services.Catalog
             if (productAttributeValueId == 0)
                 return null;
 
-            var key = string.Format(NopCatalogCachingDefaults.ProductAttributeValuesByIdCacheKey, productAttributeValueId);
-
-            return _productAttributeValueRepository.ToCachedGetById(productAttributeValueId, key);
+            return _productAttributeValueRepository.ToCachedGetById(productAttributeValueId);
         }
 
         /// <summary>
@@ -366,11 +361,15 @@ namespace Nop.Services.Catalog
         /// <returns>Product attribute mapping collection</returns>
         public virtual IList<PredefinedProductAttributeValue> GetPredefinedProductAttributeValues(int productAttributeId)
         {
+            var key = NopCatalogCachingDefaults.PredefinedProductAttributeValuesAllCacheKey.FillCacheKey(productAttributeId);
+
             var query = from ppav in _predefinedProductAttributeValueRepository.Table
                         orderby ppav.DisplayOrder, ppav.Id
                         where ppav.ProductAttributeId == productAttributeId
                         select ppav;
-            var values = query.ToList();
+
+            var values = query.ToCachedList(key);
+
             return values;
         }
 
@@ -446,7 +445,7 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return new List<ProductAttributeCombination>();
 
-            var key = string.Format(NopCatalogCachingDefaults.ProductAttributeCombinationsAllCacheKey, productId);
+            var key = NopCatalogCachingDefaults.ProductAttributeCombinationsAllCacheKey.FillCacheKey(productId);
             
             var query = from c in _productAttributeCombinationRepository.Table
                 orderby c.Id

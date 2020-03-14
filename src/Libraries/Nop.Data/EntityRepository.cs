@@ -40,10 +40,8 @@ namespace Nop.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            using (var _dataConnection = new NopDataConnection())
-            {
-                entity.Id = _dataConnection.InsertWithInt32Identity(entity);
-            }
+            using var dataConnection = new NopDataConnection();
+            entity.Id = dataConnection.InsertWithInt32Identity(entity);
         }
 
         /// <summary>
@@ -54,24 +52,22 @@ namespace Nop.Data
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
-            using (var _dataConnection = new NopDataConnection())
+            using var dataConnection = new NopDataConnection();
+            dataConnection.BeginTransaction();
+
+            try
             {
-                _dataConnection.BeginTransaction();
-
-                try
+                foreach (var entity in entities)
                 {
-                    foreach (var entity in entities)
-                    {
-                        Insert(entity);
-                    }
+                    Insert(entity);
+                }
 
-                    _dataConnection.CommitTransaction();
-                }
-                catch
-                {
-                    _dataConnection.RollbackTransaction();
-                    throw;
-                }
+                dataConnection.CommitTransaction();
+            }
+            catch
+            {
+                dataConnection.RollbackTransaction();
+                throw;
             }
         }
 
@@ -84,10 +80,8 @@ namespace Nop.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            using (var _dataConnection = new NopDataConnection())
-            {
-                _dataConnection.Update(entity);
-            }
+            using var dataConnection = new NopDataConnection();
+            dataConnection.Update(entity);
         }
 
         /// <summary>
@@ -114,10 +108,8 @@ namespace Nop.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            using (var _dataConnection = new NopDataConnection())
-            {
-                _dataConnection.Delete(entity);
-            }
+            using var dataConnection = new NopDataConnection();
+            dataConnection.Delete(entity);
         }
 
         /// <summary>
@@ -144,10 +136,8 @@ namespace Nop.Data
         /// <returns>Collection of query result records</returns>
         public virtual IList<TEntity> EntityFromSql(string storeProcedureName, params DataParameter[] dataParameters)
         {
-            using (var _dataConnection = new NopDataConnection())
-            {
-                return _dataConnection.ExecuteStoredProcedure<TEntity>(storeProcedureName, dataParameters?.ToArray());
-            }
+            using var dataConnection = new NopDataConnection();
+            return dataConnection.ExecuteStoredProcedure<TEntity>(storeProcedureName, dataParameters?.ToArray());
         }
 
         /// <summary>
@@ -156,10 +146,8 @@ namespace Nop.Data
         /// <param name="resetIdentity">Performs reset identity column</param>
         public virtual void Truncate(bool resetIdentity = false)
         {
-            using (var _dataConnection = new NopDataConnection())
-            {
-                _dataConnection.GetTable<TEntity>().Truncate(resetIdentity);
-            }
+            using var dataConnection = new NopDataConnection();
+            dataConnection.GetTable<TEntity>().Truncate(resetIdentity);
         }
 
         #endregion

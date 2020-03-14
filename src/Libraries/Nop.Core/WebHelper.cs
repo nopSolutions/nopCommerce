@@ -27,7 +27,7 @@ namespace Nop.Core
 
         private readonly HostingConfig _hostingConfig;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IApplicationLifetime _applicationLifetime;
+        private readonly IHostApplicationLifetime _hostApplicationLifetime;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly INopFileProvider _fileProvider;
         private readonly IUrlHelperFactory _urlHelperFactory;
@@ -38,14 +38,14 @@ namespace Nop.Core
 
         public WebHelper(HostingConfig hostingConfig,
             IActionContextAccessor actionContextAccessor,
-            IApplicationLifetime applicationLifetime,
+            IHostApplicationLifetime hostApplicationLifetime,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
             IUrlHelperFactory urlHelperFactory)
         {
             _hostingConfig = hostingConfig;
             _actionContextAccessor = actionContextAccessor;
-            _applicationLifetime = applicationLifetime;
+            _hostApplicationLifetime = hostApplicationLifetime;
             _httpContextAccessor = httpContextAccessor;
             _fileProvider = fileProvider;
             _urlHelperFactory = urlHelperFactory;
@@ -392,10 +392,10 @@ namespace Nop.Core
         public virtual T QueryString<T>(string name)
         {
             if (!IsRequestAvailable())
-                return default(T);
+                return default;
 
             if (StringValues.IsNullOrEmpty(_httpContextAccessor.HttpContext.Request.Query[name]))
-                return default(T);
+                return default;
 
             return CommonHelper.To<T>(_httpContextAccessor.HttpContext.Request.Query[name].ToString());
         }
@@ -418,7 +418,7 @@ namespace Nop.Core
             }
 
             if (Environment.OSVersion.Platform == PlatformID.Unix)
-                _applicationLifetime.StopApplication();
+                _hostApplicationLifetime.StopApplication();
         }
 
         /// <summary>

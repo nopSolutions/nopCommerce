@@ -1,4 +1,4 @@
-﻿namespace Nop.Core.Caching
+﻿namespace Nop.Services.Defaults
 {
     /// <summary>
     /// Represents default values related to common services

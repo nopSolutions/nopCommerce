@@ -1,6 +1,6 @@
 language: csharp
 mono: none
-dotnet: 2.2.401
+dotnet: 3.1
 dist: xenial
 sudo: required
 install:

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -251,26 +251,14 @@ namespace Nop.Services.Catalog
 
             if (string.IsNullOrWhiteSpace(price))
                 return price;
-
-            string result;
-            switch (product.RentalPricePeriod)
+            var result = product.RentalPricePeriod switch
             {
-                case RentalPricePeriod.Days:
-                    result = string.Format(_localizationService.GetResource("Products.Price.Rental.Days"), price, product.RentalPriceLength);
-                    break;
-                case RentalPricePeriod.Weeks:
-                    result = string.Format(_localizationService.GetResource("Products.Price.Rental.Weeks"), price, product.RentalPriceLength);
-                    break;
-                case RentalPricePeriod.Months:
-                    result = string.Format(_localizationService.GetResource("Products.Price.Rental.Months"), price, product.RentalPriceLength);
-                    break;
-                case RentalPricePeriod.Years:
-                    result = string.Format(_localizationService.GetResource("Products.Price.Rental.Years"), price, product.RentalPriceLength);
-                    break;
-                default:
-                    throw new NopException("Not supported rental period");
-            }
-
+                RentalPricePeriod.Days => string.Format(_localizationService.GetResource("Products.Price.Rental.Days"), price, product.RentalPriceLength),
+                RentalPricePeriod.Weeks => string.Format(_localizationService.GetResource("Products.Price.Rental.Weeks"), price, product.RentalPriceLength),
+                RentalPricePeriod.Months => string.Format(_localizationService.GetResource("Products.Price.Rental.Months"), price, product.RentalPriceLength),
+                RentalPricePeriod.Years => string.Format(_localizationService.GetResource("Products.Price.Rental.Years"), price, product.RentalPriceLength),
+                _ => throw new NopException("Not supported rental period"),
+            };
             return result;
         }
 
@@ -444,7 +432,7 @@ namespace Nop.Services.Catalog
             if (referenceUnit == null)
                 return null;
 
-            productPrice = productPrice ?? product.Price;
+            productPrice ??= product.Price;
 
             var basePrice = productPrice.Value /
                 //do not round. otherwise, it can cause issues

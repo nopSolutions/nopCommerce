@@ -182,8 +182,8 @@ namespace Nop.Services.Discounts
             //we load all discounts, and filter them using "discountType" parameter later (in memory)
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
             //that's why let's access the database only once
-            var cacheKey = string.Format(NopDiscountCachingDefaults.DiscountAllCacheKey,
-                showHidden, couponCode ?? string.Empty, discountName ?? string.Empty);
+            var cacheKey = NopDiscountCachingDefaults.DiscountAllCacheKey
+                .FillCacheKey(showHidden, couponCode ?? string.Empty, discountName ?? string.Empty);
 
             var query = _discountRepository.Table;
 
@@ -602,7 +602,7 @@ namespace Nop.Services.Discounts
             }
 
             //discount requirements
-            var key = string.Format(NopDiscountCachingDefaults.DiscountRequirementModelCacheKey, discount.Id);
+            var key = NopDiscountCachingDefaults.DiscountRequirementModelCacheKey.FillCacheKey(discount);
             var requirements = _cacheManager.Get(key, () => GetAllDiscountRequirements(discount.Id, true));
 
             //get top-level group

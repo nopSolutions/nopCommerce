@@ -16,6 +16,7 @@ using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Payments.Square.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class PaymentSquareController : BasePaymentController
     {
         #region Fields
@@ -137,7 +138,6 @@ namespace Nop.Plugin.Payments.Square.Controllers
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("save")]
         [AuthorizeAdmin]
-        [AdminAntiForgery]
         [Area(AreaNames.Admin)]
         public IActionResult Configure(ConfigurationModel model)
         {
@@ -192,7 +192,6 @@ namespace Nop.Plugin.Payments.Square.Controllers
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("obtainAccessToken")]
         [AuthorizeAdmin]
-        [AdminAntiForgery]
         [Area(AreaNames.Admin)]
         public IActionResult ObtainAccessToken(ConfigurationModel model)
         {
@@ -267,7 +266,6 @@ namespace Nop.Plugin.Payments.Square.Controllers
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("revokeAccessTokens")]
         [AuthorizeAdmin]
-        [AdminAntiForgery]
         [Area(AreaNames.Admin)]
         public IActionResult RevokeAccessTokens(ConfigurationModel model)
         {

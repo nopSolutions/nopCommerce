@@ -26,21 +26,23 @@ namespace Nop.Core.Tests.Domain.Shipping
         [Test]
         public void Can_convert_shippingOptionList_to_string_and_back()
         {
-            var shippingOptionsInput = new List<ShippingOption>();
-            shippingOptionsInput.Add(new ShippingOption
+            var shippingOptionsInput = new List<ShippingOption>
             {
-                Name = "a1",
-                Description = "a2",
-                Rate = 3.57M,
-                ShippingRateComputationMethodSystemName = "a4"
-            });
-            shippingOptionsInput.Add(new ShippingOption
-            {
-                Name = "b1",
-                Description = "b2",
-                Rate = 7.00M,
-                ShippingRateComputationMethodSystemName = "b4"
-            });
+                new ShippingOption
+                {
+                    Name = "a1",
+                    Description = "a2",
+                    Rate = 3.57M,
+                    ShippingRateComputationMethodSystemName = "a4"
+                },
+                new ShippingOption
+                {
+                    Name = "b1",
+                    Description = "b2",
+                    Rate = 7.00M,
+                    ShippingRateComputationMethodSystemName = "b4"
+                }
+            };
 
             var converter = TypeDescriptor.GetConverter(shippingOptionsInput.GetType());
             var result = converter.ConvertTo(shippingOptionsInput, typeof(string)) as string;

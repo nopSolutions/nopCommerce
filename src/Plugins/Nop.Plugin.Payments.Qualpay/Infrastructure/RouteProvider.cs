@@ -12,11 +12,11 @@ namespace Nop.Plugin.Payments.Qualpay.Infrastructure
         /// <summary>
         /// Register routes
         /// </summary>
-        /// <param name="routeBuilder">Route builder</param>
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        /// <param name="endpointRouteBuilder">Route builder</param>
+        public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
             //add route to the webhook handler
-            routeBuilder.MapRoute(QualpayDefaults.WebhookRouteName, "Plugins/Qualpay/Webhook/",
+            endpointRouteBuilder.MapControllerRoute(QualpayDefaults.WebhookRouteName, "Plugins/Qualpay/Webhook/",
                 new { controller = "Webhook", action = "WebhookHandler" });
         }
 

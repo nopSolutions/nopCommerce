@@ -14,7 +14,7 @@ namespace Nop.Services.Caching.CacheEventConsumers.Directory
         /// <param name="entity">Entity</param>
         protected override void ClearCache(Currency entity)
         {
-            RemoveByPrefix(NopDirectoryCachingDefaults.CurrenciesPrefixCacheKey);
+            RemoveByPrefix(NopDirectoryCachingDefaults.CurrenciesAllPrefixCacheKey);
         }
     }
 }

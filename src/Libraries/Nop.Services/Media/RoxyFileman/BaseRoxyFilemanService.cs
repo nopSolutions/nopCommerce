@@ -19,7 +19,7 @@ namespace Nop.Services.Media.RoxyFileman
         private Dictionary<string, string> _settings;
         private Dictionary<string, string> _languageResources;
 
-        protected readonly IHostingEnvironment _hostingEnvironment;
+        protected readonly IWebHostEnvironment _webHostEnvironment;
         protected readonly IHttpContextAccessor _httpContextAccessor;
         protected readonly INopFileProvider _fileProvider;
         protected readonly IWebHelper _webHelper;
@@ -30,14 +30,14 @@ namespace Nop.Services.Media.RoxyFileman
 
         #region Ctor
 
-        protected BaseRoxyFilemanService(IHostingEnvironment hostingEnvironment,
+        protected BaseRoxyFilemanService(IWebHostEnvironment webHostEnvironment,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
             IWebHelper webHelper,
             IWorkContext workContext,
             MediaSettings mediaSettings)
         {
-            _hostingEnvironment = hostingEnvironment;
+            _webHostEnvironment = webHostEnvironment;
             _httpContextAccessor = httpContextAccessor;
             _fileProvider = fileProvider;
             _webHelper = webHelper;
@@ -122,12 +122,12 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>Path</returns>
         protected virtual string GetFullPath(string virtualPath)
         {
-            virtualPath = virtualPath ?? string.Empty;
+            virtualPath ??= string.Empty;
             if (!virtualPath.StartsWith("/"))
                 virtualPath = "/" + virtualPath;
             virtualPath = virtualPath.TrimEnd('/');
 
-            return _fileProvider.Combine(_hostingEnvironment.WebRootPath, virtualPath);
+            return _fileProvider.Combine(_webHostEnvironment.WebRootPath, virtualPath);
         }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace Nop.Services.Media.RoxyFileman
         /// <returns>Path</returns>
         protected virtual string GetVirtualPath(string path)
         {
-            path = path ?? string.Empty;
+            path ??= string.Empty;
 
             var rootDirectory = GetRootDirectory();
             if (!path.StartsWith(rootDirectory))

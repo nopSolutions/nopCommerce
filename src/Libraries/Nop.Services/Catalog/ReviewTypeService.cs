@@ -47,7 +47,7 @@ namespace Nop.Services.Catalog
         {
             return _reviewTypeRepository.Table
                 .OrderBy(reviewType => reviewType.DisplayOrder).ThenBy(reviewType => reviewType.Id)
-                .ToCachedList(NopCatalogCachingDefaults.ReviewTypeAllKey);
+                .ToCachedList(NopCatalogCachingDefaults.ReviewTypeAllCacheKey);
         }
 
         /// <summary>
@@ -59,10 +59,8 @@ namespace Nop.Services.Catalog
         {
             if (reviewTypeId == 0)
                 return null;
-
-            var key = string.Format(NopCatalogCachingDefaults.ReviewTypeByIdKey, reviewTypeId);
-
-            return _reviewTypeRepository.ToCachedGetById(reviewTypeId, key);
+            
+            return _reviewTypeRepository.ToCachedGetById(reviewTypeId);
         }
 
         /// <summary>
@@ -122,7 +120,7 @@ namespace Nop.Services.Catalog
         public IList<ProductReviewReviewTypeMapping> GetProductReviewReviewTypeMappingsByProductReviewId(
             int productReviewId)
         {
-            var key = string.Format(NopCatalogCachingDefaults.ProductReviewReviewTypeMappingAllKey, productReviewId);
+            var key = NopCatalogCachingDefaults.ProductReviewReviewTypeMappingAllCacheKey.FillCacheKey(productReviewId);
 
             var query = from pam in _productReviewReviewTypeMappingRepository.Table
                 orderby pam.Id

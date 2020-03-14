@@ -774,6 +774,8 @@ namespace Nop.Web.Areas.Admin.Factories
             model.DeleteGuests.OnlyWithoutShoppingCart = true;
             model.DeleteAbandonedCarts.OlderThan = DateTime.UtcNow.AddDays(-182);
 
+            model.DeleteAlreadySentQueuedEmails.EndDate = DateTime.UtcNow.AddDays(-7);
+
             //prepare nested search model
             PrepareBackupFileSearchModel(model.BackupFileSearchModel);
 

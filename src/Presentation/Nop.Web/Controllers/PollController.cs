@@ -45,6 +45,7 @@ namespace Nop.Web.Controllers
         #region Methods
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult Vote(int pollAnswerId)
         {
             var pollAnswer = _pollService.GetPollAnswerById(pollAnswerId);

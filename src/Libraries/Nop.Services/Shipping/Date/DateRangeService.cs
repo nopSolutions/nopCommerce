@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
+using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -60,7 +61,8 @@ namespace Nop.Services.Shipping.Date
             var query = from dd in _deliveryDateRepository.Table
                         orderby dd.DisplayOrder, dd.Id
                         select dd;
-            var deliveryDates = query.ToList();
+            var deliveryDates = query.ToCachedList(NopShippingCachingDefaults.DeliveryDatesAllCacheKey);
+
             return deliveryDates;
         }
 
@@ -132,7 +134,8 @@ namespace Nop.Services.Shipping.Date
             var query = from par in _productAvailabilityRangeRepository.Table
                         orderby par.DisplayOrder, par.Id
                         select par;
-            return query.ToList();
+
+            return query.ToCachedList(NopShippingCachingDefaults.ProductAvailabilityAllCacheKey);
         }
 
         /// <summary>

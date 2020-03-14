@@ -47,10 +47,7 @@
                         $.ajax({
                             cache: false,
                             type: "POST",
-                            url: "@(Url.RouteUrl("BackInStockSubscribeSend"))",
-                            data: {
-                                "productId": '@Model.ProductId'
-                            },
+                            url: "@(Url.RouteUrl("BackInStockSubscribeSend", new { productId = Model.ProductId }))",
                             success: function (data, textStatus, jqXHR) {
                                 $(subscribeButton).closest('.ui-dialog-content').dialog('destroy').remove();
                             },

@@ -228,7 +228,7 @@ namespace Nop.Web.Factories
                 StoreName = _localizationService.GetLocalized(_storeContext.CurrentStore, x => x.Name)
             };
 
-            var cacheKey = string.Format(NopModelCacheDefaults.StoreLogoPath, _storeContext.CurrentStore.Id, _themeContext.WorkingThemeName, _webHelper.IsCurrentConnectionSecured());
+            var cacheKey = NopModelCacheDefaults.StoreLogoPath.FillCacheKey(_storeContext.CurrentStore.Id, _themeContext.WorkingThemeName, _webHelper.IsCurrentConnectionSecured());
             model.LogoPath = _cacheManager.Get(cacheKey, () =>
             {
                 var logo = string.Empty;
@@ -282,30 +282,25 @@ namespace Nop.Web.Factories
         /// <returns>Currency selector model</returns>
         public virtual CurrencySelectorModel PrepareCurrencySelectorModel()
         {
-            var availableCurrencies = _cacheManager.Get(string.Format(NopModelCacheDefaults.AvailableCurrenciesModelKey, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id), () =>
-            {
-                var result = _currencyService
-                    .GetAllCurrencies(storeId: _storeContext.CurrentStore.Id)
-                    .Select(x =>
+            var availableCurrencies = _currencyService
+                .GetAllCurrencies(storeId: _storeContext.CurrentStore.Id)
+                .Select(x =>
+                {
+                    //currency char
+                    var currencySymbol = !string.IsNullOrEmpty(x.DisplayLocale)
+                        ? new RegionInfo(x.DisplayLocale).CurrencySymbol
+                        : x.CurrencyCode;
+
+                    //model
+                    var currencyModel = new CurrencyModel
                     {
-                        //currency char
-                        var currencySymbol = !string.IsNullOrEmpty(x.DisplayLocale)
-                            ? new RegionInfo(x.DisplayLocale).CurrencySymbol
-                            : x.CurrencyCode;
+                        Id = x.Id,
+                        Name = _localizationService.GetLocalized(x, y => y.Name),
+                        CurrencySymbol = currencySymbol
+                    };
 
-                        //model
-                        var currencyModel = new CurrencyModel
-                        {
-                            Id = x.Id,
-                            Name = _localizationService.GetLocalized(x, y => y.Name),
-                            CurrencySymbol = currencySymbol
-                        };
-
-                        return currencyModel;
-                    }).ToList();
-
-                return result;
-            });
+                    return currencyModel;
+                }).ToList();
 
             var model = new CurrencySelectorModel
             {
@@ -421,11 +416,7 @@ namespace Nop.Web.Factories
         public virtual FooterModel PrepareFooterModel()
         {
             //footer topics
-            var topicCacheKey = string.Format(NopModelCacheDefaults.TopicFooterModelKey,
-                _workContext.WorkingLanguage.Id);
-
-            var cachedTopicModel = _cacheManager.Get(topicCacheKey, () =>
-                _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
+            var topicModels = _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
                     .Where(t => t.IncludeInFooterColumn1 || t.IncludeInFooterColumn2 || t.IncludeInFooterColumn3)
                     .Select(t => new FooterModel.FooterTopicModel
                     {
@@ -435,7 +426,7 @@ namespace Nop.Web.Factories
                         IncludeInFooterColumn1 = t.IncludeInFooterColumn1,
                         IncludeInFooterColumn2 = t.IncludeInFooterColumn2,
                         IncludeInFooterColumn3 = t.IncludeInFooterColumn3
-                    }).ToList());
+                    }).ToList();
 
             //model
             var model = new FooterModel
@@ -455,7 +446,7 @@ namespace Nop.Web.Factories
                 HidePoweredByNopCommerce = _storeInformationSettings.HidePoweredByNopCommerce,
                 AllowCustomersToApplyForVendorAccount = _vendorSettings.AllowCustomersToApplyForVendorAccount,
                 AllowCustomersToCheckGiftCardBalance = _customerSettings.AllowCustomersToCheckGiftCardBalance && _captchaSettings.Enabled,
-                Topics = cachedTopicModel,
+                Topics = topicModels,
                 DisplaySitemapFooterItem = _displayDefaultFooterItemSettings.DisplaySitemapFooterItem,
                 DisplayContactUsFooterItem = _displayDefaultFooterItemSettings.DisplayContactUsFooterItem,
                 DisplayProductSearchFooterItem = _displayDefaultFooterItemSettings.DisplayProductSearchFooterItem,
@@ -535,7 +526,7 @@ namespace Nop.Web.Factories
         /// <returns>Sitemap model</returns>
         public virtual SitemapModel PrepareSitemapModel(SitemapPageModel pageModel)
         {
-            var cacheKey = string.Format(NopModelCacheDefaults.SitemapPageModelKey,
+            var cacheKey = NopModelCacheDefaults.SitemapPageModelKey.FillCacheKey(
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                 _storeContext.CurrentStore.Id);
@@ -730,7 +721,7 @@ namespace Nop.Web.Factories
         /// <returns>Sitemap as string in XML format</returns>
         public virtual string PrepareSitemapXml(int? id)
         {
-            var cacheKey = string.Format(NopModelCacheDefaults.SitemapSeoModelKey, id,
+            var cacheKey = NopModelCacheDefaults.SitemapSeoModelKey.FillCacheKey(id,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                 _storeContext.CurrentStore.Id);

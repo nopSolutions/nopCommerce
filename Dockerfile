@@ -1,5 +1,5 @@
 # create the build instance 
-FROM microsoft/dotnet:2.2-sdk AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 
 WORKDIR /src                                                                    
 COPY ./src ./
@@ -51,7 +51,7 @@ WORKDIR /src/Presentation/Nop.Web
 RUN dotnet publish Nop.Web.csproj -c Release -o /app/published
 
 # create the runtime instance 
-FROM microsoft/dotnet:2.2-aspnetcore-runtime-alpine AS runtime 
+FROM mcr.microsoft.com/dotnet/core/runtime:3.1 AS runtime 
 
 # add globalization support
 RUN apk add --no-cache icu-libs

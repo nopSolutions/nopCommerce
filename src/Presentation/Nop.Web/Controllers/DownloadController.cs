@@ -46,9 +46,11 @@ namespace Nop.Web.Controllers
             if (download == null)
                 return Content("Sample download is not available any more.");
 
+            //A warning (SCS0027 - Open Redirect) from the "Security Code Scan" analyzer may appear at this point. 
+            //In this case, it is not relevant. Url may not be local.
             if (download.UseDownloadUrl)
                 return new RedirectResult(download.DownloadUrl);
-            
+
             if (download.DownloadBinary == null)
                 return Content("Download data is not available any more.");
             
@@ -97,6 +99,8 @@ namespace Nop.Web.Controllers
                 _orderService.UpdateOrderItem(orderItem);
 
                 //return result
+                //A warning (SCS0027 - Open Redirect) from the "Security Code Scan" analyzer may appear at this point. 
+                //In this case, it is not relevant. Url may not be local.
                 return new RedirectResult(download.DownloadUrl);
             }
             
@@ -131,14 +135,16 @@ namespace Nop.Web.Controllers
                     return Challenge();
             }
 
-            var download = _downloadService.GetDownloadById(orderItem.LicenseDownloadId.HasValue ? orderItem.LicenseDownloadId.Value : 0);
+            var download = _downloadService.GetDownloadById(orderItem.LicenseDownloadId ?? 0);
             if (download == null)
                 return Content("Download is not available any more.");
-            
+
+            //A warning (SCS0027 - Open Redirect) from the "Security Code Scan" analyzer may appear at this point. 
+            //In this case, it is not relevant. Url may not be local.
             if (download.UseDownloadUrl)
                 return new RedirectResult(download.DownloadUrl);
 
-            //binary download
+                //binary download
             if (download.DownloadBinary == null)
                 return Content("Download data is not available any more.");
 
@@ -154,10 +160,12 @@ namespace Nop.Web.Controllers
             if (download == null)
                 return Content("Download is not available any more.");
 
+            //A warning (SCS0027 - Open Redirect) from the "Security Code Scan" analyzer may appear at this point. 
+            //In this case, it is not relevant. Url may not be local.
             if (download.UseDownloadUrl)
                 return new RedirectResult(download.DownloadUrl);
 
-            //binary download
+                //binary download
             if (download.DownloadBinary == null)
                 return Content("Download data is not available any more.");
 
@@ -181,11 +189,13 @@ namespace Nop.Web.Controllers
             var download = _downloadService.GetDownloadById(orderNote.DownloadId);
             if (download == null)
                 return Content("Download is not available any more.");
-
+            
+            //A warning (SCS0027 - Open Redirect) from the "Security Code Scan" analyzer may appear at this point. 
+            //In this case, it is not relevant. Url may not be local.
             if (download.UseDownloadUrl)
                 return new RedirectResult(download.DownloadUrl);
 
-            //binary download
+                //binary download
             if (download.DownloadBinary == null)
                 return Content("Download data is not available any more.");
 

@@ -783,10 +783,21 @@ input[type="text"].k-input {
 .main-header .logo-lg {
     background: url(images/logo.png) no-repeat 50% 50%;
     height: 50px;
+    background-size: contain;
+    background-origin: content-box;
+    padding: 0 10px;
 }
 .main-header .logo-mini {
     background: url(images/logo-mini.png) no-repeat 50% 50%;
     height: 50px;
+}
+.bg-dark, .skin-blue .main-header .navbar, .skin-blue .main-header .logo {
+  background-color: #222d32 !important;
+  color: #fff;
+}
+.dropdown-menu.bg-dark li:hover, .skin-blue .main-header .navbar .sidebar-toggle:hover, .skin-blue .main-header .logo:hover, .skin-blue .main-header .navbar .nav > li >a:hover {
+  background-color: #2c3b41;
+  color: #fff;
 }
 
 /* SIDE BAR */

@@ -165,10 +165,15 @@ namespace Nop.Web.Factories
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var model = new BlogPostListModel();
-            model.PagingFilteringContext.Tag = command.Tag;
-            model.PagingFilteringContext.Month = command.Month;
-            model.WorkingLanguageId = _workContext.WorkingLanguage.Id;
+            var model = new BlogPostListModel
+            {
+                PagingFilteringContext =
+                {
+                    Tag = command.Tag,
+                    Month = command.Month
+                },
+                WorkingLanguageId = _workContext.WorkingLanguage.Id
+            };
 
             if (command.PageSize <= 0) command.PageSize = _blogSettings.PostsPageSize;
             if (command.PageNumber <= 0) command.PageNumber = 1;
@@ -209,29 +214,22 @@ namespace Nop.Web.Factories
         /// <returns>Blog post tag list model</returns>
         public virtual BlogPostTagListModel PrepareBlogPostTagListModel()
         {
-            var cacheKey = string.Format(NopModelCacheDefaults.BlogTagsModelKey, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var model = new BlogPostTagListModel();
+
+            //get tags
+            var tags = _blogService
+                .GetAllBlogPostTags(_storeContext.CurrentStore.Id, _workContext.WorkingLanguage.Id)
+                .OrderByDescending(x => x.BlogPostCount)
+                .Take(_blogSettings.NumberOfTags);
+
+            //sorting and setting into the model
+            model.Tags.AddRange(tags.OrderBy(x => x.Name).Select(tag => new BlogPostTagModel
             {
-                var model = new BlogPostTagListModel();
+                Name = tag.Name,
+                BlogPostCount = tag.BlogPostCount
+            }));
 
-                //get tags
-                var tags = _blogService.GetAllBlogPostTags(_storeContext.CurrentStore.Id, _workContext.WorkingLanguage.Id)
-                    .OrderByDescending(x => x.BlogPostCount)
-                    .Take(_blogSettings.NumberOfTags)
-                    .ToList();
-                //sorting
-                tags = tags.OrderBy(x => x.Name).ToList();
-
-                foreach (var tag in tags)
-                    model.Tags.Add(new BlogPostTagModel
-                    {
-                        Name = tag.Name,
-                        BlogPostCount = tag.BlogPostCount
-                    });
-                return model;
-            });
-
-            return cachedModel;
+            return model;
         }
 
         /// <summary>
@@ -240,7 +238,7 @@ namespace Nop.Web.Factories
         /// <returns>List of blog post year model</returns>
         public virtual List<BlogPostYearModel> PrepareBlogPostYearModel()
         {
-            var cacheKey = string.Format(NopModelCacheDefaults.BlogMonthsModelKey, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cacheKey = NopModelCacheDefaults.BlogMonthsModelKey.FillCacheKey(_workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 var model = new List<BlogPostYearModel>();

@@ -14,9 +14,12 @@ namespace Nop.Services.Caching.CacheEventConsumers.Stores
         /// <param name="entity">Entity</param>
         protected override void ClearCache(Store entity)
         {
-            RemoveByPrefix(NopStoreCachingDefaults.StoresPrefixCacheKey);
-            RemoveByPrefix(NopNewsCachingDefaults.ShoppingCartPrefixCacheKey, false);
-            RemoveByPrefix(NopLocalizationCachingDefaults.LanguagesPrefixCacheKey);
+            Remove(NopStoreCachingDefaults.StoresAllCacheKey);
+            RemoveByPrefix(NopOrderCachingDefaults.ShoppingCartPrefixCacheKey, false);
+
+            var prefix = NopLocalizationCachingDefaults.LanguagesByStoreIdPrefixCacheKey.ToCacheKey(entity);
+
+            RemoveByPrefix(prefix);
         }
     }
 }

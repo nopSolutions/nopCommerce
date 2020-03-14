@@ -1,4 +1,5 @@
 ﻿using Nop.Core;
+using Nop.Core.Caching;
 
 namespace Nop.Plugin.Tax.Avalara
 {
@@ -57,17 +58,17 @@ namespace Nop.Plugin.Tax.Avalara
         /// {3} - Country identifier
         /// {4} - Zip postal code
         /// </remarks>
-        public static string TaxRateCacheKey => "Nop.avalara.taxrate.address-{0}-{1}-{2}-{3}-{4}";
+        public static CacheKey TaxRateCacheKey => new CacheKey("Nop.avalara.taxrate.address-{0}-{1}-{2}-{3}-{4}");
 
         /// <summary>
         /// Key for caching Avalara tax code types
         /// </summary>
-        public static string TaxCodeTypesCacheKey => "Nop.avalara.taxcodetypes";
+        public static CacheKey TaxCodeTypesCacheKey => new CacheKey("Nop.avalara.taxcodetypes");
 
         /// <summary>
         /// Key for caching Avalara system entity use codes
         /// </summary>
-        public static string EntityUseCodesCacheKey => "Nop.avalara.entityusecodes";
+        public static CacheKey EntityUseCodesCacheKey => new CacheKey("Nop.avalara.entityusecodes");
 
         /// <summary>
         /// Name of the view component to display entity use code field

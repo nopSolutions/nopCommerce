@@ -9,16 +9,23 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
     public partial class ProductAttributeCacheEventConsumer : CacheEventConsumer<ProductAttribute>
     {
         /// <summary>
-        /// Clear cache data
+        /// entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        protected override void ClearCache(ProductAttribute entity)
+        /// <param name="entityEventType">Entity event type</param>
+        protected override void ClearCache(ProductAttribute entity, EntityEventType entityEventType)
         {
-            RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributesPrefixCacheKey);
-            RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributeMappingsPrefixCacheKey);
-            RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributeValuesPrefixCacheKey);
-            RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributeCombinationsPrefixCacheKey);
-            Remove(string.Format(NopCatalogCachingDefaults.ProductsByProductAtributeCacheKey, entity.Id));
+            if (entityEventType == EntityEventType.Delete)
+            {
+                RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributeMappingsPrefixCacheKey);
+                RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributeValuesAllPrefixCacheKey);
+                RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributeCombinationsAllPrefixCacheKey);
+            }
+
+            RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributesAllPrefixCacheKey);
+
+            var cacheKey = NopCatalogCachingDefaults.ProductsByProductAtributeCacheKey.FillCacheKey(entity);
+            Remove(cacheKey);
         }
     }
 }

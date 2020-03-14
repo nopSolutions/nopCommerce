@@ -56,10 +56,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding
         /// <summary>
         /// Gets name of the attribute
         /// </summary>
-        public string Name
-        {
-            get { return nameof(NopResourceDisplayNameAttribute); }
-        }
+        public string Name => nameof(NopResourceDisplayNameAttribute);
 
         #endregion
     }

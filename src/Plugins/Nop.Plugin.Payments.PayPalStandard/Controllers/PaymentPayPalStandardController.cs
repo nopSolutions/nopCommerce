@@ -22,6 +22,7 @@ using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class PaymentPayPalStandardController : BasePaymentController
     {
         #region Fields
@@ -279,7 +280,6 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
         [HttpPost]
         [AuthorizeAdmin]
-        [AdminAntiForgery]
         [Area(AreaNames.Admin)]
         public IActionResult Configure(ConfigurationModel model)
         {

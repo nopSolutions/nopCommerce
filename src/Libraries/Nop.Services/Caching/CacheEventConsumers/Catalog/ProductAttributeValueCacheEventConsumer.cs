@@ -14,10 +14,8 @@ namespace Nop.Services.Caching.CacheEventConsumers.Catalog
         /// <param name="entity">Entity</param>
         protected override void ClearCache(ProductAttributeValue entity)
         {
-            RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributesPrefixCacheKey);
-            RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributeMappingsPrefixCacheKey);
-            RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributeValuesPrefixCacheKey);
-            RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributeCombinationsPrefixCacheKey);
+            RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributesAllPrefixCacheKey);
+            RemoveByPrefix(NopCatalogCachingDefaults.ProductAttributeValuesAllPrefixCacheKey);
         }
     }
 }

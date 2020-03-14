@@ -7,11 +7,11 @@ namespace Nop.Services.Caching.Extensions
 {
     public static class IRepositoryExtensions
     {
-        public static TEntity ToCachedGetById<TEntity>(this IRepository<TEntity> repository, object id, string cacheKey = null) where TEntity : BaseEntity
+        public static TEntity ToCachedGetById<TEntity>(this IRepository<TEntity> repository, object id) where TEntity : BaseEntity
         {
             var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
 
-            return cacheManager.Get(cacheKey ?? string.Format(NopCachingDefaults.NopEntityCacheKey, typeof(TEntity).Name, id), () => repository.GetById(id));
+            return cacheManager.Get(new CacheKey(BaseEntity.GetEntityCacheKey(typeof(TEntity), id)), () => repository.GetById(id));
         }
     }
 }

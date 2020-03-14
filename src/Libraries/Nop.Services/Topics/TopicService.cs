@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
@@ -30,6 +31,7 @@ namespace Nop.Services.Topics
         private readonly IRepository<AclRecord> _aclRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IRepository<Topic> _topicRepository;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IWorkContext _workContext;
 
@@ -44,6 +46,7 @@ namespace Nop.Services.Topics
             IRepository<AclRecord> aclRepository,
             IRepository<StoreMapping> storeMappingRepository,
             IRepository<Topic> topicRepository,
+            IStaticCacheManager cacheManager,
             IStoreMappingService storeMappingService,
             IWorkContext workContext)
         {
@@ -54,6 +57,7 @@ namespace Nop.Services.Topics
             _aclRepository = aclRepository;
             _storeMappingRepository = storeMappingRepository;
             _topicRepository = topicRepository;
+            _cacheManager = cacheManager;
             _storeMappingService = storeMappingService;
             _workContext = workContext;
         }
@@ -87,9 +91,7 @@ namespace Nop.Services.Topics
             if (topicId == 0)
                 return null;
 
-            var key = string.Format(NopTopicCachingDefaults.TopicsByIdCacheKey, topicId);
-
-            return _topicRepository.ToCachedGetById(topicId, key);
+            return _topicRepository.ToCachedGetById(topicId);
         }
 
         /// <summary>
@@ -104,25 +106,32 @@ namespace Nop.Services.Topics
             if (string.IsNullOrEmpty(systemName))
                 return null;
 
-            var query = _topicRepository.Table;
-            query = query.Where(t => t.SystemName == systemName);
-            if (!showHidden)
-                query = query.Where(c => c.Published);
-            query = query.OrderBy(t => t.Id);
-            var topics = query.ToList();
-            if (storeId > 0)
-            {
-                //filter by store
-                topics = topics.Where(x => _storeMappingService.Authorize(x, storeId)).ToList();
-            }
+            var cacheKey = NopTopicCachingDefaults.TopicBySystemNameCacheKey.FillCacheKey(systemName, storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
 
-            if (!showHidden)
+            var topic = _cacheManager.Get(cacheKey, () =>
             {
-                //ACL (access control list)
-                topics = topics.Where(x => _aclService.Authorize(x)).ToList();
-            }
+                var query = _topicRepository.Table;
+                query = query.Where(t => t.SystemName == systemName);
+                if (!showHidden)
+                    query = query.Where(c => c.Published);
+                query = query.OrderBy(t => t.Id);
+                var topics = query.ToList();
+                if (storeId > 0)
+                {
+                    //filter by store
+                    topics = topics.Where(x => _storeMappingService.Authorize(x, storeId)).ToList();
+                }
 
-            return topics.FirstOrDefault();
+                if (!showHidden)
+                {
+                    //ACL (access control list)
+                    topics = topics.Where(x => _aclService.Authorize(x)).ToList();
+                }
+
+                return topics.FirstOrDefault();
+            });
+
+            return topic;
         }
 
         /// <summary>
@@ -135,8 +144,8 @@ namespace Nop.Services.Topics
         /// <returns>Topics</returns>
         public virtual IList<Topic> GetAllTopics(int storeId, bool ignorAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false)
         {
-            var key = ignorAcl ? string.Format(NopTopicCachingDefaults.TopicsAllCacheKey, storeId, showHidden, onlyIncludedInTopMenu) :
-                string.Format(NopTopicCachingDefaults.TopicsAllWithACLCacheKey, storeId, showHidden, onlyIncludedInTopMenu, string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)));
+            var key = ignorAcl ? NopTopicCachingDefaults.TopicsAllCacheKey.FillCacheKey(storeId, showHidden, onlyIncludedInTopMenu) :
+                NopTopicCachingDefaults.TopicsAllWithACLCacheKey.FillCacheKey(storeId, showHidden, onlyIncludedInTopMenu, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
 
             var query = _topicRepository.Table;
             query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);

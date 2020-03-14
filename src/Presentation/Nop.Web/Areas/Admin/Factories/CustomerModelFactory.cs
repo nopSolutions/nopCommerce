@@ -582,6 +582,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             searchModel.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             searchModel.AvatarEnabled = _customerSettings.AllowCustomersToUploadAvatars;
+            searchModel.FirstNameEnabled = _customerSettings.FirstNameEnabled;
+            searchModel.LastNameEnabled = _customerSettings.LastNameEnabled;
             searchModel.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             searchModel.CompanyEnabled = _customerSettings.CompanyEnabled;
             searchModel.PhoneEnabled = _customerSettings.PhoneEnabled;
@@ -675,7 +677,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (customer != null)
             {
                 //fill in model values from the entity
-                model = model ?? new CustomerModel();
+                model ??= new CustomerModel();
 
                 model.Id = customer.Id;
                 model.DisplayVatNumber = _taxSettings.EuVatEnabled;
@@ -766,6 +768,8 @@ namespace Nop.Web.Areas.Admin.Factories
 
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
+            model.FirstNameEnabled = _customerSettings.FirstNameEnabled;
+            model.LastNameEnabled = _customerSettings.LastNameEnabled;
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.CompanyEnabled = _customerSettings.CompanyEnabled;
@@ -919,7 +923,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (address != null)
             {
                 //fill in model values from the entity
-                model = model ?? new CustomerAddressModel();
+                model ??= new CustomerAddressModel();
 
                 //whether to fill in some of properties
                 if (!excludeProperties)

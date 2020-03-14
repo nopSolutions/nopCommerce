@@ -14,8 +14,9 @@ namespace Nop.Services.Caching.CacheEventConsumers.Vendors
         /// <param name="entity">Entity</param>
         protected override void ClearCache(VendorAttributeValue entity)
         {
-            RemoveByPrefix(NopVendorsServiceCachingDefaults.VendorAttributesPrefixCacheKey);
-            RemoveByPrefix(NopVendorsServiceCachingDefaults.VendorAttributeValuesPrefixCacheKey);
+            var cacheKey = NopVendorCachingDefaults.VendorAttributeValuesAllCacheKey.FillCacheKey(entity.VendorAttributeId);
+
+            Remove(cacheKey);
         }
     }
 }

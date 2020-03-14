@@ -57,7 +57,6 @@ namespace Nop.Web.Areas.Admin.Factories
             IPickupPluginManager pickupPluginManager,
             IPluginService pluginService,
             IShippingPluginManager shippingPluginManager,
-            IShippingService shippingService,
             IStaticCacheManager cacheManager,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             ITaxPluginManager taxPluginManager,
@@ -218,7 +217,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (pluginDescriptor != null)
             {
                 //fill in model values from the entity
-                model = model ?? pluginDescriptor.ToPluginModel(model);
+                model ??= pluginDescriptor.ToPluginModel(model);
 
                 model.LogoUrl = _pluginService.GetPluginLogoUrl(pluginDescriptor);
                 model.SelectedStoreIds = pluginDescriptor.LimitedToStores;
@@ -375,7 +374,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>List of models</returns>
         public virtual IList<AdminNavigationPluginModel> PrepareAdminNavigationPluginModels()
         {
-            var cacheKey = string.Format(NopPluginDefaults.AdminNavigationPluginsCacheKey, _workContext.CurrentCustomer.Id);
+            var cacheKey = NopPluginDefaults.AdminNavigationPluginsCacheKey.FillCacheKey(_workContext.CurrentCustomer.Id);
             return _cacheManager.Get(cacheKey, () =>
             {
                 //get installed plugins

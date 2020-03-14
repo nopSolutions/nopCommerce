@@ -14,7 +14,8 @@ namespace Nop.Services.Caching.CacheEventConsumers.Common
         /// <param name="entity">Entity</param>
         protected override void ClearCache(GenericAttribute entity)
         {
-            RemoveByPrefix(NopCommonCachingDefaults.GenericAttributePrefixCacheKey);
+            var cacheKey = NopCommonCachingDefaults.GenericAttributeCacheKey.FillCacheKey(entity.EntityId, entity.KeyGroup);
+            Remove(cacheKey);
         }
     }
 }

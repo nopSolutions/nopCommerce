@@ -44,13 +44,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Parames
         /// </summary>
-        public NameValueCollection Params
-        {
-            get
-            {
-                return _inputValues;
-            }
-        }
+        public NameValueCollection Params => _inputValues;
 
         /// <summary>
         /// Creates a new instance of the RemotePost class

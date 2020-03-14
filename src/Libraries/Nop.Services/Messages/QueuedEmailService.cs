@@ -187,6 +187,31 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
+        /// Deletes already sent emails
+        /// </summary>
+        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
+        /// <returns>Number of deleted emails</returns>
+        public virtual int DeleteAlreadySentEmails(DateTime? createdFromUtc, DateTime? createdToUtc)
+        {
+            var query = _queuedEmailRepository.Table;
+
+            // only sent emails
+            query = query.Where(qe => qe.SentOnUtc.HasValue);
+
+            if (createdFromUtc.HasValue)
+                query = query.Where(qe => qe.CreatedOnUtc >= createdFromUtc);
+            if (createdToUtc.HasValue)
+                query = query.Where(qe => qe.CreatedOnUtc <= createdToUtc);
+
+            var emails = query.ToArray();
+
+            DeleteQueuedEmails(emails);
+
+            return emails.Length;
+        }
+
+        /// <summary>
         /// Delete all queued emails
         /// </summary>
         public virtual void DeleteAllEmails()

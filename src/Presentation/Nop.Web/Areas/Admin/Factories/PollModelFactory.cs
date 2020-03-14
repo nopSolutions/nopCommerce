@@ -24,7 +24,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILanguageService _languageService;
-        private readonly ILocalizationService _localizationService;
         private readonly IPollService _pollService;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
 
@@ -36,7 +35,6 @@ namespace Nop.Web.Areas.Admin.Factories
             IBaseAdminModelFactory baseAdminModelFactory,
             IDateTimeHelper dateTimeHelper,
             ILanguageService languageService,
-            ILocalizationService localizationService,
             IPollService pollService,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory)
         {
@@ -44,7 +42,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory = baseAdminModelFactory;
             _dateTimeHelper = dateTimeHelper;
             _languageService = languageService;
-            _localizationService = localizationService;
             _pollService = pollService;
             _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
         }
@@ -151,7 +148,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (poll != null)
             {
                 //fill in model values from the entity
-                model = model ?? poll.ToModel<PollModel>();
+                model ??= poll.ToModel<PollModel>();
 
                 model.StartDateUtc = poll.StartDateUtc;
                 model.EndDateUtc = poll.EndDateUtc;

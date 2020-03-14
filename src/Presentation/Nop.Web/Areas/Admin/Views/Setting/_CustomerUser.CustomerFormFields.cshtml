@@ -2,6 +2,10 @@
 
 <script>
     $(document).ready(function () {
+        $("#@Html.IdFor(model => model.CustomerSettings.FirstNameEnabled)").click(toggleCustomerRequiredFormField);
+        $("#@Html.IdFor(model => model.CustomerSettings.FirstNameRequired)").click(toggleCustomerRequiredFormField);
+        $("#@Html.IdFor(model => model.CustomerSettings.LastNameEnabled)").click(toggleCustomerRequiredFormField);
+        $("#@Html.IdFor(model => model.CustomerSettings.LastNameRequired)").click(toggleCustomerRequiredFormField);
         $("#@Html.IdFor(model => model.CustomerSettings.DateOfBirthEnabled)").click(toggleCustomerRequiredFormField);
         $("#@Html.IdFor(model => model.CustomerSettings.DateOfBirthRequired)").click(toggleCustomerRequiredFormField);
         $("#@Html.IdFor(model => model.CustomerSettings.CountryEnabled)").click(toggleCustomerCountryFormField);
@@ -46,6 +50,18 @@
     }
 
     function toggleCustomerRequiredFormField() {
+        if ($('#@Html.IdFor(model => model.CustomerSettings.FirstNameEnabled)').is(':checked')) {
+            $('#pnlCustomerFirstNameRequired').show();
+        } else {
+            $('#pnlCustomerFirstNameRequired').hide();
+        }
+
+        if ($('#@Html.IdFor(model => model.CustomerSettings.LastNameEnabled)').is(':checked')) {
+            $('#pnlCustomerLastNameRequired').show();
+        } else {
+            $('#pnlCustomerLastNameRequired').hide();
+        }
+
         if ($('#@Html.IdFor(model => model.CustomerSettings.DateOfBirthEnabled)').is(':checked')) {
             $('#pnlCustomerDateOfBirthRequired').show();
         } else {
@@ -140,6 +156,46 @@
                 <span asp-validation-for="CustomerSettings.GenderEnabled"></span>
             </div>
         </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="CustomerSettings.FirstNameEnabled" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CustomerSettings.FirstNameEnabled" />
+                <span asp-validation-for="CustomerSettings.FirstNameEnabled"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="CustomerSettings.FirstNameEnabled">
+            <div class="form-group" id="pnlCustomerFirstNameRequired">
+                <div class="col-md-3">
+                    <nop-label asp-for="CustomerSettings.FirstNameRequired" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CustomerSettings.FirstNameRequired" />
+                    <span asp-validation-for="CustomerSettings.FirstNameRequired"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="CustomerSettings.LastNameEnabled" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="CustomerSettings.LastNameEnabled" />
+                <span asp-validation-for="CustomerSettings.LastNameEnabled"></span>
+            </div>
+        </div>
+        <nop-nested-setting asp-for="CustomerSettings.LastNameEnabled">
+            <div class="form-group" id="pnlCustomerLastNameRequired">
+                <div class="col-md-3">
+                    <nop-label asp-for="CustomerSettings.LastNameRequired" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="CustomerSettings.LastNameRequired" />
+                    <span asp-validation-for="CustomerSettings.LastNameRequired"></span>
+                </div>
+            </div>
+        </nop-nested-setting>
         <div class="form-group">
             <div class="col-md-3">
                 <nop-label asp-for="CustomerSettings.DateOfBirthEnabled" />

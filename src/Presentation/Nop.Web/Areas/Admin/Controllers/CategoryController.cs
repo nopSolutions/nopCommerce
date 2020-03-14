@@ -13,8 +13,8 @@ using Nop.Services.Discounts;
 using Nop.Services.ExportImport;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.Messages;
 using Nop.Services.Media;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
@@ -456,7 +456,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 var bytes = _exportManager
-                    .ExportCategoriesToXlsx(_categoryService.GetAllCategories(showHidden: true, loadCacheableCopy: false).ToList());
+                    .ExportCategoriesToXlsx(_categoryService.GetAllCategories(showHidden: true).ToList());
 
                 return File(bytes, MimeTypes.TextXlsx, "categories.xlsx");
             }

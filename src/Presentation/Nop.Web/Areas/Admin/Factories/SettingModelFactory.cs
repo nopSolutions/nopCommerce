@@ -476,8 +476,6 @@ namespace Nop.Web.Areas.Admin.Factories
             {
                 EncryptionKey = securitySettings.EncryptionKey,
                 ForceSslForAllPages = securitySettings.ForceSslForAllPages,
-                EnableXsrfProtectionForAdminArea = securitySettings.EnableXsrfProtectionForAdminArea,
-                EnableXsrfProtectionForPublicStore = securitySettings.EnableXsrfProtectionForPublicStore,
                 HoneypotEnabled = securitySettings.HoneypotEnabled
             };
 
@@ -1402,7 +1400,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             if (gdprConsent != null)
             {
-                model = model ?? gdprConsent.ToModel<GdprConsentModel>();
+                model ??= gdprConsent.ToModel<GdprConsentModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

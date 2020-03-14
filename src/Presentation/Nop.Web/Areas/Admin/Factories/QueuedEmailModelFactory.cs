@@ -133,7 +133,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in model values from the entity
-            model = model ?? queuedEmail.ToModel<QueuedEmailModel>();
+            model ??= queuedEmail.ToModel<QueuedEmailModel>();
 
             model.EmailAccountName = _emailAccountService.GetEmailAccountById(queuedEmail.EmailAccountId)?.FriendlyName ?? string.Empty;
             model.PriorityName = _localizationService.GetLocalizedEnum(queuedEmail.Priority);
