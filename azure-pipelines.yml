@@ -33,6 +33,7 @@ stages:
       displayName: 'Restore project dependencies'
       inputs:
         command: 'restore'
+        arguments: '--verbosity detailed'
         projects: '**/*.csproj'
 
     - task: DotNetCoreCLI@2
