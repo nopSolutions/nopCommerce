@@ -3,7 +3,7 @@ trigger:
 
 variables:
   buildConfiguration: 'Release'
-  dotnetSdkVersion: '3.1.100'
+  dotnetSdkVersion: '3.1.102'
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
 
