@@ -120,7 +120,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get blog posts
             var blogPosts = _blogService.GetAllBlogPosts(storeId: searchModel.SearchStoreId, showHidden: true,
-                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize, title : searchModel.SearchTitle);
 
             //prepare list model
             var model = new BlogPostListModel().PrepareToGrid(searchModel, blogPosts, () =>

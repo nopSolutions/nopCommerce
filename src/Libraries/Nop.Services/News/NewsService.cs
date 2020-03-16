@@ -95,13 +95,18 @@ namespace Nop.Services.News
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="title">Filter by news item title</param>
         /// <returns>News items</returns>
         public virtual IPagedList<NewsItem> GetAllNews(int languageId = 0, int storeId = 0,
-            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string title = null)
         {
             var query = _newsItemRepository.Table;
             if (languageId > 0)
                 query = query.Where(n => languageId == n.LanguageId);
+
+            if (!string.IsNullOrEmpty(title))
+                query = query.Where(n => n.Title.Contains(title));
+
             if (!showHidden)
             {
                 var utcNow = DateTime.UtcNow;

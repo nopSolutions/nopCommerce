@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
@@ -109,6 +110,23 @@ namespace Nop.Web.Areas.Admin.Factories
 
             searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
+            //prepare "published" filter (0 - all; 1 - published only; 2 - unpublished only)
+            searchModel.AvailablePublishedOptions.Add(new SelectListItem
+            {
+                Value = "0",
+                Text = _localizationService.GetResource("Admin.Catalog.Manufacturers.List.SearchPublished.All")
+            });
+            searchModel.AvailablePublishedOptions.Add(new SelectListItem
+            {
+                Value = "1",
+                Text = _localizationService.GetResource("Admin.Catalog.Manufacturers.List.SearchPublished.PublishedOnly")
+            });
+            searchModel.AvailablePublishedOptions.Add(new SelectListItem
+            {
+                Value = "2",
+                Text = _localizationService.GetResource("Admin.Catalog.Manufacturers.List.SearchPublished.UnpublishedOnly")
+            });
+
             //prepare page parameters
             searchModel.SetGridPageSize();
 
@@ -129,7 +147,8 @@ namespace Nop.Web.Areas.Admin.Factories
             var manufacturers = _manufacturerService.GetAllManufacturers(showHidden: true,
                 manufacturerName: searchModel.SearchManufacturerName,
                 storeId: searchModel.SearchStoreId,
-                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize,
+                overridePublished: searchModel.SearchPublishedId == 0 ? null : (bool?)(searchModel.SearchPublishedId == 1));
 
             //prepare grid model
             var model = new ManufacturerListModel().PrepareToGrid(searchModel, manufacturers, () =>

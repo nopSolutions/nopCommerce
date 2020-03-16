@@ -1,4 +1,5 @@
 ﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Catalog
 {
@@ -7,5 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
     /// </summary>
     public partial class ProductTagSearchModel : BaseSearchModel
     {
+        [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.SearchTagName")]
+        public string SearchTagName { get; set; }
     }
 }

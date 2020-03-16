@@ -1536,7 +1536,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get product tags
-            var productTags = _productTagService.GetAllProductTags()
+            var productTags = _productTagService.GetAllProductTags(tagName : searchModel.SearchTagName)
                 .OrderByDescending(tag => _productTagService.GetProductCount(tag.Id, storeId: 0, showHidden: true)).ToList()
                 .ToPagedList(searchModel);
 
