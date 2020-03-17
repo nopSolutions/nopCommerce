@@ -1,18 +1,18 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
-using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Indexes
 {
-    [NopMigration("2019/12/19 11:35:09:1647934")]
+    [NopMigration("2020/03/13 11:35:09:1647934")]
     public class AddCategorSubjectToAclIX : AutoReversingMigration
     {
         #region Methods
 
         public override void Up()
         {
-            this.AddIndex("IX_Category_SubjectToAcl", nameof(Category), i => i.Ascending(),
-                nameof(Category.SubjectToAcl));
+            Create.Index("IX_Category_SubjectToAcl").OnTable(nameof(Category))
+                .OnColumn(nameof(Category.SubjectToAcl)).Ascending()
+                .WithOptions().NonClustered();
         }
 
         #endregion

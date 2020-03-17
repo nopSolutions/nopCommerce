@@ -55,7 +55,7 @@ namespace Nop.Services.Installation
         #region Fields
 
         private readonly IAddressService _addressService;
-        private readonly IDataProvider _dataProvider;
+        private readonly INopDataProvider _dataProvider;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly INopFileProvider _fileProvider;
         private readonly IRepository<ActivityLog> _activityLogRepository;
@@ -122,7 +122,7 @@ namespace Nop.Services.Installation
         #region Ctor
 
         public CodeFirstInstallationService(IAddressService addressService,
-            IDataProvider dataProvider,
+            INopDataProvider dataProvider,
             IGenericAttributeService genericAttributeService,
             INopFileProvider fileProvider,
             IRepository<ActivityLog> activityLogRepository,
@@ -267,10 +267,10 @@ namespace Nop.Services.Installation
 
         protected virtual SpecificationAttributeOption GetSpecificationAttributeOption(string specAttributeName, string specAttributeOptionName)
         {
-            var specificationAttribute = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize");
+            var specificationAttribute = _specificationAttributeRepository.Table.Single(sa => sa.Name == specAttributeName);
 
             var specificationAttributeOption = _specificationAttributeOptionRepository.Table.Single(sao =>
-                sao.Name == "13.0''" && sao.SpecificationAttributeId == specificationAttribute.Id);
+                sao.Name == specAttributeOptionName && sao.SpecificationAttributeId == specificationAttribute.Id);
 
             return specificationAttributeOption;
         }

@@ -29,7 +29,7 @@ namespace Nop.Services.Customers
 
         private readonly CustomerSettings _customerSettings;
         private readonly ICacheManager _cacheManager;
-        private readonly IDataProvider _dataProvider;
+        private readonly INopDataProvider _dataProvider;
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IRepository<Address> _customerAddressRepository;
@@ -49,7 +49,7 @@ namespace Nop.Services.Customers
 
         public CustomerService(CustomerSettings customerSettings,
             ICacheManager cacheManager,
-            IDataProvider dataProvider,
+            INopDataProvider dataProvider,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             IRepository<Address> customerAddressRepository,
@@ -602,8 +602,7 @@ namespace Nop.Services.Customers
             var pTotalRecordsDeleted = SqlParameterHelper.GetOutputInt32Parameter("TotalRecordsDeleted");
 
             //invoke stored procedure
-            _dataProvider.Query<object>("EXEC [DeleteGuests] @OnlyWithoutShoppingCart, @CreatedFromUtc, @CreatedToUtc, @TotalRecordsDeleted OUTPUT",
-                pOnlyWithoutShoppingCart,
+            _customerRepository.EntityFromSql("DeleteGuests", pOnlyWithoutShoppingCart,
                 pCreatedFromUtc,
                 pCreatedToUtc,
                 pTotalRecordsDeleted);
@@ -1087,7 +1086,7 @@ namespace Nop.Services.Customers
 
             var key = NopCustomerServiceCachingDefaults.CustomerRolesCacheKey.FillCacheKey(customer, showHidden);
 
-            return query.ToCachedList(key);
+            return _cacheManager.Get(key, () => query.ToList());
         }
 
         /// <summary>

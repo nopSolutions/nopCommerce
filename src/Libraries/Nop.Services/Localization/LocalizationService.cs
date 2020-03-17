@@ -32,7 +32,7 @@ namespace Nop.Services.Localization
     {
         #region Fields
 
-        private readonly IDataProvider _dataProvider;
+        private readonly INopDataProvider _dataProvider;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
@@ -47,7 +47,7 @@ namespace Nop.Services.Localization
 
         #region Ctor
 
-        public LocalizationService(IDataProvider dataProvider,
+        public LocalizationService(INopDataProvider dataProvider,
             IEventPublisher eventPublisher,
             ILanguageService languageService,
             ILocalizedEntityService localizedEntityService,
@@ -127,6 +127,41 @@ namespace Nop.Services.Localization
             {
                 _eventPublisher.EntityUpdated(resource);
             }
+        }
+
+        protected virtual HashSet<(string name, string value)> LoadLocaleResourcesFromStream(StreamReader xmlStreamReader, string language)
+        {
+            var result = new HashSet<(string name, string value)>();
+
+            using (var xmlReader = XmlReader.Create(xmlStreamReader))
+            {
+                while (xmlReader.ReadToFollowing("Language"))
+                {
+                    if (xmlReader.NodeType == XmlNodeType.Element && string.Equals(xmlReader.GetAttribute("Name"), language, StringComparison.OrdinalIgnoreCase))
+                    {
+                        using (var languageReader = xmlReader.ReadSubtree())
+                        {
+                            while (languageReader.ReadToFollowing("LocaleResource"))
+                            {
+                                if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.GetAttribute("Name") is string name)
+                                {
+                                    using (var lrReader = languageReader.ReadSubtree())
+                                    {
+                                        if (lrReader.ReadToFollowing("Value") && lrReader.NodeType == XmlNodeType.Element)
+                                        {
+                                            result.Add((name, lrReader.ReadString()));
+                                        } 
+                                    }
+                                }
+                            }
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            return result;
         }
 
         private static Dictionary<string, KeyValuePair<int, string>> ResourceValuesToDictionary(IEnumerable<LocaleStringResource> locales)
@@ -344,7 +379,7 @@ namespace Nop.Services.Localization
                     result = lsr;
             }
 
-            if (!string.IsNullOrEmpty(result)) 
+            if (!string.IsNullOrEmpty(result))
                 return result;
 
             if (logIfNotFound)
@@ -410,21 +445,31 @@ namespace Nop.Services.Localization
             if (xmlStreamReader.EndOfStream)
                 return;
 
-            ////stored procedures are enabled and supported by the database.
-            var pLanguageId = SqlParameterHelper.GetInt32Parameter("LanguageId", language.Id);
+            var lsNamesList = _lsrRepository.Table.Select(x => x.ResourceName).ToHashSet();
 
-            var pXmlPackage = new DataParameter
+            var lrsToUpdateList = new List<LocaleStringResource>();
+            var lrsToInsertList = new List<LocaleStringResource>();
+
+            foreach (var (name, value) in LoadLocaleResourcesFromStream(xmlStreamReader, language.Name))
             {
-                Name = "XmlPackage",
-                Value = new SqlXml(XmlReader.Create(xmlStreamReader)),
-                DataType = DataType.Xml
-            };
+                var lsr = new LocaleStringResource { LanguageId = language.Id, ResourceName = name, ResourceValue = value };
+                if (lsNamesList.Contains(name))
+                {
+                    if (updateExistingResources)
+                        lrsToUpdateList.Add(lsr);
+                }
+                else
+                {
+                    lrsToInsertList.Add(lsr);
+                }
+            }
 
-            var pUpdateExistingResources = SqlParameterHelper.GetBooleanParameter("UpdateExistingResources", updateExistingResources);
-
-            //long-running query. specify timeout (600 seconds)
-            _dataProvider.Query<object>("EXEC [LanguagePackImport] @LanguageId, @XmlPackage, @UpdateExistingResources",
-                pLanguageId, pXmlPackage, pUpdateExistingResources);
+            foreach (var lrsToUpdate in lrsToUpdateList)
+            {
+                _lsrRepository.Update(lrsToUpdate);
+            }
+            
+            _lsrRepository.Insert(lrsToInsertList);
 
             //clear cache
             _cacheManager.RemoveByPrefix(NopLocalizationCachingDefaults.LocaleStringResourcesPrefixCacheKey);
@@ -484,7 +529,7 @@ namespace Nop.Services.Localization
             }
 
             //set default value if required
-            if (!string.IsNullOrEmpty(resultStr) || !returnDefaultValue) 
+            if (!string.IsNullOrEmpty(resultStr) || !returnDefaultValue)
                 return result;
             var localizer = keySelector.Compile();
             result = localizer(entity);

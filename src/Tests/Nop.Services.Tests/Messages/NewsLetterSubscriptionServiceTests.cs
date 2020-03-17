@@ -14,7 +14,7 @@ namespace Nop.Services.Tests.Messages
     public class NewsLetterSubscriptionServiceTests : ServiceTest
     {
         private Mock<IEventPublisher> _eventPublisher;
-        private Mock<IDataProvider> _dataProvider;
+        private Mock<INopDataProvider> _dataProvider;
         private Mock<IRepository<NewsLetterSubscription>> _newsLetterSubscriptionRepository;
         private Mock<IRepository<Customer>> _customerRepository;
         private Mock<IRepository<CustomerCustomerRoleMapping>> _customerCustomerRoleMappingRepository;
@@ -23,7 +23,7 @@ namespace Nop.Services.Tests.Messages
         [SetUp]
         public new void SetUp()
         {
-            _dataProvider=new Mock<IDataProvider>();
+            _dataProvider=new Mock<INopDataProvider>();
             _eventPublisher = new Mock<IEventPublisher>();
             _newsLetterSubscriptionRepository = new Mock<IRepository<NewsLetterSubscription>>();
             _customerRepository = new Mock<IRepository<Customer>>();
@@ -37,7 +37,7 @@ namespace Nop.Services.Tests.Messages
         [Test]
         public void VerifyActiveInsertTriggersSubscribeEvent()
         {
-            var service = new NewsLetterSubscriptionService(_customerService.Object, _dataProvider.Object, _eventPublisher.Object,
+            var service = new NewsLetterSubscriptionService(_customerService.Object, _eventPublisher.Object,
                 _customerRepository.Object, _customerCustomerRoleMappingRepository.Object, _newsLetterSubscriptionRepository.Object);
 
             var subscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };
@@ -52,7 +52,7 @@ namespace Nop.Services.Tests.Messages
         [Test]
         public void VerifyDeleteTriggersUnsubscribeEvent()
         {
-            var service = new NewsLetterSubscriptionService(_customerService.Object, _dataProvider.Object, _eventPublisher.Object,
+            var service = new NewsLetterSubscriptionService(_customerService.Object, _eventPublisher.Object,
                 _customerRepository.Object, _customerCustomerRoleMappingRepository.Object, _newsLetterSubscriptionRepository.Object);
 
             var subscription = new NewsLetterSubscription { Active = true, Email = "test@test.com" };
@@ -67,7 +67,7 @@ namespace Nop.Services.Tests.Messages
         [Test]
         public void VerifyInsertEventIsFired()
         {
-            var service = new NewsLetterSubscriptionService(_customerService.Object, _dataProvider.Object, _eventPublisher.Object,
+            var service = new NewsLetterSubscriptionService(_customerService.Object, _eventPublisher.Object,
                 _customerRepository.Object, _customerCustomerRoleMappingRepository.Object, _newsLetterSubscriptionRepository.Object);
 
             var subscription = new NewsLetterSubscription {Email = "test@test.com"};

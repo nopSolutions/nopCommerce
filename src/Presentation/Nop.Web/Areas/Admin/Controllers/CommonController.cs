@@ -33,7 +33,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         private readonly ICommonModelFactory _commonModelFactory;
         private readonly ICustomerService _customerService;
-        private readonly IDataProvider _dataProvider;
+        private readonly INopDataProvider _dataProvider;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -54,7 +54,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         public CommonController(ICommonModelFactory commonModelFactory,
             ICustomerService customerService,
-            IDataProvider dataProvider,
+            INopDataProvider dataProvider,
             IDateTimeHelper dateTimeHelper,
             ILanguageService languageService,
             ILocalizationService localizationService,
@@ -217,7 +217,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             try
             {
-                _dataProvider.BackupDatabase(_maintenanceService.GetNewBackupFilePath());
+                _dataProvider.BackupDatabase(_maintenanceService.CreateNewBackupFilePath());
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.BackupCreated"));
             }
             catch (Exception exc)

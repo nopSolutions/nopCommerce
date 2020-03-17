@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Forums
 {
     public partial class ForumGroupValidator : BaseNopValidator<ForumGroupModel>
     {
-        public ForumGroupValidator(IDataProvider dataProvider, ILocalizationService localizationService)
+        public ForumGroupValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Fields.Name.Required"));
 

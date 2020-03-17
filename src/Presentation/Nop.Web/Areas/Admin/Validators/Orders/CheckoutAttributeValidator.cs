@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Orders
 {
     public partial class CheckoutAttributeValidator : BaseNopValidator<CheckoutAttributeModel>
     {
-        public CheckoutAttributeValidator(IDataProvider dataProvider, ILocalizationService localizationService)
+        public CheckoutAttributeValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Fields.Name.Required"));
 

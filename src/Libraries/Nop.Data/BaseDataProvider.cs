@@ -1,195 +1,247 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using System.Data;
 using System.Linq;
-using System.Reflection;
-using FluentMigrator;
-using FluentMigrator.Runner;
-using FluentMigrator.Runner.Exceptions;
+using System.Linq.Expressions;
 using LinqToDB;
 using LinqToDB.Data;
+using LinqToDB.DataProvider;
 using LinqToDB.Mapping;
+using LinqToDB.Tools;
 using Nop.Core;
 using Nop.Core.Infrastructure;
-using Nop.Data.Migrations;
+using Nop.Data.Mapping;
 
 namespace Nop.Data
 {
-    /// <summary>
-    /// Represents a base data provider
-    /// </summary>
-    public abstract partial class BaseDataProvider
+    public abstract class BaseDataProvider
     {
-        #region Utilities
+        public abstract IDbConnection CreateDbConnection(string connectionString = null);
+
+        #region Utils
+
+        private void UpdateParameterValue(DataConnection dataConnection, DataParameter parameter)
+        {
+            if (dataConnection is null)
+                throw new ArgumentNullException(nameof(dataConnection));
+
+            if (parameter is null)
+                throw new ArgumentNullException(nameof(parameter));
+
+            if (dataConnection.Command is IDbCommand command &&
+                command.Parameters.Count > 0 &&
+                command.Parameters.Contains(parameter.Name) &&
+                command.Parameters[parameter.Name] is IDbDataParameter param)
+            {
+                parameter.Value = param.Value;
+            }
+        }
+
+        private void UpdateOutputParameters(DataConnection dataConnection, DataParameter[] dataParameters)
+        {
+            if (dataParameters is null || dataParameters.Length == 0)
+                return;
+
+            foreach (var dataParam in dataParameters.Where(p => p.Direction == ParameterDirection.Output))
+            {
+                UpdateParameterValue(dataConnection, dataParam);
+            }
+        }
 
         /// <summary>
-        /// Configure the data context
+        /// Creates the database connection
         /// </summary>
-        /// <param name="dataContext">Data context</param>
-        protected abstract void ConfigureDataContext(IDataContext dataContext);
+        protected virtual DataConnection CreateDataConnection()
+        {
+            return CreateDataConnection(LinqToDbDataProvider);
+        }
+
+        /// <summary>
+        /// Creates the database connection
+        /// </summary>
+        /// <param name="dataProvider">Data provider</param>
+        /// <returns>Database connection</returns>
+        protected virtual DataConnection CreateDataConnection(IDataProvider dataProvider)
+        {
+            if (dataProvider is null)
+                throw new ArgumentNullException(nameof(dataProvider));
+
+            var dataContext = new DataConnection(dataProvider, CreateDbConnection());
+            dataContext.AddMappingSchema(AdditionalSchema);
+
+            return dataContext;
+        }
 
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Create database schema if it not exists
-        /// </summary>
-        /// <param name="assembly">Assembly to find the mapping configurations classes;
-        /// leave null to search mapping configurations classes on the whole application pull</param>
-        public virtual void CreateDatabaseSchemaIfNotExists(Assembly assembly = null)
-        {
-            DataConnection.DefaultSettings = Singleton<DataSettings>.Instance;
-
-            using var currentConnection = new NopDataConnection();
-            ConfigureDataContext(currentConnection);
-
-            //find database mapping configuration by other assemblies
-            var typeFinder = new AppDomainTypeFinder();
-
-            var typeConfigurations = assembly != null
-                ? typeFinder.FindClassesOfType<IMappingConfiguration>(new List<Assembly> { assembly }).ToList()
-                : typeFinder.FindClassesOfType<IMappingConfiguration>().ToList();
-
-            foreach (var typeConfiguration in typeConfigurations)
-            {
-                var mappingConfiguration = (IMappingConfiguration)Activator.CreateInstance(typeConfiguration);
-                mappingConfiguration.CreateTableIfNotExists(currentConnection);
-            }
-        }
-
-        /// <summary>
-        /// Delete database schema if it exists
-        /// </summary>
-        /// <param name="assembly">Assembly to find the mapping configurations classes;
-        /// leave null to search mapping configurations classes on the whole application pull</param>
-        public virtual void DeleteDatabaseSchemaIfExists(Assembly assembly = null)
-        {
-            //find database mapping configuration by other assemblies
-            var typeFinder = new AppDomainTypeFinder();
-
-            var typeConfigurations = assembly != null
-                ? typeFinder.FindClassesOfType<IMappingConfiguration>(new List<Assembly> { assembly }).ToList()
-                : typeFinder.FindClassesOfType<IMappingConfiguration>().ToList();
-
-            //delete tables
-            foreach (var mappingConfiguration in typeConfigurations)
-            {
-                (EngineContext.Current.ResolveUnregistered(mappingConfiguration) as IMappingConfiguration)
-                    ?.DeleteTableIfExists();
-            }
-        }
-
-        /// <summary>
-        /// Executes all found (and unapplied) migrations
-        /// </summary>
-        /// <param name="assembly">Assembly to find the migration;
-        /// leave null to search migration on the whole application pull</param>
-        public virtual void ApplyUpMigrations(Assembly assembly = null)
-        {
-            var runner = EngineContext.Current.Resolve<IMigrationRunner>();
-
-            //find database mapping configuration by other assemblies
-            var typeFinder = new AppDomainTypeFinder();
-            var migrations = (assembly == null ? typeFinder.FindClassesOfType<AutoReversingMigration>() : typeFinder.FindClassesOfType<AutoReversingMigration>(new List<Assembly> { assembly }))
-                .Select(migration => migration
-                    .GetCustomAttributes(typeof(MigrationAttribute), false)
-                    .OfType<MigrationAttribute>()
-                    .FirstOrDefault()).Where(migration => migration != null && runner.HasMigrationsToApplyUp(migration.Version)).OrderBy(migration => migration.Version)
-                .ToList();
-
-            foreach (var migration in migrations)
-            {
-                try
-                {
-                    runner.MigrateUp(migration.Version);
-                }
-                catch (MissingMigrationsException)
-                {
-                    // ignore
-                }
-                catch (Exception ex)
-                {
-                    if (!(ex.InnerException is SqlException))
-                        throw;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Executes an Down migration
-        /// </summary>
-        /// <param name="assembly">Assembly to find the migration;
-        /// leave null to search migration on the whole application pull</param>
-        public virtual void ApplyDownMigrations(Assembly assembly = null)
-        {
-            //do not inject services via constructor because it'll cause installation fails
-            var migrationRunner = EngineContext.Current.Resolve<IMigrationRunner>();
-            var migrationVersionInfoRepository = EngineContext.Current.Resolve<IRepository<MigrationVersionInfo>>();
-            var typeFinder = new AppDomainTypeFinder();
-
-            //executes a Down migrations
-            foreach (var migration in assembly == null ? typeFinder.FindClassesOfType<Migration>() : typeFinder.FindClassesOfType<Migration>(new[] { assembly }))
-            {
-                try
-                {
-                    var migrationAttribute = migration
-                        .GetCustomAttributes(typeof(MigrationAttribute), false)
-                        .OfType<MigrationAttribute>()
-                        .FirstOrDefault();
-
-                    foreach (var migrationVersionInfo in migrationVersionInfoRepository.Table.Where(p => p.Version == migrationAttribute.Version).ToList())
-                    {
-                        migrationVersionInfoRepository.Delete(migrationVersionInfo);
-                    }
-
-                    var downMigration = EngineContext.Current.ResolveUnregistered(migration) as IMigration;
-                    migrationRunner.Down(downMigration);
-                }
-                catch
-                {
-                    // ignored
-                }
-            }
-        }
-
-        /// <summary>
-        /// Returns mapped entity descriptor
-        /// </summary>
-        /// <typeparam name="TEntity">Type of entity</typeparam>
-        /// <returns>Mapped entity descriptor</returns>
-        public virtual EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity 
-        {
-            using var currentConnection = new NopDataConnection();
-            return currentConnection.MappingSchema.GetEntityDescriptor(typeof(TEntity));
-        }
-
-        /// <summary>
-        /// Loads the original copy of the entity
+        /// Returns mapped entity descriptor.
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <param name="entity">Entity</param>
-        /// <returns>Copy of the passed entity</returns>
-        public virtual TEntity LoadOriginalCopy<TEntity>(TEntity entity) where TEntity : BaseEntity
+        /// <returns>Mapping descriptor</returns>
+        public EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity
         {
-            using var currentConnection = new NopDataConnection();
-            var entities = currentConnection.GetTable<TEntity>();
-
-            return entities.FirstOrDefault(e => e.Id == Convert.ToInt32(entity.Id));
+            return AdditionalSchema?.GetEntityDescriptor(typeof(TEntity));
         }
 
         /// <summary>
-        /// Insert a new entity
+        /// Returns queryable source for specified mapping class for current connection,
+        /// mapped to database table or view.
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <param name="entity">Entity</param>
-        /// <returns>Entity</returns>
-        public virtual TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
+        /// <returns>Queryable source</returns>
+        public virtual ITable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity
         {
-            using var currentConnection = new NopDataConnection();
-            entity.Id = currentConnection.InsertWithInt32Identity(entity);
+            return new DataContext(LinqToDbDataProvider, CurrentConnectionString) {MappingSchema = AdditionalSchema}
+                .GetTable<TEntity>();
+        }
 
-            return entity;
+        /// <summary>
+        /// Inserts record into table. Returns inserted entity with identity
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns>Inserted entity</returns>
+        public TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
+        {
+            using (var dataContext = CreateDataConnection())
+            {
+                entity.Id = dataContext.InsertWithInt32Identity(entity);
+                return entity;
+            }
+        }
+
+        /// <summary>
+        /// Updates record in table, using values from entity parameter. 
+        /// Record to update identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entity">Entity with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public void UpdateEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
+        {
+            using (var dataContext = CreateDataConnection())
+            {
+                dataContext.Update(entity);
+            }
+        }
+
+        /// <summary>
+        /// Deletes record in table. Record to delete identified
+        /// by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entity">Entity for delete operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public void DeleteEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
+        {
+            using (var dataContext = CreateDataConnection())
+            {
+                dataContext.Delete(entity);
+            }
+        }
+
+        /// <summary>
+        /// Performs delete records in a table
+        /// </summary>
+        /// <param name="entities">Entities for delete operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public void BulkDeleteEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        {
+            using (var dataContext = CreateDataConnection())
+            {
+                dataContext.GetTable<TEntity>()
+                    .Where(e => e.Id.In(entities.Select(x => x.Id)))
+                    .Delete();
+            }
+        }
+
+        /// <summary>
+        /// Performs delete records in a table by a condition
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public void BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
+        {
+            using (var dataContext = CreateDataConnection())
+            {
+                dataContext.GetTable<TEntity>()
+                    .Where(predicate)
+                    .Delete();
+            }
+        }
+
+        /// <summary>
+        /// Performs bulk insert operation for entity colllection.
+        /// </summary>
+        /// <param name="entities">Entities for insert operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        public void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        {
+            using (var dataContext = CreateDataConnection(LinqToDbDataProvider))
+            {
+                dataContext.BulkCopy(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
+            }
+        }
+
+        /// <summary>
+        /// Executes command returns number of affected records.
+        /// </summary>
+        /// <param name="sqlStatement">Command text</param>
+        /// <param name="dataParameters">Command parameters</param>
+        /// <returns>Number of records, affected by command execution.</returns>
+        public int ExecuteNonQuery(string sqlStatement, params DataParameter[] dataParameters)
+        {
+            using (var dataContext = CreateDataConnection())
+            {
+                var command = new CommandInfo(dataContext, sqlStatement, dataParameters);
+                var affectedRecords = command.Execute();
+
+                UpdateOutputParameters(dataContext, dataParameters);
+
+                return affectedRecords;
+            }
+        }
+
+        /// <summary>
+        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
+        /// single value
+        /// </summary>
+        /// <typeparam name="T">Result record type</typeparam>
+        /// <param name="procedureName">Procedure name</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Resulting value</returns>
+        public T ExecuteStoredProcedure<T>(string procedureName, params DataParameter[] parameters)
+        {
+            using (var dataContext = CreateDataConnection())
+            {
+                var command = new CommandInfo(dataContext, procedureName, parameters);
+
+                var result = command.ExecuteProc<T>();
+                UpdateOutputParameters(dataContext, parameters);
+
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
+        /// number of affected records.
+        /// </summary>
+        /// <param name="procedureName">Procedure name</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Number of records, affected by command execution.</returns>
+        public int ExecuteStoredProcedure(string procedureName, params DataParameter[] parameters)
+        {
+            using (var dataContext = CreateDataConnection())
+            {
+                var command = new CommandInfo(dataContext, procedureName, parameters);
+
+                var affectedRecords = command.ExecuteProc();
+                UpdateOutputParameters(dataContext, parameters);
+
+                return affectedRecords;
+            }
         }
 
         /// <summary>
@@ -200,10 +252,15 @@ namespace Nop.Data
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
         /// <returns>Returns collection of query result records</returns>
-        public virtual IList<T> QueryProc<T>(string procedureName, params DataParameter[] parameters)
+        public IList<T> QueryProc<T>(string procedureName, params DataParameter[] parameters)
         {
-            using var currentConnection = new NopDataConnection();
-            return currentConnection.ExecuteStoredProcedure<T>(procedureName, parameters) ?? new List<T>();
+            using (var dataContext = CreateDataConnection())
+            {
+                var command = new CommandInfo(dataContext, procedureName, parameters);
+                var rez = command.QueryProc<T>()?.ToList();
+                UpdateOutputParameters(dataContext, parameters);
+                return rez ?? new List<T>();
+            }
         }
 
         /// <summary>
@@ -213,11 +270,49 @@ namespace Nop.Data
         /// <param name="sql">SQL command text</param>
         /// <param name="parameters">Parameters to execute the SQL command</param>
         /// <returns>Collection of values of specified type</returns>
-        public virtual IList<T> Query<T>(string sql, params DataParameter[] parameters)
+        public IList<T> Query<T>(string sql, params DataParameter[] parameters)
         {
-            using var currentConnection = new NopDataConnection();
-            return currentConnection.Query<T>(sql, parameters)?.ToList() ?? new List<T>();
+            using (var dataContext = CreateDataConnection())
+            {
+                return dataContext.Query<T>(sql, parameters)?.ToList() ?? new List<T>();
+            }
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Linq2Db data provider
+        /// </summary>
+        protected abstract IDataProvider LinqToDbDataProvider { get; }
+
+        /// <summary>
+        /// Additional mapping schema
+        /// </summary>
+        protected MappingSchema AdditionalSchema
+        {
+            get
+            {
+                if (!(Singleton<MappingSchema>.Instance is null))
+                    return Singleton<MappingSchema>.Instance;
+
+                Singleton<MappingSchema>.Instance =
+                    new MappingSchema(ConfigurationName) {MetadataReader = new FluentMigratorMetadataReader()};
+
+                return Singleton<MappingSchema>.Instance;
+            }
+        }
+
+        /// <summary>
+        /// Database connection string
+        /// </summary>
+        protected string CurrentConnectionString => DataSettingsManager.LoadSettings().ConnectionString;
+
+        /// <summary>
+        /// Name of database provider
+        /// </summary>
+        public string ConfigurationName => LinqToDbDataProvider.Name;
 
         #endregion
     }

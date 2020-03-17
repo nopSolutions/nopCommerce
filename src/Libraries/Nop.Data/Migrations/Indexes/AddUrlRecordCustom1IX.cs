@@ -1,18 +1,21 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Seo;
-using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Indexes
 {
-    [NopMigration("2019/12/19 11:35:09:1647928")]
+    [NopMigration("2020/03/13 11:35:09:1647928")]
     public class AddUrlRecordCustom1IX : AutoReversingMigration
     {
         #region Methods
 
         public override void Up()
         {
-            this.AddIndex("IX_UrlRecord_Custom_1", nameof(UrlRecord), i => i.Ascending(), nameof(UrlRecord.EntityId),
-                nameof(UrlRecord.EntityName), nameof(UrlRecord.LanguageId), nameof(UrlRecord.IsActive));
+            Create.Index("IX_UrlRecord_Custom_1").OnTable(nameof(UrlRecord))
+                .OnColumn(nameof(UrlRecord.EntityId)).Ascending()
+                .OnColumn(nameof(UrlRecord.EntityName)).Ascending()
+                .OnColumn(nameof(UrlRecord.LanguageId)).Ascending()
+                .OnColumn(nameof(UrlRecord.IsActive)).Ascending()
+                .WithOptions().NonClustered();
         }
 
         #endregion

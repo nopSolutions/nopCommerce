@@ -13,7 +13,7 @@ namespace Nop.Web.Areas.Admin.Validators.Customers
 {
     public partial class CustomerValidator : BaseNopValidator<CustomerModel>
     {
-        public CustomerValidator(IDataProvider dataProvider, 
+        public CustomerValidator(INopDataProvider dataProvider, 
             ILocalizationService localizationService,
             IStateProvinceService stateProvinceService,
             ICustomerService customerService,

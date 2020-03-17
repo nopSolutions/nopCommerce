@@ -1,18 +1,18 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Logging;
-using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Indexes
 {
-    [NopMigration("2019/12/19 11:35:09:1647926")]
+    [NopMigration("2020/03/13 11:35:09:1647926")]
     public class AddActivityLogCreatedOnUtcIX : AutoReversingMigration
     {
         #region Methods
 
         public override void Up()
         {
-            this.AddIndex("IX_ActivityLog_CreatedOnUtc", nameof(ActivityLog), i => i.Descending(),
-                nameof(ActivityLog.CreatedOnUtc));
+            Create.Index("IX_ActivityLog_CreatedOnUtc").OnTable(nameof(ActivityLog))
+                .OnColumn(nameof(ActivityLog.CreatedOnUtc)).Descending()
+                .WithOptions().NonClustered();
         }
 
         #endregion

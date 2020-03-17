@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using LinqToDB.Data;
 using Nop.Core;
 
@@ -33,6 +35,14 @@ namespace Nop.Data
         void Insert(IEnumerable<TEntity> entities);
 
         /// <summary>
+        /// Loads the original copy of the entity
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <returns>Copy of the passed entity</returns>
+        TEntity LoadOriginalCopy(TEntity entity);
+
+        /// <summary>
         /// Update entity
         /// </summary>
         /// <param name="entity">Entity</param>
@@ -55,6 +65,12 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entities">Entities</param>
         void Delete(IEnumerable<TEntity> entities);
+
+        /// <summary>
+        /// Delete entities
+        /// </summary>
+        /// <param name="entities">Entities</param>
+        void Delete(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Executes command using System.Data.CommandType.StoredProcedure command type

@@ -86,8 +86,9 @@ namespace Nop.Services.Security
         /// </summary>
         /// <param name="data">The data for calculating the hash</param>
         /// <param name="hashAlgorithm">Hash algorithm</param>
+        /// <param name="trimByteCount">The number of bytes, which will be used in the hash algorithm; leave 0 to use all array</param>
         /// <returns>Data hash</returns>
-        public virtual string CreateHash(byte[] data, string hashAlgorithm)
+        public virtual string CreateHash(byte[] data, string hashAlgorithm, int trimByteCount = 0)
         {
             if (string.IsNullOrEmpty(hashAlgorithm))
                 throw new ArgumentNullException(nameof(hashAlgorithm));
@@ -96,8 +97,17 @@ namespace Nop.Services.Security
             if (algorithm == null)
                 throw new ArgumentException("Unrecognized hash name");
 
-            var hashByteArray = algorithm.ComputeHash(data);
-            return BitConverter.ToString(hashByteArray).Replace("-", string.Empty);
+            if (trimByteCount > 0 && data.Length > trimByteCount)
+            {
+                var newData = new byte[trimByteCount];
+                Array.Copy(data, newData, trimByteCount);
+
+                return BitConverter.ToString(algorithm.ComputeHash(newData)).Replace("-", string.Empty);
+            }
+            else
+            {
+                return BitConverter.ToString(algorithm.ComputeHash(data)).Replace("-", string.Empty);
+            }
         }
 
         /// <summary>

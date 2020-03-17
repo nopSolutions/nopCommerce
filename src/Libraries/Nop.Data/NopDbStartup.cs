@@ -1,14 +1,13 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using FluentMigrator;
 using FluentMigrator.Runner;
-using LinqToDB.Data;
-using LinqToDB.Mapping;
+using FluentMigrator.Runner.Conventions;
+using FluentMigrator.Runner.Initialization;
+using FluentMigrator.Runner.Processors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
-using Nop.Data.Extensions;
 using Nop.Data.Migrations;
 
 namespace Nop.Data
@@ -25,33 +24,23 @@ namespace Nop.Data
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            var mappingBuilder = new FluentMappingBuilder(NopDataConnection.AdditionalSchema);
-            
-            //find database mapping configuration by other assemblies
-            var typeFinder = new AppDomainTypeFinder();
-            var typeConfigurations = typeFinder.FindClassesOfType<IMappingConfiguration>().ToList();
-
-            foreach (var typeConfiguration in typeConfigurations)
-            {
-                var mappingConfiguration = (IMappingConfiguration)Activator.CreateInstance(typeConfiguration);
-                mappingConfiguration.ApplyConfiguration(mappingBuilder);
-            }
-
-            //further actions are performed only when the database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
-                return;
-
-            DataConnection.DefaultSettings = Singleton<DataSettings>.Instance;
-
-            MappingSchema.Default.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
+            var mAssemblies = new AppDomainTypeFinder().FindClassesOfType<AutoReversingMigration>()
+                .Select(t => t.Assembly)
+                .Distinct()
+                .ToArray();
 
             services
                 // add common FluentMigrator services
                 .AddFluentMigratorCore()
-                .ConfigureRunner(rb => rb.SetServer()
-                    .WithVersionTable(new MigrationVersionInfo())
-                    // define the assembly containing the migrations
-                    .ScanIn(typeConfigurations.Select(p => p.Assembly).Distinct().ToArray()).For.Migrations());
+                .AddScoped<IProcessorAccessor, NopProcessorAccessor>()
+                // set accessor for the connection string
+                .AddScoped<IConnectionStringAccessor>(x => DataSettingsManager.LoadSettings())
+                .AddScoped<IMigrationManager, MigrationManager>()
+                .AddSingleton<IConventionSet, NopConventionSet>()
+                .ConfigureRunner(rb =>
+                    rb.WithVersionTable(new MigrationVersionInfo()).AddSqlServer().AddMySql5()
+                        // define the assembly containing the migrations
+                        .ScanIn(mAssemblies).For.Migrations());
         }
 
         /// <summary>
@@ -60,12 +49,6 @@ namespace Nop.Data
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //further actions are performed only when the database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
-                return;
-
-            EngineContext.Current.Resolve<ILocker>().PerformActionWithLock(typeof(NopDbStartup).FullName, TimeSpan.FromSeconds(300),
-                () => EngineContext.Current.Resolve<IDataProvider>().ApplyUpMigrations());
         }
 
         /// <summary>

@@ -1,20 +1,21 @@
 ﻿using FluentMigrator;
 using FluentMigrator.SqlServer;
 using Nop.Core.Domain.Catalog;
-using Nop.Data.Extensions;
 using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.Indexes
 {
-    [NopMigration("2019/12/19 12:02:35:9280390")]
+    [NopMigration("2020/03/13 12:02:35:9280390")]
     public class AddPMMProductIdExtendedIX : AutoReversingMigration
     {
         #region Methods          
 
         public override void Up()
         {
-            this.AddIndex("IX_PMM_ProductId_Extended", NopMappingDefaults.ProductManufacturerTable, i => i.Ascending(),
-                    nameof(ProductManufacturer.ProductId), nameof(ProductManufacturer.IsFeaturedProduct))
+            Create.Index("IX_PMM_ProductId_Extended").OnTable(NameCompatibilityManager.GetTableName(typeof(ProductManufacturer)))
+                .OnColumn(nameof(ProductManufacturer.ProductId)).Ascending()
+                .OnColumn(nameof(ProductManufacturer.IsFeaturedProduct)).Ascending()
+                .WithOptions().NonClustered()
                 .Include(nameof(ProductManufacturer.ManufacturerId));
         }
 

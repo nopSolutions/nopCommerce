@@ -1,17 +1,18 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Directory;
-using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Indexes
 {
-    [NopMigration("2019/12/19 09:36:08:9037708")]
+    [NopMigration("2020/03/13 09:36:08:9037708")]
     public class AddCurrencyDisplayOrderIX : AutoReversingMigration
     {
         #region Methods          
 
         public override void Up()
         {
-            this.AddIndex("IX_Currency_DisplayOrder", nameof(Currency), i => i.Ascending(), nameof(Currency.DisplayOrder));
+            Create.Index("IX_Currency_DisplayOrder").OnTable(nameof(Currency))
+                .OnColumn(nameof(Currency.DisplayOrder)).Ascending()
+                .WithOptions().NonClustered();
         }
 
         #endregion

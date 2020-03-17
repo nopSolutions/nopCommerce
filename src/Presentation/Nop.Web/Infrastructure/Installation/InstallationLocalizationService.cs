@@ -217,13 +217,19 @@ namespace Nop.Web.Infrastructure.Installation
         /// <returns>Available installation data provider types</returns>
         public IList<SelectListItem> GetAvailableProviderTypes()
         {
-            //TODO 239 need to be implemented
+            //TODO 239 must be implemented
             return new List<SelectListItem>
             {
                 new SelectListItem()
                 {
                     Value = DataProviderType.SqlServer.ToString(),
                     Text = GetResource(DataProviderType.SqlServer.ToString()),
+                    Selected = true
+                },
+                new SelectListItem()
+                {
+                    Value = DataProviderType.MySql.ToString(),
+                    Text = GetResource(DataProviderType.MySql.ToString()),
                     Selected = true
                 }
             };

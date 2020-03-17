@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Messages
 {
     public partial class MessageTemplateValidator : BaseNopValidator<MessageTemplateModel>
     {
-        public MessageTemplateValidator(IDataProvider dataProvider, ILocalizationService localizationService)
+        public MessageTemplateValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Subject).NotEmpty().WithMessage(localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.Subject.Required"));
             RuleFor(x => x.Body).NotEmpty().WithMessage(localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.Body.Required"));

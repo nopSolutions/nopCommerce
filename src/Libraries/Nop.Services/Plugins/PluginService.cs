@@ -6,7 +6,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
-using Nop.Data;
+using Nop.Data.Migrations;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -22,7 +22,7 @@ namespace Nop.Services.Plugins
 
         private readonly CatalogSettings _catalogSettings;
         private readonly ICustomerService _customerService;
-        private readonly IDataProvider _dataProvider;
+        private readonly IMigrationManager _migrationManager;
         private readonly ILogger _logger;
         private readonly INopFileProvider _fileProvider;
         private readonly IPluginsInfo _pluginsInfo;
@@ -34,14 +34,14 @@ namespace Nop.Services.Plugins
 
         public PluginService(CatalogSettings catalogSettings,
             ICustomerService customerService,
-            IDataProvider dataProvider,
+            IMigrationManager migrationManager,
             ILogger logger,
             INopFileProvider fileProvider,
             IWebHelper webHelper)
         {
             _catalogSettings = catalogSettings;
             _customerService = customerService;
-            _dataProvider = dataProvider;
+            _migrationManager = migrationManager;
             _logger = logger;
             _fileProvider = fileProvider;
             _pluginsInfo = Singleton<IPluginsInfo>.Instance;
@@ -184,17 +184,13 @@ namespace Nop.Services.Plugins
         protected virtual void DeletePluginData(Type pluginType)
         {
             var assembly = Assembly.GetAssembly(pluginType);
-
-            _dataProvider.ApplyDownMigrations(assembly);
-            _dataProvider.DeleteDatabaseSchemaIfExists(assembly);
+            _migrationManager.ApplyDownMigrations(assembly);
         }
 
         protected virtual void InsertPluginData(Type pluginType)
         {
             var assembly = Assembly.GetAssembly(pluginType);
-
-            _dataProvider.CreateDatabaseSchemaIfNotExists(assembly);
-            _dataProvider.ApplyUpMigrations(assembly);
+            _migrationManager.ApplyUpMigrations(assembly);
         }
 
         #endregion

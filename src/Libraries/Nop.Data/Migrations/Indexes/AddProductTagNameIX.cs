@@ -1,17 +1,18 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
-using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Indexes
 {
-    [NopMigration("2019/12/19 11:35:09:1647925")]
+    [NopMigration("2020/03/13 11:35:09:1647925")]
     public class AddProductTagNameIX : AutoReversingMigration
     {
         #region Methods
 
         public override void Up()
         {
-            this.AddIndex("IX_ProductTag_Name", nameof(ProductTag), i => i.Ascending(), nameof(ProductTag.Name));
+            Create.Index("IX_ProductTag_Name").OnTable(nameof(ProductTag))
+                .OnColumn(nameof(ProductTag.Name)).Ascending()
+                .WithOptions().NonClustered();
         }
 
         #endregion

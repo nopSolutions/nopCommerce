@@ -12,12 +12,12 @@ namespace Nop.Web.MVC.Tests.Admin.Validators.Catalog
     public class CategoryValidatorTests : BaseValidatorTests
     {
         private CategoryValidator _validator;
-        private Mock<IDataProvider> _dataProvider;
+        private Mock<INopDataProvider> _dataProvider;
 
         [SetUp]
         public new void Setup()
         {
-            _dataProvider = new Mock<IDataProvider>();
+            _dataProvider = new Mock<INopDataProvider>();
             _validator = new CategoryValidator(_dataProvider.Object, _localizationService);
         }
 

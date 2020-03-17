@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Settings
 {
     public partial class GdprConsentValidator : BaseNopValidator<GdprConsentModel>
     {
-        public GdprConsentValidator(IDataProvider dataProvider, ILocalizationService localizationService)
+        public GdprConsentValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Message).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Message.Required"));
             RuleFor(x => x.RequiredMessage)

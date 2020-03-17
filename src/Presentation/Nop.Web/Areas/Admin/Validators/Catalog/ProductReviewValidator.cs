@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
 {
     public partial class ProductReviewValidator : BaseNopValidator<ProductReviewModel>
     {
-        public ProductReviewValidator(IDataProvider dataProvider, ILocalizationService localizationService, IWorkContext workContext)
+        public ProductReviewValidator(INopDataProvider dataProvider, ILocalizationService localizationService, IWorkContext workContext)
         {
             var isLoggedInAsVendor = workContext.CurrentVendor != null;
             //vendor can edit "Reply text" only

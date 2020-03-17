@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Vendors
 {
     public partial class VendorAttributeValidator : BaseNopValidator<VendorAttributeModel>
     {
-        public VendorAttributeValidator(IDataProvider dataProvider, ILocalizationService localizationService)
+        public VendorAttributeValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Vendors.VendorAttributes.Fields.Name.Required"));
 

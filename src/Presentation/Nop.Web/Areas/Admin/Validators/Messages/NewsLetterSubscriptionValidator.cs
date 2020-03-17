@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Messages
 {
     public partial class NewsLetterSubscriptionValidator : BaseNopValidator<NewsletterSubscriptionModel>
     {
-        public NewsLetterSubscriptionValidator(IDataProvider dataProvider, ILocalizationService localizationService)
+        public NewsLetterSubscriptionValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.Fields.Email.Required"));
             RuleFor(x => x.Email).EmailAddress().WithMessage(localizationService.GetResource("Admin.Common.WrongEmail"));

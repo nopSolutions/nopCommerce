@@ -1,19 +1,19 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Forums;
-using Nop.Data.Extensions;
 using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.Indexes
 {
-    [NopMigration("2019/12/19 09:36:08:9037700")]
+    [NopMigration("2020/03/13 09:36:08:9037700")]
     public class AddForumsSubscriptionForumIdIX : AutoReversingMigration
     {
         #region Methods          
 
         public override void Up()
         {
-            this.AddIndex("IX_Forums_Subscription_ForumId", NopMappingDefaults.ForumsSubscriptionTable,
-                i => i.Ascending(), nameof(ForumSubscription.ForumId));
+            Create.Index("IX_Forums_Subscription_ForumId").OnTable(NameCompatibilityManager.GetTableName(typeof(ForumSubscription)))
+                .OnColumn(nameof(ForumSubscription.ForumId)).Ascending()
+                .WithOptions().NonClustered();
         }
 
         #endregion

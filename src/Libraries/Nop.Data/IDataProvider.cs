@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq.Expressions;
+using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
 using Nop.Core;
@@ -9,7 +12,7 @@ namespace Nop.Data
     /// <summary>
     /// Represents a data provider
     /// </summary>
-    public partial interface IDataProvider
+    public partial interface INopDataProvider
     {
         #region Methods
 
@@ -21,57 +24,102 @@ namespace Nop.Data
         void CreateDatabase(string collation, int triesToConnect = 10);
 
         /// <summary>
+        /// Creates a connection to a database
+        /// </summary>
+        /// <param name="connectionString">Connection string</param>
+        /// <returns>Connection to a database</returns>
+        IDbConnection CreateDbConnection(string connectionString);
+
+        /// <summary>
         /// Initialize database
         /// </summary>
         void InitializeDatabase();
 
         /// <summary>
-        /// Executes all found (and unapplied) migrations
+        /// Insert a new entity
         /// </summary>
-        /// <param name="assembly">Assembly to find the migration;
-        /// leave null to search migration on the whole application pull</param>
-        void ApplyUpMigrations(Assembly assembly = null);
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <returns>Entity</returns>
+        TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity;
 
         /// <summary>
-        /// Executes an Down migration
+        /// Updates record in table, using values from entity parameter. 
+        /// Record to update identified by match on primary key value from obj value.
         /// </summary>
-        /// <param name="assembly">Assembly to find the migration;
-        /// leave null to search migration on the whole application pull</param>
-        void ApplyDownMigrations(Assembly assembly);
+        /// <param name="entity">Entity with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        void UpdateEntity<TEntity>(TEntity entity) where TEntity : BaseEntity;
 
         /// <summary>
-        /// Create database schema if it not exists
+        /// Deletes record in table. Record to delete identified
+        /// by match on primary key value from obj value.
         /// </summary>
-        /// <param name="assembly">Assembly to find the mapping configurations classes;
-        /// leave null to search mapping configurations classes on the whole application pull</param>
-        void CreateDatabaseSchemaIfNotExists(Assembly assembly);
+        /// <param name="entity">Entity for delete operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        void DeleteEntity<TEntity>(TEntity entity) where TEntity : BaseEntity;
 
         /// <summary>
-        /// Delete database schema if it exists
+        /// Performs delete records in a table
         /// </summary>
-        /// <param name="assembly">Assembly to find the mapping configurations classes;
-        /// leave null to search mapping configurations classes on the whole application pull</param>
-        void DeleteDatabaseSchemaIfExists(Assembly assembly);
+        /// <param name="entities">Entities for delete operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        void BulkDeleteEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity;
+
+        /// <summary>
+        /// Performs delete records in a table by a condition
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        void BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity;
+
+        /// <summary>
+        /// Performs bulk insert entities operation
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="entities">Collection of Entities</param>
+        void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity;
+
+        /// <summary>
+        /// Gets the name of a foreign key
+        /// </summary>
+        /// <param name="foreignTable">Foreign key table</param>
+        /// <param name="foreignColumn">Foreign key column name</param>
+        /// <param name="primaryTable">Primary table</param>
+        /// <param name="primaryColumn">Primary key column name</param>
+        /// <param name="isShort">Indicates whether to use short form</param>
+        /// <returns>Name of a foreign key</returns>
+        string GetForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn, bool isShort = true);
+
+        /// <summary>
+        /// Gets the name of an index
+        /// </summary>
+        /// <param name="targetTable">Target table name</param>
+        /// <param name="targetColumn">Target column name</param>
+        /// <param name="isShort">Indicates whether to use short form</param>
+        /// <returns>Name of an index</returns>
+        string GetIndexName(string targetTable, string targetColumn, bool isShort = true);
+
+        /// <summary>
+        /// Returns queryable source for specified mapping class for current connection,
+        /// mapped to database table or view.
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>Queryable source</returns>
+        ITable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity;
+
+        /// <summary>
+        /// Get the current identity value
+        /// </summary>
+        /// <typeparam name="TEntity">Entity</typeparam>
+        /// <returns>Integer identity; null if cannot get the result</returns>
+        int? GetTableIdent<TEntity>() where TEntity : BaseEntity;
 
         /// <summary>
         /// Checks if the specified database exists, returns true if database exists
         /// </summary>
         /// <returns>Returns true if the database exists.</returns>
         bool IsDatabaseExists();
-        
-        /// <summary>
-        /// Get the current identity value
-        /// </summary>
-        /// <typeparam name="T">Entity</typeparam>
-        /// <returns>Integer identity; null if cannot get the result</returns>
-        int? GetTableIdent<T>() where T : BaseEntity;
-
-        /// <summary>
-        /// Set table identity (is supported)
-        /// </summary>
-        /// <typeparam name="T">Entity</typeparam>
-        /// <param name="ident">Identity value</param>
-        void SetTableIdent<T>(int ident) where T : BaseEntity;
 
         /// <summary>
         /// Creates a backup of the database
@@ -90,20 +138,18 @@ namespace Nop.Data
         void ReIndexTables();
 
         /// <summary>
-        /// Loads the original copy of the entity
+        /// Build the connection string
         /// </summary>
-        /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <param name="entity">Entity</param>
-        /// <returns>Copy of the passed entity</returns>
-        TEntity LoadOriginalCopy<TEntity>(TEntity entity) where TEntity : BaseEntity;
+        /// <param name="nopConnectionString">Connection string info</param>
+        /// <returns>Connection string</returns>
+        string BuildConnectionString(INopConnectionStringInfo nopConnectionString);
 
         /// <summary>
-        /// Insert a new entity
+        /// Set table identity (is supported)
         /// </summary>
-        /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <param name="entity">Entity</param>
-        /// <returns>Entity</returns>
-        TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity;
+        /// <typeparam name="T">Entity</typeparam>
+        /// <param name="ident">Identity value</param>
+        void SetTableIdent<T>(int ident) where T : BaseEntity;
 
         /// <summary>
         /// Returns mapped entity descriptor
@@ -111,27 +157,6 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Type of entity</typeparam>
         /// <returns>Mapped entity descriptor</returns>
         EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity;
-
-        /// <summary>
-        /// Build the connection string
-        /// </summary>
-        /// <param name="nopConnectionString">Connection string info</param>
-        /// <returns>Connection string</returns>
-        string BuildConnectionString(INopConnectionStringInfo nopConnectionString);
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets a value indicating whether this data provider supports backup
-        /// </summary>
-        bool BackupSupported { get; }
-
-        /// <summary>
-        /// Gets a maximum length of the data for HASHBYTES functions, returns 0 if HASHBYTES function is not supported
-        /// </summary>
-        int SupportedLengthOfBinaryHash { get; }
 
         /// <summary>
         /// Executes command using System.Data.CommandType.StoredProcedure command type and
@@ -151,6 +176,47 @@ namespace Nop.Data
         /// <param name="parameters">Command parameters</param>
         /// <returns>Returns collection of query result records</returns>
         IList<T> Query<T>(string sql, params DataParameter[] parameters);
+
+        /// <summary>
+        /// Executes command and returns number of affected records.
+        /// </summary>
+        /// <param name="sqlStatement">Command text</param>
+        /// <param name="dataParameters">Command parameters</param>
+        /// <returns>Number of records, affected by command execution.</returns>
+        int ExecuteNonQuery(string sqlStatement, params DataParameter[] dataParameters);
+
+        /// <summary>
+        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
+        /// single value
+        /// </summary>
+        /// <typeparam name="T">Result record type</typeparam>
+        /// <param name="procedureName">Procedure name</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Resulting value</returns>
+        T ExecuteStoredProcedure<T>(string procedureName, params DataParameter[] parameters);
+
+        /// <summary>
+        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
+        /// number of affected records.
+        /// </summary>
+        /// <param name="procedureName">Procedure name</param>
+        /// <param name="parameters">Command parameters</param>
+        /// <returns>Returns collection of query result records</returns>
+        int ExecuteStoredProcedure(string procedureName, params DataParameter[] parameters);
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Name of database provider
+        /// </summary>
+        string ConfigurationName { get; }
+
+        /// <summary>
+        /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited
+        /// </summary>
+        int SupportedLengthOfBinaryHash { get; }
 
         #endregion
     }

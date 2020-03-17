@@ -22,7 +22,7 @@ namespace Nop.Services.Catalog
 
         private readonly CatalogSettings _catalogSettings;
         private readonly ICustomerService _customerService;
-        private readonly IDataProvider _dataProvider;
+        private readonly INopDataProvider _dataProvider;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<ProductProductTagMapping> _productProductTagMappingRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
@@ -36,7 +36,7 @@ namespace Nop.Services.Catalog
 
         public ProductTagService(CatalogSettings catalogSettings,
             ICustomerService customerService,
-            IDataProvider dataProvider,
+            INopDataProvider dataProvider,
             IEventPublisher eventPublisher,
             IRepository<ProductProductTagMapping> productProductTagMappingRepository,
             IRepository<ProductTag> productTagRepository,
@@ -369,6 +369,28 @@ namespace Nop.Services.Catalog
 
             //cache
             _staticCacheManager.RemoveByPrefix(NopCatalogCachingDefaults.ProductTagPrefixCacheKey);
+        }
+
+        #endregion
+
+        #region MyRegion
+
+        protected partial class ProductTagWithCount
+        {
+            /// <summary>
+            /// Gets or sets the entity identifier
+            /// </summary>
+            public int Id { get; set; }
+
+            /// <summary>
+            /// Gets or sets the product tag ID
+            /// </summary>
+            public int ProductTagId { get; set; }
+
+            /// <summary>
+            /// Gets or sets the count
+            /// </summary>
+            public int ProductCount { get; set; }
         }
 
         #endregion

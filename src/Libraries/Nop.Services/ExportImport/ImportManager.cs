@@ -42,7 +42,7 @@ namespace Nop.Services.ExportImport
         #region Constants
 
         //it's quite fast hash (to cheaply distinguish between objects)
-        private const string IMAGE_HASH_ALGORITHM = "SHA1";
+        private const string IMAGE_HASH_ALGORITHM = "SHA512";
 
         private const string UPLOADS_TEMP_PATH = "~/App_Data/TempUploads";
 
@@ -54,7 +54,7 @@ namespace Nop.Services.ExportImport
         private readonly ICategoryService _categoryService;
         private readonly ICountryService _countryService;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IDataProvider _dataProvider;
+        private readonly INopDataProvider _dataProvider;
         private readonly IDateRangeService _dateRangeService;
         private readonly IEncryptionService _encryptionService;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -91,7 +91,7 @@ namespace Nop.Services.ExportImport
             ICategoryService categoryService,
             ICountryService countryService,
             ICustomerActivityService customerActivityService,
-            IDataProvider dataProvider,
+            INopDataProvider dataProvider,
             IDateRangeService dateRangeService,
             IEncryptionService encryptionService,
             IHttpClientFactory httpClientFactory,
@@ -351,7 +351,6 @@ namespace Nop.Services.ExportImport
         {
             //performance optimization, load all pictures hashes
             //it will only be used if the images are stored in the SQL Server database (not compact)
-            var takeCount = _dataProvider.SupportedLengthOfBinaryHash - 1;
             var productsImagesIds = _productService.GetProductsImagesIds(allProductsBySku.Select(p => p.Id).ToArray());
             var allPicturesHashes = _pictureService.GetPicturesHash(productsImagesIds.SelectMany(p => p.Value).ToArray());
 
@@ -368,18 +367,25 @@ namespace Nop.Services.ExportImport
                         var pictureAlreadyExists = false;
                         if (!product.IsNew)
                         {
-                            var newImageHash = _encryptionService.CreateHash(newPictureBinary.Take(takeCount).ToArray(),
-                                IMAGE_HASH_ALGORITHM);
-                            var newValidatedImageHash = _encryptionService.CreateHash(_pictureService.ValidatePicture(newPictureBinary, mimeType)
-                                .Take(takeCount)
-                                .ToArray(), IMAGE_HASH_ALGORITHM);
+                            var newImageHash = _encryptionService.CreateHash(
+                                newPictureBinary,
+                                IMAGE_HASH_ALGORITHM,
+                                _dataProvider.SupportedLengthOfBinaryHash);
+                                    
+                            var newValidatedImageHash = _encryptionService.CreateHash(
+                                _pictureService.ValidatePicture(newPictureBinary, mimeType), 
+                                IMAGE_HASH_ALGORITHM,
+                                _dataProvider.SupportedLengthOfBinaryHash);
 
                             var imagesIds = productsImagesIds.ContainsKey(product.ProductItem.Id)
                                 ? productsImagesIds[product.ProductItem.Id]
                                 : Array.Empty<int>();
 
                             pictureAlreadyExists = allPicturesHashes.Where(p => imagesIds.Contains(p.Key))
-                                .Select(p => p.Value).Any(p => p == newImageHash || p == newValidatedImageHash);
+                                .Select(p => p.Value)
+                                .Any(p => 
+                                    p.Equals(newImageHash, StringComparison.OrdinalIgnoreCase) || 
+                                    p.Equals(newValidatedImageHash, StringComparison.OrdinalIgnoreCase));
                         }
 
                         if (pictureAlreadyExists)
@@ -1751,7 +1757,7 @@ namespace Nop.Services.ExportImport
                 //_productService.UpdateHasDiscountsApplied(product);
             }
 
-            if (_mediaSettings.ImportProductImagesUsingHash && _pictureService.StoreInDb && _dataProvider.SupportedLengthOfBinaryHash > 0)
+            if (_mediaSettings.ImportProductImagesUsingHash && _pictureService.StoreInDb)
                 ImportProductImagesUsingHash(productPictureMetadata, allProductsBySku);
             else
                 ImportProductImagesUsingServices(productPictureMetadata);

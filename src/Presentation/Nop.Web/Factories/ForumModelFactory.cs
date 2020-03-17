@@ -155,7 +155,7 @@ namespace Nop.Web.Factories
                 LastPostId = topic.LastPostId,
                 NumPosts = topic.NumPosts,
                 Views = topic.Views,
-                NumReplies = topic.NumReplies,
+                NumReplies = topic.NumPosts > 0 ? topic.NumPosts - 1 : 0,
                 ForumTopicType = topic.ForumTopicType,
                 CustomerId = topic.CustomerId,
                 AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !_customerService.IsGuest(customer),

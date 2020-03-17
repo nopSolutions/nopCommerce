@@ -1,20 +1,22 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Catalog;
-using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.Indexes
 {
-    [NopMigration("2019/12/19 09:36:08:9037678")]
+    [NopMigration("2020/03/13 09:36:08:9037678")]
     public class AddProductPriceDatesEtcIX : AutoReversingMigration
     {
         #region Methods
 
         public override void Up()
         {
-            this.AddIndex("IX_Product_PriceDatesEtc", nameof(Product), i => i.Ascending(),
-                nameof(Product.Price), nameof(Product.AvailableStartDateTimeUtc),
-                nameof(Product.AvailableEndDateTimeUtc), nameof(Product.Published),
-                nameof(Product.Deleted));
+            Create.Index("IX_Product_PriceDatesEtc").OnTable(nameof(Product))
+                .OnColumn(nameof(Product.Price)).Ascending()
+                .OnColumn(nameof(Product.AvailableStartDateTimeUtc)).Ascending()
+                .OnColumn(nameof(Product.AvailableEndDateTimeUtc)).Ascending()
+                .OnColumn(nameof(Product.Published)).Ascending()
+                .OnColumn(nameof(Product.Deleted)).Ascending()
+                .WithOptions().NonClustered();
         }
 
         #endregion

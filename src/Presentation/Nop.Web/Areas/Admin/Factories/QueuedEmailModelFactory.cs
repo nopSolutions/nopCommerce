@@ -38,7 +38,25 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         #endregion
-        
+
+        #region Utilities
+
+        /// <summary>
+        /// Gets a friendly email account name
+        /// </summary>
+        protected virtual string GetEmailAccountName(EmailAccount emailAccount)
+        {
+            if (emailAccount == null)
+                return string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(emailAccount.DisplayName))
+                return emailAccount.Email + " (" + emailAccount.DisplayName + ")";
+
+            return emailAccount.Email;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -102,7 +120,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     queuedEmailModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(queuedEmail.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    queuedEmailModel.EmailAccountName = _emailAccountService.GetEmailAccountById(queuedEmail.EmailAccountId)?.FriendlyName ?? string.Empty;
+                    queuedEmailModel.EmailAccountName = GetEmailAccountName(_emailAccountService.GetEmailAccountById(queuedEmail.EmailAccountId));
                     queuedEmailModel.PriorityName = _localizationService.GetLocalizedEnum(queuedEmail.Priority);
                     if (queuedEmail.DontSendBeforeDateUtc.HasValue)
                     {
@@ -135,7 +153,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             model ??= queuedEmail.ToModel<QueuedEmailModel>();
 
-            model.EmailAccountName = _emailAccountService.GetEmailAccountById(queuedEmail.EmailAccountId)?.FriendlyName ?? string.Empty;
+            model.EmailAccountName = GetEmailAccountName(_emailAccountService.GetEmailAccountById(queuedEmail.EmailAccountId));
             model.PriorityName = _localizationService.GetLocalizedEnum(queuedEmail.Priority);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(queuedEmail.CreatedOnUtc, DateTimeKind.Utc);
 

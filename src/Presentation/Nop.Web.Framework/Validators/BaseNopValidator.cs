@@ -41,7 +41,7 @@ namespace Nop.Web.Framework.Validators
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="dataProvider">Data provider</param>
         /// <param name="filterStringPropertyNames">Properties to skip</param>
-        protected virtual void SetDatabaseValidationRules<TEntity>(IDataProvider dataProvider, params string[] filterStringPropertyNames)
+        protected virtual void SetDatabaseValidationRules<TEntity>(INopDataProvider dataProvider, params string[] filterStringPropertyNames)
             where TEntity : BaseEntity
         {
             if (dataProvider is null)

@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Common
 {
     public partial class AddressAttributeValueValidator : BaseNopValidator<AddressAttributeValueModel>
     {
-        public AddressAttributeValueValidator(IDataProvider dataProvider, ILocalizationService localizationService)
+        public AddressAttributeValueValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Address.AddressAttributes.Values.Fields.Name.Required"));
 

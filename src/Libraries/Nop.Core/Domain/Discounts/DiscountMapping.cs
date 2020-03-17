@@ -8,7 +8,7 @@
         public int DiscountId { get; set; }
 
         /// <summary>
-        /// Gets or sets the enytity identifier
+        /// Gets or sets the entity identifier
         /// </summary>
         public abstract int EntityId { get; set; }
     }

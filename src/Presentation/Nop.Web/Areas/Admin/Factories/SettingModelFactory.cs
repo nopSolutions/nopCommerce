@@ -53,7 +53,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerAttributeModelFactory _customerAttributeModelFactory;
-        private readonly IDataProvider _dataProvider;
+        private readonly INopDataProvider _dataProvider;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IFulltextService _fulltextService;
         private readonly IGdprService _gdprService;
@@ -80,7 +80,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IBaseAdminModelFactory baseAdminModelFactory,
             ICurrencyService currencyService,
             ICustomerAttributeModelFactory customerAttributeModelFactory,
-            IDataProvider dataProvider,
+            INopDataProvider dataProvider,
             IDateTimeHelper dateTimeHelper,
             IFulltextService fulltextService,
             IGdprService gdprService,

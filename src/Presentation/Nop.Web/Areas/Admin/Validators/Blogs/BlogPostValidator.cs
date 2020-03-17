@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Validators.Blogs
 {
     public partial class BlogPostValidator : BaseNopValidator<BlogPostModel>
     {
-        public BlogPostValidator(IDataProvider dataProvider, ILocalizationService localizationService)
+        public BlogPostValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Title)
                 .NotEmpty()

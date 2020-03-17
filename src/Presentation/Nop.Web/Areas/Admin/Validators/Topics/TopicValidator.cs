@@ -10,7 +10,7 @@ namespace Nop.Web.Areas.Admin.Validators.Topics
 {
     public partial class TopicValidator : BaseNopValidator<TopicModel>
     {
-        public TopicValidator(IDataProvider dataProvider, ILocalizationService localizationService)
+        public TopicValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.SeName).Length(0, NopSeoDefaults.ForumTopicLength)
                 .WithMessage(string.Format(localizationService.GetResource("Admin.SEO.SeName.MaxLengthValidation"), NopSeoDefaults.ForumTopicLength));

@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Catalog
 {
     public partial class ProductAttributeValueModelValidator : BaseNopValidator<ProductAttributeValueModel>
     {
-        public ProductAttributeValueModelValidator(IDataProvider dataProvider, ILocalizationService localizationService)
+        public ProductAttributeValueModelValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Name)
                 .NotEmpty()

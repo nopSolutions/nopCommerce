@@ -9,7 +9,7 @@ namespace Nop.Web.Areas.Admin.Validators.Tax
 {
     public partial class TaxCategoryValidator : BaseNopValidator<TaxCategoryModel>
     {
-        public TaxCategoryValidator(IDataProvider dataProvider, ILocalizationService localizationService)
+        public TaxCategoryValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Tax.Categories.Fields.Name.Required"));
 

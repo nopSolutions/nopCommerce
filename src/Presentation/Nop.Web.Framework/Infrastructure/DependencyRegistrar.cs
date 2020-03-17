@@ -83,7 +83,7 @@ namespace Nop.Web.Framework.Infrastructure
 
             //data layer
             builder.RegisterType<DataProviderManager>().As<IDataProviderManager>().InstancePerDependency();
-            builder.Register(context => context.Resolve<IDataProviderManager>().DataProvider).As<IDataProvider>().InstancePerDependency();
+            builder.Register(context => context.Resolve<IDataProviderManager>().DataProvider).As<INopDataProvider>().InstancePerDependency();
 
             //repositories
             builder.RegisterGeneric(typeof(EntityRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
