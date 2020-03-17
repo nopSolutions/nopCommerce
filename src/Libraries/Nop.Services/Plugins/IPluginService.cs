@@ -17,10 +17,12 @@ namespace Nop.Services.Plugins
         /// <param name="customer">Filter by  customer; pass null to load all records</param>
         /// <param name="storeId">Filter by store; pass 0 to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
+        /// <param name="friendlyName">Filter by plugin friendly name; pass null to load all records</param>
+        /// <param name="author">Filter by plugin author; pass null to load all records</param>
         /// <param name="dependsOnSystemName">System name of the plugin to define dependencies</param>
         /// <returns>Plugin descriptors</returns>
         IEnumerable<PluginDescriptor> GetPluginDescriptors<TPlugin>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            Customer customer = null, int storeId = 0, string group = null, string dependsOnSystemName = "") where TPlugin : class, IPlugin;
+            Customer customer = null, int storeId = 0, string group = null, string dependsOnSystemName = "", string friendlyName = null, string author = null) where TPlugin : class, IPlugin;
 
         /// <summary>
         /// Get a plugin descriptor by the system name

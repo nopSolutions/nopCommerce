@@ -2175,6 +2175,21 @@
   <LocaleResource Name="Admin.Catalog.Categories.List.SearchCategoryName.Hint">
     <Value>A category name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.List.SearchPublished">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.List.SearchPublished.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.List.SearchPublished.Hint">
+    <Value>Search by a "Published" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.List.SearchPublished.PublishedOnly">
+    <Value>Published only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.List.SearchPublished.UnpublishedOnly">
+    <Value>Unpublished only</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.List.SearchStore">
     <Value>Store</Value>
   </LocaleResource>
@@ -2363,6 +2378,21 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchManufacturerName.Hint">
     <Value>A manufacturer name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchPublished">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchPublished.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchPublished.Hint">
+    <Value>Search by a "Published" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchPublished.PublishedOnly">
+    <Value>Published only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchPublished.UnpublishedOnly">
+    <Value>Unpublished only</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchStore">
     <Value>Store</Value>
@@ -3998,6 +4028,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductTags.Fields.ProductCount">
     <Value>Tagged products</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.ProductTags.Fields.SearchTagName">
+    <Value>Tag name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Fields.SearchTagName.Hint">
+    <Value>Search by a tag name.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ViewMode.Grid">
     <Value>Grid</Value>
@@ -4911,6 +4947,12 @@
   <LocaleResource Name="Admin.Configuration.Plugins.ApplyChanges.Progress">
     <Value>Applying changes on plugins...</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Author">
+    <Value>Author</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Author.Hint">
+    <Value>Search by author.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.ChangesApplyAfterReboot">
     <Value>Changes will be apply after restart application</Value>
   </LocaleResource>
@@ -5015,6 +5057,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Fields.Version">
     <Value>Version</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.FriendlyName">
+    <Value>Plugin name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.FriendlyName.Hint">
+    <Value>Search by a plugin name.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Group">
     <Value>Group</Value>
@@ -9138,6 +9186,12 @@
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Info">
     <Value>Info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.List.SearchTitle">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.List.SearchTitle.Hint">
+    <Value>Search by a blog post title.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.List.SearchStore">
     <Value>Store</Value>
   </LocaleResource>
@@ -9764,6 +9818,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Info">
     <Value>Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.List.SearchTitle">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.List.SearchTitle.Hint">
+    <Value>Search by a news items title.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.List.SearchStore">
     <Value>Store</Value>
@@ -12152,7 +12212,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.List.LoadNotDelivered.Hint">
     <Value>Load only undelivered shipments</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Orders.Shipments.List.StartDate">
     <Value>Start date</Value>
   </LocaleResource>
@@ -12176,6 +12236,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.List.Warehouse.Hint">
     <Value>Load shipments with products from a specified warehouse.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.Warehouse.SearchName">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.Warehouse.SearchName.Hint">
+    <Value>Search by warehouse name.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.NoProductsSelected">
     <Value>No products selected</Value>
@@ -14489,6 +14555,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Info">
     <Value>Vendor Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.List.SearchEmail">
+    <Value>Vendor Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.List.SearchEmail.Hint">
+    <Value>Search by a vendor Email.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.List.SearchName">
     <Value>Vendor name</Value>

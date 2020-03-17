@@ -43,12 +43,18 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="overridePublished">
+        /// null - process "Published" property according to "showHidden" parameter
+        /// true - load only "Published" products
+        /// false - load only "Unpublished" products
+        /// </param>
         /// <returns>Manufacturers</returns>
         IPagedList<Manufacturer> GetAllManufacturers(string manufacturerName = "",
             int storeId = 0,
             int pageIndex = 0,
             int pageSize = int.MaxValue,
-            bool showHidden = false);
+            bool showHidden = false,
+            bool? overridePublished = null);
 
         /// <summary>
         /// Get manufacturer identifiers to which a discount is applied

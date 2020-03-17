@@ -146,13 +146,20 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all product tags
         /// </summary>
+        /// <param name="tagName">Tag name</param>
         /// <returns>Product tags</returns>
-        public virtual IList<ProductTag> GetAllProductTags()
+        public virtual IList<ProductTag> GetAllProductTags(string tagName = null)
         {
             var query = _productTagRepository.Table;
-            var productTags = query.ToCachedList(NopCatalogCachingDefaults.ProductTagAllCacheKey);
+            
+            var allProductTags = query.ToCachedList(NopCatalogCachingDefaults.ProductTagAllCacheKey);
 
-            return productTags;
+            if(!string.IsNullOrEmpty(tagName))
+            {
+                allProductTags = allProductTags.Where(tag => tag.Name.Contains(tagName)).ToList();
+            }
+            
+            return allProductTags;
         }
 
         /// <summary>

@@ -39,9 +39,14 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="overridePublished">
+        /// null - process "Published" property according to "showHidden" parameter
+        /// true - load only "Published" products
+        /// false - load only "Unpublished" products
+        /// </param>
         /// <returns>Categories</returns>
         IPagedList<Category> GetAllCategories(string categoryName, int storeId = 0,
-            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, bool? overridePublished = null);
 
         /// <summary>
         /// Gets all categories filtered by parent category identifier

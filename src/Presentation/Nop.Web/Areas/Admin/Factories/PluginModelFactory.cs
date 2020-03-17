@@ -176,9 +176,11 @@ namespace Nop.Web.Areas.Admin.Factories
             //get parameters to filter plugins
             var group = string.IsNullOrEmpty(searchModel.SearchGroup) || searchModel.SearchGroup.Equals("0") ? null : searchModel.SearchGroup;
             var loadMode = (LoadPluginsMode)searchModel.SearchLoadModeId;
+            var friendlyName = string.IsNullOrEmpty(searchModel.SearchFriendlyName) ? null : searchModel.SearchFriendlyName;
+            var author = string.IsNullOrEmpty(searchModel.SearchAuthor) ? null : searchModel.SearchAuthor;
 
             //filter visible plugins
-            var plugins = _pluginService.GetPluginDescriptors<IPlugin>(group: group, loadMode: loadMode)
+            var plugins = _pluginService.GetPluginDescriptors<IPlugin>(group: group, loadMode: loadMode, friendlyName: friendlyName, author: author)
                 .Where(p => p.ShowInPluginsList)
                 .OrderBy(plugin => plugin.Group).ToList()
                 .ToPagedList(searchModel);

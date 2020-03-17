@@ -324,13 +324,20 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Gets all warehouses
         /// </summary>
+        /// <param name="name">Warehouse name</param>
         /// <returns>Warehouses</returns>
-        public virtual IList<Warehouse> GetAllWarehouses()
+        public virtual IList<Warehouse> GetAllWarehouses(string name = null)
         {
             var query = from wh in _warehouseRepository.Table
                         orderby wh.Name
                         select wh;
+
             var warehouses = query.ToCachedList(NopShippingCachingDefaults.WarehousesAllCacheKey);
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                warehouses = warehouses.Where(wh => wh.Name.Contains(name)).ToList();
+            }
 
             return warehouses;
         }

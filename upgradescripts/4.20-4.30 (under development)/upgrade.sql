@@ -376,6 +376,78 @@ set @resources='
   <LocaleResource Name="Enums.Nop.Core.Domain.Security.CaptchaType.ReCaptchaV3">
     <Value>reCAPTCHA v3</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.FriendlyName">
+    <Value>Plugin name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.FriendlyName.Hint">
+    <Value>Search by a plugin name.</Value>
+  </LocaleResource>
+   <LocaleResource Name="Admin.Configuration.Plugins.Author">
+    <Value>Author</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Author.Hint">
+    <Value>Search by author.</Value>
+  </LocaleResource>
+    <LocaleResource Name="Admin.Vendors.List.SearchEmail">
+    <Value>Vendor Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.List.SearchEmail.Hint">
+    <Value>Search by a vendor Email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.List.SearchTitle">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.List.SearchTitle.Hint">
+    <Value>Search by a blog post title.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.List.SearchTitle">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.List.SearchTitle.Hint">
+    <Value>Search by a news items title.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.Warehouse.SearchName">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.Warehouse.SearchName.Hint">
+    <Value>Search by warehouse name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.List.SearchPublished">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.List.SearchPublished.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.List.SearchPublished.Hint">
+    <Value>Search by a "Published" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.List.SearchPublished.PublishedOnly">
+    <Value>Published only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.List.SearchPublished.UnpublishedOnly">
+    <Value>Unpublished only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchPublished">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchPublished.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchPublished.Hint">
+    <Value>Search by a "Published" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchPublished.PublishedOnly">
+    <Value>Published only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchPublished.UnpublishedOnly">
+    <Value>Unpublished only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Fields.SearchTagName">
+    <Value>Tag name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Fields.SearchTagName.Hint">
+    <Value>Search by a tag name.</Value>
+  </LocaleResource>
 </Language>
 '
 

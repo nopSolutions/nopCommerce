@@ -281,6 +281,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //get vendors
             var vendors = _vendorService.GetAllVendors(showHidden: true,
                 name: searchModel.SearchName,
+                email: searchModel.SearchEmail,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model

@@ -25,6 +25,8 @@ namespace Nop.Web.Areas.Admin.Models.Blogs
         public int SearchStoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 
+        public string SearchTitle { get; set; }
+
         public bool HideStoresList { get; set; }
 
         #endregion

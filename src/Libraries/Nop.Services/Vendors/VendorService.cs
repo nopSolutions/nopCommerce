@@ -107,20 +107,25 @@ namespace Nop.Services.Vendors
         /// Gets all vendors
         /// </summary>
         /// <param name="name">Vendor name</param>
+        /// <param name="email">Vendor email</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Vendors</returns>
-        public virtual IPagedList<Vendor> GetAllVendors(string name = "", int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
+        public virtual IPagedList<Vendor> GetAllVendors(string name = "", string email = "", int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             var query = _vendorRepository.Table;
             if (!string.IsNullOrWhiteSpace(name))
                 query = query.Where(v => v.Name.Contains(name));
+
+            if (!string.IsNullOrWhiteSpace(email))
+                query = query.Where(v => v.Email.Contains(email));
+
             if (!showHidden)
                 query = query.Where(v => v.Active);
 
             query = query.Where(v => !v.Deleted);
-            query = query.OrderBy(v => v.DisplayOrder).ThenBy(v => v.Name);
+            query = query.OrderBy(v => v.DisplayOrder).ThenBy(v => v.Name).ThenBy(v => v.Email);
 
             var vendors = new PagedList<Vendor>(query, pageIndex, pageSize);
             return vendors;

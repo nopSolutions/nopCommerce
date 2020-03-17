@@ -147,6 +147,40 @@ namespace Nop.Services.Plugins
             return pluginDescriptor.DependsOn?.Contains(dependsOnSystemName) ?? false;
         }
 
+        /// <summary>
+        /// Check whether to load the plugin based on the plugin friendly name passed
+        /// </summary>
+        /// <param name="pluginDescriptor">Plugin descriptor to check</param>
+        /// <param name="friendlyName">Plugin friendly name</param>
+        /// <returns>Result of check</returns>
+        protected virtual bool FilterByPluginFriendlyName(PluginDescriptor pluginDescriptor, string friendlyName)
+        {
+            if (pluginDescriptor == null)
+                throw new ArgumentNullException(nameof(pluginDescriptor));
+
+            if (string.IsNullOrEmpty(friendlyName))
+                return true;
+
+            return pluginDescriptor.FriendlyName.Contains(friendlyName, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        /// <summary>
+        /// Check whether to load the plugin based on the plugin author passed
+        /// </summary>
+        /// <param name="pluginDescriptor">Plugin descriptor to check</param>
+        /// <param name="author">Plugin author</param>
+        /// <returns>Result of check</returns>
+        protected virtual bool FilterByPluginAuthor(PluginDescriptor pluginDescriptor, string author)
+        {
+            if (pluginDescriptor == null)
+                throw new ArgumentNullException(nameof(pluginDescriptor));
+
+            if (string.IsNullOrEmpty(author))
+                return true;
+
+            return pluginDescriptor.Author.Contains(author, StringComparison.InvariantCultureIgnoreCase);
+        }
+
         protected virtual void DeletePluginData(Type pluginType)
         {
             var assembly = Assembly.GetAssembly(pluginType);
@@ -164,7 +198,7 @@ namespace Nop.Services.Plugins
         }
 
         #endregion
-
+                 
         #region Methods
 
         /// <summary>
@@ -175,10 +209,12 @@ namespace Nop.Services.Plugins
         /// <param name="customer">Filter by  customer; pass null to load all records</param>
         /// <param name="storeId">Filter by store; pass 0 to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
+        /// <param name="friendlyName">Filter by plugin friendly name; pass null to load all records</param>
+        /// <param name="author">Filter by plugin author; pass null to load all records</param>
         /// <param name="dependsOnSystemName">System name of the plugin to define dependencies</param>
         /// <returns>Plugin descriptors</returns>
         public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors<TPlugin>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            Customer customer = null, int storeId = 0, string group = null, string dependsOnSystemName = "") where TPlugin : class, IPlugin
+            Customer customer = null, int storeId = 0, string group = null, string dependsOnSystemName = "", string friendlyName = null, string author = null) where TPlugin : class, IPlugin
         {
             var pluginDescriptors = _pluginsInfo.PluginDescriptors;
 
@@ -188,7 +224,9 @@ namespace Nop.Services.Plugins
                 FilterByCustomer(descriptor, customer) &&
                 FilterByStore(descriptor, storeId) &&
                 FilterByPluginGroup(descriptor, group) &&
-                FilterByDependsOn(descriptor, dependsOnSystemName));
+                FilterByDependsOn(descriptor, dependsOnSystemName) &&
+                FilterByPluginFriendlyName(descriptor, friendlyName) &&
+                FilterByPluginAuthor(descriptor, author));
 
             //filter by the passed type
             if (typeof(TPlugin) != typeof(IPlugin))

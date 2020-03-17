@@ -123,12 +123,18 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="overridePublished">
+        /// null - process "Published" property according to "showHidden" parameter
+        /// true - load only "Published" products
+        /// false - load only "Unpublished" products
+        /// </param>
         /// <returns>Manufacturers</returns>
         public virtual IPagedList<Manufacturer> GetAllManufacturers(string manufacturerName = "",
             int storeId = 0,
             int pageIndex = 0,
             int pageSize = int.MaxValue,
-            bool showHidden = false)
+            bool showHidden = false,
+            bool? overridePublished = null)
         {
             var query = _manufacturerRepository.Table;
             if (!showHidden)
@@ -136,6 +142,8 @@ namespace Nop.Services.Catalog
             if (!string.IsNullOrWhiteSpace(manufacturerName))
                 query = query.Where(m => m.Name.Contains(manufacturerName));
             query = query.Where(m => !m.Deleted);
+            if (overridePublished.HasValue)
+                query = query.Where(m => m.Published == overridePublished.Value);
             query = query.OrderBy(m => m.DisplayOrder).ThenBy(m => m.Id);
 
             if ((storeId <= 0 || _catalogSettings.IgnoreStoreLimitations) && (showHidden || _catalogSettings.IgnoreAcl))

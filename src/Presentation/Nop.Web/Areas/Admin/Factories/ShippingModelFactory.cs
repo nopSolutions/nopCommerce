@@ -450,7 +450,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get warehouses
-            var warehouses = _shippingService.GetAllWarehouses().ToPagedList(searchModel);
+            var warehouses = _shippingService.GetAllWarehouses(
+                name : searchModel.SearchName)
+                .ToPagedList(searchModel);
 
             //prepare list model
             var model = new WarehouseListModel().PrepareToGrid(searchModel, warehouses, () =>
