@@ -20,7 +20,7 @@
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.AzureStorage" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.2" />
     <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.4.0" />
-    <PackageReference Include="WebMarkupMin.AspNetCore3" Version="2.8.1" />
+    <PackageReference Include="WebMarkupMin.AspNetCore3" Version="2.8.2" />
     <PackageReference Include="WebMarkupMin.NUglify" Version="2.8.1" />
   </ItemGroup>
 
