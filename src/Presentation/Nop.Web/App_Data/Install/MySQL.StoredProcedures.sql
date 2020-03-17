@@ -49,7 +49,7 @@ BEGIN
     select *
     from CategoryTree;
     
-	select c.`Id`, c.`Name`, ct.`Order` 
+	select c.*
 		from Category c
 			inner join `OrderedCategories` as ct on c.Id = ct.Id
 		#filter results
