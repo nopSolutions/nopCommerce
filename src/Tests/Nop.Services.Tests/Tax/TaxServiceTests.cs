@@ -113,6 +113,7 @@ namespace Nop.Services.Tests.Tax
                 null,
                 null,
                 new TestCacheManager(),
+                _storeContext.Object,
                 null);
 
             _taxService = new TaxService(_addressSettings,

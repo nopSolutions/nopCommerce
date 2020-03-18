@@ -153,7 +153,8 @@ namespace Nop.Services.Tests.Orders
             _customerService = new FakeCustomerService(
                 customerRepository: customerRepository, 
                 customerRoleRepository: _customerRoleRepository,
-                customerCustomerRoleMappingRepository: customerCustomerRoleMappingRepository);
+                customerCustomerRoleMappingRepository: customerCustomerRoleMappingRepository,
+                storeContext: _storeContext.Object);
 
             var currencySettings = new CurrencySettings { PrimaryStoreCurrencyId = 1 };
 

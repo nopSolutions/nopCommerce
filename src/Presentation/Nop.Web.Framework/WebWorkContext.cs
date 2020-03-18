@@ -198,14 +198,14 @@ namespace Nop.Web.Framework
                     _httpContextAccessor.HttpContext.Request.Path.Equals(new PathString($"/{NopTaskDefaults.ScheduleTaskPath}"), StringComparison.InvariantCultureIgnoreCase))
                 {
                     //in this case return built-in customer record for background task
-                    customer = _customerService.GetCustomerBySystemName(NopCustomerDefaults.BackgroundTaskCustomerName);
+                    customer = _customerService.GetOrCreateBackgroundTaskUser();
                 }
 
                 if (customer == null || customer.Deleted || !customer.Active || customer.RequireReLogin)
                 {
                     //check whether request is made by a search engine, in this case return built-in customer record for search engines
                     if (_userAgentHelper.IsSearchEngine())
-                        customer = _customerService.GetCustomerBySystemName(NopCustomerDefaults.SearchEngineCustomerName);
+                        customer = _customerService.GetOrCreateSearchEngineUser();
                 }
 
                 if (customer == null || customer.Deleted || !customer.Active || customer.RequireReLogin)
