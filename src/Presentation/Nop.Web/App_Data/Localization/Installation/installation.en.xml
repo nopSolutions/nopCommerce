@@ -101,6 +101,9 @@
   <LocaleResource Name="SqlAuthentication">
     <Value>Use SQL Server account</Value>
   </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
   <LocaleResource Name="SqlCompact">
     <Value>Use built-in data storage (SQL Server Compact)</Value>
   </LocaleResource>
