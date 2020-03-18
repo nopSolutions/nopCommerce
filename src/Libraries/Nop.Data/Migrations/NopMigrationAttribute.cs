@@ -19,5 +19,15 @@ namespace Nop.Data.Migrations
             base(DateTime.ParseExact(dateTime, _dateFormats, CultureInfo.InvariantCulture).Ticks, null)
         {
         }
+
+        /// <summary>
+        /// Initializes a new instance of the NopMigrationAttribute class
+        /// </summary>
+        /// <param name="dateTime">The migration date time string to convert on version</param>
+        /// <param name="description">The migration description</param>
+        public NopMigrationAttribute(string dateTime, string description) :
+            base(DateTime.ParseExact(dateTime, _dateFormats, CultureInfo.InvariantCulture).Ticks, description)
+        {
+        }
     }
 }

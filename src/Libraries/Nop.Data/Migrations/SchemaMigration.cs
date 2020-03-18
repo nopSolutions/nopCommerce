@@ -27,7 +27,7 @@ using Nop.Core.Domain.Vendors;
 
 namespace Nop.Data.Migrations
 {
-    [NopMigration("2020/01/31 11:24:16:2551771")]
+    [NopMigration("2020/01/31 11:24:16:2551771", "Nop.Data base schema")]
     public class SchemaMigration : AutoReversingMigration
     {
         private readonly IMigrationManager _migrationManager;
