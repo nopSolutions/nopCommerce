@@ -144,7 +144,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
 
             //generate editor
 
-            var htmlOutput = _htmlHelper.Editor(For.Name, new { htmlAttributes, postfix = Postfix });
+            var htmlOutput = _htmlHelper.Editor(For.Name, Template, new { htmlAttributes, postfix = Postfix });
             output.Content.SetHtmlContent(htmlOutput);
         }
     }
