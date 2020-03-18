@@ -7,6 +7,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Seo;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
@@ -17,11 +18,12 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
+        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly CatalogSettings _catalogSettings;
         private readonly CustomerSettings _customerSettings;
-        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
+        private readonly INotificationService _notificationService;
         private readonly IProductService _productService;
         private readonly IStoreContext _storeContext;
         private readonly IUrlRecordService _urlRecordService;
@@ -36,6 +38,7 @@ namespace Nop.Web.Controllers
             IBackInStockSubscriptionService backInStockSubscriptionService,
             ICustomerService customerService,
             ILocalizationService localizationService,
+            INotificationService notificationService,
             IProductService productService,
             IStoreContext storeContext,
             IUrlRecordService urlRecordService,
@@ -46,6 +49,7 @@ namespace Nop.Web.Controllers
             _backInStockSubscriptionService = backInStockSubscriptionService;
             _customerService = customerService;
             _localizationService = localizationService;
+            _notificationService = notificationService;
             _productService = productService;
             _storeContext = storeContext;
             _urlRecordService = urlRecordService;
@@ -84,6 +88,7 @@ namespace Nop.Web.Controllers
                 model.AlreadySubscribed = _backInStockSubscriptionService
                     .FindSubscription(_workContext.CurrentCustomer.Id, product.Id, _storeContext.CurrentStore.Id) != null;
             }
+
             return PartialView(model);
         }
 
@@ -112,10 +117,8 @@ namespace Nop.Web.Controllers
                     //unsubscribe
                     _backInStockSubscriptionService.DeleteSubscription(subscription);
 
-                    return Json(new
-                    {
-                        result = "Unsubscribed"
-                    });
+                    _notificationService.SuccessNotification(_localizationService.GetResource("BackInStockSubscriptions.Notification.Unsubscribed"));
+                    return new OkResult();
                 }
 
                 //subscription does not exist
@@ -138,10 +141,8 @@ namespace Nop.Web.Controllers
                 };
                 _backInStockSubscriptionService.InsertSubscription(subscription);
 
-                return Json(new
-                {
-                    result = "Subscribed"
-                });
+                _notificationService.SuccessNotification(_localizationService.GetResource("BackInStockSubscriptions.Notification.Subscribed"));
+                return new OkResult();
             }
 
             //subscription not possible

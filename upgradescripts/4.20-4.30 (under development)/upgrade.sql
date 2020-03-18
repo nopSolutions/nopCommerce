@@ -448,6 +448,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.ProductTags.Fields.SearchTagName.Hint">
     <Value>Search by a tag name.</Value>
   </LocaleResource>
+  <LocaleResource Name="BackInStockSubscriptions.Notification.Subscribed">
+    <Value>Subscribed</Value>
+  </LocaleResource>
+  <LocaleResource Name="BackInStockSubscriptions.Notification.Unsubscribed">
+    <Value>Unsubscribed</Value>
+  </LocaleResource>
 </Language>
 '
 

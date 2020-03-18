@@ -14697,6 +14697,12 @@
   <LocaleResource Name="BackInStockSubscriptions.NotifyMeWhenAvailable">
     <Value>Notify me when available</Value>
   </LocaleResource>
+  <LocaleResource Name="BackInStockSubscriptions.Notification.Subscribed">
+    <Value>Subscribed</Value>
+  </LocaleResource>
+  <LocaleResource Name="BackInStockSubscriptions.Notification.Unsubscribed">
+    <Value>Unsubscribed</Value>
+  </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.OnlyRegistered">
     <Value>Only registered customers can use this feature</Value>
   </LocaleResource>
