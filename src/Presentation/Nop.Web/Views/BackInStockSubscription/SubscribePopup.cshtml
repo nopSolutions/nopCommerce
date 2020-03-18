@@ -50,6 +50,7 @@
                             url: "@(Url.RouteUrl("BackInStockSubscribeSend", new { productId = Model.ProductId }))",
                             success: function (data, textStatus, jqXHR) {
                                 $(subscribeButton).closest('.ui-dialog-content').dialog('destroy').remove();
+                                location.reload();
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
                                 alert('Failed to change subscription.');
