@@ -12,7 +12,6 @@ namespace Nop.Web.Areas.Admin.Controllers
     //the original file was \RoxyFileman-1.4.5-net\fileman\asp_net\main.ashx
 
     //do not validate request token (XSRF)
-    [IgnoreAntiforgeryToken]
     public class RoxyFilemanController : BaseAdminController
     {
         #region Fields
@@ -47,6 +46,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         /// <summary>
         /// Process request
         /// </summary>
+        [IgnoreAntiforgeryToken]
         public virtual void ProcessRequest()
         {
             //async requests are disabled in the js code, so use .Wait() method here
@@ -61,6 +61,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         /// Process the incoming request
         /// </summary>
         /// <returns>A task that represents the completion of the operation</returns>
+        [IgnoreAntiforgeryToken]
         protected virtual async Task ProcessRequestAsync()
         {
             var action = "DIRLIST";

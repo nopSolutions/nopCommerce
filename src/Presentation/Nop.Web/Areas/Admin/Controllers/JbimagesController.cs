@@ -12,7 +12,6 @@ namespace Nop.Web.Areas.Admin.Controllers
     /// Controller used by jbimages (JustBoil.me) plugin (TimyMCE)
     /// </summary>
     //do not validate request token (XSRF)
-    [IgnoreAntiforgeryToken]
     public partial class JbimagesController : BaseAdminController
     {
         #region Const
@@ -43,6 +42,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult Upload()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
