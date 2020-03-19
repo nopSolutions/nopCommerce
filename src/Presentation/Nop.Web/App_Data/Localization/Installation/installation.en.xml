@@ -98,6 +98,9 @@
   <LocaleResource Name="SetupFailed">
     <Value>Setup failed: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="SqlAuthentication">
     <Value>Use SQL Server account</Value>
   </LocaleResource>

@@ -98,6 +98,12 @@
   <LocaleResource Name="SetupFailed">
     <Value>सेटअप में विफल रहा है: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="SqlAuthentication">
     <Value>SQL सर्वर खाते का उपयोग करें</Value>
   </LocaleResource>

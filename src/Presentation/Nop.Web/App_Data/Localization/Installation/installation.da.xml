@@ -98,6 +98,12 @@
   <LocaleResource Name="SetupFailed">
     <Value>Installationen fejlede: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="SqlAuthentication">
     <Value>Brug SQL Server konto</Value>
   </LocaleResource>

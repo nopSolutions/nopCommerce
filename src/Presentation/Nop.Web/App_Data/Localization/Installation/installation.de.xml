@@ -98,6 +98,12 @@
   <LocaleResource Name="SetupFailed">
     <Value>Installation schlug fehl: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="SqlAuthentication">
     <Value>SQL Server Konto benutzen</Value>
   </LocaleResource>
@@ -105,10 +111,10 @@
     <Value>Integrierte Datenbank verwenden (SQL Server Compact)</Value>
   </LocaleResource>
   <LocaleResource Name="ServerName">
-    <Value>SQL Server Name</Value>
+    <Value>Server Name</Value>
   </LocaleResource>
   <LocaleResource Name="ServerNameRequired">
-    <Value>SQL Server Name ist notwendig</Value>
+    <Value>Server Name ist notwendig</Value>
   </LocaleResource>
   <LocaleResource Name="SqlPassword">
     <Value>SQL Password</Value>
