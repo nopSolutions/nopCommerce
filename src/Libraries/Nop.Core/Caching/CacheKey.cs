@@ -9,6 +9,12 @@ namespace Nop.Core.Caching
 {
     public partial class CacheKey
     {
+        #region Fields
+
+        protected string _keyFormat = "";
+
+        #endregion
+
         #region Ctor
 
         public CacheKey(string cacheKey, int? cacheTime = null, params string[] prefixes)
@@ -34,6 +40,8 @@ namespace Nop.Core.Caching
         protected void Init(string cacheKey, int? cacheTime = null, params string[] prefixes)
         {
             Key = cacheKey;
+
+            _keyFormat = cacheKey;
 
             if (cacheTime.HasValue)
                 CacheTime = cacheTime.Value;
@@ -99,7 +107,7 @@ namespace Nop.Core.Caching
         public CacheKey FillCacheKey(params object[] keyObjects)
         {
             Key = keyObjects?.Any() ?? false
-                ? string.Format(Key, keyObjects.Select(CreateCacheKeyParameters).ToArray())
+                ? string.Format(_keyFormat, keyObjects.Select(CreateCacheKeyParameters).ToArray())
                 : Key;
 
             for (var i = 0; i < Prefixes.Count; i++)
