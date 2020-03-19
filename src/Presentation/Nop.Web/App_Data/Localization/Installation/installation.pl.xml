@@ -99,6 +99,12 @@
     <Value>Błąd instalacji: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="SqlAuthentication">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
     <Value>Użyj konta SQL Server</Value>
   </LocaleResource>
   <LocaleResource Name="SqlCompact">

@@ -98,6 +98,12 @@
   <LocaleResource Name="SetupFailed">
     <Value>Échec du programme: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="SqlAuthentication">
     <Value>Utiliser un compte SQL Server</Value>
   </LocaleResource>

@@ -40,7 +40,7 @@ namespace Nop.Web.Infrastructure.Installation
         }
 
         #endregion
-        
+
         #region Methods
 
         /// <summary>
@@ -214,25 +214,22 @@ namespace Nop.Web.Infrastructure.Installation
         /// <summary>
         /// Get a list of available data provider types
         /// </summary>
-        /// <returns>Available installation data provider types</returns>
-        public IList<SelectListItem> GetAvailableProviderTypes()
+        /// <param name="valuesToExclude">Values to exclude</param>
+        /// <param name="useLocalization">Localize</param>
+        /// <returns>SelectList</returns>
+        public SelectList GetAvailableProviderTypes(int[] valuesToExclude = null, bool useLocalization = true)
         {
-            //TODO 239 must be implemented
-            return new List<SelectListItem>
-            {
-                new SelectListItem()
+            var values =
+                from DataProviderType enumValue in Enum.GetValues(typeof(DataProviderType))
+                where enumValue != DataProviderType.Unknown && (valuesToExclude == null || !valuesToExclude.Contains(Convert.ToInt32(enumValue)))
+                select new
                 {
-                    Value = DataProviderType.SqlServer.ToString(),
-                    Text = GetResource(DataProviderType.SqlServer.ToString()),
-                    Selected = true
-                },
-                new SelectListItem()
-                {
-                    Value = DataProviderType.MySql.ToString(),
-                    Text = GetResource(DataProviderType.MySql.ToString()),
-                    Selected = true
-                }
-            };
+                    ID = Convert.ToInt32(enumValue),
+                    Name = useLocalization ? GetResource(enumValue.ToString()) :
+                    CommonHelper.ConvertEnum(enumValue.ToString())
+                };
+
+            return new SelectList(values.OrderBy(v => v.Name), "ID", "Name", null);
         }
 
         #endregion

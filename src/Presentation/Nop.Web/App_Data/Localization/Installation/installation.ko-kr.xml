@@ -98,6 +98,12 @@
   <LocaleResource Name="SetupFailed">
     <Value>설치 실패: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="SqlAuthentication">
     <Value>SQL Server 계정 사용</Value>
   </LocaleResource>

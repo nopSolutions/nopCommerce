@@ -100,6 +100,12 @@
   <LocaleResource Name="SetupFailed">
     <Value>Nastavenie sa nepodarilo: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="SqlAuthentication">
     <Value>Použiť účet SQL Serveru</Value>
   </LocaleResource>

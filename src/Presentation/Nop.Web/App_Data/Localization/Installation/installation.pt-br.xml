@@ -98,9 +98,15 @@
   <LocaleResource Name="SetupFailed">
     <Value>Falha na configuração: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="SqlAuthentication">
     <Value>Usar conta do servidor SQL</Value>
   </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+   </LocaleResource>
   <LocaleResource Name="SqlCompact">
     <Value>Usar banco embutido (SQL Server Compact)</Value>
   </LocaleResource>
