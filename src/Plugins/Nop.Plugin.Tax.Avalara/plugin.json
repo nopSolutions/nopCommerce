@@ -2,7 +2,7 @@
   "Group": "Tax providers",
   "FriendlyName": "Avalara tax provider",
   "SystemName": "Tax.Avalara",
-  "Version": "2.28",
+  "Version": "2.29",
   "SupportedVersions": [ "4.30" ],
   "Author": "nopCommerce team",
   "DisplayOrder": 1,

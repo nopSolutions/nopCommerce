@@ -68,6 +68,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
+        private readonly IStoreContext _storeContext;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
         private readonly VendorSettings _vendorSettings;
@@ -104,6 +105,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             ISpecificationAttributeService specificationAttributeService,
+            IStoreContext storeContext,
             IUrlRecordService urlRecordService,
             IWorkContext workContext,
             VendorSettings vendorSettings)
@@ -136,6 +138,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _shippingService = shippingService;
             _shoppingCartService = shoppingCartService;
             _specificationAttributeService = specificationAttributeService;
+            _storeContext = storeContext;
             _urlRecordService = urlRecordService;
             _workContext = workContext;
             _vendorSettings = vendorSettings;
@@ -930,12 +933,27 @@ namespace Nop.Web.Areas.Admin.Controllers
                 var prevSampleDownloadId = product.SampleDownloadId;
                 var previousStockQuantity = product.StockQuantity;
                 var previousWarehouseId = product.WarehouseId;
+                var previousProductType = product.ProductType;
 
                 //product
                 product = model.ToEntity(product);
 
                 product.UpdatedOnUtc = DateTime.UtcNow;
                 _productService.UpdateProduct(product);
+
+                //remove associated products
+                if (previousProductType == ProductType.GroupedProduct && product.ProductType == ProductType.SimpleProduct)
+                {
+                    var storeId = _storeContext.CurrentStore?.Id ?? 0;
+                    var vendorId = _workContext.CurrentVendor?.Id ?? 0;
+
+                    var associatedProducts = _productService.GetAssociatedProducts(product.Id, storeId, vendorId);
+                    foreach (var associatedProduct in associatedProducts)
+                    {
+                        associatedProduct.ParentGroupedProductId = 0;
+                        _productService.UpdateProduct(associatedProduct);
+                    }
+                }
 
                 //search engine name
                 model.SeName = _urlRecordService.ValidateSeName(product, model.SeName, product.Name, true);
