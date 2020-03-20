@@ -19,7 +19,7 @@ using Nop.Web.Framework.Security;
 namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
 {
     [Area(AreaNames.Admin)]
-    [HttpsRequirement(SslRequirement.Yes)]
+    [HttpsRequirement]
     [AutoValidateAntiforgeryToken]
     [ValidateIpAddress]
     [AuthorizeAdmin]
