@@ -95,7 +95,7 @@ namespace Nop.Core.Domain.Common
         public bool UseResponseCompression { get; set; }
 
         /// <summary>
-        /// Gets or sets a value of "Cache-Control" header value for static content
+        /// Gets or sets a value of "Cache-Control" header value for static content (in seconds)
         /// </summary>
         public string StaticFilesCacheControl { get; set; }
 
