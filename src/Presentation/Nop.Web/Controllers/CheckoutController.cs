@@ -147,7 +147,7 @@ namespace Nop.Web.Controllers
             //in order to avoid any possible limitations by payment gateway we reset GUID periodically
             var previousPaymentRequest = HttpContext.Session.Get<ProcessPaymentRequest>("OrderPaymentInfo");
             if (_paymentSettings.RegenerateOrderGuidInterval > 0 &&
-                previousPaymentRequest != null && 
+                previousPaymentRequest != null &&
                 previousPaymentRequest.OrderGuidGeneratedOnUtc.HasValue)
             {
                 var interval = DateTime.UtcNow - previousPaymentRequest.OrderGuidGeneratedOnUtc.Value;
@@ -453,7 +453,7 @@ namespace Nop.Web.Controllers
                         address.CountryId = null;
                     if (address.StateProvinceId == 0)
                         address.StateProvinceId = null;
-                    
+
                     _addressService.InsertAddress(address);
 
                     _customerService.InsertCustomerAddress(_workContext.CurrentCustomer, address);
