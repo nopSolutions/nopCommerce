@@ -19,6 +19,7 @@ using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
+using Nop.Services.Defaults;
 using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -259,7 +260,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             application.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(fileProvider.GetAbsolutePath("db_backups")),
+                FileProvider = new PhysicalFileProvider(fileProvider.GetAbsolutePath(NopCommonDefaults.DbBackupsPath)),
                 RequestPath = new PathString("/db_backups"),
                 ContentTypeProvider = provider
             });
