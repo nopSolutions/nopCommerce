@@ -535,19 +535,19 @@ namespace Nop.Services.Media
             PictureType defaultPictureType = PictureType.Entity)
         {
             var picture = GetPictureById(pictureId);
-            return GetPictureUrl(picture, targetSize, showDefaultPicture, storeLocation, defaultPictureType);
+            return GetPictureUrl(ref picture, targetSize, showDefaultPicture, storeLocation, defaultPictureType);
         }
 
         /// <summary>
         /// Get a picture URL
         /// </summary>
-        /// <param name="picture">Picture instance</param>
+        /// <param name="picture">Reference instance of Picture</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <returns>Picture URL</returns>
-        public virtual string GetPictureUrl(Picture picture,
+        public virtual string GetPictureUrl(ref Picture picture,
             int targetSize = 0,
             bool showDefaultPicture = true,
             string storeLocation = null,
@@ -649,7 +649,7 @@ namespace Nop.Services.Media
         /// <returns></returns>
         public virtual string GetThumbLocalPath(Picture picture, int targetSize = 0, bool showDefaultPicture = true)
         {
-            var url = GetPictureUrl(picture, targetSize, showDefaultPicture);
+            var url = GetPictureUrl(ref picture, targetSize, showDefaultPicture);
             if (string.IsNullOrEmpty(url))
                 return string.Empty;
 

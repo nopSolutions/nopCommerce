@@ -281,7 +281,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
                 //picture
                 var orderItemPicture = _pictureService.GetProductPicture(product, orderItem.AttributesXml);
-                orderItemModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(orderItemPicture, 75);
+                orderItemModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(ref orderItemPicture, 75);
 
                 //license file
                 if (orderItem.LicenseDownloadId.HasValue)

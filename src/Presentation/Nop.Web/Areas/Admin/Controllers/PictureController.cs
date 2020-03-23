@@ -55,7 +55,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 success = true,
                 pictureId = picture.Id,
-                imageUrl = _pictureService.GetPictureUrl(picture, 100)
+                imageUrl = _pictureService.GetPictureUrl(ref picture, 100)
             });
         }
 

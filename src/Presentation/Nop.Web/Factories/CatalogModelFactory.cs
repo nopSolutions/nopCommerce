@@ -174,7 +174,7 @@ namespace Nop.Web.Factories
 
             //order sorting options
             var orderedActiveSortingOptions = activeSortingOptionsIds
-                .Select(id => new { Id = id, Order = _catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(id, out int order) ? order : id })
+                .Select(id => new { Id = id, Order = _catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(id, out var order) ? order : id })
                 .OrderBy(option => option.Order).ToList();
 
             pagingFilteringModel.AllowProductSorting = true;
@@ -262,7 +262,7 @@ namespace Nop.Web.Factories
                     // get the first page size entry to use as the default (category page load) or if customer enters invalid value via query string
                     if (command.PageSize <= 0 || !pageSizes.Contains(command.PageSize.ToString()))
                     {
-                        if (int.TryParse(pageSizes.FirstOrDefault(), out int temp))
+                        if (int.TryParse(pageSizes.FirstOrDefault(), out var temp))
                         {
                             if (temp > 0)
                             {
@@ -276,7 +276,7 @@ namespace Nop.Web.Factories
 
                     foreach (var pageSize in pageSizes)
                     {
-                        if (!int.TryParse(pageSize, out int temp))
+                        if (!int.TryParse(pageSize, out var temp))
                             continue;
 
                         if (temp <= 0)
@@ -403,8 +403,8 @@ namespace Nop.Web.Factories
                             var picture = _pictureService.GetPictureById(x.PictureId);
                             var pictureModel = new PictureModel
                             {
-                                FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                                ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                                FullSizeImageUrl = _pictureService.GetPictureUrl(ref picture),
+                                ImageUrl = _pictureService.GetPictureUrl(ref picture, pictureSize),
                                 Title = string.Format(
                                     _localizationService.GetResource("Media.Category.ImageLinkTitleFormat"),
                                     subCatModel.Name),
@@ -617,8 +617,8 @@ namespace Nop.Web.Factories
                             var picture = _pictureService.GetPictureById(category.PictureId);
                             var pictureModel = new PictureModel
                             {
-                                FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                                ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                                FullSizeImageUrl = _pictureService.GetPictureUrl(ref picture),
+                                ImageUrl = _pictureService.GetPictureUrl(ref picture, pictureSize),
                                 Title = string.Format(
                                     _localizationService.GetResource("Media.Category.ImageLinkTitleFormat"),
                                     catModel.Name),
@@ -918,8 +918,8 @@ namespace Nop.Web.Factories
                     var picture = _pictureService.GetPictureById(manufacturer.PictureId);
                     var pictureModel = new PictureModel
                     {
-                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                        ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                        FullSizeImageUrl = _pictureService.GetPictureUrl(ref picture),
+                        ImageUrl = _pictureService.GetPictureUrl(ref picture, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), modelMan.Name),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), modelMan.Name)
                     };
@@ -1057,8 +1057,8 @@ namespace Nop.Web.Factories
                     var picture = _pictureService.GetPictureById(vendor.PictureId);
                     var pictureModel = new PictureModel
                     {
-                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                        ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                        FullSizeImageUrl = _pictureService.GetPictureUrl(ref picture),
+                        ImageUrl = _pictureService.GetPictureUrl(ref picture, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.Vendor.ImageLinkTitleFormat"), vendorModel.Name),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Vendor.ImageAlternateTextFormat"), vendorModel.Name)
                     };
@@ -1363,7 +1363,7 @@ namespace Nop.Web.Factories
                         //min price
                         if (!string.IsNullOrEmpty(model.pf))
                         {
-                            if (decimal.TryParse(model.pf, out decimal minPrice))
+                            if (decimal.TryParse(model.pf, out var minPrice))
                                 minPriceConverted =
                                     _currencyService.ConvertToPrimaryStoreCurrency(minPrice,
                                         _workContext.WorkingCurrency);
@@ -1372,7 +1372,7 @@ namespace Nop.Web.Factories
                         //max price
                         if (!string.IsNullOrEmpty(model.pt))
                         {
-                            if (decimal.TryParse(model.pt, out decimal maxPrice))
+                            if (decimal.TryParse(model.pt, out var maxPrice))
                                 maxPriceConverted =
                                     _currencyService.ConvertToPrimaryStoreCurrency(maxPrice,
                                         _workContext.WorkingCurrency);

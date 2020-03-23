@@ -216,7 +216,7 @@ namespace Nop.Web.Factories
 
             var picture = _pictureService.GetPictureById(vendor.PictureId);
             var pictureSize = _mediaSettings.AvatarPictureSize;
-            model.PictureUrl = picture != null ? _pictureService.GetPictureUrl(picture, pictureSize) : string.Empty;
+            model.PictureUrl = picture != null ? _pictureService.GetPictureUrl(ref picture, pictureSize) : string.Empty;
 
             //vendor attributes
             if (string.IsNullOrEmpty(overriddenVendorAttributesXml))

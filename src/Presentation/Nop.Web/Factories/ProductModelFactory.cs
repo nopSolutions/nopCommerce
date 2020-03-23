@@ -449,8 +449,8 @@ namespace Nop.Web.Factories
                 var picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
                 var pictureModel = new PictureModel
                 {
-                    ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
-                    FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
+                    ImageUrl = _pictureService.GetPictureUrl(ref picture, pictureSize),
+                    FullSizeImageUrl = _pictureService.GetPictureUrl(ref picture),
                     //"title" attribute
                     Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute))
                         ? picture.TitleAttribute
@@ -795,8 +795,8 @@ namespace Nop.Web.Factories
                                 {
                                     return new PictureModel
                                     {
-                                        FullSizeImageUrl = _pictureService.GetPictureUrl(imageSquaresPicture),
-                                        ImageUrl = _pictureService.GetPictureUrl(imageSquaresPicture, _mediaSettings.ImageSquarePictureSize)
+                                        FullSizeImageUrl = _pictureService.GetPictureUrl(ref imageSquaresPicture),
+                                        ImageUrl = _pictureService.GetPictureUrl(ref imageSquaresPicture, _mediaSettings.ImageSquarePictureSize)
                                     };
                                 }
 
@@ -996,8 +996,8 @@ namespace Nop.Web.Factories
                 var defaultPicture = pictures.FirstOrDefault();
                 var defaultPictureModel = new PictureModel
                 {
-                    ImageUrl = _pictureService.GetPictureUrl(defaultPicture, defaultPictureSize, !isAssociatedProduct),
-                    FullSizeImageUrl = _pictureService.GetPictureUrl(defaultPicture, 0, !isAssociatedProduct)
+                    ImageUrl = _pictureService.GetPictureUrl(ref defaultPicture, defaultPictureSize, !isAssociatedProduct),
+                    FullSizeImageUrl = _pictureService.GetPictureUrl(ref defaultPicture, 0, !isAssociatedProduct)
                 };
                 //"title" attribute
                 defaultPictureModel.Title = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.TitleAttribute)) ?
@@ -1010,13 +1010,14 @@ namespace Nop.Web.Factories
 
                 //all pictures
                 var pictureModels = new List<PictureModel>();
-                foreach (var picture in pictures)
+                for (var i = 0; i < pictures.Count(); i++ )
                 {
+                    var picture = pictures[i];
                     var pictureModel = new PictureModel
                     {
-                        ImageUrl = _pictureService.GetPictureUrl(picture, defaultPictureSize, !isAssociatedProduct),
-                        ThumbImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
-                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
+                        ImageUrl = _pictureService.GetPictureUrl(ref picture, defaultPictureSize, !isAssociatedProduct),
+                        ThumbImageUrl = _pictureService.GetPictureUrl(ref picture, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
+                        FullSizeImageUrl = _pictureService.GetPictureUrl(ref picture),
                         Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), productName),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), productName),
                     };

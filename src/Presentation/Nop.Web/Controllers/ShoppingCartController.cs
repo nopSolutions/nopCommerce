@@ -1066,8 +1066,8 @@ namespace Nop.Web.Controllers
                         var picture = _pictureService.GetPictureById(pictureId);
                         return picture == null ? new PictureModel() : new PictureModel
                         {
-                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                            ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ProductDetailsPictureSize)
+                            FullSizeImageUrl = _pictureService.GetPictureUrl(ref picture),
+                            ImageUrl = _pictureService.GetPictureUrl(ref picture, _mediaSettings.ProductDetailsPictureSize)
                         };
                     });
                     pictureFullSizeUrl = pictureModel.FullSizeImageUrl;

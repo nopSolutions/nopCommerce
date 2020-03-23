@@ -720,7 +720,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
                     var defaultProductPicture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
-                    productModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture, 75);
+                    productModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(ref defaultProductPicture, 75);
                     productModel.ProductTypeName = _localizationService.GetLocalizedEnum(product.ProductType);
                     if (product.ProductType == ProductType.SimpleProduct && product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
                         productModel.StockQuantityStr = _productService.GetTotalStockQuantity(product).ToString();
@@ -1345,7 +1345,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var picture = _pictureService.GetPictureById(productPicture.PictureId)
                                   ?? throw new Exception("Picture cannot be loaded");
 
-                    productPictureModel.PictureUrl = _pictureService.GetPictureUrl(picture);
+                    productPictureModel.PictureUrl = _pictureService.GetPictureUrl(ref picture);
                     productPictureModel.OverrideAltAttribute = picture.AltAttribute;
                     productPictureModel.OverrideTitleAttribute = picture.TitleAttribute;
 
@@ -1941,7 +1941,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var pictureThumbnailUrl = _pictureService.GetPictureUrl(value.PictureId, 75, false);
                     //little hack here. Grid is rendered wrong way with <img> without "src" attribute
                     if (string.IsNullOrEmpty(pictureThumbnailUrl))
-                        pictureThumbnailUrl = _pictureService.GetPictureUrl(null, 1);
+                        pictureThumbnailUrl = _pictureService.GetDefaultPictureUrl(targetSize: 1);
                     productAttributeValueModel.PictureThumbnailUrl = pictureThumbnailUrl;
 
                     return productAttributeValueModel;
@@ -2135,7 +2135,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     var pictureThumbnailUrl = _pictureService.GetPictureUrl(combination.PictureId, 75, false);
                     //little hack here. Grid is rendered wrong way with <img> without "src" attribute
                     if (string.IsNullOrEmpty(pictureThumbnailUrl))
-                        pictureThumbnailUrl = _pictureService.GetPictureUrl(null, 1);
+                        pictureThumbnailUrl = _pictureService.GetDefaultPictureUrl(targetSize: 1);
+                        
                     productAttributeCombinationModel.PictureThumbnailUrl = pictureThumbnailUrl;
                     var warnings = _shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
                         ShoppingCartType.ShoppingCart, product,

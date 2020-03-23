@@ -213,7 +213,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                                 return res;
                             }),
                             url = urlHelper.RouteUrl("Product", new { SeName = seName }, _webHelper.CurrentRequestProtocol),
-                            image = _pictureService.GetPictureUrl(picture),
+                            image = _pictureService.GetPictureUrl(ref picture),
                             quantity = item.Quantity,
                             price = _shoppingCartService.GetSubTotal(item)
                         };
@@ -324,7 +324,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                             return res;
                         }),
                         url = urlHelper.RouteUrl("Product", new { SeName = seName }, _webHelper.CurrentRequestProtocol),
-                        image = _pictureService.GetPictureUrl(picture),
+                        image = _pictureService.GetPictureUrl(ref picture),
                         quantity = item.Quantity,
                         price = item.PriceInclTax,
                     };
