@@ -47,12 +47,18 @@ namespace Nop.Core.Caching
             if (key.CacheTime <= 0)
                 return acquire();
 
-            return _memoryCache.GetOrCreate(key.Key, entry =>
+            var result = _memoryCache.GetOrCreate(key.Key, entry =>
             {
                 SetupEntry(entry, key);
 
                 return acquire();
             });
+
+            //do not cache null value
+            if (result == null)
+               Remove(key);
+
+            return result;
         }
 
         private void SetupEntry(ICacheEntry entry, CacheKey key)
@@ -102,12 +108,18 @@ namespace Nop.Core.Caching
             if (key.CacheTime <= 0)
                 return await acquire();
 
-            return await _memoryCache.GetOrCreateAsync(key.Key, async entry =>
+            var result= await _memoryCache.GetOrCreateAsync(key.Key, async entry =>
             {
                 SetupEntry(entry, key);
 
                 return await acquire();
             });
+
+            //do not cache null value
+            if (result == null)
+                Remove(key);
+
+            return result;
         }
 
         /// <summary>
@@ -117,7 +129,7 @@ namespace Nop.Core.Caching
         /// <param name="data">Value for caching</param>
         public void Set(CacheKey key, object data)
         {
-            if (key.CacheTime <= 0)
+            if (key.CacheTime <= 0 || data == null)
                 return;
 
             var option = new MemoryCacheEntryOptions();
