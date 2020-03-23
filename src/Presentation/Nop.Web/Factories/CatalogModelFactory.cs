@@ -459,11 +459,9 @@ namespace Nop.Web.Factories
 
             var categoryIds = new List<int> { category.Id };
 
+            //include subcategories
             if (_catalogSettings.ShowProductsFromSubcategories)
-            {
-                //include subcategories
-                categoryIds.AddRange(_categoryService.GetChildCategoryIds(category.Id, _storeContext.CurrentStore.Id));
-            }
+                categoryIds.AddRange(model.SubCategories.Select(sc => sc.Id));
 
             //products
             IList<int> alreadyFilteredSpecOptionIds = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
