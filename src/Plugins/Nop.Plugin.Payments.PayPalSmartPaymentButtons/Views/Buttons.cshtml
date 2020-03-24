@@ -21,6 +21,14 @@
     $(document).ready(function() {
         var paymentForm = paypal.Buttons({
             onClick: function (e, n) {
+                //terms of service
+                if ($('#termsofservice').length > 0) {
+                    //terms of service element exists
+                    if (!$('#termsofservice').is(':checked')) {
+                        $("#terms-of-service-warning-box").dialog();
+                        return false;
+                    }
+                }
                 window.location = '@Url.RouteUrl("Checkout")';
                 return false;
             },
