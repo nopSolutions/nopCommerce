@@ -25,6 +25,8 @@ WORKDIR /src/Plugins/Nop.Plugin.Payments.CheckMoneyOrder
 RUN dotnet build Nop.Plugin.Payments.CheckMoneyOrder.csproj
 WORKDIR /src/Plugins/Nop.Plugin.Payments.Manual
 RUN dotnet build Nop.Plugin.Payments.Manual.csproj
+WORKDIR /src/Plugins/Nop.Plugin.Payments.PayPalSmartPaymentButtons
+RUN dotnet build Nop.Plugin.Payments.PayPalSmartPaymentButtons.csproj
 WORKDIR /src/Plugins/Nop.Plugin.Payments.PayPalStandard
 RUN dotnet build Nop.Plugin.Payments.PayPalStandard.csproj
 WORKDIR /src/Plugins/Nop.Plugin.Payments.Qualpay
@@ -35,6 +37,8 @@ WORKDIR /src/Plugins/Nop.Plugin.Pickup.PickupInStore
 RUN dotnet build Nop.Plugin.Pickup.PickupInStore.csproj
 WORKDIR /src/Plugins/Nop.Plugin.Shipping.FixedByWeightByTotal
 RUN dotnet build Nop.Plugin.Shipping.FixedByWeightByTotal.csproj
+WORKDIR /src/Plugins/Nop.Plugin.Shipping.ShipStation
+RUN dotnet build Nop.Plugin.Shipping.ShipStation.csproj
 WORKDIR /src/Plugins/Nop.Plugin.Shipping.UPS
 RUN dotnet build Nop.Plugin.Shipping.UPS.csproj
 WORKDIR /src/Plugins/Nop.Plugin.Tax.Avalara
@@ -51,7 +55,7 @@ WORKDIR /src/Presentation/Nop.Web
 RUN dotnet publish Nop.Web.csproj -c Release -o /app/published
 
 # create the runtime instance 
-FROM mcr.microsoft.com/dotnet/core/runtime:3.1 AS runtime 
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine AS runtime 
 
 # add globalization support
 RUN apk add --no-cache icu-libs
