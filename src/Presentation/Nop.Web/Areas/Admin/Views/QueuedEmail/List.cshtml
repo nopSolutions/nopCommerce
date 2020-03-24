@@ -23,11 +23,11 @@
                 @T("Admin.System.QueuedEmails.DeleteSelected")
             </button>
             <nop-action-confirmation asp-button-id="delete-selected" />
-            <button type="button" id="delete-all" name="delete-all" class="btn bg-red">
+            <button type="submit" id="delete-all" name="delete-all" class="btn bg-red">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.System.QueuedEmails.DeleteAll")
             </button>
-            <nop-action-confirmation asp-button-id="delete-all" />
+            <nop-action-confirmation asp-button-id="delete-all" asp-action="DeleteAll" />
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.QueuedEmailListButtons })
         </div>
     </div>

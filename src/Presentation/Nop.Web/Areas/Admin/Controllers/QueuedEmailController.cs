@@ -206,7 +206,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(new { Result = true });
         }
 
-        [HttpPost, ActionName("List")]
+        [HttpPost, ActionName("DeleteAll")]
         [FormValueRequired("delete-all")]
         public virtual IActionResult DeleteAll()
         {
