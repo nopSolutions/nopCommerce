@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
 using Nop.Services.Events;
@@ -70,7 +69,7 @@ namespace Nop.Plugin.Payments.Qualpay.Services
                 return;
 
             //add Embedded Fields sсript and styles to the one page checkout
-            if (eventMessage.GetRouteNames().Any(routeName => routeName.Equals(QualpayDefaults.OnePageCheckoutRouteName)))
+            if (eventMessage.GetRouteName()?.Equals(QualpayDefaults.OnePageCheckoutRouteName) ?? false)
             {
                 eventMessage.Helper.AddScriptParts(ResourceLocation.Footer, QualpayDefaults.EmbeddedFieldsScriptPath, excludeFromBundle: true);
                 eventMessage.Helper.AddCssFileParts(QualpayDefaults.EmbeddedFieldsStylePath, excludeFromBundle: true);
