@@ -258,7 +258,11 @@ namespace Nop.Core.Infrastructure
         /// <returns>The absolute path to the directory</returns>
         public virtual string GetAbsolutePath(params string[] paths)
         {
-            var allPaths = new List<string> { Root };
+            var allPaths = new List<string>();
+
+            if(paths.Any() && !paths[0].Contains(Root, StringComparison.InvariantCulture))
+                allPaths.Add(Root);
+
             allPaths.AddRange(paths);
 
             return Combine(allPaths.ToArray());
