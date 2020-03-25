@@ -346,6 +346,9 @@ namespace Nop.Services.Media.RoxyFileman
             {
                 var uniqueFileName = GetUniqueFileName(filePath, _fileProvider.GetFileNameWithoutExtension(filePath));
 
+                if (_pictureService.GetPictureSeName(uniqueFileName) != null)
+                    continue;
+
                 var picture = new Picture
                 {
                     IsNew = true,
