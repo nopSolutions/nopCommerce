@@ -1141,7 +1141,7 @@ namespace Nop.Services.Customers
 
             var key = NopCustomerServiceCachingDefaults.CustomerRoleIdsCacheKey.FillCacheKey(customer.Id, showHidden);
 
-            return query.ToCachedArray(key);
+            return _cacheManager.Get(key, () => query.ToArray());
         }
 
         /// <summary>
@@ -1539,7 +1539,7 @@ namespace Nop.Services.Customers
 
             var key = NopCustomerServiceCachingDefaults.CustomerAddressCacheKeyCacheKey.FillCacheKey(customerId, addressId);
 
-            return query.ToCachedSingle(key);
+            return _cacheManager.Get(key, () => query.Single());
         }
 
         /// <summary>
