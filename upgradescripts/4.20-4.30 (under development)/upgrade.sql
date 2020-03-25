@@ -2667,3 +2667,17 @@ BEGIN
    VALUES (N'UploadIcons', N'Upload a favicon and app icons', 'true')
 END
 GO
+
+--update setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.StaticFilesCacheControl')
+BEGIN
+    INSERT INTO [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'commonsettings.StaticFilesCacheControl', N'public,max-age=31536000', 0)    
+END
+ELSE 
+BEGIN
+    UPDATE [Setting]
+    SET [Value] = N'public,max-age=31536000'
+    WHERE [Name] = N'commonsettings.StaticFilesCacheControl'
+END
+GO
