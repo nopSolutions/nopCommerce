@@ -78,7 +78,8 @@ namespace Nop.Web.Framework.Validators
             var maxLengthExpressions = columnsMaxLengths.Select(property => new
             {
                 MaxLength = property.Length.Value,
-                Expression = DynamicExpressionParser.ParseLambda<TModel, string>(null, false, property.ColumnName)
+                // We must using identifiers of the form @SomeName to avoid problems with parsing fields that match reserved words https://github.com/StefH/System.Linq.Dynamic.Core/wiki/Dynamic-Expressions#substitution-values
+                Expression = DynamicExpressionParser.ParseLambda<TModel, string>(null, false, "@" + property.ColumnName)
             }).ToList();
 
             //define string length validation rules
