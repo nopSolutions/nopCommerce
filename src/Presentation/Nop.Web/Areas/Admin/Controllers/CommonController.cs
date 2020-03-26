@@ -178,7 +178,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (fileName.Equals("index.htm", StringComparison.InvariantCultureIgnoreCase))
                         continue;
 
-                    var info = _fileProvider.GetFileInfo(_fileProvider.Combine(EXPORT_IMPORT_PATH, fileName));
+                    var info = _fileProvider.GetFileInfo(fullPath);
                     var lastModifiedTimeUtc = info.LastModified.UtcDateTime;
                     if ((!startDateValue.HasValue || startDateValue.Value < lastModifiedTimeUtc) &&
                         (!endDateValue.HasValue || lastModifiedTimeUtc < endDateValue.Value))
