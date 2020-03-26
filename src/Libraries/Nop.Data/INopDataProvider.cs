@@ -218,6 +218,11 @@ namespace Nop.Data
         /// </summary>
         int SupportedLengthOfBinaryHash { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this data provider supports backup
+        /// </summary>
+        bool BackupSupported { get; }
+
         #endregion
     }
 }

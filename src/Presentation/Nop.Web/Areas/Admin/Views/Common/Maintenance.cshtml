@@ -55,7 +55,10 @@
                 </div>                
                 <div class="row">
                     <nop-panels id="maintenance-thirdline-panels">
-                        <nop-panel class="col-md-6 col-xs-12 margin-t-5" asp-name="maintenance-backups" asp-icon="fa fa-hdd-o" asp-title="@T("Admin.System.Maintenance.BackupDatabase.DatabaseBackups")" asp-hide-block-attribute-name="@hideBackupsBlockAttributeName" asp-hide="@hideBackupsBlock" asp-advanced="false">@await Html.PartialAsync("_Maintenance.DBBackups", Model)</nop-panel>
+                        @if (Model.BackupSupported)
+                        {
+                            <nop-panel class="col-md-6 col-xs-12 margin-t-5" asp-name="maintenance-backups" asp-icon="fa fa-hdd-o" asp-title="@T("Admin.System.Maintenance.BackupDatabase.DatabaseBackups")" asp-hide-block-attribute-name="@hideBackupsBlockAttributeName" asp-hide="@hideBackupsBlock" asp-advanced="false">@await Html.PartialAsync("_Maintenance.DBBackups", Model)</nop-panel>    
+                        }
                         <nop-panel class="col-md-6 col-xs-12 margin-t-5" asp-name="maintenance-delete-already-sent-queued-emails" asp-icon="fa fa-trash" asp-title="@T("Admin.System.Maintenance.DeleteAlreadySentQueuedEmails")" asp-hide-block-attribute-name="@hideDeleteAlreadySentQueuedEmailsBlockAttributeName" asp-hide="@hideDeleteAlreadySentQueuedEmailsBlock" asp-advanced="false">@await Html.PartialAsync("_Maintenance.DeleteAlreadySentQueuedEmails", Model)</nop-panel>
                     </nop-panels>
                 </div>

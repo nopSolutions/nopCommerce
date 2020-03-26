@@ -18,6 +18,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Authentication.External;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
@@ -56,6 +57,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
+        private readonly INopDataProvider _dataProvider;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IExchangeRatePluginManager _exchangeRatePluginManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -97,6 +99,7 @@ namespace Nop.Web.Areas.Admin.Factories
             IAuthenticationPluginManager authenticationPluginManager,
             ICurrencyService currencyService,
             ICustomerService customerService,
+            INopDataProvider dataProvider,
             IDateTimeHelper dateTimeHelper,
             INopFileProvider fileProvider,
             IExchangeRatePluginManager exchangeRatePluginManager,
@@ -134,6 +137,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _authenticationPluginManager = authenticationPluginManager;
             _currencyService = currencyService;
             _customerService = customerService;
+            _dataProvider = dataProvider;
             _dateTimeHelper = dateTimeHelper;
             _exchangeRatePluginManager = exchangeRatePluginManager;
             _httpContextAccessor = httpContextAccessor;
@@ -775,6 +779,8 @@ namespace Nop.Web.Areas.Admin.Factories
             model.DeleteAbandonedCarts.OlderThan = DateTime.UtcNow.AddDays(-182);
 
             model.DeleteAlreadySentQueuedEmails.EndDate = DateTime.UtcNow.AddDays(-7);
+
+            model.BackupSupported = _dataProvider.BackupSupported;
 
             //prepare nested search model
             PrepareBackupFileSearchModel(model.BackupFileSearchModel);

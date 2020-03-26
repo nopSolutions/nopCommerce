@@ -368,6 +368,11 @@ namespace Nop.Data
         /// </summary>
         public int SupportedLengthOfBinaryHash { get; } = 8000;
 
+        /// <summary>
+        /// Gets a value indicating whether this data provider supports backup
+        /// </summary>
+        public virtual bool BackupSupported => true;
+
         #endregion
     }
 }

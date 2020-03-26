@@ -26,6 +26,8 @@ namespace Nop.Web.Areas.Admin.Models.Common
 
         public DeleteAlreadySentQueuedEmailsModel DeleteAlreadySentQueuedEmails { get; set; }
 
+        public bool BackupSupported { get; set; }
+
         #region Nested classes
 
         public partial class DeleteGuestsModel : BaseNopModel
