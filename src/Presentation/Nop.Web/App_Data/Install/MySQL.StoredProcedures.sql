@@ -124,7 +124,7 @@ BEGIN
 			FROM `Customer_CustomerRole_Mapping` ccrm
 				INNER JOIN `CustomerRole` cr ON cr.`Id` = ccrm.`CustomerRole_Id`
 			WHERE cr.`SystemName` = 'Guests'
-		) g ON g.`CustomerId` = c.`Id`
+		) g ON g.`Customer_Id` = c.`Id`
 		LEFT JOIN `Order` o ON o.`CustomerId` = c.`Id`
 		LEFT JOIN `BlogComment` bc ON bc.`CustomerId` = c.`Id`
 		LEFT JOIN `NewsComment` nc ON nc.`CustomerId` = c.`Id`
