@@ -445,7 +445,7 @@ namespace Nop.Services.Localization
             if (xmlStreamReader.EndOfStream)
                 return;
 
-            var lsNamesList = _lsrRepository.Table.Select(x => x.ResourceName).ToHashSet();
+            var lsNamesList = _lsrRepository.Table.Where(x => x.LanguageId == language.Id).Select(x => x.ResourceName).ToHashSet();
 
             var lrsToUpdateList = new List<LocaleStringResource>();
             var lrsToInsertList = new List<LocaleStringResource>();
