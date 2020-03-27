@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace Nop.Core.Caching
@@ -48,22 +46,7 @@ namespace Nop.Core.Caching
 
             Prefixes.AddRange(prefixes);
         }
-
-        /// <summary>
-        /// Create a data hash
-        /// </summary>
-        /// <param name="data">The data for calculating the hash</param>
-        /// <returns>Data hash</returns>
-        private static string CreateHash(byte[] data)
-        {
-            var algorithm = (HashAlgorithm)CryptoConfig.CreateFromName("SHA512");
-            if (algorithm == null)
-                throw new ArgumentException("Unrecognized hash name");
-
-            var hashByteArray = algorithm.ComputeHash(data);
-            return BitConverter.ToString(hashByteArray).Replace("-", string.Empty);
-        }
-
+        
         /// <summary>
         /// Creates the hash sum of identifiers list
         /// </summary>
@@ -76,7 +59,7 @@ namespace Nop.Core.Caching
             if (!identifiers.Any())
                 return string.Empty;
 
-            return CreateHash(Encoding.UTF8.GetBytes(string.Join(", ", identifiers.OrderBy(id => id))));
+            return HashHelper.CreateHash(Encoding.UTF8.GetBytes(string.Join(", ", identifiers.OrderBy(id => id))), "SHA512");
         }
 
         /// <summary>

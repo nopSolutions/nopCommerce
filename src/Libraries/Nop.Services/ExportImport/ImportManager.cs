@@ -56,7 +56,6 @@ namespace Nop.Services.ExportImport
         private readonly ICustomerActivityService _customerActivityService;
         private readonly INopDataProvider _dataProvider;
         private readonly IDateRangeService _dateRangeService;
-        private readonly IEncryptionService _encryptionService;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
@@ -93,7 +92,6 @@ namespace Nop.Services.ExportImport
             ICustomerActivityService customerActivityService,
             INopDataProvider dataProvider,
             IDateRangeService dateRangeService,
-            IEncryptionService encryptionService,
             IHttpClientFactory httpClientFactory,
             ILocalizationService localizationService,
             ILogger logger,
@@ -126,7 +124,6 @@ namespace Nop.Services.ExportImport
             _customerActivityService = customerActivityService;
             _dataProvider = dataProvider;
             _dateRangeService = dateRangeService;
-            _encryptionService = encryptionService;
             _httpClientFactory = httpClientFactory;
             _fileProvider = fileProvider;
             _localizationService = localizationService;
@@ -367,12 +364,12 @@ namespace Nop.Services.ExportImport
                         var pictureAlreadyExists = false;
                         if (!product.IsNew)
                         {
-                            var newImageHash = _encryptionService.CreateHash(
+                            var newImageHash = HashHelper.CreateHash(
                                 newPictureBinary,
                                 IMAGE_HASH_ALGORITHM,
                                 _dataProvider.SupportedLengthOfBinaryHash);
                                     
-                            var newValidatedImageHash = _encryptionService.CreateHash(
+                            var newValidatedImageHash = HashHelper.CreateHash(
                                 _pictureService.ValidatePicture(newPictureBinary, mimeType), 
                                 IMAGE_HASH_ALGORITHM,
                                 _dataProvider.SupportedLengthOfBinaryHash);
