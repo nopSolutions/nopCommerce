@@ -87,9 +87,8 @@ namespace Nop.Data
         /// <param name="foreignColumn">Foreign key column name</param>
         /// <param name="primaryTable">Primary table</param>
         /// <param name="primaryColumn">Primary key column name</param>
-        /// <param name="isShort">Indicates whether to use short form</param>
         /// <returns>Name of a foreign key</returns>
-        string GetForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn, bool isShort = true);
+        string CreateForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn);
 
         /// <summary>
         /// Gets the name of an index

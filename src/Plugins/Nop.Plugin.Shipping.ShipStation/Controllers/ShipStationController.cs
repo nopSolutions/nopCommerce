@@ -81,7 +81,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
         public ActionResult Configure(ShipStationModel model)
         {
             if (!ModelState.IsValid)
-                return Configure();
+                return RedirectToAction("Configure");
 
             //load settings for a chosen store scope
             var storeScope = _storeContext.ActiveStoreScopeConfiguration;
@@ -111,8 +111,8 @@ namespace Nop.Plugin.Shipping.ShipStation.Controllers
             _settingService.ClearCache();
 
 			_notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
-            
-            return Configure();
+
+            return RedirectToAction("Configure");
         }
 
         public IActionResult Webhook()

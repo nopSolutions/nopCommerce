@@ -6,7 +6,6 @@ using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
@@ -25,7 +24,6 @@ using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
-using Nop.Web.Areas.Admin.Infrastructure.Cache;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Orders;
@@ -1483,9 +1481,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     throw new ArgumentOutOfRangeException(nameof(attribute.AttributeType));
             }
 
-            Action<AddSpecificationAttributeLocalizedModel, int> localizedModelConfiguration;
-
-            localizedModelConfiguration = (locale, languageId) =>
+            void localizedModelConfiguration(AddSpecificationAttributeLocalizedModel locale, int languageId)
             {
                 switch (attribute.AttributeType)
                 {
@@ -1502,9 +1498,9 @@ namespace Nop.Web.Areas.Admin.Factories
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            };
+            }
 
-            model.Locales = _localizedModelFactory.PrepareLocalizedModels(localizedModelConfiguration);
+            model.Locales = _localizedModelFactory.PrepareLocalizedModels((Action<AddSpecificationAttributeLocalizedModel, int>)localizedModelConfiguration);
 
             return model;
         }

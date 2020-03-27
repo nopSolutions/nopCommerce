@@ -102,7 +102,7 @@ namespace Nop.Plugin.Payments.Qualpay.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Configure();
+                return RedirectToAction("Configure");
 
             //load settings for a chosen store scope
             var storeId = _storeContext.ActiveStoreScopeConfiguration;
@@ -151,7 +151,7 @@ namespace Nop.Plugin.Payments.Qualpay.Controllers
             //display notification
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return Configure();
+            return RedirectToAction("Configure");
         }
 
         [HttpPost, ActionName("Configure")]
@@ -164,7 +164,7 @@ namespace Nop.Plugin.Payments.Qualpay.Controllers
             //load settings
             var settings = _settingService.LoadSetting<QualpaySettings>();
             if (settings.MerchantEmail == model.MerchantEmail)
-                return Configure();
+                return RedirectToAction("Configure");
 
             //try to subscribe/unsubscribe
             var (success, errorMessage) = _qualpayManager.SubscribeForQualpayNews(model.MerchantEmail);
@@ -188,7 +188,7 @@ namespace Nop.Plugin.Payments.Qualpay.Controllers
                 _notificationService.ErrorNotification(message);
             }
 
-            return Configure();
+            return RedirectToAction("Configure");
         }
 
         #endregion

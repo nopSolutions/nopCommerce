@@ -193,7 +193,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Configure();
+                return RedirectToAction("Configure");
 
             //save settings
             _avalaraTaxSettings.AccountId = model.AccountId;
@@ -206,7 +206,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return Configure();
+            return RedirectToAction("Configure");
         }
 
         [HttpPost, ActionName("Configure")]
@@ -217,7 +217,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Configure();
+                return RedirectToAction("Configure");
 
             //verify credentials 
             var result = _avalaraTaxManager.Ping();
@@ -228,7 +228,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             else
                 _notificationService.ErrorNotification(_localizationService.GetResource("Plugins.Tax.Avalara.VerifyCredentials.Declined"));
 
-            return Configure();
+            return RedirectToAction("Configure");
         }
 
         [HttpPost, ActionName("Configure")]
@@ -239,7 +239,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Configure();
+                return RedirectToAction("Configure");
 
             var taxProvider = _taxPluginManager.LoadPluginBySystemName(AvalaraTaxDefaults.SystemName) as AvalaraTaxProvider;
 

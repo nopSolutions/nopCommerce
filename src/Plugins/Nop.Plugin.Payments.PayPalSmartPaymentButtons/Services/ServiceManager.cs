@@ -312,7 +312,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                 }
             };
             if (!string.IsNullOrEmpty(billingAddress.PhoneNumber))
-                orderDetails.Payer.PhoneWithType = new PhoneWithType { PhoneNumber = new Phone { NationalNumber = billingAddress.PhoneNumber } };
+            {
+                var cleanPhone = CommonHelper.EnsureMaximumLength(CommonHelper.EnsureNumericOnly(billingAddress.PhoneNumber), 14);
+                orderDetails.Payer.PhoneWithType = new PhoneWithType { PhoneNumber = new Phone { NationalNumber = cleanPhone } };
+            }    
 
             //prepare purchase unit details
             var shippingPlugins = _shippingPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);

@@ -39,11 +39,8 @@ namespace Nop.Data.Migrations
             var foreignColumns = string.Join('_', foreignKey.ForeignColumns);
             var primaryColumns = string.Join('_', foreignKey.PrimaryColumns);
 
-            var keyName = _dataProvider.GetForeignKeyName(foreignKey.ForeignTable, foreignColumns, foreignKey.PrimaryTable, primaryColumns);
+            var keyName = _dataProvider.CreateForeignKeyName(foreignKey.ForeignTable, foreignColumns, foreignKey.PrimaryTable, primaryColumns);
             
-            if (_context.QuerySchema.ConstraintExists(foreignKey.ForeignTableSchema, foreignKey.ForeignTable, keyName))
-                keyName = _dataProvider.GetForeignKeyName(foreignKey.ForeignTable, foreignColumns, foreignKey.PrimaryTable, primaryColumns, false);
-
             return keyName;
         }
 

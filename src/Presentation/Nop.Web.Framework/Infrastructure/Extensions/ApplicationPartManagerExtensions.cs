@@ -11,6 +11,7 @@ using Nop.Core.ComponentModel;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Redis;
+using Nop.Data.Mapping;
 using Nop.Services.Plugins;
 
 namespace Nop.Web.Framework.Infrastructure.Extensions
@@ -586,6 +587,13 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 PluginsInfo.IncompatiblePlugins = incompatiblePlugins;
                 PluginsInfo.AssemblyLoadedCollision = _loadedAssemblies.Select(item => item.Value)
                     .Where(loadedAssemblyInfo => loadedAssemblyInfo.Collisions.Any()).ToList();
+
+                //add name compatibility types from plugins
+                var nameCompatibilityList = pluginDescriptors.Where(pd => pd.Installed).SelectMany(pd => pd
+                    .ReferencedAssembly.GetTypes().Where(type =>
+                        typeof(INameCompatibility).IsAssignableFrom(type) && !type.IsInterface && type.IsClass &&
+                        !type.IsAbstract));
+                NameCompatibilityManager.AdditionalNameCompatibilities.AddRange(nameCompatibilityList);
             }
         }
 

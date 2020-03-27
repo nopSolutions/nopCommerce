@@ -16,20 +16,11 @@
         /// Create a password hash
         /// </summary>
         /// <param name="password">Password</param>
-        /// <param name="saltkey">Salk key</param>
+        /// <param name="saltKey">Salk key</param>
         /// <param name="passwordFormat">Password format (hash algorithm)</param>
         /// <returns>Password hash</returns>
-        string CreatePasswordHash(string password, string saltkey, string passwordFormat);
-
-        /// <summary>
-        /// Create a data hash
-        /// </summary>
-        /// <param name="data">The data for calculating the hash</param>
-        /// <param name="hashAlgorithm">Hash algorithm</param>
-        /// <param name="trimByteCount">The number of bytes, which will be used in the hash algorithm; leave 0 to use all array</param>
-        /// <returns>Data hash</returns>
-        string CreateHash(byte[] data, string hashAlgorithm, int trimByteCount = 0);
-
+        string CreatePasswordHash(string password, string saltKey, string passwordFormat);
+        
         /// <summary>
         /// Encrypt text
         /// </summary>
