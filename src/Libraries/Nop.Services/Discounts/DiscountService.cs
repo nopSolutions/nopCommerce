@@ -210,10 +210,6 @@ namespace Nop.Services.Discounts
             if (!string.IsNullOrEmpty(discountName))
                 query = query.Where(discount => discount.Name.Contains(discountName));
 
-            //filter by type
-            if (discountType.HasValue)
-                query = query.Where(discount => discount.DiscountTypeId == (int)discountType.Value);
-
             query = query.OrderBy(discount => discount.Name).ThenBy(discount => discount.Id);
 
             var discounts = query.ToCachedList(cacheKey);
