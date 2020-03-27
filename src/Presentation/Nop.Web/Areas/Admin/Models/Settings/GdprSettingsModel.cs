@@ -26,6 +26,10 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public bool GdprEnabled { get; set; }
         public bool GdprEnabled_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Gdpr.GdprRequired")]
+        public bool GdprRequired { get; set; }
+        public bool GdprRequired_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Gdpr.LogPrivacyPolicyConsent")]
         public bool LogPrivacyPolicyConsent { get; set; }
         public bool LogPrivacyPolicyConsent_OverrideForStore { get; set; }

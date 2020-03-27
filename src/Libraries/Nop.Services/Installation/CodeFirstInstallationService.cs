@@ -6243,6 +6243,7 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new GdprSettings
             {
                 GdprEnabled = false,
+                GdprRequired = false,
                 LogPrivacyPolicyConsent = true,
                 LogNewsletterConsent = true,
                 LogUserProfileChanges = true

@@ -12,6 +12,16 @@
         </div>
     </div>
     <nop-nested-setting asp-for="GdprEnabled">
+        <div class="form-group advanced-setting" id="pnlGdprRequired">
+            <div class="col-md-3">
+                <nop-override-store-checkbox asp-for="GdprRequired_OverrideForStore" asp-input="GdprRequired" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                <nop-label asp-for="GdprRequired" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="GdprRequired" />
+                <span asp-validation-for="GdprRequired"></span>
+            </div>
+        </div>
         <div class="form-group advanced-setting" id="pnlLogPrivacyPolicyConsent">
             <div class="col-md-3">
                 <nop-override-store-checkbox asp-for="LogPrivacyPolicyConsent_OverrideForStore" asp-input="LogPrivacyPolicyConsent" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
@@ -53,6 +63,7 @@
 
     function toggleGdprEnabled() {
         if ($('#@Html.IdFor(model => model.GdprEnabled)').is(':checked')) {
+            $('#pnlGdprRequired').show();
             $('#pnlLogPrivacyPolicyConsent').show();
             $('#pnlLogNewsletterConsent').show();
             $('#pnlLogUserProfileChanges').show();
@@ -60,6 +71,7 @@
             $('[data-panel-name=gdprsettings-consents]').show();
             ensureDataTablesRendered();
         } else {
+            $('#pnlGdprRequired').hide();
             $('#pnlLogPrivacyPolicyConsent').hide();
             $('#pnlLogNewsletterConsent').hide();
             $('#pnlLogUserProfileChanges').hide();

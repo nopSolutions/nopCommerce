@@ -1076,6 +1076,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //this behavior can increase performance because cached settings will not be cleared 
             //and loaded from database after each update
             _settingService.SaveSettingOverridablePerStore(gdprSettings, x => x.GdprEnabled, model.GdprEnabled_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(gdprSettings, x => x.GdprRequired, model.GdprRequired_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(gdprSettings, x => x.LogPrivacyPolicyConsent, model.LogPrivacyPolicyConsent_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(gdprSettings, x => x.LogNewsletterConsent, model.LogNewsletterConsent_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(gdprSettings, x => x.LogUserProfileChanges, model.LogUserProfileChanges_OverrideForStore, storeScope, false);

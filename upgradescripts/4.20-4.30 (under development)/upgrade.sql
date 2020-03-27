@@ -574,6 +574,12 @@ set @resources='
   <LocaleResource Name="ActivityLog.UploadNewIcons">
     <Value>Uploaded a new favicon and app icons for store (ID = ''{0}'')</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.GdprRequired">
+    <Value>GDPR required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.GdprRequired.Hint">
+    <Value>Check to require GDPR consent (General Data Protection Regulation).</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -772,6 +778,13 @@ BEGIN
 END
 GO
 
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'gdprsettings.gdprrequired')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'gdprsettings.gdprrequired', N'false', 0)
+END
+GO
 
 --new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'seosettings.microdataenabled')

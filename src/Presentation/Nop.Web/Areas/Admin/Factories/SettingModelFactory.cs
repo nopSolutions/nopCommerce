@@ -1371,6 +1371,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //fill in overridden values
             model.GdprEnabled_OverrideForStore = _settingService.SettingExists(gdprSettings, x => x.GdprEnabled, storeId);
+            model.GdprRequired_OverrideForStore = _settingService.SettingExists(gdprSettings, x => x.GdprRequired, storeId);
             model.LogPrivacyPolicyConsent_OverrideForStore = _settingService.SettingExists(gdprSettings, x => x.LogPrivacyPolicyConsent, storeId);
             model.LogNewsletterConsent_OverrideForStore = _settingService.SettingExists(gdprSettings, x => x.LogNewsletterConsent, storeId);
             model.LogUserProfileChanges_OverrideForStore = _settingService.SettingExists(gdprSettings, x => x.LogUserProfileChanges, storeId);

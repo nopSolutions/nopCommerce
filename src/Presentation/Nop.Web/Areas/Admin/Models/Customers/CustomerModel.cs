@@ -231,6 +231,8 @@ namespace Nop.Web.Areas.Admin.Models.Customers
 
         //GDPR enabled
         public bool GdprEnabled { get; set; }
+
+        public bool GdprRequired { get; set; }
         
         public string AvatarUrl { get; internal set; }
 

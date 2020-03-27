@@ -6540,6 +6540,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Gdpr.GdprEnabled.Hint">
     <Value>Check to enable GDPR (General Data Protection Regulation).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.GdprRequired">
+    <Value>GDPR required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Gdpr.GdprRequired.Hint">
+    <Value>Check to require GDPR consent (General Data Protection Regulation).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Gdpr.LogNewsletterConsent">
     <Value>Log "newsletter" consent</Value>
   </LocaleResource>

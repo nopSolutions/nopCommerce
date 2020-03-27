@@ -13,6 +13,11 @@ namespace Nop.Core.Domain.Gdpr
         public bool GdprEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether GDPR is required
+        /// </summary>
+        public bool GdprRequired { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether we should log "accept privacy policy" consent
         /// </summary>
         public bool LogPrivacyPolicyConsent { get; set; }
