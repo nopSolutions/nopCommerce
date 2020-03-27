@@ -17,25 +17,19 @@ namespace Nop.Data.Mapping
         private static readonly Dictionary<Type, string> _tableNames = new Dictionary<Type, string>();
         private static readonly Dictionary<(Type, string), string> _columnName =new Dictionary<(Type, string), string>();
         private static readonly IList<Type> _loadedFor=new List<Type>();
-        private static bool _isInitialized = false;
+        private static bool _isInitialized;
         private static readonly ReaderWriterLockSlim _locker = new ReaderWriterLockSlim();
 
-        public static int counter = 1;
-        
         #endregion
 
-        #region Ctor
+        #region Utils
 
-        #endregion
-
-        #region Methods
-
-        static void Initialize()
+        private static void Initialize()
         {
             //perform with locked access to resources
             using (new ReaderWriteLockDisposable(_locker))
             {
-                if(_isInitialized)
+                if (_isInitialized)
                     return;
 
                 var typeFinder = new AppDomainTypeFinder();
@@ -45,7 +39,6 @@ namespace Nop.Data.Mapping
 
                 compatibilities.AddRange(AdditionalNameCompatibilities.Select(type => EngineContext.Current.ResolveUnregistered(type) as INameCompatibility));
 
-                counter += 1;
                 foreach (var nameCompatibility in compatibilities.Distinct())
                 {
                     if (_loadedFor.Contains(nameCompatibility.GetType()))
@@ -65,6 +58,10 @@ namespace Nop.Data.Mapping
                 _isInitialized = true;
             }
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Gets table name for mapping with the type
@@ -95,6 +92,9 @@ namespace Nop.Data.Mapping
 
         #endregion
 
+        /// <summary>
+        /// Additional name compatibility types
+        /// </summary>
         public static List<Type> AdditionalNameCompatibilities => new List<Type>();
     }
 }
