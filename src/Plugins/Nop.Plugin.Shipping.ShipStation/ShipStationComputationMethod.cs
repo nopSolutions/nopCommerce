@@ -136,8 +136,8 @@ namespace Nop.Plugin.Shipping.ShipStation
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.PackingType", "Packing type");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.Password.Hint", "Specify ShipStation password");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.Password", "Password");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.SendDimensio.Hint", "Check if need send the dimension to the ShipStation server");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.SendDimensio", "Send dimensio");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.PassDimensions.Hint", "Check if need send dimensions to the ShipStation server");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.PassDimensions", "Pass dimensions");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.UserName", "User name");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.UserName.Hint", "Specify ShipStation user name");
 
@@ -165,8 +165,8 @@ namespace Nop.Plugin.Shipping.ShipStation
             _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.PackingType");
             _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.Password.Hint");
             _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.Password");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.SendDimensio.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.SendDimensio");
+            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.PassDimensions.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.PassDimensions");
             _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.UserName.Hint");
             _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.UserName");
 
