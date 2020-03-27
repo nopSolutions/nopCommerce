@@ -111,7 +111,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return Configure();
+            return RedirectToAction("Configure");
         }
 
         #endregion

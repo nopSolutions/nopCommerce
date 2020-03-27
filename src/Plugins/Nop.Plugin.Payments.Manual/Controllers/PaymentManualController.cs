@@ -81,7 +81,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Configure();
+                return RedirectToAction("Configure");
 
             //load settings for a chosen store scope
             var storeScope = _storeContext.ActiveStoreScopeConfiguration;
@@ -105,7 +105,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return Configure();
+            return RedirectToAction("Configure");
         }
 
         #endregion

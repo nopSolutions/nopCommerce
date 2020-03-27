@@ -88,10 +88,9 @@ namespace Nop.Services.Catalog
                         orderby sa.DisplayOrder, sa.Id
                         select sa;
 
-            //TODO: issue 239, check caching. If so, then remove pageIndex and pageSize from others cache keys
-            var specificationAttributes = query.ToCachedPagedList(NopCatalogCachingDefaults.SpecAttributesAllCacheKey, pageIndex, pageSize);
+            var specificationAttributes = query.ToCachedList(NopCatalogCachingDefaults.SpecAttributesAllCacheKey);
 
-            return specificationAttributes;
+            return new PagedList<SpecificationAttribute>(specificationAttributes, pageIndex, pageSize);
         }
 
         /// <summary>
