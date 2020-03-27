@@ -1252,9 +1252,9 @@ namespace Nop.Services.Seo
                 query = query.Where(ur => ur.Slug.Contains(slug));
             query = query.OrderBy(ur => ur.Slug);
 
-            var urlRecords = query.ToCachedPagedList(NopSeoCachingDefaults.UrlRecordAllCacheKey, pageIndex, pageSize);
+            var urlRecords = query.ToCachedList(NopSeoCachingDefaults.UrlRecordAllCacheKey);
 
-            return urlRecords;
+            return new PagedList<UrlRecord>(urlRecords, pageIndex, pageSize);
         }
 
         /// <summary>
