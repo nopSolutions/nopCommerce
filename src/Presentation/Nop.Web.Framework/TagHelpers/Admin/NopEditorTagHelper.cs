@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.ViewFeatures.Buffers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Nop.Core;
+using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.TagHelpers.Admin.Extension;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
@@ -143,9 +148,33 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 htmlAttributes.Add("class", "form-control");
 
             //generate editor
+            //var htmlOutput = _htmlHelper.Editor(For.Name, Template, new { htmlAttributes, postfix = Postfix });
+            //output.Content.SetHtmlContent(htmlOutput);
 
-            var htmlOutput = _htmlHelper.Editor(For.Name, Template, new { htmlAttributes, postfix = Postfix });
-            output.Content.SetHtmlContent(htmlOutput);
+            //we have to invoke strong typed "EditorFor" method of HtmlHelper<TModel>
+            //but we cannot do it because we don't have access to Expression<Func<TModel, TValue>>
+            //more info at https://github.com/aspnet/Mvc/blob/master/src/Microsoft.AspNetCore.Mvc.ViewFeatures/HtmlHelperOfT.cs
+
+            //so we manually invoke implementation of "GenerateEditor" method of HtmlHelper
+            //more info at https://github.com/aspnet/Mvc/blob/master/src/Microsoft.AspNetCore.Mvc.ViewFeatures/HtmlHelper.cs
+
+            //little workaround here. we need to access private properties of HtmlHelper
+            //just ensure that they are not renamed by asp.net core team in future versions
+            var viewEngine = CommonHelper.GetPrivateFieldValue(_htmlHelper, "_viewEngine") as IViewEngine;
+            var bufferScope = CommonHelper.GetPrivateFieldValue(_htmlHelper, "_bufferScope") as IViewBufferScope;
+            var templateBuilder = new TemplateBuilder(
+                viewEngine,
+                bufferScope,
+                _htmlHelper.ViewContext,
+                _htmlHelper.ViewData,
+                For.ModelExplorer,
+                For.Name,
+                Template,
+                readOnly: false,
+                additionalViewData: new { htmlAttributes, postfix = Postfix });
+
+            var htmlOutput = templateBuilder.Build();
+            output.Content.SetHtmlContent(htmlOutput.RenderHtmlContent());
         }
     }
 }
