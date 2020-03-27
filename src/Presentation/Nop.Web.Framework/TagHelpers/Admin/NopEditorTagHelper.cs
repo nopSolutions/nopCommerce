@@ -142,8 +142,11 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             if (string.IsNullOrEmpty(RenderFormControlClass) && For.Metadata.ModelType.Name.Equals("String") || renderFormControlClass)
                 htmlAttributes.Add("class", "form-control");
 
-            //generate editor
+            //workaroud to work with array properties
+            if (!_htmlHelper.ViewData.ContainsKey(For.Name))
+                _htmlHelper.ViewData.Add(For.Name, For.Model);
 
+            //generate editor
             var htmlOutput = _htmlHelper.Editor(For.Name, Template, new { htmlAttributes, postfix = Postfix });
             output.Content.SetHtmlContent(htmlOutput);
         }
