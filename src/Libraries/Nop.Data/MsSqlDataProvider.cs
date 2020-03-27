@@ -325,21 +325,10 @@ namespace Nop.Data
         /// <param name="foreignColumn">Foreign key column name</param>
         /// <param name="primaryTable">Primary table</param>
         /// <param name="primaryColumn">Primary key column name</param>
-        /// <param name="isShort">Indicates whether to use short form</param>
         /// <returns>Name of a foreign key</returns>
-        public virtual string GetForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn, bool isShort = true)
+        public virtual string CreateForeignKeyName(string foreignTable, string foreignColumn, string primaryTable, string primaryColumn)
         {
-            var sb = new StringBuilder();
-
-            sb.Append("FK_");
-            sb.Append(foreignTable);
-            sb.Append("_");
-
-            sb.Append(isShort
-                ? $"{foreignColumn}_{primaryTable}{primaryColumn}"
-                : $"{foreignColumn}_{primaryTable}_{primaryColumn}");
-
-            return sb.ToString();
+            return $"FK_{foreignTable}_{foreignColumn}_{primaryTable}_{primaryColumn}";
         }
 
         /// <summary>

@@ -1,35 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using Nop.Core;
-using Nop.Core.Infrastructure;
 using Nop.Services.Defaults;
-using Nop.Services.Security;
 
 namespace Nop.Services.Caching.CachingDefaults
 {
     public static partial class CacheKeyHelper
     {
-        /// <summary>
-        /// Create a data hash
-        /// </summary>
-        /// <param name="data">The data for calculating the hash</param>
-        /// <returns>Data hash</returns>
-        private static string CreateHash(byte[] data)
-        {
-            var hashAlgorithm = NopCustomerServiceDefaults.DefaultHashedPasswordFormat;
-
-            var algorithm = (HashAlgorithm)CryptoConfig.CreateFromName(hashAlgorithm);
-            if (algorithm == null)
-                throw new ArgumentException("Unrecognized hash name");
-
-            var hashByteArray = algorithm.ComputeHash(data);
-            return BitConverter.ToString(hashByteArray).Replace("-", string.Empty);
-        }
-
         /// <summary>
         /// Creates the hash sum of identifiers list
         /// </summary>
@@ -42,7 +21,7 @@ namespace Nop.Services.Caching.CachingDefaults
             if (!identifiers.Any())
                 return string.Empty;
             
-            return CreateHash(Encoding.UTF8.GetBytes(string.Join(", ", identifiers.OrderBy(id => id))));
+            return HashHelper.CreateHash(Encoding.UTF8.GetBytes(string.Join(", ", identifiers.OrderBy(id => id))), NopCustomerServiceDefaults.DefaultHashedPasswordFormat);
         }
 
         /// <summary>

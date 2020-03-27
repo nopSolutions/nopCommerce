@@ -796,10 +796,9 @@ namespace Nop.Services.Catalog
                 select p;
 
             var key = NopCatalogCachingDefaults.ProductsByProductAtributeCacheKey.FillCacheKey(productAttributeId);
+            var products = query.ToCachedList(key);
 
-            var products = query.ToCachedPagedList(key, pageIndex, pageSize);
-
-            return products;
+            return new PagedList<Product>(products, pageIndex, pageSize);
         }
 
         /// <summary>

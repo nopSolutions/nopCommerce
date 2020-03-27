@@ -14,7 +14,6 @@ using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
 {
@@ -123,7 +122,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Configure();
+                return RedirectToAction("Configure");
 
             //load settings for a chosen store scope
             var storeScope = _storeContext.ActiveStoreScopeConfiguration;
@@ -169,7 +168,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
             else
                 _notificationService.SuccessNotification(_localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.Credentials.Valid"));
 
-            return Configure();
+            return RedirectToAction("Configure");
         }
 
         #endregion
