@@ -33,6 +33,15 @@
         }
 
         /// <summary>
+        /// Update plugin
+        /// </summary>
+        /// <param name="currentVersion">Current version of plugin</param>
+        /// <param name="targetVersion">New version of plugin</param>
+        public virtual void Update(string currentVersion, string targetVersion)
+        {
+        }
+
+        /// <summary>
         /// Prepare plugin to the uninstallation
         /// </summary>
         public virtual void PreparePluginToUninstall()

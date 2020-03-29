@@ -59,8 +59,13 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                 //log application start
                 engine.Resolve<ILogger>().Information("Application started");
 
+                var pluginService = engine.Resolve<IPluginService>();
+                
                 //install plugins
-                engine.Resolve<IPluginService>().InstallPlugins();
+                pluginService.InstallPlugins();
+
+                //update plugins
+                pluginService.UpdatePlugins();
             }
         }
 

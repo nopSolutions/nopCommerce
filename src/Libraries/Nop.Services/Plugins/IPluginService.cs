@@ -110,6 +110,11 @@ namespace Nop.Services.Plugins
         void DeletePlugins();
 
         /// <summary>
+        /// Update plugins
+        /// </summary>
+        void UpdatePlugins();
+
+        /// <summary>
         /// Check whether application restart is required to apply changes to plugins
         /// </summary>
         /// <returns>Result of check</returns>

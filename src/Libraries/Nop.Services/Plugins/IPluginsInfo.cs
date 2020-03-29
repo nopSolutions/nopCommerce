@@ -26,9 +26,9 @@ namespace Nop.Services.Plugins
         void CopyFrom(IPluginsInfo pluginsInfo);
         
         /// <summary>
-        /// Gets or sets the list of all installed plugin names
+        /// Gets or sets the list of all installed plugin
         /// </summary>
-        IList<string> InstalledPluginNames { get; set; }
+        IList<PluginDescriptorBaseInfo> InstalledPlugins { get; set; }
 
         /// <summary>
         /// Gets or sets the list of plugin names which will be uninstalled
@@ -53,7 +53,7 @@ namespace Nop.Services.Plugins
         /// <summary>
         /// Gets or sets a collection of plugin descriptors of all deployed plugins
         /// </summary>
-        IEnumerable<PluginDescriptor> PluginDescriptors { get; set; }
+        IList<PluginDescriptor> PluginDescriptors { get; set; }
 
         /// <summary>
         /// Gets or sets the list of plugin names which are not compatible with the current version
