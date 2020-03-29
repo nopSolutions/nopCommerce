@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -11,6 +12,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Http.Extensions;
 using Nop.Data;
 using Nop.Plugin.Widgets.FacebookPixel.Domain;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
 using Nop.Services.Common;
@@ -399,7 +401,9 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
                         ? $"'{valueString.Replace("'", "\\'")}'"
                         : (property.Value is List<List<(string Name, object Value)>> valueList
                         ? formatObjectList(valueList)
-                        : property.Value.ToString().ToLower());
+                        : (property.Value is decimal valueDecimal
+                        ? valueDecimal.ToString("F", CultureInfo.InvariantCulture)
+                        : property.Value.ToString().ToLower()));
 
                     //format object property
                     preparedObject += $"{Environment.NewLine}{new string('\t', (tabsNumber ?? TABS_NUMBER) + 1)}{property.Name}: {value},";
@@ -428,6 +432,26 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
             formattedScript += Environment.NewLine;
 
             return formattedScript;
+        }
+
+        /// <summary>
+        /// Get configurations
+        /// </summary>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <returns>List of configurations</returns>
+        private IList<FacebookPixelConfiguration> GetConfigurations(int storeId = 0)
+        {
+            var key = FacebookPixelDefaults.ConfigurationsCacheKey.FillCacheKey(storeId);
+
+            var query = _facebookPixelConfigurationRepository.Table;
+
+            //filter by the store
+            if (storeId > 0)
+                query = query.Where(configuration => configuration.StoreId == storeId);
+
+            query = query.OrderBy(configuration => configuration.Id);
+
+            return query.ToCachedList(key);
         }
 
         #endregion
@@ -724,7 +748,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Paged list of configurations</returns>
-        public IPagedList<FacebookPixelConfiguration> GetConfigurations(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
+        public IPagedList<FacebookPixelConfiguration> GetPagedConfigurations(int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _facebookPixelConfigurationRepository.Table;
 
@@ -865,10 +889,8 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         {
             return _cacheManager.Get(FacebookPixelDefaults.WidgetZonesCacheKey.FillCacheKey(), () =>
             {
-                //get configurations
-                var configurations = GetConfigurations().ToList();
-
                 //load custom events and their widget zones
+                var configurations = GetConfigurations();
                 var customEvents = configurations.SelectMany(configuration => GetCustomEvents(configuration.Id));
                 var widgetZones = customEvents.SelectMany(customEvent => customEvent.WidgetZones).Distinct().ToList();
 
