@@ -1,25 +1,27 @@
 ﻿@model ActionConfirmationModel
 
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="@(Model.WindowId)-title">@T("Admin.Common.AreYouSure")</h4>
-        </div>
-        <div class="modal-body">
-            @if (!string.IsNullOrEmpty(Model.AdditonalConfirmText))
-            {
-                <div class="additional-text">
-                    @T(Model.AdditonalConfirmText)
-                </div>
-            }
-            @T("Admin.Common.ActionConfirmation")
-        </div>
-        <div class="modal-footer">
-            <button type="submit" id="@(Model.WindowId)-submit-button" class="btn btn-primary pull-right">
-                @T("Admin.Common.Yes")
-            </button>
-            <span class="btn btn-default pull-right margin-r-5" data-dismiss="modal">@T("Admin.Common.NoCancel")</span>
+<form asp-controller="@Model.ControllerName" asp-action="@Model.ActionName" method="post">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="@(Model.WindowId)-title">@T("Admin.Common.AreYouSure")</h4>
+            </div>
+            <div class="modal-body">
+                @if (!string.IsNullOrEmpty(Model.AdditonalConfirmText))
+                {
+                    <div class="additional-text">
+                        @T(Model.AdditonalConfirmText)
+                    </div>
+                }
+                @T("Admin.Common.ActionConfirmation")
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="@(Model.WindowId)-submit-button" class="btn btn-primary pull-right">
+                    @T("Admin.Common.Yes")
+                </button>
+                <span class="btn btn-default pull-right margin-r-5" data-dismiss="modal">@T("Admin.Common.NoCancel")</span>
+            </div>
         </div>
     </div>
-</div>
+</form>
