@@ -10,8 +10,7 @@
     <PackageLicenseUrl>http://www.nopcommerce.com/licensev3.aspx</PackageLicenseUrl>
     <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl>
-    <RepositoryType>Git</RepositoryType>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RepositoryType>Git</RepositoryType>    
   </PropertyGroup>
 
   <ItemGroup>
