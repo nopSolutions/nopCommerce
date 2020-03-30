@@ -574,6 +574,9 @@ set @resources='
   <LocaleResource Name="ActivityLog.UploadNewIcons">
     <Value>Uploaded a new favicon and app icons for store (ID = ''{0}'')</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.XmlFile">
+    <Value>XML file</Value>
+  </LocaleResource>
 </Language>
 '
 
