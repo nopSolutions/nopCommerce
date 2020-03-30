@@ -4870,7 +4870,7 @@
     <Value>The language has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.XmlFile">
-    <Value>Xml file</Value>
+    <Value>XML file</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.XmlFile.Note1">
     <Value>NOTE: It can take up to several minutes.</Value>
