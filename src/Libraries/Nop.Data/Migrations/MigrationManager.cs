@@ -13,7 +13,6 @@ using FluentMigrator.Model;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Initialization;
 using Nop.Core;
-using Nop.Core.Domain.Messages;
 using Nop.Core.Infrastructure;
 using Nop.Data.Mapping;
 using Nop.Data.Mapping.Builders;
@@ -123,7 +122,7 @@ namespace Nop.Data.Migrations
                     Name = nameof(BaseEntity.Id),
                     Type = DbType.Int32,
                     IsIdentity = true,
-                    TableName = type.Name,
+                    TableName = NameCompatibilityManager.GetTableName(type),
                     ModificationType = ColumnModificationType.Create,
                     IsPrimaryKey = true
                 };
