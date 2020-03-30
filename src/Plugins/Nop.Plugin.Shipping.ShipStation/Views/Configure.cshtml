@@ -134,8 +134,7 @@
     }
 
     function togglePassDimensions() {
-        console.log(this);
-        if ($(@Html.IdFor(model => model.PassDimensions)).attr('checked') == "checked") {
+        if ($(@Html.IdFor(model => model.PassDimensions)).is(':checked')) {
             $('#pnlPackingType').show();
         } else {
             $('#pnlPackingType').hide();
