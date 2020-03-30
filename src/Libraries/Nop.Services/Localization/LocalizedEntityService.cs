@@ -9,6 +9,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Data;
 using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Caching.Extensions;
+using Nop.Services.Events;
 
 namespace Nop.Services.Localization
 {
@@ -19,6 +20,7 @@ namespace Nop.Services.Localization
     {
         #region Fields
 
+        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
         private readonly IStaticCacheManager _cacheManager;
         private readonly LocalizationSettings _localizationSettings;
@@ -27,10 +29,12 @@ namespace Nop.Services.Localization
 
         #region Ctor
 
-        public LocalizedEntityService(IRepository<LocalizedProperty> localizedPropertyRepository,
+        public LocalizedEntityService(IEventPublisher eventPublisher,
+            IRepository<LocalizedProperty> localizedPropertyRepository,
             IStaticCacheManager cacheManager,
             LocalizationSettings localizationSettings)
         {
+            _eventPublisher = eventPublisher;
             _localizedPropertyRepository = localizedPropertyRepository;
             _cacheManager = cacheManager;
             _localizationSettings = localizationSettings;
@@ -88,6 +92,9 @@ namespace Nop.Services.Localization
                 throw new ArgumentNullException(nameof(localizedProperty));
 
             _localizedPropertyRepository.Delete(localizedProperty);
+
+            //event notification
+            _eventPublisher.EntityDeleted(localizedProperty);
         }
 
         /// <summary>
@@ -148,6 +155,9 @@ namespace Nop.Services.Localization
                 throw new ArgumentNullException(nameof(localizedProperty));
 
             _localizedPropertyRepository.Insert(localizedProperty);
+
+            //event notification
+            _eventPublisher.EntityInserted(localizedProperty);
         }
 
         /// <summary>
@@ -160,6 +170,9 @@ namespace Nop.Services.Localization
                 throw new ArgumentNullException(nameof(localizedProperty));
 
             _localizedPropertyRepository.Update(localizedProperty);
+
+            //event notification
+            _eventPublisher.EntityUpdated(localizedProperty);
         }
 
         /// <summary>
