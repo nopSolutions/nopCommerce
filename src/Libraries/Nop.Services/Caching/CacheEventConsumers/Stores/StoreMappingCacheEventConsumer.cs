@@ -14,8 +14,8 @@ namespace Nop.Services.Caching.CacheEventConsumers.Stores
         /// <param name="entity">Entity</param>
         protected override void ClearCache(StoreMapping entity)
         {
-            var entityId = entity.Id;
-            var entityName = entity.GetType().Name;
+            var entityId = entity.EntityId;
+            var entityName = entity.EntityName;
 
             var key = NopStoreCachingDefaults.StoreMappingsByEntityIdNameCacheKey.FillCacheKey(entityId, entityName);
 

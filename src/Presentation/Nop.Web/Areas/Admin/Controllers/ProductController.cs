@@ -233,6 +233,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveProductAcl(Product product, ProductModel model)
         {
             product.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
+            _productService.UpdateProduct(product);
 
             var existingAclRecords = _aclService.GetAclRecords(product);
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);

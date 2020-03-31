@@ -142,6 +142,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveCategoryAcl(Category category, CategoryModel model)
         {
             category.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
+            _categoryService.UpdateCategory(category);
 
             var existingAclRecords = _aclService.GetAclRecords(category);
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
@@ -166,6 +167,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(Category category, CategoryModel model)
         {
             category.LimitedToStores = model.SelectedStoreIds.Any();
+            _categoryService.UpdateCategory(category);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(category);
             var allStores = _storeService.GetAllStores();

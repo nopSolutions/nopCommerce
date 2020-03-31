@@ -68,6 +68,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(NewsItem newsItem, NewsItemModel model)
         {
             newsItem.LimitedToStores = model.SelectedStoreIds.Any();
+            _newsService.UpdateNews(newsItem);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(newsItem);
             var allStores = _storeService.GetAllStores();
