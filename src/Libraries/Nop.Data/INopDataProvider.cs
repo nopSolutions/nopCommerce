@@ -156,7 +156,7 @@ namespace Nop.Data
         /// <typeparam name="TEntity">Type of entity</typeparam>
         /// <returns>Mapped entity descriptor</returns>
         EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity;
-
+        
         /// <summary>
         /// Executes command using System.Data.CommandType.StoredProcedure command type and
         /// returns results as collection of values of specified type

@@ -75,13 +75,16 @@ namespace Nop.Data
         #region Methods
 
         /// <summary>
-        /// Creates a connection to a database
+        /// Gets a connection to the database for a current data provider
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Connection to a database</returns>
-        public override IDbConnection CreateDbConnection(string connectionString = null)
+        protected override IDbConnection GetInternalDbConnection(string connectionString)
         {
-            return new SqlConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : CurrentConnectionString);
+            if(string.IsNullOrEmpty(connectionString))
+                throw new ArgumentException(nameof(connectionString));
+
+            return new SqlConnection(connectionString);
         }
 
         /// <summary>

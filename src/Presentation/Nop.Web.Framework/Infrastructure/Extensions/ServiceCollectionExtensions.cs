@@ -75,7 +75,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
             //create engine and configure service provider
             var engine = EngineContext.Create();
-                        
+
             engine.ConfigureServices(services, configuration, nopConfig);
 
             return (engine, nopConfig);
@@ -198,7 +198,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
 
                 var tokenProvider = new AzureServiceTokenProvider();
                 var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(tokenProvider.KeyVaultTokenCallback));
-                    
+
                 dataProtectionBuilder.ProtectKeysWithAzureKeyVault(keyVaultClient, nopConfig.AzureKeyVaultIdForDataProtectionKeys);
             }
             else
@@ -390,7 +390,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                     settings.CollapseTagsWithoutContent = true;
                 });
         }
-        
+
         /// <summary>
         /// Add and configure default HTTP clients
         /// </summary>
