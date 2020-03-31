@@ -143,7 +143,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 htmlAttributes.Add("class", "form-control");
 
             //generate editor
-            if (!_htmlHelper.ViewData.ContainsKey(For.Name) && For.Model != null)
+            if (!_htmlHelper.ViewData.ContainsKey(For.Name) && For.Model != null && string.IsNullOrEmpty(For.Metadata.TemplateHint))
                 _htmlHelper.ViewData.Add(For.Name, For.Model);
 
             var htmlOutput = _htmlHelper.Editor(For.Name, Template, new { htmlAttributes, postfix = Postfix });
