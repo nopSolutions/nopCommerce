@@ -64,7 +64,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entities">Entities for delete operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        void BulkDeleteEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity;
+        void BulkDeleteEntities<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity;
 
         /// <summary>
         /// Performs delete records in a table by a condition

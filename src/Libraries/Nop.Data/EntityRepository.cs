@@ -132,7 +132,7 @@ namespace Nop.Data
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            _dataProvider.BulkDeleteEntities(entities);
+            _dataProvider.BulkDeleteEntities(entities.ToList());
         }
 
         /// <summary>
