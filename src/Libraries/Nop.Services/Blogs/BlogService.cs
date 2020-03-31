@@ -445,6 +445,21 @@ namespace Nop.Services.Blogs
             _eventPublisher.EntityInserted(blogComment);
         }
 
+        /// <summary>
+        /// Update a blog comment
+        /// </summary>
+        /// <param name="blogComment">Blog comment</param>
+        public virtual void UpdateBlogComment(BlogComment blogComment)
+        {
+            if (blogComment == null)
+                throw new ArgumentNullException(nameof(blogComment));
+
+            _blogCommentRepository.Update(blogComment);
+
+            //event notification
+            _eventPublisher.EntityUpdated(blogComment);
+        }
+
         #endregion
 
         #endregion

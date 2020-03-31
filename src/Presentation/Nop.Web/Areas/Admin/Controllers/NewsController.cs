@@ -300,6 +300,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             //fill entity from model
             comment = model.ToEntity(comment);
 
+            _newsService.UpdateNewsComment(comment);
+
             //activity log
             _customerActivityService.InsertActivity("EditNewsComment",
                 string.Format(_localizationService.GetResource("ActivityLog.EditNewsComment"), comment.Id), comment);
@@ -369,6 +371,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 newsComment.IsApproved = true;
 
+                _newsService.UpdateNewsComment(newsComment);
+
                 //raise event 
                 _eventPublisher.Publish(new NewsCommentApprovedEvent(newsComment));
 
@@ -395,6 +399,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             foreach (var newsComment in newsComments)
             {
                 newsComment.IsApproved = false;
+
+                _newsService.UpdateNewsComment(newsComment);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditNewsComment",
