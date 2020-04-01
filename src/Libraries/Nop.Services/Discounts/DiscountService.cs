@@ -206,6 +206,11 @@ namespace Nop.Services.Discounts
 
             query = query.ToCachedList(cacheKey).AsQueryable();
 
+            //we know that this method is usually invoked multiple times
+            //that's why we filter discounts by type and dates on the application layer
+            if (discountType.HasValue)
+                query = query.Where(discount => discount.DiscountType == discountType.Value);
+
             //filter by dates
             if (startDateUtc.HasValue)
                 query = query.Where(discount =>
@@ -213,11 +218,6 @@ namespace Nop.Services.Discounts
             if (endDateUtc.HasValue)
                 query = query.Where(discount =>
                     !discount.EndDateUtc.HasValue || discount.EndDateUtc <= endDateUtc.Value);
-
-            //we know that this method is usually invoked multiple times
-            //that's why we filter discounts by type on the application layer
-            if (discountType.HasValue)
-                query = query.Where(discount => discount.DiscountType == discountType.Value);
 
             return query.ToList();
         }
