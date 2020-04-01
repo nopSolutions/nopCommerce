@@ -63,7 +63,6 @@ namespace Nop.Plugin.Widgets.FacebookPixel
         /// <summary>
         /// Gets the cache key for custom events
         /// </summary>
-        /// </summary>
         public static CacheKey CustomEventsCacheKey => new CacheKey("Nop.Plugin.Widgets.FacebookPixel.CustomEvents-{0}", PrefixCacheKey);
 
         /// <summary>
