@@ -47,7 +47,7 @@ namespace Nop.Web.Validators.Common
                     {
                         //if yes, then ensure that state is selected
                         if (!x.StateProvinceId.HasValue || x.StateProvinceId.Value == 0)
-                           return false;
+                            return false;
                     }
 
                     return true;

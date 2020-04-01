@@ -1,16 +1,16 @@
 ﻿using FluentValidation;
-using Nop.Web.Areas.Admin.Models.Blogs;
 using Nop.Core.Domain.Blogs;
 using Nop.Data;
 using Nop.Services.Defaults;
 using Nop.Services.Localization;
+using Nop.Web.Areas.Admin.Models.Blogs;
 using Nop.Web.Framework.Validators;
 
 namespace Nop.Web.Areas.Admin.Validators.Blogs
 {
     public partial class BlogPostValidator : BaseNopValidator<BlogPostModel>
     {
-        public BlogPostValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
+        public BlogPostValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
             RuleFor(x => x.Title)
                 .NotEmpty()
