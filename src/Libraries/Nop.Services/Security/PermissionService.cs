@@ -9,6 +9,7 @@ using Nop.Data;
 using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
+using Nop.Services.Events;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Security
@@ -21,6 +22,7 @@ namespace Nop.Services.Security
         #region Fields
 
         private readonly ICustomerService _customerService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<PermissionRecord> _permissionRecordRepository;
         private readonly IRepository<PermissionRecordCustomerRoleMapping> _permissionRecordCustomerRoleMappingRepository;
@@ -32,6 +34,7 @@ namespace Nop.Services.Security
         #region Ctor
 
         public PermissionService(ICustomerService customerService,
+            IEventPublisher eventPublishe,
             ILocalizationService localizationService,
             IRepository<PermissionRecord> permissionRecordRepository,
             IRepository<PermissionRecordCustomerRoleMapping> permissionRecordCustomerRoleMappingRepository,
@@ -39,6 +42,7 @@ namespace Nop.Services.Security
             IWorkContext workContext)
         {
             _customerService = customerService;
+            _eventPublisher = eventPublishe;
             _localizationService = localizationService;
             _permissionRecordRepository = permissionRecordRepository;
             _permissionRecordCustomerRoleMappingRepository = permissionRecordCustomerRoleMappingRepository;
@@ -83,6 +87,9 @@ namespace Nop.Services.Security
                 throw new ArgumentNullException(nameof(permission));
 
             _permissionRecordRepository.Delete(permission);
+
+            //event notification
+            _eventPublisher.EntityDeleted(permission);
         }
 
         /// <summary>
@@ -140,6 +147,9 @@ namespace Nop.Services.Security
                 throw new ArgumentNullException(nameof(permission));
 
             _permissionRecordRepository.Insert(permission);
+
+            //event notification
+            _eventPublisher.EntityInserted(permission);
         }
 
         /// <summary>
@@ -152,6 +162,9 @@ namespace Nop.Services.Security
                 throw new ArgumentNullException(nameof(permission));
 
             _permissionRecordRepository.Update(permission);
+
+            //event notification
+            _eventPublisher.EntityUpdated(permission);
         }
 
         /// <summary>
