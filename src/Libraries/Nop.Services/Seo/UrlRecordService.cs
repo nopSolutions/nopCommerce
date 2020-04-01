@@ -9,6 +9,7 @@ using Nop.Core.Domain.Seo;
 using Nop.Data;
 using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Caching.Extensions;
+using Nop.Services.Events;
 using Nop.Services.Localization;
 using NopSeoDefaults = Nop.Services.Defaults.NopSeoDefaults;
 
@@ -24,6 +25,7 @@ namespace Nop.Services.Seo
         private static readonly object _lock = new object();
         private static Dictionary<string, string> _seoCharacterTable;
 
+        private readonly IEventPublisher _eventPublisher;
         private readonly ILanguageService _languageService;
         private readonly IRepository<UrlRecord> _urlRecordRepository;
         private readonly IStaticCacheManager _cacheManager;
@@ -35,13 +37,15 @@ namespace Nop.Services.Seo
 
         #region Ctor
 
-        public UrlRecordService(ILanguageService languageService,
+        public UrlRecordService(IEventPublisher eventPublisher,
+            ILanguageService languageService,
             IRepository<UrlRecord> urlRecordRepository,
             IStaticCacheManager cacheManager,
             IWorkContext workContext,
             LocalizationSettings localizationSettings,
             SeoSettings seoSettings)
         {
+            _eventPublisher = eventPublisher;
             _languageService = languageService;
             _urlRecordRepository = urlRecordRepository;
             _cacheManager = cacheManager;
@@ -1133,6 +1137,9 @@ namespace Nop.Services.Seo
                 throw new ArgumentNullException(nameof(urlRecord));
 
             _urlRecordRepository.Delete(urlRecord);
+
+            //event notification
+            _eventPublisher.EntityDeleted(urlRecord);
         }
 
         /// <summary>
@@ -1145,6 +1152,10 @@ namespace Nop.Services.Seo
                 throw new ArgumentNullException(nameof(urlRecords));
 
             _urlRecordRepository.Delete(urlRecords);
+            
+            //event notification
+            foreach (var urlRecord in urlRecords) 
+                _eventPublisher.EntityDeleted(urlRecord);
         }
 
         /// <summary>
@@ -1184,6 +1195,9 @@ namespace Nop.Services.Seo
                 throw new ArgumentNullException(nameof(urlRecord));
 
             _urlRecordRepository.Insert(urlRecord);
+
+            //event notification
+            _eventPublisher.EntityInserted(urlRecord);
         }
 
         /// <summary>
@@ -1196,6 +1210,9 @@ namespace Nop.Services.Seo
                 throw new ArgumentNullException(nameof(urlRecord));
 
             _urlRecordRepository.Update(urlRecord);
+
+            //event notification
+            _eventPublisher.EntityUpdated(urlRecord);
         }
 
         /// <summary>
