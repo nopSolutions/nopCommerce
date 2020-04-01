@@ -233,6 +233,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveProductAcl(Product product, ProductModel model)
         {
             product.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
+            _productService.UpdateProduct(product);
 
             var existingAclRecords = _aclService.GetAclRecords(product);
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
@@ -1998,8 +1999,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No product tag found with the specified id");
 
             _productTagService.DeleteProductTag(tag);
+            
+            _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.ProductTags.Deleted"));
 
-            return new NullJsonResult();
+            return RedirectToAction("ProductTags");
         }
 
         [HttpPost]
@@ -2033,8 +2036,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public virtual IActionResult EditProductTag(ProductTagModel model)
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public virtual IActionResult EditProductTag(ProductTagModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
@@ -2052,8 +2055,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //locales
                 UpdateLocales(productTag, model);
 
-                ViewBag.RefreshPage = true;
-                return View(model);
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.ProductTags.Updated"));
+
+                return continueEditing ? RedirectToAction("EditProductTag", new { id = productTag.Id }) : RedirectToAction("ProductTags");
             }
 
             //prepare model

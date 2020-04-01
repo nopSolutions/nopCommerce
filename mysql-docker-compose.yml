@@ -8,12 +8,12 @@ services:
         depends_on:
             - nopcommerce_database
     nopcommerce_database:
-        image: "mcr.microsoft.com/mssql/server:2019-latest"
-        container_name: nopcommerce_mssql_server
+        image: "mysql:latest"
+        container_name: nopcommerce_mysql_server
+        command: "--default-authentication-plugin=mysql_native_password"
+        restart: "always"
         environment:
-            SA_PASSWORD: "nopCommerce_db_password"
-            ACCEPT_EULA: "Y"
-            MSSQL_PID: "Express"
+          MYSQL_ROOT_PASSWORD: "nopCommerce_db_password"
 
 volumes:
   nopcommerce_data:            

@@ -558,7 +558,7 @@ namespace Nop.Web.Infrastructure
             endpointRouteBuilder.MapControllerRoute("sitemap-indexed.xml",
                 pattern + "sitemap-{Id:min(0)}.xml",
                 new { controller = "Common", action = "SitemapXml" });
-
+            
             //store closed
             endpointRouteBuilder.MapControllerRoute("StoreClosed", $"{pattern}storeclosed",
                 new { controller = "Common", action = "StoreClosed" });

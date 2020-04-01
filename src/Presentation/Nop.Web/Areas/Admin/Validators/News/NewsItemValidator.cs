@@ -1,16 +1,16 @@
 ﻿using FluentValidation;
-using Nop.Web.Areas.Admin.Models.News;
 using Nop.Core.Domain.News;
 using Nop.Data;
 using Nop.Services.Defaults;
 using Nop.Services.Localization;
+using Nop.Web.Areas.Admin.Models.News;
 using Nop.Web.Framework.Validators;
 
 namespace Nop.Web.Areas.Admin.Validators.News
 {
     public partial class NewsItemValidator : BaseNopValidator<NewsItemModel>
     {
-        public NewsItemValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
+        public NewsItemValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
             RuleFor(x => x.Title).NotEmpty().WithMessage(localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Fields.Title.Required"));
 

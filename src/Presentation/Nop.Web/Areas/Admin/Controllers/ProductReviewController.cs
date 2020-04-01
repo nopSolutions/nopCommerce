@@ -306,40 +306,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(new { Result = true });
         }
 
-        public virtual IActionResult ProductSearchAutoComplete(string term)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
-                return Content(string.Empty);
-
-            const int searchTermMinimumLength = 3;
-            if (string.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
-                return Content(string.Empty);
-
-            //a vendor should have access only to his products
-            var vendorId = 0;
-            if (_workContext.CurrentVendor != null)
-            {
-                vendorId = _workContext.CurrentVendor.Id;
-            }
-
-            //products
-            const int productNumber = 15;
-            var products = _productService.SearchProducts(
-                keywords: term,
-                vendorId: vendorId,
-                pageSize: productNumber,
-                showHidden: true);
-
-            var result = (from p in products
-                          select new
-                          {
-                              label = p.Name,
-                              productid = p.Id
-                          })
-                .ToList();
-            return Json(result);
-        }
-
         [HttpPost]
         public virtual IActionResult ProductReviewReviewTypeMappingList(ProductReviewReviewTypeMappingSearchModel searchModel)
         {

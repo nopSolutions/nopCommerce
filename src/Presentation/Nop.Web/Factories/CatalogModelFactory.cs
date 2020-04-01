@@ -753,7 +753,7 @@ namespace Nop.Web.Factories
         {
             var doc = PrepareCategoryXmlDocument();
 
-            var model = from xe in doc.Root.XPathSelectElements("CategorySimpleModel")
+            var model = from xe in doc.Descendants("CategorySimpleModel")
                         where xe.XPathSelectElement("Id").Value == id.ToString()
                         select xe;
 

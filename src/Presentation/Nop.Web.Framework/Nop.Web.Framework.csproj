@@ -5,22 +5,17 @@
     <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
     <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
-    <Version>4.2.0.0</Version>
+    <Version>4.3.0.0</Version>
     <Description>Nop.Web.Framework is a class library project containing some common presentation things for Nop.Web project</Description>
-    <PackageLicenseUrl>http://www.nopcommerce.com/licensev3.aspx</PackageLicenseUrl>
-    <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl>
+    <PackageLicenseUrl>https://www.nopcommerce.com/license</PackageLicenseUrl>
+    <PackageProjectUrl>https://www.nopcommerce.com/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="BundlerMinifier.Core" Version="3.2.435" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.2" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection.AzureKeyVault" Version="3.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection.AzureStorage" Version="3.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.2" />
-    <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.4.0" />
     <PackageReference Include="WebMarkupMin.AspNetCore3" Version="2.8.2" />
     <PackageReference Include="WebMarkupMin.NUglify" Version="2.8.1" />
   </ItemGroup>

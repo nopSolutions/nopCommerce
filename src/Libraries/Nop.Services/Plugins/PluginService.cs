@@ -222,11 +222,11 @@ namespace Nop.Services.Plugins
                 FilterByPluginGroup(descriptor, group) &&
                 FilterByDependsOn(descriptor, dependsOnSystemName) &&
                 FilterByPluginFriendlyName(descriptor, friendlyName) &&
-                FilterByPluginAuthor(descriptor, author));
+                FilterByPluginAuthor(descriptor, author)).ToList();
 
             //filter by the passed type
             if (typeof(TPlugin) != typeof(IPlugin))
-                pluginDescriptors = pluginDescriptors.Where(descriptor => typeof(TPlugin).IsAssignableFrom(descriptor.PluginType));
+                pluginDescriptors = pluginDescriptors.Where(descriptor => typeof(TPlugin).IsAssignableFrom(descriptor.PluginType)).ToList();
 
             //order by group name
             pluginDescriptors = pluginDescriptors.OrderBy(descriptor => descriptor.Group)
@@ -322,7 +322,7 @@ namespace Nop.Services.Plugins
             if (_pluginsInfo.PluginNamesToInstall.Any(item => item.SystemName == systemName))
                 return;
 
-            var pluginsAfterRestart = _pluginsInfo.InstalledPluginNames.Where(installedSystemName => !_pluginsInfo.PluginNamesToUninstall.Contains(installedSystemName)).ToList();
+            var pluginsAfterRestart = _pluginsInfo.InstalledPlugins.Select(pd => pd.SystemName).Where(installedSystemName => !_pluginsInfo.PluginNamesToUninstall.Contains(installedSystemName)).ToList();
             pluginsAfterRestart.AddRange(_pluginsInfo.PluginNamesToInstall.Select(item => item.SystemName));
 
             if (checkDependencies)
@@ -371,7 +371,7 @@ namespace Nop.Services.Plugins
 
                 foreach (var dependentPlugin in dependentPlugins)
                 {
-                    if (!_pluginsInfo.InstalledPluginNames.Contains(dependentPlugin.SystemName))
+                    if (!_pluginsInfo.InstalledPlugins.Select(pd => pd.SystemName).Contains(dependentPlugin.SystemName))
                         continue;
                     if (_pluginsInfo.PluginNamesToUninstall.Contains(dependentPlugin.SystemName))
                         continue;
@@ -437,7 +437,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         public virtual void ClearInstalledPluginsList()
         {
-            _pluginsInfo.InstalledPluginNames.Clear();
+            _pluginsInfo.InstalledPlugins.Clear();
         }
 
         /// <summary>
@@ -471,7 +471,7 @@ namespace Nop.Services.Plugins
                     //remove and add plugin system name to appropriate lists
                     var pluginToInstall = _pluginsInfo.PluginNamesToInstall
                         .FirstOrDefault(plugin => plugin.SystemName.Equals(descriptor.SystemName));
-                    _pluginsInfo.InstalledPluginNames.Add(descriptor.SystemName);
+                    _pluginsInfo.InstalledPlugins.Add(descriptor.GetBaseInfoCopy);
                     _pluginsInfo.PluginNamesToInstall.Remove(pluginToInstall);
 
                     //activity log
@@ -526,7 +526,7 @@ namespace Nop.Services.Plugins
                     DeletePluginData(descriptor.PluginType);
 
                     //remove plugin system name from appropriate lists
-                    _pluginsInfo.InstalledPluginNames.Remove(descriptor.SystemName);
+                    _pluginsInfo.InstalledPlugins.Remove(descriptor);
                     _pluginsInfo.PluginNamesToUninstall.Remove(descriptor.SystemName);
 
                     //activity log
@@ -606,6 +606,43 @@ namespace Nop.Services.Plugins
             return _pluginsInfo.PluginNamesToInstall.Any()
                 || _pluginsInfo.PluginNamesToUninstall.Any()
                 || _pluginsInfo.PluginNamesToDelete.Any();
+        }
+
+        /// <summary>
+        /// Update plugins
+        /// </summary>
+        public virtual void UpdatePlugins()
+        {
+            foreach (var installedPlugin in _pluginsInfo.InstalledPlugins)
+            {
+                var newVersion = _pluginsInfo.PluginDescriptors.FirstOrDefault(pd =>
+                    pd.SystemName.Equals(installedPlugin.SystemName, StringComparison.InvariantCultureIgnoreCase));
+
+                if (newVersion == null)
+                    continue;
+
+                if (installedPlugin.Version == newVersion.Version)
+                    continue;
+
+                if (string.IsNullOrEmpty(installedPlugin.Version))
+                {
+                    //update installed plugin info
+                    installedPlugin.Version = newVersion.Version;
+
+                    continue;
+                }
+
+                //run new migrations from the plugin if there are exists
+                InsertPluginData(newVersion.PluginType);
+
+                //run the plugin update logic
+                newVersion.Instance<IPlugin>().Update(installedPlugin.Version, newVersion.Version);
+
+                //update installed plugin info
+                installedPlugin.Version = newVersion.Version;
+            }
+
+            _pluginsInfo.Save();
         }
 
         /// <summary>

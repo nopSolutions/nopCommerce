@@ -22,7 +22,7 @@ namespace Nop.Data
         #region Fields
 
         //it's quite fast hash (to cheaply distinguish between objects)
-        private const string HASH_ALGORITHM = "SHA512";
+        private const string HASH_ALGORITHM = "SHA1";
 
         #endregion
 

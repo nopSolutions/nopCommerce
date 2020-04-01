@@ -43,6 +43,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
+        private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -58,6 +59,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             ILocalizationService localizationService,
             INotificationService notificationService,
             IPermissionService permissionService,
+            IStoreContext storeContext,
             IStoreService storeService,
             IWorkContext workContext,
             StoreInformationSettings storeInformationSettings)
@@ -69,6 +71,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             _localizationService = localizationService;
             _notificationService = notificationService;
             _permissionService = permissionService;
+            _storeContext = storeContext;
             _storeService = storeService;
             _workContext = workContext;
             _storeInformationSettings = storeInformationSettings;
@@ -109,7 +112,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             model.FacebookPixelSearchModel.HideSearchBlock = _genericAttributeService
                 .GetAttribute<bool>(_workContext.CurrentCustomer, FacebookPixelDefaults.HideSearchBlockAttribute);
             model.FacebookPixelSearchModel.SetGridPageSize();
-            model.HideList = !_facebookPixelService.GetConfigurations().Any();
+            model.HideList = !_facebookPixelService.GetPagedConfigurations().Any();
 
             return View("~/Plugins/Widgets.FacebookPixel/Views/Configuration/Configure.cshtml", model);
         }
@@ -120,7 +123,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedDataTablesJson();
 
-            var configurations = _facebookPixelService.GetConfigurations(searchModel.StoreId, searchModel.Page - 1, searchModel.PageSize);
+            var configurations = _facebookPixelService.GetPagedConfigurations(searchModel.StoreId, searchModel.Page - 1, searchModel.PageSize);
             var model = new FacebookPixelListModel().PrepareToGrid(searchModel, configurations, () =>
             {
                 //fill in model values from the configuration
@@ -168,6 +171,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             if (ModelState.IsValid)
             {
                 //save configuration
+                model.StoreId = model.StoreId > 0 ? model.StoreId : _storeContext.CurrentStore.Id;
                 var configuration = model.ToEntity<FacebookPixelConfiguration>();
                 _facebookPixelService.InsertConfiguration(configuration);
 
@@ -220,6 +224,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Controllers
             {
                 //save configuration
                 var customEvents = configuration.CustomEvents;
+                model.StoreId = model.StoreId > 0 ? model.StoreId : _storeContext.CurrentStore.Id;
                 configuration = model.ToEntity<FacebookPixelConfiguration>();
                 configuration.CustomEvents = customEvents;
                 _facebookPixelService.UpdateConfiguration(configuration);

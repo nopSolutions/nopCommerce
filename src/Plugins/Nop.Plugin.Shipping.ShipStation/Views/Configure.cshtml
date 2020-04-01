@@ -71,12 +71,12 @@
 
                 <div class="form-group">
                     <div class="col-md-3">
-                        <nop-override-store-checkbox asp-for="SendDimensio" asp-input="SendDimensio" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
-                        <nop-label asp-for="SendDimensio"/>
+                        <nop-override-store-checkbox asp-for="PassDimensions" asp-input="PassDimensions" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+                        <nop-label asp-for="PassDimensions"/>
                     </div>
                     <div class="col-md-9">
-                        <nop-editor asp-for="SendDimensio"/>
-                        <span asp-validation-for="SendDimensio"></span>
+                        <nop-editor asp-for="PassDimensions"/>
+                        <span asp-validation-for="PassDimensions"></span>
                     </div>
                 </div>
                 <div class="form-group" id="pnlPackingType">
@@ -119,9 +119,9 @@
 
         $("#PackingType").change(togglePackingType);
 
-        $(@Html.IdFor(model => model.SendDimensio)).change(toggleSendDimensio);
+        $(@Html.IdFor(model => model.PassDimensions)).change(togglePassDimensions);
 
-        toggleSendDimensio();
+        togglePassDimensions();
     });
 
     function togglePackingType() {
@@ -133,9 +133,8 @@
         }
     }
 
-    function toggleSendDimensio() {
-        console.log(this);
-        if ($(@Html.IdFor(model => model.SendDimensio)).attr('checked') == "checked") {
+    function togglePassDimensions() {
+        if ($(@Html.IdFor(model => model.PassDimensions)).is(':checked')) {
             $('#pnlPackingType').show();
         } else {
             $('#pnlPackingType').hide();

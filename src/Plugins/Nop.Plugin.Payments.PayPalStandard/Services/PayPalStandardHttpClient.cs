@@ -25,7 +25,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Services
             PayPalStandardPaymentSettings payPalStandardPaymentSettings)
         {
             //configure client
-            client.Timeout = TimeSpan.FromMilliseconds(5000);
+            client.Timeout = TimeSpan.FromSeconds(20);
             client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CurrentVersion}");
 
             _httpClient = client;

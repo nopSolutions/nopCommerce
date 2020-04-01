@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Buffers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Nop.Core;
-using Nop.Web.Framework.Extensions;
-using Nop.Web.Framework.TagHelpers.Admin.Extension;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
@@ -147,11 +142,10 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             if (string.IsNullOrEmpty(RenderFormControlClass) && For.Metadata.ModelType.Name.Equals("String") || renderFormControlClass)
                 htmlAttributes.Add("class", "form-control");
 
-            //workaroud to work with array properties
-            if (!_htmlHelper.ViewData.ContainsKey(For.Name))
+            //generate editor
+            if (!_htmlHelper.ViewData.ContainsKey(For.Name) && For.Model != null && string.IsNullOrEmpty(For.Metadata.TemplateHint))
                 _htmlHelper.ViewData.Add(For.Name, For.Model);
 
-            //generate editor
             var htmlOutput = _htmlHelper.Editor(For.Name, Template, new { htmlAttributes, postfix = Postfix });
             output.Content.SetHtmlContent(htmlOutput);
         }

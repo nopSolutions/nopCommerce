@@ -14,7 +14,7 @@ namespace Nop.Web.Framework.Validators
     /// <summary>
     /// Base class for validators
     /// </summary>
-    /// <typeparam name="TModel">Model type</typeparam>
+    /// <typeparam name="TModel">Type of model being validated</typeparam>
     public abstract class BaseNopValidator<TModel> : AbstractValidator<TModel> where TModel : class
     {
         #region Ctor
@@ -49,18 +49,16 @@ namespace Nop.Web.Framework.Validators
 
             var entityDescriptor = dataProvider.GetEntityDescriptor<TEntity>();
 
-            SetStringPropertiesMaxLength<TEntity>(entityDescriptor, filterStringPropertyNames);
-            SetDecimalMaxValue<TEntity>(entityDescriptor);
+            SetStringPropertiesMaxLength(entityDescriptor, filterStringPropertyNames);
+            SetDecimalMaxValue(entityDescriptor);
         }
 
         /// <summary>
         /// Sets length validation rule(s) to string properties according to appropriate database model
         /// </summary>
-        /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="entityDescriptor">Entity descriptor</param>
         /// <param name="filterPropertyNames">Properties to skip</param>
-        protected virtual void SetStringPropertiesMaxLength<TEntity>(EntityDescriptor entityDescriptor, params string[] filterPropertyNames)
-            where TEntity : BaseEntity
+        protected virtual void SetStringPropertiesMaxLength(EntityDescriptor entityDescriptor, params string[] filterPropertyNames)
         {
             if (entityDescriptor is null)
                 return;
@@ -71,7 +69,7 @@ namespace Nop.Web.Framework.Validators
                 .Select(property => property.Name).ToList();
 
             //get max length of these properties
-            var columnsMaxLengths = entityDescriptor.Columns.Where(column => 
+            var columnsMaxLengths = entityDescriptor.Columns.Where(column =>
                 modelPropertyNames.Contains(column.ColumnName) && column.MemberType == typeof(string) && column.Length.HasValue);
 
             //create expressions for the validation rules
@@ -92,8 +90,8 @@ namespace Nop.Web.Framework.Validators
         /// <summary>
         /// Sets max value validation rule(s) to decimal properties according to appropriate database model
         /// </summary>
-        /// <typeparam name="TEntity">Entity type</typeparam>
-        protected virtual void SetDecimalMaxValue<TEntity>(EntityDescriptor entityDescriptor) where TEntity : BaseEntity
+        /// <param name="entityDescriptor">Entity descriptor</param>
+        protected virtual void SetDecimalMaxValue(EntityDescriptor entityDescriptor)
         {
             if (entityDescriptor is null)
                 return;
@@ -104,14 +102,17 @@ namespace Nop.Web.Framework.Validators
                 .Select(property => property.Name).ToList();
 
             //get max values of these properties
-            var decimalColumnsMaxValues = entityDescriptor.Columns.Where(column => 
-                modelPropertyNames.Contains(column.ColumnName) && 
+            var decimalColumnsMaxValues = entityDescriptor.Columns.Where(column =>
+                modelPropertyNames.Contains(column.ColumnName) &&
                 column.DataType == DataType.Decimal && column.Precision.HasValue && column.Scale.HasValue);
+
+            if (!decimalColumnsMaxValues.Any())
+                return;
 
             //create expressions for the validation rules
             var maxValueExpressions = decimalColumnsMaxValues.Select(column => new
             {
-                MaxValue = (decimal) Math.Pow(10, column.Precision.Value - column.Scale.Value),
+                MaxValue = (decimal)Math.Pow(10, column.Precision.Value - column.Scale.Value),
                 Expression = DynamicExpressionParser.ParseLambda<TModel, decimal>(null, false, column.ColumnName)
             }).ToList();
 

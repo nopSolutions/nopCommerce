@@ -574,6 +574,18 @@ set @resources='
   <LocaleResource Name="ActivityLog.UploadNewIcons">
     <Value>Uploaded a new favicon and app icons for store (ID = ''{0}'')</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.XmlFile">
+    <Value>XML file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.BackToList">
+    <Value>back to product tags list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Updated">
+    <Value>The product tag has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Deleted">
+    <Value>The product tag has been deleted successfully.</Value>
+  </LocaleResource>
 </Language>
 '
 

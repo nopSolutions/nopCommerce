@@ -14,41 +14,43 @@ RUN dotnet build Nop.Web.csproj -c Release
 
 # build plugins
 WORKDIR /src/Plugins/Nop.Plugin.DiscountRules.CustomerRoles
-RUN dotnet build Nop.Plugin.DiscountRules.CustomerRoles.csproj
+RUN dotnet build Nop.Plugin.DiscountRules.CustomerRoles.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.ExchangeRate.EcbExchange
-RUN dotnet build Nop.Plugin.ExchangeRate.EcbExchange.csproj
+RUN dotnet build Nop.Plugin.ExchangeRate.EcbExchange.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.ExternalAuth.Facebook
-RUN dotnet build Nop.Plugin.ExternalAuth.Facebook.csproj
+RUN dotnet build Nop.Plugin.ExternalAuth.Facebook.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Misc.SendinBlue
-RUN dotnet build Nop.Plugin.Misc.SendinBlue.csproj
+RUN dotnet build Nop.Plugin.Misc.SendinBlue.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.CheckMoneyOrder
-RUN dotnet build Nop.Plugin.Payments.CheckMoneyOrder.csproj
+RUN dotnet build Nop.Plugin.Payments.CheckMoneyOrder.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.Manual
-RUN dotnet build Nop.Plugin.Payments.Manual.csproj
+RUN dotnet build Nop.Plugin.Payments.Manual.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.PayPalSmartPaymentButtons
-RUN dotnet build Nop.Plugin.Payments.PayPalSmartPaymentButtons.csproj
+RUN dotnet build Nop.Plugin.Payments.PayPalSmartPaymentButtons.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.PayPalStandard
-RUN dotnet build Nop.Plugin.Payments.PayPalStandard.csproj
+RUN dotnet build Nop.Plugin.Payments.PayPalStandard.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.Qualpay
-RUN dotnet build Nop.Plugin.Payments.Qualpay.csproj
+RUN dotnet build Nop.Plugin.Payments.Qualpay.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Payments.Square
-RUN dotnet build Nop.Plugin.Payments.Square.csproj
+RUN dotnet build Nop.Plugin.Payments.Square.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Pickup.PickupInStore
-RUN dotnet build Nop.Plugin.Pickup.PickupInStore.csproj
+RUN dotnet build Nop.Plugin.Pickup.PickupInStore.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Shipping.FixedByWeightByTotal
-RUN dotnet build Nop.Plugin.Shipping.FixedByWeightByTotal.csproj
+RUN dotnet build Nop.Plugin.Shipping.FixedByWeightByTotal.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Shipping.ShipStation
-RUN dotnet build Nop.Plugin.Shipping.ShipStation.csproj
+RUN dotnet build Nop.Plugin.Shipping.ShipStation.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Shipping.UPS
-RUN dotnet build Nop.Plugin.Shipping.UPS.csproj
+RUN dotnet build Nop.Plugin.Shipping.UPS.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Tax.Avalara
-RUN dotnet build Nop.Plugin.Tax.Avalara.csproj
+RUN dotnet build Nop.Plugin.Tax.Avalara.csproj -c Release
+WORKDIR /src/Plugins/Nop.Plugin.Widgets.FacebookPixel
+RUN dotnet build Nop.Plugin.Widgets.FacebookPixel.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Tax.FixedOrByCountryStateZip
-RUN dotnet build Nop.Plugin.Tax.FixedOrByCountryStateZip.csproj
+RUN dotnet build Nop.Plugin.Tax.FixedOrByCountryStateZip.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Widgets.GoogleAnalytics
-RUN dotnet build Nop.Plugin.Widgets.GoogleAnalytics.csproj
+RUN dotnet build Nop.Plugin.Widgets.GoogleAnalytics.csproj -c Release
 WORKDIR /src/Plugins/Nop.Plugin.Widgets.NivoSlider
-RUN dotnet build Nop.Plugin.Widgets.NivoSlider.csproj
+RUN dotnet build Nop.Plugin.Widgets.NivoSlider.csproj -c Release
 
 # publish project
 WORKDIR /src/Presentation/Nop.Web   

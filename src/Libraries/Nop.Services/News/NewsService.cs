@@ -335,6 +335,21 @@ namespace Nop.Services.News
             _eventPublisher.EntityInserted(comment);
         }
 
+        /// <summary>
+        /// Update a news comment
+        /// </summary>
+        /// <param name="comment">News comment</param>
+        public virtual void UpdateNewsComment(NewsComment comment)
+        {
+            if (comment == null)
+                throw new ArgumentNullException(nameof(comment));
+
+            _newsCommentRepository.Update(comment);
+
+            //event notification
+            _eventPublisher.EntityUpdated(comment);
+        }
+
         #endregion
 
         #endregion

@@ -480,7 +480,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                             throw new Exception($"A plugin with '{pluginDescriptor.SystemName}' system name is already defined");
 
                         //set 'Installed' property
-                        pluginDescriptor.Installed = PluginsInfo.InstalledPluginNames
+                        pluginDescriptor.Installed = PluginsInfo.InstalledPlugins.Select(pd => pd.SystemName)
                             .Any(pluginName => pluginName.Equals(pluginDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase));
 
                         try
@@ -518,7 +518,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                             pluginDescriptor.OriginalAssemblyFile = mainPluginFile;
 
                             //need to deploy if plugin is already installed
-                            var needToDeploy = PluginsInfo.InstalledPluginNames.Contains(pluginName);
+                            var needToDeploy = PluginsInfo.InstalledPlugins.Select(pd => pd.SystemName).Contains(pluginName);
 
                             //also, deploy if the plugin is only going to be installed now
                             needToDeploy = needToDeploy || PluginsInfo.PluginNamesToInstall.Any(pluginInfo => pluginInfo.SystemName.Equals(pluginName));

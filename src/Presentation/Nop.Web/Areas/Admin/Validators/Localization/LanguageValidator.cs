@@ -1,16 +1,16 @@
 ﻿using System.Globalization;
 using FluentValidation;
-using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
 using Nop.Services.Localization;
+using Nop.Web.Areas.Admin.Models.Localization;
 using Nop.Web.Framework.Validators;
 
 namespace Nop.Web.Areas.Admin.Validators.Localization
 {
     public partial class LanguageValidator : BaseNopValidator<LanguageModel>
     {
-        public LanguageValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
+        public LanguageValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Languages.Fields.Name.Required"));
             RuleFor(x => x.LanguageCulture)

@@ -79,6 +79,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(Currency currency, CurrencyModel model)
         {
             currency.LimitedToStores = model.SelectedStoreIds.Any();
+            _currencyService.UpdateCurrency(currency);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(currency);
             var allStores = _storeService.GetAllStores();

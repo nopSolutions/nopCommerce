@@ -194,14 +194,6 @@ namespace Nop.Services.Discounts
                     (!discount.EndDateUtc.HasValue || discount.EndDateUtc >= DateTime.UtcNow));
             }
 
-            //filter by dates
-            if (startDateUtc.HasValue)
-                query = query.Where(discount =>
-                    !discount.StartDateUtc.HasValue || discount.StartDateUtc >= startDateUtc.Value);
-            if (endDateUtc.HasValue)
-                query = query.Where(discount =>
-                    !discount.EndDateUtc.HasValue || discount.EndDateUtc <= endDateUtc.Value);
-
             //filter by coupon code
             if (!string.IsNullOrEmpty(couponCode))
                 query = query.Where(discount => discount.CouponCode == couponCode);
@@ -210,20 +202,24 @@ namespace Nop.Services.Discounts
             if (!string.IsNullOrEmpty(discountName))
                 query = query.Where(discount => discount.Name.Contains(discountName));
 
-            //filter by type
-            if (discountType.HasValue)
-                query = query.Where(discount => discount.DiscountTypeId == (int)discountType.Value);
-
             query = query.OrderBy(discount => discount.Name).ThenBy(discount => discount.Id);
 
-            var discounts = query.ToCachedList(cacheKey);
+            query = query.ToCachedList(cacheKey).AsQueryable();
 
             //we know that this method is usually invoked multiple times
-            //that's why we filter discounts by type on the application layer
+            //that's why we filter discounts by type and dates on the application layer
             if (discountType.HasValue)
-                discounts = discounts.Where(discount => discount.DiscountType == discountType.Value).ToList();
+                query = query.Where(discount => discount.DiscountType == discountType.Value);
 
-            return discounts.ToList();
+            //filter by dates
+            if (startDateUtc.HasValue)
+                query = query.Where(discount =>
+                    !discount.StartDateUtc.HasValue || discount.StartDateUtc >= startDateUtc.Value);
+            if (endDateUtc.HasValue)
+                query = query.Where(discount =>
+                    !discount.EndDateUtc.HasValue || discount.EndDateUtc <= endDateUtc.Value);
+
+            return query.ToList();
         }
 
         /// <summary>

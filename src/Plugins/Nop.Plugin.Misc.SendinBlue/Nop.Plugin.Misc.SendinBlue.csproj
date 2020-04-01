@@ -1,21 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework> 
-    <Copyright>Copyright © Nop Solutions, Ltd</Copyright> 
-    <Company>Nop Solutions, Ltd</Company> 
-    <Authors>Nop Solutions, Ltd</Authors> 
-    <PackageLicenseUrl></PackageLicenseUrl> 
-    <PackageProjectUrl>https://www.nopcommerce.com/</PackageProjectUrl> 
-    <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl> 
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
+    <Company>Nop Solutions, Ltd</Company>
+    <Authors>Nop Solutions, Ltd</Authors>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageProjectUrl>https://www.nopcommerce.com/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <OutputPath>..\..\Presentation\Nop.Web\Plugins\Misc.SendinBlue</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
-    <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project. You need to set this parameter to true if your plugin has a nuget package to ensure that the dlls copied from the NuGet cache to the output of your project-->
+    <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project. 
+    You need to set this parameter to true if your plugin has a nuget package 
+    to ensure that the dlls copied from the NuGet cache to the output of your project-->
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
-    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <None Remove="Content\styles.css" />
     <None Remove="logo.jpg" />
@@ -24,7 +25,7 @@
     <None Remove="Views\PublicInfo.cshtml" />
     <None Remove="Views\_ViewImports.cshtml" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <Content Include="Content\styles.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -43,7 +44,7 @@
     </Content>
     <Content Include="Views\_ViewImports.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>    
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

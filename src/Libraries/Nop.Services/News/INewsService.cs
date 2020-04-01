@@ -124,6 +124,12 @@ namespace Nop.Services.News
         /// <param name="comment">News comment</param>
         void InsertNewsComment(NewsComment comment);
 
+        /// <summary>
+        /// Update a news comment
+        /// </summary>
+        /// <param name="comment">News comment</param>
+        void UpdateNewsComment(NewsComment comment);
+
         #endregion
     }
 }

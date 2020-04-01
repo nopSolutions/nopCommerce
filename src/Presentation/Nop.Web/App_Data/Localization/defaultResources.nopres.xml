@@ -4014,6 +4014,12 @@
   <LocaleResource Name="Admin.Catalog.ProductTags">
     <Value>Product tags</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.BackToList">
+    <Value>back to product tags list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Deleted">
+    <Value>The product tag has been deleted successfully.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductTags.EditTagDetails">
     <Value>Edit product tag details</Value>
   </LocaleResource>
@@ -4034,6 +4040,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductTags.Fields.SearchTagName.Hint">
     <Value>Search by a tag name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Updated">
+    <Value>The product tag has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ViewMode.Grid">
     <Value>Grid</Value>
@@ -4870,7 +4879,7 @@
     <Value>The language has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.XmlFile">
-    <Value>Xml file</Value>
+    <Value>XML file</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.XmlFile.Note1">
     <Value>NOTE: It can take up to several minutes.</Value>

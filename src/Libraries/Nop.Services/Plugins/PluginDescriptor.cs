@@ -11,7 +11,7 @@ namespace Nop.Services.Plugins
     /// <summary>
     /// Represents a plugin descriptor
     /// </summary>
-    public partial class PluginDescriptor : IDescriptor, IComparable<PluginDescriptor>
+    public partial class PluginDescriptor : PluginDescriptorBaseInfo, IDescriptor, IComparable<PluginDescriptor>
     {
         #region Ctor
 
@@ -20,6 +20,7 @@ namespace Nop.Services.Plugins
             SupportedVersions = new List<string>();
             LimitedToStores = new List<int>();
             LimitedToCustomerRoles = new List<int>();
+            DependsOn = new List<string>();
         }
 
         /// <summary>
@@ -83,7 +84,7 @@ namespace Nop.Services.Plugins
             if (DisplayOrder != other.DisplayOrder)
                 return DisplayOrder.CompareTo(other.DisplayOrder);
 
-            return string.Compare(FriendlyName, other.FriendlyName, StringComparison.InvariantCultureIgnoreCase);
+            return string.Compare(SystemName, other.SystemName, StringComparison.InvariantCultureIgnoreCase);
         }
 
         /// <summary>
@@ -93,25 +94,6 @@ namespace Nop.Services.Plugins
         public override string ToString()
         {
             return FriendlyName;
-        }
-
-        /// <summary>
-        /// Determines whether this instance and another specified PluginDescriptor object have the same SystemName
-        /// </summary>
-        /// <param name="value">The PluginDescriptor to compare to this instance</param>
-        /// <returns>True if the SystemName of the value parameter is the same as the SystemName of this instance; otherwise, false</returns>
-        public override bool Equals(object value)
-        {
-            return SystemName?.Equals((value as PluginDescriptor)?.SystemName) ?? false;
-        }
-
-        /// <summary>
-        /// Returns the hash code for this plugin descriptor
-        /// </summary>
-        /// <returns>A 32-bit signed integer hash code</returns>
-        public override int GetHashCode()
-        {
-            return SystemName.GetHashCode();
         }
 
         /// <summary>
@@ -149,19 +131,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         [JsonProperty(PropertyName = "FriendlyName")]
         public virtual string FriendlyName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the plugin system name
-        /// </summary>
-        [JsonProperty(PropertyName = "SystemName")]
-        public virtual string SystemName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the version
-        /// </summary>
-        [JsonProperty(PropertyName = "Version")]
-        public virtual string Version { get; set; }
-
+        
         /// <summary>
         /// Gets or sets the supported versions of nopCommerce
         /// </summary>

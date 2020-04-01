@@ -160,7 +160,7 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                 Weight = new Weight { Value = weight }
             };
 
-            if (_shipStationSettings.SendDimensio)
+            if (_shipStationSettings.PassDimensions)
             {
                 int length, height, width;
 

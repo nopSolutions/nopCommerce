@@ -132,32 +132,21 @@ namespace Nop.Services.Localization
             var result = new HashSet<(string name, string value)>();
 
             using (var xmlReader = XmlReader.Create(xmlStreamReader))
-            {
                 while (xmlReader.ReadToFollowing("Language"))
                 {
-                    if (xmlReader.NodeType == XmlNodeType.Element && string.Equals(xmlReader.GetAttribute("Name"), language, StringComparison.OrdinalIgnoreCase))
-                    {
-                        using (var languageReader = xmlReader.ReadSubtree())
+                    if (xmlReader.NodeType != XmlNodeType.Element) 
+                        continue;
+
+                    using var languageReader = xmlReader.ReadSubtree();
+                    while (languageReader.ReadToFollowing("LocaleResource"))
+                        if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.GetAttribute("Name") is string name)
                         {
-                            while (languageReader.ReadToFollowing("LocaleResource"))
-                            {
-                                if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.GetAttribute("Name") is string name)
-                                {
-                                    using (var lrReader = languageReader.ReadSubtree())
-                                    {
-                                        if (lrReader.ReadToFollowing("Value") && lrReader.NodeType == XmlNodeType.Element)
-                                        {
-                                            result.Add((name, lrReader.ReadString()));
-                                        } 
-                                    }
-                                }
-                            }
+                            using var lrReader = languageReader.ReadSubtree();
+                            if (lrReader.ReadToFollowing("Value") && lrReader.NodeType == XmlNodeType.Element) result.Add((name, lrReader.ReadString()));
                         }
 
-                        break;
-                    }
+                    break;
                 }
-            }
 
             return result;
         }
