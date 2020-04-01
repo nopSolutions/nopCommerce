@@ -13,7 +13,7 @@ namespace Nop.Web.Validators.Customer
     public partial class CustomerInfoValidator : BaseNopValidator<CustomerInfoModel>
     {
         public CustomerInfoValidator(ILocalizationService localizationService,
-            IStateProvinceService stateProvinceService, 
+            IStateProvinceService stateProvinceService,
             CustomerSettings customerSettings)
         {
             RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Email.Required"));
@@ -40,7 +40,7 @@ namespace Nop.Web.Validators.Customer
                     .NotEqual(0)
                     .WithMessage(localizationService.GetResource("Account.Fields.Country.Required"));
             }
-            if (customerSettings.CountryEnabled && 
+            if (customerSettings.CountryEnabled &&
                 customerSettings.StateProvinceEnabled &&
                 customerSettings.StateProvinceRequired)
             {

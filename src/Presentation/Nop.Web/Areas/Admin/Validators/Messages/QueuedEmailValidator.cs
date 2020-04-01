@@ -1,15 +1,15 @@
 ﻿using FluentValidation;
-using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
 using Nop.Services.Localization;
+using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Validators;
 
 namespace Nop.Web.Areas.Admin.Validators.Messages
 {
     public partial class QueuedEmailValidator : BaseNopValidator<QueuedEmailModel>
     {
-        public QueuedEmailValidator(INopDataProvider dataProvider, ILocalizationService localizationService)
+        public QueuedEmailValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
             RuleFor(x => x.From).NotEmpty().WithMessage(localizationService.GetResource("Admin.System.QueuedEmails.Fields.From.Required"));
             RuleFor(x => x.To).NotEmpty().WithMessage(localizationService.GetResource("Admin.System.QueuedEmails.Fields.To.Required"));
