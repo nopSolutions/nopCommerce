@@ -41,7 +41,7 @@ namespace Nop.Services.Common
         {
             //configure client
             client.BaseAddress = new Uri("https://www.nopcommerce.com/");
-            client.Timeout = TimeSpan.FromMilliseconds(5000);
+            client.Timeout = TimeSpan.FromSeconds(20);
             client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CurrentVersion}");
 
             _adminAreaSettings = adminAreaSettings;
