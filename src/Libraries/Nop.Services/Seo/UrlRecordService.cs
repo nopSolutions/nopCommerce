@@ -1265,11 +1265,12 @@ namespace Nop.Services.Seo
         public virtual IPagedList<UrlRecord> GetAllUrlRecords(string slug = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _urlRecordRepository.Table;
-            if (!string.IsNullOrWhiteSpace(slug))
-                query = query.Where(ur => ur.Slug.Contains(slug));
             query = query.OrderBy(ur => ur.Slug);
 
             var urlRecords = query.ToCachedList(NopSeoCachingDefaults.UrlRecordAllCacheKey);
+
+            if (!string.IsNullOrWhiteSpace(slug))
+                urlRecords = urlRecords.Where(ur => ur.Slug.Contains(slug)).ToList();
 
             return new PagedList<UrlRecord>(urlRecords, pageIndex, pageSize);
         }
