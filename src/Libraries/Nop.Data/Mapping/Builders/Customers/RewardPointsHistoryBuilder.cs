@@ -20,8 +20,7 @@ namespace Nop.Data.Mapping.Builders.Customers
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(RewardPointsHistory.CustomerId)).AsInt32().ForeignKey<Customer>()
-                .WithColumn(nameof(RewardPointsHistory.OrderId)).AsInt32().Nullable().ForeignKey<Order>(onDelete: Rule.SetNull);
+                .WithColumn(nameof(RewardPointsHistory.CustomerId)).AsInt32().ForeignKey<Customer>();
         }
 
         #endregion
