@@ -53,11 +53,10 @@
                 popUp.handlers.success = undefined;
             },
             error: function () {
-                if (!initialized)
-                    popUp.selectShippingOption();
+                popUp.selectShippingOption();
             },
             selectedOption: function (option) {
-                if (option) {
+                if (option && option.provider && option.price && popUp.addressIsValid(option.address)) {
                     let shippingContent = $('#open-estimate-shipping-popup');
 
                     let shippingTitle = $('<div/>').addClass('shipping-title')

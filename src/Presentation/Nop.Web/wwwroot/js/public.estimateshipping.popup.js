@@ -154,8 +154,8 @@
 
         this.clearShippingOptions();
 
-        if (self.handlers && self.handlers.error)
-            self.handlers.error(jqXHR, textStatus, errorThrown);
+        if (this.handlers && this.handlers.error)
+            this.handlers.error(jqXHR, textStatus, errorThrown);
     },
 
     selectShippingOption: function (option) {

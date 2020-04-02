@@ -28,7 +28,7 @@
         let handlers = {
             selectedOption: function (option) {
                 let params;
-                if (option) {
+                if (option && option.provider && option.price && popUp.addressIsValid(option.address)) {
                     params = $.param({
                         Name: option.provider,
                         CountryId: option.address.countryId,
