@@ -768,6 +768,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.CustomerRewardPointsSearchModel, options => options.Ignore())
                 .ForMember(model => model.SendEmail, options => options.Ignore())
                 .ForMember(model => model.SendPm, options => options.Ignore())
+                .ForMember(model => model.AllowSendingOfPrivateMessage, options => options.Ignore())
                 .ForMember(model => model.AllowSendingOfWelcomeMessage, options => options.Ignore())
                 .ForMember(model => model.AllowReSendingOfActivationMessage, options => options.Ignore())
                 .ForMember(model => model.GdprEnabled, options => options.Ignore())
