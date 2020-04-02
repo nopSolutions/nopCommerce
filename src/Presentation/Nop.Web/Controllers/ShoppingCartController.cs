@@ -1132,7 +1132,7 @@ namespace Nop.Web.Controllers
                 .Select(idString => int.TryParse(idString, out var id) ? id : 0)
                 .Distinct().ToList();
 
-            var products = _productService.GetProductsByIds(cart.Select(item => item.ProductId).ToArray())
+            var products = _productService.GetProductsByIds(cart.Select(item => item.ProductId).Distinct().ToArray())
                 .ToDictionary(item => item.Id, item => item);
 
             //get order items with changed quantity
