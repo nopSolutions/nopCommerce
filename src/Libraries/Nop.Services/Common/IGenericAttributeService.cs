@@ -81,5 +81,13 @@ namespace Nop.Services.Common
         /// <returns>Attribute</returns>
         TPropType GetAttribute<TEntity, TPropType>(int entityId, string key, int storeId = 0, TPropType defaultValue = default)
             where TEntity : BaseEntity;
+        
+        /// <summary>
+        /// Get list of all the attributes with a keygroup and keyname. for example list of all phone for customer where custonmer is key group and phone is key name
+        /// </summary>
+        /// <param name="keyName">Key Name</param>
+        /// <param name="keyGroup">Key group</param>
+        /// <returns>List of attributes for same group & key</returns>
+        IList<GenericAttribute> GetAllAttributesForEntity(string keyGroup, string keyName);
     }
 }
