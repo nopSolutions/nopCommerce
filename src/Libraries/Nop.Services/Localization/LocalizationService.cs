@@ -434,22 +434,25 @@ namespace Nop.Services.Localization
 
             var lsNamesList = _lsrRepository.Table
                 .Where(lsr => lsr.LanguageId == language.Id)
-                .Select(x => x.ResourceName).ToHashSet();
+                .ToDictionary(lsr => lsr.ResourceName, lsr => lsr);
 
             var lrsToUpdateList = new List<LocaleStringResource>();
             var lrsToInsertList = new List<LocaleStringResource>();
 
             foreach (var (name, value) in LoadLocaleResourcesFromStream(xmlStreamReader, language.Name))
             {
-                var lsr = new LocaleStringResource { LanguageId = language.Id, ResourceName = name, ResourceValue = value };
-                if (updateExistingResources && lsNamesList.Contains(name))
+                if (lsNamesList.ContainsKey(name))
                 {
-                    lsr.Id = GetLocaleStringResourceByName(name).Id;
-
-                    lrsToUpdateList.Add(lsr);
+                    if (updateExistingResources)
+                    {
+                        var lsr = lsNamesList[name];
+                        lsr.ResourceValue = value;
+                        lrsToUpdateList.Add(lsr);
+                    }
                 }
                 else
                 {
+                    var lsr = new LocaleStringResource { LanguageId = language.Id, ResourceName = name, ResourceValue = value };
                     lrsToInsertList.Add(lsr);
                 }
             }
@@ -458,7 +461,7 @@ namespace Nop.Services.Localization
             {
                 _lsrRepository.Update(lrsToUpdate);
             }
-            
+
             _lsrRepository.Insert(lrsToInsertList);
 
             //clear cache
