@@ -69,7 +69,7 @@ namespace Nop.Data
         /// <summary>
         /// Delete entities
         /// </summary>
-        /// <param name="entities">Entities</param>
+        /// <param name="predicate">A function to test each element for a condition</param>
         void Delete(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>

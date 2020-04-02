@@ -1066,6 +1066,7 @@ namespace Nop.Services.Customers
             {
                 _customerCustomerRoleMappingRepository.Delete(mapping);
 
+                //event notification
                 _eventPublisher.EntityDeleted(mapping);
             }
         }
@@ -1473,6 +1474,7 @@ namespace Nop.Services.Customers
 
                 _customerAddressMappingRepository.Delete(mapping);
 
+                //event notification
                 _eventPublisher.EntityDeleted(mapping);
             }
         }
@@ -1500,6 +1502,7 @@ namespace Nop.Services.Customers
 
                 _customerAddressMappingRepository.Insert(mapping);
 
+                //event notification
                 _eventPublisher.EntityInserted(mapping);
             }
         }

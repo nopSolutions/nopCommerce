@@ -794,6 +794,7 @@ namespace Nop.Services.Orders
 
             _orderItemRepository.Insert(orderItem);
 
+            //event notification
             _eventPublisher.EntityInserted(orderItem);
         }
 
