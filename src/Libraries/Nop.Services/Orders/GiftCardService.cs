@@ -289,6 +289,7 @@ namespace Nop.Services.Orders
 
             _giftCardUsageHistoryRepository.Insert(giftCardUsageHistory);
 
+            //event notification
             _eventPublisher.EntityInserted(giftCardUsageHistory);
         }
 

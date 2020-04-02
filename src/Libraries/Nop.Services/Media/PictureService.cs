@@ -365,9 +365,19 @@ namespace Nop.Services.Media
             pictureBinary.BinaryData = binaryData;
 
             if (isNew)
+            {
                 _pictureBinaryRepository.Insert(pictureBinary);
+
+                //event notification
+                _eventPublisher.EntityInserted(pictureBinary);
+            }
             else
+            {
                 _pictureBinaryRepository.Update(pictureBinary);
+
+                //event notification
+                _eventPublisher.EntityUpdated(pictureBinary);
+            }
 
             return pictureBinary;
         }

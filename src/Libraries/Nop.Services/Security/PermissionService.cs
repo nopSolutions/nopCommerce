@@ -34,7 +34,7 @@ namespace Nop.Services.Security
         #region Ctor
 
         public PermissionService(ICustomerService customerService,
-            IEventPublisher eventPublishe,
+            IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             IRepository<PermissionRecord> permissionRecordRepository,
             IRepository<PermissionRecordCustomerRoleMapping> permissionRecordCustomerRoleMappingRepository,
@@ -42,7 +42,7 @@ namespace Nop.Services.Security
             IWorkContext workContext)
         {
             _customerService = customerService;
-            _eventPublisher = eventPublishe;
+            _eventPublisher = eventPublisher;
             _localizationService = localizationService;
             _permissionRecordRepository = permissionRecordRepository;
             _permissionRecordCustomerRoleMappingRepository = permissionRecordCustomerRoleMappingRepository;
@@ -358,6 +358,9 @@ namespace Nop.Services.Security
                 throw new Exception(string.Empty);
 
             _permissionRecordCustomerRoleMappingRepository.Delete(mapping);
+
+            //event notification
+            _eventPublisher.EntityDeleted(mapping);
         }
 
         /// <summary>
@@ -370,6 +373,9 @@ namespace Nop.Services.Security
                 throw new ArgumentNullException(nameof(permissionRecordCustomerRoleMapping));
 
             _permissionRecordCustomerRoleMappingRepository.Insert(permissionRecordCustomerRoleMapping);
+
+            //event notification
+            _eventPublisher.EntityInserted(permissionRecordCustomerRoleMapping);
         }
 
         #endregion

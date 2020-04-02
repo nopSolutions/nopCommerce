@@ -209,7 +209,6 @@ namespace Nop.Services.Orders
             {
                 CustomerId = customer.Id,
                 StoreId = storeId,
-                OrderId = usedWithOrder?.Id,
                 Points = points,
                 PointsBalance = activatingDate.HasValue ? null : (int?)(GetRewardPointsBalance(customer.Id, storeId) + points),
                 UsedAmount = usedAmount,

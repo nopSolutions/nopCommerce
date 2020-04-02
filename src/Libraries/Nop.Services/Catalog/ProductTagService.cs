@@ -238,6 +238,7 @@ namespace Nop.Services.Catalog
 
             _productProductTagMappingRepository.Insert(tagMapping);
 
+            //event notification
             _eventPublisher.EntityInserted(tagMapping);
         }
 

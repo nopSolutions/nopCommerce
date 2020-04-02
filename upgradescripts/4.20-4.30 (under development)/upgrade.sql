@@ -2685,3 +2685,22 @@ UPDATE [Setting]
 SET [Value] = N'public,max-age=31536000'
 WHERE [Name] = N'commonsettings.StaticFilesCacheControl'
 GO
+
+--delete indexe
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_RewardPointsHistory_OrderId' and object_id=object_id(N'[RewardPointsHistory]'))
+BEGIN
+	DROP INDEX [IX_RewardPointsHistory_OrderId] ON [RewardPointsHistory]
+END
+GO
+
+--delete FK
+IF EXISTS (SELECT *  FROM sys.foreign_keys  WHERE object_id = OBJECT_ID(N'FK_RewardPointsHistory_OrderId_Order_Id') AND parent_object_id = OBJECT_ID(N'RewardPointsHistory'))
+	ALTER TABLE [RewardPointsHistory] DROP CONSTRAINT FK_RewardPointsHistory_OrderId_Order_Id
+GO
+
+--delete column
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[RewardPointsHistory]') and NAME='OrderId')
+BEGIN
+	ALTER TABLE [RewardPointsHistory] DROP COLUMN OrderId
+END
+GO

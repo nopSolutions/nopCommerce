@@ -2555,6 +2555,7 @@ namespace Nop.Services.Catalog
 
             _productWarehouseInventoryRepository.Insert(pwi);
 
+            //event notification
             _eventPublisher.EntityInserted(pwi);
         }
 
@@ -2568,7 +2569,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException(nameof(pwi));
 
             _productWarehouseInventoryRepository.Update(pwi);
-            
+
+            //event notification
             _eventPublisher.EntityUpdated(pwi);
         }
 
@@ -2585,7 +2587,8 @@ namespace Nop.Services.Catalog
                 return;
 
             _productWarehouseInventoryRepository.Update(pwis);
-            
+
+            //event notification
             foreach (var pwi in pwis)
             {
                 _eventPublisher.EntityUpdated(pwi);
@@ -2684,6 +2687,9 @@ namespace Nop.Services.Catalog
             foreach (var pdcm in mappingsWithProducts)
             {
                 _discountProductMappingRepository.Delete(pdcm.dcm);
+                //event notification
+                _eventPublisher.EntityDeleted(pdcm.dcm);
+
                 //update "HasDiscountsApplied" property
                 UpdateHasDiscountsApplied(pdcm.product);                    
             }   

@@ -275,6 +275,9 @@ namespace Nop.Services.Shipping
                 throw new ArgumentNullException(nameof(shippingMethodCountryMapping));
 
             _shippingMethodCountryMappingRepository.Insert(shippingMethodCountryMapping);
+
+            //event notification
+            _eventPublisher.EntityInserted(shippingMethodCountryMapping);
         }
 
         /// <summary>
@@ -287,6 +290,9 @@ namespace Nop.Services.Shipping
                 throw new ArgumentNullException(nameof(shippingMethodCountryMapping));
 
             _shippingMethodCountryMappingRepository.Delete(shippingMethodCountryMapping);
+
+            //event notification
+            _eventPublisher.EntityDeleted(shippingMethodCountryMapping);
         }
 
         #endregion
