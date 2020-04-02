@@ -2687,6 +2687,9 @@ namespace Nop.Services.Catalog
             foreach (var pdcm in mappingsWithProducts)
             {
                 _discountProductMappingRepository.Delete(pdcm.dcm);
+                //event notification
+                _eventPublisher.EntityDeleted(pdcm.dcm);
+
                 //update "HasDiscountsApplied" property
                 UpdateHasDiscountsApplied(pdcm.product);                    
             }   

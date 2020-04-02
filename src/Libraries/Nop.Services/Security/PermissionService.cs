@@ -358,6 +358,9 @@ namespace Nop.Services.Security
                 throw new Exception(string.Empty);
 
             _permissionRecordCustomerRoleMappingRepository.Delete(mapping);
+
+            //event notification
+            _eventPublisher.EntityDeleted(mapping);
         }
 
         /// <summary>
@@ -370,6 +373,9 @@ namespace Nop.Services.Security
                 throw new ArgumentNullException(nameof(permissionRecordCustomerRoleMapping));
 
             _permissionRecordCustomerRoleMappingRepository.Insert(permissionRecordCustomerRoleMapping);
+
+            //event notification
+            _eventPublisher.EntityInserted(permissionRecordCustomerRoleMapping);
         }
 
         #endregion
