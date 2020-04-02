@@ -90,34 +90,37 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             }
 
             //log errors
-            application.UseExceptionHandler(handler =>
+            application.Use((next) =>
             {
-                handler.Run(context =>
+                RequestDelegate ret = async (context) =>
                 {
-                    var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
-                    if (exception == null)
-                        return Task.CompletedTask;
-
                     try
                     {
-                        //check whether database is installed
-                        if (DataSettingsManager.DatabaseIsInstalled)
-                        {
-                            //get current customer
-                            var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
-
-                            //log error
-                            EngineContext.Current.Resolve<ILogger>().Error(exception.Message, exception, currentCustomer);
-                        }
+                        await next(context);
                     }
-                    finally
+                    catch (Exception exception)
                     {
-                        //rethrow the exception to show the error page
-                        ExceptionDispatchInfo.Throw(exception);
-                    }
+                        try
+                        {
+                            //check whether database is installed
+                            if (DataSettingsManager.DatabaseIsInstalled)
+                            {
+                                //get current customer
+                                var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
 
-                    return Task.CompletedTask;
-                });
+                                //log error
+                                EngineContext.Current.Resolve<ILogger>().Error(exception.Message, exception, currentCustomer);
+                            }
+                        }
+                        catch
+                        {
+                            //ignore database errors
+                        }
+                        //rethrow the exception to show the error page
+                        throw;
+                    }
+                };
+                return ret;
             });
         }
 
