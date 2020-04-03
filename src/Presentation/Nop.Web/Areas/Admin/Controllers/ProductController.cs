@@ -323,7 +323,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     //new discount
                     if (_productService.GetDiscountAppliedToProduct(product.Id, discount.Id) is null)
-                        _productService.DeleteDiscountProductMapping(new DiscountProductMapping { EntityId = product.Id, DiscountId = discount.Id });
+                        _productService.InsertDiscountProductMapping(new DiscountProductMapping { EntityId = product.Id, DiscountId = discount.Id });
                 }
                 else
                 {
