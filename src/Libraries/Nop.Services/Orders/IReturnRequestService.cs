@@ -11,6 +11,12 @@ namespace Nop.Services.Orders
     public partial interface IReturnRequestService
     {
         /// <summary>
+        /// Updates a return request
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        void UpdateReturnRequest(ReturnRequest returnRequest);
+
+        /// <summary>
         /// Deletes a return request
         /// </summary>
         /// <param name="returnRequest">Return request</param>
