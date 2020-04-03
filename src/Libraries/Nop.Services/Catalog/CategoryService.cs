@@ -178,34 +178,6 @@ namespace Nop.Services.Catalog
         public virtual IPagedList<Category> GetAllCategories(string categoryName, int storeId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, bool? overridePublished = null)
         {
-            if (overridePublished == null && _commonSettings.UseStoredProcedureForLoadingCategories)
-            {
-                //stored procedures are enabled for loading categories and supported by the database. 
-                //It's much faster with a large number of categories than the LINQ implementation below 
-
-                //prepare parameters
-                var showHiddenParameter = SqlParameterHelper.GetBooleanParameter("ShowHidden", showHidden);
-                var nameParameter = SqlParameterHelper.GetStringParameter("Name", categoryName ?? string.Empty);
-                var storeIdParameter = SqlParameterHelper.GetInt32Parameter("StoreId", !_catalogSettings.IgnoreStoreLimitations ? storeId : 0);
-                var pageIndexParameter = SqlParameterHelper.GetInt32Parameter("PageIndex", pageIndex);
-                var pageSizeParameter = SqlParameterHelper.GetInt32Parameter("PageSize", pageSize);
-                //pass allowed customer role identifiers as comma-delimited string
-                var customerRoleIdsParameter = SqlParameterHelper.GetStringParameter("CustomerRoleIds", !_catalogSettings.IgnoreAcl ? string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)) : string.Empty);
-
-                var totalRecordsParameter = SqlParameterHelper.GetOutputInt32Parameter("TotalRecords");
-
-                //invoke stored procedure
-                var categories = _categoryRepository.EntityFromSql("CategoryLoadAllPaged",
-                    showHiddenParameter, nameParameter, storeIdParameter, customerRoleIdsParameter,
-                    pageIndexParameter, pageSizeParameter, totalRecordsParameter).ToList();
-
-                var totalRecords = totalRecordsParameter.Value != DBNull.Value ? Convert.ToInt32(totalRecordsParameter.Value) : 0;
-
-                //paging
-                return new PagedList<Category>(categories, pageIndex, pageSize, totalRecords);
-            }
-
-            //don't use a stored procedure. Use LINQ
             var query = _categoryRepository.Table;
             if (!showHidden)
                 query = query.Where(c => c.Published);
