@@ -2694,6 +2694,16 @@ END
 GO
 
 --delete FK
+IF EXISTS (SELECT *  FROM sys.foreign_keys  WHERE object_id = OBJECT_ID(N'FK_RewardPointsHistory_OrderId_OrderId') AND parent_object_id = OBJECT_ID(N'RewardPointsHistory'))
+	ALTER TABLE [RewardPointsHistory] DROP CONSTRAINT FK_RewardPointsHistory_OrderId_OrderId
+GO
+
+--delete FK
+IF EXISTS (SELECT *  FROM sys.foreign_keys  WHERE object_id = OBJECT_ID(N'FK_RewardPointsHistory_Order_OrderId') AND parent_object_id = OBJECT_ID(N'RewardPointsHistory'))
+	ALTER TABLE [RewardPointsHistory] DROP CONSTRAINT FK_RewardPointsHistory_Order_OrderId
+GO
+
+--delete FK
 IF EXISTS (SELECT *  FROM sys.foreign_keys  WHERE object_id = OBJECT_ID(N'FK_RewardPointsHistory_OrderId_Order_Id') AND parent_object_id = OBJECT_ID(N'RewardPointsHistory'))
 	ALTER TABLE [RewardPointsHistory] DROP CONSTRAINT FK_RewardPointsHistory_OrderId_Order_Id
 GO
