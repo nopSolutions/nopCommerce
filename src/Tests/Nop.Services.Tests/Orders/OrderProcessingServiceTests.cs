@@ -914,9 +914,5 @@ namespace Nop.Services.Tests.Orders
             _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory { RecurringPaymentId = rp.Id });
             _orderProcessingService.GetCyclesRemaining(rp).Should().Be(0);
         }
-
-        //TODO write unit tests for the following methods:
-        //PlaceOrder
-        //CanCancelRecurringPayment, ProcessNextRecurringPayment, CancelRecurringPayment
     }
 }

@@ -1,11 +1,8 @@
 ﻿@model ProductModel
 
 @inject IStoreService storeService
-@inject IProductTagService productTagService
 
 @using Nop.Core.Domain.Catalog;
-@using Nop.Services.Catalog;
-@using System.Text;
 @using Nop.Services
 @using Nop.Services.Stores
 
@@ -129,28 +126,9 @@
         }
     }
 
-    @{
-        //TODO move to Model
-        var productTags = productTagService.GetAllProductTags();
-        var productTagsSb = new StringBuilder();
-        productTagsSb.Append("var initialProductTags = [");
-        for (var i = 0; i < productTags.Count; i++)
-        {
-            var tag = productTags[i];
-            productTagsSb.Append("'");
-            productTagsSb.Append(JavaScriptEncoder.Default.Encode(tag.Name));
-            productTagsSb.Append("'");
-            if (i != productTags.Count - 1)
-            {
-                productTagsSb.Append(",");
-            }
-        }
-        productTagsSb.Append("]");
-    }
-
     //tags
     $(document).ready(function() {
-        @Html.Raw(productTagsSb.ToString())
+        @Html.Raw(Model.InitialProductTags)
         $("#@Html.IdFor(model => model.ProductTags)").tagEditor({
             autocomplete: {
                 delay: 0,

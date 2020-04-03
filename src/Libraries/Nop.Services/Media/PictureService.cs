@@ -438,8 +438,6 @@ namespace Nop.Services.Media
             if (mimeType == null)
                 return null;
 
-            //TODO use FileExtensionContentTypeProvider to get file extension
-
             var parts = mimeType.Split('/');
             var lastPart = parts[parts.Length - 1];
             switch (lastPart)

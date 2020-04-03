@@ -1136,20 +1136,32 @@ namespace Nop.Services.Orders
                     _pdfService.PrintOrderToPdf(order) : null;
                 var orderPaidAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPaidEmail ?
                     "order.pdf" : null;
-                _workflowMessageService.SendOrderPaidCustomerNotification(order, order.CustomerLanguageId,
+                var orderPaidCustomerNotificationQueuedEmailIds = _workflowMessageService.SendOrderPaidCustomerNotification(order, order.CustomerLanguageId,
                     orderPaidAttachmentFilePath, orderPaidAttachmentFileName);
 
-                _workflowMessageService.SendOrderPaidStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
+                if (orderPaidCustomerNotificationQueuedEmailIds.Any())
+                    AddOrderNote(order, $"\"Order paid\" email (to customer) has been queued. Queued email identifiers: {string.Join(", ", orderPaidCustomerNotificationQueuedEmailIds)}.");
+
+                var orderPaidStoreOwnerNotificationQueuedEmailIds = _workflowMessageService.SendOrderPaidStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
+                if (orderPaidStoreOwnerNotificationQueuedEmailIds.Any())
+                    AddOrderNote(order, $"\"Order paid\" email (to store owner) has been queued. Queued email identifiers: {string.Join(", ", orderPaidStoreOwnerNotificationQueuedEmailIds)}.");
+
                 var vendors = GetVendorsInOrder(order);
                 foreach (var vendor in vendors)
                 {
-                    _workflowMessageService.SendOrderPaidVendorNotification(order, vendor, _localizationSettings.DefaultAdminLanguageId);
+                    var orderPaidVendorNotificationQueuedEmailIds = _workflowMessageService.SendOrderPaidVendorNotification(order, vendor, _localizationSettings.DefaultAdminLanguageId);
+
+                    if (orderPaidVendorNotificationQueuedEmailIds.Any())
+                        AddOrderNote(order, $"\"Order paid\" email (to vendor) has been queued. Queued email identifiers: {string.Join(", ", orderPaidVendorNotificationQueuedEmailIds)}.");
                 }
 
                 if (order.AffiliateId != 0)
-                    _workflowMessageService.SendOrderPaidAffiliateNotification(order, _localizationSettings.DefaultAdminLanguageId);
-
-                //TODO add "order paid email sent" order note
+                {
+                    var orderPaidAffiliateNotificationQueuedEmailIds = _workflowMessageService.SendOrderPaidAffiliateNotification(order,
+                        _localizationSettings.DefaultAdminLanguageId);
+                    if (orderPaidAffiliateNotificationQueuedEmailIds.Any())
+                        AddOrderNote(order, $"\"Order paid\" email (to affiliate) has been queued. Queued email identifiers: {string.Join(", ", orderPaidAffiliateNotificationQueuedEmailIds)}.");
+                }
             }
 
             //customer roles with "purchased with product" specified

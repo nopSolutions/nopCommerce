@@ -32,6 +32,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
+using Nop.Core.Security;
 using Nop.Data;
 using Nop.Services.Blogs;
 using Nop.Services.Caching.Extensions;
@@ -6815,6 +6816,13 @@ namespace Nop.Services.Installation
                 Password = string.Empty,
                 BypassOnLocal = true,
                 PreAuthenticate = true
+            });
+
+            settingService.SaveSetting(new CookieSettings
+            {
+                CompareProductsCookieExpires = 24 *10,
+                RecentlyViewedProductsCookieExpires = 24 *10,
+                CustomerCookieExpires = 24 * 365
             });
         }
 

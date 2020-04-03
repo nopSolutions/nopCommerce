@@ -640,8 +640,6 @@ namespace Nop.Services.ExportImport
 
         private byte[] ExportOrderToXlsxWithProducts(PropertyByName<Order>[] properties, IEnumerable<Order> itemsToExport)
         {
-            //TODO: _productService.GetProductById(oi.ProductId) - variant add as local func with cache
-
             var orderItemProperties = new[]
             {
                 new PropertyByName<OrderItem>("Name", oi => _productService.GetProductById(oi.ProductId).Name),
@@ -1854,7 +1852,7 @@ namespace Nop.Services.ExportImport
             }, _catalogSettings);
 
             var orderItemsManager = new PropertyManager<OrderItem>(new[]
-            { //TODO: _productService.GetProductById(oi.ProductId) - variant add as local func with cache
+            { 
                 new PropertyByName<OrderItem>("SKU", oi => _productService.GetProductById(oi.ProductId).Sku),
                 new PropertyByName<OrderItem>("Name", oi => _localizationService.GetLocalized(_productService.GetProductById(oi.ProductId), p => p.Name)),
                 new PropertyByName<OrderItem>("Price", oi => _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(_orderService.GetOrderById(oi.OrderId).CustomerTaxDisplayType == TaxDisplayType.IncludingTax ? oi.UnitPriceInclTax : oi.UnitPriceExclTax, _orderService.GetOrderById(oi.OrderId).CurrencyRate), true, _orderService.GetOrderById(oi.OrderId).CustomerCurrencyCode, false, _workContext.WorkingLanguage)),
