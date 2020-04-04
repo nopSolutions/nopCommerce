@@ -6124,7 +6124,6 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new CommonSettings
             {
                 UseSystemEmailForContactUsForm = true,
-                UseStoredProcedureForLoadingCategories = true,
 
                 DisplayJavaScriptDisabledWarning = false,
                 UseFullTextSearch = false,

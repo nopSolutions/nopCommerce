@@ -14,69 +14,6 @@ RETURN exists(
 		);
 END$$
 DELIMITER ;
-DELIMITER $$
-CREATE PROCEDURE `CategoryLoadAllPaged`(
-	`ShowHidden`        	bool,
-    `Name`              	text,
-    `StoreId`           	int,
-    `CustomerRoleIds`		text,
-    `PageIndex`				int,
-	`PageSize`				int,
-    OUT `TotalRecords`		int
-)
-READS SQL DATA 
-sql security invoker
-BEGIN
-	Set @lengthId = (select CHAR_LENGTH(MAX(Id)) FROM Category);
-	Set @lengthOrder = (select CHAR_LENGTH(MAX(DisplayOrder)) FROM Category);
-	drop temporary table if exists OrderedCategories;
-    create temporary table `OrderedCategories` (
-		`id`	int,
-        `Order` text
-    );
-    
-    insert into `OrderedCategories`
-	with recursive CategoryTree AS
-	(
-	  SELECT id, cast(concat(LPAD(DisplayOrder, @lengthOrder, '0'), '-' , LPAD(Id, @lengthId, '0'))  as char(500)) as `Order`
-		FROM Category
-		WHERE ParentCategoryId = 0
-	  UNION ALL
-	  SELECT c.id, concat(sc.`Order`, '|', LPAD(c.DisplayOrder, @lengthOrder, '0'), '-' , LPAD(c.Id, @lengthId, '0')) as `Order`
-		FROM CategoryTree AS sc 
-		  JOIN Category AS c ON sc.id = c.ParentCategoryId
-	)
-    select *
-    from CategoryTree;
-    
-	select c.*
-		from Category c
-			inner join `OrderedCategories` as ct on c.Id = ct.Id
-		#filter results
-		where not c.Deleted
-			and (ShowHidden OR c.Published)
-            and (COALESCE(`Name`, '') = '' OR c.`Name` LIKE concat('%', `Name`, '%'))
-            and (ShowHidden OR COALESCE(`CustomerRoleIds`, '') = '' OR not c.SubjectToAcl
-				OR EXISTS (
-					select 1 
-                    from AclRecord as acl 
-                    where find_in_set(acl.CustomerRoleId, CustomerRoleIds) 
-						and acl.`EntityId` = c.`Id` AND acl.`EntityName` = 'Category')
-			)
-            and (not StoreId OR not c.`LimitedToStores`
-				OR EXISTS (SELECT 1 FROM StoreMapping sm
-					WHERE sm.`EntityId` = c.`Id` AND sm.`EntityName` = 'Category' AND sm.`StoreId` = StoreId
-				)
-			)
-            and ct.Id > `PageSize` * `PageIndex`
-	order by ct.`Order`, 1
-    LIMIT `PageSize`;
-    
-    select count(*) from `OrderedCategories` into `TotalRecords`;
-    
-    drop temporary table if exists OrderedCategories;
-END$$
-DELIMITER ;
 
 DELIMITER $$
 CREATE PROCEDURE `Create_FullText_Index`(

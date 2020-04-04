@@ -2736,3 +2736,21 @@ GO
 IF EXISTS (SELECT *  FROM sys.foreign_keys  WHERE object_id = OBJECT_ID(N'FK_MessageTemplate_EmailAccountId_EmailAccountId') AND parent_object_id = OBJECT_ID(N'MessageTemplate'))
 	ALTER TABLE [MessageTemplate] DROP CONSTRAINT FK_MessageTemplate_EmailAccountId_EmailAccountId
 GO
+
+--delete setting
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.usestoredprocedureforloadingcategories')
+BEGIN
+    DELETE FROM [Setting]
+    WHERE [Name] = N'commonsettings.usestoredprocedureforloadingcategories'
+END
+GO
+
+--drop the "CategoryLoadAllPaged" stored procedure
+IF EXISTS (SELECT 1 FROM sys.objects WHERE OBJECT_ID = OBJECT_ID(N'[CategoryLoadAllPaged]') AND OBJECTPROPERTY(OBJECT_ID, N'IsProcedure') = 1)
+    DROP PROCEDURE [CategoryLoadAllPaged];
+GO
+
+--drop the "LanguagePackImport" stored procedure
+IF EXISTS (SELECT 1 FROM sys.objects WHERE OBJECT_ID = OBJECT_ID(N'[LanguagePackImport]') AND OBJECTPROPERTY(OBJECT_ID, N'IsProcedure') = 1)
+    DROP PROCEDURE [LanguagePackImport];
+GO
