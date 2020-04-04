@@ -40,6 +40,7 @@ namespace Nop.Web
         public void ConfigureServices(IServiceCollection services)
         {
             (_engine, _nopConfig) = services.ConfigureApplicationServices(_configuration, _webHostEnvironment);
+            services.AddRazorPages().AddRazorRuntimeCompilation(); // Apply changes when debugging int VS .net core 3.1 
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
