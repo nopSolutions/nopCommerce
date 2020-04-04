@@ -1,4 +1,6 @@
-﻿namespace Nop.Data
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Nop.Data
 {
     /// <summary>
     /// Represents a connection string info
@@ -28,6 +30,7 @@
         /// <summary>
         /// Password
         /// </summary>
+        [DataType(DataType.Password)]
         string Password { get; set; }
     }
 }
