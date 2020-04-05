@@ -1054,9 +1054,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 if (_customerService.IsGuest(customer))
                     throw new NopException("Customer should be registered");
                 if (string.IsNullOrWhiteSpace(model.SendPm.Subject))
-                    throw new NopException("PM subject is empty");
+                    throw new NopException(_localizationService.GetResource("PrivateMessages.SubjectCannotBeEmpty"));
                 if (string.IsNullOrWhiteSpace(model.SendPm.Message))
-                    throw new NopException("PM message is empty");
+                    throw new NopException(_localizationService.GetResource("PrivateMessages.MessageCannotBeEmpty"));
 
                 var privateMessage = new PrivateMessage
                 {
