@@ -64,6 +64,9 @@
             $('#group-required-other-products').hide();
             $('#group-visible-individually').hide();
             $('#group-associated-products').show();
+            //update columns' width to avoid its collapse
+            $('#associatedproducts-grid').DataTable().columns.adjust();
+
             $('#@Html.IdFor(model => model.VisibleIndividually)').prop('checked', true);
 
 
