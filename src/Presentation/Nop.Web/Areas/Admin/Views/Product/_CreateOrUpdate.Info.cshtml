@@ -65,6 +65,7 @@
             $('#group-visible-individually').hide();
             $('#group-associated-products').show();
             $('#@Html.IdFor(model => model.VisibleIndividually)').prop('checked', true);
+            $('#associatedproducts-grid').DataTable().columns.adjust();
 
 
             $('[data-panel-name=product-price]').hide();
