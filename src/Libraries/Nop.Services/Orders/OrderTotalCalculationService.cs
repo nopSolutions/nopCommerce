@@ -1066,7 +1066,7 @@ namespace Nop.Services.Orders
                 return decimal.Zero;
 
             ShippingOption shippingOption = null;
-            if (customer != null) //TODO: customer can't be null
+            if (customer != null)
                 shippingOption = _genericAttributeService.GetAttribute<ShippingOption>(customer, NopCustomerDefaults.SelectedShippingOptionAttribute, _storeContext.CurrentStore.Id);
 
             if (shippingOption != null)

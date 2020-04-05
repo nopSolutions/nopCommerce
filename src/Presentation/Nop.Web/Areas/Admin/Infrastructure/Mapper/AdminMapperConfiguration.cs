@@ -226,7 +226,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.CreatedOn, options => options.Ignore())
                 .ForMember(model => model.LanguageName, options => options.Ignore())
                 .ForMember(model => model.NotApprovedComments, options => options.Ignore())
-                .ForMember(model => model.SeName, options => options.Ignore());
+                .ForMember(model => model.SeName, options => options.Ignore())
+                .ForMember(model => model.InitialBlogTags, options => options.Ignore());
             CreateMap<BlogPostModel, BlogPost>()
                 .ForMember(entity => entity.CreatedOnUtc, options => options.Ignore());
 
@@ -439,7 +440,8 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.StockQuantityHistory, options => options.Ignore())
                 .ForMember(model => model.StockQuantityHistorySearchModel, options => options.Ignore())
                 .ForMember(model => model.StockQuantityStr, options => options.Ignore())
-                .ForMember(model => model.TierPriceSearchModel, options => options.Ignore());
+                .ForMember(model => model.TierPriceSearchModel, options => options.Ignore())
+                .ForMember(model => model.InitialProductTags, options => options.Ignore());
             CreateMap<ProductModel, Product>()
                 .ForMember(entity => entity.ApprovedRatingSum, options => options.Ignore())
                 .ForMember(entity => entity.ApprovedTotalReviews, options => options.Ignore())

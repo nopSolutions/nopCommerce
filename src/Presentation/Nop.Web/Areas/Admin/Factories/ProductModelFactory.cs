@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -904,6 +905,22 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare model stores
             _storeMappingSupportedModelFactory.PrepareModelStores(model, product, excludeProperties);
+
+            var productTags = _productTagService.GetAllProductTags();
+            var productTagsSb = new StringBuilder();
+            productTagsSb.Append("var initialProductTags = [");
+            for (var i = 0; i < productTags.Count; i++)
+            {
+                var tag = productTags[i];
+                productTagsSb.Append("'");
+                productTagsSb.Append(JavaScriptEncoder.Default.Encode(tag.Name));
+                productTagsSb.Append("'");
+                if (i != productTags.Count - 1) 
+                    productTagsSb.Append(",");
+            }
+            productTagsSb.Append("]");
+
+            model.InitialProductTags = productTagsSb.ToString();
 
             return model;
         }

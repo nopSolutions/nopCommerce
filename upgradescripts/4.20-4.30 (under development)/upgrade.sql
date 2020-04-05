@@ -2715,6 +2715,28 @@ BEGIN
 END
 GO
 
+--delete indexe
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_MessageTemplate_EmailAccountId' and object_id=object_id(N'[MessageTemplate]'))
+BEGIN
+	DROP INDEX [IX_MessageTemplate_EmailAccountId] ON [MessageTemplate]
+END
+GO
+
+--delete FK
+IF EXISTS (SELECT *  FROM sys.foreign_keys  WHERE object_id = OBJECT_ID(N'FK_MessageTemplate_EmailAccountId_EmailAccount_Id') AND parent_object_id = OBJECT_ID(N'MessageTemplate'))
+	ALTER TABLE [MessageTemplate] DROP CONSTRAINT FK_MessageTemplate_EmailAccountId_EmailAccount_Id
+GO
+
+--delete FK
+IF EXISTS (SELECT *  FROM sys.foreign_keys  WHERE object_id = OBJECT_ID(N'FK_MessageTemplate_EmailAccount_EmailAccountId') AND parent_object_id = OBJECT_ID(N'MessageTemplate'))
+	ALTER TABLE [MessageTemplate] DROP CONSTRAINT FK_MessageTemplate_EmailAccount_EmailAccountId
+GO
+
+--delete FK
+IF EXISTS (SELECT *  FROM sys.foreign_keys  WHERE object_id = OBJECT_ID(N'FK_MessageTemplate_EmailAccountId_EmailAccountId') AND parent_object_id = OBJECT_ID(N'MessageTemplate'))
+	ALTER TABLE [MessageTemplate] DROP CONSTRAINT FK_MessageTemplate_EmailAccountId_EmailAccountId
+GO
+
 --delete setting
 IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.usestoredprocedureforloadingcategories')
 BEGIN

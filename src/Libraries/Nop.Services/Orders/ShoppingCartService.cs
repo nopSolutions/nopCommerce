@@ -173,7 +173,7 @@ namespace Nop.Services.Orders
             //price is the same (for products which require customers to enter a price)
             if (product.CustomerEntersPrice)
             {
-                //TODO should we use PriceCalculationService.RoundPrice here?
+                //we use rounding to eliminate errors associated with storing real numbers in memory when comparing
                 var customerEnteredPricesEqual = Math.Round(shoppingCartItem.CustomerEnteredPrice, 2) == Math.Round(customerEnteredPrice, 2);
                 if (!customerEnteredPricesEqual)
                     return false;
