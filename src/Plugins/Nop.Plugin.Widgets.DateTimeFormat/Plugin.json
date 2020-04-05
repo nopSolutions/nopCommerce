@@ -1,0 +1,11 @@
+{
+  "Group": "Widgets",
+  "FriendlyName": "Date Time Format",
+  "SystemName": "Widgets.DateTimeFormat",
+  "Version": "1.0",
+  "SupportedVersions": [ "4.30" ],
+  "Author": "MMH",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Widgets.DateTimeFormat.dll",
+  "Description": "This Widget changes the date time formatting."
+}
