@@ -91,6 +91,15 @@
             $('#mastercheckbox').attr('checked', false).change();
             selectedIds = [];
         }
+        updateSelectedButtons();
+    }
+
+    function updateSelectedButtons() {
+        if (selectedIds.length == 0) {
+            $("[id$=-selected]").attr('disabled', 'disabled');
+        } else {
+            $("[id$=-selected]").removeAttr('disabled');
+        }
     }
 
     $(document).ready(function () {
@@ -129,10 +138,12 @@
                     });
                 }
                 updateMasterCheckbox();
+                updateSelectedButtons();
             });
             </text>
         }
         $('#@Model.Name').DataTable().columns.adjust();
+        updateSelectedButtons();
     });
 </script>
 

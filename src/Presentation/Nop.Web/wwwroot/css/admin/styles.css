@@ -945,6 +945,10 @@ div.dataTables_wrapper div.dataTables_processing .fa {
     color: #777;
     white-space: nowrap;
 }
+/* display the button with less opacity when no item selected */
+.content-header .btn-group .dropdown-menu button[disabled]{
+    opacity:.35;
+}
 .content-header .pull-right .dropdown-menu {
     right: 0;
     left: auto;
@@ -1585,10 +1589,12 @@ span.grid-report-item.red {
   float: left;
   margin-left: 3px;
 }
-
-
+/* display the button with less opacity when no item selected */
+.content-header .btn[disabled] {
+  opacity: .35;
+}
 /* JQUERY DATA TABLES */
-.button-column{
+.button-column {
   text-align: center;
 }
 .table>tbody>tr>td.button-column {
