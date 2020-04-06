@@ -4,7 +4,6 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Security;
@@ -28,7 +27,6 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
-        private readonly CommonSettings _commonSettings;
         private readonly IAclService _aclService;
         private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
@@ -49,7 +47,6 @@ namespace Nop.Services.Catalog
         #region Ctor
 
         public CategoryService(CatalogSettings catalogSettings,
-            CommonSettings commonSettings,
             IAclService aclService,
             ICustomerService customerService,
             IEventPublisher eventPublisher,
@@ -66,7 +63,6 @@ namespace Nop.Services.Catalog
             IWorkContext workContext)
         {
             _catalogSettings = catalogSettings;
-            _commonSettings = commonSettings;
             _aclService = aclService;
             _customerService = customerService;
             _eventPublisher = eventPublisher;
@@ -156,7 +152,7 @@ namespace Nop.Services.Catalog
                 string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
                 showHidden);
 
-            var categories = _staticCacheManager.Get(key, () => GetAllCategories(string.Empty, storeId, showHidden: showHidden));
+            var categories = _staticCacheManager.Get(key, () => GetAllCategories(string.Empty, storeId, showHidden: showHidden).ToList());
 
             return categories;
         }
@@ -611,7 +607,7 @@ namespace Nop.Services.Catalog
                 query = query.Distinct().OrderBy(pc => pc.DisplayOrder).ThenBy(pc => pc.Id);
             }
 
-            var productCategories = query.ToCachedPagedList(key, pageIndex, pageSize);
+            var productCategories = new PagedList<ProductCategory>(query.ToCachedList(key), pageIndex, pageSize);
 
             return productCategories;
         }

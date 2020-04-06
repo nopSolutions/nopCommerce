@@ -33,15 +33,7 @@ namespace Nop.Services.Caching.Extensions
                 ? query.Single()
                 : CacheManager.Get(cacheKey, query.Single);
         }
-
-        public static IPagedList<T> ToCachedPagedList<T>(this IQueryable<T> query, CacheKey cacheKey, int pageIndex,
-            int pageSize)
-        {
-            return cacheKey == null
-                ? new PagedList<T>(query, pageIndex, pageSize)
-                : CacheManager.Get(cacheKey, () => new PagedList<T>(query, pageIndex, pageSize));
-        }
-
+        
         public static bool ToCachedAny<T>(this IQueryable<T> query, CacheKey cacheKey)
         {
             return cacheKey == null

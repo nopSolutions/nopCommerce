@@ -378,7 +378,7 @@ namespace Nop.Services.Catalog
                 query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
             }
 
-            var productManufacturers = query.ToCachedPagedList(key, pageIndex, pageSize);
+            var productManufacturers = new PagedList<ProductManufacturer>(query.ToCachedList(key), pageIndex, pageSize);
 
             return productManufacturers;
         }

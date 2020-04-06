@@ -93,7 +93,7 @@ namespace Nop.Services.Catalog
             var query = from pa in _productAttributeRepository.Table
                 orderby pa.Name
                 select pa;
-            var productAttributes = query.ToCachedPagedList(key, pageIndex, pageSize);
+            var productAttributes = new PagedList<ProductAttribute>(query.ToCachedList(key), pageIndex, pageSize);
 
             return productAttributes;
         }

@@ -26,7 +26,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache
         /// Key for caching all tax rates
         /// </summary>
         public static CacheKey ALL_TAX_RATES_MODEL_KEY = new CacheKey("Nop.plugins.tax.fixedorbycountrystateziptaxrate.all", TAXRATE_PATTERN_KEY);
-        public static CacheKey TAXRATE_ALL_KEY = new CacheKey("Nop.plugins.tax.fixedorbycountrystateziptaxrate.all-{0}-{1}", TAXRATE_PATTERN_KEY);
+        public static CacheKey TAXRATE_ALL_KEY = new CacheKey("Nop.plugins.tax.fixedorbycountrystateziptaxrate.taxrate.all", TAXRATE_PATTERN_KEY);
         public const string TAXRATE_PATTERN_KEY = "Nop.plugins.tax.fixedorbycountrystateziptaxrate.";
 
         #endregion
