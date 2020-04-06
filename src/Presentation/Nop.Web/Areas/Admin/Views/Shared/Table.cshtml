@@ -93,6 +93,12 @@
         }
     }
 
+    function updateTableWidth(tableSelector) {
+        if ($.fn.DataTable.isDataTable(tableSelector)) {
+            $(tableSelector).DataTable().columns.adjust();
+        }
+    }
+
     $(document).ready(function () {
         $('#@Model.Name').DataTable({
              @await Html.PartialAsync("_Table.Definition", Model)
@@ -142,7 +148,7 @@
     {
         var tableName = ReplaceName(curModel.Name);
         <text>
-        <script>
+            <script>
             function table_deletedata_@(tableName)(dataId) {
                 if (confirm('@T("Admin.Common.DeleteConfirmation")')) {
                     var postData = {
@@ -183,8 +189,8 @@
                     return false;
                 }
             }
-        </script>
-        </text>
+            </script>
+            </text>
         }
     }
 
@@ -193,8 +199,8 @@
     foreach (var curModel in listOfTables)
     {
         var tableName = ReplaceName(curModel.Name);
-    <text>
-        <script>
+        <text>
+            <script>
         var editIndexTable_@(tableName) = -1;
         var editRowData_@(tableName) = [];
         var columnData_@(tableName) = [];
@@ -365,10 +371,10 @@
                 }
             });
         }
-        </script>
-        </text>
+            </script>
+            </text>
+        }
     }
-}
 
 @if (Model.ChildTable != null)
 {
@@ -377,8 +383,8 @@
         var modelName = ReplaceName(curModel.Name);
         if (curModel.ChildTable != null)
         {
-        <text>
-            <script>
+            <text>
+                <script>
                 function getchild_@(modelName)(d) {
                     return '<table id="child' + d.@(curModel.PrimaryKeyColumn) + '" class="table table-bordered table-hover dataTable" width="100%" style="padding-left:2%;"></table>';
                 }
@@ -410,8 +416,8 @@
                         $('#@curModel.Name').DataTable().columns.adjust();
                     });
                 });
-            </script>
-        </text>
+                </script>
+            </text>
         }
     }
 }
