@@ -104,7 +104,7 @@ namespace Nop.Web.Framework.Validators
             //get max values of these properties
             var decimalColumnsMaxValues = entityDescriptor.Columns.Where(column =>
                 modelPropertyNames.Contains(column.ColumnName) &&
-                column.DataType == DataType.Decimal && column.Precision.HasValue && column.Scale.HasValue);
+                column.DataType == DataType.Decimal && column.Length.HasValue && column.Precision.HasValue);
 
             if (!decimalColumnsMaxValues.Any())
                 return;
@@ -112,7 +112,7 @@ namespace Nop.Web.Framework.Validators
             //create expressions for the validation rules
             var maxValueExpressions = decimalColumnsMaxValues.Select(column => new
             {
-                MaxValue = (decimal)Math.Pow(10, column.Precision.Value - column.Scale.Value),
+                MaxValue = (decimal)Math.Pow(10, column.Length.Value - column.Precision.Value),
                 Expression = DynamicExpressionParser.ParseLambda<TModel, decimal>(null, false, column.ColumnName)
             }).ToList();
 
