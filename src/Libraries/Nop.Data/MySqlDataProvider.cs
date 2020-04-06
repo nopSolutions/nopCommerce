@@ -28,6 +28,19 @@ namespace Nop.Data
 
         #region Utils
 
+        /// <summary>
+        /// Configures the data context
+        /// </summary>
+        /// <param name="dataContext">Data context to configure</param>
+        private void ConfigureDataContext(IDataContext dataContext)
+        {
+            AdditionalSchema.SetDataType(
+                typeof(Guid),
+                new SqlDataType(DataType.NChar, typeof(Guid), 36));
+
+            AdditionalSchema.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
+        }
+        
         protected MySqlConnectionStringBuilder GetConnectionStringBuilder()
         {
             return new MySqlConnectionStringBuilder(CurrentConnectionString);
@@ -88,31 +101,21 @@ namespace Nop.Data
             return dataContext;
         }
 
-        /// <summary>
-        /// Configures the data context
-        /// </summary>
-        /// <param name="dataContext">Data context to configure</param>
-        public virtual void ConfigureDataContext(IDataContext dataContext)
-        {
-            AdditionalSchema.SetDataType(
-                typeof(Guid),
-                new SqlDataType(DataType.NChar, typeof(Guid), 36));
-
-            AdditionalSchema.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
-        }
-
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Creates a connection to a database
+        /// Gets a connection to the database for a current data provider
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Connection to a database</returns>
-        public override IDbConnection CreateDbConnection(string connectionString = null)
+        protected override IDbConnection GetInternalDbConnection(string connectionString)
         {
-            return new MySqlConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : CurrentConnectionString);
+            if(string.IsNullOrEmpty(connectionString))
+                throw new ArgumentException(nameof(connectionString));
+
+            return new MySqlConnection(connectionString);
         }
 
         /// <summary>
