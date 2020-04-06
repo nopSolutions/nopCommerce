@@ -13,6 +13,7 @@
     <RepositoryType>Git</RepositoryType>
     <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project-->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
   <ItemGroup>
