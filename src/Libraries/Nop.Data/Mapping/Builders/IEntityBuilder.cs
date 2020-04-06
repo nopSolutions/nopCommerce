@@ -12,10 +12,5 @@ namespace Nop.Data.Mapping.Builders
         /// </summary>
         /// <param name="table">Create table expression builder</param>
         void MapEntity(CreateTableExpressionBuilder table);
-
-        /// <summary>
-        /// Table name
-        /// </summary>
-        string TableName { get; }
     }
 }

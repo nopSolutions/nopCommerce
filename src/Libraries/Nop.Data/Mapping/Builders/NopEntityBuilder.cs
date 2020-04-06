@@ -7,13 +7,11 @@ namespace Nop.Data.Mapping.Builders
     /// Represents base entity builder
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
+    /// <remarks>
+    /// "Entity type <see cref="TEntity"/>" is needed to determine the right entity builder for a specific entity type
+    /// </remarks>
     public abstract class NopEntityBuilder<TEntity> : IEntityBuilder where TEntity : BaseEntity
     {
-        /// <summary>
-        /// Table name
-        /// </summary>
-        public string TableName => typeof(TEntity).Name;
-
         /// <summary>
         /// Apply entity configuration
         /// </summary>
