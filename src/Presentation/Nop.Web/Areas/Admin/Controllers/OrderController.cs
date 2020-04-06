@@ -354,6 +354,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 billingCountryId: model.BillingCountryId,
                 orderNotes: model.OrderNotes);
 
+            //ensure that we at least one order selected
+            if (!orders.Any())
+            {
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Orders.PdfInvoice.NoOrders"));
+                return RedirectToAction("List");
+            }
+
             try
             {
                 var xml = _exportManager.ExportOrdersToXml(orders);
@@ -381,6 +388,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 orders.AddRange(_orderService.GetOrdersByIds(ids).Where(HasAccessToOrder));
+            }
+
+            //ensure that we at least one order selected
+            if (!orders.Any())
+            {
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Orders.PdfInvoice.NoOrders"));
+                return RedirectToAction("List");
             }
 
             var xml = _exportManager.ExportOrdersToXml(orders);
@@ -439,6 +453,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 billingCountryId: model.BillingCountryId,
                 orderNotes: model.OrderNotes);
 
+            //ensure that we at least one order selected
+            if (!orders.Any())
+            {
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Orders.PdfInvoice.NoOrders"));
+                return RedirectToAction("List");
+            }
+
             try
             {
                 var bytes = _exportManager.ExportOrdersToXlsx(orders);
@@ -465,6 +486,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 orders.AddRange(_orderService.GetOrdersByIds(ids).Where(HasAccessToOrder));
+            }
+
+            //ensure that we at least one order selected
+            if (!orders.Any())
+            {
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Orders.PdfInvoice.NoOrders"));
+                return RedirectToAction("List");
             }
 
             try
@@ -1002,6 +1030,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
                 orderNotes: model.OrderNotes);
+
+            //ensure that we at least one order selected
+            if (!orders.Any())
+            {
+                _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Orders.PdfInvoice.NoOrders"));
+                return RedirectToAction("List");
+            }
 
             byte[] bytes;
             using (var stream = new MemoryStream())
