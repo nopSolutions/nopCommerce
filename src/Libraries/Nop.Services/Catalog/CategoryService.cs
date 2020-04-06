@@ -352,7 +352,7 @@ namespace Nop.Services.Catalog
                 if (!discount.AppliedToSubCategories)
                     return ids;
 
-                ids.AddRange(ids.SelectMany(categoryId => GetChildCategoryIds(categoryId, _storeContext.CurrentStore.Id)));
+                ids.AddRange(ids.SelectMany(categoryId => GetChildCategoryIds(categoryId, _storeContext.CurrentStore.Id)).ToList());
 
                 return ids.Distinct().ToList();
             });
