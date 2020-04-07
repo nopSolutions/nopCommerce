@@ -84,7 +84,7 @@ namespace Nop.Web.Framework.Mvc.Routing
                         //redirect to the page for current language
                         values[NopPathRouteDefaults.ControllerFieldKey] = "Common";
                         values[NopPathRouteDefaults.ActionFieldKey] = "InternalRedirect";
-                        values[NopPathRouteDefaults.UrlFieldKey] = $"{pathBase}/{slugForCurrentLanguage}{httpContext.Request.QueryString}";
+                        values[NopPathRouteDefaults.UrlFieldKey] = $"{pathBase}/{language.UniqueSeoCode}/{slugForCurrentLanguage}{httpContext.Request.QueryString}";
                         values[NopPathRouteDefaults.PermanentRedirectFieldKey] = false;
                         httpContext.Items["nop.RedirectFromGenericPathRoute"] = true;
 
