@@ -574,6 +574,9 @@ namespace Nop.Services.Customers
 
             _customerRepository.Insert(customer);
 
+            //event notification
+            _eventPublisher.EntityInserted(customer);
+
             AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = guestRole.Id });
 
             return customer;

@@ -395,7 +395,7 @@ namespace Nop.Services.Blogs
             if (isApproved.HasValue)
                 query = query.Where(comment => comment.IsApproved == isApproved.Value);
 
-            var cacheKey = NopBlogsCachingDefaults.BlogCommentsNumberCacheKey.FillCacheKey(blogPost, storeId, true);
+            var cacheKey = NopBlogsCachingDefaults.BlogCommentsNumberCacheKey.FillCacheKey(blogPost, storeId, isApproved);
             
             return _cacheManager.Get(cacheKey, () => query.Count());
         }
