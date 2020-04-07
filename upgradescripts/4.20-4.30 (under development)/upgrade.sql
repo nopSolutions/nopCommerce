@@ -2754,3 +2754,27 @@ GO
 IF EXISTS (SELECT 1 FROM sys.objects WHERE OBJECT_ID = OBJECT_ID(N'[LanguagePackImport]') AND OBJECTPROPERTY(OBJECT_ID, N'IsProcedure') = 1)
     DROP PROCEDURE [LanguagePackImport];
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'cookiesettings.compareproductscookieexpires')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'cookiesettings.compareproductscookieexpires', N'240', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'cookiesettings.recentlyviewedproductscookieexpires')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'cookiesettings.recentlyviewedproductscookieexpires', N'240', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'cookiesettings.customercookieexpires')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'cookiesettings.customercookieexpires', N'8760', 0)
+END
+GO
