@@ -139,13 +139,19 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                         var originalPath = context.HttpContext.Request.Path;
                         var originalQueryString = context.HttpContext.Request.QueryString;
 
-                        //store the original paths in special feature, so we can use it later
-                        context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(new StatusCodeReExecuteFeature
+                        if (DataSettingsManager.DatabaseIsInstalled)
                         {
-                            OriginalPathBase = context.HttpContext.Request.PathBase.Value,
-                            OriginalPath = originalPath.Value,
-                            OriginalQueryString = originalQueryString.HasValue ? originalQueryString.Value : null
-                        });
+                            var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
+
+                            if (commonSettings.Log404Errors)
+                            {
+                                var logger = EngineContext.Current.Resolve<ILogger>();
+                                var workContext = EngineContext.Current.Resolve<IWorkContext>();
+
+                                logger.Error($"Error 404. The requested page ({originalPath}) was not found",
+                                    customer: workContext.CurrentCustomer);
+                            }
+                        }
 
                         try
                         {
@@ -159,9 +165,9 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
                             //return original path to request
                             context.HttpContext.Request.QueryString = originalQueryString;
                             context.HttpContext.Request.Path = originalPath;
-                            context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(null);
                         }
                     }
+
                     await Task.CompletedTask;
                 }
             });

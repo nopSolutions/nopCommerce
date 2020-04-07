@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain;
@@ -35,7 +34,6 @@ namespace Nop.Web.Controllers
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
-        private readonly ILogger _logger;
         private readonly IStoreContext _storeContext;
         private readonly IThemeContext _themeContext;
         private readonly IVendorService _vendorService;
@@ -59,7 +57,6 @@ namespace Nop.Web.Controllers
             IGenericAttributeService genericAttributeService,
             ILanguageService languageService,
             ILocalizationService localizationService,
-            ILogger logger,
             IStoreContext storeContext,
             IThemeContext themeContext,
             IVendorService vendorService,
@@ -79,7 +76,6 @@ namespace Nop.Web.Controllers
             _genericAttributeService = genericAttributeService;
             _languageService = languageService;
             _localizationService = localizationService;
-            _logger = logger;
             _storeContext = storeContext;
             _themeContext = themeContext;
             _vendorService = vendorService;
@@ -99,14 +95,6 @@ namespace Nop.Web.Controllers
         //page not found
         public virtual IActionResult PageNotFound()
         {
-            if (_commonSettings.Log404Errors)
-            {
-                var statusCodeReExecuteFeature = HttpContext?.Features?.Get<IStatusCodeReExecuteFeature>();
-                //TODO add locale resource
-                _logger.Error($"Error 404. The requested page ({statusCodeReExecuteFeature?.OriginalPath}) was not found",
-                    customer: _workContext.CurrentCustomer);
-            }
-
             Response.StatusCode = 404;
             Response.ContentType = "text/html";
 
