@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
@@ -50,7 +51,7 @@ namespace Nop.Core.Caching
 
             //add tokens to clear cache entries
             options.AddExpirationToken(new CancellationChangeToken(_clearToken.Token));
-            foreach (var keyPrefix in key.Prefixes)
+            foreach (var keyPrefix in key.Prefixes.ToList())
             {
                 var tokenSource = _prefixes.GetOrAdd(keyPrefix, new CancellationTokenSource());
                 options.AddExpirationToken(new CancellationChangeToken(tokenSource.Token));
