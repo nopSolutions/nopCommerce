@@ -684,6 +684,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                         }
                     }
 
+                    var currentCustomerRoleIds = _customerService.GetCustomerRoleIds(customer, true);
+
                     //customer roles
                     foreach (var customerRole in allCustomerRoles)
                     {
@@ -696,7 +698,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         if (model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                         {
                             //new role
-                            if (!_customerService.IsInCustomerRole(customer, customerRole.SystemName))
+                            if (currentCustomerRoleIds.All(roleId => roleId != customerRole.Id))
                                 _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole.Id });
                         }
                         else
@@ -709,10 +711,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                             }
 
                             //remove role
-                            if (_customerService.IsInCustomerRole(customer, customerRole.SystemName))
-                            {
+                            if (currentCustomerRoleIds.Any(roleId => roleId == customerRole.Id))
                                 _customerService.RemoveCustomerRoleMapping(customer, customerRole);
-                            }
                         }
                     }
 
