@@ -87,7 +87,7 @@
     },
 
     setLoadWaiting: function () {
-        $('.message-failure').empty();
+        $('#estimate-shipping-popup .message-failure').empty();
         $('#shipping-options-body').html($('<div/>').addClass('shipping-options-loading'));
     },
 
@@ -145,7 +145,7 @@
         if (jqXHR.status >= 400) {
             let response = jqXHR.responseJSON;
             if (response instanceof Object && response.hasOwnProperty('Errors')) {
-                let errorBox = $('.message-failure').empty();
+                let errorBox = $('#estimate-shipping-popup .message-failure').empty();
                 $.each(response.Errors, function (i, error) {
                     errorBox.append($('<div/>').text(error));
                 });
