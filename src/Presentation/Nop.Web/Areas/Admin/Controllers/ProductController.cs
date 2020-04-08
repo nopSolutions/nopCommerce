@@ -3284,7 +3284,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //check whether the same attribute combination already exists
             var existingCombination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
-            if (existingCombination != null && existingCombination != combination)
+            if (existingCombination != null && existingCombination.Id != model.Id && existingCombination.AttributesXml.Equals(attributesXml))
                 warnings.Add(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AlreadyExists"));
 
             if (!warnings.Any() && ModelState.IsValid)
