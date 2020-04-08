@@ -228,7 +228,8 @@ namespace Nop.Web.Factories
                 StoreName = _localizationService.GetLocalized(_storeContext.CurrentStore, x => x.Name)
             };
 
-            var cacheKey = NopModelCacheDefaults.StoreLogoPath.FillCacheKey(_storeContext.CurrentStore.Id, _themeContext.WorkingThemeName, _webHelper.IsCurrentConnectionSecured());
+            var cacheKey = NopModelCacheDefaults.StoreLogoPath
+                .FillCacheKey(_storeContext.CurrentStore, _themeContext.WorkingThemeName, _webHelper.IsCurrentConnectionSecured());
             model.LogoPath = _cacheManager.Get(cacheKey, () =>
             {
                 var logo = string.Empty;
@@ -527,9 +528,9 @@ namespace Nop.Web.Factories
         public virtual SitemapModel PrepareSitemapModel(SitemapPageModel pageModel)
         {
             var cacheKey = NopModelCacheDefaults.SitemapPageModelKey.FillCacheKey(
-                _workContext.WorkingLanguage.Id,
-                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
-                _storeContext.CurrentStore.Id);
+                _workContext.WorkingLanguage,
+                _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer),
+                _storeContext.CurrentStore);
 
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
@@ -722,9 +723,9 @@ namespace Nop.Web.Factories
         public virtual string PrepareSitemapXml(int? id)
         {
             var cacheKey = NopModelCacheDefaults.SitemapSeoModelKey.FillCacheKey(id,
-                _workContext.WorkingLanguage.Id,
-                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
-                _storeContext.CurrentStore.Id);
+                _workContext.WorkingLanguage,
+                _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer),
+                _storeContext.CurrentStore);
 
             var siteMap = _cacheManager.Get(cacheKey, () => _sitemapGenerator.Generate(id));
 

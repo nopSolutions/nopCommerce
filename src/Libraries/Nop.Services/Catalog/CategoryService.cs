@@ -149,7 +149,7 @@ namespace Nop.Services.Catalog
         {
             var key = NopCatalogCachingDefaults.CategoriesAllCacheKey.FillCacheKey(
                 storeId,
-                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
+                _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer),
                 showHidden);
 
             var categories = _staticCacheManager.Get(key, () => GetAllCategories(string.Empty, storeId, showHidden: showHidden).ToList());
@@ -231,7 +231,7 @@ namespace Nop.Services.Catalog
             bool showHidden = false)
         {
             var key = NopCatalogCachingDefaults.CategoriesByParentCategoryIdCacheKey.FillCacheKey(parentCategoryId,
-                showHidden, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+                showHidden, _workContext.CurrentCustomer, _storeContext.CurrentStore);
 
             var query = _categoryRepository.Table;
 
@@ -316,7 +316,7 @@ namespace Nop.Services.Catalog
                 return categories;
 
             var cacheKey = NopCatalogCachingDefaults.CategoriesDisplayedOnHomepageWithoutHiddenCacheKey
-                .FillCacheKey(_storeContext.CurrentStore.Id, string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)));
+                .FillCacheKey(_storeContext.CurrentStore, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
 
             var result = _staticCacheManager.Get(cacheKey, () =>
             {
@@ -339,15 +339,14 @@ namespace Nop.Services.Catalog
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            var discountId = discount.Id;
             var cacheKey = NopDiscountCachingDefaults.DiscountCategoryIdsModelCacheKey.FillCacheKey(
-                discountId,
+                discount,
                 _customerService.GetCustomerRoleIds(customer),
                 _storeContext.CurrentStore);
 
             var result = _staticCacheManager.Get(cacheKey, () =>
             {
-                var ids = _discountCategoryMappingRepository.Table.Where(dmm => dmm.DiscountId == discountId).Select(dmm => dmm.EntityId).Distinct().ToList();
+                var ids = _discountCategoryMappingRepository.Table.Where(dmm => dmm.DiscountId == discount.Id).Select(dmm => dmm.EntityId).Distinct().ToList();
 
                 if (!discount.AppliedToSubCategories)
                     return ids;
@@ -371,8 +370,8 @@ namespace Nop.Services.Catalog
         {
             var cacheKey = NopCatalogCachingDefaults.CategoriesChildIdentifiersCacheKey.FillCacheKey(
                 parentCategoryId,
-                string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer)),
-                _storeContext.CurrentStore.Id,
+                _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer),
+                _storeContext.CurrentStore,
                 showHidden);
 
             return _staticCacheManager.Get(cacheKey, () =>
@@ -546,7 +545,7 @@ namespace Nop.Services.Catalog
                 return new PagedList<ProductCategory>(new List<ProductCategory>(), pageIndex, pageSize);
 
             var key = NopCatalogCachingDefaults.ProductCategoriesAllByCategoryIdCacheKey.FillCacheKey(categoryId, showHidden,
-                pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+                pageIndex, pageSize, _workContext.CurrentCustomer, _storeContext.CurrentStore);
 
             var query = from pc in _productCategoryRepository.Table
                         join p in _productRepository.Table on pc.ProductId equals p.Id
@@ -637,7 +636,7 @@ namespace Nop.Services.Catalog
                 return new List<ProductCategory>();
 
             var key = NopCatalogCachingDefaults.ProductCategoriesAllByProductIdCacheKey.FillCacheKey(productId,
-                showHidden, _workContext.CurrentCustomer.Id, storeId);
+                showHidden, _workContext.CurrentCustomer, storeId);
 
             var query = from pc in _productCategoryRepository.Table
                         join c in _categoryRepository.Table on pc.CategoryId equals c.Id

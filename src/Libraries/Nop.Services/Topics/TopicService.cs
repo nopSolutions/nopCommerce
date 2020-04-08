@@ -106,7 +106,8 @@ namespace Nop.Services.Topics
             if (string.IsNullOrEmpty(systemName))
                 return null;
 
-            var cacheKey = NopTopicCachingDefaults.TopicBySystemNameCacheKey.FillCacheKey(systemName, storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+            var cacheKey = NopTopicCachingDefaults.TopicBySystemNameCacheKey
+                .FillCacheKey(systemName, storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
 
             var topic = _cacheManager.Get(cacheKey, () =>
             {
@@ -145,7 +146,8 @@ namespace Nop.Services.Topics
         public virtual IList<Topic> GetAllTopics(int storeId, bool ignorAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false)
         {
             var key = ignorAcl ? NopTopicCachingDefaults.TopicsAllCacheKey.FillCacheKey(storeId, showHidden, onlyIncludedInTopMenu) :
-                NopTopicCachingDefaults.TopicsAllWithACLCacheKey.FillCacheKey(storeId, showHidden, onlyIncludedInTopMenu, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+                NopTopicCachingDefaults.TopicsAllWithACLCacheKey
+                    .FillCacheKey(storeId, showHidden, onlyIncludedInTopMenu, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
 
             var query = _topicRepository.Table;
             query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);

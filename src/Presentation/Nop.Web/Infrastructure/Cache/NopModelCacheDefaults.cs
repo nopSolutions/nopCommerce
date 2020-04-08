@@ -37,7 +37,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </summary>
         /// <remarks>
         /// {0} : language id
-        /// {1} : comma separated list of customer roles
+        /// {1} : roles of the current user
         /// {2} : current store ID
         /// </remarks>
         public static CacheKey CategoryAllModelKey => new CacheKey("Nop.pres.category.all-{0}-{1}-{2}", CategoryAllPrefixCacheKey);
@@ -70,7 +70,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </summary>
         /// <remarks>
         /// {0} : language id
-        /// {1} : comma separated list of customer roles
+        /// {1} : roles of the current user
         /// {2} : current store ID
         /// </remarks>
         public static CacheKey CategoryXmlAllModelKey => new CacheKey("Nop.pres.categoryXml.all-{0}-{1}-{2}", CategoryXmlAllPrefixCacheKey);
@@ -80,7 +80,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// Key for SpecificationAttributeOptionFilter caching
         /// </summary>
         /// <remarks>
-        /// {0} : comma separated list of specification attribute option IDs
+        /// {0} : list of specification attribute option IDs
         /// {1} : language id
         /// </remarks>
         public static CacheKey SpecsFilterModelKey => new CacheKey("Nop.pres.filter.specs-{0}-{1}", SpecsFilterPrefixCacheKey);

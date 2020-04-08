@@ -93,7 +93,9 @@ namespace Nop.Services.Catalog
                 allowedCustomerRolesIds = string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
             }
 
-            var key = NopCatalogCachingDefaults.ProductTagCountCacheKey.FillCacheKey(storeId, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer), showHidden);
+            var key = NopCatalogCachingDefaults.ProductTagCountCacheKey.FillCacheKey(storeId, 
+                _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer), 
+                showHidden);
            
             return _staticCacheManager.Get(key, () =>
             {
