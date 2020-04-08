@@ -7824,14 +7824,8 @@
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.Discounts">
     <Value>Discounts</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayOrder">
-    <Value>Display order</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayStockAvailability">
     <Value>Display availability</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayStockQuantity">
-    <Value>Display stock qty</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DownloadableProduct">
     <Value>Downloadable product</Value>
@@ -7862,12 +7856,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MarkAsNew">
     <Value>Mark as new</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MarkAsNewEndDate">
-    <Value>Mark as new. End date</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MarkAsNewStartDate">
-    <Value>Mark as new. Start date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MaximumCartQuantity">
     <Value>Maximum cart qty</Value>

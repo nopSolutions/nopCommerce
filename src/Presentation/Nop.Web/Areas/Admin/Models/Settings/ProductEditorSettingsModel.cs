@@ -36,9 +36,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.ShowOnHomepage")]
         public bool ShowOnHomepage { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.DisplayOrder")]
-        public bool DisplayOrder { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.AllowCustomerReviews")]
         public bool AllowCustomerReviews { get; set; }
 
@@ -123,9 +120,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.DisplayStockAvailability")]
         public bool DisplayStockAvailability { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.DisplayStockQuantity")]
-        public bool DisplayStockQuantity { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.MinimumStockQuantity")]
         public bool MinimumStockQuantity { get; set; }
 
@@ -170,12 +164,6 @@ namespace Nop.Web.Areas.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.MarkAsNew")]
         public bool MarkAsNew { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.MarkAsNewStartDate")]
-        public bool MarkAsNewStartDate { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.MarkAsNewEndDate")]
-        public bool MarkAsNewEndDate { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.ProductEditor.Published")]
         public bool Published { get; set; }

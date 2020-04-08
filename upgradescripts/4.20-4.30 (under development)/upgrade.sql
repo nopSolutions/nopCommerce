@@ -592,6 +592,18 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Plugins.Description.Step5">
     <Value>Click on the ''Restart application to apply changes'' button on the top panel to finish the installation process.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayOrder">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MarkAsNewEndDate">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.MarkAsNewStartDate">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayStockQuantity">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

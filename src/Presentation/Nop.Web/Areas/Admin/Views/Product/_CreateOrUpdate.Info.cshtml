@@ -375,7 +375,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="ShowOnHomepage">
-        <div class="form-group @(Model.ProductEditorSettingsModel.DisplayOrder ? null : "advanced-setting")" id="pnlDisplayOrder" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+        <div class="form-group @(Model.ProductEditorSettingsModel.ShowOnHomepage ? null : "advanced-setting")" id="pnlDisplayOrder" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             <div class="col-md-3">
                 <nop-label asp-for="DisplayOrder" />
             </div>
@@ -684,7 +684,7 @@
         </div>
     </div>
     <nop-nested-setting asp-for="MarkAsNew">
-        <div class="form-group @(Model.ProductEditorSettingsModel.MarkAsNewStartDate ? null : "advanced-setting")" id="pnlMarkAsNewStartDateTimeUtc">
+        <div class="form-group @(Model.ProductEditorSettingsModel.MarkAsNew ? null : "advanced-setting")" id="pnlMarkAsNewStartDateTimeUtc">
             <div class="col-md-3">
                 <nop-label asp-for="MarkAsNewStartDateTimeUtc" />
             </div>
@@ -693,7 +693,7 @@
                 <span asp-validation-for="MarkAsNewStartDateTimeUtc"></span>
             </div>
         </div>
-        <div class="form-group @(Model.ProductEditorSettingsModel.MarkAsNewEndDate ? null : "advanced-setting")" id="pnlMarkAsNewEndDateTimeUtc">
+        <div class="form-group @(Model.ProductEditorSettingsModel.MarkAsNew ? null : "advanced-setting")" id="pnlMarkAsNewEndDateTimeUtc">
             <div class="col-md-3">
                 <nop-label asp-for="MarkAsNewEndDateTimeUtc" />
             </div>
