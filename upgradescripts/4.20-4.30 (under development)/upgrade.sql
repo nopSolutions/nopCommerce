@@ -586,6 +586,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.ProductTags.Deleted">
     <Value>The product tag has been deleted successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Description.Step4">
+    <Value>Click on the ''Install'' link to choose the plugin for install.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Description.Step5">
+    <Value>Click on the ''Restart application to apply changes'' button on the top panel to finish the installation process.</Value>
+  </LocaleResource>
 </Language>
 '
 
