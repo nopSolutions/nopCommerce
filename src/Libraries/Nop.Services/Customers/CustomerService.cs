@@ -1143,7 +1143,7 @@ namespace Nop.Services.Customers
                         (showHidden || cr.Active)
                         select cr.Id;
 
-            var key = NopCustomerServiceCachingDefaults.CustomerRoleIdsCacheKey.FillCacheKey(customer.Id, showHidden);
+            var key = NopCustomerServiceCachingDefaults.CustomerRoleIdsCacheKey.FillCacheKey(customer, showHidden);
 
             return _cacheManager.Get(key, () => query.ToArray());
         }

@@ -33,7 +33,7 @@ namespace Nop.Services.Caching.CachingDefaults
         /// </summary>
         /// <remarks>
         /// {0} : parent category id
-        /// {1} : comma separated list of customer roles
+        /// {1} : roles of the current user
         /// {2} : current store ID
         /// {3} : show hidden records?
         /// </remarks>
@@ -87,7 +87,7 @@ namespace Nop.Services.Caching.CachingDefaults
         /// </summary>
         /// <remarks>
         /// {0} : current store ID
-        /// {1} : comma separated list of customer roles
+        /// {1} : roles of the current user
         /// {2} : show hidden records?
         /// </remarks>
         public static CacheKey CategoriesAllCacheKey => new CacheKey("Nop.category.all-{0}-{1}-{2}", CategoriesAllPrefixCacheKey);
@@ -206,6 +206,9 @@ namespace Nop.Services.Caching.CachingDefaults
         /// <summary>
         /// Gets a key pattern to clear cache
         /// </summary>
+        /// <remarks>
+        /// {0} : product ID
+        /// </remarks>
         public static string ProductsRelatedPrefixCacheKey => "Nop.product.related-{0}";
 
         /// <summary>
@@ -418,10 +421,10 @@ namespace Nop.Services.Caching.CachingDefaults
 
         /// <summary>
         /// Key for specification attributes caching
+        /// </summary>
         /// <remarks>
         /// {0} : specification attribute ID
         /// </remarks>
-        /// </summary>
         public static CacheKey SpecAttributesOptionsCacheKey => new CacheKey("Nop.productspecificationattribute.options-{0}");
         
         #endregion

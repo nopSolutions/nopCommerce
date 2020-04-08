@@ -16,8 +16,8 @@ namespace Nop.Services.Caching.CacheEventConsumers.Seo
         {
             Remove(NopSeoCachingDefaults.UrlRecordAllCacheKey);
 
-            var cacheKey = NopSeoCachingDefaults.UrlRecordActiveByIdNameLanguageCacheKey.FillCacheKey(entity.EntityId,
-                entity.EntityName, entity.LanguageId);
+            var cacheKey = NopSeoCachingDefaults.UrlRecordActiveByIdNameLanguageCacheKey
+                .FillCacheKey(entity.EntityId, entity.EntityName, entity.LanguageId);
             Remove(cacheKey);
 
             RemoveByPrefix(NopSeoCachingDefaults.UrlRecordByIdsPrefixCacheKey);

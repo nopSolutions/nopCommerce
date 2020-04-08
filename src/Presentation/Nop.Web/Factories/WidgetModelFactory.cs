@@ -53,7 +53,7 @@ namespace Nop.Web.Factories
         public virtual List<RenderWidgetModel> PrepareRenderWidgetModel(string widgetZone, object additionalData = null)
         {
             var cacheKey = NopModelCacheDefaults.WidgetModelKey.FillCacheKey(
-                _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, widgetZone, _themeContext.WorkingThemeName);
+                _workContext.CurrentCustomer, _storeContext.CurrentStore, widgetZone, _themeContext.WorkingThemeName);
 
             var cachedModels = _cacheManager.Get(cacheKey, () =>
                 _widgetPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id, widgetZone)

@@ -356,7 +356,7 @@ namespace Nop.Web.Models.Catalog
 
                 foreach (var spec in alreadyFilteredSpecsStr.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    int.TryParse(spec.Trim(), out int specId);
+                    int.TryParse(spec.Trim(), out var specId);
                     if (!result.Contains(specId))
                         result.Add(specId);
                 }
@@ -379,9 +379,7 @@ namespace Nop.Web.Models.Catalog
                 IWebHelper webHelper, IWorkContext workContext, ICacheManager cacheManager)
             {
                 Enabled = false;
-                var optionIds = filterableSpecificationAttributeOptionIds != null
-                    ? string.Join(",", filterableSpecificationAttributeOptionIds) : string.Empty;
-                var cacheKey = NopModelCacheDefaults.SpecsFilterModelKey.FillCacheKey(optionIds, workContext.WorkingLanguage.Id);
+                var cacheKey = NopModelCacheDefaults.SpecsFilterModelKey.FillCacheKey(filterableSpecificationAttributeOptionIds, workContext.WorkingLanguage);
 
                 var allOptions = specificationAttributeService.GetSpecificationAttributeOptionsByIds(filterableSpecificationAttributeOptionIds);
                 var allFilters = cacheManager.Get(cacheKey, () => allOptions.Select(sao =>

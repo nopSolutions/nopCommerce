@@ -376,7 +376,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>List of models</returns>
         public virtual IList<AdminNavigationPluginModel> PrepareAdminNavigationPluginModels()
         {
-            var cacheKey = NopPluginDefaults.AdminNavigationPluginsCacheKey.FillCacheKey(_workContext.CurrentCustomer.Id);
+            var cacheKey = NopPluginDefaults.AdminNavigationPluginsCacheKey.FillCacheKey(_workContext.CurrentCustomer);
             return _cacheManager.Get(cacheKey, () =>
             {
                 //get installed plugins

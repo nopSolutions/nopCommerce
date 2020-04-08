@@ -793,7 +793,8 @@ namespace Nop.Web.Factories
         /// <returns>Picture model</returns>
         public virtual PictureModel PrepareCartItemPictureModel(ShoppingCartItem sci, int pictureSize, bool showDefaultPicture, string productName)
         {
-            var pictureCacheKey = NopModelCacheDefaults.CartPictureModelKey.FillCacheKey(sci.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+            var pictureCacheKey = NopModelCacheDefaults.CartPictureModelKey
+                .FillCacheKey(sci, pictureSize, true, _workContext.WorkingLanguage, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore);
             //as we cache per user (shopping cart item identifier)
             //let's cache just for 3 minutes
             pictureCacheKey.CacheTime = 3;

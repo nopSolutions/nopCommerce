@@ -188,13 +188,12 @@ namespace Nop.Services.Catalog
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            var discountId = discount.Id;
             var cacheKey = NopDiscountCachingDefaults.DiscountManufacturerIdsModelCacheKey.FillCacheKey(
-                discountId,
+                discount,
                 _customerService.GetCustomerRoleIds(customer),
                 _storeContext.CurrentStore);
 
-            var result = _discountManufacturerMappingRepository.Table.Where(dmm => dmm.DiscountId == discountId)
+            var result = _discountManufacturerMappingRepository.Table.Where(dmm => dmm.DiscountId == discount.Id)
                 .Select(dmm => dmm.EntityId).ToCachedList(cacheKey);
 
             return result;
@@ -317,7 +316,7 @@ namespace Nop.Services.Catalog
                 return new PagedList<ProductManufacturer>(new List<ProductManufacturer>(), pageIndex, pageSize);
 
             var key = NopCatalogCachingDefaults.ProductManufacturersAllByManufacturerIdCacheKey.FillCacheKey(manufacturerId,
-                showHidden, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+                showHidden, pageIndex, pageSize, _workContext.CurrentCustomer, _storeContext.CurrentStore);
 
             var query = from pm in _productManufacturerRepository.Table
                 join p in _productRepository.Table on pm.ProductId equals p.Id

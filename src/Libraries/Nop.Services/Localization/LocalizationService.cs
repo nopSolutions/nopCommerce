@@ -30,7 +30,6 @@ namespace Nop.Services.Localization
     {
         #region Fields
 
-        private readonly INopDataProvider _dataProvider;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
@@ -45,7 +44,7 @@ namespace Nop.Services.Localization
 
         #region Ctor
 
-        public LocalizationService(INopDataProvider dataProvider,
+        public LocalizationService(
             IEventPublisher eventPublisher,
             ILanguageService languageService,
             ILocalizedEntityService localizedEntityService,
@@ -56,7 +55,6 @@ namespace Nop.Services.Localization
             IWorkContext workContext,
             LocalizationSettings localizationSettings)
         {
-            _dataProvider = dataProvider;
             _eventPublisher = eventPublisher;
             _languageService = languageService;
             _localizedEntityService = localizedEntityService;
@@ -296,7 +294,8 @@ namespace Nop.Services.Localization
             }
 
             //performance optimization of the site startup
-            key = (loadPublicLocales.Value ? NopLocalizationCachingDefaults.LocaleStringResourcesAllPublicCacheKey : NopLocalizationCachingDefaults.LocaleStringResourcesAllAdminCacheKey).FillCacheKey(languageId);
+            key = (loadPublicLocales.Value ? NopLocalizationCachingDefaults.LocaleStringResourcesAllPublicCacheKey : 
+                NopLocalizationCachingDefaults.LocaleStringResourcesAllAdminCacheKey).FillCacheKey(languageId);
 
             return _cacheManager.Get(key, () =>
             {
