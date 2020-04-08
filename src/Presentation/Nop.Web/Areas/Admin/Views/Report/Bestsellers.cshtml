@@ -8,6 +8,8 @@
 }
 
 @{
+    var bestsellerSummaryColumnNumber = 2;
+
     const string hideSearchBlockAttributeName = "BestsellersPage.HideSearchBlock";
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
@@ -132,6 +134,8 @@
                         SearchButtonId = "search-salesreport",
                         Length = Model.PageSize,
                         LengthMenu = Model.AvailablePageSizes,
+                        FooterCallback = !Model.IsLoggedInAsVendor ? "bestsellerfootercallback" : null,
+                        FooterColumns = !Model.IsLoggedInAsVendor ? 4 : 0,
                         Filters = new List<FilterParameter>
                         {
                             new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
@@ -167,6 +171,40 @@
                             }
                         }
                     })
+
+                    <script>
+
+                        function bestsellerfootercallback(tfoot, data, start, end, display) {
+                                //update order totals summary
+                                var postData = {
+                                    StartDate: $('#@Html.IdFor(model => model.StartDate)').val(),
+                                    EndDate: $('#@Html.IdFor(model => model.EndDate)').val(),
+                                    OrderStatusId: $('#@Html.IdFor(model => model.OrderStatusId)').val(),
+                                    PaymentStatusId: $('#@Html.IdFor(model => model.PaymentStatusId)').val(),
+                                    StoreId: $('#@Html.IdFor(model => model.StoreId)').val(),
+                                    VendorId: $('#@Html.IdFor(model => model.VendorId)').val(),
+                                    BillingCountryId: $('#@Html.IdFor(model => model.BillingCountryId)').val(),
+                                    ManufacturerId: $('#@Html.IdFor(model => model.ManufacturerId)').val(),
+                                    CategoryId: $('#@Html.IdFor(model => model.CategoryId)').val()
+                                };
+                                addAntiForgeryToken(postData);
+
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@(Url.Action("BestsellersReportAggregates", "Report"))",
+                                    data: postData,
+                                    success: function (data, textStatus, jqXHR) {
+                                        if (data) {
+                                            var reportSummary = '<div><strong>@T("Admin.Reports.Sales.Bestsellers.Total"): </strong> <span>' + data['aggregatortotal'] + '</span></div>';
+                                            var orderTotalsColumn = $('#salesreport-grid').DataTable().column(@(bestsellerSummaryColumnNumber));
+                                            $(orderTotalsColumn.footer()).html(reportSummary);
+                                        }
+                                    }
+                                });
+                            }
+                    </script>
+
                 </div>
             </div>
         </div>

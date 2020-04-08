@@ -604,6 +604,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayStockQuantity">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.Total">
+    <Value>Total</Value>
+  </LocaleResource>
 </Language>
 '
 
