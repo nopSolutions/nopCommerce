@@ -604,6 +604,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.DisplayStockQuantity">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Wishlist.AddToCart.NoAddedItems">
+    <Value>No products selected to add to cart.</Value>
+  </LocaleResource>
 </Language>
 '
 

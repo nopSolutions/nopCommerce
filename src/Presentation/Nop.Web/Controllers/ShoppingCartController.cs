@@ -1534,7 +1534,7 @@ namespace Nop.Web.Controllers
             var pageCart = _shoppingCartService.GetShoppingCart(pageCustomer, ShoppingCartType.Wishlist, _storeContext.CurrentStore.Id);
 
             var allWarnings = new List<string>();
-            var numberOfAddedItems = 0;
+            var countOfAddedItems = 0;
             var allIdsToAdd = form.ContainsKey("addtocart")
                 ? form["addtocart"].ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList()
                 : new List<int>();
@@ -1550,7 +1550,7 @@ namespace Nop.Web.Controllers
                         sci.AttributesXml, sci.CustomerEnteredPrice,
                         sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, true);
                     if (!warnings.Any())
-                        numberOfAddedItems++;
+                        countOfAddedItems++;
                     if (_shoppingCartSettings.MoveItemsFromWishlistToCart && //settings enabled
                         !customerGuid.HasValue && //own wishlist
                         !warnings.Any()) //no warnings ( already in the cart)
@@ -1563,7 +1563,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            if (numberOfAddedItems > 0)
+            if (countOfAddedItems > 0)
             {
                 //redirect to the shopping cart page
 
@@ -1573,6 +1573,10 @@ namespace Nop.Web.Controllers
                 }
 
                 return RedirectToRoute("ShoppingCart");
+            }
+            else
+            {
+                _notificationService.WarningNotification(_localizationService.GetResource("Wishlist.AddToCart.NoAddedItems"));
             }
             //no items added. redisplay the wishlist page
 
