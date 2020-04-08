@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.WebUtilities;
-using Newtonsoft.Json;
 using Nop.Core;
-using Nop.Plugin.Payments.Square.Domain;
 using Nop.Services.Configuration;
 using Nop.Services.Logging;
-using Square.Connect.Api;
-using Square.Connect.Client;
-using Square.Connect.Model;
+using Square;
+using Square.Exceptions;
+using Square.Models;
+using SquareSdk = Square;
 
 namespace Nop.Plugin.Payments.Square.Services
 {
@@ -48,11 +47,11 @@ namespace Nop.Plugin.Payments.Square.Services
         #region Utilities
 
         /// <summary>
-        /// Create the API configuration
+        /// Creates the Square Client
         /// </summary>
         /// <param name="storeId">Store identifier for which configuration should be loaded</param>
-        /// <returns>The API Configuration</returns>
-        private Configuration CreateApiConfiguration(int storeId)
+        /// <returns>The Square Client</returns>
+        private ISquareClient CreateSquareClient(int storeId)
         {
             var settings = _settingService.LoadSetting<SquarePaymentSettings>(storeId);
 
@@ -60,15 +59,43 @@ namespace Nop.Plugin.Payments.Square.Services
             if (settings.UseSandbox && string.IsNullOrEmpty(settings.AccessToken))
                 throw new NopException("Sandbox access token should not be empty");
 
-            var config = new Configuration
-            {
-                AccessToken = settings.AccessToken,
-                UserAgent = SquarePaymentDefaults.UserAgent
-            };
+            var client = new SquareClient.Builder()
+                .AccessToken(settings.AccessToken)
+                .AddAdditionalHeader("user-agent", SquarePaymentDefaults.UserAgent);
+            
             if (settings.UseSandbox)
-                config.setApiClientUsingDefault(new ApiClient(SquarePaymentDefaults.SandboxBaseUrl));
+                client.Environment(SquareSdk.Environment.Sandbox);
+            else
+                client.Environment(SquareSdk.Environment.Production);
 
-            return config;
+            return client.Build();
+        }
+
+        private void ThrowErrorsIfExists(IList<Error> errors)
+        {
+            //check whether there are errors in the service response
+            if (errors?.Any() ?? false)
+            {
+                var errorsMessage = string.Join(";", errors.Select(error => error.Detail));
+                throw new NopException($"There are errors in the service response. {errorsMessage}");
+            }
+        }
+
+        private string CatchException(Exception exception)
+        {
+            //log full error
+            var errorMessage = exception.Message;
+            _logger.Error($"Square payment error: {errorMessage}.", exception, _workContext.CurrentCustomer);
+
+            // check Square exception
+            if (exception is ApiException apiException)
+            {
+                //try to get error details
+                if (apiException?.Errors?.Any() ?? false)
+                    errorMessage = string.Join(";", apiException.Errors.Select(error => error.Detail));
+            }
+
+            return errorMessage;
         }
 
         #endregion
@@ -78,29 +105,60 @@ namespace Nop.Plugin.Payments.Square.Services
         #region Common
 
         /// <summary>
-        /// Get active business locations
+        /// Get selected active business locations
+        /// </summary>
+        /// <param name="storeId">Store identifier for which locations should be loaded</param>
+        /// <returns>Location</returns>
+        public Location GetSelectedActiveLocation(int storeId)
+        {
+            var client = CreateSquareClient(storeId);
+            var settings = _settingService.LoadSetting<SquarePaymentSettings>(storeId);
+
+            if (string.IsNullOrEmpty(settings.LocationId))
+                return null;
+
+            try
+            {
+                var locationResponse = client.LocationsApi.RetrieveLocation(settings.LocationId);
+                if (locationResponse == null)
+                    throw new NopException("No service response");
+
+                ThrowErrorsIfExists(locationResponse.Errors);
+
+                var location = locationResponse.Location;
+                if (location == null
+                      || location.Status != SquarePaymentDefaults.LOCATION_STATUS_ACTIVE
+                         || (!location.Capabilities?.Contains(SquarePaymentDefaults.LOCATION_CAPABILITIES_PROCESSING) ?? true))
+                {
+                    throw new NopException("There are no selected active location for the account");
+                }
+
+                return location;
+            }
+            catch (Exception exception)
+            {
+                CatchException(exception);
+
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets active business locations
         /// </summary>
         /// <param name="storeId">Store identifier for which locations should be loaded</param>
         /// <returns>List of location</returns>
         public IList<Location> GetActiveLocations(int storeId)
         {
+            var client = CreateSquareClient(storeId);
+
             try
             {
-                //create location API
-                var configuration = CreateApiConfiguration(storeId);
-                var locationsApi = new LocationsApi(configuration);
-
-                //get list of all locations
-                var listLocationsResponse = locationsApi.ListLocations();
+                var listLocationsResponse = client.LocationsApi.ListLocations();
                 if (listLocationsResponse == null)
                     throw new NopException("No service response");
 
-                //check whether there are errors in the service response
-                if (listLocationsResponse.Errors?.Any() ?? false)
-                {
-                    var errorsMessage = string.Join(";", listLocationsResponse.Errors.Select(error => error.ToString()));
-                    throw new NopException($"There are errors in the service response. {errorsMessage}");
-                }
+                ThrowErrorsIfExists(listLocationsResponse.Errors);
 
                 //filter active locations and locations that can process credit cards
                 var activeLocations = listLocationsResponse.Locations?.Where(location => location?.Status == SquarePaymentDefaults.LOCATION_STATUS_ACTIVE
@@ -112,8 +170,7 @@ namespace Nop.Plugin.Payments.Square.Services
             }
             catch (Exception exception)
             {
-                //log full error
-                _logger.Error($"Square payment error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                CatchException(exception);
 
                 return new List<Location>();
             }
@@ -127,34 +184,26 @@ namespace Nop.Plugin.Payments.Square.Services
         /// <returns>Customer</returns>
         public Customer GetCustomer(string customerId, int storeId)
         {
+            //whether passed customer identifier exists
+            if (string.IsNullOrEmpty(customerId))
+                return null;
+
+            var client = CreateSquareClient(storeId);
+
             try
             {
-                //whether passed customer identifier exists
-                if (string.IsNullOrEmpty(customerId))
-                    return null;
-
-                //create customer API
-                var configuration = CreateApiConfiguration(storeId);
-                var customersApi = new CustomersApi(configuration);
-
                 //get customer by identifier
-                var retrieveCustomerResponse = customersApi.RetrieveCustomer(customerId);
+                var retrieveCustomerResponse = client.CustomersApi.RetrieveCustomer(customerId);
                 if (retrieveCustomerResponse == null)
                     throw new NopException("No service response");
 
-                //check whether there are errors in the service response
-                if (retrieveCustomerResponse.Errors?.Any() ?? false)
-                {
-                    var errorsMessage = string.Join(";", retrieveCustomerResponse.Errors.Select(error => error.ToString()));
-                    throw new NopException($"There are errors in the service response. {errorsMessage}");
-                }
+                ThrowErrorsIfExists(retrieveCustomerResponse.Errors);
 
                 return retrieveCustomerResponse.Customer;
             }
             catch (Exception exception)
             {
-                //log full error
-                _logger.Error($"Square payment error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                CatchException(exception);
 
                 return null;
             }
@@ -168,30 +217,25 @@ namespace Nop.Plugin.Payments.Square.Services
         /// <returns>Customer</returns>
         public Customer CreateCustomer(CreateCustomerRequest customerRequest, int storeId)
         {
+            if (customerRequest == null)
+                throw new ArgumentNullException(nameof(customerRequest));
+
+            var client = CreateSquareClient(storeId);
+
             try
             {
-                //create customer API
-                var configuration = CreateApiConfiguration(storeId);
-                var customersApi = new CustomersApi(configuration);
-
                 //create the new customer
-                var createCustomerResponse = customersApi.CreateCustomer(customerRequest);
+                var createCustomerResponse = client.CustomersApi.CreateCustomer(customerRequest);
                 if (createCustomerResponse == null)
                     throw new NopException("No service response");
 
-                //check whether there are errors in the service response
-                if (createCustomerResponse.Errors?.Any() ?? false)
-                {
-                    var errorsMessage = string.Join(";", createCustomerResponse.Errors.Select(error => error.ToString()));
-                    throw new NopException($"There are errors in the service response. {errorsMessage}");
-                }
+                ThrowErrorsIfExists(createCustomerResponse.Errors);
 
                 return createCustomerResponse.Customer;
             }
             catch (Exception exception)
             {
-                //log full error
-                _logger.Error($"Square payment error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                CatchException(exception);
 
                 return null;
             }
@@ -206,30 +250,29 @@ namespace Nop.Plugin.Payments.Square.Services
         /// <returns>Card</returns>
         public Card CreateCustomerCard(string customerId, CreateCustomerCardRequest cardRequest, int storeId)
         {
+            if (cardRequest == null)
+                throw new ArgumentNullException(nameof(cardRequest));
+
+            //whether passed customer identifier exists
+            if (string.IsNullOrEmpty(customerId))
+                return null;
+
+            var client = CreateSquareClient(storeId);
+
             try
             {
-                //create customer API
-                var configuration = CreateApiConfiguration(storeId);
-                var customersApi = new CustomersApi(configuration);
-
                 //create the new card of the customer
-                var createCustomerCardResponse = customersApi.CreateCustomerCard(customerId, cardRequest);
+                var createCustomerCardResponse = client.CustomersApi.CreateCustomerCard(customerId, cardRequest);
                 if (createCustomerCardResponse == null)
                     throw new NopException("No service response");
 
-                //check whether there are errors in the service response
-                if (createCustomerCardResponse.Errors?.Any() ?? false)
-                {
-                    var errorsMessage = string.Join(";", createCustomerCardResponse.Errors.Select(error => error.ToString()));
-                    throw new NopException($"There are errors in the service response. {errorsMessage}");
-                }
+                ThrowErrorsIfExists(createCustomerCardResponse.Errors);
 
                 return createCustomerCardResponse.Card;
             }
             catch (Exception exception)
             {
-                //log full error
-                _logger.Error($"Square payment error: {exception.Message}.", exception, _workContext.CurrentCustomer);
+                CatchException(exception);
 
                 return null;
             }
@@ -240,273 +283,122 @@ namespace Nop.Plugin.Payments.Square.Services
         #region Payment workflow
 
         /// <summary>
-        /// Get transaction by transaction identifier
+        /// Creates a payment
         /// </summary>
-        /// <param name="transactionId">Transaction ID</param>
-        /// <param name="storeId">Store identifier for which transaction should be loaded</param>
-        /// <returns>Transaction and/or errors if exist</returns>
-        public (Transaction, string) GetTransaction(string transactionId, int storeId)
+        /// <param name="paymentRequest">Request parameters to create payment</param>
+        /// <param name="storeId">Store identifier for which payment should be created</param>
+        /// <returns>Payment and/or errors if exist</returns>
+        public (Payment, string) CreatePayment(CreatePaymentRequest paymentRequest, int storeId)
         {
+            if (paymentRequest == null)
+                throw new ArgumentNullException(nameof(paymentRequest));
+
+            var client = CreateSquareClient(storeId);
+
             try
             {
-                var settings = _settingService.LoadSetting<SquarePaymentSettings>(storeId);
-
-                //try to get the selected location
-                var selectedLocation = GetActiveLocations(storeId).FirstOrDefault(location => location.Id.Equals(settings.LocationId));
-                if (selectedLocation == null)
-                    throw new NopException("Location is a required parameter for payment requests");
-
-                //create transaction API
-                var configuration = CreateApiConfiguration(storeId);
-                var transactionsApi = new TransactionsApi(configuration);
-
-                //get transaction by identifier
-                var retrieveTransactionResponse = transactionsApi.RetrieveTransaction(selectedLocation.Id, transactionId);
-                if (retrieveTransactionResponse == null)
+                var paymentResponse = client.PaymentsApi.CreatePayment(paymentRequest);
+                if (paymentResponse == null)
                     throw new NopException("No service response");
 
-                //check whether there are errors in the service response
-                if (retrieveTransactionResponse.Errors?.Any() ?? false)
-                {
-                    var errorsMessage = string.Join(";", retrieveTransactionResponse.Errors.Select(error => error.ToString()));
-                    throw new NopException($"There are errors in the service response. {errorsMessage}");
-                }
+                ThrowErrorsIfExists(paymentResponse.Errors);
 
-                return (retrieveTransactionResponse.Transaction, null);
+                return (paymentResponse.Payment, null);
             }
             catch (Exception exception)
             {
-                //log full error
-                var errorMessage = exception.Message;
-                _logger.Error($"Square payment error: {errorMessage}.", exception, _workContext.CurrentCustomer);
-
-                if (exception is ApiException apiException)
-                {
-                    //try to get error details
-                    var response = JsonConvert.DeserializeObject<RetrieveTransactionResponse>(apiException.ErrorContent) as RetrieveTransactionResponse;
-                    if (response?.Errors?.Any() ?? false)
-                        errorMessage = string.Join(";", response.Errors.Select(error => error.Detail));
-                }
-
-                return (null, errorMessage);
+                return (null, CatchException(exception));
             }
         }
 
         /// <summary>
-        /// Charge transaction
+        /// Completes a payment
         /// </summary>
-        /// <param name="chargeRequest">Request parameters to charge transaction</param>
-        /// <param name="storeId">Store identifier for which charge request should be created</param>
-        /// <returns>Transaction and/or errors if exist</returns>
-        public (Transaction, string) Charge(ExtendedChargeRequest chargeRequest, int storeId)
+        /// <param name="paymentId">Payment ID</param>
+        /// <param name="storeId">Store identifier for which payment should be completed</param>
+        /// <returns>True if the payment successfully completed; otherwise false. And/or errors if exist</returns>
+        public (bool, string) CompletePayment(string paymentId, int storeId)
         {
+            if (string.IsNullOrEmpty(paymentId))
+                return (false, null);
+
+            var client = CreateSquareClient(storeId);
+
             try
             {
-                var settings = _settingService.LoadSetting<SquarePaymentSettings>(storeId);
-                
-                //try to get the selected location
-                var selectedLocation = GetActiveLocations(storeId).FirstOrDefault(location => location.Id.Equals(settings.LocationId));
-                if (selectedLocation == null)
-                    throw new NopException("Location is a required parameter for payment requests");
-
-                //create transaction API
-                var configuration = CreateApiConfiguration(storeId);
-                var transactionsApi = new TransactionsApi(configuration);
-
-                //create charge transaction
-                var chargeResponse = transactionsApi.Charge(selectedLocation.Id, chargeRequest);
-                if (chargeResponse == null)
+                var paymentResponse = client.PaymentsApi.CompletePayment(paymentId, null);
+                if (paymentResponse == null)
                     throw new NopException("No service response");
 
-                //check whether there are errors in the service response
-                if (chargeResponse.Errors?.Any() ?? false)
-                {
-                    var errorsMessage = string.Join(";", chargeResponse.Errors.Select(error => error.ToString()));
-                    throw new NopException($"There are errors in the service response. {errorsMessage}");
-                }
+                ThrowErrorsIfExists(paymentResponse.Errors);
 
-                return (chargeResponse.Transaction, null);
-            }
-            catch (Exception exception)
-            {
-                //log full error
-                var errorMessage = exception.Message;
-                _logger.Error($"Square payment error: {errorMessage}.", exception, _workContext.CurrentCustomer);
-
-                if (exception is ApiException apiException)
-                {
-                    //try to get error details
-                    var response = JsonConvert.DeserializeObject<ChargeResponse>(apiException.ErrorContent) as ChargeResponse;
-                    if (response?.Errors?.Any() ?? false)
-                        errorMessage = string.Join(";", response.Errors.Select(error => error.Detail));
-                }
-
-                return (null, errorMessage);
-            }
-        }
-
-        /// <summary>
-        /// Capture authorized transaction
-        /// </summary>
-        /// <param name="transactionId">Transaction ID</param>
-        /// <param name="storeId">Store identifier for which transaction should be captured</param>
-        /// <returns>True if the transaction successfully captured; otherwise false. And/or errors if exist</returns>
-        public (bool, string) CaptureTransaction(string transactionId, int storeId)
-        {
-            try
-            {
-                var settings = _settingService.LoadSetting<SquarePaymentSettings>(storeId);
-
-                //try to get the selected location
-                var selectedLocation = GetActiveLocations(storeId).FirstOrDefault(location => location.Id.Equals(settings.LocationId));
-                if (selectedLocation == null)
-                    throw new NopException("Location is a required parameter for payment requests");
-
-                //create transaction API
-                var configuration = CreateApiConfiguration(storeId);
-                var transactionsApi = new TransactionsApi(configuration);
-
-                //capture transaction by identifier
-                var captureTransactionResponse = transactionsApi.CaptureTransaction(selectedLocation.Id, transactionId);
-                if (captureTransactionResponse == null)
-                    throw new NopException("No service response");
-
-                //check whether there are errors in the service response
-                if (captureTransactionResponse.Errors?.Any() ?? false)
-                {
-                    var errorsMessage = string.Join(";", captureTransactionResponse.Errors.Select(error => error.ToString()));
-                    throw new NopException($"There are errors in the service response. {errorsMessage}");
-                }
-
-                //if there are no errors in the response, transaction was successfully captured
+                //if there are no errors in the response, payment was successfully completed
                 return (true, null);
             }
             catch (Exception exception)
             {
-                //log full error
-                var errorMessage = exception.Message;
-                _logger.Error($"Square payment error: {errorMessage}.", exception, _workContext.CurrentCustomer);
-
-                if (exception is ApiException apiException)
-                {
-                    //try to get error details
-                    var response = JsonConvert.DeserializeObject<CaptureTransactionResponse>(apiException.ErrorContent) as CaptureTransactionResponse;
-                    if (response?.Errors?.Any() ?? false)
-                        errorMessage = string.Join(";", response.Errors.Select(error => error.Detail));
-                }
-
-                return (false, errorMessage);
+                return (false, CatchException(exception));
             }
         }
 
         /// <summary>
-        /// Void authorized transaction
+        /// Cancels a payment
         /// </summary>
-        /// <param name="transactionId">Transaction ID</param>
-        /// <param name="storeId">Store identifier for which transaction should be voided</param>
-        /// <returns>True if the transaction successfully voided; otherwise false. And/or errors if exist</returns>
-        public (bool, string) VoidTransaction(string transactionId, int storeId)
+        /// <param name="paymentId">Payment ID</param>
+        /// <param name="storeId">Store identifier for which payment should be canceled</param>
+        /// <returns>True if the payment successfully canceled; otherwise false. And/or errors if exist</returns>
+        public (bool, string) CancelPayment(string paymentId, int storeId)
         {
+            if (string.IsNullOrEmpty(paymentId))
+                return (false, null);
+
+            var client = CreateSquareClient(storeId);
+
             try
             {
-                var settings = _settingService.LoadSetting<SquarePaymentSettings>(storeId);
-
-                //try to get the selected location
-                var selectedLocation = GetActiveLocations(storeId).FirstOrDefault(location => location.Id.Equals(settings.LocationId));
-                if (selectedLocation == null)
-                    throw new NopException("Location is a required parameter for payment requests");
-
-                //create transaction API
-                var configuration = CreateApiConfiguration(storeId);
-                var transactionsApi = new TransactionsApi(configuration);
-
-                //void transaction by identifier
-                var voidTransactionResponse = transactionsApi.VoidTransaction(selectedLocation.Id, transactionId);
-                if (voidTransactionResponse == null)
+                var paymentResponse = client.PaymentsApi.CancelPayment(paymentId);
+                if (paymentResponse == null)
                     throw new NopException("No service response");
 
-                //check whether there are errors in the service response
-                if (voidTransactionResponse.Errors?.Any() ?? false)
-                {
-                    var errorsMessage = string.Join(";", voidTransactionResponse.Errors.Select(error => error.ToString()));
-                    throw new NopException($"There are errors in the service response. {errorsMessage}");
-                }
+                ThrowErrorsIfExists(paymentResponse.Errors);
 
-                //if there are no errors in the response, transaction was successfully voided
+                //if there are no errors in the response, payment was successfully canceled
                 return (true, null);
             }
             catch (Exception exception)
             {
-                //log full error
-                var errorMessage = exception.Message;
-                _logger.Error($"Square payment error: {errorMessage}.", exception, _workContext.CurrentCustomer);
-
-                if (exception is ApiException apiException)
-                {
-                    //try to get error details
-                    var response = JsonConvert.DeserializeObject<VoidTransactionResponse>(apiException.ErrorContent) as VoidTransactionResponse;
-                    if (response?.Errors?.Any() ?? false)
-                        errorMessage = string.Join(";", response.Errors.Select(error => error.Detail));
-                }
-
-                return (false, errorMessage);
+                return (false, CatchException(exception));
             }
         }
 
         /// <summary>
-        /// Create a refund of the transaction
+        /// Refunds a payment
         /// </summary>
-        /// <param name="transactionId">Transaction ID</param>
-        /// <param name="refundRequest">Request parameters to create refund</param>
-        /// <param name="storeId">Store identifier for which refund should be created</param>
-        /// <returns>Refund and/or errors if exist</returns>
-        public (Refund, string) CreateRefund(string transactionId, CreateRefundRequest refundRequest, int storeId)
+        /// <param name="refundPaymentRequest">Request parameters to create refund</param>
+        /// <param name="storeId">Store identifier for which payment should be refunded</param>
+        /// <returns>Payment refund and/or errors if exist</returns>
+        public (PaymentRefund, string) RefundPayment(RefundPaymentRequest refundPaymentRequest, int storeId)
         {
+            if (refundPaymentRequest == null)
+                throw new ArgumentNullException(nameof(refundPaymentRequest));
+
+            var client = CreateSquareClient(storeId);
+
             try
             {
-                var settings = _settingService.LoadSetting<SquarePaymentSettings>(storeId);
-
-                //try to get the selected location
-                var selectedLocation = GetActiveLocations(storeId).FirstOrDefault(location => location.Id.Equals(settings.LocationId));
-                if (selectedLocation == null)
-                    throw new NopException("Location is a required parameter for payment requests");
-
-                //create transaction API
-                var configuration = CreateApiConfiguration(storeId);
-                var transactionsApi = new TransactionsApi(configuration);
-
-                //create refund
-                var createRefundResponse = transactionsApi.CreateRefund(selectedLocation.Id, transactionId, refundRequest);
-                if (createRefundResponse == null)
+                var refundPaymentResponse = client.RefundsApi.RefundPayment(refundPaymentRequest);
+                if (refundPaymentResponse == null)
                     throw new NopException("No service response");
 
-                //check whether there are errors in the service response
-                if (createRefundResponse.Errors?.Any() ?? false)
-                {
-                    var errorsMessage = string.Join(";", createRefundResponse.Errors.Select(error => error.ToString()));
-                    throw new NopException($"There are errors in the service response. {errorsMessage}");
-                }
+                ThrowErrorsIfExists(refundPaymentResponse.Errors);
 
-                return (createRefundResponse.Refund, null);
+                return (refundPaymentResponse.Refund, null);
             }
             catch (Exception exception)
             {
-                //log full error
-                var errorMessage = exception.Message;
-                _logger.Error($"Square payment error: {errorMessage}.", exception, _workContext.CurrentCustomer);
-
-                if (exception is ApiException apiException)
-                {
-                    //try to get error details
-                    var response = JsonConvert.DeserializeObject<CreateRefundResponse>(apiException.ErrorContent) as CreateRefundResponse;
-                    if (response?.Errors?.Any() ?? false)
-                        errorMessage = string.Join(";", response.Errors.Select(error => error.Detail));
-                }
-
-                return (null, errorMessage);
+                return (null, CatchException(exception));
             }
         }
-
         #endregion
 
         #region OAuth2 authorization

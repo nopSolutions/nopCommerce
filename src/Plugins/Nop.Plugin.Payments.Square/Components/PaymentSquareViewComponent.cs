@@ -130,7 +130,7 @@ namespace Nop.Plugin.Payments.Square.Components
                 model.BillingLastName = billingAddress?.LastName;
                 model.BillingEmail = billingAddress?.Email;
                 model.BillingCountry = country?.TwoLetterIsoCode;
-                model.BillingState = stateProvince?.Name;
+                model.BillingState = stateProvince?.Abbreviation;
                 model.BillingCity = billingAddress?.City;
                 model.BillingPostalCode = billingAddress?.ZipPostalCode;
             }

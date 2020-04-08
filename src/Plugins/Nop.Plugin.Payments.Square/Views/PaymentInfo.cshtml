@@ -7,8 +7,8 @@
 
 @{
     Layout = "";
-    Html.AddScriptParts(ResourceLocation.Footer, 
-        squarePaymentSettings.UseSandbox ? SquarePaymentDefaults.SandboxPaymentFormScriptPath : SquarePaymentDefaults.SandboxPaymentFormScriptPath, 
+    Html.AddScriptParts(ResourceLocation.Footer,
+        squarePaymentSettings.UseSandbox ? SquarePaymentDefaults.SandboxPaymentFormScriptPath : SquarePaymentDefaults.SandboxPaymentFormScriptPath,
         excludeFromBundle: true);
 }
 
@@ -82,36 +82,7 @@
                         $('input.payment-info-next-step-button').trigger("click");
                     }
                     else if (use3ds) {
-                        const verificationDetails = {
-                            intent: 'CHARGE',
-                            amount: '@Model.OrderTotal',
-                            currencyCode: '@Model.Currency',
-                            billingContact: {
-                              givenName: '@Model.BillingFirstName',
-                              familyName: '@Model.BillingLastName',
-                              email: '@Model.BillingEmail',
-                              country: '@Model.BillingCountry',
-                              region: '@Model.BillingState',
-                              city: '@Model.BillingCity',
-                              postalCode: '@Model.BillingPostalCode'
-                            }
-                          };
-
-                        paymentForm.verifyBuyer(nonce, verificationDetails,
-                            function(err, verificationResult) {
-                                if (err) {
-                                    $('#@Html.IdFor(model => model.Errors)').val($('#@Html.IdFor(model => model.Errors)').val() + '|' + err.message);
-                                    paymentForm.destroy();
-                                    paymentForm = null;
-                                }
-                                else {
-                                    $('#@Html.IdFor(model => model.CardNonce)').val(nonce);
-                                    $('#@Html.IdFor(model => model.Token)').val(verificationResult.token);
-                                }
-                                submitForm = true;
-                                $('input.payment-info-next-step-button').trigger("click");
-                            }
-                        );
+                        verifyBuyer(nonce);
                     }
                     else {
                         $('#@Html.IdFor(model => model.CardNonce)').val(nonce);
@@ -138,11 +109,18 @@
         }
 
         $('input.payment-info-next-step-button').on('click', function (data) {
-            var selectedStoredCardId = $('#@Html.IdFor(model => model.StoredCardId)').val()
-            if (!submitForm && (!selectedStoredCardId || selectedStoredCardId == '@(Guid.Empty.ToString())')) {
+            if (!submitForm) {
                 if (paymentForm) {
-                    paymentForm.requestCardNonce();
-                    return false;
+                    var selectedStoredCardId = $('#@Html.IdFor(model => model.StoredCardId)').val();
+                    if ((!selectedStoredCardId || selectedStoredCardId == '@(Guid.Empty.ToString())')) {
+                        paymentForm.requestCardNonce();
+                        return false;
+                    } else if (use3ds) {
+                        verifyBuyer(selectedStoredCardId);
+                        return false;
+                    } else if (onePageCheckout) {
+                        PaymentInfo.save();
+                    }
                 }
             }
             else if (onePageCheckout) {
@@ -163,6 +141,42 @@
                 $('.payment-info-next-step-button').attr('onclick', null);
             }
         });
+
+        function verifyBuyer(nonce) {
+            const verificationDetails = {
+                intent: 'CHARGE',
+                amount: '@Model.OrderTotal',
+                currencyCode: '@Model.Currency',
+                billingContact: {
+                    givenName: '@Model.BillingFirstName',
+                    familyName: '@Model.BillingLastName',
+                    email: '@Model.BillingEmail',
+                    country: '@Model.BillingCountry',
+                    region: '@Model.BillingState',
+                    city: '@Model.BillingCity',
+                    postalCode: '@Model.BillingPostalCode'
+                }
+            };
+
+            paymentForm.verifyBuyer(nonce, verificationDetails,
+                function(err, verificationResult) {
+                    if (err) {
+                        $('#@Html.IdFor(model => model.Errors)').val($('#@Html.IdFor(model => model.Errors)').val() + '|' + err.message);
+                        paymentForm.destroy();
+                        paymentForm = null;
+                    }
+                    else {
+                        if (nonce.indexOf('cnon:') === 0) {
+                            $('#@Html.IdFor(model => model.CardNonce)').val(nonce);
+                        }
+
+                        $('#@Html.IdFor(model => model.Token)').val(verificationResult.token);
+                    }
+                    submitForm = true;
+                    $('input.payment-info-next-step-button').trigger("click");
+                }
+            );
+        }
     });
 
     function toggleStoredCard() {
