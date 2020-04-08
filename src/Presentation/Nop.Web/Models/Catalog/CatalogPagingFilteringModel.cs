@@ -376,7 +376,7 @@ namespace Nop.Web.Models.Catalog
             public virtual void PrepareSpecsFilters(IList<int> alreadyFilteredSpecOptionIds,
                 int[] filterableSpecificationAttributeOptionIds,
                 ISpecificationAttributeService specificationAttributeService, ILocalizationService localizationService,
-                IWebHelper webHelper, IWorkContext workContext, ICacheManager cacheManager)
+                IWebHelper webHelper, IWorkContext workContext, IStaticCacheManager cacheManager)
             {
                 Enabled = false;
                 var cacheKey = NopModelCacheDefaults.SpecsFilterModelKey.FillCacheKey(filterableSpecificationAttributeOptionIds, workContext.WorkingLanguage);
