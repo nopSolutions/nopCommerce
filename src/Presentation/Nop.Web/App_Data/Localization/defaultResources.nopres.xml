@@ -17793,6 +17793,9 @@
   <LocaleResource Name="Shipping.EstimateShippingPopUp.ShippingOption.EstimatedDelivery">
     <Value>Estimated Delivery</Value>
   </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.ShippingOption.IsNotFound">
+    <Value>Selected shipping option couldn't be found</Value>
+  </LocaleResource>
   <LocaleResource Name="Shipping.EstimateShippingPopUp.ShippingOption.Name">
     <Value>Name</Value>
   </LocaleResource>

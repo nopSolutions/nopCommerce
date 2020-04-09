@@ -1269,11 +1269,14 @@ namespace Nop.Web.Factories
                     ZipPostalCode = zipPostalCode,
                 };
 
+                var shippingOptionsForCache = new List<ShippingOption>();
                 var rawShippingOptions = new List<ShippingOption>();
 
                 var getShippingOptionResponse = _shippingService.GetShippingOptions(cart, address, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
                 if (getShippingOptionResponse.Success)
                 {
+                    shippingOptionsForCache.AddRange(getShippingOptionResponse.ShippingOptions);
+
                     if (getShippingOptionResponse.ShippingOptions.Any())
                     {
                         foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
@@ -1299,14 +1302,22 @@ namespace Nop.Web.Factories
                     {
                         if (pickupPointsResponse.PickupPoints.Any())
                         {
-                            var point = pickupPointsResponse.PickupPoints.OrderBy(p => p.PickupFee).First();
+                            var pickupPoint = pickupPointsResponse.PickupPoints.OrderBy(p => p.PickupFee).First();
 
                             rawShippingOptions.Add(new ShippingOption()
                             {
                                 Name = _localizationService.GetResource("Checkout.PickupPoints"),
                                 Description = _localizationService.GetResource("Checkout.PickupPoints.Description"),
-                                Rate = point.PickupFee,
-                                TransitDays = point.TransitDays
+                                Rate = _orderTotalCalculationService.AdjustShippingRate(pickupPoint.PickupFee, cart, out var _),
+                                TransitDays = pickupPoint.TransitDays
+                            });
+
+                            shippingOptionsForCache.Add(new ShippingOption()
+                            {
+                                Name = _localizationService.GetResource("Checkout.PickupPoints"),
+                                Rate = pickupPoint.PickupFee,
+                                Description = pickupPoint.Description,
+                                ShippingRateComputationMethodSystemName = pickupPoint.ProviderSystemName
                             });
                         }
                     }
@@ -1314,6 +1325,13 @@ namespace Nop.Web.Factories
                         foreach (var error in pickupPointsResponse.Errors)
                             model.Warnings.Add(error);
                 }
+
+                //performance optimization. cache returned shipping options.
+                //we'll use them later (after a customer has selected an option).
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                                                       NopCustomerDefaults.OfferedShippingOptionsAttribute,
+                                                       shippingOptionsForCache,
+                                                       _storeContext.CurrentStore.Id);
 
                 if (rawShippingOptions.Any())
                 {

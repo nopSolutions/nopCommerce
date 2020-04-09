@@ -26,6 +26,7 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Seo;
+using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Controllers;
@@ -71,6 +72,7 @@ namespace Nop.Web.Controllers
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IShippingService _shippingService;
         private readonly MediaSettings _mediaSettings;
         private readonly OrderSettings _orderSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -108,6 +110,7 @@ namespace Nop.Web.Controllers
             IWebHelper webHelper,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
+            IShippingService shippingService,
             MediaSettings mediaSettings,
             OrderSettings orderSettings,
             ShoppingCartSettings shoppingCartSettings)
@@ -134,6 +137,7 @@ namespace Nop.Web.Controllers
             _productService = productService;
             _shoppingCartModelFactory = shoppingCartModelFactory;
             _shoppingCartService = shoppingCartService;
+            _shippingService = shippingService;
             _cacheManager = cacheManager;
             _storeContext = storeContext;
             _taxService = taxService;
@@ -408,59 +412,66 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public virtual IActionResult SelectShippingOption([FromQuery]string name, [FromQuery]EstimateShippingModel model, IFormCollection form)
         {
+            if (model == null)
+                return BadRequest();
+
+            var errors = new List<string>();
+
+            if (string.IsNullOrEmpty(model.ZipPostalCode))
+                errors.Add(_localizationService.GetResource("Shipping.EstimateShipping.ZipPostalCode.Required"));
+
+            if (model.CountryId == null || model.CountryId == 0)
+                errors.Add(_localizationService.GetResource("Shipping.EstimateShipping.Country.Required"));
+
+            if (errors.Count > 0)
+                return BadRequest(new { Errors = errors });
+
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
 
             //parse and save checkout attributes
             ParseAndSaveCheckoutAttributes(cart, form);
 
+            var shippingOptions = new List<ShippingOption>();
             ShippingOption selectedShippingOption = null;
 
             if (!string.IsNullOrWhiteSpace(name))
             {
+                //find shipping options
                 //performance optimization. try cache first
-                var shippingOptions = _genericAttributeService.GetAttribute<List<ShippingOption>>(_workContext.CurrentCustomer,
+                shippingOptions = _genericAttributeService.GetAttribute<List<ShippingOption>>(_workContext.CurrentCustomer,
                     NopCustomerDefaults.OfferedShippingOptionsAttribute, _storeContext.CurrentStore.Id);
-                if (shippingOptions?.Any() == true)
-                    selectedShippingOption = shippingOptions.FirstOrDefault(so => so.Name == name);
-                else
+
+                if (shippingOptions == null || !shippingOptions.Any())
                 {
-                    if (model == null)
-                        return BadRequest();
+                    //not found? let's load them using shipping service
+                    var getShippingOptionResponse = _shippingService.GetShippingOptions(cart, _customerService.GetCustomerShippingAddress(_workContext.CurrentCustomer),
+                        _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
 
-                    var errors = new List<string>();
-
-                    if (string.IsNullOrEmpty(model.ZipPostalCode))
-                        errors.Add(_localizationService.GetResource("Shipping.EstimateShipping.ZipPostalCode.Required"));
-
-                    if (model.CountryId == null || model.CountryId == 0)
-                        errors.Add(_localizationService.GetResource("Shipping.EstimateShipping.Country.Required"));
-
-                    if (errors.Count > 0)
-                        return BadRequest(new { Errors = errors });
-
-                    var result = _shoppingCartModelFactory.PrepareEstimateShippingResultModel(cart, model.CountryId, model.StateProvinceId, model.ZipPostalCode);
-                    if (result?.ShippingOptions?.Any() == true)
-                    {
-                        var shippingOptionModel = result.ShippingOptions.FirstOrDefault(so => so.Name == name);
-                        if (shippingOptionModel != null)
-                        {
-                            selectedShippingOption = new ShippingOption()
-                            {
-                                Name = shippingOptionModel.Name,
-                                Rate = shippingOptionModel.Rate
-                            };
-                        }
-                    }
+                    if (getShippingOptionResponse.Success)
+                        shippingOptions = getShippingOptionResponse.ShippingOptions.ToList();
+                    else
+                        foreach (var error in getShippingOptionResponse.Errors)
+                            errors.Add(error);
                 }
             }
 
+            if (errors.Count > 0)
+                return BadRequest(new { Errors = errors });
+
+            selectedShippingOption = shippingOptions.Find(so => !string.IsNullOrEmpty(so.Name) && so.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+
+            if (selectedShippingOption == null)
+                return BadRequest(new { Errors = new List<string>() { _localizationService.GetResource("Shipping.EstimateShippingPopUp.ShippingOption.IsNotFound") } });
+
+            //reset pickup point
+            _genericAttributeService.SaveAttribute<PickupPoint>(_workContext.CurrentCustomer,
+                NopCustomerDefaults.SelectedPickupPointAttribute, null, _storeContext.CurrentStore.Id);
+
+            //cache shipping option
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                 NopCustomerDefaults.SelectedShippingOptionAttribute, selectedShippingOption, _storeContext.CurrentStore.Id);
 
-            var shoppingCartModel = new ShoppingCartModel();
-            shoppingCartModel = _shoppingCartModelFactory.PrepareShoppingCartModel(shoppingCartModel, cart);
-
-            var ordertotalssectionhtml = RenderViewComponentToString("OrderTotals", new { isEditable = shoppingCartModel.IsEditable });
+            var ordertotalssectionhtml = RenderViewComponentToString("OrderTotals", new { isEditable = true });
 
             return Json(new
             {
@@ -1371,19 +1382,6 @@ namespace Nop.Web.Controllers
                 return BadRequest(new { Errors = errors });
 
             var result = _shoppingCartModelFactory.PrepareEstimateShippingResultModel(cart, model.CountryId, model.StateProvinceId, model.ZipPostalCode);
-
-            //performance optimization. cache returned shipping options.
-            //we'll use them later (after a customer has selected an option).
-            if (result?.ShippingOptions?.Any() == true)
-            {
-                var options = result.ShippingOptions.Select(m => new ShippingOption()
-                {
-                    Name = m.Name,
-                    Rate = m.Rate
-                }).ToList();
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                    NopCustomerDefaults.OfferedShippingOptionsAttribute, options, _storeContext.CurrentStore.Id);
-            }
 
             return Json(result);
         }
