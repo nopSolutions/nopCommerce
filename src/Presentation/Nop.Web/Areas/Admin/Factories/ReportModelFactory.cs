@@ -234,7 +234,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 os: orderStatus,
                 ps: paymentStatus,
                 billingCountryId: searchModel.BillingCountryId,
-                orderBy: 2,
+                orderBy: OrderByEnum.OrderByTotalAmount,
                 vendorId: searchModel.VendorId,
                 categoryId: searchModel.CategoryId,
                 manufacturerId: searchModel.ManufacturerId,

@@ -345,7 +345,7 @@ namespace Nop.Services.Orders
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             int billingCountryId = 0,
-            int orderBy = 1,
+            OrderByEnum orderBy = OrderByEnum.OrderByQuantity,
             int pageIndex = 0, int pageSize = int.MaxValue,
             bool showHidden = false)
         {
@@ -404,8 +404,8 @@ namespace Nop.Services.Orders
 
             query2 = orderBy switch
             {
-                1 => query2.OrderByDescending(x => x.TotalQuantity),
-                2 => query2.OrderByDescending(x => x.TotalAmount),
+                OrderByEnum.OrderByQuantity => query2.OrderByDescending(x => x.TotalQuantity),
+                OrderByEnum.OrderByTotalAmount => query2.OrderByDescending(x => x.TotalAmount),
                 _ => throw new ArgumentException("Wrong orderBy parameter", nameof(orderBy)),
             };
             var result = new PagedList<BestsellersReportLine>(query2, pageIndex, pageSize);
