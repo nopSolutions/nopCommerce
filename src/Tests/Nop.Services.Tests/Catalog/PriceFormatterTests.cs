@@ -125,7 +125,7 @@ namespace Nop.Services.Tests.Catalog
                 Name = "English",
                 LanguageCulture = "en-US"
             };
-            _priceFormatter.FormatPrice(1234.5M, false, currency, language, false, false).Should().Be("€1234.50");
+            _priceFormatter.FormatPrice(1234.5M, false, currency, language.Id, false, false).Should().Be("€1234.50");
         }
 
         [Test]
@@ -151,8 +151,8 @@ namespace Nop.Services.Tests.Catalog
                 Name = "English",
                 LanguageCulture = "en-US"
             };
-            _priceFormatter.FormatPrice(1234.5M, false, usd_currency, language, false, false).Should().Be("$1,234.50");
-            _priceFormatter.FormatPrice(1234.5M, false, gbp_currency, language, false, false).Should().Be("£1,234.50");
+            _priceFormatter.FormatPrice(1234.5M, false, usd_currency, language.Id, false, false).Should().Be("$1,234.50");
+            _priceFormatter.FormatPrice(1234.5M, false, gbp_currency, language.Id, false, false).Should().Be("£1,234.50");
         }
 
         [Test]
@@ -171,8 +171,8 @@ namespace Nop.Services.Tests.Catalog
                 Name = "English",
                 LanguageCulture = "en-US"
             };
-            _priceFormatter.FormatPrice(1234.5M, false, currency, language, true, true).Should().Be("$1,234.50 incl tax");
-            _priceFormatter.FormatPrice(1234.5M, false, currency, language, false, true).Should().Be("$1,234.50 excl tax");
+            _priceFormatter.FormatPrice(1234.5M, false, currency, language.Id, true, true).Should().Be("$1,234.50 incl tax");
+            _priceFormatter.FormatPrice(1234.5M, false, currency, language.Id, false, true).Should().Be("$1,234.50 excl tax");
 
         }
 
@@ -193,10 +193,10 @@ namespace Nop.Services.Tests.Catalog
                 LanguageCulture = "en-US"
             };
             _currencySettings.DisplayCurrencyLabel = true;
-            _priceFormatter.FormatPrice(1234.5M, true, currency, language, false, false).Should().Be("$1,234.50 (USD)");
+            _priceFormatter.FormatPrice(1234.5M, true, currency, language.Id, false, false).Should().Be("$1,234.50 (USD)");
 
             _currencySettings.DisplayCurrencyLabel = false;
-            _priceFormatter.FormatPrice(1234.5M, true, currency, language, false, false).Should().Be("$1,234.50");
+            _priceFormatter.FormatPrice(1234.5M, true, currency, language.Id, false, false).Should().Be("$1,234.50");
         }
     }
 }
