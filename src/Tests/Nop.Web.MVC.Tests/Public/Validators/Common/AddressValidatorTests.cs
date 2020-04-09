@@ -1,6 +1,7 @@
 ﻿using FluentValidation.TestHelper;
 using Moq;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 using Nop.Services.Directory;
 using Nop.Web.Models.Common;
 using Nop.Web.Validators.Common;
@@ -23,7 +24,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
         public void Should_have_error_when_email_is_null_or_empty()
         {
             var validator = new AddressValidator(_localizationService, _stateProvinceService,
-                new AddressSettings());
+                new AddressSettings(), new CustomerSettings());
 
             var model = new AddressModel
             {
@@ -37,7 +38,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
         public void Should_have_error_when_email_is_wrong_format()
         {
             var validator = new AddressValidator(_localizationService, _stateProvinceService,
-                new AddressSettings());
+                new AddressSettings(), new CustomerSettings());
 
             var model = new AddressModel
             {
@@ -49,7 +50,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
         public void Should_not_have_error_when_email_is_correct_format()
         {
             var validator = new AddressValidator(_localizationService, _stateProvinceService,
-                new AddressSettings());
+                new AddressSettings(), new CustomerSettings());
 
             var model = new AddressModel
             {
@@ -62,7 +63,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
         public void Should_have_error_when_firstName_is_null_or_empty()
         {
             var validator = new AddressValidator(_localizationService, _stateProvinceService,
-                new AddressSettings());
+                new AddressSettings(), new CustomerSettings());
 
             var model = new AddressModel
             {
@@ -76,7 +77,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
         public void Should_not_have_error_when_firstName_is_specified()
         {
             var validator = new AddressValidator(_localizationService, _stateProvinceService,
-                new AddressSettings());
+                new AddressSettings(), new CustomerSettings());
 
             var model = new AddressModel
             {
@@ -89,7 +90,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
         public void Should_have_error_when_lastName_is_null_or_empty()
         {
             var validator = new AddressValidator(_localizationService, _stateProvinceService,
-                new AddressSettings());
+                new AddressSettings(), new CustomerSettings());
 
             var model = new AddressModel
             {
@@ -103,7 +104,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
         public void Should_not_have_error_when_lastName_is_specified()
         {
             var validator = new AddressValidator(_localizationService, _stateProvinceService,
-                new AddressSettings());
+                new AddressSettings(), new CustomerSettings());
 
             var model = new AddressModel
             {
@@ -123,7 +124,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 {
                     CompanyEnabled = true,
                     CompanyRequired = true
-                });
+                }, new CustomerSettings());
             model.Company = null;
             validator.ShouldHaveValidationErrorFor(x => x.Company, model);
             model.Company = "";
@@ -136,7 +137,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 {
                     CompanyEnabled = true,
                     CompanyRequired = false
-                });
+                }, new CustomerSettings());
             model.Company = null;
             validator.ShouldNotHaveValidationErrorFor(x => x.Company, model);
             model.Company = "";
@@ -149,7 +150,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 new AddressSettings
                 {
                     CompanyEnabled = true
-                });
+                }, new CustomerSettings());
 
             var model = new AddressModel
             {
@@ -169,7 +170,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 {
                     StreetAddressEnabled = true,
                     StreetAddressRequired = true
-                });
+                }, new CustomerSettings());
             model.Address1 = null;
             validator.ShouldHaveValidationErrorFor(x => x.Address1, model);
             model.Address1 = "";
@@ -181,7 +182,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 {
                     StreetAddressEnabled = true,
                     StreetAddressRequired = false
-                });
+                }, new CustomerSettings());
             model.Address1 = null;
             validator.ShouldNotHaveValidationErrorFor(x => x.Address1, model);
             model.Address1 = "";
@@ -194,7 +195,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 new AddressSettings
                 {
                     StreetAddressEnabled = true
-                });
+                }, new CustomerSettings());
 
             var model = new AddressModel
             {
@@ -214,7 +215,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 {
                     StreetAddress2Enabled = true,
                     StreetAddress2Required = true
-                });
+                }, new CustomerSettings());
             model.Address2 = null;
             validator.ShouldHaveValidationErrorFor(x => x.Address2, model);
             model.Address2 = "";
@@ -226,7 +227,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 {
                     StreetAddress2Enabled = true,
                     StreetAddress2Required = false
-                });
+                }, new CustomerSettings());
             model.Address2 = null;
             validator.ShouldNotHaveValidationErrorFor(x => x.Address2, model);
             model.Address2 = "";
@@ -239,7 +240,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 new AddressSettings
                 {
                     StreetAddress2Enabled = true
-                });
+                }, new CustomerSettings());
 
             var model = new AddressModel
             {
@@ -259,7 +260,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 {
                     ZipPostalCodeEnabled = true,
                     ZipPostalCodeRequired = true
-                });
+                }, new CustomerSettings());
             model.ZipPostalCode = null;
             validator.ShouldHaveValidationErrorFor(x => x.ZipPostalCode, model);
             model.ZipPostalCode = "";
@@ -272,7 +273,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 {
                     ZipPostalCodeEnabled = true,
                     ZipPostalCodeRequired = false
-                });
+                }, new CustomerSettings());
             model.ZipPostalCode = null;
             validator.ShouldNotHaveValidationErrorFor(x => x.ZipPostalCode, model);
             model.ZipPostalCode = "";
@@ -285,7 +286,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 new AddressSettings
                 {
                     StreetAddress2Enabled = true
-                });
+                }, new CustomerSettings());
 
             var model = new AddressModel
             {
@@ -305,7 +306,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 {
                     CityEnabled = true,
                     CityRequired = true
-                });
+                }, new CustomerSettings());
             model.City = null;
             validator.ShouldHaveValidationErrorFor(x => x.City, model);
             model.City = "";
@@ -318,7 +319,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 {
                     CityEnabled = true,
                     CityRequired = false
-                });
+                }, new CustomerSettings());
             model.City = null;
             validator.ShouldNotHaveValidationErrorFor(x => x.City, model);
             model.City = "";
@@ -331,7 +332,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 new AddressSettings
                 {
                     CityEnabled = true
-                });
+                }, new CustomerSettings());
 
             var model = new AddressModel
             {
@@ -351,7 +352,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 {
                     PhoneEnabled = true,
                     PhoneRequired = true
-                });
+                }, new CustomerSettings());
             model.PhoneNumber = null;
             validator.ShouldHaveValidationErrorFor(x => x.PhoneNumber, model);
             model.PhoneNumber = "";
@@ -363,7 +364,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 {
                     PhoneEnabled = true,
                     PhoneRequired = false
-                });
+                }, new CustomerSettings());
             model.PhoneNumber = null;
             validator.ShouldNotHaveValidationErrorFor(x => x.PhoneNumber, model);
             model.PhoneNumber = "";
@@ -376,7 +377,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 new AddressSettings
                 {
                     PhoneEnabled = true
-                });
+                }, new CustomerSettings());
 
             var model = new AddressModel
             {
@@ -396,7 +397,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 {
                     FaxEnabled = true,
                     FaxRequired = true
-                });
+                }, new CustomerSettings());
             model.FaxNumber = null;
             validator.ShouldHaveValidationErrorFor(x => x.FaxNumber, model);
             model.FaxNumber = "";
@@ -409,7 +410,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 {
                     FaxEnabled = true,
                     FaxRequired = false
-                });
+                }, new CustomerSettings());
             model.FaxNumber = null;
             validator.ShouldNotHaveValidationErrorFor(x => x.FaxNumber, model);
             model.FaxNumber = "";
@@ -422,7 +423,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
                 new AddressSettings
                 {
                     FaxEnabled = true
-                });
+                }, new CustomerSettings());
 
             var model = new AddressModel
             {
