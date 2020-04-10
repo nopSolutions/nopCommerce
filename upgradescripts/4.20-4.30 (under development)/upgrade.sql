@@ -606,6 +606,9 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Wishlist.AddToCart.NoAddedItems">
     <Value>No products selected to add to cart.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Tabs">
+    <Value>Panels and product species</Value>
   </LocaleResource>
 </Language>
 '
