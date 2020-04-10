@@ -8,9 +8,10 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
+using Nop.Services.Discounts;
 using Nop.Services.Events;
 
 namespace Nop.Services.Catalog
@@ -188,7 +189,7 @@ namespace Nop.Services.Catalog
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            var cacheKey = NopDiscountCachingDefaults.DiscountManufacturerIdsModelCacheKey.FillCacheKey(
+            var cacheKey = NopDiscountDefaults.DiscountManufacturerIdsModelCacheKey.FillCacheKey(
                 discount,
                 _customerService.GetCustomerRoleIds(customer),
                 _storeContext.CurrentStore);
@@ -315,9 +316,6 @@ namespace Nop.Services.Catalog
             if (manufacturerId == 0)
                 return new PagedList<ProductManufacturer>(new List<ProductManufacturer>(), pageIndex, pageSize);
 
-            var key = NopCatalogCachingDefaults.ProductManufacturersAllByManufacturerIdCacheKey.FillCacheKey(manufacturerId,
-                showHidden, pageIndex, pageSize, _workContext.CurrentCustomer, _storeContext.CurrentStore);
-
             var query = from pm in _productManufacturerRepository.Table
                 join p in _productRepository.Table on pm.ProductId equals p.Id
                 where pm.ManufacturerId == manufacturerId &&
@@ -377,7 +375,7 @@ namespace Nop.Services.Catalog
                 query = query.Distinct().OrderBy(pm => pm.DisplayOrder).ThenBy(pm => pm.Id);
             }
 
-            var productManufacturers = new PagedList<ProductManufacturer>(query.ToCachedList(key), pageIndex, pageSize);
+            var productManufacturers = new PagedList<ProductManufacturer>(query, pageIndex, pageSize);
 
             return productManufacturers;
         }
@@ -394,7 +392,7 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return new List<ProductManufacturer>();
 
-            var key = NopCatalogCachingDefaults.ProductManufacturersAllByProductIdCacheKey.FillCacheKey(productId,
+            var key = NopCatalogDefaults.ProductManufacturersAllByProductIdCacheKey.FillCacheKey(productId,
                 showHidden, _workContext.CurrentCustomer, _storeContext.CurrentStore);
 
             var query = from pm in _productManufacturerRepository.Table

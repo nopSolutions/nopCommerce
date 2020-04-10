@@ -10,7 +10,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
@@ -26,7 +26,6 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 using static SixLabors.ImageSharp.Configuration;
-using NopMediaDefaults = Nop.Services.Defaults.NopMediaDefaults;
 
 namespace Nop.Services.Media
 {
@@ -719,10 +718,7 @@ namespace Nop.Services.Media
 
             query = query.OrderByDescending(p => p.Id);
 
-            var key = NopMediaCachingDefaults.PicturesByVirtualPathCacheKey.FillCacheKey(virtualPath);
-            var pics = query.ToCachedList(key);
-
-            return new PagedList<Picture>(pics, pageIndex, pageSize);
+            return new PagedList<Picture>(query, pageIndex, pageSize);
         }
 
         /// <summary>

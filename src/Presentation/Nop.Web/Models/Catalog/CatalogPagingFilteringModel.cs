@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
+using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Models;

@@ -7,11 +7,10 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 using Nop.Services.Localization;
-using NopSeoDefaults = Nop.Services.Defaults.NopSeoDefaults;
 
 namespace Nop.Services.Seo
 {
@@ -1167,7 +1166,7 @@ namespace Nop.Services.Seo
         {
             var query = _urlRecordRepository.Table;
 
-            var key = NopSeoCachingDefaults.UrlRecordByIdsCacheKey.FillCacheKey(urlRecordIds);
+            var key = NopSeoDefaults.UrlRecordByIdsCacheKey.FillCacheKey(urlRecordIds);
 
             return query.Where(p => urlRecordIds.Contains(p.Id)).ToCachedList(key);
         }
@@ -1225,7 +1224,7 @@ namespace Nop.Services.Seo
             if (string.IsNullOrEmpty(slug))
                 return null;
             
-            var key = NopSeoCachingDefaults.UrlRecordBySlugCacheKey.FillCacheKey(slug);
+            var key = NopSeoDefaults.UrlRecordBySlugCacheKey.FillCacheKey(slug);
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
             {
                 return _cacheManager.Get(key, () =>
@@ -1267,7 +1266,7 @@ namespace Nop.Services.Seo
             var query = _urlRecordRepository.Table;
             query = query.OrderBy(ur => ur.Slug);
 
-            var urlRecords = query.ToCachedList(NopSeoCachingDefaults.UrlRecordAllCacheKey);
+            var urlRecords = query.ToCachedList(NopSeoDefaults.UrlRecordAllCacheKey);
 
             if (!string.IsNullOrWhiteSpace(slug))
                 urlRecords = urlRecords.Where(ur => ur.Slug.Contains(slug)).ToList();
@@ -1285,7 +1284,7 @@ namespace Nop.Services.Seo
         public virtual string GetActiveSlug(int entityId, string entityName, int languageId)
         {
             //gradual loading
-            var key = NopSeoCachingDefaults.UrlRecordActiveByIdNameLanguageCacheKey.FillCacheKey(entityId, entityName, languageId);
+            var key = NopSeoDefaults.UrlRecordActiveByIdNameLanguageCacheKey.FillCacheKey(entityId, entityName, languageId);
 
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
             {

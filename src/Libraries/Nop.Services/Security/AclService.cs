@@ -6,7 +6,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -168,7 +168,7 @@ namespace Nop.Services.Security
             var entityId = entity.Id;
             var entityName = entity.GetType().Name;
 
-            var key = NopSecurityCachingDefaults.AclRecordByEntityIdNameCacheKey.FillCacheKey(entityId, entityName);
+            var key = NopSecurityDefaults.AclRecordByEntityIdNameCacheKey.FillCacheKey(entityId, entityName);
 
             var query = from ur in _aclRecordRepository.Table
                 where ur.EntityId == entityId &&

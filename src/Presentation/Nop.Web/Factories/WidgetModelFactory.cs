@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Services.Caching;
 using Nop.Services.Cms;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Infrastructure.Cache;

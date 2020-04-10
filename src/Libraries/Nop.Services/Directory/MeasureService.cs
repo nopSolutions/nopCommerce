@@ -4,7 +4,6 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -97,7 +96,7 @@ namespace Nop.Services.Directory
             var query = from md in _measureDimensionRepository.Table
                 orderby md.DisplayOrder, md.Id
                 select md;
-            var measureDimensions = query.ToCachedList(NopDirectoryCachingDefaults.MeasureDimensionsAllCacheKey);
+            var measureDimensions = query.ToCachedList(NopDirectoryDefaults.MeasureDimensionsAllCacheKey);
 
             return measureDimensions;
         }
@@ -270,7 +269,7 @@ namespace Nop.Services.Directory
             var query = from mw in _measureWeightRepository.Table
                 orderby mw.DisplayOrder, mw.Id
                 select mw;
-            var measureWeights = query.ToCachedList(NopDirectoryCachingDefaults.MeasureWeightsAllCacheKey);
+            var measureWeights = query.ToCachedList(NopDirectoryDefaults.MeasureWeightsAllCacheKey);
 
             return measureWeights;
         }

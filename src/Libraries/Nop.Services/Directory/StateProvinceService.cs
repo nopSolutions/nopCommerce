@@ -5,7 +5,7 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -81,7 +81,7 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(abbreviation))
                 return null;
 
-            var key = NopDirectoryCachingDefaults.StateProvincesByAbbreviationCacheKey
+            var key = NopDirectoryDefaults.StateProvincesByAbbreviationCacheKey
                 .FillCacheKey(abbreviation, countryId ?? 0);
 
             var query = _stateProvinceRepository.Table.Where(state => state.Abbreviation == abbreviation);
@@ -112,7 +112,7 @@ namespace Nop.Services.Directory
         /// <returns>States</returns>
         public virtual IList<StateProvince> GetStateProvincesByCountryId(int countryId, int languageId = 0, bool showHidden = false)
         {
-            var key = NopDirectoryCachingDefaults.StateProvincesByCountryCacheKey.FillCacheKey(countryId, languageId, showHidden);
+            var key = NopDirectoryDefaults.StateProvincesByCountryCacheKey.FillCacheKey(countryId, languageId, showHidden);
             return _cacheManager.Get(key, () =>
             {
                 var query = from sp in _stateProvinceRepository.Table
@@ -147,7 +147,7 @@ namespace Nop.Services.Directory
                         where showHidden || sp.Published
                         select sp;
 
-            var stateProvinces = query.ToCachedList(NopDirectoryCachingDefaults.StateProvincesAllCacheKey.FillCacheKey(showHidden));
+            var stateProvinces = query.ToCachedList(NopDirectoryDefaults.StateProvincesAllCacheKey.FillCacheKey(showHidden));
 
             return stateProvinces;
         }

@@ -4,7 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 using Nop.Services.Stores;
@@ -104,7 +104,7 @@ namespace Nop.Services.Directory
             query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
 
             //cacheable copy
-            var key = NopDirectoryCachingDefaults.CurrenciesAllCacheKey.FillCacheKey(showHidden);
+            var key = NopDirectoryDefaults.CurrenciesAllCacheKey.FillCacheKey(showHidden);
 
             var currencies = query.ToCachedList(key);
 

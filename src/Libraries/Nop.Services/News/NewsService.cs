@@ -6,7 +6,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -131,6 +131,7 @@ namespace Nop.Services.News
             }
 
             var news = new PagedList<NewsItem>(query, pageIndex, pageSize);
+
             return news;
         }
 
@@ -285,7 +286,7 @@ namespace Nop.Services.News
             if (isApproved.HasValue)
                 query = query.Where(comment => comment.IsApproved == isApproved.Value);
 
-            var cacheKey = NopNewsCachingDefaults.NewsCommentsNumberCacheKey.FillCacheKey(newsItem, storeId, isApproved);
+            var cacheKey = NopNewsDefaults.NewsCommentsNumberCacheKey.FillCacheKey(newsItem, storeId, isApproved);
 
             return query.ToCachedCount(cacheKey);
         }

@@ -4,7 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -88,9 +88,7 @@ namespace Nop.Services.Catalog
                         orderby sa.DisplayOrder, sa.Id
                         select sa;
 
-            var specificationAttributes = query.ToCachedList(NopCatalogCachingDefaults.SpecAttributesAllCacheKey);
-
-            return new PagedList<SpecificationAttribute>(specificationAttributes, pageIndex, pageSize);
+            return new PagedList<SpecificationAttribute>(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -103,7 +101,7 @@ namespace Nop.Services.Catalog
                 join sao in _specificationAttributeOptionRepository.Table on sa.Id equals sao.SpecificationAttributeId
                 select sa;
 
-            return query.ToCachedList(NopCatalogCachingDefaults.SpecAttributesWithOptionsCacheKey);
+            return query.ToCachedList(NopCatalogDefaults.SpecAttributesWithOptionsCacheKey);
         }
 
         /// <summary>
@@ -221,7 +219,7 @@ namespace Nop.Services.Catalog
                         where sao.SpecificationAttributeId == specificationAttributeId
                         select sao;
 
-            var specificationAttributeOptions = query.ToCachedList(NopCatalogCachingDefaults.SpecAttributesOptionsCacheKey.FillCacheKey(specificationAttributeId));
+            var specificationAttributeOptions = query.ToCachedList(NopCatalogDefaults.SpecAttributesOptionsCacheKey.FillCacheKey(specificationAttributeId));
 
             return specificationAttributeOptions;
         }
@@ -319,7 +317,7 @@ namespace Nop.Services.Catalog
         {
             var allowFilteringCacheStr = allowFiltering.HasValue ? allowFiltering.ToString() : "null";
             var showOnProductPageCacheStr = showOnProductPage.HasValue ? showOnProductPage.ToString() : "null";
-            var key = NopCatalogCachingDefaults.ProductSpecificationAttributeAllByProductIdCacheKey.FillCacheKey(
+            var key = NopCatalogDefaults.ProductSpecificationAttributeAllByProductIdCacheKey.FillCacheKey(
                 productId, specificationAttributeOptionId, allowFilteringCacheStr, showOnProductPageCacheStr);
 
             var query = _productSpecificationAttributeRepository.Table;

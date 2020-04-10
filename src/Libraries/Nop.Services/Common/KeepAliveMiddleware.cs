@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Data;
-using Nop.Services.Defaults;
 
 namespace Nop.Services.Common
 {

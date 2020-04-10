@@ -4,7 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -121,7 +121,7 @@ namespace Nop.Services.Common
         /// <returns>Get attributes</returns>
         public virtual IList<GenericAttribute> GetAttributesForEntity(int entityId, string keyGroup)
         {
-            var key = NopCommonCachingDefaults.GenericAttributeCacheKey.FillCacheKey(entityId, keyGroup);
+            var key = NopCommonDefaults.GenericAttributeCacheKey.FillCacheKey(entityId, keyGroup);
 
             var query = from ga in _genericAttributeRepository.Table
                 where ga.EntityId == entityId &&

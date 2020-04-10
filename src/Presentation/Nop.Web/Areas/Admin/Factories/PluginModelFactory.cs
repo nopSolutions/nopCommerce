@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Services.Authentication.External;
+using Nop.Services.Caching;
 using Nop.Services.Cms;
 using Nop.Services.Localization;
 using Nop.Services.Payments;

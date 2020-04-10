@@ -12,7 +12,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -660,7 +660,7 @@ namespace Nop.Services.Orders
             if (createdToUtc.HasValue)
                 items = items.Where(item => createdToUtc.Value >= item.CreatedOnUtc);
 
-            var key = NopOrderCachingDefaults.ShoppingCartCacheKey.FillCacheKey(customer, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
+            var key = NopOrderDefaults.ShoppingCartCacheKey.FillCacheKey(customer, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
 
             return _cacheManager.Get(key, () => items.ToList());
         }

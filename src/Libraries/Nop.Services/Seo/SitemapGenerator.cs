@@ -22,7 +22,6 @@ using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.News;
 using Nop.Services.Topics;
-using NopSeoDefaults = Nop.Services.Defaults.NopSeoDefaults;
 
 namespace Nop.Services.Seo
 {

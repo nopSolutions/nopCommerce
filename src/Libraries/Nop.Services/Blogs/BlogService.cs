@@ -7,7 +7,7 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -171,7 +171,7 @@ namespace Nop.Services.Blogs
         /// <returns>Blog post tags</returns>
         public virtual IList<BlogPostTag> GetAllBlogPostTags(int storeId, int languageId, bool showHidden = false)
         {
-            var cacheKey = NopBlogsCachingDefaults.BlogTagsModelCacheKey.FillCacheKey(languageId, storeId);
+            var cacheKey = NopBlogsDefaults.BlogTagsModelCacheKey.FillCacheKey(languageId, storeId);
 
             var blogPostTags = _cacheManager.Get(cacheKey, () =>
             {
@@ -395,7 +395,7 @@ namespace Nop.Services.Blogs
             if (isApproved.HasValue)
                 query = query.Where(comment => comment.IsApproved == isApproved.Value);
 
-            var cacheKey = NopBlogsCachingDefaults.BlogCommentsNumberCacheKey.FillCacheKey(blogPost, storeId, isApproved);
+            var cacheKey = NopBlogsDefaults.BlogCommentsNumberCacheKey.FillCacheKey(blogPost, storeId, isApproved);
             
             return _cacheManager.Get(cacheKey, () => query.Count());
         }

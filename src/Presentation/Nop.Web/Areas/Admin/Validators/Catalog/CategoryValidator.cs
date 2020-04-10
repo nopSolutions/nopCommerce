@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
-using Nop.Services.Defaults;
 using Nop.Services.Localization;
+using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Validators;
 

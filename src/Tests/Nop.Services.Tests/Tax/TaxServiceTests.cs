@@ -3,7 +3,6 @@ using FluentAssertions;
 ﻿using System.Collections.Generic;
 using Moq;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -101,7 +100,6 @@ namespace Nop.Services.Tests.Tax
 
             _customerService = new CustomerService(new CustomerSettings(),
                 new TestCacheManager(), 
-                null,
                 _eventPublisher.Object,
                 _genericAttributeService.Object,
                 null,

@@ -16,7 +16,6 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
 using Nop.Services.Customers;
-using Nop.Services.Defaults;
 using Nop.Services.ExportImport;
 using Nop.Services.Forums;
 using Nop.Services.Gdpr;
@@ -185,7 +184,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
             foreach (var attribute in customerAttributes)
             {
-                var controlId = $"{NopAttributePrefixDefaults.Customer}{attribute.Id}";
+                var controlId = $"{NopCustomerServicesDefaults.CustomerAttributePrefix}{attribute.Id}";
                 StringValues ctrlAttributes;
 
                 switch (attribute.AttributeControlType)

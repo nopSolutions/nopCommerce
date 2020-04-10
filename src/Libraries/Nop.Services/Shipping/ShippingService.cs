@@ -8,7 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -177,7 +177,7 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping methods</returns>
         public virtual IList<ShippingMethod> GetAllShippingMethods(int? filterByCountryId = null)
         {
-            var key = NopShippingCachingDefaults.ShippingMethodsAllCacheKey.FillCacheKey(filterByCountryId);
+            var key = NopShippingDefaults.ShippingMethodsAllCacheKey.FillCacheKey(filterByCountryId);
             
             if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
             {
@@ -338,7 +338,7 @@ namespace Nop.Services.Shipping
                         orderby wh.Name
                         select wh;
 
-            var warehouses = query.ToCachedList(NopShippingCachingDefaults.WarehousesAllCacheKey);
+            var warehouses = query.ToCachedList(NopShippingDefaults.WarehousesAllCacheKey);
 
             if (!string.IsNullOrEmpty(name))
             {

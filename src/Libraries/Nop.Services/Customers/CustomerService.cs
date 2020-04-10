@@ -12,7 +12,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Events;
@@ -29,7 +29,6 @@ namespace Nop.Services.Customers
 
         private readonly CustomerSettings _customerSettings;
         private readonly ICacheManager _cacheManager;
-        private readonly INopDataProvider _dataProvider;
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IRepository<Address> _customerAddressRepository;
@@ -50,7 +49,6 @@ namespace Nop.Services.Customers
 
         public CustomerService(CustomerSettings customerSettings,
             ICacheManager cacheManager,
-            INopDataProvider dataProvider,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             IRepository<Address> customerAddressRepository,
@@ -67,7 +65,6 @@ namespace Nop.Services.Customers
         {
             _customerSettings = customerSettings;
             _cacheManager = cacheManager;
-            _dataProvider = dataProvider;
             _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _customerAddressRepository = customerAddressRepository;
@@ -245,6 +242,7 @@ namespace Nop.Services.Customers
             query = query.OrderByDescending(c => c.CreatedOnUtc);
 
             var customers = new PagedList<Customer>(query, pageIndex, pageSize, getOnlyTotalCount);
+
             return customers;
         }
 
@@ -422,6 +420,7 @@ namespace Nop.Services.Customers
                         orderby c.Id
                         select c;
             var customer = query.FirstOrDefault();
+
             return customer;
         }
 
@@ -1115,7 +1114,7 @@ namespace Nop.Services.Customers
             if (string.IsNullOrWhiteSpace(systemName))
                 return null;
 
-            var key = NopCustomerServiceCachingDefaults.CustomerRolesBySystemNameCacheKey.FillCacheKey(systemName);
+            var key = NopCustomerServicesDefaults.CustomerRolesBySystemNameCacheKey.FillCacheKey(systemName);
 
             var query = from cr in _customerRoleRepository.Table
                 orderby cr.Id
@@ -1143,7 +1142,7 @@ namespace Nop.Services.Customers
                         (showHidden || cr.Active)
                         select cr.Id;
 
-            var key = NopCustomerServiceCachingDefaults.CustomerRoleIdsCacheKey.FillCacheKey(customer, showHidden);
+            var key = NopCustomerServicesDefaults.CustomerRoleIdsCacheKey.FillCacheKey(customer, showHidden);
 
             return _cacheManager.Get(key, () => query.ToArray());
         }
@@ -1165,7 +1164,7 @@ namespace Nop.Services.Customers
                         (showHidden || cr.Active)
                         select cr;
 
-            var key = NopCustomerServiceCachingDefaults.CustomerRolesCacheKey.FillCacheKey(customer, showHidden);
+            var key = NopCustomerServicesDefaults.CustomerRolesCacheKey.FillCacheKey(customer, showHidden);
 
             return _cacheManager.Get(key, () => query.ToList());
         }
@@ -1177,7 +1176,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer roles</returns>
         public virtual IList<CustomerRole> GetAllCustomerRoles(bool showHidden = false)
         {
-            var key = NopCustomerServiceCachingDefaults.CustomerRolesAllCacheKey.FillCacheKey(showHidden);
+            var key = NopCustomerServicesDefaults.CustomerRolesAllCacheKey.FillCacheKey(showHidden);
 
             var query = from cr in _customerRoleRepository.Table
                 orderby cr.Name
@@ -1438,7 +1437,7 @@ namespace Nop.Services.Customers
                 return false;
 
             //cache result between HTTP requests
-            var cacheKey = NopCustomerServiceCachingDefaults.CustomerPasswordLifetimeCacheKey.FillCacheKey(customer);
+            var cacheKey = NopCustomerServicesDefaults.CustomerPasswordLifetimeCacheKey.FillCacheKey(customer);
 
             //get current password usage time
             var currentLifetime = _staticCacheManager.Get(cacheKey, () =>
@@ -1522,7 +1521,7 @@ namespace Nop.Services.Customers
                 where cam.CustomerId == customerId
                 select address;
 
-            var key = NopCustomerServiceCachingDefaults.CustomerAddressesByCustomerIdCacheKey.FillCacheKey(customerId);
+            var key = NopCustomerServicesDefaults.CustomerAddressesByCustomerIdCacheKey.FillCacheKey(customerId);
 
             return _cacheManager.Get(key, () => query.ToList());
         }
@@ -1543,7 +1542,7 @@ namespace Nop.Services.Customers
                 where cam.CustomerId == customerId && address.Id == addressId
                 select address;
 
-            var key = NopCustomerServiceCachingDefaults.CustomerAddressCacheKeyCacheKey.FillCacheKey(customerId, addressId);
+            var key = NopCustomerServicesDefaults.CustomerAddressCacheKeyCacheKey.FillCacheKey(customerId, addressId);
 
             return _cacheManager.Get(key, () => query.Single());
         }

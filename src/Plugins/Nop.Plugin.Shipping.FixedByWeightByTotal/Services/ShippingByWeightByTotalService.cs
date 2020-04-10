@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Data;
 using Nop.Plugin.Shipping.FixedByWeightByTotal.Domain;
+using Nop.Services.Caching;
 
 namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Services
 {

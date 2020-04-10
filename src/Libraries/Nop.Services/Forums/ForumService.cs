@@ -7,11 +7,10 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Html;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Customers;
-using Nop.Services.Defaults;
 using Nop.Services.Events;
 using Nop.Services.Messages;
 using Nop.Services.Seo;
@@ -274,7 +273,7 @@ namespace Nop.Services.Forums
                 orderby fg.DisplayOrder, fg.Id
                 select fg;
 
-            return query.ToCachedList(NopForumCachingDefaults.ForumGroupAllCacheKey);
+            return query.ToCachedList(NopForumDefaults.ForumGroupAllCacheKey);
         }
 
         /// <summary>
@@ -374,7 +373,7 @@ namespace Nop.Services.Forums
         /// <returns>Forums</returns>
         public virtual IList<Forum> GetAllForumsByGroupId(int forumGroupId)
         {
-            var key = NopForumCachingDefaults.ForumAllByForumGroupIdCacheKey.FillCacheKey(forumGroupId);
+            var key = NopForumDefaults.ForumAllByForumGroupIdCacheKey.FillCacheKey(forumGroupId);
 
             var query = from f in _forumRepository.Table
                 orderby f.DisplayOrder, f.Id
@@ -532,6 +531,7 @@ namespace Nop.Services.Forums
                          select ft;
 
             var topics = new PagedList<ForumTopic>(query2, pageIndex, pageSize);
+
             return topics;
         }
 
@@ -557,6 +557,7 @@ namespace Nop.Services.Forums
                          select ft;
 
             var topics = new PagedList<ForumTopic>(query2, pageIndex, pageSize);
+
             return topics;
         }
 
@@ -766,6 +767,7 @@ namespace Nop.Services.Forums
                 query.OrderByDescending(fp => fp.CreatedOnUtc).ThenBy(fp => fp.Id);
 
             var forumPosts = new PagedList<ForumPost>(query, pageIndex, pageSize);
+
             return forumPosts;
         }
 
@@ -1027,6 +1029,7 @@ namespace Nop.Services.Forums
                         select fs;
 
             var forumSubscriptions = new PagedList<ForumSubscription>(query, pageIndex, pageSize);
+
             return forumSubscriptions;
         }
 
