@@ -13152,6 +13152,9 @@
   <LocaleResource Name="Admin.Reports.Sales.Bestsellers.Store.Hint">
     <Value>Filter report by orders placed in a specific store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.Total">
+    <Value>Total</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Reports.Sales.Bestsellers.Vendor">
     <Value>Vendor</Value>
   </LocaleResource>

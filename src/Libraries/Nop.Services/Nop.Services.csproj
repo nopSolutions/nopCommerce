@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EPPlus" Version="5.0.4" />
+    <PackageReference Include="EPPlus" Version="4.5.3.3" />
     <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.6.5" />
     <PackageReference Include="MailKit" Version="2.5.2" />
     <PackageReference Include="MaxMind.GeoIP2" Version="3.1.0" />
