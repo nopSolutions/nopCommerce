@@ -7,6 +7,7 @@ using Microsoft.Extensions.Primitives;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
@@ -443,8 +444,15 @@ namespace Nop.Web.Controllers
 
                 if (shippingOptions == null || !shippingOptions.Any())
                 {
+                    var address = new Address
+                    {
+                        CountryId = model.CountryId,
+                        StateProvinceId = model.StateProvinceId,
+                        ZipPostalCode = model.ZipPostalCode,
+                    };
+
                     //not found? let's load them using shipping service
-                    var getShippingOptionResponse = _shippingService.GetShippingOptions(cart, _customerService.GetCustomerShippingAddress(_workContext.CurrentCustomer),
+                    var getShippingOptionResponse = _shippingService.GetShippingOptions(cart, address,
                         _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
 
                     if (getShippingOptionResponse.Success)
