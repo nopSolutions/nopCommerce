@@ -1317,6 +1317,11 @@ namespace Nop.Services.ExportImport
                             if (_workContext.CurrentVendor == null)
                                 product.ShowOnHomepage = property.BooleanValue;
                             break;
+                        case "DisplayOrder":
+                            //vendor can't change this field
+                            if (_workContext.CurrentVendor == null)
+                                product.DisplayOrder = property.IntValue;
+                            break;
                         case "MetaKeywords":
                             product.MetaKeywords = property.StringValue;
                             break;
