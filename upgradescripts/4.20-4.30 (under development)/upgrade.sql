@@ -610,6 +610,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Tabs">
     <Value>Panels and product species</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Reports.Sales.Bestsellers.Total">
+    <Value>Total</Value>
+  </LocaleResource>
 </Language>
 '
 

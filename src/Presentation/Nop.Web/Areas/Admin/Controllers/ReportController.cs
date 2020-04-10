@@ -80,6 +80,18 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
+        [HttpPost]
+        public virtual IActionResult BestsellersReportAggregates(BestsellerSearchModel searchModel)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedDataTablesJson();
+
+            //prepare model
+            var totalAmount = _reportModelFactory.GetBestsellerTotalAmount(searchModel);
+
+            return Json(new { aggregatortotal = totalAmount });
+        }
+
         #endregion
 
         #region Never Sold
