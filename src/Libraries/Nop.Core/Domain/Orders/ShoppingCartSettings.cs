@@ -21,7 +21,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating maximum number of items in the shopping cart
         /// </summary>
         public int MaximumShoppingCartItems { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating maximum number of items in the wishlist
         /// </summary>
@@ -36,7 +36,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether to move items from wishlist to cart when clicking "Add to cart" button. Otherwise, they are copied.
         /// </summary>
         public bool MoveItemsFromWishlistToCart { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether shopping carts (and wishlist) are shared between stores (in multi-store environment)
         /// </summary>
@@ -66,7 +66,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a number of "Cross-sells" on shopping cart page
         /// </summary>
         public int CrossSellsNumber { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether "email a wishlist" feature is enabled
         /// </summary>
@@ -76,7 +76,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether to enabled "email a wishlist" for anonymous users.
         /// </summary>
         public bool AllowAnonymousUsersToEmailWishlist { get; set; }
-        
+
         /// <summary>Gets or sets a value indicating whether mini-shopping cart is enabled
         /// </summary>
         public bool MiniShoppingCartEnabled { get; set; }
@@ -89,10 +89,11 @@ namespace Nop.Core.Domain.Orders
         /// <summary>Gets or sets a maximum number of products which can be displayed in the mini-shopping cart block
         /// </summary>
         public int MiniShoppingCartProductNumber { get; set; }
-        
+
         //Round is already an issue. 
-        //When enabled it can cause one issue: https://www.nopcommerce.com/boards/t/7679/vattax-rounding-error-important-fix.aspx
-        //When disable it causes another one: https://www.nopcommerce.com/boards/t/11419/nop-20-order-of-steps-in-checkout.aspx?p=3#46924
+        //When enabled it can cause one issue: https://www.nopcommerce.com/boards/topic/7679/vattax-rounding-error-important-fix
+        //When disable it causes another one: https://www.nopcommerce.com/boards/topic/11419/nop-20-order-of-steps-in-checkout/page/3#46924
+
         /// <summary>
         /// Gets or sets a value indicating whether to round calculated prices and total during calculation
         /// </summary>

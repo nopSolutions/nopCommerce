@@ -13,7 +13,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
 {
     [Area(AreaNames.Admin)]
     [AuthorizeAdmin]
-    [AdminAntiForgery]
+    [AutoValidateAntiforgeryToken]
     public class WidgetsGoogleAnalyticsController : BasePluginController
     {
         #region Fields
@@ -111,7 +111,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return Configure();
+            return RedirectToAction("Configure");
         }
 
         #endregion

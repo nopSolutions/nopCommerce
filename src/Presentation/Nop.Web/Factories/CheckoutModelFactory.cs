@@ -4,11 +4,13 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -32,6 +34,7 @@ namespace Nop.Web.Factories
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IOrderProcessingService _orderProcessingService;
@@ -64,6 +67,7 @@ namespace Nop.Web.Factories
             IAddressService addressService,
             ICountryService countryService,
             ICurrencyService currencyService,
+            ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IOrderProcessingService orderProcessingService,
@@ -92,6 +96,7 @@ namespace Nop.Web.Factories
             _addressService = addressService;
             _countryService = countryService;
             _currencyService = currencyService;
+            _customerService = customerService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _orderProcessingService = orderProcessingService;
@@ -117,83 +122,16 @@ namespace Nop.Web.Factories
 
         #endregion
 
-        #region Methods
+        #region Utilities
 
         /// <summary>
-        /// Prepare billing address model
+        /// Prepares the checkout pickup points model
         /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <param name="selectedCountryId">Selected country identifier</param>
-        /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
-        /// <param name="overrideAttributesXml">Override attributes xml</param>
-        /// <returns>Billing address model</returns>
-        public virtual CheckoutBillingAddressModel PrepareBillingAddressModel(IList<ShoppingCartItem> cart,
-            int? selectedCountryId = null,
-            bool prePopulateNewAddressWithCustomerFields = false,
-            string overrideAttributesXml = "")
+        /// <returns>The checkout pickup points model</returns>
+        protected virtual CheckoutPickupPointsModel PrepareCheckoutPickupPointsModel()
         {
-            var model = new CheckoutBillingAddressModel
+            var model = new CheckoutPickupPointsModel()
             {
-                ShipToSameAddressAllowed = _shippingSettings.ShipToSameAddress && _shoppingCartService.ShoppingCartRequiresShipping(cart),
-                //allow customers to enter (choose) a shipping address if "Disable Billing address step" setting is enabled
-                ShipToSameAddress = !_orderSettings.DisableBillingAddressCheckoutStep
-            };
-
-            //existing addresses
-            var addresses = _workContext.CurrentCustomer.Addresses
-                .Where(a => a.Country == null ||
-                    (//published
-                    a.Country.Published &&
-                    //allow billing
-                    a.Country.AllowsBilling &&
-                    //enabled for the current store
-                    _storeMappingService.Authorize(a.Country)))
-                .ToList();
-            foreach (var address in addresses)
-            {
-                var addressModel = new AddressModel();
-                _addressModelFactory.PrepareAddressModel(addressModel,
-                    address: address,
-                    excludeProperties: false,
-                    addressSettings: _addressSettings);
-
-                if (_addressService.IsAddressValid(address))
-                {
-                    model.ExistingAddresses.Add(addressModel);
-                }
-                else
-                {
-                    model.InvalidExistingAddresses.Add(addressModel);
-                }
-            }
-
-            //new address
-            model.BillingNewAddress.CountryId = selectedCountryId;
-            _addressModelFactory.PrepareAddressModel(model.BillingNewAddress,
-                address: null,
-                excludeProperties: false,
-                addressSettings: _addressSettings,
-                loadCountries: () => _countryService.GetAllCountriesForBilling(_workContext.WorkingLanguage.Id),
-                prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
-                customer: _workContext.CurrentCustomer,
-                overrideAttributesXml: overrideAttributesXml);
-            return model;
-        }
-
-        /// <summary>
-        /// Prepare shipping address model
-        /// </summary>
-        /// <param name="selectedCountryId">Selected country identifier</param>
-        /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
-        /// <param name="overrideAttributesXml">Override attributes xml</param>
-        /// <returns>Shipping address model</returns>
-        public virtual CheckoutShippingAddressModel PrepareShippingAddressModel(int? selectedCountryId = null,
-            bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
-        {
-            var model = new CheckoutShippingAddressModel
-            {
-
-                //allow pickup in store?
                 AllowPickupInStore = _shippingSettings.AllowPickupInStore
             };
             if (model.AllowPickupInStore)
@@ -204,7 +142,7 @@ namespace Nop.Web.Factories
                 if (pickupPointProviders.Any())
                 {
                     var languageId = _workContext.WorkingLanguage.Id;
-                    var pickupPointsResponse = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddress,
+                    var pickupPointsResponse = _shippingService.GetPickupPoints(_workContext.CurrentCustomer.BillingAddressId ?? 0,
                         _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
                     if (pickupPointsResponse.Success)
                         model.PickupPoints = pickupPointsResponse.PickupPoints.Select(point =>
@@ -257,15 +195,101 @@ namespace Nop.Web.Factories
                 }
             }
 
+            return model;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Prepare billing address model
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <param name="selectedCountryId">Selected country identifier</param>
+        /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
+        /// <param name="overrideAttributesXml">Override attributes xml</param>
+        /// <returns>Billing address model</returns>
+        public virtual CheckoutBillingAddressModel PrepareBillingAddressModel(IList<ShoppingCartItem> cart,
+            int? selectedCountryId = null,
+            bool prePopulateNewAddressWithCustomerFields = false,
+            string overrideAttributesXml = "")
+        {
+            var model = new CheckoutBillingAddressModel
+            {
+                ShipToSameAddressAllowed = _shippingSettings.ShipToSameAddress && _shoppingCartService.ShoppingCartRequiresShipping(cart),
+                //allow customers to enter (choose) a shipping address if "Disable Billing address step" setting is enabled
+                ShipToSameAddress = !_orderSettings.DisableBillingAddressCheckoutStep
+            };
+
             //existing addresses
-            var addresses = _workContext.CurrentCustomer.Addresses
-                .Where(a => a.Country == null ||
+            var addresses = _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id)
+                .Where(a => _countryService.GetCountryByAddress(a) is Country country &&
                     (//published
-                    a.Country.Published &&
-                    //allow shipping
-                    a.Country.AllowsShipping &&
+                    country.Published &&
+                    //allow billing
+                    country.AllowsBilling &&
                     //enabled for the current store
-                    _storeMappingService.Authorize(a.Country)))
+                    _storeMappingService.Authorize(country)))
+                .ToList();
+            foreach (var address in addresses)
+            {
+                var addressModel = new AddressModel();
+                _addressModelFactory.PrepareAddressModel(addressModel,
+                    address: address,
+                    excludeProperties: false,
+                    addressSettings: _addressSettings);
+
+                if (_addressService.IsAddressValid(address))
+                {
+                    model.ExistingAddresses.Add(addressModel);
+                }
+                else
+                {
+                    model.InvalidExistingAddresses.Add(addressModel);
+                }
+            }
+
+            //new address
+            model.BillingNewAddress.CountryId = selectedCountryId;
+            _addressModelFactory.PrepareAddressModel(model.BillingNewAddress,
+                address: null,
+                excludeProperties: false,
+                addressSettings: _addressSettings,
+                loadCountries: () => _countryService.GetAllCountriesForBilling(_workContext.WorkingLanguage.Id),
+                prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
+                customer: _workContext.CurrentCustomer,
+                overrideAttributesXml: overrideAttributesXml);
+            return model;
+        }
+
+        /// <summary>
+        /// Prepare shipping address model
+        /// </summary>
+        /// <param name="selectedCountryId">Selected country identifier</param>
+        /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
+        /// <param name="overrideAttributesXml">Override attributes xml</param>
+        /// <returns>Shipping address model</returns>
+        public virtual CheckoutShippingAddressModel PrepareShippingAddressModel(int? selectedCountryId = null,
+            bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
+        {
+            var model = new CheckoutShippingAddressModel()
+            {
+                DisplayPickupInStore = !_orderSettings.DisplayPickupInStoreOnShippingMethodPage
+            };
+
+            if (!_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
+                model.PickupPointsModel = PrepareCheckoutPickupPointsModel();
+
+            //existing addresses
+            var addresses = _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id)
+                .Where(a => _countryService.GetCountryByAddress(a) is Country country &&
+                    (//published
+                    country.Published &&
+                    //allow shipping
+                    country.AllowsShipping &&
+                    //enabled for the current store
+                    _storeMappingService.Authorize(country)))
                 .ToList();
             foreach (var address in addresses)
             {
@@ -307,7 +331,13 @@ namespace Nop.Web.Factories
         /// <returns>Shipping method model</returns>
         public virtual CheckoutShippingMethodModel PrepareShippingMethodModel(IList<ShoppingCartItem> cart, Address shippingAddress)
         {
-            var model = new CheckoutShippingMethodModel();
+            var model = new CheckoutShippingMethodModel()
+            {
+                DisplayPickupInStore = _orderSettings.DisplayPickupInStoreOnShippingMethodPage
+            };
+
+            if (_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
+                model.PickupPointsModel = PrepareCheckoutPickupPointsModel();
 
             var getShippingOptionResponse = _shippingService.GetShippingOptions(cart, shippingAddress, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
             if (getShippingOptionResponse.Success)
@@ -540,7 +570,7 @@ namespace Nop.Web.Factories
             var model = new OnePageCheckoutModel
             {
                 ShippingRequired = _shoppingCartService.ShoppingCartRequiresShipping(cart),
-                DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep && _workContext.CurrentCustomer.Addresses.Any(),
+                DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep && _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id).Any(),
                 BillingAddress = PrepareBillingAddressModel(cart, prePopulateNewAddressWithCustomerFields: true)
             };
             return model;

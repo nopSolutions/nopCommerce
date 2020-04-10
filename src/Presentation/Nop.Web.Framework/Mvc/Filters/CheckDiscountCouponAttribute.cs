@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
+using Nop.Data;
 using Nop.Services.Customers;
+using Nop.Services.Defaults;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -18,7 +20,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents filter attribute that checks and applied discount coupon code to customer
     /// </summary>
-    public class CheckDiscountCouponAttribute : TypeFilterAttribute
+    public sealed class CheckDiscountCouponAttribute : TypeFilterAttribute
     {
         #region Ctor
 
@@ -100,7 +102,7 @@ namespace Nop.Web.Framework.Mvc.Filters
 
                 //get validated discounts with passed coupon codes
                 var discounts = couponCodes
-                    .SelectMany(couponCode => _discountService.GetAllDiscountsForCaching(couponCode: couponCode))
+                    .SelectMany(couponCode => _discountService.GetAllDiscounts(couponCode: couponCode))
                     .Distinct()
                     .ToList();
 

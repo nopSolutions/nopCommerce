@@ -1,4 +1,4 @@
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Vendors
 {
@@ -26,10 +26,5 @@ namespace Nop.Core.Domain.Vendors
         /// Gets or sets the vendor attribute identifier
         /// </summary>
         public int VendorAttributeId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the vendor attribute
-        /// </summary>
-        public virtual VendorAttribute VendorAttribute { get; set; }
     }
 }

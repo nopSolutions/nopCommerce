@@ -1,4 +1,5 @@
-﻿<Language Name="हिंदी" IsDefault="false" IsRightToLeft="false">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="हिंदी" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>व्यवस्थापक उपयोगकर्ता के ईमेल</Value>
   </LocaleResource>
@@ -44,11 +45,11 @@
   <LocaleResource Name="CustomCollation">
     <Value>कस्टम SQL सर्वर परितुलन निर्दिष्ट करें</Value>
   </LocaleResource>
-  <LocaleResource Name="DatabaseCreationError">
-    <Value>एक त्रुटि जब डेटाबेस बनाने हुआ: {0}</Value>
-  </LocaleResource>
   <LocaleResource Name="Database">
     <Value>डेटाबेस</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>एक त्रुटि जब डेटाबेस बनाने हुआ: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>डेटाबेस जानकारी</Value>
@@ -80,6 +81,12 @@
   <LocaleResource Name="Installing">
     <Value>NopCommerce अधिष्ठापन कर रहा है ...</Value>
   </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>एकीकृत Windows प्रमाणीकरण का उपयोग करें</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>पासवर्ड मेल नहीं खाते</Value>
   </LocaleResource>
@@ -95,6 +102,12 @@
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>अधिष्ठापन प्रक्रिया को पुनः आरंभ (सभी कैश्ड मूल्यों के स्पष्ट) के लिए क्लिक करें</Value>
   </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>SQL सर्वर का नाम</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>SQL सर्वर नाम की आवश्यकता है</Value>
+  </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>सेटअप में विफल रहा है: {0}</Value>
   </LocaleResource>
@@ -104,26 +117,20 @@
   <LocaleResource Name="SqlCompact">
     <Value>आंकड़ा भंडारण का निर्माण का उपयोग करें (SQL सर्वर संकुचित)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
-    <Value>SQL सर्वर का नाम</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
-    <Value>SQL सर्वर नाम की आवश्यकता है</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL पासवर्ड</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>SQL पासवर्ड की आवश्यकता है</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
     <Value>SQL उपयोगकर्ता नाम</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>SQL उपयोगकर्ता नाम की आवश्यकता है</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>SQL (या SQL एक्सप्रेस) Server डेटाबेस का उपयोग करें</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>स्टोर जानकारी</Value>
@@ -136,8 +143,5 @@
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
     <Value>इस जादूगर को पूरा करने के लिए आप अपने डेटाबेस सर्वर के बारे में कुछ जानकारी ("कनेक्शन स्ट्रिंग") पता होना चाहिए. कृपया अपने ISP से संपर्क करें यदि आवश्यक हो.यदि आप एक स्थानीय मशीन या सर्वर पर स्थापित कर रहे हैं आप अपने सिस्टम व्यवस्थापक से जानकारी की आवश्यकता हो सकती है</Value>
-  </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
-    <Value>एकीकृत Windows प्रमाणीकरण का उपयोग करें</Value>
   </LocaleResource>
 </Language>

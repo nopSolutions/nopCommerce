@@ -12,7 +12,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.System.SeNames")
@@ -91,13 +90,12 @@
                             },
                             new ColumnProperty(nameof(UrlRecordModel.Name))
                             {
-                                Title = T("Admin.System.SeNames.Name").Text,
-                                Width = "300"
+                                Title = T("Admin.System.SeNames.Name").Text
                             },
                             new ColumnProperty(nameof(UrlRecordModel.EntityId))
                             {
                                 Title = T("Admin.System.SeNames.EntityId").Text,
-                                Width = "50"
+                                Width = "80"
                             },
                             new ColumnProperty(nameof(UrlRecordModel.EntityName))
                             {
@@ -107,7 +105,7 @@
                             new ColumnProperty(nameof(UrlRecordModel.IsActive))
                             {
                                 Title = T("Admin.System.SeNames.IsActive").Text,
-                                Width = "50",
+                                Width = "80",
                                 ClassName = NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },

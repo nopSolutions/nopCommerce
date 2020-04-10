@@ -64,6 +64,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public string CustomHeadTags { get; set; }
         public bool CustomHeadTags_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.Microdata")]
+        public bool MicrodataEnabled { get; set; }
+        public bool MicrodataEnabled_OverrideForStore { get; set; }
         #endregion
     }
 }

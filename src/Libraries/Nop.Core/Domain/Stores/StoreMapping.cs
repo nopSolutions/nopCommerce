@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Stores
+﻿namespace Nop.Core.Domain.Stores
 {
     /// <summary>
     /// Represents a store mapping record
@@ -19,10 +19,5 @@ namespace Nop.Core.Domain.Stores
         /// Gets or sets the store identifier
         /// </summary>
         public int StoreId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the store
-        /// </summary>
-        public virtual Store Store { get; set; }
     }
 }

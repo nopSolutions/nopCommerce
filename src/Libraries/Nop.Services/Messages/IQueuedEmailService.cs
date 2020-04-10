@@ -68,6 +68,14 @@ namespace Nop.Services.Messages
             bool loadNewest, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
+        /// Deletes already sent emails
+        /// </summary>
+        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
+        /// <returns>Number of deleted emails</returns>
+        int DeleteAlreadySentEmails(DateTime? createdFromUtc, DateTime? createdToUtc);
+
+        /// <summary>
         /// Delete all queued emails
         /// </summary>
         void DeleteAllEmails();

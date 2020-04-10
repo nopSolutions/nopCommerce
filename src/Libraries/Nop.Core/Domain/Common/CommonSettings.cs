@@ -24,11 +24,6 @@ namespace Nop.Core.Domain.Common
         public bool UseSystemEmailForContactUsForm { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to use stored procedure (if supported) for loading categories (it's much faster in admin area with a large number of categories than the LINQ implementation)
-        /// </summary>
-        public bool UseStoredProcedureForLoadingCategories { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to display a warning if java-script is disabled
         /// </summary>
         public bool DisplayJavaScriptDisabledWarning { get; set; }
@@ -95,7 +90,7 @@ namespace Nop.Core.Domain.Common
         public bool UseResponseCompression { get; set; }
 
         /// <summary>
-        /// Gets or sets a value of "Cache-Control" header value for static content
+        /// Gets or sets a value of "Cache-Control" header value for static content (in seconds)
         /// </summary>
         public string StaticFilesCacheControl { get; set; }
 

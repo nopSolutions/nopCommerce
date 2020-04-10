@@ -361,16 +361,14 @@ namespace Nop.Services.Payments
             var ds = new DictionarySerializer(request.CustomValues);
             var xs = new XmlSerializer(typeof(DictionarySerializer));
 
-            using (var textWriter = new StringWriter())
+            using var textWriter = new StringWriter();
+            using (var xmlWriter = XmlWriter.Create(textWriter))
             {
-                using (var xmlWriter = XmlWriter.Create(textWriter))
-                {
-                    xs.Serialize(xmlWriter, ds);
-                }
-
-                var result = textWriter.ToString();
-                return result;
+                xs.Serialize(xmlWriter, ds);
             }
+
+            var result = textWriter.ToString();
+            return result;
         }
 
         /// <summary>
@@ -388,15 +386,11 @@ namespace Nop.Services.Payments
 
             var serializer = new XmlSerializer(typeof(DictionarySerializer));
 
-            using (var textReader = new StringReader(order.CustomValuesXml))
-            {
-                using (var xmlReader = XmlReader.Create(textReader))
-                {
-                    if (serializer.Deserialize(xmlReader) is DictionarySerializer ds)
-                        return ds.Dictionary;
-                    return new Dictionary<string, object>();
-                }
-            }
+            using var textReader = new StringReader(order.CustomValuesXml);
+            using var xmlReader = XmlReader.Create(textReader);
+            if (serializer.Deserialize(xmlReader) is DictionarySerializer ds)
+                return ds.Dictionary;
+            return new Dictionary<string, object>();
         }
 
         #endregion

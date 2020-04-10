@@ -19,6 +19,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
 {
     [AuthorizeAdmin]
     [Area(AreaNames.Admin)]
+    [AutoValidateAntiforgeryToken]
     public class UPSShippingController : BasePluginController
     {
         #region Fields
@@ -102,7 +103,6 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult Configure(UPSShippingModel model)
         {
             //whether user has the authority to manage configuration
@@ -110,7 +110,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Configure();
+                return RedirectToAction("Configure");
 
             //save settings
             _upsSettings.AccountNumber = model.AccountNumber;
@@ -146,7 +146,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return Configure();
+            return RedirectToAction("Configure");
         }
 
         #endregion

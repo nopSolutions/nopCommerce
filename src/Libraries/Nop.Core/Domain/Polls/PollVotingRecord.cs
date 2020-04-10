@@ -1,5 +1,4 @@
-using System;
-using Nop.Core.Domain.Customers;
+﻿using System;
 
 namespace Nop.Core.Domain.Polls
 {
@@ -22,15 +21,5 @@ namespace Nop.Core.Domain.Polls
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-
-        /// <summary>
-        /// Gets or sets the customer
-        /// </summary>
-        public virtual Customer Customer { get; set; }
-
-        /// <summary>
-        /// Gets or sets the poll answer
-        /// </summary>
-        public virtual PollAnswer PollAnswer { get; set; }
     }
 }

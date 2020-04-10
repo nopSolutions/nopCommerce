@@ -6,12 +6,15 @@ using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Nop.Core;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Plugin.Payments.PayPalStandard.Services;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -29,13 +32,19 @@ namespace Nop.Plugin.Payments.PayPalStandard
         #region Fields
 
         private readonly CurrencySettings _currencySettings;
+        private readonly IAddressService _addressService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
+        private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILocalizationService _localizationService;
+        private readonly IOrderService _orderService;
         private readonly IPaymentService _paymentService;
+        private readonly IProductService _productService;
         private readonly ISettingService _settingService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly ITaxService _taxService;
         private readonly IWebHelper _webHelper;
         private readonly PayPalStandardHttpClient _payPalStandardHttpClient;
@@ -46,26 +55,38 @@ namespace Nop.Plugin.Payments.PayPalStandard
         #region Ctor
 
         public PayPalStandardPaymentProcessor(CurrencySettings currencySettings,
+            IAddressService addressService,
             ICheckoutAttributeParser checkoutAttributeParser,
+            ICountryService countryService,
             ICurrencyService currencyService,
+            ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             IHttpContextAccessor httpContextAccessor,
             ILocalizationService localizationService,
+            IOrderService orderService,
             IPaymentService paymentService,
+            IProductService productService,
             ISettingService settingService,
+            IStateProvinceService stateProvinceService,
             ITaxService taxService,
             IWebHelper webHelper,
             PayPalStandardHttpClient payPalStandardHttpClient,
             PayPalStandardPaymentSettings payPalStandardPaymentSettings)
         {
             _currencySettings = currencySettings;
+            _addressService = addressService;
             _checkoutAttributeParser = checkoutAttributeParser;
+            _countryService = countryService;
             _currencyService = currencyService;
+            _customerService = customerService;
             _genericAttributeService = genericAttributeService;
             _httpContextAccessor = httpContextAccessor;
             _localizationService = localizationService;
+            _orderService = orderService;
             _paymentService = paymentService;
+            _productService = productService;
             _settingService = settingService;
+            _stateProvinceService = stateProvinceService;
             _taxService = taxService;
             _webHelper = webHelper;
             _payPalStandardHttpClient = payPalStandardHttpClient;
@@ -142,9 +163,8 @@ namespace Nop.Plugin.Payments.PayPalStandard
             var storeLocation = _webHelper.GetStoreLocation();
 
             //choosing correct order address
-            var orderAddress = postProcessPaymentRequest.Order.PickupInStore
-                    ? postProcessPaymentRequest.Order.PickupAddress
-                    : postProcessPaymentRequest.Order.ShippingAddress;
+            var orderAddress = _addressService.GetAddressById(
+                (postProcessPaymentRequest.Order.PickupInStore ? postProcessPaymentRequest.Order.PickupAddressId : postProcessPaymentRequest.Order.ShippingAddressId) ?? 0);
 
             //create query parameters
             return new Dictionary<string, string>
@@ -178,8 +198,8 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 ["address1"] = orderAddress?.Address1,
                 ["address2"] = orderAddress?.Address2,
                 ["city"] = orderAddress?.City,
-                ["state"] = orderAddress?.StateProvince?.Abbreviation,
-                ["country"] = orderAddress?.Country?.TwoLetterIsoCode,
+                ["state"] = _stateProvinceService.GetStateProvinceByAddress(orderAddress)?.Abbreviation,
+                ["country"] = _countryService.GetCountryByAddress(orderAddress)?.TwoLetterIsoCode,
                 ["zip"] = orderAddress?.ZipPostalCode,
                 ["email"] = orderAddress?.Email
             };
@@ -201,12 +221,14 @@ namespace Nop.Plugin.Payments.PayPalStandard
             var itemCount = 1;
 
             //add shopping cart items
-            foreach (var item in postProcessPaymentRequest.Order.OrderItems)
+            foreach (var item in _orderService.GetOrderItems(postProcessPaymentRequest.Order.Id))
             {
                 var roundedItemPrice = Math.Round(item.UnitPriceExclTax, 2);
 
+                var product = _productService.GetProductById(item.ProductId);
+
                 //add query parameters
-                parameters.Add($"item_name_{itemCount}", item.Product.Name);
+                parameters.Add($"item_name_{itemCount}", product.Name);
                 parameters.Add($"amount_{itemCount}", roundedItemPrice.ToString("0.00", CultureInfo.InvariantCulture));
                 parameters.Add($"quantity_{itemCount}", item.Quantity.ToString());
 
@@ -217,22 +239,27 @@ namespace Nop.Plugin.Payments.PayPalStandard
 
             //add checkout attributes as order items
             var checkoutAttributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(postProcessPaymentRequest.Order.CheckoutAttributesXml);
-            foreach (var attributeValue in checkoutAttributeValues)
+            var customer = _customerService.GetCustomerById(postProcessPaymentRequest.Order.CustomerId);
+
+            foreach (var (attribute, values) in checkoutAttributeValues)
             {
-                var attributePrice = _taxService.GetCheckoutAttributePrice(attributeValue, false, postProcessPaymentRequest.Order.Customer);
-                var roundedAttributePrice = Math.Round(attributePrice, 2);
+                foreach (var attributeValue in values)
+                {
+                    var attributePrice = _taxService.GetCheckoutAttributePrice(attribute, attributeValue, false, customer);
+                    var roundedAttributePrice = Math.Round(attributePrice, 2);
 
-                //add query parameters
-                if (attributeValue.CheckoutAttribute == null) 
-                    continue;
+                    //add query parameters
+                    if (attribute == null)
+                        continue;
 
-                parameters.Add($"item_name_{itemCount}", attributeValue.CheckoutAttribute.Name);
-                parameters.Add($"amount_{itemCount}", roundedAttributePrice.ToString("0.00", CultureInfo.InvariantCulture));
-                parameters.Add($"quantity_{itemCount}", "1");
+                    parameters.Add($"item_name_{itemCount}", attribute.Name);
+                    parameters.Add($"amount_{itemCount}", roundedAttributePrice.ToString("0.00", CultureInfo.InvariantCulture));
+                    parameters.Add($"quantity_{itemCount}", "1");
 
-                cartTotal += attributePrice;
-                roundedCartTotal += roundedAttributePrice;
-                itemCount++;
+                    cartTotal += attributePrice;
+                    roundedCartTotal += roundedAttributePrice;
+                    itemCount++;
+                }
             }
 
             //add shipping fee as a separate order item, if it has price

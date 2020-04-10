@@ -64,35 +64,33 @@ namespace Nop.Services.ExportImport.Help
         /// <returns></returns>
         public virtual byte[] ExportToXlsx(IEnumerable<T> itemsToExport)
         {
-            using (var stream = new MemoryStream())
+            using var stream = new MemoryStream();
+            // ok, we can run the real code of the sample now
+            using (var xlPackage = new ExcelPackage(stream))
             {
-                // ok, we can run the real code of the sample now
-                using (var xlPackage = new ExcelPackage(stream))
+                // uncomment this line if you want the XML written out to the outputDir
+                //xlPackage.DebugMode = true; 
+
+                // get handles to the worksheets
+                var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(T).Name);
+                var fWorksheet = xlPackage.Workbook.Worksheets.Add("DataForFilters");
+                fWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
+
+                //create Headers and format them 
+                WriteCaption(worksheet);
+
+                var row = 2;
+                foreach (var items in itemsToExport)
                 {
-                    // uncomment this line if you want the XML written out to the outputDir
-                    //xlPackage.DebugMode = true; 
-
-                    // get handles to the worksheets
-                    var worksheet = xlPackage.Workbook.Worksheets.Add(typeof(T).Name);
-                    var fWorksheet = xlPackage.Workbook.Worksheets.Add("DataForFilters");
-                    fWorksheet.Hidden = eWorkSheetHidden.VeryHidden;
-
-                    //create Headers and format them 
-                    WriteCaption(worksheet);
-
-                    var row = 2;
-                    foreach (var items in itemsToExport)
-                    {
-                        CurrentObject = items;
-                        WriteToXlsx(worksheet, row++, fWorksheet: fWorksheet);
-                    }
-
-                    xlPackage.Save();
+                    CurrentObject = items;
+                    WriteToXlsx(worksheet, row++, fWorksheet: fWorksheet);
                 }
 
-                CurrentObject = default(T);
-                return stream.ToArray();
+                xlPackage.Save();
             }
+
+            CurrentObject = default;
+            return stream.ToArray();
         }
 
         /// <summary>
@@ -268,10 +266,7 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Is caption
         /// </summary>
-        public bool IsCaption
-        {
-            get { return _properties.Values.All(p => p.IsCaption); }
-        }
+        public bool IsCaption => _properties.Values.All(p => p.IsCaption);
 
         /// <summary>
         /// Gets a value indicating whether need create dropdown list for export

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
@@ -227,6 +229,27 @@ namespace Nop.Web.Areas.Admin.Controllers
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Deleted"));
 
             return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public virtual IActionResult DeleteSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                var productAttributes = _productAttributeService.GetProductAttributeByIds(selectedIds.ToArray());
+                _productAttributeService.DeleteProductAttributes(productAttributes);
+
+                foreach (var productAttribute in productAttributes)
+                {
+                    _customerActivityService.InsertActivity("DeleteProductAttribute",
+                        string.Format(_localizationService.GetResource("ActivityLog.DeleteProductAttribute"), productAttribute.Name), productAttribute);
+                }
+            }
+
+            return Json(new { Result = true });
         }
 
         #endregion

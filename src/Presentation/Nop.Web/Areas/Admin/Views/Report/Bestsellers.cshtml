@@ -12,7 +12,6 @@
     var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Reports.Sales.Bestsellers")
@@ -135,8 +134,8 @@
                         LengthMenu = Model.AvailablePageSizes,
                         Filters = new List<FilterParameter>
                         {
-                            new FilterParameter(nameof(Model.StartDate)),
-                            new FilterParameter(nameof(Model.EndDate)),
+                            new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
+                            new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
                             new FilterParameter(nameof(Model.StoreId)),
                             new FilterParameter(nameof(Model.OrderStatusId)),
                             new FilterParameter(nameof(Model.PaymentStatusId)),

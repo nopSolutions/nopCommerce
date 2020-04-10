@@ -52,6 +52,12 @@ namespace Nop.Services.Catalog
         /// <returns>Product review and review type mapping collection</returns>
         IList<ProductReviewReviewTypeMapping> GetProductReviewReviewTypeMappingsByProductReviewId(int productReviewId);
 
+        /// <summary>
+        /// Inserts a product review and review type mapping
+        /// </summary>
+        /// <param name="productReviewReviewType">Product review and review type mapping</param>
+        void InsertProductReviewReviewTypeMappings(ProductReviewReviewTypeMapping productReviewReviewType);
+
         #endregion
     }
 }

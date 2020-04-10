@@ -13,6 +13,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
 {
     [AuthorizeAdmin]
     [Area(AreaNames.Admin)]
+    [AutoValidateAntiforgeryToken]
     public class PaymentCheckMoneyOrderController : BasePaymentController
     {
         #region Fields
@@ -84,14 +85,13 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult Configure(ConfigurationModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Configure();
+                return RedirectToAction("Configure");
 
             //load settings for a chosen store scope
             var storeScope = _storeContext.ActiveStoreScopeConfiguration;
@@ -123,7 +123,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return Configure();
+            return RedirectToAction("Configure");
         }
 
         #endregion

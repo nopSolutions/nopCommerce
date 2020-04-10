@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Authentication.External
@@ -22,6 +23,20 @@ namespace Nop.Services.Authentication.External
         /// <param name="customer">Customer</param>
         /// <param name="parameters">External authentication parameters</param>
         void AssociateExternalAccountWithUser(Customer customer, ExternalAuthenticationParameters parameters);
+
+        /// <summary>
+        /// Get the external authentication records by identifier
+        /// </summary>
+        /// <param name="externalAuthenticationRecordId">External authentication record identifier</param>
+        /// <returns>Result</returns>
+        ExternalAuthenticationRecord GetExternalAuthenticationRecordById(int externalAuthenticationRecordId);
+
+        /// <summary>
+        /// Get all the external authentication records by customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Customer</returns>
+        IList<ExternalAuthenticationRecord> GetCustomerExternalAuthenticationRecords(Customer customer);
 
         /// <summary>
         /// Get the particular user with specified parameters

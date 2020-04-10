@@ -1,5 +1,5 @@
 ﻿using System;
-using Nop.Tests;
+using FluentAssertions;
 using Nop.Web.Models.News;
 using NUnit.Framework;
 
@@ -48,32 +48,32 @@ namespace Nop.Web.MVC.Tests.Public.Models.News
 
             //clone
             var model2 = (HomepageNewsItemsModel)model1.Clone();
-            model2.WorkingLanguageId.ShouldEqual(1);
-            model2.NewsItems.ShouldNotBeNull();
-            model2.NewsItems.Count.ShouldEqual(1);
+            model2.WorkingLanguageId.Should().Be(1);
+            model2.NewsItems.Should().NotBeNull();
+            model2.NewsItems.Count.Should().Be(1);
             var newsItemModel2 = model2.NewsItems[0];
-            newsItemModel2.Id.ShouldEqual(1);
-            newsItemModel2.SeName.ShouldEqual("SeName 1");
-            newsItemModel2.Title.ShouldEqual("Title 1");
-            newsItemModel2.Short.ShouldEqual("Short 1");
-            newsItemModel2.Full.ShouldEqual("Full 1");
-            newsItemModel2.AllowComments.ShouldEqual(true);
-            newsItemModel2.NumberOfComments.ShouldEqual(2);
-            newsItemModel2.CreatedOn.ShouldEqual(new DateTime(2010, 01, 01));
-            newsItemModel2.Comments.ShouldNotBeNull();
-            newsItemModel2.Comments.Count.ShouldEqual(1);
-            newsItemModel2.Comments[0].Id.ShouldEqual(3);
-            newsItemModel2.Comments[0].CustomerId.ShouldEqual(4);
-            newsItemModel2.Comments[0].CustomerName.ShouldEqual("CustomerName 1");
-            newsItemModel2.Comments[0].CustomerAvatarUrl.ShouldEqual("CustomerAvatarUrl 1");
-            newsItemModel2.Comments[0].CommentTitle.ShouldEqual("CommentTitle 1");
-            newsItemModel2.Comments[0].CommentText.ShouldEqual("CommentText 1");
-            newsItemModel2.Comments[0].CreatedOn.ShouldEqual(new DateTime(2010, 01, 02));
-            newsItemModel2.Comments[0].AllowViewingProfiles.ShouldEqual(true);
-            newsItemModel2.AddNewComment.ShouldNotBeNull();
-            newsItemModel2.AddNewComment.CommentTitle.ShouldEqual("CommentTitle 1");
-            newsItemModel2.AddNewComment.CommentText.ShouldEqual("CommentText 1");
-            newsItemModel2.AddNewComment.DisplayCaptcha.ShouldEqual(true);
+            newsItemModel2.Id.Should().Be(1);
+            newsItemModel2.SeName.Should().Be("SeName 1");
+            newsItemModel2.Title.Should().Be("Title 1");
+            newsItemModel2.Short.Should().Be("Short 1");
+            newsItemModel2.Full.Should().Be("Full 1");
+            newsItemModel2.AllowComments.Should().BeTrue();
+            newsItemModel2.NumberOfComments.Should().Be(2);
+            newsItemModel2.CreatedOn.Should().Be(new DateTime(2010, 01, 01));
+            newsItemModel2.Comments.Should().NotBeNull();
+            newsItemModel2.Comments.Count.Should().Be(1);
+            newsItemModel2.Comments[0].Id.Should().Be(3);
+            newsItemModel2.Comments[0].CustomerId.Should().Be(4);
+            newsItemModel2.Comments[0].CustomerName.Should().Be("CustomerName 1");
+            newsItemModel2.Comments[0].CustomerAvatarUrl.Should().Be("CustomerAvatarUrl 1");
+            newsItemModel2.Comments[0].CommentTitle.Should().Be("CommentTitle 1");
+            newsItemModel2.Comments[0].CommentText.Should().Be("CommentText 1");
+            newsItemModel2.Comments[0].CreatedOn.Should().Be(new DateTime(2010, 01, 02));
+            newsItemModel2.Comments[0].AllowViewingProfiles.Should().BeTrue();
+            newsItemModel2.AddNewComment.Should().NotBeNull();
+            newsItemModel2.AddNewComment.CommentTitle.Should().Be("CommentTitle 1");
+            newsItemModel2.AddNewComment.CommentText.Should().Be("CommentText 1");
+            newsItemModel2.AddNewComment.DisplayCaptcha.Should().BeTrue();
         }
     }
 }

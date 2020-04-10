@@ -21,6 +21,16 @@ namespace Nop.Web.Framework.Security.Captcha
         #region Properties
 
         /// <summary>
+        /// Gets or sets the action name for this request (important to verify)
+        /// </summary>
+        [JsonProperty(PropertyName = "action")]
+
+        public string Action { get; set; }
+
+        [JsonProperty(PropertyName = "score")]
+        public double Score { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether validation is success
         /// </summary>
         [JsonProperty(PropertyName = "success")]

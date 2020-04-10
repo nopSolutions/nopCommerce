@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
-using Nop.Services.Discounts;
 
 namespace Nop.Services.Orders
 {
@@ -27,11 +26,6 @@ namespace Nop.Services.Orders
         }
 
         #endregion
-
-        /// <summary>
-        /// Gets customer of order
-        /// </summary>
-        public Customer OrderCustomer => UpdatedOrder?.Customer;
 
         /// <summary>
         /// The updated order
@@ -86,7 +80,7 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Applied discounts
         /// </summary>
-        public List<DiscountForCaching> AppliedDiscounts { get; } = new List<DiscountForCaching>();
+        public List<Discount> AppliedDiscounts { get; } = new List<Discount>();
 
         /// <summary>
         /// Pickup point

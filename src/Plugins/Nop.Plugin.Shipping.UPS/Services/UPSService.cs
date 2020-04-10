@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
@@ -76,6 +78,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
         private readonly IMeasureService _measureService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IShippingService _shippingService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IWorkContext _workContext;
         private readonly UPSSettings _upsSettings;
 
@@ -91,6 +94,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
             IMeasureService measureService,
             IOrderTotalCalculationService orderTotalCalculationService,
             IShippingService shippingService,
+            IStateProvinceService stateProvinceService,
             IWorkContext workContext,
             UPSSettings upsSettings)
         {
@@ -102,6 +106,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
             _measureService = measureService;
             _orderTotalCalculationService = orderTotalCalculationService;
             _shippingService = shippingService;
+            _stateProvinceService = stateProvinceService;
             _workContext = workContext;
             _upsSettings = upsSettings;
         }
@@ -132,15 +137,11 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// <returns>XML string</returns>
         private string ToXml<T>(T value)
         {
-            using (var writer = new StringWriter())
-            {
-                using (var xmlWriter = new XmlTextWriter(writer) { Formatting = Formatting.Indented })
-                {
-                    var xmlSerializer = new XmlSerializer(typeof(T));
-                    xmlSerializer.Serialize(xmlWriter, value);
-                    return writer.ToString();
-                }
-            }
+            using var writer = new StringWriter();
+            using var xmlWriter = new XmlTextWriter(writer) { Formatting = Formatting.Indented };
+            var xmlSerializer = new XmlSerializer(typeof(T));
+            xmlSerializer.Serialize(xmlWriter, value);
+            return writer.ToString();
         }
 
         /// <summary>
@@ -156,35 +157,34 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 var trackPort = _upsSettings.UseSandbox
                     ? UPSTrack.TrackPortTypeClient.EndpointConfiguration.TrackPort
                     : UPSTrack.TrackPortTypeClient.EndpointConfiguration.ProductionTrackPort;
-                using (var client = new UPSTrack.TrackPortTypeClient(trackPort))
+                
+                using var client = new UPSTrack.TrackPortTypeClient(trackPort);
+                //create object to authenticate request
+                var security = new UPSTrack.UPSSecurity
                 {
-                    //create object to authenticate request
-                    var security = new UPSTrack.UPSSecurity
+                    ServiceAccessToken = new UPSTrack.UPSSecurityServiceAccessToken
                     {
-                        ServiceAccessToken = new UPSTrack.UPSSecurityServiceAccessToken
-                        {
-                            AccessLicenseNumber = _upsSettings.AccessKey
-                        },
-                        UsernameToken = new UPSTrack.UPSSecurityUsernameToken
-                        {
-                            Username = _upsSettings.Username,
-                            Password = _upsSettings.Password
-                        }
-                    };
+                        AccessLicenseNumber = _upsSettings.AccessKey
+                    },
+                    UsernameToken = new UPSTrack.UPSSecurityUsernameToken
+                    {
+                        Username = _upsSettings.Username,
+                        Password = _upsSettings.Password
+                    }
+                };
 
-                    //save debug info
-                    if (_upsSettings.Tracing)
-                        _logger.Information($"UPS shipment tracking. Request: {ToXml(new UPSTrack.TrackRequest1(security, request))}");
+                //save debug info
+                if (_upsSettings.Tracing)
+                    _logger.Information($"UPS shipment tracking. Request: {ToXml(new UPSTrack.TrackRequest1(security, request))}");
 
-                    //try to get response details
-                    var response = await client.ProcessTrackAsync(security, request);
+                //try to get response details
+                var response = await client.ProcessTrackAsync(security, request);
 
-                    //save debug info
-                    if (_upsSettings.Tracing)
-                        _logger.Information($"UPS shipment tracking. Response: {ToXml(response)}");
+                //save debug info
+                if (_upsSettings.Tracing)
+                    _logger.Information($"UPS shipment tracking. Response: {ToXml(response)}");
 
-                    return response.TrackResponse;
-                }
+                return response.TrackResponse;
             }
             catch (FaultException<UPSTrack.ErrorDetailType[]> ex)
             {
@@ -259,24 +259,13 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 switch (activity.Status.Type)
                 {
                     case "I":
-                        switch (activity.Status.Code)
+                        eventName = activity.Status.Code switch
                         {
-                            case "DP":
-                                eventName = "Plugins.Shipping.Tracker.Departed";
-                                break;
-
-                            case "EP":
-                                eventName = "Plugins.Shipping.Tracker.ExportScanned";
-                                break;
-
-                            case "OR":
-                                eventName = "Plugins.Shipping.Tracker.OriginScanned";
-                                break;
-
-                            default:
-                                eventName = "Plugins.Shipping.Tracker.Arrived";
-                                break;
-                        }
+                            "DP" => "Plugins.Shipping.Tracker.Departed",
+                            "EP" => "Plugins.Shipping.Tracker.ExportScanned",
+                            "OR" => "Plugins.Shipping.Tracker.OriginScanned",
+                            _ => "Plugins.Shipping.Tracker.Arrived",
+                        };
                         break;
 
                     case "X":
@@ -315,35 +304,34 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 var ratePort = _upsSettings.UseSandbox
                     ? UPSRate.RatePortTypeClient.EndpointConfiguration.RatePort
                     : UPSRate.RatePortTypeClient.EndpointConfiguration.ProductionRatePort;
-                using (var client = new UPSRate.RatePortTypeClient(ratePort))
+                
+                using var client = new UPSRate.RatePortTypeClient(ratePort);
+                //create object to authenticate request
+                var security = new UPSRate.UPSSecurity
                 {
-                    //create object to authenticate request
-                    var security = new UPSRate.UPSSecurity
+                    ServiceAccessToken = new UPSRate.UPSSecurityServiceAccessToken
                     {
-                        ServiceAccessToken = new UPSRate.UPSSecurityServiceAccessToken
-                        {
-                            AccessLicenseNumber = _upsSettings.AccessKey
-                        },
-                        UsernameToken = new UPSRate.UPSSecurityUsernameToken
-                        {
-                            Username = _upsSettings.Username,
-                            Password = _upsSettings.Password
-                        }
-                    };
+                        AccessLicenseNumber = _upsSettings.AccessKey
+                    },
+                    UsernameToken = new UPSRate.UPSSecurityUsernameToken
+                    {
+                        Username = _upsSettings.Username,
+                        Password = _upsSettings.Password
+                    }
+                };
 
-                    //save debug info
-                    if (_upsSettings.Tracing)
-                        _logger.Information($"UPS rates. Request: {ToXml(new UPSRate.RateRequest1(security, request))}");
+                //save debug info
+                if (_upsSettings.Tracing)
+                    _logger.Information($"UPS rates. Request: {ToXml(new UPSRate.RateRequest1(security, request))}");
 
-                    //try to get response details
-                    var response = await client.ProcessRateAsync(security, request);
+                //try to get response details
+                var response = await client.ProcessRateAsync(security, request);
 
-                    //save debug info
-                    if (_upsSettings.Tracing)
-                        _logger.Information($"UPS rates. Response: {ToXml(response)}");
+                //save debug info
+                if (_upsSettings.Tracing)
+                    _logger.Information($"UPS rates. Response: {ToXml(response)}");
 
-                    return response.RateResponse;
-                }
+                return response.RateResponse;
             }
             catch (FaultException<UPSRate.ErrorDetailType[]> ex)
             {
@@ -380,7 +368,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
             };
 
             //prepare addresses details
-            var stateCodeTo = shippingOptionRequest.ShippingAddress.StateProvince?.Abbreviation;
+            var stateCodeTo = _stateProvinceService.GetStateProvinceByAddress(shippingOptionRequest.ShippingAddress)?.Abbreviation;
             var stateCodeFrom = shippingOptionRequest.StateProvinceFrom?.Abbreviation;
             var countryCodeFrom = (shippingOptionRequest.CountryFrom ?? _countryService.GetAllCountries().FirstOrDefault())
                 .TwoLetterIsoCode ?? string.Empty;
@@ -398,7 +386,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 AddressLine = new[] { shippingOptionRequest.ShippingAddress.Address1, shippingOptionRequest.ShippingAddress.Address2 },
                 City = shippingOptionRequest.ShippingAddress.City,
                 StateProvinceCode = stateCodeTo,
-                CountryCode = shippingOptionRequest.ShippingAddress.Country.TwoLetterIsoCode,
+                CountryCode = _countryService.GetCountryByAddress(shippingOptionRequest.ShippingAddress)?.TwoLetterIsoCode,
                 PostalCode = shippingOptionRequest.ShippingAddress.ZipPostalCode,
                 ResidentialAddressIndicator = string.Empty
             };
@@ -454,22 +442,12 @@ namespace Nop.Plugin.Shipping.UPS.Services
             }
 
             //set packages details
-            switch (_upsSettings.PackingType)
+            request.Shipment.Package = _upsSettings.PackingType switch
             {
-                case PackingType.PackByOneItemPerPackage:
-                    request.Shipment.Package = GetPackagesForOneItemPerPackage(shippingOptionRequest).ToArray();
-                    break;
-
-                case PackingType.PackByVolume:
-                    request.Shipment.Package = GetPackagesByCubicRoot(shippingOptionRequest).ToArray();
-                    break;
-
-                case PackingType.PackByDimensions:
-                default:
-                    request.Shipment.Package = GetPackagesByDimensions(shippingOptionRequest).ToArray();
-                    break;
-            }
-
+                PackingType.PackByOneItemPerPackage => GetPackagesForOneItemPerPackage(shippingOptionRequest).ToArray(),
+                PackingType.PackByVolume => GetPackagesByCubicRoot(shippingOptionRequest).ToArray(),
+                _ => GetPackagesByDimensions(shippingOptionRequest).ToArray(),
+            };
             return request;
         }
 
@@ -539,8 +517,8 @@ namespace Nop.Plugin.Shipping.UPS.Services
             return shippingOptionRequest.Items.SelectMany(packageItem =>
             {
                 //get dimensions and weight of the single item
-                var (width, length, height) = GetDimensionsForSingleItem(packageItem.ShoppingCartItem);
-                var weight = GetWeightForSingleItem(packageItem.ShoppingCartItem);
+                var (width, length, height) = GetDimensionsForSingleItem(packageItem.ShoppingCartItem, packageItem.Product);
+                var weight = GetWeightForSingleItem(packageItem.ShoppingCartItem, shippingOptionRequest.Customer, packageItem.Product);
 
                 var insuranceAmount = 0;
                 if (_upsSettings.InsurePackage)
@@ -551,7 +529,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
                     //One could argue that the insured value should be based on Cost rather than Price.
                     //GetUnitPrice handles Attribute Adjustments and also Customer Entered Price.
                     //But, even with includeDiscounts:false, it could apply a "discount" from Tier pricing.
-                    insuranceAmount = Convert.ToInt32(packageItem.ShoppingCartItem.Product.Price);
+                    insuranceAmount = Convert.ToInt32(packageItem.Product.Price);
                 }
 
                 //create packages according to item quantity
@@ -646,8 +624,8 @@ namespace Nop.Plugin.Shipping.UPS.Services
             if (shippingOptionRequest.Items.Count == 1 && shippingOptionRequest.Items.FirstOrDefault().GetQuantity() == 1)
             {
                 //get dimensions and weight of the single cubic size of package
-                var item = shippingOptionRequest.Items.FirstOrDefault().ShoppingCartItem;
-                (width, length, height) = GetDimensionsForSingleItem(item);
+                var item = shippingOptionRequest.Items.FirstOrDefault();
+                (width, length, height) = GetDimensionsForSingleItem(item.ShoppingCartItem, item.Product);
             }
             else
             {
@@ -658,7 +636,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 var totalVolume = shippingOptionRequest.Items.Sum(item =>
                 {
                     //get dimensions and weight of the single item
-                    var (itemWidth, itemLength, itemHeight) = GetDimensionsForSingleItem(item.ShoppingCartItem);
+                    var (itemWidth, itemLength, itemHeight) = GetDimensionsForSingleItem(item.ShoppingCartItem, item.Product);
                     return item.GetQuantity() * itemWidth * itemLength * itemHeight;
                 });
                 if (totalVolume > decimal.Zero)
@@ -714,9 +692,9 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// </summary>
         /// <param name="item">Shopping cart item</param>
         /// <returns>Dimensions values</returns>
-        private (decimal width, decimal length, decimal height) GetDimensionsForSingleItem(ShoppingCartItem item)
+        private (decimal width, decimal length, decimal height) GetDimensionsForSingleItem(ShoppingCartItem item, Product product)
         {
-            var items = new[] { new GetShippingOptionRequest.PackageItem(item, 1) };
+            var items = new[] { new GetShippingOptionRequest.PackageItem(item, product, 1) };
             return GetDimensions(items);
         }
 
@@ -750,12 +728,12 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// </summary>
         /// <param name="item">Shopping cart item</param>
         /// <returns>Weight value</returns>
-        private decimal GetWeightForSingleItem(ShoppingCartItem item)
+        private decimal GetWeightForSingleItem(ShoppingCartItem item, Customer customer, Product product)
         {
             var shippingOptionRequest = new GetShippingOptionRequest
             {
-                Customer = item.Customer,
-                Items = new[] { new GetShippingOptionRequest.PackageItem(item, 1) }
+                Customer = customer,
+                Items = new[] { new GetShippingOptionRequest.PackageItem(item, product, 1) }
             };
             return GetWeight(shippingOptionRequest);
         }
@@ -868,11 +846,20 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 if (!monetaryValue.HasValue)
                     continue;
 
+                //parse transit days
+                int? transitDays = null;
+                if (!string.IsNullOrWhiteSpace(rate.GuaranteedDelivery?.BusinessDaysInTransit))
+                {
+                    if (int.TryParse(rate.GuaranteedDelivery.BusinessDaysInTransit, out var businessDaysInTransit))
+                        transitDays = businessDaysInTransit;
+                }
+
                 //add shipping option based on service rate
                 shippingOptions.Add(new ShippingOption
                 {
                     Rate = monetaryValue.Value,
-                    Name = deliveryService.Name
+                    Name = deliveryService.Name,
+                    TransitDays = transitDays
                 });
             }
 

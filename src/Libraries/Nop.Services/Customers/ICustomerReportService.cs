@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using Nop.Services.Orders;
 
 namespace Nop.Services.Customers
 {
@@ -25,7 +26,7 @@ namespace Nop.Services.Customers
         /// <param name="pageSize">Page size</param>
         /// <returns>Report</returns>
         IPagedList<BestCustomerReportLine> GetBestCustomersReport(DateTime? createdFromUtc,
-            DateTime? createdToUtc, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, int orderBy,
+            DateTime? createdToUtc, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, OrderByEnum orderBy,
             int pageIndex = 0, int pageSize = 214748364);
         
         /// <summary>

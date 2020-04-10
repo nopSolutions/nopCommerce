@@ -101,6 +101,8 @@ namespace Nop.Web.Areas.Admin.Models.Topics
 
         public IList<SelectListItem> AvailableCustomerRoles { get; set; }
 
+        public string TopicName { get; set; }
+
         #endregion
     }
 

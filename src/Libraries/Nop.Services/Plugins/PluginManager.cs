@@ -44,7 +44,7 @@ namespace Nop.Services.Plugins
         public virtual IList<TPlugin> LoadAllPlugins(Customer customer = null, int storeId = 0)
         {
             //get plugins and put them into the dictionary to avoid further loading
-            var key = string.Format(KEY_FORMAT, null, customer?.CustomerGuid ?? default(Guid), storeId);
+            var key = string.Format(KEY_FORMAT, null, customer?.CustomerGuid ?? default, storeId);
             if (!_plugins.ContainsKey(key))
                 _plugins.Add(key, _pluginService.GetPlugins<TPlugin>(customer: customer, storeId: storeId).ToList());
 
@@ -64,7 +64,7 @@ namespace Nop.Services.Plugins
                 return null;
 
             //try to get already loaded plugin
-            var key = string.Format(KEY_FORMAT, systemName, customer?.CustomerGuid ?? default(Guid), storeId);
+            var key = string.Format(KEY_FORMAT, systemName, customer?.CustomerGuid ?? default, storeId);
             if (_plugins.ContainsKey(key))
                 return _plugins[key].FirstOrDefault();
 

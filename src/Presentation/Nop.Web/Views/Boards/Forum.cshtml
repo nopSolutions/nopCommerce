@@ -26,7 +26,7 @@
     </div>
     <div class="forum-actions">
         <div class="actions">
-            @Html.RouteLink(T("Forum.NewTopic").ToString(), "TopicCreate", new {id = Model.Id}, new {@class = "new-topic"})
+            @Html.RouteLink(T("Forum.NewTopic").ToString(), "TopicCreate", new { id = Model.Id }, new { @class = "new-topic" })
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="watch-forum" href="#" id="watch-forum">@Model.WatchForumText</a>
@@ -79,7 +79,10 @@
                         <col width="1" />
                         <col />
                         <col width="1" />
-                        <col width="1" />
+                        @if (Model.AllowPostVoting)
+                        {
+                            <col width="1" />
+                        }
                         <col width="1" />
                     </colgroup>
                     <thead>
@@ -150,11 +153,11 @@
                                             <label>@T("Forum.Author"):</label>
                                             if (topic.AllowViewingProfiles)
                                             {
-                                            @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
+                                                @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
                                             }
                                             else
                                             {
-                                            @topic.CustomerName
+                                                @topic.CustomerName
                                             }
                                         }
                                     </div>

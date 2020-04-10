@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -11,6 +11,7 @@ using Nop.Core.Http.Extensions;
 using Nop.Plugin.Tax.Avalara.Domain;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
@@ -31,6 +32,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         private readonly IPaymentService _paymentService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IShippingPluginManager _shippingPluginManager;
+        private readonly ICustomerService _customerService;
         private readonly IStoreContext _storeContext;
         private readonly ITaxService _taxService;
         private readonly IWorkContext _workContext;
@@ -41,13 +43,17 @@ namespace Nop.Plugin.Tax.Avalara.Services
         #region Ctor
 
         public OverriddenOrderTotalCalculationService(CatalogSettings catalogSettings,
+            IAddressService addressService,
             ICheckoutAttributeParser checkoutAttributeParser,
+            ICustomerService customerSercice,
             IDiscountService discountService,
             IGenericAttributeService genericAttributeService,
             IGiftCardService giftCardService,
+            IOrderService orderService,
             IHttpContextAccessor httpContextAccessor,
             IPaymentService paymentService,
             IPriceCalculationService priceCalculationService,
+            IProductService productService,
             IRewardPointService rewardPointService,
             IShippingPluginManager shippingPluginManager,
             IShippingService shippingService,
@@ -59,12 +65,16 @@ namespace Nop.Plugin.Tax.Avalara.Services
             ShippingSettings shippingSettings,
             ShoppingCartSettings shoppingCartSettings,
             TaxSettings taxSettings) : base(catalogSettings,
+                addressService,
                 checkoutAttributeParser,
+                customerSercice,
                 discountService,
                 genericAttributeService,
                 giftCardService,
+                orderService,
                 paymentService,
                 priceCalculationService,
+                productService,
                 rewardPointService,
                 shippingPluginManager,
                 shippingService,
@@ -82,6 +92,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             _paymentService = paymentService;
             _priceCalculationService = priceCalculationService;
             _shippingPluginManager = shippingPluginManager;
+            _customerService = customerSercice;
             _storeContext = storeContext;
             _taxService = taxService;
             _workContext = workContext;
@@ -105,7 +116,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating order total</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
         public override decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
-            out decimal discountAmount, out List<DiscountForCaching> appliedDiscounts,
+            out decimal discountAmount, out List<Discount> appliedDiscounts,
             out List<AppliedGiftCard> appliedGiftCards,
             out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount,
             bool? useRewardPoints = null, bool usePaymentMethodAdditionalFee = true)
@@ -113,7 +124,8 @@ namespace Nop.Plugin.Tax.Avalara.Services
             redeemedRewardPoints = 0;
             redeemedRewardPointsAmount = decimal.Zero;
 
-            var customer = cart.FirstOrDefault(item => item.Customer != null)?.Customer;
+            var customer = _customerService.GetShoppingCartCustomer(cart);
+
             var paymentMethodSystemName = string.Empty;
             if (customer != null)
             {
@@ -200,7 +212,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             //reward points
             SetRewardPoints(ref redeemedRewardPoints, ref redeemedRewardPointsAmount, useRewardPoints, customer, orderTotal);
 
-            orderTotal = orderTotal - redeemedRewardPointsAmount;
+            orderTotal -= redeemedRewardPointsAmount;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 orderTotal = _priceCalculationService.RoundPrice(orderTotal);
             return orderTotal;

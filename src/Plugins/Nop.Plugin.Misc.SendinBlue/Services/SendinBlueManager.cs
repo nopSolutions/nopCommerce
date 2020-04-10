@@ -699,6 +699,11 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         {
             try
             {
+                if (order is null)
+                    throw new ArgumentNullException(nameof(order));
+
+                var customer = _customerService.GetCustomerById(order.CustomerId);
+
                 //create API client
                 var client = CreateApiClient(config => new ContactsApi(config));
 
@@ -711,7 +716,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     [SendinBlueDefaults.OrderTotalServiceAttribute] = order.OrderTotal.ToString()
                 };
                 var updateContact = new UpdateContact { Attributes = attributes };
-                client.UpdateContact(order.Customer.Email, updateContact);
+                client.UpdateContact(customer.Email, updateContact);
             }
             catch (Exception exception)
             {
@@ -1101,7 +1106,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                 }
 
                 //or create new one
-                currentSender = currentSender ?? senders.Senders.FirstOrDefault();
+                currentSender ??= senders.Senders.FirstOrDefault();
                 var relay = accountClient.GetAccount().Relay;
                 var newEmailAccount = new EmailAccount
                 {

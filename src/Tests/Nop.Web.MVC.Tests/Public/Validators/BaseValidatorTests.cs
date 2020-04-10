@@ -1,6 +1,7 @@
 ﻿using Moq;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Localization;
 using Nop.Tests;
 using Nop.Web.Areas.Admin.Validators.Common;
@@ -12,6 +13,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators
     public abstract class BaseValidatorTests
     {
         protected ILocalizationService _localizationService;
+        private Mock<INopDataProvider> _dataProvider;
         protected Mock<IWorkContext> _workContext;
         
         [SetUp]
@@ -20,9 +22,10 @@ namespace Nop.Web.MVC.Tests.Public.Validators
             var nopEngine = new Mock<NopEngine>();
             var serviceProvider = new TestServiceProvider();
             nopEngine.Setup(x => x.ServiceProvider).Returns(serviceProvider);
-            nopEngine.Setup(x => x.ResolveUnregistered(typeof(AddressValidator))).Returns(new AddressValidator(serviceProvider.LocalizationService.Object));
-            EngineContext.Replace(nopEngine.Object);
+            _dataProvider = new Mock<INopDataProvider>();
             _localizationService = serviceProvider.LocalizationService.Object;
+            nopEngine.Setup(x => x.ResolveUnregistered(typeof(AddressValidator))).Returns(new AddressValidator(_localizationService, _dataProvider.Object));
+            EngineContext.Replace(nopEngine.Object);
         }
     }
 }

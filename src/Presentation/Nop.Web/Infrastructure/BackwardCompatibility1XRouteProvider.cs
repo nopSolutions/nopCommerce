@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
-using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Web.Infrastructure
@@ -17,52 +17,52 @@ namespace Nop.Web.Infrastructure
         /// <summary>
         /// Register routes
         /// </summary>
-        /// <param name="routeBuilder">Route builder</param>
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        /// <param name="endpointRouteBuilder">Route builder</param>
+        public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
             if (DataSettingsManager.DatabaseIsInstalled && !EngineContext.Current.Resolve<CommonSettings>().SupportPreviousNopcommerceVersions)
                 return;
 
             //all old aspx URLs
-            routeBuilder.MapRoute("", "{oldfilename}.aspx",
+            endpointRouteBuilder.MapControllerRoute("", "{oldfilename}.aspx",
                 new { controller = "BackwardCompatibility1X", action = "GeneralRedirect" });
 
             //products
-            routeBuilder.MapRoute("", "products/{id}.aspx",
+            endpointRouteBuilder.MapControllerRoute("", "products/{id}.aspx",
                 new { controller = "BackwardCompatibility1X", action = "RedirectProduct" });
 
             //categories
-            routeBuilder.MapRoute("", "category/{id}.aspx",
+            endpointRouteBuilder.MapControllerRoute("", "category/{id}.aspx",
                 new { controller = "BackwardCompatibility1X", action = "RedirectCategory" });
 
             //manufacturers
-            routeBuilder.MapRoute("", "manufacturer/{id}.aspx",
+            endpointRouteBuilder.MapControllerRoute("", "manufacturer/{id}.aspx",
                 new { controller = "BackwardCompatibility1X", action = "RedirectManufacturer" });
 
             //product tags
-            routeBuilder.MapRoute("", "producttag/{id}.aspx",
+            endpointRouteBuilder.MapControllerRoute("", "producttag/{id}.aspx",
                 new { controller = "BackwardCompatibility1X", action = "RedirectProductTag" });
 
             //news
-            routeBuilder.MapRoute("", "news/{id}.aspx",
+            endpointRouteBuilder.MapControllerRoute("", "news/{id}.aspx",
                 new { controller = "BackwardCompatibility1X", action = "RedirectNewsItem" });
 
             //blog posts
-            routeBuilder.MapRoute("", "blog/{id}.aspx",
+            endpointRouteBuilder.MapControllerRoute("", "blog/{id}.aspx",
                 new { controller = "BackwardCompatibility1X", action = "RedirectBlogPost" });
 
             //topics
-            routeBuilder.MapRoute("", "topic/{id}.aspx",
+            endpointRouteBuilder.MapControllerRoute("", "topic/{id}.aspx",
                 new { controller = "BackwardCompatibility1X", action = "RedirectTopic" });
 
             //forums
-            routeBuilder.MapRoute("", "boards/fg/{id}.aspx",
+            endpointRouteBuilder.MapControllerRoute("", "boards/fg/{id}.aspx",
                 new { controller = "BackwardCompatibility1X", action = "RedirectForumGroup" });
 
-            routeBuilder.MapRoute("", "boards/f/{id}.aspx",
+            endpointRouteBuilder.MapControllerRoute("", "boards/f/{id}.aspx",
                 new { controller = "BackwardCompatibility1X", action = "RedirectForum" });
 
-            routeBuilder.MapRoute("", "boards/t/{id}.aspx",
+            endpointRouteBuilder.MapControllerRoute("", "boards/t/{id}.aspx",
                 new { controller = "BackwardCompatibility1X", action = "RedirectForumTopic" });
         }
 

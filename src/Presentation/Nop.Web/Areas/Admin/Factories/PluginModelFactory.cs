@@ -57,7 +57,6 @@ namespace Nop.Web.Areas.Admin.Factories
             IPickupPluginManager pickupPluginManager,
             IPluginService pluginService,
             IShippingPluginManager shippingPluginManager,
-            IShippingService shippingService,
             IStaticCacheManager cacheManager,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             ITaxPluginManager taxPluginManager,
@@ -177,9 +176,11 @@ namespace Nop.Web.Areas.Admin.Factories
             //get parameters to filter plugins
             var group = string.IsNullOrEmpty(searchModel.SearchGroup) || searchModel.SearchGroup.Equals("0") ? null : searchModel.SearchGroup;
             var loadMode = (LoadPluginsMode)searchModel.SearchLoadModeId;
+            var friendlyName = string.IsNullOrEmpty(searchModel.SearchFriendlyName) ? null : searchModel.SearchFriendlyName;
+            var author = string.IsNullOrEmpty(searchModel.SearchAuthor) ? null : searchModel.SearchAuthor;
 
             //filter visible plugins
-            var plugins = _pluginService.GetPluginDescriptors<IPlugin>(group: group, loadMode: loadMode)
+            var plugins = _pluginService.GetPluginDescriptors<IPlugin>(group: group, loadMode: loadMode, friendlyName: friendlyName, author: author)
                 .Where(p => p.ShowInPluginsList)
                 .OrderBy(plugin => plugin.Group).ToList()
                 .ToPagedList(searchModel);
@@ -218,7 +219,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (pluginDescriptor != null)
             {
                 //fill in model values from the entity
-                model = model ?? pluginDescriptor.ToPluginModel(model);
+                model ??= pluginDescriptor.ToPluginModel(model);
 
                 model.LogoUrl = _pluginService.GetPluginLogoUrl(pluginDescriptor);
                 model.SelectedStoreIds = pluginDescriptor.LimitedToStores;
@@ -375,7 +376,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>List of models</returns>
         public virtual IList<AdminNavigationPluginModel> PrepareAdminNavigationPluginModels()
         {
-            var cacheKey = string.Format(NopPluginDefaults.AdminNavigationPluginsCacheKey, _workContext.CurrentCustomer.Id);
+            var cacheKey = NopPluginDefaults.AdminNavigationPluginsCacheKey.FillCacheKey(_workContext.CurrentCustomer);
             return _cacheManager.Get(cacheKey, () =>
             {
                 //get installed plugins

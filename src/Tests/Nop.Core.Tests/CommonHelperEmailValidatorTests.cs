@@ -1,5 +1,4 @@
-﻿using System;
-using Nop.Tests;
+﻿using FluentAssertions;
 using NUnit.Framework;
 
 namespace Nop.Core.Tests
@@ -12,7 +11,7 @@ namespace Nop.Core.Tests
         {
             var email = "testperson@gmail.com";
             var result = CommonHelper.IsValidEmail(email);
-            result.ShouldEqual(true);
+            result.Should().BeTrue();
         }
 
         [Test]
@@ -20,7 +19,7 @@ namespace Nop.Core.Tests
         {
             var email = "testperson+label@gmail.com";
             var result = CommonHelper.IsValidEmail(email);
-            result.ShouldEqual(true);
+            result.Should().BeTrue();
         }
 
         [Test]
@@ -28,7 +27,7 @@ namespace Nop.Core.Tests
         {
             string email = null;
             var result = CommonHelper.IsValidEmail(email);
-            result.ShouldEqual(false);
+            result.Should().BeFalse();
         }
 
         [Test]
@@ -36,7 +35,7 @@ namespace Nop.Core.Tests
         {
             var email = string.Empty;
             var result = CommonHelper.IsValidEmail(email);
-            result.ShouldEqual(false);
+            result.Should().BeFalse();
         }
 
         [Test]
@@ -44,7 +43,7 @@ namespace Nop.Core.Tests
         {
             var email = "testperso";
             var result = CommonHelper.IsValidEmail(email);
-            result.ShouldEqual(false);
+            result.Should().BeFalse();
         }
 
 
@@ -53,7 +52,7 @@ namespace Nop.Core.Tests
         {
             var email = "thisisaverylongstringcodeplex.com";
             var result = CommonHelper.IsValidEmail(email);
-            result.ShouldEqual(false);
+            result.Should().BeFalse();
         }
 
         [Test]
@@ -61,11 +60,11 @@ namespace Nop.Core.Tests
         {
             var email = "testperson@gmail.com";
             var result = CommonHelper.IsValidEmail(email);
-            result.ShouldEqual(true);
+            result.Should().BeTrue();
 
             email = "TestPerson@gmail.com";
             result = CommonHelper.IsValidEmail(email);
-            result.ShouldEqual(true);
+            result.Should().BeTrue();
         }
     }
 }

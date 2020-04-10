@@ -82,6 +82,6 @@ namespace Nop.Web.Models.Blogs
         }
 
 
-        public IList<BlogPostTagModel> Tags { get; set; }
+        public List<BlogPostTagModel> Tags { get; set; }
     }
 }
