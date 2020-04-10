@@ -903,8 +903,10 @@ namespace Nop.Services.ExportImport
                 //vendor can't change this field
                 xmlWriter.WriteString("VendorId", product.VendorId, IgnoreExportPoductProperty(p => p.Vendor) || _workContext.CurrentVendor != null);
                 xmlWriter.WriteString("ProductTemplateId", product.ProductTemplateId, IgnoreExportPoductProperty(p => p.ProductTemplate));
-                xmlWriter.WriteString("ShowOnHomepage", product.ShowOnHomepage, IgnoreExportPoductProperty(p => p.ShowOnHomepage));
-                xmlWriter.WriteString("DisplayOrder", product.DisplayOrder, IgnoreExportPoductProperty(p => p.ShowOnHomepage));
+                //vendor can't change this field
+                xmlWriter.WriteString("ShowOnHomepage", product.ShowOnHomepage, IgnoreExportPoductProperty(p => p.ShowOnHomepage) || _workContext.CurrentVendor != null);
+                //vendor can't change this field
+                xmlWriter.WriteString("DisplayOrder", product.DisplayOrder, IgnoreExportPoductProperty(p => p.ShowOnHomepage) || _workContext.CurrentVendor != null);
                 xmlWriter.WriteString("MetaKeywords", product.MetaKeywords, IgnoreExportPoductProperty(p => p.Seo));
                 xmlWriter.WriteString("MetaDescription", product.MetaDescription, IgnoreExportPoductProperty(p => p.Seo));
                 xmlWriter.WriteString("MetaTitle", product.MetaTitle, IgnoreExportPoductProperty(p => p.Seo));
@@ -1226,6 +1228,7 @@ namespace Nop.Services.ExportImport
                 },
                 //vendor can't change this field
                 new PropertyByName<Product>("ShowOnHomepage", p => p.ShowOnHomepage, IgnoreExportPoductProperty(p => p.ShowOnHomepage) || _workContext.CurrentVendor != null),
+                //vendor can't change this field
                 new PropertyByName<Product>("DisplayOrder", p => p.DisplayOrder, IgnoreExportPoductProperty(p => p.ShowOnHomepage) || _workContext.CurrentVendor != null),
                 new PropertyByName<Product>("MetaKeywords", p => p.MetaKeywords, IgnoreExportPoductProperty(p => p.Seo)),
                 new PropertyByName<Product>("MetaDescription", p => p.MetaDescription, IgnoreExportPoductProperty(p => p.Seo)),
