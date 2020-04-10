@@ -7,7 +7,6 @@
     Html.SetActiveMenuItemSystemName("Countries");
 }
 
-<nop-antiforgery-token />
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Countries")
@@ -56,12 +55,11 @@
                                 IsMasterCheckBox = true,
                                 Render = new RenderCheckBox("checkbox_countries"),
                                 ClassName =  NopColumnClassDefaults.CenterAll,
-                                Width = "50",
+                                Width = "50"
                             },
                             new ColumnProperty(nameof(CountryModel.Name))
                             {
-                                Title = T("Admin.Configuration.Countries.Fields.Name").Text,
-                                Width = "200"
+                                Title = T("Admin.Configuration.Countries.Fields.Name").Text
                             },
                             new ColumnProperty(nameof(CountryModel.AllowsBilling))
                             {
@@ -90,7 +88,7 @@
                             new ColumnProperty(nameof(CountryModel.NumericIsoCode))
                             {
                                 Title = T("Admin.Configuration.Countries.Fields.NumericIsoCode").Text,
-                                Width = "150"
+                                Width = "120"
                             },
                             new ColumnProperty(nameof(CountryModel.SubjectToVat))
                             {
@@ -114,7 +112,7 @@
                             new ColumnProperty(nameof(CountryModel.Published))
                             {
                                 Title = T("Admin.Configuration.Countries.Fields.Published").Text,
-                                Width = "100",
+                                Width = "80",
                                 ClassName =  NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             },
@@ -208,7 +206,7 @@
                                 <em>@T("Admin.Configuration.Countries.ImportTip")</em>
                             </li>
                             <li>
-                                <em><a href="https://www.nopcommerce.com/p/1622/all-states-provinces-package.aspx?utm_source=admin-panel&utm_medium=countries&utm_campaign=admin-panel" target="_blank">https://www.nopcommerce.com/p/1622/all-states-provinces-package.aspx</a></em>
+                                <em><a href="https://www.nopcommerce.com/all-states-provinces-package-nopcommerce-team?utm_source=admin-panel&utm_medium=countries&utm_campaign=admin-panel" target="_blank">https://www.nopcommerce.com/all-states-provinces-package-nopcommerce-team</a></em>
                             </li>
                         </ul>
                         <div class="form-group">

@@ -102,6 +102,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(Country country, CountryModel model)
         {
             country.LimitedToStores = model.SelectedStoreIds.Any();
+            _countryService.UpdateCountry(country);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(country);
             var allStores = _storeService.GetAllStores();

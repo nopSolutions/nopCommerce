@@ -7,7 +7,6 @@
     Html.SetActiveMenuItemSystemName("Manage forums");
 }
 
-<nop-antiforgery-token/>
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.Forums")
@@ -67,7 +66,7 @@
                         },
                         ChildTable = new DataTablesModel
                         {
-                            Name = "shipments-grid",
+                            Name = "forumdetails-grid",
                             UrlRead = new DataUrl("ForumList", "Forum", null),
                             IsChildTable = true,
                             Length = Model.PageSize,

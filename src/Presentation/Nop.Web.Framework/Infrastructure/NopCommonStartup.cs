@@ -1,9 +1,9 @@
-﻿using EasyCaching.Core;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Infrastructure.Extensions;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Web.Framework.Infrastructure
 {
@@ -24,10 +24,7 @@ namespace Nop.Web.Framework.Infrastructure
 
             //add options feature
             services.AddOptions();
-
-            //add Easy caching
-            services.AddEasyCaching();
-
+            
             //add distributed memory cache
             services.AddDistributedMemoryCache();
 
@@ -45,6 +42,13 @@ namespace Nop.Web.Framework.Infrastructure
 
             //add theme support
             services.AddThemes();
+
+            //add routing
+            services.AddRouting(options =>
+            {
+                //add constraint key for language
+                options.ConstraintMap["lang"] = typeof(LanguageParameterTransformer);
+            });
         }
 
         /// <summary>
@@ -73,9 +77,6 @@ namespace Nop.Web.Framework.Infrastructure
 
             //set request culture
             application.UseCulture();
-
-            //easy caching
-            application.UseEasyCaching();
         }
 
         /// <summary>

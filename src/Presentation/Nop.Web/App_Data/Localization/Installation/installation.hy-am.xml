@@ -1,3 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Հայերեն" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Ադմինիստրատորի էլ. փոստ</Value>
@@ -44,11 +45,11 @@
   <LocaleResource Name="CustomCollation">
     <Value>Նշել SQL Server collation</Value>
   </LocaleResource>
-  <LocaleResource Name="DatabaseCreationError">
-    <Value>Տվյալների բազան ստեղծելիս առաջացել է սխալ՝ {0}</Value>
-  </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Տվյալների բազա</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Տվյալների բազան ստեղծելիս առաջացել է սխալ՝ {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Ինֆորմացիա տվյալների բազայի մասին</Value>
@@ -80,6 +81,14 @@
   <LocaleResource Name="Installing">
     <Value>nopCommerce տեղադրում...</Value>
   </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>
+      Windows համակարգի ստուգում
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>Գաղտնաբառերը չեն համընկնում</Value>
   </LocaleResource>
@@ -95,6 +104,12 @@
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>Սեղմեք, եթե ցանկանում եք վերսկսել տեղադրման գործընթացը (մաքրում է բոլոր քեշավորված տվյալները)</Value>
   </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>SQL Server անուն կամ ցանցային հասցե</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Մուտքագրեք SQL Server անունը կամ ցանցային հասցեն</Value>
+  </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>Տեղադրման սխալ՝ {0}</Value>
   </LocaleResource>
@@ -104,26 +119,20 @@
   <LocaleResource Name="SqlCompact">
     <Value>SQL Server Compact</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
-    <Value>SQL Server անուն կամ ցանցային հասցե</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
-    <Value>Մուտքագրեք SQL Server անունը կամ ցանցային հասցեն</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL Server գաղտնաբառ</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>Մուտքագրեք SQL Server գաղտնաբառը</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
     <Value>SQL Server գաղտնանուն</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>Մուտքագրեք SQL Server գաղտնանունը</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>SQL Server կամ SQL Express</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Ինֆորմացիա խանութի մասին</Value>
@@ -136,10 +145,5 @@
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
     <Value>nopCommerce համակարգը հաջողությամբ տեղադրելու համար Դուք պետք է իմանաք տվյալների բազային միանալու կարգավորումների տողը: Եթե Դուք չունեք այդ ինֆորմացիան, ապա կարող եք հարցնել Ձեր հոսթինգ պրովայդերից: Եթե տեղադրում եք լոկալ համակարգչի վրա, ապա կարող եք իմանալ Ձեր ադմինիստրատորից:</Value>
-  </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
-    <Value>
-      Windows համակարգի ստուգում
-    </Value>
   </LocaleResource>
 </Language>

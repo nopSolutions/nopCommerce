@@ -31,7 +31,7 @@ namespace Nop.Core.Http.Extensions
         {
             var value = session.GetString(key);
             if (value == null)
-                return default(T);
+                return default;
 
             return JsonConvert.DeserializeObject<T>(value);
         }

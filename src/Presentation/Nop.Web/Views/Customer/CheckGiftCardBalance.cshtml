@@ -1,12 +1,13 @@
 ﻿@model CheckGiftCardBalanceModel
 
 @using Nop.Core
-@using Nop.Core.Domain.Customers
+@using Nop.Services.Customers
 @using Nop.Web.Framework.UI;
 @inject IWorkContext workContext
+@inject ICustomerService customerService
 
 @{
-    var isRegisterCustomer = workContext.CurrentCustomer.IsRegistered();
+    var isRegisterCustomer = customerService.IsRegistered(workContext.CurrentCustomer);
     Layout = isRegisterCustomer ? "_ColumnsTwo" : "_ColumnsOne";
 
     //title
@@ -58,9 +59,7 @@
                         <nop-required />
                         <span asp-validation-for="GiftCardCode"></span>
                     </div>
-                    <div class="captcha-box">
-                        <nop-captcha />
-                    </div>
+                    <nop-captcha />
                 </div>
                 <div class="buttons">
                     <input type="submit" name="checkbalancegiftcard" id="checkbalancegiftcard" class="button-1 check-gift-card-balance-button" value="@T("CheckGiftCard.GiftCardCouponCode.Button")" />

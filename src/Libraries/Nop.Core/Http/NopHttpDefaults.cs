@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Core.Http
+﻿namespace Nop.Core.Http
 {
     /// <summary>
     /// Represents default values related to HTTP features

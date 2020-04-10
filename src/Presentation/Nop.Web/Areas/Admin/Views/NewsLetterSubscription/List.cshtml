@@ -23,7 +23,7 @@
             @T("Admin.Promotions.NewsLetterSubscriptions")
         </h1>
         <div class="pull-right">
-            <button type="submit" name="exportcsv" class="btn bg-green">
+            <button  asp-action="ExportCSV" type="submit" name="exportcsv" class="btn bg-green">
                 <i class="fa fa-download"></i>
                 @T("Admin.Common.ExportToCsv")
             </button>
@@ -126,8 +126,8 @@
                             LengthMenu = Model.AvailablePageSizes,
                             Filters = new List<FilterParameter>
                             {
-                                new FilterParameter(nameof(Model.StartDate)),
-                                new FilterParameter(nameof(Model.EndDate)),
+                                new FilterParameter(nameof(Model.StartDate), typeof(DateTime?)),
+                                new FilterParameter(nameof(Model.EndDate), typeof(DateTime?)),
                                 new FilterParameter(nameof(Model.SearchEmail)),
                                 new FilterParameter(nameof(Model.ActiveId)),
                                 new FilterParameter(nameof(Model.StoreId)),

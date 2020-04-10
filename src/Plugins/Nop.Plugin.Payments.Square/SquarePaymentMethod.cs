@@ -36,6 +36,7 @@ namespace Nop.Plugin.Payments.Square
         #region Fields
 
         private readonly CurrencySettings _currencySettings;
+        private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -45,15 +46,18 @@ namespace Nop.Plugin.Payments.Square
         private readonly IPageHeadBuilder _pageHeadBuilder;
         private readonly ISettingService _settingService;
         private readonly IScheduleTaskService _scheduleTaskService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IWebHelper _webHelper;
         private readonly SquarePaymentManager _squarePaymentManager;
         private readonly SquarePaymentSettings _squarePaymentSettings;
+        private readonly IStoreContext _storeContext;
 
         #endregion
 
         #region Ctor
 
         public SquarePaymentMethod(CurrencySettings currencySettings,
+            ICountryService countryService,
             ICurrencyService currencyService,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
@@ -63,11 +67,14 @@ namespace Nop.Plugin.Payments.Square
             IPageHeadBuilder pageHeadBuilder,
             ISettingService settingService,
             IScheduleTaskService scheduleTaskService,
+            IStateProvinceService stateProvinceService,
             IWebHelper webHelper,
             SquarePaymentManager squarePaymentManager,
-            SquarePaymentSettings squarePaymentSettings)
+            SquarePaymentSettings squarePaymentSettings,
+            IStoreContext storeContext)
         {
             _currencySettings = currencySettings;
+            _countryService = countryService;
             _currencyService = currencyService;
             _customerService = customerService;
             _genericAttributeService = genericAttributeService;
@@ -77,9 +84,11 @@ namespace Nop.Plugin.Payments.Square
             _pageHeadBuilder = pageHeadBuilder;
             _settingService = settingService;
             _scheduleTaskService = scheduleTaskService;
+            _stateProvinceService = stateProvinceService;
             _webHelper = webHelper;
             _squarePaymentManager = squarePaymentManager;
             _squarePaymentSettings = squarePaymentSettings;
+            _storeContext = storeContext;
         }
 
         #endregion
@@ -95,7 +104,7 @@ namespace Nop.Plugin.Payments.Square
         {
             foreach (var culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
             {
-                var regionInfo = new RegionInfo(culture.LCID);
+                var regionInfo = new RegionInfo(culture.Name);
                 if (currency.CurrencyCode.Equals(regionInfo.ISOCurrencySymbol, StringComparison.InvariantCultureIgnoreCase))
                 {
                     return true;
@@ -112,23 +121,14 @@ namespace Nop.Plugin.Payments.Square
         /// <returns>Payment status</returns>
         private PaymentStatus GetPaymentStatus(string status)
         {
-            switch (status)
+            return status switch
             {
-                case SquarePaymentDefaults.TENDERCARDDETAILS_AUTHORIZED_STATUS:
-                    return PaymentStatus.Authorized;
-
-                case SquarePaymentDefaults.TENDERCARDDETAILS_CAPTURED_STATUS:
-                    return PaymentStatus.Paid;
-
-                case SquarePaymentDefaults.TENDERCARDDETAILS_FAILED_STATUS:
-                    return PaymentStatus.Pending;
-
-                case SquarePaymentDefaults.TENDERCARDDETAILS_VOIDED_STATUS:
-                    return PaymentStatus.Voided;
-
-                default:
-                    return PaymentStatus.Pending;
-            }
+                SquarePaymentDefaults.TENDERCARDDETAILS_AUTHORIZED_STATUS => PaymentStatus.Authorized,
+                SquarePaymentDefaults.TENDERCARDDETAILS_CAPTURED_STATUS => PaymentStatus.Paid,
+                SquarePaymentDefaults.TENDERCARDDETAILS_FAILED_STATUS => PaymentStatus.Pending,
+                SquarePaymentDefaults.TENDERCARDDETAILS_VOIDED_STATUS => PaymentStatus.Voided,
+                _ => PaymentStatus.Pending,
+            };
         }
 
         /// <summary>
@@ -142,8 +142,9 @@ namespace Nop.Plugin.Payments.Square
             //create charge request
             var chargeRequest = CreateChargeRequest(paymentRequest, isRecurringPayment);
 
-            //charge transaction
-            var (transaction, error) = _squarePaymentManager.Charge(chargeRequest);
+            //charge transaction for current store
+            var storeId = _storeContext.CurrentStore.Id;
+            var (transaction, error) = _squarePaymentManager.Charge(chargeRequest, storeId);
             if (transaction == null)
                 throw new NopException(error);
 
@@ -199,23 +200,37 @@ namespace Nop.Plugin.Payments.Square
             if (!CheckSupportCurrency(currency))
                 throw new NopException($"The {currency.CurrencyCode} currency is not supported by the Square");
 
+            var storeId = _storeContext.CurrentStore.Id;
+
             //check customer's billing address, shipping address and email, 
-            SquareModel.Address createAddress(Address address) => address == null ? null : new SquareModel.Address
-            (
-                AddressLine1: address.Address1,
-                AddressLine2: address.Address2,
-                AdministrativeDistrictLevel1: address.StateProvince?.Abbreviation,
-                AdministrativeDistrictLevel2: address.County,
-                Country: string.Equals(address.Country?.TwoLetterIsoCode, new RegionInfo(address.Country?.TwoLetterIsoCode).TwoLetterISORegionName, StringComparison.InvariantCultureIgnoreCase)
-                    ? address.Country?.TwoLetterIsoCode : null,
-                FirstName: address.FirstName,
-                LastName: address.LastName,
-                Locality: address.City,
-                PostalCode: address.ZipPostalCode
-            );
-            var billingAddress = createAddress(customer.BillingAddress);
-            var shippingAddress = billingAddress == null ? createAddress(customer.ShippingAddress) : null;
-            var email = customer.BillingAddress != null ? customer.BillingAddress.Email : customer.ShippingAddress?.Email;
+            SquareModel.Address createAddress(Address address)
+            {
+                if (address == null)
+                    return null;
+
+                var country = _countryService.GetCountryByAddress(address);
+
+                return new SquareModel.Address
+                (
+                    AddressLine1: address.Address1,
+                    AddressLine2: address.Address2,
+                    AdministrativeDistrictLevel1: _stateProvinceService.GetStateProvinceByAddress(address)?.Abbreviation,
+                    AdministrativeDistrictLevel2: address.County,
+                    Country: string.Equals(country?.TwoLetterIsoCode, new RegionInfo(country?.TwoLetterIsoCode).TwoLetterISORegionName, StringComparison.InvariantCultureIgnoreCase)
+                        ? country?.TwoLetterIsoCode : null,
+                    FirstName: address.FirstName,
+                    LastName: address.LastName,
+                    Locality: address.City,
+                    PostalCode: address.ZipPostalCode
+                );
+            }
+
+            var customerBillingAddress = _customerService.GetCustomerBillingAddress(customer);
+            var customerShippingAddress = _customerService.GetCustomerShippingAddress(customer);
+
+            var billingAddress = createAddress(customerBillingAddress);
+            var shippingAddress = billingAddress == null ? createAddress(customerShippingAddress) : null;
+            var email = customerBillingAddress != null ? customerBillingAddress.Email : customerShippingAddress?.Email;
 
             //the transaction is ineligible for chargeback protection if they are not provided
             if ((billingAddress == null && shippingAddress == null) || string.IsNullOrEmpty(email))
@@ -246,9 +261,9 @@ namespace Nop.Plugin.Payments.Square
             var storedCardKey = _localizationService.GetResource("Plugins.Payments.Square.Fields.StoredCard.Key");
             if (paymentRequest.CustomValues.TryGetValue(storedCardKey, out var storedCardId) && !storedCardId.ToString().Equals(Guid.Empty.ToString()))
             {
-                //check whether customer exists
+                //check whether customer exists for current store
                 var customerId = _genericAttributeService.GetAttribute<string>(customer, SquarePaymentDefaults.CustomerIdAttribute);
-                var squareCustomer = _squarePaymentManager.GetCustomer(customerId);
+                var squareCustomer = _squarePaymentManager.GetCustomer(customerId, storeId);
                 if (squareCustomer == null)
                     throw new NopException("Failed to retrieve customer");
 
@@ -273,20 +288,20 @@ namespace Nop.Plugin.Payments.Square
 
             //whether to save card details for the future purchasing
             var saveCardKey = _localizationService.GetResource("Plugins.Payments.Square.Fields.SaveCard.Key");
-            if (paymentRequest.CustomValues.TryGetValue(saveCardKey, out var saveCardValue) && saveCardValue is bool saveCard && saveCard && !customer.IsGuest())
+            if (paymentRequest.CustomValues.TryGetValue(saveCardKey, out var saveCardValue) && saveCardValue is bool saveCard && saveCard && !_customerService.IsGuest(customer))
             {
                 //remove the value from payment custom values, since it is no longer needed
                 paymentRequest.CustomValues.Remove(saveCardKey);
 
                 try
                 {
-                    //check whether customer exists
+                    //check whether customer exists for current store
                     var customerId = _genericAttributeService.GetAttribute<string>(customer, SquarePaymentDefaults.CustomerIdAttribute);
-                    var squareCustomer = _squarePaymentManager.GetCustomer(customerId);
+                    var squareCustomer = _squarePaymentManager.GetCustomer(customerId, storeId);
 
                     if (squareCustomer == null)
                     {
-                        //try to create the new one, if not exists
+                        //try to create the new one for current store, if not exists
                         var customerRequest = new SquareModel.CreateCustomerRequest
                         (
                             EmailAddress: customer.Email,
@@ -297,7 +312,7 @@ namespace Nop.Plugin.Payments.Square
                             CompanyName: _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CompanyAttribute),
                             ReferenceId: customer.CustomerGuid.ToString()
                         );
-                        squareCustomer = _squarePaymentManager.CreateCustomer(customerRequest);
+                        squareCustomer = _squarePaymentManager.CreateCustomer(customerRequest, storeId);
                         if (squareCustomer == null)
                             throw new NopException("Failed to create customer. Error details in the log");
 
@@ -326,12 +341,12 @@ namespace Nop.Plugin.Payments.Square
                         //remove the value from payment custom values, since it is no longer needed
                         paymentRequest.CustomValues.Remove(postalCodeKey);
 
-                        cardRequest.BillingAddress = cardRequest.BillingAddress ?? new SquareModel.Address();
+                        cardRequest.BillingAddress ??= new SquareModel.Address();
                         cardRequest.BillingAddress.PostalCode = postalCode.ToString();
                     }
 
-                    //try to create card
-                    var card = _squarePaymentManager.CreateCustomerCard(squareCustomer.Id, cardRequest);
+                    //try to create card for current store
+                    var card = _squarePaymentManager.CreateCustomerCard(squareCustomer.Id, cardRequest, storeId);
                     if (card == null)
                         throw new NopException("Failed to create card. Error details in the log");
 
@@ -420,9 +435,10 @@ namespace Nop.Plugin.Payments.Square
             if (capturePaymentRequest == null)
                 throw new ArgumentException(nameof(capturePaymentRequest));
 
-            //capture transaction
+            //capture transaction for current store
+            var storeId = _storeContext.CurrentStore.Id;
             var transactionId = capturePaymentRequest.Order.AuthorizationTransactionId;
-            var (successfullyCaptured, error) = _squarePaymentManager.CaptureTransaction(transactionId);
+            var (successfullyCaptured, error) = _squarePaymentManager.CaptureTransaction(transactionId, storeId);
             if (!successfullyCaptured)
                 throw new NopException(error);
 
@@ -458,9 +474,10 @@ namespace Nop.Plugin.Payments.Square
             var orderTotal = (int)(refundPaymentRequest.AmountToRefund * 100);
             var amountMoney = new SquareModel.Money(Amount: orderTotal, Currency: currency.CurrencyCode);
 
-            //first try to get the transaction
+            //first try to get the transaction for current store
+            var storeId = _storeContext.CurrentStore.Id;
             var transactionId = refundPaymentRequest.Order.CaptureTransactionId;
-            var (transaction, transactionError) = _squarePaymentManager.GetTransaction(transactionId);
+            var (transaction, transactionError) = _squarePaymentManager.GetTransaction(transactionId, storeId);
             if (transaction == null)
                 throw new NopException(transactionError);
 
@@ -469,21 +486,21 @@ namespace Nop.Plugin.Payments.Square
             if (tender == null)
                 throw new NopException("There are no tenders (methods of payment) used to pay in the transaction");
 
-            //create refund of the transaction
+            //create refund of the transaction for current store
             var refundRequest = new SquareModel.CreateRefundRequest
             (
                 AmountMoney: amountMoney,
                 IdempotencyKey: Guid.NewGuid().ToString(),
                 TenderId: tender.Id
             );
-            var (createdRefund, refundError) = _squarePaymentManager.CreateRefund(transactionId, refundRequest);
+            var (createdRefund, refundError) = _squarePaymentManager.CreateRefund(transactionId, refundRequest, storeId);
             if (createdRefund == null)
                 throw new NopException(refundError);
 
-            //if refund status is 'pending', try to refund once more with the same request parameters
+            //if refund status is 'pending', try to refund once more with the same request parameters for current store
             if (createdRefund.Status == SquarePaymentDefaults.REFUND_STATUS_PENDING)
             {
-                (createdRefund, refundError) = _squarePaymentManager.CreateRefund(transactionId, refundRequest);
+                (createdRefund, refundError) = _squarePaymentManager.CreateRefund(transactionId, refundRequest, storeId);
                 if (createdRefund == null)
                     throw new NopException(refundError);
             }
@@ -515,9 +532,10 @@ namespace Nop.Plugin.Payments.Square
             if (voidPaymentRequest == null)
                 throw new ArgumentException(nameof(voidPaymentRequest));
 
-            //void transaction
+            //void transaction for current store
+            var storeId = _storeContext.CurrentStore.Id;
             var transactionId = voidPaymentRequest.Order.AuthorizationTransactionId;
-            var (successfullyVoided, error) = _squarePaymentManager.VoidTransaction(transactionId);
+            var (successfullyVoided, error) = _squarePaymentManager.VoidTransaction(transactionId, storeId);
             if (!successfullyVoided)
                 throw new NopException(error);
 
@@ -688,22 +706,33 @@ namespace Nop.Plugin.Payments.Square
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.UseSandbox", "Use sandbox");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.UseSandbox.Hint", "Determine whether to use sandbox credentials.");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Instructions", @"
-                <p>
-                    For plugin configuration follow these steps:<br />
+                <div style=""margin: 0 0 10px;"">
+                    <em><b>Warning: Square sandbox data has been changed. For more information visit our <a href=""https://docs.nopcommerce.com/user-guide/configuring/settingup/payments/methods/square.html"" target=""_blank"">documentation</a>.</em></b><br />
+                    <br />
+                    For plugin configuration, follow these steps:<br />
                     <br />
                     1. You will need a Square Merchant account. If you don't already have one, you can sign up here: <a href=""http://squ.re/nopcommerce"" target=""_blank"">https://squareup.com/signup/</a><br />
-                    <em>Important: Your merchant account must have at least one location with enabled credit card processing. Please refer to the Square customer support if you have any questions about how to set this up.</em><br />
-                    2. Sign in to your Square Developer Portal at <a href=""http://squ.re/nopcommerce1"" target=""_blank"">https://connect.squareup.com/apps</a>; use the same sign in credentials as your merchant account.<br />
-                    3. Click on '+New Application' and fill in the Application Name. This name is for you to recognize the application in the developer portal and is not used by the extension. Click 'Create Application' at the bottom of the page.<br />
-                    4. In the Square Developer admin go to 'Credentials' tab. Copy the Application ID and paste it into Application ID below.<br />
-                    5. In the Square Developer admin go to 'OAuth' tab. Click 'Show Secret'. Copy the Application Secret and paste it into Application Secret below. Click 'Save' on this page.<br />
-                    6. Copy this URL: <em>{0}</em>. Go to the Square Developer admin, go to 'OAuth' tab, and paste this URL into Redirect URL. Click 'Save'.<br />
-                    7. On this page click 'Obtain access token' below; the Access token field should populate. Click 'Save' below.<br />
-                    8. Choose the business location. Location is a required parameter for payment requests.<br />
-                    9. Fill in the remaining fields and save to complete the configuration.<br />
+                    2. Sign in to 'Square Merchant Dashboard'. Go to 'Account & Settings' &#8594; 'Locations' tab and create new location.<br />
+                    <em>   Important: Your merchant account must have at least one location with enabled credit card processing. Please refer to the Square customer support if you have any questions about how to set this up.</em><br />
+                    3. Sign in to your 'Square Developer Dashboard' at <a href=""http://squ.re/nopcommerce1"" target=""_blank"">https://connect.squareup.com/apps</a>; use the same login credentials as your merchant account.<br />
+                    4. Click on 'Create Your First Application' and fill in the 'Application Name'. This name is for you to recognize the application in the developer portal and is not used by the plugin. Click 'Create Application' at the bottom of the page.<br />
+                    5. Now you are on the details page of the previously created application. On the 'Credentials' tab click on the 'Change Version' button and choose '2019-09-25'.<br />
+                    6. Make sure you uncheck 'Use sandbox' below.<br />
+                    7. In the 'Square Developer Dashboard' go to the details page of the your previously created application:
+                       <ul>
+                          <li>On the 'Credentials' tab make sure the 'Application mode' setting value is 'Production'</li>
+                          <li>On the 'Credentials' tab copy the 'Application ID' and paste it into 'Application ID' below</li>
+                          <li>Go to 'OAuth' tab. Click 'Show' on the 'Application Secret' field. Copy the 'Application Secret' and paste it into 'Application Secret' below</li>
+                          <li>Copy this URL: <em>{0}</em>. On the 'OAuth' tab paste this URL into 'Redirect URL'. Click 'Save'</li>
+                       </ul>
+                    8. Click 'Save' below to save the plugin configuration.<br />
+                    9. Click 'Obtain access token' below; the Access token field should populate.<br />
+                    <em>Note: If for whatever reason you would like to disable an access to your accounts, simply 'Revoke access tokens' below.</em><br />
+                    10. Choose the previously created location. 'Location' is a required parameter for payment requests.<br />
+                    11. Fill in the remaining fields and click 'Save' to complete the configuration.<br />
                     <br />
                     <em>Note: The payment form must be generated only on a webpage that uses HTTPS.</em><br />
-                </p>");
+                </div>");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.ObtainAccessToken", "Obtain access token");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.ObtainAccessToken.Error", "An error occurred while obtaining an access token");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.ObtainAccessToken.Success", "The access token was successfully obtained");

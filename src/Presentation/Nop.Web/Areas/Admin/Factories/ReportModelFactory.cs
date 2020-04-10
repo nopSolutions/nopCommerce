@@ -135,15 +135,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 Published = product.Published
             }));
 
-            lowStockProductModels.AddRange(combinations.Select(combination => new LowStockProductModel
-            {
-                Id = combination.Product.Id,
-                Name = combination.Product.Name,
-                Attributes = _productAttributeFormatter
-                    .FormatAttributes(combination.Product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
-                ManageInventoryMethod = _localizationService.GetLocalizedEnum(combination.Product.ManageInventoryMethod),
-                StockQuantity = combination.StockQuantity,
-                Published = combination.Product.Published
+            lowStockProductModels.AddRange(combinations.Select(combination => {
+
+                var product = _productService.GetProductById(combination.ProductId);
+
+                return new LowStockProductModel
+                {
+                    Id = combination.ProductId,
+                    Name = product.Name,
+                    Attributes = _productAttributeFormatter
+                        .FormatAttributes(product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
+                    ManageInventoryMethod = _localizationService.GetLocalizedEnum(product.ManageInventoryMethod),
+                    StockQuantity = combination.StockQuantity,
+                    Published = product.Published
+                };
             }));
 
             var pagesList = lowStockProductModels.ToPagedList(searchModel);
@@ -229,7 +234,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 os: orderStatus,
                 ps: paymentStatus,
                 billingCountryId: searchModel.BillingCountryId,
-                orderBy: 2,
+                orderBy: OrderByEnum.OrderByTotalAmount,
                 vendorId: searchModel.VendorId,
                 categoryId: searchModel.CategoryId,
                 manufacturerId: searchModel.ManufacturerId,
@@ -533,7 +538,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     var customer = _customerService.GetCustomerById(item.CustomerId);
                    if (customer != null)
                    {
-                       bestCustomersReportModel.CustomerName = customer.IsRegistered() ? customer.Email :
+                       bestCustomersReportModel.CustomerName = _customerService.IsRegistered(customer) ? customer.Email :
                            _localizationService.GetResource("Admin.Customers.Guest");
                    }
 

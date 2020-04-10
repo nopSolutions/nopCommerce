@@ -15,15 +15,12 @@ namespace Nop.Core.Domain.Customers
         /// <returns>Value of delay in hours</returns>
         public static int ToHours(this RewardPointsActivatingDelayPeriod period, int value)
         {
-            switch (period)
+            return period switch
             {
-                case RewardPointsActivatingDelayPeriod.Hours:
-                    return value;
-                case RewardPointsActivatingDelayPeriod.Days:
-                    return value * 24;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(period));
-            }
+                RewardPointsActivatingDelayPeriod.Hours => value,
+                RewardPointsActivatingDelayPeriod.Days => value * 24,
+                _ => throw new ArgumentOutOfRangeException(nameof(period)),
+            };
         }
     }
 }

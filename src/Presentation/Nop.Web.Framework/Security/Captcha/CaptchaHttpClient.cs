@@ -5,7 +5,7 @@ using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Security;
-using Nop.Services.Security;
+using Nop.Services.Defaults;
 
 namespace Nop.Web.Framework.Security.Captcha
 {
@@ -33,7 +33,7 @@ namespace Nop.Web.Framework.Security.Captcha
             _webHelper = webHelper;
 
             //configure client
-            client.BaseAddress = new Uri(NopSecurityDefaults.RecaptchaApiUrl);
+            client.BaseAddress = new Uri(captchaSettings.ReCaptchaApiUrl);
             client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CurrentVersion}");
 
             if (captchaSettings.ReCaptchaRequestTimeout is int timeout && timeout > 0)

@@ -13,11 +13,11 @@ namespace Nop.Plugin.Tax.Avalara.Infrastructure
         /// <summary>
         /// Register routes
         /// </summary>
-        /// <param name="routeBuilder">Route builder</param>
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        /// <param name="endpointRouteBuilder">Route builder</param>
+        public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
             //override some of default routes in Admin area
-            routeBuilder.MapRoute("Plugin.Tax.Avalara.Tax.Categories", "Admin/Tax/Categories",
+            endpointRouteBuilder.MapControllerRoute("Plugin.Tax.Avalara.Tax.Categories", "Admin/Tax/Categories",
                 new { controller = "OverriddenTax", action = "Categories", area = AreaNames.Admin });
         }
 

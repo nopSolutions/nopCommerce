@@ -130,6 +130,11 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     topicModel.SeName = _urlRecordService.GetSeName(topic, 0, true, false);
 
+                    if (!string.IsNullOrEmpty(topicModel.SystemName))
+                        topicModel.TopicName = topicModel.SystemName;
+                    else
+                        topicModel.TopicName = topicModel.Title;
+
                     return topicModel;
                 });
             });

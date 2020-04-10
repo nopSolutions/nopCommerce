@@ -43,26 +43,24 @@ namespace Nop.Web.Framework.Menu
 
             if (!string.IsNullOrEmpty(content))
             {
+                var doc = new XmlDocument();
                 using (var sr = new StringReader(content))
                 {
-                    using (var xr = XmlReader.Create(sr,
-                            new XmlReaderSettings
-                            {
-                                CloseInput = true,
-                                IgnoreWhitespace = true,
-                                IgnoreComments = true,
-                                IgnoreProcessingInstructions = true
-                            }))
-                    {
-                        var doc = new XmlDocument();
-                        doc.Load(xr);
-
-                        if ((doc.DocumentElement != null) && doc.HasChildNodes)
+                    using var xr = XmlReader.Create(sr,
+                        new XmlReaderSettings
                         {
-                            var xmlRootNode = doc.DocumentElement.FirstChild;
-                            Iterate(RootNode, xmlRootNode);
-                        }
-                    }
+                            CloseInput = true,
+                            IgnoreWhitespace = true,
+                            IgnoreComments = true,
+                            IgnoreProcessingInstructions = true
+                        });
+
+                    doc.Load(xr);
+                }
+                if ((doc.DocumentElement != null) && doc.HasChildNodes)
+                {
+                    var xmlRootNode = doc.DocumentElement.FirstChild;
+                    Iterate(RootNode, xmlRootNode);
                 }
             }
         }
@@ -102,7 +100,7 @@ namespace Nop.Web.Framework.Menu
                 siteMapNode.ControllerName = controllerName;
                 siteMapNode.ActionName = actionName;
 
-                //apply admin area as described here - https://www.nopcommerce.com/boards/t/20478/broken-menus-in-admin-area-whilst-trying-to-make-a-plugin-admin-page.aspx
+                //apply admin area as described here - https://www.nopcommerce.com/boards/topic/20478/broken-menus-in-admin-area-whilst-trying-to-make-a-plugin-admin-page
                 siteMapNode.RouteValues = new RouteValueDictionary { { "area", AreaNames.Admin } };
             }
             else if (!string.IsNullOrEmpty(url))
@@ -128,7 +126,7 @@ namespace Nop.Web.Framework.Menu
 
             // Open URL in new tab
             var openUrlInNewTabValue = GetStringValueFromAttribute(xmlNode, "OpenUrlInNewTab");
-            if (!string.IsNullOrWhiteSpace(openUrlInNewTabValue) && bool.TryParse(openUrlInNewTabValue, out bool booleanResult))
+            if (!string.IsNullOrWhiteSpace(openUrlInNewTabValue) && bool.TryParse(openUrlInNewTabValue, out var booleanResult))
             {
                 siteMapNode.OpenUrlInNewTab = booleanResult;
             }

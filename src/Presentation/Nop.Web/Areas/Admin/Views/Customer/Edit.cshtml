@@ -31,10 +31,13 @@
                 <i class="fa fa-at"></i>
                 @T("Admin.Customers.Customers.SendEmail")
             </button>
-            <button type="button" class="btn bg-green" data-toggle="modal" data-target="#sendprivatemessage-window">
-                <i class="fa fa-envelope-o"></i>
-                @T("Admin.Customers.Customers.SendPM")
-            </button>
+            @if (Model.AllowSendingOfPrivateMessage)
+            {
+                <button type="button" class="btn bg-green" data-toggle="modal" data-target="#sendprivatemessage-window">
+                    <i class="fa fa-envelope-o"></i>
+                    @T("Admin.Customers.Customers.SendPM")
+                </button>
+            }
             @if (Model.AllowSendingOfWelcomeMessage)
             {
                 <button type="submit" id="send-welcome-message" name="send-welcome-message" class="btn bg-green">

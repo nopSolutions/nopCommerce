@@ -73,6 +73,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             ISpecificationAttributeService specificationAttributeService,
+            IStoreContext storeContext,
             ITaxCategoryService taxCategoryService,
             ITaxPluginManager taxPluginManager,
             IUrlRecordService urlRecordService,
@@ -105,6 +106,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 shippingService,
                 shoppingCartService,
                 specificationAttributeService,
+                storeContext,
                 urlRecordService,
                 workContext,
                 vendorSettings)

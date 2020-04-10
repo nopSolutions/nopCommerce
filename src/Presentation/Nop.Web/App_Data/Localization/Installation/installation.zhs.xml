@@ -1,4 +1,5 @@
-﻿<Language Name="简体中文" IsDefault="false" IsRightToLeft="false">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="简体中文" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>管理员邮箱</Value>
   </LocaleResource>
@@ -44,11 +45,11 @@
   <LocaleResource Name="CustomCollation">
     <Value>指定自定义的Sql Server排序规则</Value>
   </LocaleResource>
-  <LocaleResource Name="DatabaseCreationError">
-    <Value>创建数据库: {0}的时候发生错误</Value>
-  </LocaleResource>
   <LocaleResource Name="Database">
     <Value>数据库</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>创建数据库: {0}的时候发生错误</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>数据库信息</Value>
@@ -80,6 +81,12 @@
   <LocaleResource Name="Installing">
     <Value>正在安装nopCommerce...</Value>
   </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>使用集成windows身份认证</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>密码不匹配</Value>
   </LocaleResource>
@@ -95,6 +102,12 @@
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>点击以重新启动安装过程(清除所有缓存值)</Value>
   </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>SQL Server 实例名</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>请输入SQL Server 实例名</Value>
+  </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>安装失败: {0}</Value>
   </LocaleResource>
@@ -104,26 +117,20 @@
   <LocaleResource Name="SqlCompact">
     <Value>使用内置的数据存储(SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
-    <Value>SQL Server 实例名</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
-    <Value>请输入SQL Server 实例名</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL Server密码</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>请输入SQL Server密码 </Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
     <Value>SQL Server用户名</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>请输入SQL Server用户名</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>使用SQL Server(或SQL Express)数据库</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>商店信息</Value>
@@ -136,8 +143,5 @@
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
     <Value>完成这个向导，你必须知道如何连接数据库("即连接字符串").如有必要，请联系你的服务提供商。如果在本机或服务器上安装，你可能还需要一些管理员的信息 .</Value>
-  </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
-    <Value>使用集成windows身份认证</Value>
   </LocaleResource>
 </Language>

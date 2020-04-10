@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Nop.Services.Events;
+﻿using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
 using Nop.Services.Tasks;
@@ -54,7 +53,7 @@ namespace Nop.Plugin.Payments.Square.Services
                 return;
 
             //add js script to one page checkout
-            if (eventMessage.GetRouteNames().Any(routeName => routeName.Equals(SquarePaymentDefaults.OnePageCheckoutRouteName)))
+            if (eventMessage.GetRouteName()?.Equals(SquarePaymentDefaults.OnePageCheckoutRouteName) ?? false)
             {
                 eventMessage.Helper?.AddScriptParts(ResourceLocation.Footer,
                     _squarePaymentSettings.UseSandbox ? SquarePaymentDefaults.SandboxPaymentFormScriptPath : SquarePaymentDefaults.PaymentFormScriptPath,

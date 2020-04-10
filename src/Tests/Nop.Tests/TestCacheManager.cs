@@ -9,18 +9,7 @@ namespace Nop.Tests
     /// </summary>
     public partial class TestCacheManager : IStaticCacheManager
     {
-        /// <summary>
-        /// Get a cached item. If it's not in the cache yet, then load and cache it
-        /// </summary>
-        /// <typeparam name="T">Type of cached item</typeparam>
-        /// <param name="key">Cache key</param>
-        /// <param name="acquire">Function to load item if it's not in the cache yet</param>
-        /// <param name="cacheTime">Cache time in minutes; pass 0 to do not cache; pass null to use the default time</param>
-        /// <returns>The cached value associated with the specified key</returns>
-        public virtual T Get<T>(string key, Func<T> acquire, int? cacheTime = null)
-        {
-            return acquire();
-        }
+        private bool _disposed;
 
         /// <summary>
         /// Get a cached item. If it's not in the cache yet, then load and cache it
@@ -28,21 +17,30 @@ namespace Nop.Tests
         /// <typeparam name="T">Type of cached item</typeparam>
         /// <param name="key">Cache key</param>
         /// <param name="acquire">Function to load item if it's not in the cache yet</param>
-        /// <param name="cacheTime">Cache time in minutes; pass 0 to do not cache; pass null to use the default time</param>
         /// <returns>The cached value associated with the specified key</returns>
-        public async Task<T> GetAsync<T>(string key, Func<Task<T>> acquire, int? cacheTime = null)
+        public virtual T Get<T>(CacheKey key, Func<T> acquire)
+        {
+            return acquire();
+        }
+        /// <summary>
+        /// Get a cached item. If it's not in the cache yet, then load and cache it
+        /// </summary>
+        /// <typeparam name="T">Type of cached item</typeparam>
+        /// <param name="key">Cache key</param>
+        /// <param name="acquire">Function to load item if it's not in the cache yet</param>
+        /// <returns>The cached value associated with the specified key</returns>
+        public async Task<T> GetAsync<T>(CacheKey key, Func<Task<T>> acquire)
         {
             var rez = await acquire();
             return rez;
         }
-
+        
         /// <summary>
         /// Adds the specified key and object to the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <param name="data">Value for caching</param>
-        /// <param name="cacheTime">Cache time in minutes</param>
-        public virtual void Set(string key, object data, int cacheTime)
+        public virtual void Set(CacheKey key, object data)
         {
         }
 
@@ -51,7 +49,7 @@ namespace Nop.Tests
         /// </summary>
         /// <param name="key">Key of cached item</param>
         /// <returns>True if item already is in cache; otherwise false</returns>
-        public bool IsSet(string key)
+        public bool IsSet(CacheKey key)
         {
             return false;
         }
@@ -60,7 +58,7 @@ namespace Nop.Tests
         /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="key">Key of cached item</param>
-        public virtual void Remove(string key)
+        public virtual void Remove(CacheKey key)
         {
         }
 
@@ -83,9 +81,24 @@ namespace Nop.Tests
         /// <summary>
         /// Dispose cache manager
         /// </summary>
-        public virtual void Dispose()
+        public void Dispose()
         {
-            //nothing special
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern.
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                //nothing special
+            }
+
+            _disposed = true;
         }
     }
 }

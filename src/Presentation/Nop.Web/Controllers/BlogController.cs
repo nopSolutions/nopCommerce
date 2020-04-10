@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Core.Rss;
 using Nop.Services.Blogs;
+using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -20,13 +20,11 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
-using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Blogs;
 
 namespace Nop.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.No)]
+    [AutoValidateAntiforgeryToken]
     public partial class BlogController : BasePublicController
     {
         #region Fields
@@ -36,6 +34,7 @@ namespace Nop.Web.Controllers
         private readonly IBlogModelFactory _blogModelFactory;
         private readonly IBlogService _blogService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
@@ -56,6 +55,7 @@ namespace Nop.Web.Controllers
             IBlogModelFactory blogModelFactory,
             IBlogService blogService,
             ICustomerActivityService customerActivityService,
+            ICustomerService customerService,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             IPermissionService permissionService,
@@ -72,6 +72,7 @@ namespace Nop.Web.Controllers
             _blogModelFactory = blogModelFactory;
             _blogService = blogService;
             _customerActivityService = customerActivityService;
+            _customerService = customerService;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
             _permissionService = permissionService;
@@ -168,8 +169,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("BlogPost")]
-        [PublicAntiForgery]
+        [HttpPost, ActionName("BlogPost")]        
         [FormValueRequired("add-comment")]
         [ValidateCaptcha]
         public virtual IActionResult BlogCommentAdd(int blogPostId, BlogPostModel model, bool captchaValid)
@@ -181,7 +181,7 @@ namespace Nop.Web.Controllers
             if (blogPost == null || !blogPost.AllowComments)
                 return RedirectToRoute("Homepage");
 
-            if (_workContext.CurrentCustomer.IsGuest() && !_blogSettings.AllowNotRegisteredUsersToLeaveComments)
+            if (_customerService.IsGuest(_workContext.CurrentCustomer) && !_blogSettings.AllowNotRegisteredUsersToLeaveComments)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Blog.Comments.OnlyRegisteredUsersLeaveComments"));
             }
@@ -203,8 +203,8 @@ namespace Nop.Web.Controllers
                     StoreId = _storeContext.CurrentStore.Id,
                     CreatedOnUtc = DateTime.UtcNow,
                 };
-                blogPost.BlogComments.Add(comment);
-                _blogService.UpdateBlogPost(blogPost);
+
+                _blogService.InsertBlogComment(comment);
 
                 //notify a store owner
                 if (_blogSettings.NotifyAboutNewBlogComments)

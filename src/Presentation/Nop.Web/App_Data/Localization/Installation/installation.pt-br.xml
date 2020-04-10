@@ -1,3 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Portugês (Brasil)" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Email do Administrador</Value>
@@ -44,11 +45,11 @@
   <LocaleResource Name="CustomCollation">
     <Value>Especifique o agrupamento do SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="DatabaseCreationError">
-    <Value>Ocorreu um erro ao criar o banco: {0}</Value>
-  </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Banco de dados</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Ocorreu um erro ao criar o banco: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Informações do banco de dados</Value>
@@ -80,6 +81,12 @@
   <LocaleResource Name="Installing">
     <Value>Instalando nopCommerce...</Value>
   </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Usar autenticação integrada com o Windows</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>As senhas não são iguais</Value>
   </LocaleResource>
@@ -95,6 +102,12 @@
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>Clique para reiniciar o processo de instalação (limpar todos os valores)</Value>
   </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Nome do servidor SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Entre com o nome do servidor SQL</Value>
+  </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>Falha na configuração: {0}</Value>
   </LocaleResource>
@@ -104,26 +117,20 @@
   <LocaleResource Name="SqlCompact">
     <Value>Usar banco embutido (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
-    <Value>Nome do servidor SQL</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
-    <Value>Entre com o nome do servidor SQL</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>Senha SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>Entre com a senha SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
     <Value>Usuário SQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>Entre com o usuário SQL</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Use um banco de dados de servidor SQL (ou SQL Express)</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Guardar informação</Value>
@@ -136,8 +143,5 @@
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
     <Value>Para completar o passo a passo você precisa saber algumas informações sobre seu servidor de banco de dados ("string de conexão"). Por favor entre em contato com seu provedor de hospedagem se necessário. Se você está instalando em um computador local ou servidor talvez seja necessário informações do seu Administrador de Sistemas.</Value>
-  </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
-    <Value>Usar autenticação integrada com o Windows</Value>
   </LocaleResource>
 </Language>

@@ -1,4 +1,5 @@
-﻿<Language Name="עברית" IsDefault="false" IsRightToLeft="true">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="עברית" IsDefault="false" IsRightToLeft="true">
   <LocaleResource Name="AdminEmail">
     <Value>אימיל מנהל החנות</Value>
   </LocaleResource>
@@ -44,11 +45,11 @@
   <LocaleResource Name="CustomCollation">
     <Value>בחירת SQL Server collation</Value>
   </LocaleResource>
-  <LocaleResource Name="DatabaseCreationError">
-    <Value>שגיאה בעת יצירת מסד נתונים: {0}</Value>
-  </LocaleResource>
   <LocaleResource Name="Database">
     <Value>מסד הנתונים</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>שגיאה בעת יצירת מסד נתונים: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>מידע אודות מסד הנתונים</Value>
@@ -80,6 +81,12 @@
   <LocaleResource Name="Installing">
     <Value>מתקין את נופקומרס...</Value>
   </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>אימות  Windows</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>הסיסמאות לא תואמות</Value>
   </LocaleResource>
@@ -95,6 +102,12 @@
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>לחצו כאן כדי להתחיל את תהליך ההתקנה מחדש (מנקה את כל הערכים בזיכרון המטמון)</Value>
   </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>שם או כתובת הרשת של שרת הSQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>הזינו שם או כתובת הרשת של שרת הSQL</Value>
+  </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>שגיאת התקנה: {0}</Value>
   </LocaleResource>
@@ -104,26 +117,20 @@
   <LocaleResource Name="SqlCompact">
     <Value>SQL Server Compact</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
-    <Value>שם או כתובת הרשת של שרת הSQL</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
-    <Value>הזינו שם או כתובת הרשת של שרת הSQL</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>סיסמה עבור חשבון שרת הSQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>הזינו סיסמה עבור חשבון שרת הSQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
     <Value>שם משתמש בחשבון שרת הSQL</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>הזינו שם משתמש בחשבון שרת הSQL</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>SQL Server או SQL Express</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>פרטי החנות</Value>
@@ -136,8 +143,5 @@
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
     <Value>על מנת להתקין בהצלחה את מערכת ה nopCommerce , עלייך לדעת את מחרוזת החיבור למסד הנתונים. אם אין לך את המידע הזה, באפשרותך  לקבל את המידע מספק האירוח שלך. אם הנך מתקין את nopCommerce על מחשב האישי שלך, באפשרותך לקבל את זה ממנהל המערכת שלך.</Value>
-  </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
-    <Value>אימות  Windows</Value>
   </LocaleResource>
 </Language>

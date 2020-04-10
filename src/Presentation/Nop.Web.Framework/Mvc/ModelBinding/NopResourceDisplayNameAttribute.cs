@@ -8,7 +8,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding
     /// <summary>
     /// Represents model attribute that specifies the display name by passed key of the locale resource
     /// </summary>
-    public class NopResourceDisplayNameAttribute : DisplayNameAttribute, IModelAttribute
+    public sealed class NopResourceDisplayNameAttribute : DisplayNameAttribute, IModelAttribute
     {
         #region Fields
 
@@ -56,10 +56,7 @@ namespace Nop.Web.Framework.Mvc.ModelBinding
         /// <summary>
         /// Gets name of the attribute
         /// </summary>
-        public string Name
-        {
-            get { return nameof(NopResourceDisplayNameAttribute); }
-        }
+        public string Name => nameof(NopResourceDisplayNameAttribute);
 
         #endregion
     }

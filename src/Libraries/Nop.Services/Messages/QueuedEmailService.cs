@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
-using Nop.Data.Extensions;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Messages
@@ -17,7 +16,6 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
-        private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<QueuedEmail> _queuedEmailRepository;
 
@@ -25,11 +23,9 @@ namespace Nop.Services.Messages
 
         #region Ctor
 
-        public QueuedEmailService(IDbContext dbContext,
-            IEventPublisher eventPublisher,
+        public QueuedEmailService(IEventPublisher eventPublisher,
             IRepository<QueuedEmail> queuedEmailRepository)
         {
-            _dbContext = dbContext;
             _eventPublisher = eventPublisher;
             _queuedEmailRepository = queuedEmailRepository;
         }
@@ -111,7 +107,7 @@ namespace Nop.Services.Messages
             if (queuedEmailId == 0)
                 return null;
 
-            return _queuedEmailRepository.GetById(queuedEmailId);
+            return _queuedEmailRepository.ToCachedGetById(queuedEmailId);
         }
 
         /// <summary>
@@ -191,17 +187,36 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
+        /// Deletes already sent emails
+        /// </summary>
+        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
+        /// <returns>Number of deleted emails</returns>
+        public virtual int DeleteAlreadySentEmails(DateTime? createdFromUtc, DateTime? createdToUtc)
+        {
+            var query = _queuedEmailRepository.Table;
+
+            // only sent emails
+            query = query.Where(qe => qe.SentOnUtc.HasValue);
+
+            if (createdFromUtc.HasValue)
+                query = query.Where(qe => qe.CreatedOnUtc >= createdFromUtc);
+            if (createdToUtc.HasValue)
+                query = query.Where(qe => qe.CreatedOnUtc <= createdToUtc);
+
+            var emails = query.ToArray();
+
+            DeleteQueuedEmails(emails);
+
+            return emails.Length;
+        }
+
+        /// <summary>
         /// Delete all queued emails
         /// </summary>
         public virtual void DeleteAllEmails()
         {
-            //do all databases support "Truncate command"?
-            var queuedEmailTableName = _dbContext.GetTableName<QueuedEmail>();
-            _dbContext.ExecuteSqlCommand($"TRUNCATE TABLE [{queuedEmailTableName}]");
-
-            //var queuedEmails = _queuedEmailRepository.Table.ToList();
-            //foreach (var qe in queuedEmails)
-            //    _queuedEmailRepository.Delete(qe);
+            _queuedEmailRepository.Truncate();
         }
 
         #endregion

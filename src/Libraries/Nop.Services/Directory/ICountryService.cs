@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 
 namespace Nop.Services.Directory
@@ -37,6 +38,13 @@ namespace Nop.Services.Directory
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Countries</returns>
         IList<Country> GetAllCountriesForShipping(int languageId = 0, bool showHidden = false);
+
+        /// <summary>
+        /// Gets a country by address 
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <returns>Country</returns>
+        Country GetCountryByAddress(Address address);
 
         /// <summary>
         /// Gets a country 

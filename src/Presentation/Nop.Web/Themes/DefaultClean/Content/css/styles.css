@@ -5047,9 +5047,13 @@ label, label + * {
 	margin: 0 auto 3px;
 	font-size: 15px; /*reset zeroing*/
 }
+.private-messages-page .no-items {
+  padding: 20px;
+  text-align: center;
+}
 
 .private-message-view-page .view-message {
-	margin: 0 0 30px;
+  margin: 0 0 30px;
 }
 .private-message-view-page .message-head {
 	margin: 0 0 20px;
@@ -5875,7 +5879,10 @@ pre {
 	overflow: hidden;
 }
 .checkout-page .address-item {
-	float: left;
+	display: inline-block;
+  *display: inline;
+  vertical-align: top;
+  zoom: 1;
 	width: 48%;
 	margin: 0 1% 40px;
 }
@@ -6307,7 +6314,7 @@ pre {
 
 .flyout-cart {
 	position: absolute;
-	top: 45px;
+	top: 100%;
 	right: 0;
 	z-index: 100;
 	width: 300px;

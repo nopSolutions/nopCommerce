@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Stores;
 
 namespace Nop.Services.Stores
@@ -17,17 +17,15 @@ namespace Nop.Services.Stores
         /// <summary>
         /// Gets all stores
         /// </summary>
-        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Stores</returns>
-        IList<Store> GetAllStores(bool loadCacheableCopy = true);
+        IList<Store> GetAllStores();
 
         /// <summary>
         /// Gets a store 
         /// </summary>
         /// <param name="storeId">Store identifier</param>
-        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Store</returns>
-        Store GetStoreById(int storeId, bool loadCacheableCopy = true);
+        Store GetStoreById(int storeId);
 
         /// <summary>
         /// Inserts a store

@@ -129,7 +129,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (vendorAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? vendorAttribute.ToModel<VendorAttributeModel>();
+                model ??= vendorAttribute.ToModel<VendorAttributeModel>();
 
                 //prepare nested search model
                 PrepareVendorAttributeValueSearchModel(model.VendorAttributeValueSearchModel, vendorAttribute);
@@ -195,7 +195,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (vendorAttributeValue != null)
             {
                 //fill in model values from the entity
-                model = model ?? vendorAttributeValue.ToModel<VendorAttributeValueModel>();
+                model ??= vendorAttributeValue.ToModel<VendorAttributeValueModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

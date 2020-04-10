@@ -1,4 +1,5 @@
 ﻿using System;
+using Nop.Core.Events;
 using Nop.Services.Events;
 
 namespace Nop.Web.MVC.Tests.Events

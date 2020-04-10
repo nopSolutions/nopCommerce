@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- (http://fkosoft.com) -->
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Slovensky" IsDefault="false">
   <LocaleResource Name="AdminEmail">
     <Value>Email administrátora</Value>
@@ -46,11 +45,11 @@
   <LocaleResource Name="CustomCollation">
     <Value>Zadajte nastavenie porovnávaní (collation) pre SQL Server</Value>
   </LocaleResource>
-  <LocaleResource Name="DatabaseCreationError">
-    <Value>Prišlo k chybe pri vytváraní databázy: {0}</Value>
-  </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Databáze</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Prišlo k chybe pri vytváraní databázy: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Informácie o databázy</Value>
@@ -82,6 +81,12 @@
   <LocaleResource Name="Installing">
     <Value>Inštalujem nopCommerce...</Value>
   </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Integrované overovanie Windows</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>Heslá niesú zhodné</Value>
   </LocaleResource>
@@ -97,6 +102,12 @@
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>Kliknite pre obnovenie - reštart procesu inštalácie (všetky dočasné hodnoty budú zmazané)</Value>
   </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Názov SQL Servera</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Názov SQL Servera je povinné</Value>
+  </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>Nastavenie sa nepodarilo: {0}</Value>
   </LocaleResource>
@@ -106,26 +117,20 @@
   <LocaleResource Name="SqlCompact">
     <Value>Použiť vstavanú databázu (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
-    <Value>Názov SQL Servera</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
-    <Value>Názov SQL Servera je povinné</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL - heslo</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>SQL - heslo je povinné</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
     <Value>SQL - užívateľské meno</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>SQL - užívateľské meno je povinné</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Použiť databázu SQL Server (alebo SQL Express)</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Informácie o obchode</Value>
@@ -138,8 +143,5 @@
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
     <Value>K úspešnému dokončeniu inštalácie a nastaveniu musíte mať k dispozicii informácie o databázovom serveri a databázy (databázové spojenie - "connection string"). Ak ich budete potrebovať, spýtajte sa Vášho poskytovateľa internetových služeb (ISP). Ak inštalujete na miestny počítač alebo server, pravdepodobne získate požadované informacie od vašeho systémového administrátora.</Value>
-  </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
-    <Value>Integrované overovanie Windows</Value>
   </LocaleResource>
 </Language>

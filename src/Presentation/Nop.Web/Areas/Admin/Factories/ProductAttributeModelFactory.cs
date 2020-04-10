@@ -147,7 +147,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (productAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? productAttribute.ToModel<ProductAttributeModel>();
+                model ??= productAttribute.ToModel<ProductAttributeModel>();
 
                 //prepare nested search models
                 PreparePredefinedProductAttributeValueSearchModel(model.PredefinedProductAttributeValueSearchModel, productAttribute);
