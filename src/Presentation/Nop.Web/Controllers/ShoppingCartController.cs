@@ -1389,7 +1389,7 @@ namespace Nop.Web.Controllers
             if (errors.Count > 0)
                 return BadRequest(new { Errors = errors });
 
-            var result = _shoppingCartModelFactory.PrepareEstimateShippingResultModel(cart, model.CountryId, model.StateProvinceId, model.ZipPostalCode);
+            var result = _shoppingCartModelFactory.PrepareEstimateShippingResultModel(cart, model.CountryId, model.StateProvinceId, model.ZipPostalCode, true);
 
             return Json(result);
         }

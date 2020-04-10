@@ -1255,8 +1255,9 @@ namespace Nop.Web.Factories
         /// <param name="countryId">Country identifier</param>
         /// <param name="stateProvinceId">State or province identifier</param>
         /// <param name="zipPostalCode">Zip postal code</param>
+        /// <param name="cacheOfferedShippingOptions">Indicates whether to cache offered shipping options</param>
         /// <returns>Estimate shipping result model</returns>
-        public virtual EstimateShippingResultModel PrepareEstimateShippingResultModel(IList<ShoppingCartItem> cart, int? countryId, int? stateProvinceId, string zipPostalCode)
+        public virtual EstimateShippingResultModel PrepareEstimateShippingResultModel(IList<ShoppingCartItem> cart, int? countryId, int? stateProvinceId, string zipPostalCode, bool cacheOfferedShippingOptions)
         {
             var model = new EstimateShippingResultModel();
 
@@ -1312,13 +1313,16 @@ namespace Nop.Web.Factories
                                 TransitDays = pickupPoint.TransitDays
                             });
 
-                            shippingOptionsForCache.Add(new ShippingOption()
+                            if (cacheOfferedShippingOptions)
                             {
-                                Name = _localizationService.GetResource("Checkout.PickupPoints"),
-                                Rate = pickupPoint.PickupFee,
-                                Description = pickupPoint.Description,
-                                ShippingRateComputationMethodSystemName = pickupPoint.ProviderSystemName
-                            });
+                                shippingOptionsForCache.Add(new ShippingOption()
+                                {
+                                    Name = _localizationService.GetResource("Checkout.PickupPoints"),
+                                    Rate = pickupPoint.PickupFee,
+                                    Description = pickupPoint.Description,
+                                    ShippingRateComputationMethodSystemName = pickupPoint.ProviderSystemName
+                                });
+                            }
                         }
                     }
                     else
@@ -1326,12 +1330,15 @@ namespace Nop.Web.Factories
                             model.Warnings.Add(error);
                 }
 
-                //performance optimization. cache returned shipping options.
-                //we'll use them later (after a customer has selected an option).
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                                                       NopCustomerDefaults.OfferedShippingOptionsAttribute,
-                                                       shippingOptionsForCache,
-                                                       _storeContext.CurrentStore.Id);
+                if (cacheOfferedShippingOptions)
+                {
+                    //performance optimization. cache returned shipping options.
+                    //we'll use them later (after a customer has selected an option).
+                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                                                           NopCustomerDefaults.OfferedShippingOptionsAttribute,
+                                                           shippingOptionsForCache,
+                                                           _storeContext.CurrentStore.Id);
+                }
 
                 if (rawShippingOptions.Any())
                 {

@@ -242,7 +242,7 @@ namespace Nop.Web.Controllers
             wrappedProduct.RentalStartDateUtc = rentalStartDate;
             wrappedProduct.RentalEndDateUtc = rentalEndDate;
 
-            var modelResult = _shoppingCartModelFactory.PrepareEstimateShippingResultModel(new [] { wrappedProduct }, model.CountryId, model.StateProvinceId, model.ZipPostalCode);
+            var modelResult = _shoppingCartModelFactory.PrepareEstimateShippingResultModel(new [] { wrappedProduct }, model.CountryId, model.StateProvinceId, model.ZipPostalCode, false);
 
             return Json(modelResult);
         }
