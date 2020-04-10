@@ -1264,6 +1264,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("DisplayStockAvailability", p => p.DisplayStockAvailability, IgnoreExportPoductProperty(p => p.DisplayStockAvailability)),
                 new PropertyByName<Product>("DisplayStockQuantity", p => p.DisplayStockQuantity, IgnoreExportPoductProperty(p => p.DisplayStockQuantity)),
                 new PropertyByName<Product>("MinStockQuantity", p => p.MinStockQuantity, IgnoreExportPoductProperty(p => p.MinimumStockQuantity)),
+                new PropertyByName<Product>("LowStockQuantity", p => p.LowStockQuantity, IgnoreExportPoductProperty(p => p.LowStockQuantity)),
                 new PropertyByName<Product>("LowStockActivity", p => p.LowStockActivityId, IgnoreExportPoductProperty(p => p.LowStockActivity))
                 {
                     DropDownElements = LowStockActivity.Nothing.ToSelectList(useLocalization: false)

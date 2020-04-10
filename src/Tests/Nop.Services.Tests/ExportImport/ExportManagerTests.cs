@@ -676,6 +676,7 @@ namespace Nop.Services.Tests.ExportImport
                     DisplayStockAvailability = true,
                     DisplayStockQuantity = true,
                     MinStockQuantity = 1,
+                    LowStockQuantity = 10,
                     LowStockActivityId = (int)LowStockActivity.Nothing,
                     NotifyAdminForQuantityBelow = 5,
                     BackorderModeId = (int)BackorderMode.NoBackorders,
