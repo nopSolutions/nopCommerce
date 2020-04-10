@@ -57,9 +57,14 @@ namespace Nop.Services.Messages
                     emailAccount.Port,
                     emailAccount.EnableSsl ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.StartTlsWhenAvailable);
 
-                client.Authenticate(emailAccount.UseDefaultCredentials ?
-                        CredentialCache.DefaultNetworkCredentials :
-                        new NetworkCredential(emailAccount.Username, emailAccount.Password));
+                if (emailAccount.UseDefaultCredentials)
+                {
+                    client.Authenticate(CredentialCache.DefaultNetworkCredentials);
+                } 
+                else if (!string.IsNullOrWhiteSpace(emailAccount.Username))
+                {
+                    client.Authenticate(new NetworkCredential(emailAccount.Username, emailAccount.Password));
+                }
 
                 return client;
             }
