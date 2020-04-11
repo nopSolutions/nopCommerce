@@ -11,9 +11,13 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Data;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Orders;
 using Nop.Data;
 using Nop.Plugin.Misc.PolyCommerce.Models;
+using Nop.Services.Directory;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -25,12 +29,17 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         private readonly IDbContext _dbContext;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
+        private readonly CurrencySettings _currencySettings;
+        private readonly ICurrencyService _currencyService;
+        private const string POLY_COMMERCE_BASE_URL = "https://localhost:44340";
 
-        public PolyCommerceController(IDbContext dbContext, IStoreContext storeContext, IWorkContext workContext)
+        public PolyCommerceController(IDbContext dbContext, IStoreContext storeContext, IWorkContext workContext, ICurrencyService currencyService, CurrencySettings currencySettings)
         {
             _dbContext = dbContext;
+            _currencyService = currencyService;
             _storeContext = storeContext;
             _workContext = workContext;
+            _currencySettings = currencySettings;
         }
 
         [AuthorizeAdmin]
@@ -53,8 +62,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                                             where StoreId = @StoreId";
 
                     command.CommandType = CommandType.Text;
-                    var parameter = new SqlParameter("@StoreId", _storeContext.CurrentStore.Id);
-                    command.Parameters.Add(parameter);
+                    command.Parameters.Add(new SqlParameter("@StoreId", _storeContext.CurrentStore.Id));
 
                     command.Connection = conn;
 
@@ -80,6 +88,8 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                 }
             }
 
+            var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+
             var request = new LoginModel
             {
                 StoreName = _storeContext.CurrentStore.Name,
@@ -89,15 +99,19 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                 StoreToken = storeToken,
                 Username = _workContext.CurrentCustomer.Username,
                 UserEmail = _workContext.CurrentCustomer.Email,
-                StoreIntegrationTypeId = 2
+                StoreIntegrationTypeId = 2,
+                StoreCurrencyCode = primaryStoreCurrency
             };
 
-            var model = new ConfigureViewModel();
+            var model = new ConfigureViewModel()
+            {
+                PolyCommerceBaseUrl = POLY_COMMERCE_BASE_URL
+            };
 
             using (var client = new HttpClient())
             {
                 var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-                var result = await client.PostAsync("https://localhost:44340/api/account/generate_external_token", content);
+                var result = await client.PostAsync($"{POLY_COMMERCE_BASE_URL}/api/account/generate_external_token", content);
 
                 var resultString = await result.Content.ReadAsStringAsync();
 
@@ -112,10 +126,6 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
 
                 
             }
-
-
-
-
 
             return View("~/Plugins/Misc.PolyCommerce/Views/Configure.cshtml", model);
         }

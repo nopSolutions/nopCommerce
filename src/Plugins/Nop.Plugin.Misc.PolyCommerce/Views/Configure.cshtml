@@ -6,7 +6,7 @@
     Layout = "_AdminLayout";
 }
 
-<iframe id="poly-frame" style="width: 100%; border: none" src="https://localhost:44340/account/login?token=@(Model.UserToken)"></iframe>
+<iframe id="poly-frame" style="width: 100%; border: none" src="@(Model.PolyCommerceBaseUrl)/account/login?token=@(Model.UserToken)"></iframe>
 
 <script>
 

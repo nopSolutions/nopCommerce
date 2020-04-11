@@ -14,5 +14,6 @@ namespace Nop.Plugin.Misc.PolyCommerce.Models
         public string StoreName { get; set; }
         public string CustomerGuid { get; set; }
         public string StoreUrl { get; set; }
+        public string StoreCurrencyCode { get; set; }
     }
 }
