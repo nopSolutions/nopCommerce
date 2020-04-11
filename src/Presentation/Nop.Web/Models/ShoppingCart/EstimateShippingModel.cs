@@ -40,6 +40,8 @@ namespace Nop.Web.Models.ShoppingCart
         {
             public string Name { get; set; }
 
+            public string ShippingRateComputationMethodSystemName { get; set; }
+
             public string Description { get; set; }
 
             public string Price { get; set; }
@@ -47,6 +49,8 @@ namespace Nop.Web.Models.ShoppingCart
             public decimal Rate { get; set; }
 
             public string DeliveryDateFormat { get; set; }
+
+            public bool Selected { get; set; }
         }
 
         #endregion

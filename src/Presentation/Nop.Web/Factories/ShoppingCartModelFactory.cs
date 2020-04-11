@@ -1270,14 +1270,11 @@ namespace Nop.Web.Factories
                     ZipPostalCode = zipPostalCode,
                 };
 
-                var shippingOptionsForCache = new List<ShippingOption>();
                 var rawShippingOptions = new List<ShippingOption>();
 
                 var getShippingOptionResponse = _shippingService.GetShippingOptions(cart, address, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
                 if (getShippingOptionResponse.Success)
                 {
-                    shippingOptionsForCache.AddRange(getShippingOptionResponse.ShippingOptions);
-
                     if (getShippingOptionResponse.ShippingOptions.Any())
                     {
                         foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
@@ -1286,8 +1283,9 @@ namespace Nop.Web.Factories
                             {
                                 Name = shippingOption.Name,
                                 Description = shippingOption.Description,
-                                Rate = _orderTotalCalculationService.AdjustShippingRate(shippingOption.Rate, cart, out var _),
-                                TransitDays = shippingOption.TransitDays
+                                Rate = shippingOption.Rate,
+                                TransitDays = shippingOption.TransitDays,
+                                ShippingRateComputationMethodSystemName = shippingOption.ShippingRateComputationMethodSystemName
                             });
                         }
                     }
@@ -1309,20 +1307,10 @@ namespace Nop.Web.Factories
                             {
                                 Name = _localizationService.GetResource("Checkout.PickupPoints"),
                                 Description = _localizationService.GetResource("Checkout.PickupPoints.Description"),
-                                Rate = _orderTotalCalculationService.AdjustShippingRate(pickupPoint.PickupFee, cart, out var _),
-                                TransitDays = pickupPoint.TransitDays
+                                Rate = pickupPoint.PickupFee,
+                                TransitDays = pickupPoint.TransitDays,
+                                ShippingRateComputationMethodSystemName = pickupPoint.ProviderSystemName
                             });
-
-                            if (cacheOfferedShippingOptions)
-                            {
-                                shippingOptionsForCache.Add(new ShippingOption()
-                                {
-                                    Name = _localizationService.GetResource("Checkout.PickupPoints"),
-                                    Rate = pickupPoint.PickupFee,
-                                    Description = pickupPoint.Description,
-                                    ShippingRateComputationMethodSystemName = pickupPoint.ProviderSystemName
-                                });
-                            }
                         }
                     }
                     else
@@ -1336,9 +1324,13 @@ namespace Nop.Web.Factories
                     //we'll use them later (after a customer has selected an option).
                     _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                                                            NopCustomerDefaults.OfferedShippingOptionsAttribute,
-                                                           shippingOptionsForCache,
+                                                           rawShippingOptions,
                                                            _storeContext.CurrentStore.Id);
                 }
+
+                //find a selected (previously) shipping option
+                var selectedShippingOption = _genericAttributeService.GetAttribute<ShippingOption>(_workContext.CurrentCustomer,
+                        NopCustomerDefaults.SelectedShippingOptionAttribute, _storeContext.CurrentStore.Id);
 
                 if (rawShippingOptions.Any())
                 {
@@ -1347,7 +1339,7 @@ namespace Nop.Web.Factories
                         .ThenBy(option => option.TransitDays)
                         .Select(option =>
                         {
-                            var shippingRate = option.Rate;
+                            var shippingRate = _orderTotalCalculationService.AdjustShippingRate(option.Rate, cart, out var _);
                             shippingRate = _taxService.GetShippingPrice(shippingRate, _workContext.CurrentCustomer);
                             shippingRate = _currencyService.ConvertFromPrimaryStoreCurrency(shippingRate, _workContext.WorkingCurrency);
                             var shippingRateString = _priceFormatter.FormatShippingPrice(shippingRate, true);
@@ -1360,20 +1352,37 @@ namespace Nop.Web.Factories
                                 deliveryDateFormat = customerDateTime.AddDays(option.TransitDays.Value).ToString("d", currentCulture);
                             }
 
+                            var selected = false;
+                            if (!string.IsNullOrEmpty(option.Name) &&
+                                   option.Name.Equals(selectedShippingOption.Name, StringComparison.InvariantCultureIgnoreCase) &&
+                                   !string.IsNullOrEmpty(option.ShippingRateComputationMethodSystemName) &&
+                                   option.ShippingRateComputationMethodSystemName.Equals(selectedShippingOption.ShippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                selected = true;
+                            }
+
                             return new EstimateShippingResultModel.ShippingOptionModel()
                             {
                                 Name = option.Name,
+                                ShippingRateComputationMethodSystemName = option.ShippingRateComputationMethodSystemName,
                                 Description = option.Description,
                                 Price = shippingRateString,
                                 Rate = option.Rate,
-                                DeliveryDateFormat = deliveryDateFormat
+                                DeliveryDateFormat = deliveryDateFormat,
+                                Selected = selected
                             };
-                        });
+                        }).ToList();
+
+                    //if no option has been selected, let's do it for the first one
+                    if (orderedShippingOptions.FirstOrDefault(so => so.Selected) == null)
+                    {
+                        var shippingOptionToSelect = orderedShippingOptions.FirstOrDefault();
+                        if (shippingOptionToSelect != null)
+                            shippingOptionToSelect.Selected = true;
+                    }
 
                     foreach (var option in orderedShippingOptions)
-                    {
                         model.ShippingOptions.Add(option);
-                    }
                 }
             }
 
