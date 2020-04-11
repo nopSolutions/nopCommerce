@@ -139,7 +139,6 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
              Width = product.Width,
              RetailPrice = product.OldPrice,
              IsDownload = product.IsDownload,
-             D
              MinInventoryLevel = product.MinStockQuantity,
              Condition = "NEW",
              Gtin = product.Gtin,

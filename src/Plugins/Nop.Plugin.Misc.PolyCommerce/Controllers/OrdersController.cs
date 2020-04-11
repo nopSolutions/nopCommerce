@@ -23,9 +23,18 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         }
 
         [HttpGet]
-        [Route("api/polycommerce/get_new_orders")]
+        [Route("api/polycommerce/orders/get_new_orders")]
         public async Task<IActionResult> GetNewOrders(int page, int pageSize, DateTime minCreatedDate)
         {
+            var storeToken = Request.Headers.TryGetValue("Store-Token", out var values) ? values.First() : null;
+
+            var store = await PolyCommerceHelper.GetPolyCommerceStoreByToken(storeToken);
+
+            if (store == null)
+            {
+                return Unauthorized();
+            }
+
             var skipRecords = (page - 1) * pageSize;
 
             var orders = await _orderRepository.Table
@@ -38,9 +47,18 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         }
 
         [HttpGet]
-        [Route("api/polycommerce/get_orders_by_id")]
+        [Route("api/polycommerce/orders/get_orders_by_id")]
         public async Task<IActionResult> GetOrdersById(string commaSeparatedOrderIds)
         {
+            var storeToken = Request.Headers.TryGetValue("Store-Token", out var values) ? values.First() : null;
+
+            var store = await PolyCommerceHelper.GetPolyCommerceStoreByToken(storeToken);
+
+            if (store == null)
+            {
+                return Unauthorized();
+            }
+
             commaSeparatedOrderIds = commaSeparatedOrderIds.Trim().Replace(" ", string.Empty);
 
             var orderIds = commaSeparatedOrderIds.Split(',').Select(x => int.Parse(x));
