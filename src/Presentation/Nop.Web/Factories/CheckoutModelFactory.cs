@@ -128,7 +128,7 @@ namespace Nop.Web.Factories
         /// Prepares the checkout pickup points model
         /// </summary>
         /// <returns>The checkout pickup points model</returns>
-        protected virtual CheckoutPickupPointsModel PrepareCheckoutPickupPointsModel()
+        protected virtual CheckoutPickupPointsModel PrepareCheckoutPickupPointsModel(IList<ShoppingCartItem> cart)
         {
             var model = new CheckoutPickupPointsModel()
             {
@@ -166,12 +166,13 @@ namespace Nop.Web.Factories
                                 Longitude = point.Longitude,
                                 OpeningHours = point.OpeningHours
                             };
-                            if (point.PickupFee > 0)
-                            {
-                                var amount = _taxService.GetShippingPrice(point.PickupFee, _workContext.CurrentCustomer);
-                                amount = _currencyService.ConvertFromPrimaryStoreCurrency(amount, _workContext.WorkingCurrency);
-                                pickupPointModel.PickupFee = _priceFormatter.FormatShippingPrice(amount, true);
-                            }
+
+                            //adjust rate
+                            var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(point.PickupFee, cart, out var _);
+
+                            var rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
+                            var rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
+                            pickupPointModel.PickupFee = _priceFormatter.FormatShippingPrice(rate, true);
 
                             return pickupPointModel;
                         }).ToList();
@@ -270,8 +271,8 @@ namespace Nop.Web.Factories
         /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
         /// <param name="overrideAttributesXml">Override attributes xml</param>
         /// <returns>Shipping address model</returns>
-        public virtual CheckoutShippingAddressModel PrepareShippingAddressModel(int? selectedCountryId = null,
-            bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
+        public virtual CheckoutShippingAddressModel PrepareShippingAddressModel(IList<ShoppingCartItem> cart, 
+            int? selectedCountryId = null, bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
             var model = new CheckoutShippingAddressModel()
             {
@@ -279,7 +280,7 @@ namespace Nop.Web.Factories
             };
 
             if (!_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
-                model.PickupPointsModel = PrepareCheckoutPickupPointsModel();
+                model.PickupPointsModel = PrepareCheckoutPickupPointsModel(cart);
 
             //existing addresses
             var addresses = _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id)
@@ -337,7 +338,7 @@ namespace Nop.Web.Factories
             };
 
             if (_orderSettings.DisplayPickupInStoreOnShippingMethodPage)
-                model.PickupPointsModel = PrepareCheckoutPickupPointsModel();
+                model.PickupPointsModel = PrepareCheckoutPickupPointsModel(cart);
 
             var getShippingOptionResponse = _shippingService.GetShippingOptions(cart, shippingAddress, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
             if (getShippingOptionResponse.Success)
