@@ -229,7 +229,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
 
                 //add query parameters
                 parameters.Add($"item_name_{itemCount}", product.Name);
-                parameters.Add($"amount_{itemCount}", roundedItemPrice.ToString("0.00", CultureInfo.InvariantCulture));
+                parameters.Add($"amount_{itemCount}", $"{roundedItemPrice:N2}");
                 parameters.Add($"quantity_{itemCount}", item.Quantity.ToString());
 
                 cartTotal += item.PriceExclTax;
@@ -253,7 +253,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                         continue;
 
                     parameters.Add($"item_name_{itemCount}", attribute.Name);
-                    parameters.Add($"amount_{itemCount}", roundedAttributePrice.ToString("0.00", CultureInfo.InvariantCulture));
+                    parameters.Add($"amount_{itemCount}", $"{roundedAttributePrice:N2}");
                     parameters.Add($"quantity_{itemCount}", "1");
 
                     cartTotal += attributePrice;
@@ -267,7 +267,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             if (roundedShippingPrice > decimal.Zero)
             {
                 parameters.Add($"item_name_{itemCount}", "Shipping fee");
-                parameters.Add($"amount_{itemCount}", roundedShippingPrice.ToString("0.00", CultureInfo.InvariantCulture));
+                parameters.Add($"amount_{itemCount}", $"{roundedShippingPrice:N2}");
                 parameters.Add($"quantity_{itemCount}", "1");
 
                 cartTotal += postProcessPaymentRequest.Order.OrderShippingExclTax;
@@ -280,7 +280,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             if (roundedPaymentMethodPrice > decimal.Zero)
             {
                 parameters.Add($"item_name_{itemCount}", "Payment method fee");
-                parameters.Add($"amount_{itemCount}", roundedPaymentMethodPrice.ToString("0.00", CultureInfo.InvariantCulture));
+                parameters.Add($"amount_{itemCount}", $"{roundedPaymentMethodPrice:N2}");
                 parameters.Add($"quantity_{itemCount}", "1");
 
                 cartTotal += postProcessPaymentRequest.Order.PaymentMethodAdditionalFeeExclTax;
@@ -293,7 +293,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             if (roundedTaxAmount > decimal.Zero)
             {
                 parameters.Add($"item_name_{itemCount}", "Tax amount");
-                parameters.Add($"amount_{itemCount}", roundedTaxAmount.ToString("0.00", CultureInfo.InvariantCulture));
+                parameters.Add($"amount_{itemCount}", $"{roundedTaxAmount:N2}");
                 parameters.Add($"quantity_{itemCount}", "1");
 
                 cartTotal += postProcessPaymentRequest.Order.OrderTax;
@@ -307,7 +307,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 roundedCartTotal -= discountTotal;
 
                 //gift card or rewarded point amount applied to cart in nopCommerce - shows in PayPal as "discount"
-                parameters.Add("discount_amount_cart", discountTotal.ToString("0.00", CultureInfo.InvariantCulture));
+                parameters.Add("discount_amount_cart", $"{discountTotal:N2}");
             }
 
             //save order total that actually sent to PayPal (used for PDT order total validation)
@@ -326,7 +326,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
 
             parameters.Add("cmd", "_xclick");
             parameters.Add("item_name", $"Order Number {postProcessPaymentRequest.Order.CustomOrderNumber}");
-            parameters.Add("amount", roundedOrderTotal.ToString("0.00", CultureInfo.InvariantCulture));
+            parameters.Add("amount", $"{roundedOrderTotal:N2}");
 
             //save order total that actually sent to PayPal (used for PDT order total validation)
             _genericAttributeService.SaveAttribute(postProcessPaymentRequest.Order, PayPalHelper.OrderTotalSentToPayPal, roundedOrderTotal);
