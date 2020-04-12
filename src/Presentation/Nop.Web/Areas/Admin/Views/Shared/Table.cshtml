@@ -84,13 +84,24 @@
         </text>
     }
 
-    function updateTable(tableSelector) {
-        $(tableSelector).DataTable().ajax.reload();
-        $(tableSelector).DataTable().columns.adjust();
+    function updateMasterCheckBox() {
         if (@isMasterCheckBoxUsed.ToString().ToLower()) {
             $('#mastercheckbox').attr('checked', false).change();
             selectedIds = [];
         }
+    }
+
+    function updateTableSrc(tableSelector) {
+        var dataSrc = $(tableSelector).DataTable().data();
+        $(tableSelector).DataTable().clear().rows.add(dataSrc).draw();
+        $(tableSelector).DataTable().columns.adjust();
+        updateMasterCheckBox;
+    }
+
+    function updateTable(tableSelector) {
+        $(tableSelector).DataTable().ajax.reload();     
+        $(tableSelector).DataTable().columns.adjust();
+        updateMasterCheckBox;
     }
 
     function updateTableWidth(tableSelector) {

@@ -174,7 +174,18 @@ ordering: @Model.Ordering.ToString().ToLower(),
             name: 'refresh',
             text: '<i class="fa fa-refresh" style="padding-left: 5px"></i>',
             action: function () {
-                updateTable('#@Model.Name');
+                @if (Model.ServerSide)
+                {
+                    <text>
+                    updateTable('#@Model.Name');
+                    </text>
+                }
+                else
+                {
+                    <text>
+                    updateTableSrc('#@Model.Name');
+                    </text>
+                }
             }
         }],
     </text>
