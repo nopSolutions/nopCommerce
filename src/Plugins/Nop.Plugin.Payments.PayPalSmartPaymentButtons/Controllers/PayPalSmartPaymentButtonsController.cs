@@ -79,6 +79,12 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
                 SecretKey = settings.SecretKey,
                 UseSandbox = settings.UseSandbox,
                 PaymentTypeId = (int)settings.PaymentType,
+                DisplayButtonsOnShoppingCart = settings.DisplayButtonsOnShoppingCart,
+                DisplayButtonsOnProductDetails = settings.DisplayButtonsOnProductDetails,
+                DisplayLogoInHeaderLinks = settings.DisplayLogoInHeaderLinks,
+                LogoInHeaderLinks = settings.LogoInHeaderLinks,
+                DisplayLogoInFooter = settings.DisplayLogoInFooter,
+                LogoInFooter = settings.LogoInFooter,
                 ActiveStoreScopeConfiguration = storeScope
             };
 
@@ -88,20 +94,17 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
                 model.SecretKey_OverrideForStore = _settingService.SettingExists(settings, setting => setting.SecretKey, storeScope);
                 model.UseSandbox_OverrideForStore = _settingService.SettingExists(settings, setting => setting.UseSandbox, storeScope);
                 model.PaymentTypeId_OverrideForStore = _settingService.SettingExists(settings, setting => setting.PaymentType, storeScope);
-                model.ButtonsWidgetZones_OverrideForStore = _settingService.SettingExists(settings, setting => setting.ButtonsWidgetZones, storeScope);
+                model.DisplayButtonsOnShoppingCart_OverrideForStore = _settingService.SettingExists(settings, setting => setting.DisplayButtonsOnShoppingCart, storeScope);
+                model.DisplayButtonsOnProductDetails_OverrideForStore = _settingService.SettingExists(settings, setting => setting.DisplayButtonsOnProductDetails, storeScope);
+                model.DisplayLogoInHeaderLinks_OverrideForStore = _settingService.SettingExists(settings, setting => setting.DisplayLogoInHeaderLinks, storeScope);
+                model.LogoInHeaderLinks_OverrideForStore = _settingService.SettingExists(settings, setting => setting.LogoInHeaderLinks, storeScope);
+                model.DisplayLogoInFooter_OverrideForStore = _settingService.SettingExists(settings, setting => setting.DisplayLogoInFooter, storeScope);
+                model.LogoInFooter_OverrideForStore = _settingService.SettingExists(settings, setting => setting.LogoInFooter, storeScope);
             }
 
             //prepare available payment types
             model.PaymentTypes = PaymentType.Capture.ToSelectList(false)
                 .Select(item => new SelectListItem(item.Text, item.Value))
-                .ToList();
-
-            //prepare widget zones
-            model.ButtonsWidgetZones = Defaults.AvailableButtonsWidgetZones
-                .Select(widgetZone => (settings.ButtonsWidgetZones?.Contains(widgetZone.Value) ?? false) ? widgetZone.Key : 0)
-                .Where(id => id > 0).ToList();
-            model.AvailableButtonsWidgetZones = Defaults.AvailableButtonsWidgetZones
-                .Select(widgetZone => new SelectListItem(widgetZone.Value, widgetZone.Key.ToString(), settings.ButtonsWidgetZones?.Contains(widgetZone.Value) ?? false))
                 .ToList();
 
             //prices and total aren't rounded, so display warning
@@ -122,14 +125,14 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return RedirectToAction("Configure");
+                return Configure();
 
             //load settings for a chosen store scope
             var storeScope = _storeContext.ActiveStoreScopeConfiguration;
             var settings = _settingService.LoadSetting<PayPalSmartPaymentButtonsSettings>(storeScope);
 
             //first delete the unused webhook on a previous client, if changed
-            if (!model.ClientId.Equals(settings.ClientId))
+            if ((!model.ClientId?.Equals(settings.ClientId) ?? true) && !string.IsNullOrEmpty(settings.ClientId) && !string.IsNullOrEmpty(settings.SecretKey))
                 _serviceManager.DeleteWebhook(settings);
 
             //set new settings values
@@ -137,17 +140,25 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
             settings.SecretKey = model.SecretKey;
             settings.UseSandbox = model.UseSandbox;
             settings.PaymentType = (PaymentType)model.PaymentTypeId;
-            settings.ButtonsWidgetZones = model.ButtonsWidgetZones.Select(id => Defaults.AvailableButtonsWidgetZones[id]).ToList();
+            settings.DisplayButtonsOnShoppingCart = model.DisplayButtonsOnShoppingCart;
+            settings.DisplayButtonsOnProductDetails = model.DisplayButtonsOnProductDetails;
+            settings.DisplayLogoInHeaderLinks = model.DisplayLogoInHeaderLinks;
+            settings.LogoInHeaderLinks = model.LogoInHeaderLinks;
+            settings.DisplayLogoInFooter = model.DisplayLogoInFooter;
+            settings.LogoInFooter = model.LogoInFooter;
 
             //ensure that webhook created, display warning in case of fail
-            var webhookUrl = Url.RouteUrl(Defaults.WebhookRouteName, null, _webHelper.CurrentRequestProtocol);
-            var (webhook, webhookError) = _serviceManager.CreateWebHook(settings, webhookUrl);
-            settings.WebhookId = webhook?.Id;
-            if (string.IsNullOrEmpty(settings.WebhookId))
+            if (!string.IsNullOrEmpty(settings.ClientId) && !string.IsNullOrEmpty(settings.SecretKey))
             {
-                var url = Url.Action("List", "Log");
-                var warning = string.Format(_localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.WebhookWarning"), url);
-                _notificationService.WarningNotification(warning, false);
+                var webhookUrl = Url.RouteUrl(Defaults.WebhookRouteName, null, _webHelper.CurrentRequestProtocol);
+                var (webhook, webhookError) = _serviceManager.CreateWebHook(settings, webhookUrl);
+                settings.WebhookId = webhook?.Id;
+                if (string.IsNullOrEmpty(settings.WebhookId))
+                {
+                    var url = Url.Action("List", "Log");
+                    var warning = string.Format(_localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.WebhookWarning"), url);
+                    _notificationService.WarningNotification(warning, false);
+                }
             }
 
             //save settings
@@ -156,19 +167,31 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Controllers
             _settingService.SaveSettingOverridablePerStore(settings, setting => setting.SecretKey, model.SecretKey_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(settings, setting => setting.UseSandbox, model.UseSandbox_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(settings, setting => setting.PaymentType, model.PaymentTypeId_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(settings, setting => setting.ButtonsWidgetZones, model.ButtonsWidgetZones_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(settings, setting => setting.DisplayButtonsOnShoppingCart, model.DisplayButtonsOnShoppingCart_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(settings, setting => setting.DisplayButtonsOnProductDetails, model.DisplayButtonsOnProductDetails_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(settings, setting => setting.DisplayLogoInHeaderLinks, model.DisplayLogoInHeaderLinks_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(settings, setting => setting.LogoInHeaderLinks, model.LogoInHeaderLinks_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(settings, setting => setting.DisplayLogoInFooter, model.DisplayLogoInFooter_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(settings, setting => setting.LogoInFooter, model.LogoInFooter_OverrideForStore, storeScope, false);
             _settingService.ClearCache();
+
+            //ensure credentials are valid
+            if (!string.IsNullOrEmpty(settings.ClientId) && !string.IsNullOrEmpty(settings.SecretKey))
+            {
+                var (_, errorMessage) = _serviceManager.GetAccessToken(settings);
+                if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    var url = Url.Action("List", "Log");
+                    var error = string.Format(_localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.Credentials.Invalid"), url);
+                    _notificationService.ErrorNotification(error, false);
+                }
+                else
+                    _notificationService.SuccessNotification(_localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.Credentials.Valid"));
+            }
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            //check credentials
-            var credentialsError = _serviceManager.CheckCredentials(settings);
-            if (!string.IsNullOrEmpty(credentialsError))
-                _notificationService.ErrorNotification(credentialsError);
-            else
-                _notificationService.SuccessNotification(_localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.Credentials.Valid"));
-
-            return RedirectToAction("Configure");
+            return Configure();
         }
 
         #endregion

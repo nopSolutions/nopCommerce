@@ -15,6 +15,7 @@ using Nop.Plugin.Payments.PayPalSmartPaymentButtons.Domain;
 using Nop.Plugin.Payments.PayPalSmartPaymentButtons.Models;
 using Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services;
 using Nop.Services.Cms;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
@@ -32,6 +33,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         #region Fields
 
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
@@ -45,6 +47,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         #region Ctor
 
         public PaymentMethod(IActionContextAccessor actionContextAccessor,
+            IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             ISettingService settingService,
             IStoreService storeService,
@@ -54,6 +57,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
             WidgetSettings widgetSettings)
         {
             _actionContextAccessor = actionContextAccessor;
+            _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _settingService = settingService;
             _storeService = storeService;
@@ -81,10 +85,10 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
 
             //authorize or capture the order
             var (order, error) = _settings.PaymentType == PaymentType.Capture
-                ? _serviceManager.Capture(orderId.ToString())
+                ? _serviceManager.Capture(_settings, orderId.ToString())
                 : (_settings.PaymentType == PaymentType.Authorize
-                ? _serviceManager.Authorize(orderId.ToString())
-                : (null, null));
+                ? _serviceManager.Authorize(_settings, orderId.ToString())
+                : (default, default));
 
             if (!string.IsNullOrEmpty(error))
                 return new ProcessPaymentResult { Errors = new[] { error } };
@@ -127,7 +131,8 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         public CapturePaymentResult Capture(CapturePaymentRequest capturePaymentRequest)
         {
             //capture previously authorized payment
-            var (capture, error) = _serviceManager.CaptureAuthorization(capturePaymentRequest.Order.AuthorizationTransactionId);
+            var (capture, error) = _serviceManager
+                .CaptureAuthorization(_settings, capturePaymentRequest.Order.AuthorizationTransactionId);
 
             if (!string.IsNullOrEmpty(error))
                 return new CapturePaymentResult { Errors = new[] { error } };
@@ -149,7 +154,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
         public VoidPaymentResult Void(VoidPaymentRequest voidPaymentRequest)
         {
             //void previously authorized payment
-            var error = _serviceManager.Void(voidPaymentRequest.Order.AuthorizationTransactionId);
+            var (_, error) = _serviceManager.Void(_settings, voidPaymentRequest.Order.AuthorizationTransactionId);
 
             if (!string.IsNullOrEmpty(error))
                 return new VoidPaymentResult { Errors = new[] { error } };
@@ -169,13 +174,18 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
             var amount = refundPaymentRequest.AmountToRefund != refundPaymentRequest.Order.OrderTotal
                 ? (decimal?)refundPaymentRequest.AmountToRefund
                 : null;
-            var (refund, error) = _serviceManager.Refund(refundPaymentRequest.Order.CaptureTransactionId,
+            var (refund, error) = _serviceManager.Refund(_settings, refundPaymentRequest.Order.CaptureTransactionId,
                 refundPaymentRequest.Order.CustomerCurrencyCode, amount);
 
             if (!string.IsNullOrEmpty(error))
                 return new RefundPaymentResult { Errors = new[] { error } };
 
             //request succeeded
+            var refundIds = _genericAttributeService.GetAttribute<List<string>>(refundPaymentRequest.Order, Defaults.RefundIdAttributeName)
+                ?? new List<string>();
+            if (!refundIds.Contains(refund.Id))
+                refundIds.Add(refund.Id);
+            _genericAttributeService.SaveAttribute(refundPaymentRequest.Order, Defaults.RefundIdAttributeName, refundIds);
             return new RefundPaymentResult
             {
                 NewPaymentStatus = refundPaymentRequest.IsPartialRefund ? PaymentStatus.PartiallyRefunded : PaymentStatus.Refunded
@@ -319,13 +329,11 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
                 return Defaults.SCRIPT_VIEW_COMPONENT_NAME;
             }
 
-            if (widgetZone.Equals(PublicWidgetZones.ProductDetailsAddInfo) ||
-                widgetZone.Equals(PublicWidgetZones.OrderSummaryContentAfter) ||
-                widgetZone.Equals(PublicWidgetZones.HeaderLinksBefore) ||
-                widgetZone.Equals(PublicWidgetZones.Footer))
-            {
+            if (widgetZone.Equals(PublicWidgetZones.ProductDetailsAddInfo) || widgetZone.Equals(PublicWidgetZones.OrderSummaryContentAfter))
                 return Defaults.BUTTONS_VIEW_COMPONENT_NAME;
-            }
+
+            if (widgetZone.Equals(PublicWidgetZones.HeaderLinksBefore) || widgetZone.Equals(PublicWidgetZones.Footer))
+                return Defaults.LOGO_VIEW_COMPONENT_NAME;
 
             return string.Empty;
         }
@@ -338,14 +346,17 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
             //settings
             _settingService.SaveSetting(new PayPalSmartPaymentButtonsSettings
             {
-                ClientId = "sb",
                 UseSandbox = true,
                 PaymentType = PaymentType.Capture,
+                DisplayButtonsOnShoppingCart = true,
+                DisplayLogoInHeaderLinks = true,
+                LogoInHeaderLinks = @"<!-- PayPal Logo --><li><a href=""https://www.paypal.com/webapps/mpp/paypal-popup"" title=""How PayPal Works"" onclick=""javascript:window.open('https://www.paypal.com/webapps/mpp/paypal-popup','WIPaypal','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700'); return false;""><img style=""padding-top:10px;"" src=""https://www.paypalobjects.com/webstatic/mktg/logo/bdg_now_accepting_pp_2line_w.png"" border=""0"" alt=""Now accepting PayPal""></a></li><!-- PayPal Logo -->",
+                DisplayLogoInFooter = true,
+                LogoInFooter = @"<!-- PayPal Logo --><div><a href=""https://www.paypal.com/webapps/mpp/paypal-popup"" title=""How PayPal Works"" onclick=""javascript:window.open('https://www.paypal.com/webapps/mpp/paypal-popup','WIPaypal','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700'); return false;""><img src=""https://www.paypalobjects.com/webstatic/mktg/logo/AM_mc_vs_dc_ae.jpg"" border=""0"" alt=""PayPal Acceptance Mark""></a></div><!-- PayPal Logo -->",
                 StyleLayout = "vertical",
                 StyleColor = "blue",
                 StyleShape = "rect",
-                StyleLabel = "paypal",
-                ButtonsWidgetZones = Defaults.AvailableButtonsWidgetZones.Values.ToList()
+                StyleLabel = "paypal"
             });
 
             if (!_widgetSettings.ActiveWidgetSystemNames.Contains(Defaults.SystemName))
@@ -358,11 +369,22 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
             _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.PayPalSmartPaymentButtons.Domain.PaymentType.Authorize", "Authorize");
             _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.PayPalSmartPaymentButtons.Domain.PaymentType.Capture", "Capture");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Credentials.Valid", "The specified credentials are valid");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.ButtonsWidgetZones", "Widget zones");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.ButtonsWidgetZones.Hint", "Choose widget zones to display PayPal logo and buttons on the site.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Credentials.Invalid", "The specified credentials are invalid (see details in the <a href=\"{0}\" target=\"_blank\">log</a>)");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnProductDetails", "Display buttons on product details");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnProductDetails.Hint", "Determine whether to display PayPal buttons on product details pages, clicking on them will lead to the start of the checkout process.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnShoppingCart", "Display buttons on shopping cart");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnShoppingCart.Hint", "Determine whether to display PayPal buttons on the shopping cart page instead of default checkout button.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInFooter", "Display logo in footer");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInFooter.Hint", "Determine whether to display PayPal logo in the footer. These logos and banners are a great way to let your buyers know that you choose PayPal to securely process their payments.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInHeaderLinks", "Display logo in header links");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInHeaderLinks.Hint", "Determine whether to display PayPal logo in header links. These logos and banners are a great way to let your buyers know that you choose PayPal to securely process their payments.");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.ClientId", "Client ID");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.ClientId.Hint", "Enter your PayPal REST client ID. This identifies your PayPal account and determines where transactions are paid. While you're testing in sandbox, you can use 'sb' as a shortcut.");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.ClientId.Required", "Client ID is required");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInFooter", "Logo source code");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInFooter.Hint", "Enter source code of the logo. You can find more logos and banners on PayPal Logo Center.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInHeaderLinks", "Logo source code");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInHeaderLinks.Hint", "Enter source code of the logo. You can find more logos and banners on PayPal Logo Center.");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.PaymentType", "Payment type");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.PaymentType.Hint", "Choose a payment type to either capture payment immediately or authorize a payment for an order after order creation.");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.SecretKey", "Secret");
@@ -403,11 +425,22 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
             _localizationService.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.PayPalSmartPaymentButtons.Domain.PaymentType.Authorize");
             _localizationService.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.PayPalSmartPaymentButtons.Domain.PaymentType.Capture");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Credentials.Valid");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.ButtonsWidgetZones");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.ButtonsWidgetZones.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Credentials.Invalid");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnProductDetails");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnProductDetails.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnShoppingCart");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnShoppingCart.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInFooter");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInFooter.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInHeaderLinks");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInHeaderLinks.Hint");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.ClientId");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.ClientId.Hint");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.ClientId.Required");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInFooter");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInFooter.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInHeaderLinks");
+            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInHeaderLinks.Hint");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.PaymentType");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.PaymentType.Hint");
             _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.SecretKey");

@@ -1,20 +1,19 @@
 ﻿@model (string WidgetZone, int ProductId)
 
-@if (Model.WidgetZone.Equals(PublicWidgetZones.OrderSummaryContentAfter))
+@if (Model.ProductId > 0)
+{
+    <div>
+        <div class="add-to-cart-panel" id="paypal-button-container@($"-{Model.ProductId}")"></div>
+    </div>
+}
+else
 {
     <script asp-location="Footer">
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#checkout').after('<div id="paypal-button-container"></div>');
             $('#checkout').hide();
         });
     </script>
-}
-
-@if (Model.WidgetZone.Equals(PublicWidgetZones.ProductDetailsAddInfo))
-{
-    <div>
-        <div class="add-to-cart-panel" id="paypal-button-container@(Model.ProductId > 0 ? $"-{Model.ProductId}" : null)"></div>
-    </div>
 }
 
 <script asp-location="Footer">
@@ -28,6 +27,9 @@
                         $("#terms-of-service-warning-box").dialog();
                         return false;
                     }
+                }
+                if ($('#add-to-cart-button-@Model.ProductId').length > 0) {
+                    AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');
                 }
                 window.location = '@Url.RouteUrl("Checkout")';
                 return false;

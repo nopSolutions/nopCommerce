@@ -22,9 +22,7 @@
     <None Remove="plugin.json" />
     <None Remove="Views\Buttons.cshtml" />
     <None Remove="Views\Configure.cshtml" />
-    <None Remove="Views\Logo.cshtml" />
     <None Remove="Views\PaymentInfo.cshtml" />
-    <None Remove="Views\Script.cshtml" />
     <None Remove="Views\_ViewImports.cshtml" />
   </ItemGroup>
 
@@ -35,16 +33,10 @@
     <Content Include="plugin.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Logo.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Views\Configure.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Buttons.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Script.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\PaymentInfo.cshtml">
@@ -62,7 +54,8 @@
 
   <ItemGroup>
     <PackageReference Include="PayPal" Version="2.0.0-rc2" />
-    <PackageReference Include="PayPalCheckoutSdk" Version="1.0.2" />
+    <PackageReference Include="PayPalCheckoutSdk" Version="1.0.3" />
+    <PackageReference Include="PayPalHttp" Version="1.0.0" />
   </ItemGroup>
 
   <!-- This target execute after "Build" target -->

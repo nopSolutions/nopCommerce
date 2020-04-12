@@ -16,8 +16,6 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Models
         public ConfigurationModel()
         {
             PaymentTypes = new List<SelectListItem>();
-            ButtonsWidgetZones = new List<int>();
-            AvailableButtonsWidgetZones = new List<SelectListItem>();
         }
 
         #endregion
@@ -45,10 +43,29 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Models
         public bool PaymentTypeId_OverrideForStore { get; set; }
         public IList<SelectListItem> PaymentTypes { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payments.PayPalSmartPaymentButtons.Fields.ButtonsWidgetZones")]
-        public IList<int> ButtonsWidgetZones { get; set; }
-        public bool ButtonsWidgetZones_OverrideForStore { get; set; }
-        public IList<SelectListItem> AvailableButtonsWidgetZones { get; set; }
+        [NopResourceDisplayName("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnShoppingCart")]
+        public bool DisplayButtonsOnShoppingCart { get; set; }
+        public bool DisplayButtonsOnShoppingCart_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnProductDetails")]
+        public bool DisplayButtonsOnProductDetails { get; set; }
+        public bool DisplayButtonsOnProductDetails_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInHeaderLinks")]
+        public bool DisplayLogoInHeaderLinks { get; set; }
+        public bool DisplayLogoInHeaderLinks_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInHeaderLinks")]
+        public string LogoInHeaderLinks { get; set; }
+        public bool LogoInHeaderLinks_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInFooter")]
+        public bool DisplayLogoInFooter { get; set; }
+        public bool DisplayLogoInFooter_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInFooter")]
+        public string LogoInFooter { get; set; }
+        public bool LogoInFooter_OverrideForStore { get; set; }
 
         #endregion
     }

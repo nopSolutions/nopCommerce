@@ -16,11 +16,13 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Validators
         {
             RuleFor(model => model.ClientId)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.ClientId.Required"));
+                .WithMessage(localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.ClientId.Required"))
+                .When(model => !model.UseSandbox);
 
             RuleFor(model => model.SecretKey)
                 .NotEmpty()
-                .WithMessage(localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.SecretKey.Required"));
+                .WithMessage(localizationService.GetResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.SecretKey.Required"))
+                .When(model => !model.UseSandbox);
         }
 
         #endregion
