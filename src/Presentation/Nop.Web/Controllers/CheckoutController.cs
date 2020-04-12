@@ -134,38 +134,6 @@ namespace Nop.Web.Controllers
         }
 
         /// <summary>
-        /// Generate an order GUID
-        /// </summary>
-        /// <param name="processPaymentRequest">Process payment request</param>
-        protected virtual void GenerateOrderGuid(ProcessPaymentRequest processPaymentRequest)
-        {
-            if (processPaymentRequest == null)
-                return;
-
-            //we should use the same GUID for multiple payment attempts
-            //this way a payment gateway can prevent security issues such as credit card brute-force attacks
-            //in order to avoid any possible limitations by payment gateway we reset GUID periodically
-            var previousPaymentRequest = HttpContext.Session.Get<ProcessPaymentRequest>("OrderPaymentInfo");
-            if (_paymentSettings.RegenerateOrderGuidInterval > 0 &&
-                previousPaymentRequest != null &&
-                previousPaymentRequest.OrderGuidGeneratedOnUtc.HasValue)
-            {
-                var interval = DateTime.UtcNow - previousPaymentRequest.OrderGuidGeneratedOnUtc.Value;
-                if (interval.TotalSeconds < _paymentSettings.RegenerateOrderGuidInterval)
-                {
-                    processPaymentRequest.OrderGuid = previousPaymentRequest.OrderGuid;
-                    processPaymentRequest.OrderGuidGeneratedOnUtc = previousPaymentRequest.OrderGuidGeneratedOnUtc;
-                }
-            }
-
-            if (processPaymentRequest.OrderGuid == Guid.Empty)
-            {
-                processPaymentRequest.OrderGuid = Guid.NewGuid();
-                processPaymentRequest.OrderGuidGeneratedOnUtc = DateTime.UtcNow;
-            }
-        }
-
-        /// <summary>
         /// Parses the value indicating whether the "pickup in store" is allowed
         /// </summary>
         /// <param name="form">The form</param>
@@ -931,7 +899,7 @@ namespace Nop.Web.Controllers
                 //get payment info
                 var paymentInfo = paymentMethod.GetPaymentInfo(form);
                 //set previous order GUID (if exists)
-                GenerateOrderGuid(paymentInfo);
+                _paymentService.GenerateOrderGuid(paymentInfo);
 
                 //session save
                 HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
@@ -1002,7 +970,7 @@ namespace Nop.Web.Controllers
 
                     processPaymentRequest = new ProcessPaymentRequest();
                 }
-                GenerateOrderGuid(processPaymentRequest);
+                _paymentService.GenerateOrderGuid(processPaymentRequest);
                 processPaymentRequest.StoreId = _storeContext.CurrentStore.Id;
                 processPaymentRequest.CustomerId = _workContext.CurrentCustomer.Id;
                 processPaymentRequest.PaymentMethodSystemName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
@@ -1633,7 +1601,7 @@ namespace Nop.Web.Controllers
                     //get payment info
                     var paymentInfo = paymentMethod.GetPaymentInfo(form);
                     //set previous order GUID (if exists)
-                    GenerateOrderGuid(paymentInfo);
+                    _paymentService.GenerateOrderGuid(paymentInfo);
 
                     //session save
                     HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
@@ -1704,7 +1672,7 @@ namespace Nop.Web.Controllers
 
                     processPaymentRequest = new ProcessPaymentRequest();
                 }
-                GenerateOrderGuid(processPaymentRequest);
+                _paymentService.GenerateOrderGuid(processPaymentRequest);
                 processPaymentRequest.StoreId = _storeContext.CurrentStore.Id;
                 processPaymentRequest.CustomerId = _workContext.CurrentCustomer.Id;
                 processPaymentRequest.PaymentMethodSystemName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
