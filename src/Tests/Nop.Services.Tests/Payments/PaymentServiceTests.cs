@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Moq;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
@@ -21,6 +22,7 @@ namespace Nop.Services.Tests.Payments
         private Mock<ISettingService> _settingService;
         private IPaymentPluginManager _paymentPluginManager;
         private IPaymentService _paymentService;
+        private Mock<IHttpContextAccessor> _httpContextAccessor;
 
         [SetUp]
         public new void SetUp()
@@ -38,8 +40,9 @@ namespace Nop.Services.Tests.Payments
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _settingService = new Mock<ISettingService>();
+            _httpContextAccessor = new Mock<IHttpContextAccessor>();
             _paymentPluginManager = new PaymentPluginManager(pluginService, _settingService.Object, _paymentSettings);
-            _paymentService = new PaymentService(_paymentPluginManager, _paymentSettings, _shoppingCartSettings);
+            _paymentService = new PaymentService(_httpContextAccessor.Object, _paymentPluginManager, _paymentSettings, _shoppingCartSettings);
         }
 
         [Test]
