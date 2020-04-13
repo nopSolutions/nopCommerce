@@ -89,7 +89,7 @@ namespace Nop.Core.Domain.Security
         /// <summary>
         /// reCAPTCHA V3 score threshold
         /// </summary>
-        public double ReCaptchaV3ScoreThreshold { get; set; }
+        public decimal ReCaptchaV3ScoreThreshold { get; set; }
 
         /// <summary>
         /// reCAPTCHA theme

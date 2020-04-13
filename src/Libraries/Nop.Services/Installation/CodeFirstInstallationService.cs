@@ -6787,7 +6787,7 @@ namespace Nop.Services.Installation
                 AutomaticallyChooseLanguage = true,
                 Enabled = false,
                 CaptchaType = CaptchaType.CheckBoxReCaptchaV2,
-                ReCaptchaV3ScoreThreshold = 0.5,
+                ReCaptchaV3ScoreThreshold = 0.5M,
                 ShowOnApplyVendorPage = false,
                 ShowOnBlogCommentPage = false,
                 ShowOnContactUsPage = false,
