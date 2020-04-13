@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -143,7 +144,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 htmlAttributes.Add("class", "form-control");
 
             //generate editor
-            if (!_htmlHelper.ViewData.ContainsKey(For.Name) && For.Model != null && string.IsNullOrEmpty(For.Metadata.TemplateHint))
+            if (!_htmlHelper.ViewData.ContainsKey(For.Name) && Regex.IsMatch(For.Name, @"Locales(?=\[\w+\]\.)"))
                 _htmlHelper.ViewData.Add(For.Name, For.Model);
 
             var htmlOutput = _htmlHelper.Editor(For.Name, Template, new { htmlAttributes, postfix = Postfix });
