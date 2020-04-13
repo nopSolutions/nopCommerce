@@ -16,12 +16,10 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
     public class CategoriesController : Controller
     {
         private readonly IRepository<Category> _categoryRepository;
-        private readonly ICategoryModelFactory _categoryModelFactory;
 
-        public CategoriesController(IRepository<Category> categoryRepository, ICategoryModelFactory categoryModelFactory)
+        public CategoriesController(IRepository<Category> categoryRepository)
         {
             _categoryRepository = categoryRepository;
-            _categoryModelFactory = categoryModelFactory;
         }
 
         [HttpGet]
