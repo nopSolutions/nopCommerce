@@ -57,6 +57,9 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Components
             if (!_paymentPluginManager.IsPluginActive(Defaults.SystemName, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id))
                 return Content(string.Empty);
 
+            if (string.IsNullOrEmpty(_settings.ClientId))
+                return Content(string.Empty);
+
             if (!widgetZone.Equals(PublicWidgetZones.CheckoutPaymentInfoTop) &&
                 !widgetZone.Equals(PublicWidgetZones.OpcContentBefore) &&
                 !widgetZone.Equals(PublicWidgetZones.ProductDetailsTop) &&

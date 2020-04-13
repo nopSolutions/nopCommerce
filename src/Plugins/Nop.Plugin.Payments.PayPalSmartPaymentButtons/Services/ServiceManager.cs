@@ -103,7 +103,8 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         private bool IsConfigured(PayPalSmartPaymentButtonsSettings settings)
         {
             //client id and secret are required to request services
-            return !string.IsNullOrEmpty(settings?.ClientId) && !string.IsNullOrEmpty(settings?.SecretKey);
+            return !string.IsNullOrEmpty(settings?.ClientId) && 
+                (!string.IsNullOrEmpty(settings?.SecretKey) || settings.ClientId.Equals("sb", StringComparison.InvariantCultureIgnoreCase));
         }
 
         /// <summary>

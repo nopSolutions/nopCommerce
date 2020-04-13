@@ -7,7 +7,7 @@
     <div id="paypal-button-container"></div>
 
     <script asp-location="Footer">
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('.payment-info-next-step-button').hide();
 
             var paymentForm = paypal.Buttons({
@@ -36,6 +36,12 @@
             if (paymentForm) {
                 paymentForm.render('#paypal-button-container');
             }
+
+            $(document).on('accordion_section_opened', function (data) {
+                if (data.currentSectionId != 'opc-payment_info') {
+                    $('.payment-info-next-step-button').show();
+                }
+            });
         });
     </script>
 }
