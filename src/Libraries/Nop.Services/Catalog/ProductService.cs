@@ -2684,7 +2684,7 @@ namespace Nop.Services.Catalog
             if (!mappingsWithProducts.Any())
                 return;
 
-            foreach (var pdcm in mappingsWithProducts)
+            foreach (var pdcm in mappingsWithProducts.ToList())
             {
                 _discountProductMappingRepository.Delete(pdcm.dcm);
                 //event notification
