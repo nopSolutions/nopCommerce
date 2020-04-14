@@ -166,9 +166,13 @@ namespace Nop.Web.Factories
                                 Longitude = point.Longitude,
                                 OpeningHours = point.OpeningHours
                             };
-                            if (point.PickupFee > 0)
+
+                            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+                            var amount = _orderTotalCalculationService.IsFreeShipping(cart) ? 0 : point.PickupFee;
+
+                            if (amount > 0)
                             {
-                                var amount = _taxService.GetShippingPrice(point.PickupFee, _workContext.CurrentCustomer);
+                                amount = _taxService.GetShippingPrice(amount, _workContext.CurrentCustomer);
                                 amount = _currencyService.ConvertFromPrimaryStoreCurrency(amount, _workContext.WorkingCurrency);
                                 pickupPointModel.PickupFee = _priceFormatter.FormatShippingPrice(amount, true);
                             }
