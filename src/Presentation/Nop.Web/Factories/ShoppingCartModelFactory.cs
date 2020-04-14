@@ -1257,7 +1257,7 @@ namespace Nop.Web.Factories
         /// <param name="zipPostalCode">Zip postal code</param>
         /// <param name="cacheOfferedShippingOptions">Indicates whether to cache offered shipping options</param>
         /// <returns>Estimate shipping result model</returns>
-        public virtual EstimateShippingResultModel PrepareEstimateShippingResultModel(IList<ShoppingCartItem> cart, int? countryId, int? stateProvinceId, string zipPostalCode, bool cacheOfferedShippingOptions)
+        public virtual EstimateShippingResultModel PrepareEstimateShippingResultModel(IList<ShoppingCartItem> cart, int? countryId, int? stateProvinceId, string zipPostalCode, bool cacheShippingOptions)
         {
             var model = new EstimateShippingResultModel();
 
@@ -1318,7 +1318,8 @@ namespace Nop.Web.Factories
                             model.Warnings.Add(error);
                 }
 
-                if (cacheOfferedShippingOptions)
+                ShippingOption selectedShippingOption = null;
+                if (cacheShippingOptions)
                 {
                     //performance optimization. cache returned shipping options.
                     //we'll use them later (after a customer has selected an option).
@@ -1326,11 +1327,11 @@ namespace Nop.Web.Factories
                                                            NopCustomerDefaults.OfferedShippingOptionsAttribute,
                                                            rawShippingOptions,
                                                            _storeContext.CurrentStore.Id);
-                }
 
-                //find a selected (previously) shipping option
-                var selectedShippingOption = _genericAttributeService.GetAttribute<ShippingOption>(_workContext.CurrentCustomer,
-                        NopCustomerDefaults.SelectedShippingOptionAttribute, _storeContext.CurrentStore.Id);
+                    //find a selected (previously) shipping option
+                    selectedShippingOption = _genericAttributeService.GetAttribute<ShippingOption>(_workContext.CurrentCustomer,
+                            NopCustomerDefaults.SelectedShippingOptionAttribute, _storeContext.CurrentStore.Id);
+                }
 
                 if (rawShippingOptions.Any())
                 {
@@ -1353,7 +1354,8 @@ namespace Nop.Web.Factories
                             }
 
                             var selected = false;
-                            if (!string.IsNullOrEmpty(option.Name) &&
+                            if (selectedShippingOption != null &&
+                                   !string.IsNullOrEmpty(option.Name) &&
                                    option.Name.Equals(selectedShippingOption.Name, StringComparison.InvariantCultureIgnoreCase) &&
                                    !string.IsNullOrEmpty(option.ShippingRateComputationMethodSystemName) &&
                                    option.ShippingRateComputationMethodSystemName.Equals(selectedShippingOption.ShippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
