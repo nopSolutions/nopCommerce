@@ -79,11 +79,11 @@
         function updateMasterCheckbox() {
             var numChkBoxes = $('#@Model.Name input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]').length;
             var numChkBoxesChecked = $('#@Model.Name input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
-            $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+            $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
         }
 
         function clearMasterCheckbox() {
-            $('#mastercheckbox').attr('checked', false).change();
+            $('#mastercheckbox').prop('checked', false).change();
             selectedIds = [];
         }
         </text>
@@ -126,7 +126,7 @@
             <text>
             $('#@Model.SearchButtonId').click(function() {
                 $('#@Model.Name').DataTable().ajax.reload();
-                $('.checkboxGroups').attr('checked', false).change();
+                $('.checkboxGroups').prop('checked', false).change();
                 selectedIds = [];
                 return false;
             });
@@ -136,7 +136,7 @@
         {
             <text>
             $('#mastercheckbox').click(function () {
-                $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+                $('.checkboxGroups').prop('checked', $(this).is(':checked')).change();
             });
 
             $('#@Model.Name').on('change', 'input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]', function (e) {
