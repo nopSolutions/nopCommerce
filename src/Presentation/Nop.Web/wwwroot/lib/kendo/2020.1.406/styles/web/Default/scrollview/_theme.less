@@ -1,0 +1,50 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.k-scrollview-nav > li.k-link {
+    border-color: @scrollview-pagebutton-border;
+    background-color: @scrollview-pagebutton-bg;
+
+    &.k-primary {
+        border-color: @scrollview-pagebutton-primary-border;
+        background-color: @scrollview-pagebutton-primary-bg;
+    }
+
+    .box-shadow(@scrollview-pagebutton-shadow);
+    background-clip: padding-box;
+}
+
+.k-scrollview-elements {
+    color: @scrollview-navigation-color;
+}
+
+.k-scrollview-next,
+.k-scrollview-prev {
+    color: inherit;
+    background: @scrollview-navigation-background;
+    text-shadow: @scrollview-navigation-icon-shadow;
+    opacity: @scrollview-navigation-default-opacity;
+    outline-width: 0;
+    -webkit-tap-highlight-color: @scrollview-navigation-background;
+
+    &:hover {
+        color: @scrollview-navigation-color;
+        opacity: @scrollview-navigation-hover-opacity;
+
+        span::before {
+            background-color: @scrollview-navigation-hover-span-bg;
+        }
+    }
+}
