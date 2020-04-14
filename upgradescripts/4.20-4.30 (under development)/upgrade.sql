@@ -622,6 +622,9 @@ set @resources='
   <LocaleResource Name="Vendors.ApplyAccount.IsAdmin">
     <Value>Administrator cannot apply for vendor account</Value>
   </LocaleResource>
+  <LocaleResource Name="Checkout.Address.NotFound">
+    <Value>Address can''t be loaded</Value>
+  </LocaleResource>
 </Language>
 '
 
