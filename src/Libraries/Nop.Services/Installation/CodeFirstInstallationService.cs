@@ -11006,7 +11006,7 @@ namespace Nop.Services.Installation
                     });
 
                     product.ApprovedRatingSum = rating;
-                    //product.ApprovedTotalReviews = _dbContext.Set<ProductReview>().Count(r => r.ProductId == product.Id);
+                    product.ApprovedTotalReviews = 1;
                 }
             }
 
