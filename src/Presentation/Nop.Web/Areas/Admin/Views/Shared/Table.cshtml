@@ -81,27 +81,33 @@
             var numChkBoxesChecked = $('#@Model.Name input[type=checkbox][id!=mastercheckbox][class=checkboxGroups]:checked').length;
             $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
         }
-        </text>
-    }
 
-    function updateMasterCheckBox() {
-        if (@isMasterCheckBoxUsed.ToString().ToLower()) {
+        function clearMasterCheckbox() {
             $('#mastercheckbox').attr('checked', false).change();
             selectedIds = [];
         }
+        </text>
     }
 
     function updateTableSrc(tableSelector) {
         var dataSrc = $(tableSelector).DataTable().data();
         $(tableSelector).DataTable().clear().rows.add(dataSrc).draw();
         $(tableSelector).DataTable().columns.adjust();
-        updateMasterCheckBox;
+        
+        @if (isMasterCheckBoxUsed)
+        {
+            <text>clearMasterCheckbox;</text>
+        }
     }
 
     function updateTable(tableSelector) {
         $(tableSelector).DataTable().ajax.reload();     
         $(tableSelector).DataTable().columns.adjust();
-        updateMasterCheckBox;
+        
+        @if (isMasterCheckBoxUsed)
+        {
+            <text>clearMasterCheckbox;</text>
+        }    
     }
 
     function updateTableWidth(tableSelector) {
