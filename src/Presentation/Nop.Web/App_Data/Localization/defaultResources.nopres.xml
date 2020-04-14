@@ -18261,6 +18261,9 @@
   <LocaleResource Name="Vendors.ApplyAccount.Email.Required">
     <Value>Email is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.IsAdmin">
+    <Value>Administrator cannot apply for vendor account</Value>
+  </LocaleResource>
   <LocaleResource Name="Vendors.ApplyAccount.Name">
     <Value>Vendor name</Value>
   </LocaleResource>

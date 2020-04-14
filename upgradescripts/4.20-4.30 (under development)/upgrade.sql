@@ -619,6 +619,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.BlockTitle.Price">
     <Value>Prices</Value>
   </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.IsAdmin">
+    <Value>Administrator cannot apply for vendor account</Value>
+  </LocaleResource>
 </Language>
 '
 

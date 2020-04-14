@@ -200,6 +200,9 @@ namespace Nop.Web.Controllers
             if (!_customerService.IsRegistered(_workContext.CurrentCustomer))
                 return Challenge();
 
+            if (_customerService.IsAdmin(_workContext.CurrentCustomer))
+                ModelState.AddModelError("", _localizationService.GetResource("Vendors.ApplyAccount.IsAdmin"));
+
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage && !captchaValid)
             {
