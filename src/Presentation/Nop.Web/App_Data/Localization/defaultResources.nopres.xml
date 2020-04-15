@@ -11061,6 +11061,9 @@
   <LocaleResource Name="Admin.Customers.OnlineCustomers.Fields.Location">
     <Value>Location</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.NoCustomers">
+    <Value>No customers selected</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Dashboard">
     <Value>Dashboard</Value>
   </LocaleResource>
@@ -11904,6 +11907,9 @@
   <LocaleResource Name="Admin.Orders.List.Warehouse.Hint">
     <Value>Load orders with products from a specified warehouse.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.NoOrders">
+    <Value>No orders selected</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.OrderItem.DeleteAssociatedGiftCardRecordError">
     <Value>This order item has an associated gift card record. Please delete it first</Value>
   </LocaleResource>
@@ -11954,10 +11960,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.PdfInvoice">
     <Value>Invoice (PDF)</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Orders.PdfInvoice.NoOrders">
-    <Value>No orders selected</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Orders.PdfInvoices">
     <Value>Print PDF invoices</Value>
   </LocaleResource>
@@ -12383,6 +12386,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Plugins.Saved">
     <Value>The plugin has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Products.NoProducts">
+    <Value>No products selected</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions">
     <Value>Promotions</Value>

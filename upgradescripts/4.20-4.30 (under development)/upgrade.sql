@@ -625,6 +625,18 @@ set @resources='
   <LocaleResource Name="Checkout.Address.NotFound">
     <Value>Address can''t be loaded</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.PdfInvoice.NoOrders">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.NoOrders">
+    <Value>No orders selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Products.NoProducts">
+    <Value>No products selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.NoCustomers">
+    <Value>No customers selected</Value>
+  </LocaleResource>
 </Language>
 '
 
