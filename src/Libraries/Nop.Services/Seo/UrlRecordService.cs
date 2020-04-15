@@ -1503,7 +1503,7 @@ namespace Nop.Services.Seo
                 if (convertNonWesternChars)
                 {
                     if (_seoCharacterTable?.ContainsKey(c2) ?? false)
-                        c2 = _seoCharacterTable[c2];
+                        c2 = _seoCharacterTable[c2].ToLowerInvariant();
                 }
 
                 if (allowUnicodeCharsInUrls)
