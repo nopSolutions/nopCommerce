@@ -66,6 +66,7 @@
         public static string CheckoutPaymentInfoTop => "checkout_payment_info_top";
         public static string CheckoutPaymentMethodBottom => "checkout_payment_method_bottom";
         public static string CheckoutPaymentMethodTop => "checkout_payment_method_top";
+        public static string CheckoutPickUpPointsAfter => "checkout_pickup_points_after";
         public static string CheckoutProgressAfter => "checkout_progress_after";
         public static string CheckoutProgressBefore => "checkout_progress_before";
         public static string CheckoutShippingAddressBottom => "checkout_shipping_address_bottom";
