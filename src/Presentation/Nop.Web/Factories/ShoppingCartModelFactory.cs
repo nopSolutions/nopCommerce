@@ -1309,7 +1309,8 @@ namespace Nop.Web.Factories
                                 Description = _localizationService.GetResource("Checkout.PickupPoints.Description"),
                                 Rate = pickupPoint.PickupFee,
                                 TransitDays = pickupPoint.TransitDays,
-                                ShippingRateComputationMethodSystemName = pickupPoint.ProviderSystemName
+                                ShippingRateComputationMethodSystemName = pickupPoint.ProviderSystemName,
+                                IsPickupInStore = true
                             });
                         }
                     }
@@ -1340,7 +1341,7 @@ namespace Nop.Web.Factories
                         .ThenBy(option => option.TransitDays)
                         .Select(option =>
                         {
-                            var shippingRate = _orderTotalCalculationService.AdjustShippingRate(option.Rate, cart, out var _);
+                            var shippingRate = _orderTotalCalculationService.AdjustShippingRate(option.Rate, cart, out var _, option.IsPickupInStore);
                             shippingRate = _taxService.GetShippingPrice(shippingRate, _workContext.CurrentCustomer);
                             shippingRate = _currencyService.ConvertFromPrimaryStoreCurrency(shippingRate, _workContext.WorkingCurrency);
                             var shippingRateString = _priceFormatter.FormatShippingPrice(shippingRate, true);
@@ -1355,10 +1356,12 @@ namespace Nop.Web.Factories
 
                             var selected = false;
                             if (selectedShippingOption != null &&
-                                   !string.IsNullOrEmpty(option.Name) &&
-                                   option.Name.Equals(selectedShippingOption.Name, StringComparison.InvariantCultureIgnoreCase) &&
-                                   !string.IsNullOrEmpty(option.ShippingRateComputationMethodSystemName) &&
-                                   option.ShippingRateComputationMethodSystemName.Equals(selectedShippingOption.ShippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
+                            !string.IsNullOrEmpty(option.ShippingRateComputationMethodSystemName) &&
+                                   option.ShippingRateComputationMethodSystemName.Equals(selectedShippingOption.ShippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase) &&
+                                   (!string.IsNullOrEmpty(option.Name) &&
+                                   option.Name.Equals(selectedShippingOption.Name, StringComparison.InvariantCultureIgnoreCase) || 
+                                   option.IsPickupInStore == selectedShippingOption.IsPickupInStore)
+                                   )
                             {
                                 selected = true;
                             }

@@ -209,7 +209,8 @@ namespace Nop.Web.Controllers
                 Name = string.Format(_localizationService.GetResource("Checkout.PickupPoints.Name"), pickupPoint.Name),
                 Rate = pickupPoint.PickupFee,
                 Description = pickupPoint.Description,
-                ShippingRateComputationMethodSystemName = pickupPoint.ProviderSystemName
+                ShippingRateComputationMethodSystemName = pickupPoint.ProviderSystemName,
+                IsPickupInStore = true
             };
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedShippingOptionAttribute, pickUpInStoreShippingOption, _storeContext.CurrentStore.Id);
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedPickupPointAttribute, pickupPoint, _storeContext.CurrentStore.Id);
