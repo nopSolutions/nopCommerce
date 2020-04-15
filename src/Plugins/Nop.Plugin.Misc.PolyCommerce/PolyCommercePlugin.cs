@@ -15,17 +15,10 @@ namespace Nop.Plugin.Misc.PolyCommerce
 {
     public class PolyCommercePlugin : BasePlugin, IAdminMenuPlugin
     {
-        private readonly ISettingService _settingService;
         private readonly IDbContext _dbContext;
 
-        public PolyCommercePlugin(ISettingService settingService, IStoreService storeService, IStoreContext storeContext, IWorkContext _workContext, IDbContext dbContext)
+        public PolyCommercePlugin(ISettingService settingService, IDbContext dbContext)
         {
-            var stores = storeService.GetAllStores(false);
-
-            var user = _workContext.CurrentCustomer;
-
-            var active = storeContext.CurrentStore;
-            _settingService = settingService;
             _dbContext = dbContext;
         }
         public override void Install()
@@ -49,17 +42,24 @@ namespace Nop.Plugin.Misc.PolyCommerce
         public void ManageSiteMap(SiteMapNode rootNode)
         {
             // Create custom PolyCommerce menu item
+
             var menuItem = new SiteMapNode()
             {
                 SystemName = "PolyCommercePlugin",
                 Title = "PolyCommerce",
                 IconClass = "fa-cubes",
-                Url = "/Admin/PolyCommerce/Configure",
+                Url = "/Admin/PolyCommerce/Dashboard",
                 Visible = true,
+                OpenUrlInNewTab = true,
                 RouteValues = new RouteValueDictionary() { { "area", null } },
             };
 
-            rootNode.ChildNodes.Add(menuItem);
+            // Add PolyCommerce menu item if it does not already exist.
+            if (!rootNode.ChildNodes.Any(x => string.Equals(x.SystemName, "PolyCommercePlugin")))
+            {
+                rootNode.ChildNodes.Add(menuItem);
+            }
+                
         }
     }
 }

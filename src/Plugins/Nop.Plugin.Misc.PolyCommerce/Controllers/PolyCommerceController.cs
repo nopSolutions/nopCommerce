@@ -1,26 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Data;
-using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Orders;
 using Nop.Data;
 using Nop.Plugin.Misc.PolyCommerce.Models;
 using Nop.Services.Directory;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Services.Logging;
 
 namespace Nop.Plugin.Misc.PolyCommerce.Controllers
 {
@@ -31,103 +26,120 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         private readonly IWorkContext _workContext;
         private readonly CurrencySettings _currencySettings;
         private readonly ICurrencyService _currencyService;
+        private readonly ILogger _logger;
         private const string POLY_COMMERCE_BASE_URL = "https://localhost:44340";
+        private const int NOP_COMMERCE = 2;
 
-        public PolyCommerceController(IDbContext dbContext, IStoreContext storeContext, IWorkContext workContext, ICurrencyService currencyService, CurrencySettings currencySettings)
+        public PolyCommerceController(IDbContext dbContext,
+            IStoreContext storeContext,
+            IWorkContext workContext,
+            ICurrencyService currencyService,
+            CurrencySettings currencySettings,
+            ILogger logger)
         {
             _dbContext = dbContext;
             _currencyService = currencyService;
             _storeContext = storeContext;
             _workContext = workContext;
             _currencySettings = currencySettings;
+            _logger = logger;
         }
 
         [AuthorizeAdmin]
         [Area(AreaNames.Admin)]
         [HttpGet]
-        public async Task<IActionResult> Configure()
+        public async Task<IActionResult> Dashboard()
         {
-            // get short lived token for user..
-            
-            var dataSettings = DataSettingsManager.LoadSettings();
-
-            string storeToken = null;
-
-            using (var conn = new SqlConnection(dataSettings.DataConnectionString))
+            try
             {
-                using (var command = new SqlCommand())
+                var dataSettings = DataSettingsManager.LoadSettings();
+
+                string storeToken = null;
+
+                using (var conn = new SqlConnection(dataSettings.DataConnectionString))
                 {
-                    command.CommandText = @"select Token
+                    using (var command = new SqlCommand())
+                    {
+                        command.CommandText = @"select Token
                                             from[dbo].[PolyCommerceStore]
                                             where StoreId = @StoreId";
 
-                    command.CommandType = CommandType.Text;
-                    command.Parameters.Add(new SqlParameter("@StoreId", _storeContext.CurrentStore.Id));
+                        command.CommandType = CommandType.Text;
+                        command.Parameters.Add(new SqlParameter("@StoreId", _storeContext.CurrentStore.Id));
 
-                    command.Connection = conn;
+                        command.Connection = conn;
 
-                    await conn.OpenAsync();
+                        await conn.OpenAsync();
 
-                    storeToken = (await command.ExecuteScalarAsync())?.ToString();
+                        storeToken = (await command.ExecuteScalarAsync())?.ToString();
+                    }
                 }
-            }
 
-            if (storeToken == null)
-            {
-
-                storeToken = Guid.NewGuid().ToString("N").ToLower();
-                var affectedRecords = _dbContext.ExecuteSqlCommand("insert into [dbo].[PolyCommerceStore](StoreId, Token, CreatedOnUtc, IsActive) values(@StoreId, @Token, @CreatedOnUtc, @IsActive)", false, null, 
-                    new SqlParameter("@StoreId", _storeContext.CurrentStore.Id), 
-                    new SqlParameter("@Token", storeToken), 
-                    new SqlParameter("@CreatedOnUtc", DateTime.UtcNow), 
-                    new SqlParameter("@IsActive", true));
-
-                if (affectedRecords != 1)
+                if (storeToken == null)
                 {
-                    // return error view
+
+                    storeToken = Guid.NewGuid().ToString("N").ToLower();
+                    var affectedRecords = _dbContext.ExecuteSqlCommand("insert into [dbo].[PolyCommerceStore](StoreId, Token, CreatedOnUtc, IsActive) values(@StoreId, @Token, @CreatedOnUtc, @IsActive)", false, null,
+                        new SqlParameter("@StoreId", _storeContext.CurrentStore.Id),
+                        new SqlParameter("@Token", storeToken),
+                        new SqlParameter("@CreatedOnUtc", DateTime.UtcNow),
+                        new SqlParameter("@IsActive", true));
+
+                    if (affectedRecords != 1)
+                    {
+                        // return error view
+                        _logger.Error($"PolyCommerce | There was a problem inserting into table [dbo].[PolyCommerceStore]. Expected 1 record to be inserted but instead {affectedRecords} records were affected.");
+                        return Redirect($"{POLY_COMMERCE_BASE_URL}/unexpected-error");
+                    }
                 }
-            }
 
-            var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+                var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
 
-            var request = new LoginModel
-            {
-                StoreName = _storeContext.CurrentStore.Name,
-                CustomerGuid = _workContext.CurrentCustomer.CustomerGuid.ToString(),
-                UserId = _workContext.CurrentCustomer.Id.ToString(),
-                StoreUrl = _storeContext.CurrentStore.Url,
-                StoreToken = storeToken,
-                Username = _workContext.CurrentCustomer.Username,
-                UserEmail = _workContext.CurrentCustomer.Email,
-                StoreIntegrationTypeId = 2,
-                StoreCurrencyCode = primaryStoreCurrency
-            };
 
-            var model = new ConfigureViewModel()
-            {
-                PolyCommerceBaseUrl = POLY_COMMERCE_BASE_URL
-            };
 
-            using (var client = new HttpClient())
-            {
-                var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-                var result = await client.PostAsync($"{POLY_COMMERCE_BASE_URL}/api/account/generate_external_token", content);
-
-                var resultString = await result.Content.ReadAsStringAsync();
-
-                if (result.IsSuccessStatusCode)
+                var request = new LoginModel
                 {
-                    model.UserToken = resultString;
-                }
-                else
+                    StoreName = _storeContext.CurrentStore.Name,
+                    CustomerGuid = _workContext.CurrentCustomer.CustomerGuid.ToString(),
+                    UserId = _workContext.CurrentCustomer.Id.ToString(),
+                    StoreUrl = _storeContext.CurrentStore.Url,
+                    StoreToken = storeToken,
+                    Username = _workContext.CurrentCustomer.Username,
+                    UserEmail = _workContext.CurrentCustomer.Email,
+                    StoreIntegrationTypeId = NOP_COMMERCE,
+                    StoreCurrencyCode = primaryStoreCurrency
+                };
+
+                string userToken = null;
+
+                using (var client = new HttpClient())
                 {
-                    // return error view
+                    // get short lived token for user..
+                    var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+                    var result = await client.PostAsync($"{POLY_COMMERCE_BASE_URL}/api/account/generate_external_token", content);
+
+                    var resultString = await result.Content.ReadAsStringAsync();
+
+                    if (result.IsSuccessStatusCode)
+                    {
+                        _logger.Information($"PolyCommerce | Successfully generated authentication token for user '{_workContext.CurrentCustomer.Username}'.");
+                        userToken = resultString;
+                    }
+                    else
+                    {
+                        // return error view
+                        _logger.Error($"PolyCommerce | Could not generate authentication token. {userToken}");
+                        return Redirect($"{POLY_COMMERCE_BASE_URL}/unexpected-error");
+                    }
                 }
 
-                
+                return Redirect($"{POLY_COMMERCE_BASE_URL}/account/login?token={userToken}");
             }
-
-            return View("~/Plugins/Misc.PolyCommerce/Views/Configure.cshtml", model);
+            catch (Exception ex)
+            {
+                _logger.Error("PolyCommerce | Could not generate authentication token.", ex);
+                return Redirect($"{POLY_COMMERCE_BASE_URL}/unexpected-error");
+            }
         }
     }
 }
