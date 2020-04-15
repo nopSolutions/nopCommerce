@@ -625,6 +625,36 @@ set @resources='
   <LocaleResource Name="Checkout.Address.NotFound">
     <Value>Address can''t be loaded</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.DisplayOrder.Required">
+    <Value>Please provide a display order.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.DisplayOrder.Required">
+    <Value>Please provide a display order.</Value>
+  </LocaleResource>  
+  <LocaleResource Name=" Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder.Required">
+    <Value>Please provide a display order.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Tax.Categories.Fields.DisplayOrder.Required">
+    <Value>Please provide a display order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Category.DisplayOrder.Required">
+    <Value>Please provide a display order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Manufacturer.DisplayOrder.Required">
+    <Value>Please provide a display order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.DisplayOrder.Required">
+    <Value>Please provide a display order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.DisplayOrder.Required">
+    <Value>Please provide a display order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.Ratio.Required">
+    <Value>Please provide a weight ratio.</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.Ratio.Required">
+    <Value>Please provide a dimension ratio.</Value>
+  </LocaleResource>
 </Language>
 '
 

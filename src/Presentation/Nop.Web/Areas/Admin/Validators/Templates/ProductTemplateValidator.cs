@@ -13,6 +13,7 @@ namespace Nop.Web.Areas.Admin.Validators.Templates
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.System.Templates.Product.Name.Required"));
             RuleFor(x => x.ViewPath).NotEmpty().WithMessage(localizationService.GetResource("Admin.System.Templates.Product.ViewPath.Required"));
+            RuleFor(x => x.DisplayOrder).NotEmpty().WithMessage(localizationService.GetResource("Admin.System.Templates.Product.DisplayOrder.Required"));
 
             SetDatabaseValidationRules<ProductTemplate>(dataProvider);
         }

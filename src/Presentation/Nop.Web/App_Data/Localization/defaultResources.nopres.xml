@@ -8625,6 +8625,9 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.DisplayOrder.Hint">
     <Value>The display order of this dimension. 1 represents the top of the list.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.DisplayOrder.Required">
+    <Value>Please provide a display order.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.IsPrimaryDimension">
     <Value>Is primary dimension</Value>
   </LocaleResource>
@@ -8645,6 +8648,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.Ratio.Hint">
     <Value>Specify the dimension ratio.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.Ratio.Required">
+    <Value>Please provide a dimension ratio.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.SystemKeyword">
     <Value>System keyword</Value>
@@ -8670,6 +8676,9 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.DisplayOrder.Hint">
     <Value>The display order of this weight. 1 represents the top of the list.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.DisplayOrder.Required">
+    <Value>Please provide a display order.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.IsPrimaryWeight">
     <Value>Is primary weight</Value>
   </LocaleResource>
@@ -8690,6 +8699,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.Ratio.Hint">
     <Value>Specify the weight ratio.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.Ratio.Required">
+     <Value>Please provide a weight ratio.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.SystemKeyword">
     <Value>System keyword</Value>
@@ -9017,6 +9029,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Tax.Categories.Fields.DisplayOrder.Hint">
     <Value>The display order of this tax category. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Tax.Categories.Fields.DisplayOrder.Required">
+    <Value>Please provide a display order.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Tax.Categories.Fields.Name">
     <Value>Name</Value>
@@ -9848,6 +9863,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder.Hint">
     <Value>The display order of this poll answer. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name=" Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder.Required">
+    <Value>Please provide a display order.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Answers.Fields.Name">
     <Value>Name</Value>
@@ -14223,6 +14241,9 @@
   <LocaleResource Name="Admin.System.Templates.Category.DisplayOrder.Hint">
     <Value>The display order of this template. 1 represents the top of the list.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Category.DisplayOrder.Required">
+    <Value>Please provide a display order.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Templates.Category.Name">
     <Value>Name</Value>
   </LocaleResource>
@@ -14250,6 +14271,9 @@
   <LocaleResource Name="Admin.System.Templates.Manufacturer.DisplayOrder.Hint">
     <Value>The display order of this template. 1 represents the top of the list.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Manufacturer.DisplayOrder.Required">
+     <Value>Please provide a display order.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Templates.Manufacturer.Name">
     <Value>Name</Value>
   </LocaleResource>
@@ -14276,6 +14300,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.Templates.Product.DisplayOrder.Hint">
     <Value>The display order of this template. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.DisplayOrder.Required">
+     <Value>Please provide a display order.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Templates.Product.IgnoredProductTypes">
     <Value>Ignored product type IDs (advanced)</Value>
@@ -14309,6 +14336,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.Templates.Topic.DisplayOrder.Hint">
     <Value>The display order of this template. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.DisplayOrder.Required">
+    <Value>Please provide a display order.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Templates.Topic.Name">
     <Value>Name</Value>

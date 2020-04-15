@@ -12,6 +12,7 @@ namespace Nop.Web.Areas.Admin.Validators.Tax
         public TaxCategoryValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Tax.Categories.Fields.Name.Required"));
+            RuleFor(x => x.DisplayOrder).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Tax.Categories.Fields.DisplayOrder.Required"));
 
             SetDatabaseValidationRules<TaxCategory>(dataProvider);
         }
