@@ -1186,7 +1186,7 @@ namespace Nop.Web.Controllers
                 {
                     //existing address
                     var address = _customerService.GetCustomerAddress(_workContext.CurrentCustomer.Id, billingAddressId)
-                        ?? throw new Exception("Address can't be loaded");
+                        ?? throw new Exception(_localizationService.GetResource("Checkout.Address.NotFound"));
 
                     _workContext.CurrentCustomer.BillingAddressId = address.Id;
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
@@ -1346,7 +1346,7 @@ namespace Nop.Web.Controllers
                 {
                     //existing address
                     var address = _customerService.GetCustomerAddress(_workContext.CurrentCustomer.Id, shippingAddressId)
-                        ?? throw new Exception("Address can't be loaded");
+                        ?? throw new Exception(_localizationService.GetResource("Checkout.Address.NotFound"));
 
                     _workContext.CurrentCustomer.ShippingAddressId = address.Id;
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);

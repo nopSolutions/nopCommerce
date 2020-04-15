@@ -1545,7 +1545,7 @@ namespace Nop.Services.Customers
 
             var key = NopCustomerServiceCachingDefaults.CustomerAddressCacheKeyCacheKey.FillCacheKey(customerId, addressId);
 
-            return _cacheManager.Get(key, () => query.Single());
+            return _cacheManager.Get(key, () => query.FirstOrDefault());
         }
 
         /// <summary>
