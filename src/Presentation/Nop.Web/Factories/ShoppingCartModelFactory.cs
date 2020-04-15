@@ -1360,7 +1360,7 @@ namespace Nop.Web.Factories
                                    option.ShippingRateComputationMethodSystemName.Equals(selectedShippingOption.ShippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase) &&
                                    (!string.IsNullOrEmpty(option.Name) &&
                                    option.Name.Equals(selectedShippingOption.Name, StringComparison.InvariantCultureIgnoreCase) || 
-                                   option.IsPickupInStore == selectedShippingOption.IsPickupInStore)
+                                   (option.IsPickupInStore && option.IsPickupInStore == selectedShippingOption.IsPickupInStore))
                                    )
                             {
                                 selected = true;
