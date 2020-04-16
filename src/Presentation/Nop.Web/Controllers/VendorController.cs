@@ -100,7 +100,7 @@ namespace Nop.Web.Controllers
             var attributes = _vendorAttributeService.GetAllVendorAttributes();
             foreach (var attribute in attributes)
             {
-                var controlId = $"vendor_attribute_{attribute.Id}";
+                var controlId = $"{NopVendorDefaults.VendorAttributePrefix}{attribute.Id}";
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
