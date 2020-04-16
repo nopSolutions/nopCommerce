@@ -655,6 +655,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.Ratio.Required">
     <Value>Please provide a dimension ratio.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Clear">
+    <Value>Clear activity log</Value>
+  </LocaleResource>
 </Language>
 '
 
