@@ -42,7 +42,6 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         private readonly IOrderService _orderService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IProductService _productService;
-        private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
@@ -64,7 +63,6 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
             IOrderService orderService,
             IOrderTotalCalculationService orderTotalCalculationService,
             IProductService productService,
-            IShippingPluginManager shippingPluginManager,
             IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
@@ -82,7 +80,6 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
             _orderService = orderService;
             _orderTotalCalculationService = orderTotalCalculationService;
             _productService = productService;
-            _shippingPluginManager = shippingPluginManager;
             _shoppingCartService = shoppingCartService;
             _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
@@ -103,7 +100,7 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
         private bool IsConfigured(PayPalSmartPaymentButtonsSettings settings)
         {
             //client id and secret are required to request services
-            return !string.IsNullOrEmpty(settings?.ClientId) && 
+            return !string.IsNullOrEmpty(settings?.ClientId) &&
                 (!string.IsNullOrEmpty(settings?.SecretKey) || settings.ClientId.Equals("sb", StringComparison.InvariantCultureIgnoreCase));
         }
 
@@ -317,12 +314,11 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons.Services
                 }
 
                 //prepare purchase unit details
-                var shippingPlugins = _shippingPluginManager.LoadActivePlugins(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
                 var shoppingCart = _shoppingCartService
                     .GetShoppingCart(_workContext.CurrentCustomer, Core.Domain.Orders.ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id)
                     .ToList();
-                var taxTotal = Math.Round(_orderTotalCalculationService.GetTaxTotal(shoppingCart, shippingPlugins, false), 2);
-                var shippingTotal = Math.Round(_orderTotalCalculationService.GetShoppingCartShippingTotal(shoppingCart, shippingPlugins) ?? decimal.Zero, 2);
+                var taxTotal = Math.Round(_orderTotalCalculationService.GetTaxTotal(shoppingCart, false), 2);
+                var shippingTotal = Math.Round(_orderTotalCalculationService.GetShoppingCartShippingTotal(shoppingCart) ?? decimal.Zero, 2);
                 var orderTotal = Math.Round(_orderTotalCalculationService.GetShoppingCartTotal(shoppingCart, usePaymentMethodAdditionalFee: false) ?? decimal.Zero, 2);
 
                 var purchaseUnit = new PurchaseUnitRequest

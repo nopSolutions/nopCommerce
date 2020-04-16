@@ -45,7 +45,6 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
         private readonly IPictureService _pictureService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
-        private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
@@ -73,7 +72,6 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             IPictureService pictureService,
             IProductAttributeParser productAttributeParser,
             IProductService productService,
-            IShippingPluginManager shippingPluginManager,
             IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
@@ -97,7 +95,6 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
             _pictureService = pictureService;
             _productAttributeParser = productAttributeParser;
             _productService = productService;
-            _shippingPluginManager = shippingPluginManager;
             _shoppingCartService = shoppingCartService;
             _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
@@ -175,13 +172,11 @@ namespace Nop.Plugin.Misc.SendinBlue.Services
                     var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
                     //get shopping cart amounts
-                    var shippingRateComputationMethods = _shippingPluginManager
-                        .LoadActivePlugins(customer, _storeContext.CurrentStore.Id);
                     _orderTotalCalculationService.GetShoppingCartSubTotal(cart,
                         _workContext.TaxDisplayType == TaxDisplayType.IncludingTax,
                         out var cartDiscount, out _, out var cartSubtotal, out _);
-                    var cartTax = _orderTotalCalculationService.GetTaxTotal(cart, shippingRateComputationMethods, false);
-                    var cartShipping = _orderTotalCalculationService.GetShoppingCartShippingTotal(cart, shippingRateComputationMethods);
+                    var cartTax = _orderTotalCalculationService.GetTaxTotal(cart, false);
+                    var cartShipping = _orderTotalCalculationService.GetShoppingCartShippingTotal(cart);
                     var cartTotal = _orderTotalCalculationService.GetShoppingCartTotal(cart, false, false);
 
                     //get products data by shopping cart items

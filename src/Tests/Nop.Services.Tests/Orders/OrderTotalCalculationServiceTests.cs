@@ -48,7 +48,6 @@ namespace Nop.Services.Tests.Orders
         private readonly Mock<IGenericAttributeService> _genericAttributeService = new Mock<IGenericAttributeService>();
         private readonly Mock<IPaymentService> _paymentService = new Mock<IPaymentService>();
         private readonly Mock<IStoreContext> _storeContext = new Mock<IStoreContext>();
-        private readonly Mock<IWorkContext> _workContext = new Mock<IWorkContext>();
 
         private readonly RewardPointsSettings _rewardPointsSettings = new RewardPointsSettings();
         private readonly ShippingPluginManager _shippingPluginManager;
@@ -790,9 +789,7 @@ namespace Nop.Services.Tests.Orders
             var customer = _customerService.GetCustomerById(1);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-            var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins(_shippingSettings.ActiveShippingRateComputationMethodSystemNames, _workContext.Object.CurrentCustomer, _storeContext.Object.CurrentStore.Id);
-
-            var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, false, shippingRateComputationMethods, out var taxRate, out var appliedDiscounts);
+            var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, false, out var taxRate, out var appliedDiscounts);
             shipping.Should().NotBeNull();
             //10 - default fixed shipping rate, 42.5 - additional shipping change
             shipping.Should().Be(52.5M);
@@ -865,9 +862,7 @@ namespace Nop.Services.Tests.Orders
             var customer = _customerService.GetCustomerById(1);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-            var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins(_shippingSettings.ActiveShippingRateComputationMethodSystemNames, _workContext.Object.CurrentCustomer, _storeContext.Object.CurrentStore.Id);
-
-            var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, true, shippingRateComputationMethods, out var taxRate, out var appliedDiscounts);
+            var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, true, out var taxRate, out var appliedDiscounts);
             shipping.Should().NotBeNull();
             //10 - default fixed shipping rate, 42.5 - additional shipping change
             shipping.Should().Be(57.75M);
@@ -951,9 +946,7 @@ namespace Nop.Services.Tests.Orders
                 DiscountLimitation = DiscountLimitationType.Unlimited
             });
 
-            var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins(_shippingSettings.ActiveShippingRateComputationMethodSystemNames, _workContext.Object.CurrentCustomer, _storeContext.Object.CurrentStore.Id);
-
-            var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, false, shippingRateComputationMethods, out var taxRate, out var appliedDiscounts);
+            var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, false, out var taxRate, out var appliedDiscounts);
             appliedDiscounts.Count.Should().Be(1);
             appliedDiscounts.First().Name.Should().Be("Discount 1");
             shipping.Should().NotBeNull();
@@ -1035,9 +1028,7 @@ namespace Nop.Services.Tests.Orders
                 DiscountLimitation = DiscountLimitationType.Unlimited
             });
 
-            var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins(_shippingSettings.ActiveShippingRateComputationMethodSystemNames, _workContext.Object.CurrentCustomer, _storeContext.Object.CurrentStore.Id);
-
-            var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, true, shippingRateComputationMethods, out var taxRate, out var appliedDiscounts);
+            var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, true, out var taxRate, out var appliedDiscounts);
             appliedDiscounts.Count.Should().Be(1);
             appliedDiscounts.First().Name.Should().Be("Discount 1");
             shipping.Should().NotBeNull();
@@ -1093,12 +1084,10 @@ namespace Nop.Services.Tests.Orders
 
             //56 - items, 10 - shipping (fixed), 20 - payment fee
 
-            var shippingRateComputationMethods = _shippingPluginManager.LoadActivePlugins(_shippingSettings.ActiveShippingRateComputationMethodSystemNames, _workContext.Object.CurrentCustomer, _storeContext.Object.CurrentStore.Id);
-
             //1. shipping is taxable, payment fee is taxable
             _taxSettings.ShippingIsTaxable = true;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
-            _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out var taxRates).Should().Be(8.6M);
+            _orderTotalCalcService.GetTaxTotal(cart, out var taxRates).Should().Be(8.6M);
             taxRates.Should().NotBeNull();
             taxRates.Count.Should().Be(1);
             taxRates.ContainsKey(10).Should().BeTrue();
@@ -1107,7 +1096,7 @@ namespace Nop.Services.Tests.Orders
             //2. shipping is taxable, payment fee is not taxable
             _taxSettings.ShippingIsTaxable = true;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = false;
-            _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out taxRates).Should().Be(6.6M);
+            _orderTotalCalcService.GetTaxTotal(cart, out taxRates).Should().Be(6.6M);
             taxRates.Should().NotBeNull();
             taxRates.Count.Should().Be(1);
             taxRates.ContainsKey(10).Should().BeTrue();
@@ -1116,7 +1105,7 @@ namespace Nop.Services.Tests.Orders
             //3. shipping is not taxable, payment fee is taxable
             _taxSettings.ShippingIsTaxable = false;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
-            _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out taxRates).Should().Be(7.6M);
+            _orderTotalCalcService.GetTaxTotal(cart, out taxRates).Should().Be(7.6M);
             taxRates.Should().NotBeNull();
             taxRates.Count.Should().Be(1);
             taxRates.ContainsKey(10).Should().BeTrue();
@@ -1125,7 +1114,7 @@ namespace Nop.Services.Tests.Orders
             //3. shipping is not taxable, payment fee is not taxable
             _taxSettings.ShippingIsTaxable = false;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = false;
-            _orderTotalCalcService.GetTaxTotal(cart, shippingRateComputationMethods, out taxRates).Should().Be(5.6M);
+            _orderTotalCalcService.GetTaxTotal(cart, out taxRates).Should().Be(5.6M);
             taxRates.Should().NotBeNull();
             taxRates.Count.Should().Be(1);
             taxRates.ContainsKey(10).Should().BeTrue();
