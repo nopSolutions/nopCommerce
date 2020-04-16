@@ -6,7 +6,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -129,7 +129,7 @@ namespace Nop.Services.Messages
             if (string.IsNullOrWhiteSpace(messageTemplateName))
                 throw new ArgumentException(nameof(messageTemplateName));
 
-            var key = NopMessageCachingDefaults.MessageTemplatesByNameCacheKey.FillCacheKey(messageTemplateName, storeId);
+            var key = NopMessageDefaults.MessageTemplatesByNameCacheKey.FillCacheKey(messageTemplateName, storeId);
             return _cacheManager.Get(key, () =>
             {
                 //get message templates with the passed name
@@ -152,7 +152,7 @@ namespace Nop.Services.Messages
         /// <returns>Message template list</returns>
         public virtual IList<MessageTemplate> GetAllMessageTemplates(int storeId)
         {
-            var key = NopMessageCachingDefaults.MessageTemplatesAllCacheKey.FillCacheKey(storeId);
+            var key = NopMessageDefaults.MessageTemplatesAllCacheKey.FillCacheKey(storeId);
 
             var query = _messageTemplateRepository.Table;
             query = query.OrderBy(t => t.Name);

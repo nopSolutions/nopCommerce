@@ -9,7 +9,6 @@ using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Configuration;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -50,7 +49,7 @@ namespace Nop.Services.Configuration
         protected virtual IDictionary<string, IList<Setting>> GetAllSettingsDictionary()
         {
             //cache
-            return _cacheManager.Get(NopConfigurationCachingDefaults.SettingsAllAsDictionaryCacheKey, () =>
+            return _cacheManager.Get(NopConfigurationDefaults.SettingsAllAsDictionaryCacheKey, () =>
             {
                 var settings = GetAllSettings();
 
@@ -299,7 +298,7 @@ namespace Nop.Services.Configuration
                         orderby s.Name, s.StoreId
                         select s;
 
-            var settings = query.ToCachedList(NopConfigurationCachingDefaults.SettingsAllCacheKey);
+            var settings = query.ToCachedList(NopConfigurationDefaults.SettingsAllCacheKey);
 
             return settings;
         }
@@ -500,7 +499,7 @@ namespace Nop.Services.Configuration
         /// </summary>
         public virtual void ClearCache()
         {
-            _cacheManager.RemoveByPrefix(NopConfigurationCachingDefaults.SettingsPrefixCacheKey);
+            _cacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
         }
 
         /// <summary>

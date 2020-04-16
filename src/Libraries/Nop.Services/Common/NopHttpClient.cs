@@ -7,7 +7,6 @@ using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Rss;
-using Nop.Services.Defaults;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Common

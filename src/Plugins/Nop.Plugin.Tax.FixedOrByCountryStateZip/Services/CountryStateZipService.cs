@@ -5,6 +5,7 @@ using Nop.Core.Caching;
 using Nop.Data;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache;
+using Nop.Services.Caching;
 using Nop.Services.Events;
 
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
@@ -75,6 +76,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
             });
 
             var records = new PagedList<TaxRate>(rez, pageIndex, pageSize);
+
             return records;
         }
 

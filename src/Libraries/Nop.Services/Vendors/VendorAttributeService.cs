@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Vendors;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -47,7 +47,7 @@ namespace Nop.Services.Vendors
         {
             return _vendorAttributeRepository.Table
                 .OrderBy(vendorAttribute => vendorAttribute.DisplayOrder).ThenBy(vendorAttribute => vendorAttribute.Id)
-                .ToCachedList(NopVendorCachingDefaults.VendorAttributesAllCacheKey);
+                .ToCachedList(NopVendorDefaults.VendorAttributesAllCacheKey);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Nop.Services.Vendors
         /// <returns>Vendor attribute values</returns>
         public virtual IList<VendorAttributeValue> GetVendorAttributeValues(int vendorAttributeId)
         {
-            var key = NopVendorCachingDefaults.VendorAttributeValuesAllCacheKey.FillCacheKey(vendorAttributeId);
+            var key = NopVendorDefaults.VendorAttributeValuesAllCacheKey.FillCacheKey(vendorAttributeId);
 
             return _vendorAttributeValueRepository.Table
                 .Where(vendorAttributeValue => vendorAttributeValue.VendorAttributeId == vendorAttributeId)

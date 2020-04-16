@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
-using Nop.Services.Defaults;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Web.Framework.Extensions;
 
 namespace Nop.Web.Framework.Security.Captcha

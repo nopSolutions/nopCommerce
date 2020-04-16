@@ -16,7 +16,6 @@ namespace Nop.Services.Tests
     {
         public FakeCustomerService(CustomerSettings customerSettings = null,
             ICacheManager cacheManager = null,
-            INopDataProvider dataProvider = null,
             IEventPublisher eventPublisher = null,
             IGenericAttributeService genericAttributeService = null,
             IRepository<Address> customerAddressRepository = null,
@@ -31,7 +30,6 @@ namespace Nop.Services.Tests
             ShoppingCartSettings shoppingCartSettings = null) : base(
             customerSettings ?? new CustomerSettings(),
             cacheManager ?? new TestCacheManager(),
-            dataProvider ?? new Mock<INopDataProvider>().Object,
             eventPublisher ?? new Mock<IEventPublisher>().Object,
             genericAttributeService ?? new Mock<IGenericAttributeService>().Object,
             customerAddressRepository.FakeRepoNullPropagation(),

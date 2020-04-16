@@ -4,7 +4,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 using Nop.Services.Stores;
@@ -85,7 +85,7 @@ namespace Nop.Services.Orders
         /// <returns>Checkout attributes</returns>
         public virtual IList<CheckoutAttribute> GetAllCheckoutAttributes(int storeId = 0, bool excludeShippableAttributes = false)
         {
-            var key = NopOrderCachingDefaults.CheckoutAttributesAllCacheKey.FillCacheKey(storeId, excludeShippableAttributes);
+            var key = NopOrderDefaults.CheckoutAttributesAllCacheKey.FillCacheKey(storeId, excludeShippableAttributes);
             return _cacheManager.Get(key, () =>
             {
                 var query = from ca in _checkoutAttributeRepository.Table
@@ -195,7 +195,7 @@ namespace Nop.Services.Orders
         /// <returns>Checkout attribute values</returns>
         public virtual IList<CheckoutAttributeValue> GetCheckoutAttributeValues(int checkoutAttributeId)
         {
-            var key = NopOrderCachingDefaults.CheckoutAttributeValuesAllCacheKey.FillCacheKey(checkoutAttributeId);
+            var key = NopOrderDefaults.CheckoutAttributeValuesAllCacheKey.FillCacheKey(checkoutAttributeId);
 
             var query = from cav in _checkoutAttributeValueRepository.Table
                 orderby cav.DisplayOrder, cav.Id

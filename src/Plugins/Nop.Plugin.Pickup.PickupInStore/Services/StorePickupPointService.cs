@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Data;
 using Nop.Plugin.Pickup.PickupInStore.Domain;
+using Nop.Services.Caching;
 
 namespace Nop.Plugin.Pickup.PickupInStore.Services
 {

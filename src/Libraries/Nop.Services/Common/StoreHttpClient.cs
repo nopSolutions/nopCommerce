@@ -2,7 +2,6 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Nop.Core;
-using Nop.Services.Defaults;
 
 namespace Nop.Services.Common
 {

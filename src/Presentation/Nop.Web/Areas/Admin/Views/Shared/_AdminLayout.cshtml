@@ -9,13 +9,13 @@
 @inject StoreInformationSettings storeInformationSettings
 @inject INopFileProvider fileProvider;
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment WebHostEnvironment
-@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject IGenericAttributeService genericAttributeService
 @inject Nop.Services.Localization.ILanguageService languageService
 @using System.Globalization
 @using Nop.Core.Domain
 @using Nop.Core.Domain.Localization
+@using Nop.Services.Common
 @using Nop.Services.Customers
-@using Nop.Services.Defaults
 @using Nop.Services.Helpers
 @using Nop.Services.Security
 @using Nop.Web.Framework.UI

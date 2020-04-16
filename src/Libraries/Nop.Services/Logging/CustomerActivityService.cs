@@ -5,7 +5,6 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -99,7 +98,7 @@ namespace Nop.Services.Logging
             var query = from alt in _activityLogTypeRepository.Table
                         orderby alt.Name
                         select alt;
-            var activityLogTypes = query.ToCachedList(NopLoggingCachingDefaults.ActivityTypeAllCacheKey);
+            var activityLogTypes = query.ToCachedList(NopLoggingDefaults.ActivityTypeAllCacheKey);
 
             return activityLogTypes;
         }

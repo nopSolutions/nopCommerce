@@ -4,7 +4,6 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -112,6 +111,7 @@ namespace Nop.Services.Orders
             query = query.OrderByDescending(rr => rr.CreatedOnUtc).ThenByDescending(rr => rr.Id);
 
             var returnRequests = new PagedList<ReturnRequest>(query, pageIndex, pageSize, getOnlyTotalCount);
+
             return returnRequests;
         }
 
@@ -140,7 +140,7 @@ namespace Nop.Services.Orders
                         orderby rra.DisplayOrder, rra.Id
                         select rra;
 
-            return query.ToCachedList(NopOrderCachingDefaults.ReturnRequestActionAllCacheKey);
+            return query.ToCachedList(NopOrderDefaults.ReturnRequestActionAllCacheKey);
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace Nop.Services.Orders
                         orderby rra.DisplayOrder, rra.Id
                         select rra;
 
-            return query.ToCachedList(NopOrderCachingDefaults.ReturnRequestReasonAllCacheKey);
+            return query.ToCachedList(NopOrderDefaults.ReturnRequestReasonAllCacheKey);
         }
 
         /// <summary>

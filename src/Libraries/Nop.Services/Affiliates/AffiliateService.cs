@@ -8,7 +8,6 @@ using Nop.Core.Domain.Seo;
 using Nop.Data;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Common;
-using Nop.Services.Defaults;
 using Nop.Services.Events;
 using Nop.Services.Seo;
 
@@ -163,6 +162,7 @@ namespace Nop.Services.Affiliates
             query = query.OrderByDescending(a => a.Id);
 
             var affiliates = new PagedList<Affiliate>(query, pageIndex, pageSize);
+
             return affiliates;
         }
 

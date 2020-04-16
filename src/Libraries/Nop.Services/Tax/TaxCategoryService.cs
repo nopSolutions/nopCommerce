@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Tax;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -59,7 +58,7 @@ namespace Nop.Services.Tax
                 orderby tc.DisplayOrder, tc.Id
                 select tc;
 
-            var taxCategories = query.ToCachedList(NopTaxCachingDefaults.TaxCategoriesAllCacheKey);
+            var taxCategories = query.ToCachedList(NopTaxDefaults.TaxCategoriesAllCacheKey);
 
             return taxCategories;
         }

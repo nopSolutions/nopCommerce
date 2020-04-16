@@ -8,7 +8,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -182,7 +182,7 @@ namespace Nop.Services.Discounts
             //we load all discounts, and filter them using "discountType" parameter later (in memory)
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
             //that's why let's access the database only once
-            var cacheKey = NopDiscountCachingDefaults.DiscountAllCacheKey
+            var cacheKey = NopDiscountDefaults.DiscountAllCacheKey
                 .FillCacheKey(showHidden, couponCode ?? string.Empty, discountName ?? string.Empty);
 
             var query = _discountRepository.Table;
@@ -598,7 +598,7 @@ namespace Nop.Services.Discounts
             }
 
             //discount requirements
-            var key = NopDiscountCachingDefaults.DiscountRequirementModelCacheKey.FillCacheKey(discount);
+            var key = NopDiscountDefaults.DiscountRequirementModelCacheKey.FillCacheKey(discount);
             var requirements = _cacheManager.Get(key, () => GetAllDiscountRequirements(discount.Id, true));
 
             //get top-level group

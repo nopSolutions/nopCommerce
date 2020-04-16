@@ -7,7 +7,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -75,7 +75,7 @@ namespace Nop.Services.Localization
             var query = from lp in _localizedPropertyRepository.Table
                 select lp;
 
-            return query.ToCachedList(NopLocalizationCachingDefaults.LocalizedPropertyAllCacheKey);
+            return query.ToCachedList(NopLocalizationDefaults.LocalizedPropertyAllCacheKey);
         }
 
         #endregion
@@ -120,7 +120,7 @@ namespace Nop.Services.Localization
         /// <returns>Found localized value</returns>
         public virtual string GetLocalizedValue(int languageId, int entityId, string localeKeyGroup, string localeKey)
         {
-            var key = NopLocalizationCachingDefaults.LocalizedPropertyCacheKey
+            var key = NopLocalizationDefaults.LocalizedPropertyCacheKey
                 .FillCacheKey(languageId, entityId, localeKeyGroup, localeKey);
 
             return _cacheManager.Get(key, () =>

@@ -14,7 +14,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -357,7 +357,7 @@ namespace Nop.Services.Catalog
                         p.ShowOnHomepage
                         select p;
 
-            var products = query.ToCachedList(NopCatalogCachingDefaults.ProductsAllDisplayedOnHomepageCacheKey);
+            var products = query.ToCachedList(NopCatalogDefaults.ProductsAllDisplayedOnHomepageCacheKey);
 
             return products;
         }
@@ -385,7 +385,7 @@ namespace Nop.Services.Catalog
             if (productIds == null || productIds.Length == 0)
                 return new List<Product>();
 
-            var key = NopCatalogCachingDefaults.ProductsByIdsCacheKey.FillCacheKey(productIds);
+            var key = NopCatalogDefaults.ProductsByIdsCacheKey.FillCacheKey(productIds);
 
             var query = from p in _productRepository.Table
                         where productIds.Contains(p.Id) && !p.Deleted
@@ -509,7 +509,7 @@ namespace Nop.Services.Catalog
                         select p;
             }
 
-            var cacheKey = NopCatalogCachingDefaults.CategoryNumberOfProductsCacheKey
+            var cacheKey = NopCatalogDefaults.CategoryNumberOfProductsCacheKey
                 .FillCacheKey(allowedCustomerRolesIds, storeId, categoryIds);
 
             //only distinct products
@@ -774,6 +774,7 @@ namespace Nop.Services.Catalog
             }
             //return products
             var totalRecords = pTotalRecords.Value != DBNull.Value ? Convert.ToInt32(pTotalRecords.Value) : 0;
+            
             return new PagedList<Product>(products, pageIndex, pageSize, totalRecords);
         }
 
@@ -795,10 +796,7 @@ namespace Nop.Services.Catalog
                 orderby p.Name
                 select p;
 
-            var key = NopCatalogCachingDefaults.ProductsByProductAtributeCacheKey.FillCacheKey(productAttributeId);
-            var products = query.ToCachedList(key);
-
-            return new PagedList<Product>(products, pageIndex, pageSize);
+            return new PagedList<Product>(query, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -1763,7 +1761,7 @@ namespace Nop.Services.Catalog
                         orderby rp.DisplayOrder, rp.Id
                         select rp;
 
-            var relatedProducts = query.ToCachedList(NopCatalogCachingDefaults.ProductsRelatedCacheKey.FillCacheKey(productId, showHidden));
+            var relatedProducts = query.ToCachedList(NopCatalogDefaults.ProductsRelatedCacheKey.FillCacheKey(productId, showHidden));
 
             return relatedProducts;
         }
@@ -2030,7 +2028,7 @@ namespace Nop.Services.Catalog
         public virtual IList<TierPrice> GetTierPricesByProduct(int productId)
         {
             return _tierPriceRepository.Table.Where(tp => tp.ProductId == productId)
-                .ToCachedList(NopCatalogCachingDefaults.ProductTierPricesCacheKey.FillCacheKey(productId));
+                .ToCachedList(NopCatalogDefaults.ProductTierPricesCacheKey.FillCacheKey(productId));
         }
 
         /// <summary>

@@ -5,7 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -93,7 +93,7 @@ namespace Nop.Services.Catalog
                 allowedCustomerRolesIds = string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
             }
 
-            var key = NopCatalogCachingDefaults.ProductTagCountCacheKey.FillCacheKey(storeId, 
+            var key = NopCatalogDefaults.ProductTagCountCacheKey.FillCacheKey(storeId, 
                 _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer), 
                 showHidden);
            
@@ -154,7 +154,7 @@ namespace Nop.Services.Catalog
         {
             var query = _productTagRepository.Table;
             
-            var allProductTags = query.ToCachedList(NopCatalogCachingDefaults.ProductTagAllCacheKey);
+            var allProductTags = query.ToCachedList(NopCatalogDefaults.ProductTagAllCacheKey);
 
             if(!string.IsNullOrEmpty(tagName))
             {
@@ -171,7 +171,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product tags</returns>
         public virtual IList<ProductTag> GetAllProductTagsByProductId(int productId)
         {
-            var key = NopCatalogCachingDefaults.ProductTagAllByProductIdCacheKey.FillCacheKey(productId);
+            var key = NopCatalogDefaults.ProductTagAllByProductIdCacheKey.FillCacheKey(productId);
 
             var query = from pt in _productTagRepository.Table
                 join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId
@@ -371,7 +371,7 @@ namespace Nop.Services.Catalog
             }
 
             //cache
-            _staticCacheManager.RemoveByPrefix(NopCatalogCachingDefaults.ProductTagPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopCatalogDefaults.ProductTagPrefixCacheKey);
         }
 
         #endregion

@@ -19,7 +19,6 @@ using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
-using Nop.Services.Defaults;
 using Nop.Services.Installation;
 using Nop.Services.Localization;
 using Nop.Services.Logging;

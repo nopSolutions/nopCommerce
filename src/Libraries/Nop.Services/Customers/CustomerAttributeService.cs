@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -62,7 +62,7 @@ namespace Nop.Services.Customers
                 orderby ca.DisplayOrder, ca.Id
                 select ca;
 
-            return query.ToCachedList(NopCustomerServiceCachingDefaults.CustomerAttributesAllCacheKey);
+            return query.ToCachedList(NopCustomerServicesDefaults.CustomerAttributesAllCacheKey);
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer attribute values</returns>
         public virtual IList<CustomerAttributeValue> GetCustomerAttributeValues(int customerAttributeId)
         {
-            var key = NopCustomerServiceCachingDefaults.CustomerAttributeValuesAllCacheKey.FillCacheKey(customerAttributeId);
+            var key = NopCustomerServicesDefaults.CustomerAttributeValuesAllCacheKey.FillCacheKey(customerAttributeId);
 
             var query = from cav in _customerAttributeValueRepository.Table
                 orderby cav.DisplayOrder, cav.Id

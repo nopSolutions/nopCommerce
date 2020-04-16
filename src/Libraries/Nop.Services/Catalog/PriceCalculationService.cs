@@ -7,7 +7,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
@@ -349,7 +349,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
 
-            var cacheKey = NopCatalogCachingDefaults.ProductPriceCacheKey.FillCacheKey(
+            var cacheKey = NopCatalogDefaults.ProductPriceCacheKey.FillCacheKey(
                 product,
                 overriddenProductPrice,
                 additionalCharge,

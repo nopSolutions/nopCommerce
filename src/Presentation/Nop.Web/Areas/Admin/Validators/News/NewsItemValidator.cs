@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using Nop.Core.Domain.News;
 using Nop.Data;
-using Nop.Services.Defaults;
 using Nop.Services.Localization;
+using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Models.News;
 using Nop.Web.Framework.Validators;
 

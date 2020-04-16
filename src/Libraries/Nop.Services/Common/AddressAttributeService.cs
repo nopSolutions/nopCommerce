@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Common;
 using Nop.Data;
-using Nop.Services.Caching.CachingDefaults;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -62,7 +62,7 @@ namespace Nop.Services.Common
                 orderby aa.DisplayOrder, aa.Id
                 select aa;
 
-            return query.ToCachedList(NopCommonCachingDefaults.AddressAttributesAllCacheKey);
+            return query.ToCachedList(NopCommonDefaults.AddressAttributesAllCacheKey);
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace Nop.Services.Common
         /// <returns>Address attribute values</returns>
         public virtual IList<AddressAttributeValue> GetAddressAttributeValues(int addressAttributeId)
         {
-            var key = NopCommonCachingDefaults.AddressAttributeValuesAllCacheKey.FillCacheKey(addressAttributeId);
+            var key = NopCommonDefaults.AddressAttributeValuesAllCacheKey.FillCacheKey(addressAttributeId);
 
             var query = from aav in _addressAttributeValueRepository.Table
                 orderby aav.DisplayOrder, aav.Id
