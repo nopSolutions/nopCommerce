@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Stores;
+using Nop.Data;
+using Nop.Services.Caching;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 
@@ -20,7 +23,7 @@ namespace Nop.Services.Directory
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly IRepository<Country> _countryRepository;
@@ -32,7 +35,7 @@ namespace Nop.Services.Directory
         #region Ctor
 
         public CountryService(CatalogSettings catalogSettings,
-            ICacheManager cacheManager,
+            IStaticCacheManager cacheManager,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             IRepository<Country> countryRepository,
@@ -63,8 +66,6 @@ namespace Nop.Services.Directory
 
             _countryRepository.Delete(country);
 
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CountriesPatternCacheKey);
-
             //event notification
             _eventPublisher.EntityDeleted(country);
         }
@@ -77,7 +78,7 @@ namespace Nop.Services.Directory
         /// <returns>Countries</returns>
         public virtual IList<Country> GetAllCountries(int languageId = 0, bool showHidden = false)
         {
-            var key = string.Format(NopDirectoryDefaults.CountriesAllCacheKey, languageId, showHidden);
+            var key = NopDirectoryDefaults.CountriesAllCacheKey.FillCacheKey(languageId, showHidden);
             return _cacheManager.Get(key, () =>
             {
                 var query = _countryRepository.Table;
@@ -137,6 +138,16 @@ namespace Nop.Services.Directory
         }
 
         /// <summary>
+        /// Gets a country by address 
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <returns>Country</returns>
+        public virtual Country GetCountryByAddress(Address address)
+        {
+            return GetCountryById(address?.CountryId ?? 0);
+        }
+
+        /// <summary>
         /// Gets a country 
         /// </summary>
         /// <param name="countryId">Country identifier</param>
@@ -145,8 +156,8 @@ namespace Nop.Services.Directory
         {
             if (countryId == 0)
                 return null;
-
-            return _countryRepository.GetById(countryId);
+            
+            return _countryRepository.ToCachedGetById(countryId);
         }
 
         /// <summary>
@@ -185,11 +196,13 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(twoLetterIsoCode))
                 return null;
 
+            var key = NopDirectoryDefaults.CountriesByTwoLetterCodeCacheKey.FillCacheKey(twoLetterIsoCode);
+
             var query = from c in _countryRepository.Table
-                        where c.TwoLetterIsoCode == twoLetterIsoCode
-                        select c;
-            var country = query.FirstOrDefault();
-            return country;
+                where c.TwoLetterIsoCode == twoLetterIsoCode
+                select c;
+
+            return query.ToCachedFirstOrDefault(key);
         }
 
         /// <summary>
@@ -202,11 +215,13 @@ namespace Nop.Services.Directory
             if (string.IsNullOrEmpty(threeLetterIsoCode))
                 return null;
 
+            var key = NopDirectoryDefaults.CountriesByThreeLetterCodeCacheKey.FillCacheKey(threeLetterIsoCode);
+
             var query = from c in _countryRepository.Table
-                        where c.ThreeLetterIsoCode == threeLetterIsoCode
-                        select c;
-            var country = query.FirstOrDefault();
-            return country;
+                where c.ThreeLetterIsoCode == threeLetterIsoCode
+                select c;
+
+            return query.ToCachedFirstOrDefault(key);
         }
 
         /// <summary>
@@ -219,8 +234,6 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException(nameof(country));
 
             _countryRepository.Insert(country);
-
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CountriesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(country);
@@ -236,8 +249,6 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException(nameof(country));
 
             _countryRepository.Update(country);
-
-            _cacheManager.RemoveByPattern(NopDirectoryDefaults.CountriesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityUpdated(country);

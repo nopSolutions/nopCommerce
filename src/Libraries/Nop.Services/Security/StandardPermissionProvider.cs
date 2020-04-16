@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 
@@ -55,7 +55,7 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord ManageMaintenance = new PermissionRecord { Name = "Admin area. Manage Maintenance", SystemName = "ManageMaintenance", Category = "Configuration" };
         public static readonly PermissionRecord HtmlEditorManagePictures = new PermissionRecord { Name = "Admin area. HTML Editor. Manage pictures", SystemName = "HtmlEditor.ManagePictures", Category = "Configuration" };
         public static readonly PermissionRecord ManageScheduleTasks = new PermissionRecord { Name = "Admin area. Manage Schedule Tasks", SystemName = "ManageScheduleTasks", Category = "Configuration" };
-        
+
         //public store permissions
         public static readonly PermissionRecord DisplayPrices = new PermissionRecord { Name = "Public store. Display Prices", SystemName = "DisplayPrices", Category = "PublicStore" };
         public static readonly PermissionRecord EnableShoppingCart = new PermissionRecord { Name = "Public store. Enable shopping cart", SystemName = "EnableShoppingCart", Category = "PublicStore" };
@@ -69,7 +69,7 @@ namespace Nop.Services.Security
         /// <returns>Permissions</returns>
         public virtual IEnumerable<PermissionRecord> GetPermissions()
         {
-            return new[] 
+            return new[]
             {
                 AccessAdminPanel,
                 AllowCustomerImpersonation,
@@ -128,14 +128,13 @@ namespace Nop.Services.Security
         /// Get default permissions
         /// </summary>
         /// <returns>Permissions</returns>
-        public virtual IEnumerable<DefaultPermissionRecord> GetDefaultPermissions()
+        public virtual HashSet<(string systemRoleName, PermissionRecord[] permissions)> GetDefaultPermissions()
         {
-            return new[] 
+            return new HashSet<(string, PermissionRecord[])>
             {
-                new DefaultPermissionRecord 
-                {
-                    CustomerRoleSystemName = NopCustomerDefaults.AdministratorsRoleName,
-                    PermissionRecords = new[] 
+                (
+                    NopCustomerDefaults.AdministratorsRoleName,
+                    new[]
                     {
                         AccessAdminPanel,
                         AllowCustomerImpersonation,
@@ -188,51 +187,47 @@ namespace Nop.Services.Security
                         PublicStoreAllowNavigation,
                         AccessClosedStore
                     }
-                },
-                new DefaultPermissionRecord 
-                {
-                    CustomerRoleSystemName = NopCustomerDefaults.ForumModeratorsRoleName,
-                    PermissionRecords = new[] 
+                ),
+                (
+                    NopCustomerDefaults.ForumModeratorsRoleName,
+                    new[]
                     {
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
                         PublicStoreAllowNavigation
                     }
-                },
-                new DefaultPermissionRecord 
-                {
-                    CustomerRoleSystemName = NopCustomerDefaults.GuestsRoleName,
-                    PermissionRecords = new[] 
+                ),
+                (
+                    NopCustomerDefaults.GuestsRoleName,
+                    new[]
                     {
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
                         PublicStoreAllowNavigation
                     }
-                },
-                new DefaultPermissionRecord 
-                {
-                    CustomerRoleSystemName = NopCustomerDefaults.RegisteredRoleName,
-                    PermissionRecords = new[] 
+                ),
+                (
+                    NopCustomerDefaults.RegisteredRoleName,
+                    new[]
                     {
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
                         PublicStoreAllowNavigation
                     }
-                },
-                new DefaultPermissionRecord 
-                {
-                    CustomerRoleSystemName = NopCustomerDefaults.VendorsRoleName,
-                    PermissionRecords = new[] 
+                ),
+                (
+                    NopCustomerDefaults.VendorsRoleName,
+                    new[]
                     {
                         AccessAdminPanel,
                         ManageProducts,
                         ManageProductReviews,
                         ManageOrders
                     }
-                }
+                )
             };
         }
     }

@@ -1,8 +1,8 @@
 ﻿nopCommerce | [![Build Status](https://travis-ci.com/nopSolutions/nopCommerce.svg?branch=develop)](https://travis-ci.com/nopSolutions/nopCommerce)
 ===========
-nopCommerce is the best open-source e-commerce shopping cart. nopCommerce is available for free. Today it's the best and most popular ASP.NET ecommerce software. It has been downloaded more than 1.8 million times!
+nopCommerce is the best open-source e-commerce shopping cart solution. nopCommerce is free and it is the most popular ASP.NET ecommerce platform. It has been downloaded more than 3 million times!
 
-nopCommerce is a fully customizable shopping cart. It's stable and highly usable. nopCommerce is an open source ecommerce solution that is **ASP.NET Core** based with a MS SQL 2008 (or higher) backend database. Our easy-to-use shopping cart solution is uniquely suited for merchants that have outgrown existing systems, and may be hosted with your current web host or our hosting partners. It has everything you need to get started in selling physical and digital goods over the internet.
+nopCommerce is a fully customizable shopping cart. It's stable and highly usable. nopCommerce is an open source ecommerce solution that is **ASP.NET Core** based with a MS SQL 2012 (or higher) backend database. Our easy-to-use shopping cart solution is uniquely suited for merchants that have outgrown existing systems, and may be hosted with your current web host or our hosting partners. It has everything you need to get started in selling physical and digital goods over the internet.
 
 ![nopCommerce demo](https://www.nopcommerce.com/images/features/responsive_devices_codeplex.jpg)
 
@@ -17,17 +17,16 @@ nopCommerce offers unprecedented flexibility and control. Since it is open-sourc
 
 nopCommerce official site: [https://www.nopcommerce.com](https://www.nopcommerce.com)
 
-nopCommerce demo store: [https://www.nopCommerce.com/demo.aspx](https://www.nopCommerce.com/demo.aspx)
+nopCommerce demo store: [https://www.nopcommerce.com/demo](https://www.nopcommerce.com/demo)
 
-Feature list: [https://www.nopcommerce.com/featurelist.aspx](https://www.nopcommerce.com/featurelist.aspx)
+Feature list: [https://www.nopcommerce.com/features](https://www.nopcommerce.com/features)
 
-Technology & system Requirements: [http://docs.nopcommerce.com/pages/viewpage.action?pageId=10256757](http://docs.nopcommerce.com/pages/viewpage.action?pageId=10256757)
+Technology & system Requirements: [https://docs.nopcommerce.com/user-guide/installing/technology-system-requirements.html](https://docs.nopcommerce.com/user-guide/installing/technology-system-requirements.html)
 
-Documentation: [http://docs.nopcommerce.com/](http://docs.nopcommerce.com/)
+Documentation: [https://docs.nopcommerce.com/](https://docs.nopcommerce.com/)
 
 Forums: [https://www.nopcommerce.com/boards/](https://www.nopcommerce.com/boards/)
 
-Gitter.im chat room: [https://gitter.im/nopCommerce-official/Lobby](https://gitter.im/nopCommerce-official/Lobby)
 
 ## Store demo: ##
 
@@ -36,7 +35,7 @@ Browse our shopping cart demo store to get a feel for nopCommerce shopping cart.
 
 Front End | Admin area
 ----|------
-[![ScreenShot](https://www.nopcommerce.com/images/demo/demo3.png)](https://demo.nopcommerce.com/) | [![ScreenShot](https://www.nopcommerce.com/images/demo/admindemo_500.png)](https://admin-demo.nopcommerce.com/)
+[![ScreenShot](https://www.nopcommerce.com/images/demo/demo3.png)](https://demo.nopcommerce.com/) | [![ScreenShot](https://www.nopcommerce.com/images/demo/admindemo_500.png)](https://admin-demo.nopcommerce.com/admin/)
 
 
 ## Survey for developers and product managers: ##

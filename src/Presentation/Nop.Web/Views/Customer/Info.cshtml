@@ -1,5 +1,4 @@
-﻿@using System.Text.Encodings.Web
-@using Nop.Core
+﻿@using Nop.Core
 @model CustomerInfoModel
 @inject Nop.Core.IWebHelper webHelper
 @{
@@ -45,18 +44,30 @@
                             </div>
                         </div>
                     }
-                    <div class="inputs">
-                        <label asp-for="FirstName" asp-postfix=":"></label>
-                        <input asp-for="FirstName" />
-                        <nop-required />
-                        <span asp-validation-for="FirstName"></span>
-                    </div>
-                    <div class="inputs">
-                        <label asp-for="LastName" asp-postfix=":"></label>
-                        <input asp-for="LastName" />
-                        <nop-required />
-                        <span asp-validation-for="LastName"></span>
-                    </div>
+                    @if (Model.FirstNameEnabled)
+                    {
+                        <div class="inputs">
+                            <label asp-for="FirstName" asp-postfix=":"></label>
+                            <input asp-for="FirstName" />
+                            @if (Model.FirstNameRequired)
+                            {
+                                <nop-required />
+                            }
+                            <span asp-validation-for="FirstName"></span>
+                        </div>
+                    }
+                    @if (Model.LastNameEnabled)
+                    {
+                        <div class="inputs">
+                            <label asp-for="LastName" asp-postfix=":"></label>
+                            <input asp-for="LastName" />
+                            @if (Model.LastNameRequired)
+                            {
+                                <nop-required />
+                            }
+                            <span asp-validation-for="LastName"></span>
+                        </div>
+                    }
                     @if (Model.DateOfBirthEnabled)
                     {
                         <div class="inputs date-of-birth">
@@ -459,14 +470,14 @@
             addAntiForgeryToken(postData);
             $.ajax({
                 cache: false,
-                type: 'POST',
-                url: '@Url.Action("RemoveExternalAssociation", "Customer")',
+                type: "POST",
+                url: "@Url.Action("RemoveExternalAssociation", "Customer")",
                 data: postData,
-                dataType: 'json',
-                success: function (data) {
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
                     location.href = data.redirect;
                 },
-                error: function (xhr, ajaxOptions, thrownError) {
+                error: function (jqXHR, textStatus, errorThrown) {
                     alert('Failed to delete');
                 }
             });

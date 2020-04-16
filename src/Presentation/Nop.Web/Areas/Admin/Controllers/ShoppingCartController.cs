@@ -60,7 +60,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult CurrentCarts(ShoppingCartSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _shoppingCartModelFactory.PrepareShoppingCartListModel(searchModel);
@@ -68,41 +68,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             return Json(model);
         }
 
-        public virtual IActionResult ProductSearchAutoComplete(string term)
-        {
-            const int searchTermMinimumLength = 3;
-            if (string.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
-                return Content(string.Empty);
-
-            //a vendor should have access only to his products
-            var vendorId = 0;
-            if (_workContext.CurrentVendor != null)
-            {
-                vendorId = _workContext.CurrentVendor.Id;
-            }
-
-            //products
-            const int productNumber = 15;
-            var products = _productService.SearchProducts(
-                vendorId: vendorId,
-                keywords: term,
-                pageSize: productNumber,
-                showHidden: true);
-
-            var result = (from p in products
-                select new
-                {
-                    label = p.Name,
-                    productid = p.Id
-                }).ToList();
-            return Json(result);
-        }
-
         [HttpPost]
         public virtual IActionResult GetCartDetails(ShoppingCartItemSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a customer with the specified id
             var customer = _customerService.GetCustomerById(searchModel.CustomerId)
@@ -118,7 +88,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult DeleteItem(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
             
             _shoppingCartService.DeleteShoppingCartItem(id);
 

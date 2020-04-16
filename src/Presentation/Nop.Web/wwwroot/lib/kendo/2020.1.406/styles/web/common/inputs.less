@@ -1,0 +1,1228 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// ComboBox & DropDownList
+
+span.k-datepicker,
+span.k-timepicker,
+span.k-datetimepicker,
+span.k-colorpicker,
+span.k-numerictextbox,
+span.k-combobox,
+span.k-dropdown,
+span.k-dropdowntree,
+.k-toolbar .k-split-button {
+    background-image: none;
+}
+
+.k-autocomplete,
+.k-combobox,
+.k-datepicker,
+.k-timepicker,
+.k-datetimepicker,
+.k-colorpicker,
+.k-numerictextbox,
+.k-dropdown,
+.k-dropdowntree,
+.k-selectbox,
+.k-multiselect,
+.k-textbox,
+.k-toolbar .k-split-button,
+.k-listbox {
+    position: relative;
+    display: inline-block;
+    width: @input-default-width;
+    overflow: visible;
+    border-width: 0;
+    vertical-align: middle;
+}
+
+.k-autocomplete > .k-i-close,
+.k-dropdown-wrap > .k-i-close,
+.k-multiselect-wrap > .k-i-close {
+    font-size: 100%;
+    display: none;
+    position: absolute;
+    cursor: pointer;
+}
+
+.k-autocomplete > .k-i-close {
+    right: calc(@input-clear-icon-offset);
+}
+
+.k-multiselect-wrap > .k-i-close {
+    right: calc(@input-clear-icon-offset + 1px);
+}
+
+.k-autocomplete > .k-i-close,
+.k-dropdown-wrap > .k-i-close {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.k-dropdown-wrap > .k-i-close {
+    right: calc(@combobox-clear-icon-offset);
+}
+
+.k-multiselect-wrap > .k-i-close,
+.k-dropdowntree > .k-multiselect-wrap > .k-i-close  {
+    top: calc(@multiselect-clear-icon-top-offset);
+}
+
+.k-multiselect-wrap .k-readonly,
+.k-dropdown-wrap .k-readonly {
+    opacity: 0.5;
+}
+
+.k-autocomplete,
+.k-dropdown-wrap,
+// dropdowntree
+.k-multiselect-wrap {
+    &.k-state-hover,
+    &.k-state-focused {
+        > .k-i-close {
+            display: inline-block;
+            outline: none;
+        }
+    }
+}
+
+.k-multiselect {
+    &.k-state-hover,
+    &.k-state-focused {
+        > .k-multiselect-wrap > .k-i-close {
+            display: inline-block;
+            outline: none;
+        }
+    }
+}
+
+.k-autocomplete > .k-hidden,
+.k-dropdown-wrap .k-hidden,
+.k-multiselect-wrap .k-hidden {
+    display: none !important;
+}
+
+.k-autocomplete,
+.k-combobox,
+.k-datepicker,
+.k-timepicker,
+.k-datetimepicker,
+.k-colorpicker,
+.k-numerictextbox,
+.k-dropdown,
+.k-dropdowntree,
+.k-selectbox,
+.k-toolbar .k-split-button {
+    white-space: nowrap;
+}
+
+.k-filter-menu .k-combobox,
+.k-filter-menu .k-datepicker,
+.k-filter-menu .k-timepicker,
+.k-filter-menu .k-datetimepicker,
+.k-filter-menu .k-numerictextbox,
+.k-filter-menu .k-dropdown,
+.k-filter-menu .k-dropdowntree,
+.k-filter-menu .k-autocomplete,
+.k-filter-menu .k-textbox {
+    width: 13.2em;
+}
+
+.k-colorpicker,
+.k-toolbar .k-split-button {
+    width: auto;
+}
+
+.k-datetimepicker {
+    width: 15em;
+}
+
+.k-autocomplete,
+.k-picker-wrap,
+.k-numeric-wrap {
+    position: relative;
+    cursor: default;
+}
+
+.k-dropdown-wrap,
+.k-picker-wrap,
+.k-numeric-wrap,
+.k-multiselect-wrap {
+    display: block;
+}
+
+.k-list-scroller {
+    position: relative;
+    overflow: auto;
+}
+
+.k-popup.k-list-container,
+.k-popup.k-calendar-container {
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    padding: 2px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.k-list-container.k-popup-dropdowntree {
+    padding: 0;
+
+    .k-check-all {
+        margin: 10px 10px 0;
+    }
+
+    .k-treeview {
+        box-sizing: border-box;
+        padding: 10px;
+    }
+}
+
+.k-list-container.k-state-border-down,
+.k-autocomplete.k-state-border-down,
+.k-picker-wrap.k-state-border-down,
+.k-numeric-wrap.k-state-border-down {
+    border-bottom-width: 0;
+    padding-bottom: 1px;
+}
+
+.k-list-container .km-scroll-container {
+    padding-bottom: 6px;
+}
+
+.k-textbox,
+.k-autocomplete,
+.k-dropdown-wrap,
+.k-multiselect-wrap,
+.k-picker-wrap,
+.k-numeric-wrap {
+    border-width: @input-border-width;
+    border-style: solid;
+}
+
+.k-dropdown-wrap {
+    position: relative;
+}
+
+.k-dropdown-wrap,
+.k-numeric-wrap,
+.k-picker-wrap {
+    padding-right: calc(@input-offset);
+}
+
+.k-numeric-wrap.k-expand-padding {
+    padding-right: 0;
+}
+
+.k-numeric-wrap.k-expand-padding .k-i-warning{
+    right: 0;
+}
+
+.k-textbox,
+.k-autocomplete {
+    padding: 0;
+}
+
+.k-textbox.k-space-left {
+    padding-left: 2em;
+}
+
+.k-textbox.k-space-right {
+    padding-right: 2em;
+}
+
+.k-picker-wrap .k-input {
+    margin: 0;
+}
+
+.k-textbox .k-icon {
+    top: 50%;
+    margin: -8px 0 0;
+    position: absolute;
+}
+
+.k-space-left .k-icon {
+    left: 3px;
+}
+
+.k-space-right .k-icon {
+    right: 3px;
+}
+
+// prevent missing bottom border at some zoom levels
+span.k-textbox:after {
+  content: "\a0";
+  display: block;
+  height: .4px;
+  overflow: hidden;
+}
+
+.k-autocomplete,
+.k-dropdown-wrap,
+.k-picker-wrap,
+.k-numeric-wrap {
+    transition: box-shadow .15s ease-out;
+}
+
+.k-textbox > input,
+.k-picker-wrap .k-input,
+.k-numeric-wrap .k-input,
+.k-dropdown-wrap .k-input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.k-picker-wrap .k-input,
+.k-numeric-wrap .k-input,
+.k-dropdown-wrap .k-input,
+.k-selectbox .k-input {
+    font-family: inherit;
+    border-width: 0;
+    outline: 0;
+}
+
+.k-dropdown .k-input,
+.k-dropdowntree .k-dropdown-wrap .k-input,
+.k-selectbox .k-input {
+    color: inherit;
+    background: transparent;
+}
+
+.k-picker-wrap .k-select,
+.k-numeric-wrap .k-select,
+.k-dropdown-wrap .k-select {
+    position: absolute; // icon positioning
+    top: 0;
+    right: 0;
+    display: inline-block;
+    vertical-align: top;
+    text-decoration: none;
+}
+
+.k-combobox .k-select,
+.k-picker-wrap .k-select,
+.k-numeric-wrap .k-select {
+    border-style: solid;
+    border-width: 0 0 0 1px;
+    border-color: inherit; // skin-related, inherit does not work in ie7-
+}
+
+span.k-datetimepicker .k-select,
+span.k-datetimepicker .k-select + .k-select {
+    right: 0;
+}
+
+.k-textbox > input,
+.k-autocomplete .k-input {
+    display: block;
+    width: 100%;
+}
+
+.k-dropdown-wrap .k-select,
+.k-selectbox .k-select {
+    overflow: hidden;
+    border: 0;
+    text-decoration: none;
+    color: inherit;
+}
+
+.k-dropdown .k-input,
+.k-dropdowntree .k-dropdown-wrap .k-input,
+.k-selectbox .k-input {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.k-textbox > input,
+.k-autocomplete .k-input,
+.k-multiselect-wrap .k-input,
+.k-picker-wrap .k-input,
+.k-numeric-wrap .k-input,
+.k-dropdown-wrap .k-input,
+.k-selectbox .k-input {
+    line-height: @input-height;
+    padding: @input-padding-y @input-padding-x;
+    text-indent: @input-indent;
+    border: 0;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.k-dropdown-wrap .k-input:before {
+    content: "";
+    display: inline-block;
+    width: 0;
+}
+
+.k-ie {
+    .k-autocomplete .k-input {
+        height: @input-height;
+    }
+
+    .k-textbox > input,
+    .k-picker-wrap .k-input,
+    .k-numeric-wrap .k-input,
+    .k-combobox .k-input {
+        height: ~"calc(@{input-height} + .35em)";
+    }
+
+    input.k-textbox {
+        height: ~"calc(@{input-height} + .35em + 2px)";
+    }
+}
+
+// fix missing bottom border on browser zoom in Chrome
+.k-webkit .k-combobox .k-dropdown-wrap:before,
+.k-webkit .k-picker-wrap:before,
+.k-webkit .k-numeric-wrap:before {
+    padding-bottom: 0.38em;
+}
+
+// above style breaks NumericTextBox layout due display:block style applied to the input
+.km.root .k-combobox .k-dropdown-wrap:before,
+.km.root .k-picker-wrap:before,
+.km.root .k-numeric-wrap:before {
+    content: none;
+}
+
+.k-combobox .k-input,
+.k-picker-wrap .k-input,
+.k-numeric-wrap .k-input {
+    display: inline;
+}
+
+.k-picker-wrap .k-select,
+.k-numeric-wrap .k-select,
+.k-dropdown-wrap .k-select {
+    line-height: calc(@input-height + .35em);
+    vertical-align: middle;
+    -moz-box-sizing: border-box;
+    text-align: center;
+    width: calc(@input-height + .35em);
+    height: 100%;
+}
+
+.k-numeric-wrap .k-select {
+    padding: 0;
+}
+
+body .k-datetimepicker .k-select {
+    border-radius: 0;
+}
+
+.k-combobox .k-select,
+.k-dropdown,
+.k-dropdowntree .k-dropdown-wrap,
+.k-selectbox .k-icon {
+    cursor: pointer;
+}
+
+.k-popup {
+    border-style: solid;
+    border-width: 1px;
+}
+
+.k-popup .k-item,
+.k-list-optionlabel {
+    cursor: default;
+}
+
+.k-popup .k-calendar {
+    border: 0;
+}
+
+.k-list {
+    height: auto;
+}
+
+.k-nodata {
+    min-height: 138px;
+    width: 100%;
+    display: table;
+    text-transform: uppercase;
+    font-size: 0.85em;
+    font-weight: lighter;
+}
+
+.k-nodata > div {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    padding: 11px;
+}
+
+.k-popup .k-list .k-item,
+.k-fieldselector .k-list .k-item,
+.k-list-optionlabel,
+.k-popup > .k-group-header,
+.k-popup > .k-virtual-wrap > .k-group-header,
+.k-listbox .k-item,
+.k-item.k-drag-clue {
+    padding: 1px 5px 1px 5px;
+    line-height: 1.8em;
+    min-height: 1.8em;
+}
+
+.k-popup .k-list .k-item,
+.k-listbox .k-item {
+    border-width: 1px;
+    border-style: solid;
+    border-color: transparent;
+    padding: 0 4px;
+}
+
+.k-popup .k-list .k-item > .k-group {
+    top: -1px;
+}
+
+.k-group-header + div > .k-list > .k-item.k-first:before {
+    content: " ";
+    display: block;
+    border-top-width: 1px;
+    border-top-style: solid;
+    position: absolute;
+    top: -1px;
+    left: 0;
+    right: 0;
+}
+
+.k-popup > .k-group-header,
+.k-popup > .k-virtual-wrap > .k-group-header {
+    padding-right: 22px;
+}
+
+.k-overflow-container .k-item {
+    padding: 1px;
+}
+
+.k-overflow-container > .k-state-disabled .k-button,
+.k-overflow-container > .k-state-disabled .k-button:hover,
+.k-overflow-container .k-button.k-state-disabled,
+.k-overflow-container .k-button.k-state-disabled:hover {
+    border-color: transparent;
+    background: none;
+}
+
+.k-popup .k-list .k-state-hover,
+.k-popup .k-list .k-state-focused,
+.k-popup .k-list .k-state-selected,
+.k-overflow-container .k-state-hover,
+.k-overflow-container .k-state-focused,
+.k-overflow-container .k-state-selected,
+.k-fieldselector .k-list .k-item,
+.k-list-optionlabel.k-state-focused,
+.k-list-optionlabel.k-state-selected,
+.k-listbox .k-item {
+    padding: 0 4px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.k-list-filter {
+    position: relative;
+    margin-bottom: 2px;
+}
+
+.k-list-filter > .k-textbox {
+    padding-right: 20px;
+    width: 100%;
+}
+
+.k-list-filter > .k-icon {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.km-root .k-list-filter > .k-textbox {
+    padding-left: 0;
+    padding-right: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+}
+
+// MultiSelect
+.k-multiselect {
+    display: block;
+    width: auto;
+}
+.k-multiselect-wrap {
+    border-radius: 4px;
+    padding-right: (@grid-size + (@grid-size/4 + 2px));
+}
+
+.k-multiselect-wrap .k-input {
+    min-width: 25px;
+    min-height: @input-height;
+    padding: @input-padding-y;
+    text-indent: @input-indent;
+    background-color: transparent;
+    border: 0;
+    margin: 0;
+    float: left;
+}
+
+.k-multiselect-wrap .k-input::-ms-clear {
+    display: none;
+}
+
+.k-multiselect-wrap li {
+    margin: 1px 0 1px 1px;
+    padding: .1em 1.6em .1em .4em;
+    line-height: (@input-height - .15);
+    min-height: calc((@input-height - 0.15em) + .2em + 2px);
+    float: left;
+    position: relative;
+}
+
+.k-autocomplete .k-i-loading,
+.k-multiselect .k-i-loading {
+    position: absolute;
+    top: auto;
+    right: 0.4em;
+    bottom: 0.4em;
+}
+
+.k-multiselect-wrap .k-select {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    padding: .03em .2em;
+}
+
+// Inputs
+.k-autocomplete-clearable,
+.k-multiselect-clearable,
+.k-dropdowntree-clearable,
+.k-combobox-clearable {
+    .k-input {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.k-combobox-clearable .k-input,
+.k-multiselect-clearable .k-multiselect-wrap,
+.k-dropdowntree-clearable .k-multiselect-wrap,
+.k-dropdowntree-clearable .k-dropdown-wrap .k-input {
+    padding-right: calc(@input-offset);
+}
+
+// Date/Time Pickers
+
+.k-datetimepicker .k-picker-wrap {
+    padding-right: 4em;
+}
+
+.k-datetimepicker .k-select {
+    width: 4em;
+
+    .k-link {
+        display: inline-block;
+        width: 50%;
+    }
+}
+
+.k-datetimepicker .k-link {
+    color: inherit;
+}
+.k-datetimepicker .k-picker-wrap .k-icon {
+    margin: 0 2px;
+}
+
+.k-picker-wrap .k-icon {
+    cursor: pointer;
+}
+
+.k-textbox,
+.k-timepicker,
+.k-datepicker,
+.k-datetimepicker {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.k-time-popup .k-item {
+    padding: 1px 3px;
+}
+
+// inputs
+
+.k-input {
+    font-size: inherit;
+    padding: 0.25em 0;
+}
+
+.k-input,
+.k-textbox > input {
+    outline: 0;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+.k-textbox {
+    outline: 0;
+}
+
+input.k-textbox,
+textarea.k-textbox {
+    padding: @input-padding-y @input-padding-x;
+}
+
+input.k-textbox {
+    line-height: @input-height;
+    text-indent: @input-indent;
+}
+
+.k-ie input.k-textbox
+{
+    text-indent: (@input-indent / 2);
+}
+
+textarea.k-textbox {
+    height: auto;
+}
+
+// Input with icon
+.k-input-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: @input-icon-width;
+    position: relative;
+
+    .k-icon {
+        position: static;
+        margin: 0;
+    }
+
+    .k-ie9 & {
+        position: absolute;
+        height: 100%;
+        right: 0;
+        top: 0;
+    }
+
+    .k-rtl &,
+    [dir="rtl"] & {
+        .k-ie9 & {
+            left: 0;
+            right: auto;
+        }
+    }
+}
+
+
+// NumericTextBox
+
+span.k-numerictextbox {
+    background-color: transparent;
+}
+
+.k-numerictextbox .k-input // alignment of arrows in WebKit
+{
+    margin: 0;
+}
+
+.k-numerictextbox .k-link {
+    color: inherit;
+    display: block;
+    height: 1em;
+    line-height: 1em;
+    vertical-align: middle;
+    border-width: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.k-numerictextbox {
+    .k-icon {
+        display: block;
+        margin: auto;
+        height: 100%;
+    }
+
+    .k-i-arrow-60-up {
+        top: 0;
+    }
+
+    .k-i-arrow-60-down {
+        bottom: 0;
+    }
+}
+
+.k-numeric-wrap .k-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.k-rtl .k-multiselect-wrap {
+    padding-right: 0;
+    padding-left: (@grid-size + (@grid-size/4 + 2px));
+}
+
+.k-maskedtextbox {
+    position: relative;
+    display: inline-block;
+    background-color: transparent;
+    border-width: 0;
+
+    ::-ms-clear {
+        display: none;
+        width : 0;
+        height: 0;
+    }
+
+    .k-i-warning {
+        display: none;
+        position: absolute;
+        width: 2em;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    &.k-state-invalid .k-i-warning {
+        display: inline-block;
+    }
+}
+
+.k-dateinput {
+    position: relative;
+    display: inline-block;
+    border-width: 0;
+
+    &.k-widget {
+        background-color: transparent;
+    }
+
+    ::-ms-clear {
+        display: none;
+        width : 0;
+        height: 0;
+    }
+
+    .k-i-warning {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        overflow: visible;
+    }
+    &.k-state-invalid {
+        .k-i-warning {
+            display: inline-block;
+        }
+    }
+}
+
+.k-datepicker,
+.k-timepicker,
+.k-datetimepicker {
+    .k-picker-wrap {
+        .k-i-warning {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            overflow: visible;
+        }
+
+        &.k-state-invalid .k-i-warning {
+            display: inline-block;
+        }
+    }
+}
+
+.k-listbox {
+    box-sizing: border-box;
+    height: 200px;
+
+    &.k-widget {
+        background-color: transparent;
+    }
+
+    .k-list-scroller {
+        height: 100%;
+        overflow: auto;
+        border-width: 1px;
+        border-style: solid;
+        box-sizing: border-box;
+
+        li {
+            cursor: default;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+    }
+
+    .k-listbox-toolbar {
+        box-sizing: border-box;
+    }
+
+    &.k-listbox-toolbar-top {
+        padding: 15px 0 1.42857143em;
+
+        .k-listbox-toolbar {
+            margin-top: -15px;
+            margin-bottom: 5px;
+
+            li {
+            display: inline-block;
+
+                + li {
+                    margin-left: 5px;
+                }
+            }
+        }
+    }
+
+    &.k-listbox-toolbar-left {
+        .k-listbox-toolbar {
+            float: left;
+            margin-right: 5px;
+
+            li + li {
+                margin-top: 5px;
+            }
+        }
+
+    }
+
+    &.k-listbox-toolbar-right {
+        .k-listbox-toolbar {
+            float: right;
+            margin-left: 5px;
+
+            li:not(:last-child) {
+                margin-bottom: 5px;
+            }
+        }
+
+    }
+
+    &.k-listbox-toolbar-bottom {
+        padding: 15px 0 1.45em;
+
+        .k-list-scroller {
+            margin-top: -15px;
+        }
+
+        .k-listbox-toolbar {
+            margin-top: 5px;
+
+            li {
+                display: inline-block;
+
+                + li {
+                    margin-left: 5px;
+                }
+            }
+        }
+    }
+
+    .k-ghost {
+        opacity: .5;
+    }
+}
+
+// RTL
+.k-rtl {
+
+    .k-dropdown-wrap,
+    .k-picker-wrap,
+    .k-numeric-wrap,
+    .k-combobox-clearable .k-input,
+    .k-multiselect-clearable .k-multiselect-wrap,
+    .k-dropdowntree-clearable .k-multiselect-wrap,
+    .k-dropdowntree-clearable .k-dropdown-wrap .k-input {
+        padding-right: 0;
+        padding-left: calc(@input-offset);
+    }
+
+    .k-dropdown-wrap > .k-i-close {
+        left: calc(@combobox-clear-icon-offset);
+    }
+
+    .k-autocomplete > .k-i-close {
+        left: calc(@input-clear-icon-offset);
+    }
+
+    .k-multiselect-wrap > .k-i-close {
+        left: calc(@input-clear-icon-offset + 1px);
+    }
+
+    .k-numeric-wrap.k-state-invalid.k-expand-padding .k-i-warning{
+        left: 0;
+    }
+
+    .k-listbox {
+
+        &.k-listbox-toolbar-left,
+        &.k-listbox-toolbar-right {
+            .k-listbox-toolbar {
+                transform: scaleX(-1);
+            }
+        }
+
+        &.k-listbox-toolbar-left {
+            .k-listbox-toolbar {
+                float: right;
+                margin-right: 0;
+                margin-left: 5px;
+            }
+        }
+
+        &.k-listbox-toolbar-right {
+            .k-listbox-toolbar {
+                float: left;
+                margin-right: 5px;
+                margin-left: 0;
+            }
+        }
+    }
+}
+
+
+.k-multiple-selection .k-in.k-state-selected {
+    border-color: transparent;
+    color: inherit;
+    background: none;
+}
+
+
+.k-popup-flush,
+.k-popup-flush.k-list-container {
+    padding: 0;
+}
+.k-dropdowngrid-popup {
+    overflow: hidden;
+}
+.k-dropdowngrid-popup .k-grid-header,
+.k-dropdowngrid-popup .k-group-header,
+.k-dropdowngrid-popup .k-list-scroller,
+.k-dropdowngrid-popup .k-virtual-content,
+.k-dropdowngrid-popup .k-footer {
+    line-height: (20/14);
+}
+.k-dropdowngrid-popup .k-virtual-wrap {
+    margin: 0;
+}
+.k-dropdowngrid-popup .k-grid-header table {
+    margin: 0 0 -1px 0;
+    width: 100%;
+    max-width: none;
+    border-width: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    empty-cells: show;
+    outline: none;
+}
+.k-grid-list {
+    width: 100%;
+    max-width: none;
+    border-width: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    table-layout: fixed;
+    empty-cells: show;
+    outline: none;
+    display: table;
+}
+.k-grid-list > .k-item {
+    box-sizing: border-box;
+    display: table-row;
+    position: relative;
+}
+.k-grid-list > .k-item > .k-cell,
+.k-grid-list > .k-item > .k-group,
+.k-grid-list > .k-item > .k-spacer-group {
+    box-sizing: border-box;
+    display: table-cell;
+    vertical-align: middle;
+}
+.k-grid-list.k-virtual-list > .k-item > .k-cell,
+.k-grid-list.k-virtual-list > .k-item > .k-group,
+.k-grid-list.k-virtual-list > .k-item > .k-spacer-group {
+    display: inline-block;
+}
+.k-dropdowngrid-popup .k-grid-header .k-header,
+.k-grid-list > .k-item > .k-cell {
+    border-width: 0 0 1px 1px;
+    border-style: solid;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.k-dropdowngrid-popup .k-grid-header .k-header {
+    padding: @grid-header-padding-y @grid-header-padding-x;
+}
+.k-grid-list > .k-item > .k-cell {
+    padding: @grid-cell-padding-y @grid-cell-padding-x;
+}
+.k-dropdowngrid-popup .k-grid-header .k-header:first-child,
+.k-grid-list > .k-item > .k-cell:first-child {
+    border-left-width: 0;
+}
+div.k-dropdowngrid-popup .k-group-header {
+    margin: 0;
+    padding: @grid-header-padding-y @grid-header-padding-x;
+    min-height: auto;
+    text-align: left;
+}
+.k-grid-list > .k-item > .k-group-cell,
+.k-grid-list > .k-item > .k-spacer-cell {
+    padding-left: 0;
+    padding-right: 0;
+    width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    overflow: visible;
+    position: relative;
+}
+.k-grid-list > .k-item > .k-group-cell > span {
+    padding: 0 (@grid-cell-padding-x / 2);
+    font-size: .875em;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.k-grid-list > .k-item:last-child > .k-cell,
+.k-grid-list > .k-item:last-child > .k-group-cell,
+.k-grid-list > .k-item:last-child > .k-spacer-cell {
+    border-bottom-width: 0;
+}
+.k-dropdowngrid-popup .k-footer {
+    // margin-top: -1px;
+    padding: @grid-footer-padding-y @grid-footer-padding-x;
+    border-width: 1px 0 0 0;
+    border-style: solid;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: relative;
+}
+
+
+.k-rtl {
+    .k-grid-list > .k-item > .k-cell {
+        border-left-width: 1px;
+        border-right-width: 1px;
+        text-align: right;
+    }
+    .k-grid-list > .k-item > .k-cell:first-child {
+        border-right-width: 0;
+    }
+    div.k-dropdowngrid-popup .k-group-header {
+        text-align: right;
+    }
+    .k-grid-list > .k-item > .k-group-cell > span {
+        right: auto;
+        left: 0;
+    }
+}
+
+
+// input container / floating label
+@floating-label-transition: .2s ease-out;
+@floating-label-scale: .75;
+@floating-label-height: calc(@input-height * @floating-label-scale);
+
+.k-textbox-container {
+    position: relative;
+    padding-top: @floating-label-height;
+    display: inline-flex;
+    width: @input-default-width;
+    flex-direction: column;
+    justify-content: stretch;
+
+    > .k-label {
+        pointer-events: none;
+        position: absolute;
+        line-height: @input-height;
+        cursor: text;
+        top: calc(@floating-label-height + @input-border-width + @input-padding-y);
+        left: calc(@input-padding-x + @input-border-width);
+        transition: transform @floating-label-transition, color @floating-label-transition;
+    }
+
+    > .k-textbox,
+    > .k-textarea,
+    > .k-widget {
+        flex: 1 1 auto;
+        width: auto;
+    }
+
+    &.k-state-empty {
+        > .k-label {
+            transform: translate( 0, 0 ) scale( 1 );
+        }
+    }
+
+    &.k-state-focused {
+        box-shadow: none;
+    }
+
+    > .k-label,
+    &.k-state-focused > .k-label {
+        // persist alignment after scaling
+        @half-scale-percent: ((1 - @floating-label-scale) * 100% / 2);
+
+        // transform position to top-left corner of the textbox-container
+        // do not use single translate + calc() because of IE10/11
+        @fls: -@floating-label-scale;
+        transform: translate(-@input-padding-x, calc(@fls * @input-padding-y))
+                translate(-@input-border-width, calc(@fls * @input-height))
+                translate(-@half-scale-percent, calc(@fls * @half-scale-percent))
+                scale(@floating-label-scale);
+    }
+
+    .k-rtl &,
+    &[dir='rtl'] {
+
+        > .k-label {
+            left: auto;
+            right: calc(@input-padding-x + @input-border-width);
+        }
+
+        &.k-state-empty {
+            > .k-label {
+                transform: translate( 0, 0 ) scale( 1 );
+            }
+        }
+
+        > .k-label,
+        &.k-state-focused > .k-label {
+            @half-scale-percent: ((1 - @floating-label-scale) * 100% / 2);
+
+            @fls: -@floating-label-scale;
+            transform: translate(@input-padding-x, calc(@fls * @input-padding-y))
+                    translate(@input-border-width, calc(@fls * @input-height))
+                    translate(@half-scale-percent, calc(@fls * @half-scale-percent))
+                    scale(@floating-label-scale);
+        }
+    }
+}

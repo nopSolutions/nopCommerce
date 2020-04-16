@@ -21,7 +21,7 @@ namespace Nop.Web.Components
             if (!_newsSettings.Enabled || !_newsSettings.ShowNewsOnMainPage)
                 return Content("");
 
-            var model = _newsModelFactory.PrepareHomePageNewsItemsModel();
+            var model = _newsModelFactory.PrepareHomepageNewsItemsModel();
             return View(model);
         }
     }

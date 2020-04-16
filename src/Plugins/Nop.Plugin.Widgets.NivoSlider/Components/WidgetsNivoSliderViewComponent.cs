@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache;
 using Nop.Plugin.Widgets.NivoSlider.Models;
+using Nop.Services.Caching;
 using Nop.Services.Configuration;
 using Nop.Services.Media;
 using Nop.Web.Framework.Components;
@@ -75,7 +76,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Components
 
         protected string GetPictureUrl(int pictureId)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY, 
+            var cacheKey = ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY.FillCacheKey( 
                 pictureId, _webHelper.IsCurrentConnectionSecured() ? Uri.UriSchemeHttps : Uri.UriSchemeHttp);
 
             return _cacheManager.Get(cacheKey, () =>

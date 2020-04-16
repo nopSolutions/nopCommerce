@@ -2,12 +2,16 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Catalog.Manufacturers").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.Manufacturers").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Manufacturers");
 }
 
-<nop-antiforgery-token />
+@{
+    const string hideSearchBlockAttributeName = "ManufacturersPage.HideSearchBlock";
+    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+}
+
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Catalog.Manufacturers")
@@ -34,7 +38,7 @@
                     </a>
                 </li>
                 <li>
-                    <a  asp-action="ExportXlsx">
+                    <a asp-action="ExportXlsx">
                         <i class="fa fa-file-excel-o"></i>
                         @T("Admin.Common.ExportToExcel")
                     </a>
@@ -46,6 +50,11 @@
             @T("Admin.Common.Import")
         </button>
         @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ManufacturerListButtons })
+        <button type="button" id="delete-selected" class="btn bg-red">
+            <i class="fa fa-trash-o"></i>
+            @T("Admin.Common.Delete.Selected")
+        </button>
+        <nop-action-confirmation asp-button-id="delete-selected" />
     </div>
 </div>
 
@@ -54,129 +63,138 @@
         <div class="panel-group">
             <div class="panel panel-default panel-search">
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="col-md-4">
-                                    <nop-label asp-for="SearchManufacturerName" />
+                    <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                        <div class="search-text">@T("Admin.Common.Search")</div>
+                        <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                        <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                    </div>
+
+                    <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchManufacturerName" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchManufacturerName" />
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <nop-editor asp-for="SearchManufacturerName" />
+                                <div class="form-group" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchStoreId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group" @(Model.HideStoresList ? Html.Raw("style=\"display:none\"") : null)>
-                                <div class="col-md-4">
-                                    <nop-label asp-for="SearchStoreId" />
-                                </div>
-                                <div class="col-md-8">
-                                    <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchPublishedId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchPublishedId" asp-items="Model.AvailablePublishedOptions" />
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-md-8 col-md-offset-4">
-                                    <button type="button" id="search-manufacturers" class="btn btn-primary btn-search">
-                                        <i class="fa fa-search"></i>
-                                        @T("Admin.Common.Search")
-                                    </button>
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-7 col-md-offset-5">
+                                <button type="button" id="search-manufacturers" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div id="manufacturers-grid"></div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @await Html.PartialAsync("Table", new DataTablesModel
+                {
+                    Name = "manufacturers-grid",
+                    UrlRead = new DataUrl("List", "Manufacturer", null),
+                    SearchButtonId = "search-manufacturers",
+                    Length = Model.PageSize,
+                    LengthMenu = Model.AvailablePageSizes,
+                    Filters = new List<FilterParameter>
+                    {
+                        new FilterParameter(nameof(Model.SearchManufacturerName)),
+                        new FilterParameter(nameof(Model.SearchStoreId)),
+                        new FilterParameter(nameof(Model.SearchPublishedId))
+                    },
+                    ColumnCollection = new List<ColumnProperty>
+                    {
+                        new ColumnProperty(nameof(ManufacturerModel.Id))
+                        {
+                            IsMasterCheckBox = true,
+                            Render = new RenderCheckBox("checkbox_manufacturers"),
+                            ClassName =  NopColumnClassDefaults.CenterAll,
+                            Width = "50"
+                        },
+                        new ColumnProperty(nameof(ManufacturerModel.Name))
+                        {
+                            Title = T("Admin.Catalog.Manufacturers.Fields.Name").Text
+                        },
+                        new ColumnProperty(nameof(ManufacturerModel.Published))
+                        {
+                            Title = T("Admin.Catalog.Manufacturers.Fields.Published").Text,
+                            Width = "100",
+                            ClassName =  NopColumnClassDefaults.CenterAll,
+                            Render = new RenderBoolean()
+                        },
+                        new ColumnProperty(nameof(ManufacturerModel.DisplayOrder))
+                        {
+                            Title = T("Admin.Catalog.Manufacturers.Fields.DisplayOrder").Text,
+                            Width = "150",
+                            ClassName = NopColumnClassDefaults.CenterAll
+                        },
+                        new ColumnProperty(nameof(ManufacturerModel.Id))
+                        {
+                            Title = T("Admin.Common.Edit").Text,
+                            Width = "100",
+                            ClassName =  NopColumnClassDefaults.Button,
+                            Render = new RenderButtonEdit(new DataUrl("Edit"))
+                        }
+                    }
+                })
 
-                    <script>
-                        $(document).ready(function() {
-                            $("#manufacturers-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("List", "Manufacturer"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: function() {
-                                                var data = {
-                                                    SearchManufacturerName: $('#@Html.IdFor(model => model.SearchManufacturerName)').val(),
-                                                    SearchStoreId: $('#SearchStoreId').val()
-                                                };
-                                                addAntiForgeryToken(data);
-                                                return data;
-                                            }
-                                        }
+                <script>
+                        $(document).ready(function () {
+                            $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                                var postData = {
+                                    selectedIds: selectedIds
+                                };
+                                addAntiForgeryToken(postData);
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@(Url.Action("DeleteSelected", "Manufacturer"))",
+                                    data: postData,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#deleteSelectedFailed-info').text(errorThrown);
+                                        $('#deleteSelectedFailed').click();
                                     },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [
-                                {
-                                    field: "Name",
-                                    title: "@T("Admin.Catalog.Manufacturers.Fields.Name")"
-                                }, {
-                                    field: "Published",
-                                    title: "@T("Admin.Catalog.Manufacturers.Fields.Published")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
-                                }, {
-                                    field: "DisplayOrder",
-                                    title: "@T("Admin.Catalog.Manufacturers.Fields.DisplayOrder")",
-                                    width: 150
-                                }, {
-                                    field: "Id",
-                                    title: "@T("Admin.Common.Edit")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<a class="btn btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'                                }
-                                ]
-                            });
-                        });
-                    </script>
-
-                    <script>
-                        $(document).ready(function() {
-                            //search button
-                            $('#search-manufacturers').click(function() {
-                                //search
-                                var grid = $('#manufacturers-grid').data('kendoGrid');
-                                grid.dataSource.page(1); //new search. Set page size to 1
-                                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                    complete: function (jqXHR, textStatus) {
+                                        updateTable('#manufacturers-grid');
+                                    }
+                                });
+                                $('#delete-selected-action-confirmation').modal('toggle');
                                 return false;
                             });
                         });
-                    </script>
-                </div>
+
+                </script>
+                <nop-alert asp-alert-id="deleteSelectedFailed" />
             </div>
         </div>
     </div>
+</div>
 </div>
 
 @*import manufacturers form*@

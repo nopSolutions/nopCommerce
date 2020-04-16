@@ -11,8 +11,9 @@ namespace Nop.Web.Factories
         /// Get the topic model by topic identifier
         /// </summary>
         /// <param name="topicId">Topic identifier</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Topic model</returns>
-        TopicModel PrepareTopicModelById(int topicId);
+        TopicModel PrepareTopicModelById(int topicId, bool showHidden = false);
 
         /// <summary>
         /// Get the topic model by topic system name

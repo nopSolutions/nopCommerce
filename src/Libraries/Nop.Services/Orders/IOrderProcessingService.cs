@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -253,5 +254,17 @@ namespace Nop.Services.Orders
         /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
         /// <returns>true - OK; false - minimum order total amount is not reached</returns>
         bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool? useRewardPoints = null);
+
+        /// <summary>
+        /// Gets the next payment date
+        /// </summary>
+        /// <param name="recurringPayment">Recurring payment</param>
+        DateTime? GetNextPaymentDate(RecurringPayment recurringPayment);
+
+        /// <summary>
+        /// Gets the cycles remaining
+        /// </summary>
+        /// <param name="recurringPayment">Recurring payment</param>
+        int GetCyclesRemaining(RecurringPayment recurringPayment);
     }
 }

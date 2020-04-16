@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using Nop.Core.Domain.Catalog;
+﻿using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Vendors
@@ -9,8 +8,6 @@ namespace Nop.Core.Domain.Vendors
     /// </summary>
     public partial class VendorAttribute : BaseEntity, ILocalizedEntity
     {
-        private ICollection<VendorAttributeValue> _vendorAttributeValues;
-
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -38,15 +35,6 @@ namespace Nop.Core.Domain.Vendors
         {
             get => (AttributeControlType)AttributeControlTypeId;
             set => AttributeControlTypeId = (int)value;
-        }
-
-        /// <summary>
-        /// Gets the vendor attribute values
-        /// </summary>
-        public virtual ICollection<VendorAttributeValue> VendorAttributeValues
-        {
-            get => _vendorAttributeValues ?? (_vendorAttributeValues = new List<VendorAttributeValue>());
-            protected set => _vendorAttributeValues = value;
         }
     }
 }

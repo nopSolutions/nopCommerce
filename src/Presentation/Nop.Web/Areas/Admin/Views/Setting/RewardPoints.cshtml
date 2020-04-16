@@ -5,7 +5,7 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Settings.RewardPoints").Text;
+    ViewBag.PageTitle = T("Admin.Configuration.Settings.RewardPoints").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Reward points");
 }
@@ -15,7 +15,7 @@
     var hideCommonBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideCommonBlockAttributeName);
 
     const string hideEarningRewardPointsBlockAttributeName = "RewardPointsSettingsPage.HideEarningRewardPointsBlock";
-    var hideEarningRewardPointsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideEarningRewardPointsBlockAttributeName, defaultValue: true);
+    var hideEarningRewardPointsBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideEarningRewardPointsBlockAttributeName);
 }
 
 <form asp-controller="Setting" asp-action="RewardPoints" method="post">

@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
 using Nop.Core.Domain.Tasks;
+using Nop.Data;
+using Nop.Services.Caching.Extensions;
 
 namespace Nop.Services.Tasks
 {
@@ -50,7 +51,7 @@ namespace Nop.Services.Tasks
             if (taskId == 0)
                 return null;
 
-            return _taskRepository.GetById(taskId);
+            return _taskRepository.ToCachedGetById(taskId);
         }
 
         /// <summary>

@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Catalog
@@ -57,7 +58,8 @@ namespace Nop.Services.Catalog
                         orderby pt.DisplayOrder, pt.Id
                         select pt;
 
-            var templates = query.ToList();
+            var templates = query.ToCachedList(NopCatalogDefaults.ProductTemplatesAllCacheKey);
+
             return templates;
         }
 
@@ -71,7 +73,7 @@ namespace Nop.Services.Catalog
             if (productTemplateId == 0)
                 return null;
 
-            return _productTemplateRepository.GetById(productTemplateId);
+            return _productTemplateRepository.ToCachedGetById(productTemplateId);
         }
 
         /// <summary>

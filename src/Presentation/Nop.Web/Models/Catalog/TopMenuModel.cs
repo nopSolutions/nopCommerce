@@ -19,7 +19,7 @@ namespace Nop.Web.Models.Catalog
         public bool NewProductsEnabled { get; set; }
         public bool ForumEnabled { get; set; }
 
-        public bool DisplayHomePageMenuItem { get; set; }
+        public bool DisplayHomepageMenuItem { get; set; }
         public bool DisplayNewProductsMenuItem { get; set; }
         public bool DisplayProductSearchMenuItem { get; set; }
         public bool DisplayCustomerInfoMenuItem { get; set; }
@@ -29,24 +29,18 @@ namespace Nop.Web.Models.Catalog
 
         public bool UseAjaxMenu { get; set; }
 
-        public bool HasOnlyCategories
-        {
-            get
-            {
-                return Categories.Any()
+        public bool HasOnlyCategories => Categories.Any()
                        && !Topics.Any()
-                       && !DisplayHomePageMenuItem
+                       && !DisplayHomepageMenuItem
                        && !(DisplayNewProductsMenuItem && NewProductsEnabled)
                        && !DisplayProductSearchMenuItem
                        && !DisplayCustomerInfoMenuItem
                        && !(DisplayBlogMenuItem && BlogEnabled)
                        && !(DisplayForumsMenuItem && ForumEnabled)
                        && !DisplayContactUsMenuItem;
-            }
-        }
 
         #region Nested classes
-        
+
         public class TopicModel : BaseNopEntityModel
         {
             public string Name { get; set; }

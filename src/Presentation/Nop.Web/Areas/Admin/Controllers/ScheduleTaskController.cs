@@ -8,8 +8,8 @@ using Nop.Services.Tasks;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tasks;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -67,7 +67,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(ScheduleTaskSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _scheduleTaskModelFactory.PrepareScheduleTaskListModel(searchModel);
@@ -82,7 +82,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a schedule task with the specified id
             var scheduleTask = _scheduleTaskService.GetTaskById(model.Id)

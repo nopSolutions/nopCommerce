@@ -15,7 +15,7 @@ using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Models.Extensions;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 
@@ -23,6 +23,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
 {
     [AuthorizeAdmin]
     [Area(AreaNames.Admin)]
+    [AutoValidateAntiforgeryToken]
     public class FixedByWeightByTotalController : BasePluginController
     {
         #region Fields
@@ -108,11 +109,12 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
             //states
             model.AvailableStates.Add(new SelectListItem { Text = "*", Value = "0" });
 
+            model.SetGridPageSize();
+
             return View("~/Plugins/Shipping.FixedByWeightByTotal/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult Configure(ConfigurationModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -126,6 +128,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public IActionResult SaveMode(bool value)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -141,35 +144,39 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         #region Fixed rate
 
         [HttpPost]
-        public IActionResult FixedShippingRateList(DataSourceRequest command)
+        public IActionResult FixedShippingRateList(ConfigurationModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
-            var rateModels = _shippingService.GetAllShippingMethods().Select(shippingMethod => new FixedRateModel
-            {
-                ShippingMethodId = shippingMethod.Id,
-                ShippingMethodName = shippingMethod.Name,
-                Rate = _settingService.GetSettingByKey<decimal>(string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, shippingMethod.Id))
-            }).ToList();
+            var shippingMethods = _shippingService.GetAllShippingMethods().ToPagedList(searchModel);
 
-            var gridModel = new DataSourceResult
+            var gridModel = new FixedRateListModel().PrepareToGrid(searchModel, shippingMethods, () =>
             {
-                Data = rateModels,
-                Total = rateModels.Count
-            };
+                return shippingMethods.Select(shippingMethod => new FixedRateModel
+                {
+                    ShippingMethodId = shippingMethod.Id,
+                    ShippingMethodName = shippingMethod.Name,
+                    Rate = _settingService.GetSettingByKey<decimal>(
+                        string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, shippingMethod.Id)),
+                    TransitDays = _settingService.GetSettingByKey<int?>(
+                        string.Format(FixedByWeightByTotalDefaults.TransitDaysSettingsKey, shippingMethod.Id))
+                });
+            });
 
             return Json(gridModel);
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult UpdateFixedShippingRate(FixedRateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
 
-            _settingService.SetSetting(string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, model.ShippingMethodId), model.Rate);
+            _settingService.SetSetting(string.Format(FixedByWeightByTotalDefaults.FixedRateSettingsKey, model.ShippingMethodId), model.Rate, 0, false);
+            _settingService.SetSetting(string.Format(FixedByWeightByTotalDefaults.TransitDaysSettingsKey, model.ShippingMethodId), model.TransitDays, 0, false);
+
+            _settingService.ClearCache();
 
             return new NullJsonResult();
         }
@@ -179,16 +186,15 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         #region Rate by weight
 
         [HttpPost]
-        [AdminAntiForgery]
-        public IActionResult RateByWeightByTotalList(DataSourceRequest command, ConfigurationModel filter)
+        public IActionResult RateByWeightByTotalList(ConfigurationModel searchModel, ConfigurationModel filter)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //var records = _shippingByWeightService.GetAll(command.Page - 1, command.PageSize);
             var records = _shippingByWeightService.FindRecords(
-              pageIndex: command.Page - 1,
-              pageSize: command.PageSize,
+              pageIndex: searchModel.Page - 1,
+              pageSize: searchModel.PageSize,
               storeId: filter.SearchStoreId,
               warehouseId: filter.SearchWarehouseId,
               countryId: filter.SearchCountryId,
@@ -199,60 +205,77 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
               orderSubtotal: null
               );
 
-            var sbwModel = records.Select(record =>
+            var gridModel = new ShippingByWeightByTotalListModel().PrepareToGrid(searchModel, records, () =>
             {
-                var model = new ShippingByWeightByTotalModel
+                return records.Select(record =>
                 {
-                    Id = record.Id,
-                    StoreId = record.StoreId,
-                    StoreName = _storeService.GetStoreById(record.StoreId)?.Name ?? "*",
-                    WarehouseId = record.WarehouseId,
-                    WarehouseName = _shippingService.GetWarehouseById(record.WarehouseId)?.Name ?? "*",
-                    ShippingMethodId = record.ShippingMethodId,
-                    ShippingMethodName = _shippingService.GetShippingMethodById(record.ShippingMethodId)?.Name ?? "Unavailable",
-                    CountryId = record.CountryId,
-                    CountryName = _countryService.GetCountryById(record.CountryId)?.Name ?? "*",
-                    StateProvinceId = record.StateProvinceId,
-                    StateProvinceName = _stateProvinceService.GetStateProvinceById(record.StateProvinceId)?.Name ?? "*",
-                    WeightFrom = record.WeightFrom,
-                    WeightTo = record.WeightTo,
-                    OrderSubtotalFrom = record.OrderSubtotalFrom,
-                    OrderSubtotalTo = record.OrderSubtotalTo,
-                    AdditionalFixedCost = record.AdditionalFixedCost,
-                    PercentageRateOfSubtotal = record.PercentageRateOfSubtotal,
-                    RatePerWeightUnit = record.RatePerWeightUnit,
-                    LowerWeightLimit = record.LowerWeightLimit,
-                    Zip = !string.IsNullOrEmpty(record.Zip) ? record.Zip : "*"
-                };                
+                    var model = new ShippingByWeightByTotalModel
+                    {
+                        Id = record.Id,
+                        StoreId = record.StoreId,
+                        StoreName = _storeService.GetStoreById(record.StoreId)?.Name ?? "*",
+                        WarehouseId = record.WarehouseId,
+                        WarehouseName = _shippingService.GetWarehouseById(record.WarehouseId)?.Name ?? "*",
+                        ShippingMethodId = record.ShippingMethodId,
+                        ShippingMethodName = _shippingService.GetShippingMethodById(record.ShippingMethodId)?.Name ??
+                                             "Unavailable",
+                        CountryId = record.CountryId,
+                        CountryName = _countryService.GetCountryById(record.CountryId)?.Name ?? "*",
+                        StateProvinceId = record.StateProvinceId,
+                        StateProvinceName =
+                            _stateProvinceService.GetStateProvinceById(record.StateProvinceId)?.Name ?? "*",
+                        WeightFrom = record.WeightFrom,
+                        WeightTo = record.WeightTo,
+                        OrderSubtotalFrom = record.OrderSubtotalFrom,
+                        OrderSubtotalTo = record.OrderSubtotalTo,
+                        AdditionalFixedCost = record.AdditionalFixedCost,
+                        PercentageRateOfSubtotal = record.PercentageRateOfSubtotal,
+                        RatePerWeightUnit = record.RatePerWeightUnit,
+                        LowerWeightLimit = record.LowerWeightLimit,
+                        Zip = !string.IsNullOrEmpty(record.Zip) ? record.Zip : "*"
+                    };
 
-                var htmlSb = new StringBuilder("<div>");
-                htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.FixedByWeightByTotal.Fields.WeightFrom"), model.WeightFrom);
-                htmlSb.Append("<br />");
-                htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.FixedByWeightByTotal.Fields.WeightTo"), model.WeightTo);
-                htmlSb.Append("<br />");
-                htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.FixedByWeightByTotal.Fields.OrderSubtotalFrom"), model.OrderSubtotalFrom);
-                htmlSb.Append("<br />");
-                htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.FixedByWeightByTotal.Fields.OrderSubtotalTo"), model.OrderSubtotalTo);
-                htmlSb.Append("<br />");
-                htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.FixedByWeightByTotal.Fields.AdditionalFixedCost"), model.AdditionalFixedCost);
-                htmlSb.Append("<br />");
-                htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.FixedByWeightByTotal.Fields.RatePerWeightUnit"), model.RatePerWeightUnit);
-                htmlSb.Append("<br />");
-                htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.FixedByWeightByTotal.Fields.LowerWeightLimit"), model.LowerWeightLimit);
-                htmlSb.Append("<br />");
-                htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.FixedByWeightByTotal.Fields.PercentageRateOfSubtotal"), model.PercentageRateOfSubtotal);
+                    var htmlSb = new StringBuilder("<div>");
+                    htmlSb.AppendFormat("{0}: {1}",
+                        _localizationService.GetResource("Plugins.Shipping.FixedByWeightByTotal.Fields.WeightFrom"),
+                        model.WeightFrom);
+                    htmlSb.Append("<br />");
+                    htmlSb.AppendFormat("{0}: {1}",
+                        _localizationService.GetResource("Plugins.Shipping.FixedByWeightByTotal.Fields.WeightTo"),
+                        model.WeightTo);
+                    htmlSb.Append("<br />");
+                    htmlSb.AppendFormat("{0}: {1}",
+                        _localizationService.GetResource(
+                            "Plugins.Shipping.FixedByWeightByTotal.Fields.OrderSubtotalFrom"), model.OrderSubtotalFrom);
+                    htmlSb.Append("<br />");
+                    htmlSb.AppendFormat("{0}: {1}",
+                        _localizationService.GetResource(
+                            "Plugins.Shipping.FixedByWeightByTotal.Fields.OrderSubtotalTo"), model.OrderSubtotalTo);
+                    htmlSb.Append("<br />");
+                    htmlSb.AppendFormat("{0}: {1}",
+                        _localizationService.GetResource(
+                            "Plugins.Shipping.FixedByWeightByTotal.Fields.AdditionalFixedCost"),
+                        model.AdditionalFixedCost);
+                    htmlSb.Append("<br />");
+                    htmlSb.AppendFormat("{0}: {1}",
+                        _localizationService.GetResource(
+                            "Plugins.Shipping.FixedByWeightByTotal.Fields.RatePerWeightUnit"), model.RatePerWeightUnit);
+                    htmlSb.Append("<br />");
+                    htmlSb.AppendFormat("{0}: {1}",
+                        _localizationService.GetResource(
+                            "Plugins.Shipping.FixedByWeightByTotal.Fields.LowerWeightLimit"), model.LowerWeightLimit);
+                    htmlSb.Append("<br />");
+                    htmlSb.AppendFormat("{0}: {1}",
+                        _localizationService.GetResource(
+                            "Plugins.Shipping.FixedByWeightByTotal.Fields.PercentageRateOfSubtotal"),
+                        model.PercentageRateOfSubtotal);
 
-                htmlSb.Append("</div>");
-                model.DataHtml = htmlSb.ToString();
+                    htmlSb.Append("</div>");
+                    model.DataHtml = htmlSb.ToString();
 
-                return model;
-            }).ToList();
-
-            var gridModel = new DataSourceResult
-            {
-                Data = sbwModel,
-                Total = records.TotalCount
-            };
+                    return model;
+                });
+            });
 
             return Json(gridModel);
         }
@@ -297,7 +320,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
         
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult AddRateByWeightByTotalPopup(ShippingByWeightByTotalModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -318,7 +340,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
                 AdditionalFixedCost = model.AdditionalFixedCost,
                 RatePerWeightUnit = model.RatePerWeightUnit,
                 PercentageRateOfSubtotal = model.PercentageRateOfSubtotal,
-                LowerWeightLimit = model.LowerWeightLimit
+                LowerWeightLimit = model.LowerWeightLimit,
+                TransitDays = model.TransitDays
             });
 
             ViewBag.RefreshPage = true;
@@ -354,7 +377,8 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
                 RatePerWeightUnit = sbw.RatePerWeightUnit,
                 LowerWeightLimit = sbw.LowerWeightLimit,
                 PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId)?.CurrencyCode,
-                BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name
+                BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId)?.Name,
+                TransitDays = sbw.TransitDays
             };
 
             var shippingMethods = _shippingService.GetAllShippingMethods();
@@ -392,7 +416,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult EditRateByWeightByTotalPopup(ShippingByWeightByTotalModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -417,6 +440,7 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
             sbw.RatePerWeightUnit = model.RatePerWeightUnit;
             sbw.PercentageRateOfSubtotal = model.PercentageRateOfSubtotal;
             sbw.LowerWeightLimit = model.LowerWeightLimit;
+            sbw.TransitDays = model.TransitDays;
 
             _shippingByWeightService.UpdateShippingByWeightRecord(sbw);
 
@@ -426,7 +450,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal.Controllers
         }
 
         [HttpPost]
-        [AdminAntiForgery]
         public IActionResult DeleteRateByWeightByTotal(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))

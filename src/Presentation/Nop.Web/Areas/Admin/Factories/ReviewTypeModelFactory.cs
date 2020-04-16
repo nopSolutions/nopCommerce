@@ -5,8 +5,8 @@ using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -65,15 +65,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get review types
-            var reviewTypes = _reviewTypeService.GetAllReviewTypes();
+            var reviewTypes = _reviewTypeService.GetAllReviewTypes().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ReviewTypeListModel
+            var model = new ReviewTypeListModel().PrepareToGrid(searchModel, reviewTypes, () =>
             {
                 //fill in model values from the entity
-                Data = reviewTypes.PaginationByRequestModel(searchModel).Select(reviewType => reviewType.ToModel<ReviewTypeModel>()),
-                Total = reviewTypes.Count
-            };
+                return reviewTypes.Select(reviewType => reviewType.ToModel<ReviewTypeModel>());
+            });
 
             return model;
         }
@@ -85,7 +84,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="reviewType">Review type</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Review type model</returns>
-        public virtual ReviewTypeModel PrepareReviewTypeModel(ReviewTypeModel model, 
+        public virtual ReviewTypeModel PrepareReviewTypeModel(ReviewTypeModel model,
             ReviewType reviewType, bool excludeProperties = false)
         {
             Action<ReviewTypeLocalizedModel, int> localizedModelConfiguration = null;
@@ -93,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (reviewType != null)
             {
                 //fill in model values from the entity
-                model = model ?? reviewType.ToModel<ReviewTypeModel>();
+                model ??= reviewType.ToModel<ReviewTypeModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

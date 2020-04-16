@@ -1,4 +1,6 @@
 ﻿using FluentValidation.TestHelper;
+using Moq;
+using Nop.Data;
 using Nop.Web.Areas.Admin.Models.Vendors;
 using Nop.Web.Areas.Admin.Validators.Vendors;
 using Nop.Web.MVC.Tests.Public.Validators;
@@ -9,12 +11,14 @@ namespace Nop.Web.MVC.Tests.Admin.Validators.Vendors
     [TestFixture]
     public class VendorValidatorTests : BaseValidatorTests
     {
+        private Mock<INopDataProvider> _dataProvider;
         private VendorValidator _validator;
 
         [SetUp]
         public new void Setup()
         {
-            _validator = new VendorValidator(_localizationService, null);
+            _dataProvider = new Mock<INopDataProvider>();
+            _validator = new VendorValidator(_localizationService, _dataProvider.Object);
         }
 
         [Test]

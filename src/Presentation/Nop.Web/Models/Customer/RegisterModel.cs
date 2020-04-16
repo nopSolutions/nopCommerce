@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
-using Nop.Web.Validators.Customer;
 
 namespace Nop.Web.Models.Customer
 {
-    [Validator(typeof(RegisterValidator))]
     public partial class RegisterModel : BaseNopModel
     {
         public RegisterModel()
@@ -51,10 +48,14 @@ namespace Nop.Web.Models.Customer
         [NopResourceDisplayName("Account.Fields.Gender")]
         public string Gender { get; set; }
 
+        public bool FirstNameEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.FirstName")]
         public string FirstName { get; set; }
+        public bool FirstNameRequired { get; set; }
+        public bool LastNameEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.LastName")]
         public string LastName { get; set; }
+        public bool LastNameRequired { get; set; }
 
         public bool DateOfBirthEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.DateOfBirth")]

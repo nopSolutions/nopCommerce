@@ -3,7 +3,7 @@
     Layout = "_AdminPopupLayout";
 
     //page title
-    ViewBag.Title = T("Admin.Address.AddressAttributes.Values.AddNew").Text;
+    ViewBag.PageTitle = T("Admin.Address.AddressAttributes.Values.AddNew").Text;
 }
 <form asp-controller="AddressAttribute" asp-action="ValueCreatePopup"
       asp-route-addressAttributeId="@Context.Request.Query["addressAttributeId"]"

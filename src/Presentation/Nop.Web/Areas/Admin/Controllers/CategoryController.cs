@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Http;
@@ -12,8 +13,8 @@ using Nop.Services.Discounts;
 using Nop.Services.ExportImport;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.Messages;
 using Nop.Services.Media;
+using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
@@ -141,6 +142,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveCategoryAcl(Category category, CategoryModel model)
         {
             category.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
+            _categoryService.UpdateCategory(category);
 
             var existingAclRecords = _aclService.GetAclRecords(category);
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
@@ -165,6 +167,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(Category category, CategoryModel model)
         {
             category.LimitedToStores = model.SelectedStoreIds.Any();
+            _categoryService.UpdateCategory(category);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(category);
             var allStores = _storeService.GetAllStores();
@@ -210,7 +213,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(CategorySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _categoryModelFactory.PrepareCategoryListModel(searchModel);
@@ -258,8 +261,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var discount in allDiscounts)
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
-                        //category.AppliedDiscounts.Add(discount);
-                        category.DiscountCategoryMappings.Add(new DiscountCategoryMapping { Discount = discount });
+                        _categoryService.InsertDiscountCategoryMapping(new DiscountCategoryMapping { DiscountId = discount.Id, EntityId = category.Id });
                 }
 
                 _categoryService.UpdateCategory(category);
@@ -281,10 +283,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = category.Id });
             }
 
@@ -344,15 +343,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
                         //new discount
-                        if (category.DiscountCategoryMappings.Count(mapping => mapping.DiscountId == discount.Id) == 0)
-                            category.DiscountCategoryMappings.Add(new DiscountCategoryMapping { Discount = discount });
+                        if (_categoryService.GetDiscountAppliedToCategory(category.Id, discount.Id) is null)
+                            _categoryService.InsertDiscountCategoryMapping(new DiscountCategoryMapping { DiscountId = discount.Id, EntityId = category.Id });
                     }
                     else
                     {
                         //remove discount
-                        if (category.DiscountCategoryMappings.Count(mapping => mapping.DiscountId == discount.Id) > 0)
-                            category.DiscountCategoryMappings
-                                .Remove(category.DiscountCategoryMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
+                        if (_categoryService.GetDiscountAppliedToCategory(category.Id, discount.Id) is DiscountCategoryMapping mapping)
+                            _categoryService.DeleteDiscountCategoryMapping(mapping);
                     }
                 }
 
@@ -383,10 +381,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = category.Id });
             }
 
@@ -419,6 +414,20 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        [HttpPost]
+        public virtual IActionResult DeleteSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                _categoryService.DeleteCategories(_categoryService.GetCategoriesByIds(selectedIds.ToArray()).Where(p => _workContext.CurrentVendor == null).ToList());
+            }
+
+            return Json(new { Result = true });
+        }
+
         #endregion
 
         #region Export / Import
@@ -449,7 +458,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 var bytes = _exportManager
-                    .ExportCategoriesToXlsx(_categoryService.GetAllCategories(showHidden: true, loadCacheableCopy: false).ToList());
+                    .ExportCategoriesToXlsx(_categoryService.GetAllCategories(showHidden: true).ToList());
 
                 return File(bytes, MimeTypes.TextXlsx, "categories.xlsx");
             }
@@ -501,7 +510,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ProductList(CategoryProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a category with the specified id
             var category = _categoryService.GetCategoryById(searchModel.CategoryId)
@@ -558,7 +567,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ProductAddPopupList(AddProductToCategorySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _categoryModelFactory.PrepareAddProductToCategoryListModel(searchModel);

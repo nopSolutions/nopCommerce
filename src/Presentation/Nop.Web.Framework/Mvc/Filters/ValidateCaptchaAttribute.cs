@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
-using Nop.Core.Data;
+using Nop.Core;
 using Nop.Core.Domain.Security;
+using Nop.Data;
+using Nop.Services.Logging;
 using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Web.Framework.Mvc.Filters
@@ -11,7 +13,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute enabling CAPTCHA validation
     /// </summary>
-    public class ValidateCaptchaAttribute : TypeFilterAttribute
+    public sealed class ValidateCaptchaAttribute : TypeFilterAttribute
     {
         #region Ctor
 
@@ -35,7 +37,6 @@ namespace Nop.Web.Framework.Mvc.Filters
         {
             #region Constants
 
-            private const string CHALLENGE_FIELD_KEY = "recaptcha_challenge_field";
             private const string RESPONSE_FIELD_KEY = "recaptcha_response_field";
             private const string G_RESPONSE_FIELD_KEY = "g-recaptcha-response";
 
@@ -44,16 +45,26 @@ namespace Nop.Web.Framework.Mvc.Filters
             #region Fields
 
             private readonly string _actionParameterName;
+            private readonly CaptchaHttpClient _captchaHttpClient;
             private readonly CaptchaSettings _captchaSettings;
+            private readonly ILogger _logger;
+            private readonly IWorkContext _workContext;
 
             #endregion
 
             #region Ctor
 
-            public ValidateCaptchaFilter(string actionParameterName, CaptchaSettings captchaSettings)
+            public ValidateCaptchaFilter(string actionParameterName,
+                CaptchaHttpClient captchaHttpClient,
+                CaptchaSettings captchaSettings,
+                ILogger logger,
+                IWorkContext workContext)
             {
                 _actionParameterName = actionParameterName;
+                _captchaHttpClient = captchaHttpClient;
                 _captchaSettings = captchaSettings;
+                _logger = logger;
+                _workContext = workContext;
             }
 
             #endregion
@@ -70,24 +81,35 @@ namespace Nop.Web.Framework.Mvc.Filters
                 var isValid = false;
 
                 //get form values
-                var captchaChallengeValue = context.HttpContext.Request.Form[CHALLENGE_FIELD_KEY];
                 var captchaResponseValue = context.HttpContext.Request.Form[RESPONSE_FIELD_KEY];
                 var gCaptchaResponseValue = context.HttpContext.Request.Form[G_RESPONSE_FIELD_KEY];
 
-                if ((!StringValues.IsNullOrEmpty(captchaChallengeValue) && !StringValues.IsNullOrEmpty(captchaResponseValue)) || !StringValues.IsNullOrEmpty(gCaptchaResponseValue))
+                if (!StringValues.IsNullOrEmpty(captchaResponseValue) || !StringValues.IsNullOrEmpty(gCaptchaResponseValue))
                 {
-                    //create CAPTCHA validator
-                    var captchaValidtor = new GReCaptchaValidator()
-                    {
-                        SecretKey = _captchaSettings.ReCaptchaPrivateKey,
-                        RemoteIp = context.HttpContext.Connection.RemoteIpAddress?.ToString(),
-                        Response = !StringValues.IsNullOrEmpty(captchaResponseValue) ? captchaResponseValue : gCaptchaResponseValue,
-                        Challenge = captchaChallengeValue
-                    };
-
                     //validate request
-                    var recaptchaResponse = captchaValidtor.Validate();
-                    isValid = recaptchaResponse.IsValid;
+                    try
+                    {
+                        var value = !StringValues.IsNullOrEmpty(captchaResponseValue) ? captchaResponseValue : gCaptchaResponseValue;
+                        var response = _captchaHttpClient.ValidateCaptchaAsync(value).Result;
+
+                        switch (_captchaSettings.CaptchaType)
+                        {
+                            case CaptchaType.CheckBoxReCaptchaV2:
+                                isValid = response.IsValid;
+                                break;
+                            case CaptchaType.ReCaptchaV3:
+                                isValid = response.IsValid &&
+                                            response.Action == context.RouteData.Values["action"].ToString() &&
+                                              response.Score > _captchaSettings.ReCaptchaV3ScoreThreshold;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        _logger.Error("Error occurred on CAPTCHA validation", exception, _workContext.CurrentCustomer);
+                    }
                 }
 
                 return isValid;

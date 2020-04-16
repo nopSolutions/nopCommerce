@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
+using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Orders;
 using Nop.Services.Security;
@@ -49,7 +50,7 @@ namespace Nop.Web.Components
                 return Content("");
 
             //load and cache report
-            var productIds = _cacheManager.Get(string.Format(NopModelCacheDefaults.ProductsAlsoPurchasedIdsKey, productId, _storeContext.CurrentStore.Id),
+            var productIds = _cacheManager.Get(NopModelCacheDefaults.ProductsAlsoPurchasedIdsKey.FillCacheKey(productId, _storeContext.CurrentStore),
                 () => _orderReportService.GetAlsoPurchasedProductsIds(_storeContext.CurrentStore.Id, productId, _catalogSettings.ProductsAlsoPurchasedNumber)
             );
 

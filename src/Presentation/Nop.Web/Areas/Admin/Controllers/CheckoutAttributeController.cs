@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
@@ -112,6 +113,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
         {
             checkoutAttribute.LimitedToStores = model.SelectedStoreIds.Any();
+            _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(checkoutAttribute);
             var allStores = _storeService.GetAllStores();
@@ -214,7 +216,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(CheckoutAttributeSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _checkoutAttributeModelFactory.PrepareCheckoutAttributeListModel(searchModel);
@@ -258,10 +260,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = checkoutAttribute.Id });
             }
 
@@ -319,10 +318,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = checkoutAttribute.Id });
             }
             
@@ -355,6 +351,28 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        [HttpPost]
+        public virtual IActionResult DeleteSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                var checkoutAttributes = _checkoutAttributeService.GetCheckoutAttributeByIds(selectedIds.ToArray());
+                _checkoutAttributeService.DeleteCheckoutAttributes(checkoutAttributes);
+
+                foreach (var checkoutAttribute in checkoutAttributes)
+                {
+                    //activity log
+                    _customerActivityService.InsertActivity("DeleteCheckoutAttribute",
+                        string.Format(_localizationService.GetResource("ActivityLog.DeleteCheckoutAttribute"), checkoutAttribute.Name), checkoutAttribute);
+                }
+            }
+
+            return Json(new { Result = true });
+        }
+
         #endregion
 
         #region Checkout attribute values
@@ -363,7 +381,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ValueList(CheckoutAttributeValueSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a checkout attribute with the specified id
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(searchModel.CheckoutAttributeId)
@@ -482,7 +500,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
 
-            if (checkoutAttributeValue.CheckoutAttribute.AttributeControlType == AttributeControlType.ColorSquares)
+            if (checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares)
             {
                 //ensure valid color is chosen/entered
                 if (string.IsNullOrEmpty(model.ColorSquaresRgb))

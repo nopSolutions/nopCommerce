@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
+using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Orders;
 using Nop.Services.Security;
@@ -49,7 +50,7 @@ namespace Nop.Web.Components
                 return Content("");
 
             //load and cache report
-            var report = _cacheManager.Get(string.Format(NopModelCacheDefaults.HomepageBestsellersIdsKey, _storeContext.CurrentStore.Id),
+            var report = _cacheManager.Get(NopModelCacheDefaults.HomepageBestsellersIdsKey.FillCacheKey(_storeContext.CurrentStore),
                 () => _orderReportService.BestSellersReport(
                         storeId: _storeContext.CurrentStore.Id,
                         pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)

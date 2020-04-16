@@ -5,6 +5,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain;
@@ -24,6 +25,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
+using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -32,6 +34,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
+using Nop.Services.Media.RoxyFileman;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Plugins;
@@ -42,10 +45,9 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Kendoui;
-using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -56,18 +58,20 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IAddressService _addressService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerService _customerService;
+        private readonly INopDataProvider _dataProvider;
         private readonly IEncryptionService _encryptionService;
         private readonly IFulltextService _fulltextService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGdprService _gdprService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILocalizationService _localizationService;
-        private readonly IMaintenanceService _maintenanceService;
         private readonly INopFileProvider _fileProvider;
         private readonly INotificationService _notificationService;
         private readonly IOrderService _orderService;
         private readonly IPermissionService _permissionService;
         private readonly IPictureService _pictureService;
+        private readonly IRoxyFilemanService _roxyFilemanService;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly ISettingModelFactory _settingModelFactory;
         private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
@@ -83,18 +87,20 @@ namespace Nop.Web.Areas.Admin.Controllers
         public SettingController(IAddressService addressService,
             ICustomerActivityService customerActivityService,
             ICustomerService customerService,
+            INopDataProvider dataProvider,
             IEncryptionService encryptionService,
             IFulltextService fulltextService,
             IGenericAttributeService genericAttributeService,
             IGdprService gdprService,
             ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService,
-            IMaintenanceService maintenanceService,
             INopFileProvider fileProvider,
             INotificationService notificationService,
             IOrderService orderService,
             IPermissionService permissionService,
             IPictureService pictureService,
+            IRoxyFilemanService roxyFilemanService,
+            IServiceScopeFactory serviceScopeFactory,
             ISettingModelFactory settingModelFactory,
             ISettingService settingService,
             IStoreContext storeContext,
@@ -106,18 +112,20 @@ namespace Nop.Web.Areas.Admin.Controllers
             _addressService = addressService;
             _customerActivityService = customerActivityService;
             _customerService = customerService;
+            _dataProvider = dataProvider;
             _encryptionService = encryptionService;
             _fulltextService = fulltextService;
             _genericAttributeService = genericAttributeService;
             _gdprService = gdprService;
             _localizedEntityService = localizedEntityService;
             _localizationService = localizationService;
-            _maintenanceService = maintenanceService;
             _fileProvider = fileProvider;
             _notificationService = notificationService;
             _orderService = orderService;
             _permissionService = permissionService;
             _pictureService = pictureService;
+            _roxyFilemanService = roxyFilemanService;
+            _serviceScopeFactory = serviceScopeFactory;
             _settingModelFactory = settingModelFactory;
             _settingService = settingService;
             _storeContext = storeContext;
@@ -129,9 +137,9 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #endregion
 
-        #region Utilites
+        #region Utilities
 
-        protected virtual void UpdateGDPRConsentLocales(GdprConsent gdprConsent, GdprConsentModel model)
+        protected virtual void UpdateGdprConsentLocales(GdprConsent gdprConsent, GdprConsentModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -181,6 +189,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Blog(BlogSettingsModel model)
         {
@@ -192,9 +201,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             var blogSettings = _settingService.LoadSetting<BlogSettings>(storeScope);
             blogSettings = model.ToSettings(blogSettings);
 
-             //we do not clear cache after each setting update.
-             //this behavior can increase performance because cached settings will not be cleared 
-             //and loaded from database after each update
+            //we do not clear cache after each setting update.
+            //this behavior can increase performance because cached settings will not be cleared 
+            //and loaded from database after each update
             _settingService.SaveSettingOverridablePerStore(blogSettings, x => x.Enabled, model.Enabled_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(blogSettings, x => x.PostsPageSize, model.PostsPageSize_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(blogSettings, x => x.AllowNotRegisteredUsersToLeaveComments, model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, storeScope, false);
@@ -225,6 +234,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Vendor(VendorSettingsModel model)
         {
@@ -272,6 +282,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Forum(ForumSettingsModel model)
         {
@@ -331,6 +342,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult News(NewsSettingsModel model)
         {
@@ -376,6 +388,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Shipping(ShippingSettingsModel model)
         {
@@ -391,9 +404,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             //this behavior can increase performance because cached settings will not be cleared 
             //and loaded from database after each update
             _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.ShipToSameAddress, model.ShipToSameAddress_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.AllowPickUpInStore, model.AllowPickUpInStore_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.AllowPickupInStore, model.AllowPickupInStore_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.DisplayPickupPointsOnMap, model.DisplayPickupPointsOnMap_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.IgnoreAdditionalShippingChargeForPickUpInStore, model.IgnoreAdditionalShippingChargeForPickUpInStore_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.IgnoreAdditionalShippingChargeForPickupInStore, model.IgnoreAdditionalShippingChargeForPickupInStore_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.GoogleMapsApiKey, model.GoogleMapsApiKey_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.UseWarehouseLocation, model.UseWarehouseLocation_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(shippingSettings, x => x.NotifyCustomerAboutShippingFromMultipleLocations, model.NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore, storeScope, false);
@@ -452,6 +465,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Tax(TaxSettingsModel model)
         {
@@ -535,7 +549,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = _settingModelFactory.PrepareCatalogSettingsModel();
 
             return View(model);
-        }[HttpPost]
+        }
+
+        [HttpPost]
         public virtual IActionResult Catalog(CatalogSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -583,6 +599,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.SearchPageAllowCustomersToSelectPageSize, model.SearchPageAllowCustomersToSelectPageSize_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.SearchPagePageSizeOptions, model.SearchPagePageSizeOptions_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ProductSearchAutoCompleteEnabled, model.ProductSearchAutoCompleteEnabled_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ProductSearchEnabled, model.ProductSearchEnabled_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ProductSearchAutoCompleteNumberOfProducts, model.ProductSearchAutoCompleteNumberOfProducts_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ShowProductImagesInSearchAutoComplete, model.ShowProductImagesInSearchAutoComplete_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ShowLinkToAllResultInSearchAutoComplete, model.ShowLinkToAllResultInSearchAutoComplete_OverrideForStore, storeScope, false);
@@ -616,7 +633,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ExportImportRelatedEntitiesByName, model.ExportImportRelatedEntitiesByName_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.ExportImportProductUseLimitedToStores, model.ExportImportProductUseLimitedToStores_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(catalogSettings, x => x.DisplayDatePreOrderAvailability, model.DisplayDatePreOrderAvailability_OverrideForStore, storeScope, false);
-            
+
             //now settings not overridable per store
             _settingService.SaveSetting(catalogSettings, x => x.IgnoreDiscounts, 0, false);
             _settingService.SaveSetting(catalogSettings, x => x.IgnoreFeaturedProducts, 0, false);
@@ -634,17 +651,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return RedirectToAction("Catalog");
         }
+
         [HttpPost]
         public virtual IActionResult SortOptionsList(SortOptionSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _settingModelFactory.PrepareSortOptionListModel(searchModel);
 
             return Json(model);
         }
+
         [HttpPost]
         public virtual IActionResult SortOptionUpdate(SortOptionModel model)
         {
@@ -660,7 +679,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!model.IsActive && !catalogSettings.ProductSortingEnumDisabled.Contains(model.Id))
                 catalogSettings.ProductSortingEnumDisabled.Add(model.Id);
 
-            _settingService.SaveSetting(catalogSettings);
+            _settingService.SaveSetting(catalogSettings, x => x.ProductSortingEnumDisplayOrder, storeScope, false);
+            _settingService.SaveSetting(catalogSettings, x => x.ProductSortingEnumDisabled, storeScope, false);
+
+            //now clear settings cache
+            _settingService.ClearCache();
 
             return new NullJsonResult();
         }
@@ -675,6 +698,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult RewardPoints(RewardPointsSettingsModel model)
         {
@@ -739,6 +763,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Order(OrderSettingsModel model)
         {
@@ -768,6 +793,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab, model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab_OverrideForStore, storeScope, false);
                 _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.DisableBillingAddressCheckoutStep, model.DisableBillingAddressCheckoutStep_OverrideForStore, storeScope, false);
                 _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.DisableOrderCompletedPage, model.DisableOrderCompletedPage_OverrideForStore, storeScope, false);
+                _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.DisplayPickupInStoreOnShippingMethodPage, model.DisplayPickupInStoreOnShippingMethodPage_OverrideForStore, storeScope, false);
                 _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.AttachPdfInvoiceToOrderPlacedEmail, model.AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore, storeScope, false);
                 _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.AttachPdfInvoiceToOrderPaidEmail, model.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore, storeScope, false);
                 _settingService.SaveSettingOverridablePerStore(orderSettings, x => x.AttachPdfInvoiceToOrderCompletedEmail, model.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, storeScope, false);
@@ -792,7 +818,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     try
                     {
-                        _maintenanceService.SetTableIdent<Order>(model.OrderIdent.Value);
+                        _dataProvider.SetTableIdent<Order>(model.OrderIdent.Value);
                     }
                     catch (Exception exc)
                     {
@@ -813,9 +839,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                         _notificationService.ErrorNotification(error.ErrorMessage);
             }
 
-            //selected tab
-            SaveSelectedTabName();
-
             return RedirectToAction("Order");
         }
 
@@ -829,6 +852,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult ShoppingCart(ShoppingCartSettingsModel model)
         {
@@ -884,6 +908,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         [FormValueRequired("save")]
         public virtual IActionResult Media(MediaSettingsModel model)
@@ -925,6 +950,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return RedirectToAction("Media");
         }
+
         [HttpPost, ActionName("Media")]
         [FormValueRequired("change-picture-storage")]
         public virtual IActionResult ChangePictureStorage()
@@ -932,7 +958,18 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
+            _roxyFilemanService.FlushAllImagesOnDisk();
+
             _pictureService.StoreInDb = !_pictureService.StoreInDb;
+
+            //use "Resolve" to load the correct service
+            //we do it because the IRoxyFilemanService service is registered for
+            //a scope and in the usual way to get a new instance there is no possibility
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var newRoxyFilemanService = scope.ServiceProvider.GetRequiredService<IRoxyFilemanService>();
+                newRoxyFilemanService.Configure();
+            }
 
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
@@ -952,6 +989,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult CustomerUser(CustomerUserSettingsModel model)
         {
@@ -1006,9 +1044,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
-            //selected tab
-            SaveSelectedTabName();
-
             return RedirectToAction("CustomerUser");
         }
 
@@ -1024,6 +1059,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult Gdpr(GdprSettingsModel model)
         {
@@ -1048,22 +1084,24 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
-                        
+
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 
             return RedirectToAction("Gdpr");
         }
+
         [HttpPost]
         public virtual IActionResult GdprConsentList(GdprConsentSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _settingModelFactory.PrepareGdprConsentListModel(searchModel);
 
             return Json(model);
         }
+
         public virtual IActionResult CreateGdprConsent()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -1087,7 +1125,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _gdprService.InsertConsent(gdprConsent);
 
                 //locales                
-                UpdateGDPRConsentLocales(gdprConsent, model);
+                UpdateGdprConsentLocales(gdprConsent, model);
 
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Added"));
 
@@ -1100,6 +1138,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //if we got this far, something failed, redisplay form
             return View(model);
         }
+
         public virtual IActionResult EditGdprConsent(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -1115,6 +1154,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public virtual IActionResult EditGdprConsent(GdprConsentModel model, bool continueEditing)
         {
@@ -1131,11 +1171,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 gdprConsent = model.ToEntity(gdprConsent);
                 _gdprService.UpdateConsent(gdprConsent);
 
-                //selected tab
-                SaveSelectedTabName();
-
                 //locales                
-                UpdateGDPRConsentLocales(gdprConsent, model);
+                UpdateGdprConsentLocales(gdprConsent, model);
 
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.Gdpr.Consent.Updated"));
 
@@ -1148,6 +1185,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //if we got this far, something failed, redisplay form
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult DeleteGdprConsent(int id)
         {
@@ -1177,11 +1215,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             var model = _settingModelFactory.PrepareGeneralCommonSettingsModel();
 
             //notify admin that CSS bundling is not allowed in virtual directories
-            if (model.SeoSettings.EnableCssBundling && HttpContext.Request.PathBase.HasValue)
+            if (model.MinificationSettings.EnableCssBundling && HttpContext.Request.PathBase.HasValue)
                 _notificationService.WarningNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Warning"));
 
             return View(model);
         }
+
         [HttpPost]
         [FormValueRequired("save")]
         public virtual IActionResult GeneralCommon(GeneralCommonSettingsModel model)
@@ -1223,8 +1262,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             sitemapSettings.SitemapIncludeNews = model.SitemapSettings.SitemapIncludeNews;
             sitemapSettings.SitemapIncludeTopics = model.SitemapSettings.SitemapIncludeTopics;
 
+            //minification
+            commonSettings.EnableHtmlMinification = model.MinificationSettings.EnableHtmlMinification;
+            commonSettings.EnableJsBundling = model.MinificationSettings.EnableJsBundling;
+            commonSettings.EnableCssBundling = model.MinificationSettings.EnableCssBundling;
             //use response compression
-            commonSettings.UseResponseCompression = model.StoreInformationSettings.UseResponseCompression;
+            commonSettings.UseResponseCompression = model.MinificationSettings.UseResponseCompression;
 
             //we do not clear cache after each setting update.
             //this behavior can increase performance because cached settings will not be cleared 
@@ -1249,7 +1292,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(sitemapSettings, x => x.SitemapIncludeBlogPosts, model.SitemapSettings.SitemapIncludeBlogPosts_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(sitemapSettings, x => x.SitemapIncludeNews, model.SitemapSettings.SitemapIncludeNews_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(sitemapSettings, x => x.SitemapIncludeTopics, model.SitemapSettings.SitemapIncludeTopics_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.UseResponseCompression, model.StoreInformationSettings.UseResponseCompression_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.EnableHtmlMinification, model.MinificationSettings.EnableHtmlMinification_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.EnableJsBundling, model.MinificationSettings.EnableJsBundling_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.EnableCssBundling, model.MinificationSettings.EnableCssBundling_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.UseResponseCompression, model.MinificationSettings.UseResponseCompression_OverrideForStore, storeScope, false);
 
             //now clear settings cache
             _settingService.ClearCache();
@@ -1265,10 +1311,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             seoSettings.ConvertNonWesternChars = model.SeoSettings.ConvertNonWesternChars;
             seoSettings.CanonicalUrlsEnabled = model.SeoSettings.CanonicalUrlsEnabled;
             seoSettings.WwwRequirement = (WwwRequirement)model.SeoSettings.WwwRequirement;
-            seoSettings.EnableJsBundling = model.SeoSettings.EnableJsBundling;
-            seoSettings.EnableCssBundling = model.SeoSettings.EnableCssBundling;
             seoSettings.TwitterMetaTags = model.SeoSettings.TwitterMetaTags;
             seoSettings.OpenGraphMetaTags = model.SeoSettings.OpenGraphMetaTags;
+            seoSettings.MicrodataEnabled = model.SeoSettings.MicrodataEnabled;
             seoSettings.CustomHeadTags = model.SeoSettings.CustomHeadTags;
 
             //we do not clear cache after each setting update.
@@ -1283,11 +1328,10 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.ConvertNonWesternChars, model.SeoSettings.ConvertNonWesternChars_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.CanonicalUrlsEnabled, model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.WwwRequirement, model.SeoSettings.WwwRequirement_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.EnableJsBundling, model.SeoSettings.EnableJsBundling_OverrideForStore, storeScope, false);
-            _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.EnableCssBundling, model.SeoSettings.EnableCssBundling_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.TwitterMetaTags, model.SeoSettings.TwitterMetaTags_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.OpenGraphMetaTags, model.SeoSettings.OpenGraphMetaTags_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.CustomHeadTags, model.SeoSettings.CustomHeadTags_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(seoSettings, x => x.MicrodataEnabled, model.SeoSettings.MicrodataEnabled_OverrideForStore, storeScope, false);
 
             //now clear settings cache
             _settingService.ClearCache();
@@ -1301,9 +1345,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                 foreach (var s in model.SecuritySettings.AdminAreaAllowedIpAddresses.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                     if (!string.IsNullOrWhiteSpace(s))
                         securitySettings.AdminAreaAllowedIpAddresses.Add(s.Trim());
-            securitySettings.ForceSslForAllPages = model.SecuritySettings.ForceSslForAllPages;
-            securitySettings.EnableXsrfProtectionForAdminArea = model.SecuritySettings.EnableXsrfProtectionForAdminArea;
-            securitySettings.EnableXsrfProtectionForPublicStore = model.SecuritySettings.EnableXsrfProtectionForPublicStore;
             securitySettings.HoneypotEnabled = model.SecuritySettings.HoneypotEnabled;
             _settingService.SaveSetting(securitySettings);
 
@@ -1320,8 +1361,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             captchaSettings.ShowOnProductReviewPage = model.CaptchaSettings.ShowOnProductReviewPage;
             captchaSettings.ShowOnForgotPasswordPage = model.CaptchaSettings.ShowOnForgotPasswordPage;
             captchaSettings.ShowOnApplyVendorPage = model.CaptchaSettings.ShowOnApplyVendorPage;
+            captchaSettings.ShowOnForum = model.CaptchaSettings.ShowOnForum;
             captchaSettings.ReCaptchaPublicKey = model.CaptchaSettings.ReCaptchaPublicKey;
             captchaSettings.ReCaptchaPrivateKey = model.CaptchaSettings.ReCaptchaPrivateKey;
+            captchaSettings.CaptchaType = (CaptchaType)model.CaptchaSettings.CaptchaType;
+            captchaSettings.ReCaptchaV3ScoreThreshold = model.CaptchaSettings.ReCaptchaV3ScoreThreshold;
 
             //we do not clear cache after each setting update.
             //this behavior can increase performance because cached settings will not be cleared 
@@ -1337,8 +1381,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             _settingService.SaveSettingOverridablePerStore(captchaSettings, x => x.ShowOnProductReviewPage, model.CaptchaSettings.ShowOnProductReviewPage_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(captchaSettings, x => x.ShowOnApplyVendorPage, model.CaptchaSettings.ShowOnApplyVendorPage_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(captchaSettings, x => x.ShowOnForgotPasswordPage, model.CaptchaSettings.ShowOnForgotPasswordPage_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(captchaSettings, x => x.ShowOnForum, model.CaptchaSettings.ShowOnForum_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(captchaSettings, x => x.ReCaptchaPublicKey, model.CaptchaSettings.ReCaptchaPublicKey_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(captchaSettings, x => x.ReCaptchaPrivateKey, model.CaptchaSettings.ReCaptchaPrivateKey_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(captchaSettings, x => x.ReCaptchaV3ScoreThreshold, model.CaptchaSettings.ReCaptchaV3ScoreThreshold_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(captchaSettings, x => x.CaptchaType, model.CaptchaSettings.CaptchaType_OverrideForStore, storeScope, false);
 
             // now clear settings cache
             _settingService.ClearCache();
@@ -1376,9 +1423,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (localizationSettings.SeoFriendlyUrlsForLanguagesEnabled != model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 localizationSettings.SeoFriendlyUrlsForLanguagesEnabled = model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled;
-
-                //clear cached values of routes
-                RouteData.Routers.ClearSeoFriendlyUrlsCachedValueForRoutes();
             }
 
             localizationSettings.AutomaticallyDetectLanguage = model.LocalizationSettings.AutomaticallyDetectLanguage;
@@ -1398,7 +1442,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             //we do not clear cache after each setting update.
             //this behavior can increase performance because cached settings will not be cleared 
             //and loaded from database after each update
-            displayDefaultMenuItemSettings.DisplayHomePageMenuItem = model.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem;
+            displayDefaultMenuItemSettings.DisplayHomepageMenuItem = model.DisplayDefaultMenuItemSettings.DisplayHomepageMenuItem;
             displayDefaultMenuItemSettings.DisplayNewProductsMenuItem = model.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem;
             displayDefaultMenuItemSettings.DisplayProductSearchMenuItem = model.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem;
             displayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem = model.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem;
@@ -1406,7 +1450,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             displayDefaultMenuItemSettings.DisplayForumsMenuItem = model.DisplayDefaultMenuItemSettings.DisplayForumsMenuItem;
             displayDefaultMenuItemSettings.DisplayContactUsMenuItem = model.DisplayDefaultMenuItemSettings.DisplayContactUsMenuItem;
 
-            _settingService.SaveSettingOverridablePerStore(displayDefaultMenuItemSettings, x => x.DisplayHomePageMenuItem, model.DisplayDefaultMenuItemSettings.DisplayHomePageMenuItem_OverrideForStore, storeScope, false);
+            _settingService.SaveSettingOverridablePerStore(displayDefaultMenuItemSettings, x => x.DisplayHomepageMenuItem, model.DisplayDefaultMenuItemSettings.DisplayHomepageMenuItem_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(displayDefaultMenuItemSettings, x => x.DisplayNewProductsMenuItem, model.DisplayDefaultMenuItemSettings.DisplayNewProductsMenuItem_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(displayDefaultMenuItemSettings, x => x.DisplayProductSearchMenuItem, model.DisplayDefaultMenuItemSettings.DisplayProductSearchMenuItem_OverrideForStore, storeScope, false);
             _settingService.SaveSettingOverridablePerStore(displayDefaultMenuItemSettings, x => x.DisplayCustomerInfoMenuItem, model.DisplayDefaultMenuItemSettings.DisplayCustomerInfoMenuItem_OverrideForStore, storeScope, false);
@@ -1478,6 +1522,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return RedirectToAction("GeneralCommon");
         }
+
         [HttpPost, ActionName("GeneralCommon")]
         [FormValueRequired("changeencryptionkey")]
         public virtual IActionResult ChangeEncryptionKey(GeneralCommonSettingsModel model)
@@ -1557,6 +1602,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return RedirectToAction("GeneralCommon");
         }
+
         [HttpPost, ActionName("GeneralCommon")]
         [FormValueRequired("togglefulltext")]
         public virtual IActionResult ToggleFullText(GeneralCommonSettingsModel model)
@@ -1599,48 +1645,77 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult UploadIconsArchive(IFormFile archivefile)
+        public virtual IActionResult UploadLocalePattern()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             try
             {
-                if (archivefile == null || archivefile.Length == 0)
+                _uploadService.UploadLocalePattern();
+                _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.LocalePattern.SuccessUpload"));
+            }
+            catch (Exception exc)
+            {
+                _notificationService.ErrorNotification(exc);
+            }
+
+            return RedirectToAction("GeneralCommon");
+        }
+
+        [HttpPost]
+        public virtual IActionResult UploadIcons(IFormFile iconsFile)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            try
+            {
+                if (iconsFile == null || iconsFile.Length == 0)
                 {
                     _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
                     return RedirectToAction("GeneralCommon");
                 }
 
-               _uploadService.UploadIconsArchive(archivefile);
-
                 //load settings for a chosen store scope
                 var storeScope = _storeContext.ActiveStoreScopeConfiguration;
                 var commonSettings = _settingService.LoadSetting<CommonSettings>(storeScope);
 
-                var headCodePath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, _storeContext.ActiveStoreScopeConfiguration), NopCommonDefaults.HeadCodeFileName);
-
-                if (!_fileProvider.FileExists(headCodePath))
+                switch (_fileProvider.GetFileExtension(iconsFile.FileName))
                 {
-                    throw new Exception(string.Format(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.MissingFile"), NopCommonDefaults.HeadCodeFileName));
+                    case ".ico":
+                        _uploadService.UploadFavicon(iconsFile);
+                        commonSettings.FaviconAndAppIconsHeadCode = string.Format(NopCommonDefaults.SingleFaviconHeadLink, storeScope, iconsFile.FileName);
+
+                        break;
+
+                    case ".zip":
+                        _uploadService.UploadIconsArchive(iconsFile);
+
+                        var headCodePath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.FaviconAndAppIconsPath, storeScope), NopCommonDefaults.HeadCodeFileName);
+                        if (!_fileProvider.FileExists(headCodePath))
+                            throw new Exception(string.Format(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.MissingFile"), NopCommonDefaults.HeadCodeFileName));
+
+                        using (var sr = new StreamReader(headCodePath))
+                            commonSettings.FaviconAndAppIconsHeadCode = sr.ReadToEnd();
+
+                        break;
+
+                    default:
+                        throw new InvalidOperationException("File is not supported.");
                 }
 
-                using (var sr = new StreamReader(headCodePath))
-                {
-                    commonSettings.FaviconAndAppIconsHeadCode = sr.ReadToEnd();
-                }
-
-                _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.FaviconAndAppIconsHeadCode, true, storeScope, true);
+                _settingService.SaveSettingOverridablePerStore(commonSettings, x => x.FaviconAndAppIconsHeadCode, true, storeScope);
 
                 //delete old favicon icon if exist
-                var oldFaviconIconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.OldFaviconIconName, _storeContext.ActiveStoreScopeConfiguration));
+                var oldFaviconIconPath = _fileProvider.GetAbsolutePath(string.Format(NopCommonDefaults.OldFaviconIconName, storeScope));
                 if (_fileProvider.FileExists(oldFaviconIconPath))
                 {
                     _fileProvider.DeleteFile(oldFaviconIconPath);
                 }
 
                 //activity log
-                _customerActivityService.InsertActivity("UploadIconsArchive", string.Format(_localizationService.GetResource("ActivityLog.UploadNewIconsArchive"), _storeContext.ActiveStoreScopeConfiguration));
+                _customerActivityService.InsertActivity("UploadIcons", string.Format(_localizationService.GetResource("ActivityLog.UploadNewIcons"), storeScope));
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Configuration.FaviconAndAppIcons.Uploaded"));
             }
             catch (Exception exc)
@@ -1661,17 +1736,19 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public virtual IActionResult AllSettings(SettingSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _settingModelFactory.PrepareSettingListModel(searchModel);
 
             return Json(model);
         }
+
         [HttpPost]
         public virtual IActionResult SettingUpdate(SettingModel model)
         {
@@ -1685,28 +1762,26 @@ namespace Nop.Web.Areas.Admin.Controllers
                 model.Value = model.Value.Trim();
 
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
 
             //try to get a setting with the specified id
             var setting = _settingService.GetSettingById(model.Id)
                 ?? throw new ArgumentException("No setting found with the specified id");
 
-            var storeId = model.StoreId;
-
-            if (!setting.Name.Equals(model.Name, StringComparison.InvariantCultureIgnoreCase) ||
-                setting.StoreId != storeId)
+            if (!setting.Name.Equals(model.Name, StringComparison.InvariantCultureIgnoreCase))
             {
-                //setting name or store has been changed
+                //setting name has been changed
                 _settingService.DeleteSetting(setting);
             }
 
-            _settingService.SetSetting(model.Name, model.Value, storeId);
+            _settingService.SetSetting(model.Name, model.Value, setting.StoreId);
 
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"), setting);
 
             return new NullJsonResult();
         }
+
         [HttpPost]
         public virtual IActionResult SettingAdd(SettingModel model)
         {
@@ -1720,7 +1795,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 model.Value = model.Value.Trim();
 
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
 
             var storeId = model.StoreId;
             _settingService.SetSetting(model.Name, model.Value, storeId);
@@ -1730,8 +1805,9 @@ namespace Nop.Web.Areas.Admin.Controllers
                 string.Format(_localizationService.GetResource("ActivityLog.AddNewSetting"), model.Name),
                 _settingService.GetSetting(model.Name, storeId));
 
-            return new NullJsonResult();
+            return Json(new { Result = true });
         }
+
         [HttpPost]
         public virtual IActionResult SettingDelete(int id)
         {
@@ -1756,7 +1832,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public IActionResult RedisCacheHighTrafficWarning(bool loadAllLocaleRecordsOnStartup)
         {
             //LoadAllLocaleRecordsOnStartup is set and Redis cache is used, so display warning
-            if (_config.RedisCachingEnabled && loadAllLocaleRecordsOnStartup)
+            if (_config.RedisEnabled && _config.UseRedisForCaching && loadAllLocaleRecordsOnStartup)
                 return Json(new
                 {
                     Result = _localizationService.GetResource(

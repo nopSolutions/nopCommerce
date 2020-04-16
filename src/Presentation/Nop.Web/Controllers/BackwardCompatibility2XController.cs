@@ -8,7 +8,9 @@ using Nop.Services.Vendors;
 
 namespace Nop.Web.Controllers
 {
-    public partial class BackwardCompatibility2XController : BasePublicController
+    //do not inherit it from BasePublicController. otherwise a lot of extra action filters will be called
+    //they can create guest account(s), etc
+    public partial class BackwardCompatibility2XController : Controller
     {
         #region Fields
 
@@ -56,7 +58,7 @@ namespace Nop.Web.Controllers
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
-                return RedirectToRoutePermanent("HomePage");
+                return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("Product", new { SeName = _urlRecordService.GetSeName(product) });
         }
@@ -66,7 +68,7 @@ namespace Nop.Web.Controllers
         {
             var category = _categoryService.GetCategoryById(categoryId);
             if (category == null)
-                return RedirectToRoutePermanent("HomePage");
+                return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("Category", new { SeName = _urlRecordService.GetSeName(category) });
         }
@@ -76,7 +78,7 @@ namespace Nop.Web.Controllers
         {
             var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
             if (manufacturer == null)
-                return RedirectToRoutePermanent("HomePage");
+                return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("Manufacturer", new { SeName = _urlRecordService.GetSeName(manufacturer) });
         }
@@ -86,7 +88,7 @@ namespace Nop.Web.Controllers
         {
             var newsItem = _newsService.GetNewsById(newsItemId);
             if (newsItem == null)
-                return RedirectToRoutePermanent("HomePage");
+                return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("NewsItem", new { SeName = _urlRecordService.GetSeName(newsItem, newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
         }
@@ -96,7 +98,7 @@ namespace Nop.Web.Controllers
         {
             var blogPost = _blogService.GetBlogPostById(blogPostId);
             if (blogPost == null)
-                return RedirectToRoutePermanent("HomePage");
+                return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("BlogPost", new { SeName = _urlRecordService.GetSeName(blogPost, blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
         }
@@ -106,7 +108,7 @@ namespace Nop.Web.Controllers
         {
             var topic = _topicService.GetTopicBySystemName(systemName);
             if (topic == null)
-                return RedirectToRoutePermanent("HomePage");
+                return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("Topic", new { SeName = _urlRecordService.GetSeName(topic) });
         }
@@ -116,7 +118,7 @@ namespace Nop.Web.Controllers
         {
             var vendor = _vendorService.GetVendorById(vendorId);
             if (vendor == null)
-                return RedirectToRoutePermanent("HomePage");
+                return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("Vendor", new { SeName = _urlRecordService.GetSeName(vendor) });
         }
@@ -126,7 +128,7 @@ namespace Nop.Web.Controllers
         {
             var productTag = _productTagService.GetProductTagById(productTagId);
             if (productTag == null)
-                return RedirectToRoutePermanent("HomePage");
+                return RedirectToRoutePermanent("Homepage");
 
             return RedirectToRoutePermanent("ProductsByTag", new { SeName = _urlRecordService.GetSeName(productTag) });
         }

@@ -18,7 +18,7 @@ using Nop.Services.Seo;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Areas.Admin.Models.Discounts;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -34,6 +34,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICategoryService _categoryService;
         private readonly ICurrencyService _currencyService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IDiscountPluginManager _discountPluginManager;
         private readonly IDiscountService _discountService;
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
@@ -52,6 +53,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ICategoryService categoryService,
             ICurrencyService currencyService,
             IDateTimeHelper dateTimeHelper,
+            IDiscountPluginManager discountPluginManager,
             IDiscountService discountService,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
@@ -66,6 +68,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _categoryService = categoryService;
             _currencyService = currencyService;
             _dateTimeHelper = dateTimeHelper;
+            _discountPluginManager = discountPluginManager;
             _discountService = discountService;
             _localizationService = localizationService;
             _manufacturerService = manufacturerService;
@@ -102,7 +105,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
+        
         /// <summary>
         /// Prepare discount product search model
         /// </summary>
@@ -124,7 +127,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
+        
         /// <summary>
         /// Prepare discount category search model
         /// </summary>
@@ -146,7 +149,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
+        
         /// <summary>
         /// Prepare discount manufacturer search model
         /// </summary>
@@ -169,7 +172,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
+        
         #endregion
 
         #region Methods
@@ -216,12 +219,12 @@ namespace Nop.Web.Areas.Admin.Factories
                 couponCode: searchModel.SearchDiscountCouponCode,
                 discountName: searchModel.SearchDiscountName,
                 startDateUtc: startDateUtc,
-                endDateUtc: endDateUtc);
+                endDateUtc: endDateUtc).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new DiscountListModel
+            var model = new DiscountListModel().PrepareToGrid(searchModel, discounts, () =>
             {
-                Data = discounts.PaginationByRequestModel(searchModel).Select(discount =>
+                return discounts.Select(discount =>
                 {
                     //fill in model values from the entity
                     var discountModel = discount.ToModel<DiscountModel>();
@@ -233,9 +236,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     discountModel.TimesUsed = _discountService.GetAllDiscountUsageHistory(discount.Id, pageSize: 1).TotalCount;
 
                     return discountModel;
-                }),
-                Total = discounts.Count
-            };
+                });
+            });
 
             return model;
         }
@@ -252,10 +254,10 @@ namespace Nop.Web.Areas.Admin.Factories
             if (discount != null)
             {
                 //fill in model values from the entity
-                model = model ?? discount.ToModel<DiscountModel>();
+                model ??= discount.ToModel<DiscountModel>();
 
                 //prepare available discount requirement rules
-                var discountRules = _discountService.LoadAllDiscountRequirementRules();
+                var discountRules = _discountPluginManager.LoadAllPlugins();
                 foreach (var discountRule in discountRules)
                 {
                     model.AvailableDiscountRequirementRules.Add(new SelectListItem
@@ -278,7 +280,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 });
 
                 //prepare available requirement groups
-                var requirementGroups = discount.DiscountRequirements.Where(requirement => requirement.IsGroup);
+                var requirementGroups = _discountService.GetAllDiscountRequirements(discount.Id).Where(requirement => requirement.IsGroup);
                 model.AvailableRequirementGroups = requirementGroups.Select(requirement =>
                     new SelectListItem { Value = requirement.Id.ToString(), Text = requirement.DiscountRequirementRuleSystemName }).ToList();
 
@@ -342,14 +344,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (requirement.IsGroup)
                 {
                     //get child requirements for the group
+                    var childRequirements = _discountService.GetDiscountRequirementsByParent(requirement);
+
                     requirementModel
-                        .ChildRequirements = PrepareDiscountRequirementRuleModels(requirement.ChildRequirements, discount, interactionType);
+                        .ChildRequirements = PrepareDiscountRequirementRuleModels(childRequirements, discount, interactionType);
 
                     return requirementModel;
                 }
 
                 //or try to get name and configuration URL for the requirement
-                var requirementRule = _discountService.LoadDiscountRequirementRuleBySystemName(requirement.DiscountRequirementRuleSystemName);
+                var requirementRule = _discountPluginManager.LoadPluginBySystemName(requirement.DiscountRequirementRuleSystemName);
                 if (requirementRule == null)
                     return null;
 
@@ -381,13 +385,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new DiscountUsageHistoryListModel
+            var model = new DiscountUsageHistoryListModel().PrepareToGrid(searchModel, history, () =>
             {
-                Data = history.Select(historyEntry =>
+                return history.Select(historyEntry =>
                 {
                     //fill in model values from the entity
                     var discountUsageHistoryModel = historyEntry.ToModel<DiscountUsageHistoryModel>();
-                    
+
                     //convert dates to the user time
                     discountUsageHistoryModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc);
 
@@ -400,9 +404,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     }
 
                     return discountUsageHistoryModel;
-                }),
-                Total = history.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -422,24 +425,23 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(discount));
 
             //get products with applied discount
-            var discountProducts = _discountService.GetProductsWithAppliedDiscount(discountId: discount.Id,
+            var discountProducts = _productService.GetProductsWithAppliedDiscount(discountId: discount.Id,
                 showHidden: false,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new DiscountProductListModel
+            var model = new DiscountProductListModel().PrepareToGrid(searchModel, discountProducts, () =>
             {
                 //fill in model values from the entity
-                Data = discountProducts.Select(product =>
+                return discountProducts.Select(product =>
                 {
                     var discountProductModel = product.ToModel<DiscountProductModel>();
                     discountProductModel.ProductId = product.Id;
                     discountProductModel.ProductName = product.Name;
 
                     return discountProductModel;
-                }),
-                Total = discountProducts.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -496,18 +498,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddProductToDiscountListModel
+            var model = new AddProductToDiscountListModel().PrepareToGrid(searchModel, products, () =>
             {
-                //fill in model values from the entity
-                Data = products.Select(product =>
+                return products.Select(product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
                     productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
 
                     return productModel;
-                }),
-                Total = products.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -527,15 +527,15 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(discount));
 
             //get categories with applied discount
-            var discountCategories = _discountService.GetCategoriesWithAppliedDiscount(discountId: discount.Id,
+            var discountCategories = _categoryService.GetCategoriesByAppliedDiscount(discountId: discount.Id,
                 showHidden: false,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new DiscountCategoryListModel
+            var model = new DiscountCategoryListModel().PrepareToGrid(searchModel, discountCategories, () =>
             {
                 //fill in model values from the entity
-                Data = discountCategories.Select(category => 
+                return discountCategories.Select(category =>
                 {
                     var discountCategoryModel = category.ToModel<DiscountCategoryModel>();
 
@@ -543,10 +543,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     discountCategoryModel.CategoryId = category.Id;
 
                     return discountCategoryModel;
-                }),
-
-                Total = discountCategories.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -583,9 +581,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddCategoryToDiscountListModel
+            var model = new AddCategoryToDiscountListModel().PrepareToGrid(searchModel, categories, () =>
             {
-                Data = categories.Select(category =>
+                return categories.Select(category =>
                 {
                     //fill in model values from the entity
                     var categoryModel = category.ToModel<CategoryModel>();
@@ -595,9 +593,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     categoryModel.SeName = _urlRecordService.GetSeName(category, 0, true, false);
 
                     return categoryModel;
-                }),
-                Total = categories.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -618,24 +615,23 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(discount));
 
             //get manufacturers with applied discount
-            var discountManufacturers = _discountService.GetManufacturersWithAppliedDiscount(discountId: discount.Id,
+            var discountManufacturers = _manufacturerService.GetManufacturersWithAppliedDiscount(discountId: discount.Id,
                 showHidden: false,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new DiscountManufacturerListModel
+            var model = new DiscountManufacturerListModel().PrepareToGrid(searchModel, discountManufacturers, () =>
             {
                 //fill in model values from the entity
-                Data = discountManufacturers.Select(manufacturer =>
+                return discountManufacturers.Select(manufacturer =>
                 {
                     var discountManufacturerModel = manufacturer.ToModel<DiscountManufacturerModel>();
                     discountManufacturerModel.ManufacturerId = manufacturer.Id;
                     discountManufacturerModel.ManufacturerName = manufacturer.Name;
 
                     return discountManufacturerModel;
-                }),
-                Total = discountManufacturers.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -672,18 +668,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddManufacturerToDiscountListModel
+            var model = new AddManufacturerToDiscountListModel().PrepareToGrid(searchModel, manufacturers, () =>
             {
-                //fill in model values from the entity
-                Data = manufacturers.Select(manufacturer =>
+                return manufacturers.Select(manufacturer =>
                 {
                     var manufacturerModel = manufacturer.ToModel<ManufacturerModel>();
                     manufacturerModel.SeName = _urlRecordService.GetSeName(manufacturer, 0, true, false);
 
                     return manufacturerModel;
-                }),
-                Total = manufacturers.TotalCount
-            };
+                });
+            });
 
             return model;
         }

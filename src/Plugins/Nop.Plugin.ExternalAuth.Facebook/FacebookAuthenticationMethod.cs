@@ -1,8 +1,8 @@
-using Nop.Core;
-using Nop.Core.Plugins;
+﻿using Nop.Core;
 using Nop.Services.Authentication.External;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Plugins;
 
 namespace Nop.Plugin.ExternalAuth.Facebook
 {
@@ -48,7 +48,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook
         /// <returns>View component name</returns>
         public string GetPublicViewComponentName()
         {
-            return FacebookAuthenticationDefaults.ViewComponentName;
+            return FacebookAuthenticationDefaults.VIEW_COMPONENT_NAME;
         }
 
         /// <summary>

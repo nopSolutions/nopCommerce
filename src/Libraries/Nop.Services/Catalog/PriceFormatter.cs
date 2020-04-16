@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -123,7 +123,7 @@ namespace Nop.Services.Catalog
         public virtual string FormatPrice(decimal price, bool showCurrency, Currency targetCurrency)
         {
             var priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
-            return FormatPrice(price, showCurrency, targetCurrency, _workContext.WorkingLanguage, priceIncludesTax);
+            return FormatPrice(price, showCurrency, targetCurrency, _workContext.WorkingLanguage.Id, priceIncludesTax);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace Nop.Services.Catalog
         public virtual string FormatPrice(decimal price, bool showCurrency, bool showTax)
         {
             var priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
-            return FormatPrice(price, showCurrency, _workContext.WorkingCurrency, _workContext.WorkingLanguage, priceIncludesTax, showTax);
+            return FormatPrice(price, showCurrency, _workContext.WorkingCurrency, _workContext.WorkingLanguage.Id, priceIncludesTax, showTax);
         }
 
         /// <summary>
@@ -146,10 +146,10 @@ namespace Nop.Services.Catalog
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="currencyCode">Currency code</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageID">Language</param>
         /// <returns>Price</returns>
         public virtual string FormatPrice(decimal price, bool showCurrency,
-            string currencyCode, bool showTax, Language language)
+            string currencyCode, bool showTax, int languageID)
         {
             var currency = _currencyService.GetCurrencyByCode(currencyCode) ?? new Currency
             {
@@ -157,7 +157,7 @@ namespace Nop.Services.Catalog
             };
 
             var priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
-            return FormatPrice(price, showCurrency, currency, language, priceIncludesTax, showTax);
+            return FormatPrice(price, showCurrency, currency, languageID, priceIncludesTax, showTax);
         }
 
         /// <summary>
@@ -166,18 +166,18 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="currencyCode">Currency code</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
         public virtual string FormatPrice(decimal price, bool showCurrency,
-            string currencyCode, Language language, bool priceIncludesTax)
+            string currencyCode, int languageId, bool priceIncludesTax)
         {
             var currency = _currencyService.GetCurrencyByCode(currencyCode)
                 ?? new Currency
                 {
                     CurrencyCode = currencyCode
                 };
-            return FormatPrice(price, showCurrency, currency, language, priceIncludesTax);
+            return FormatPrice(price, showCurrency, currency, languageId, priceIncludesTax);
         }
 
         /// <summary>
@@ -186,13 +186,13 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="targetCurrency">Target currency</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
         public virtual string FormatPrice(decimal price, bool showCurrency,
-            Currency targetCurrency, Language language, bool priceIncludesTax)
+            Currency targetCurrency, int languageId, bool priceIncludesTax)
         {
-            return FormatPrice(price, showCurrency, targetCurrency, language,
+            return FormatPrice(price, showCurrency, targetCurrency, languageId,
                 priceIncludesTax, _taxSettings.DisplayTaxSuffix);
         }
 
@@ -202,12 +202,12 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="targetCurrency">Target currency</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
         /// <returns>Price</returns>
         public virtual string FormatPrice(decimal price, bool showCurrency,
-            Currency targetCurrency, Language language, bool priceIncludesTax, bool showTax)
+            Currency targetCurrency, int languageId, bool priceIncludesTax, bool showTax)
         {
             //we should round it no matter of "ShoppingCartSettings.RoundPricesDuringCalculation" setting
             var priceCalculationService = EngineContext.Current.Resolve<IPriceCalculationService>();
@@ -221,13 +221,13 @@ namespace Nop.Services.Catalog
             string formatStr;
             if (priceIncludesTax)
             {
-                formatStr = _localizationService.GetResource("Products.InclTaxSuffix", language.Id, false);
+                formatStr = _localizationService.GetResource("Products.InclTaxSuffix", languageId, false);
                 if (string.IsNullOrEmpty(formatStr))
                     formatStr = "{0} incl tax";
             }
             else
             {
-                formatStr = _localizationService.GetResource("Products.ExclTaxSuffix", language.Id, false);
+                formatStr = _localizationService.GetResource("Products.ExclTaxSuffix", languageId, false);
                 if (string.IsNullOrEmpty(formatStr))
                     formatStr = "{0} excl tax";
             }
@@ -251,26 +251,14 @@ namespace Nop.Services.Catalog
 
             if (string.IsNullOrWhiteSpace(price))
                 return price;
-
-            string result;
-            switch (product.RentalPricePeriod)
+            var result = product.RentalPricePeriod switch
             {
-                case RentalPricePeriod.Days:
-                    result = string.Format(_localizationService.GetResource("Products.Price.Rental.Days"), price, product.RentalPriceLength);
-                    break;
-                case RentalPricePeriod.Weeks:
-                    result = string.Format(_localizationService.GetResource("Products.Price.Rental.Weeks"), price, product.RentalPriceLength);
-                    break;
-                case RentalPricePeriod.Months:
-                    result = string.Format(_localizationService.GetResource("Products.Price.Rental.Months"), price, product.RentalPriceLength);
-                    break;
-                case RentalPricePeriod.Years:
-                    result = string.Format(_localizationService.GetResource("Products.Price.Rental.Years"), price, product.RentalPriceLength);
-                    break;
-                default:
-                    throw new NopException("Not supported rental period");
-            }
-
+                RentalPricePeriod.Days => string.Format(_localizationService.GetResource("Products.Price.Rental.Days"), price, product.RentalPriceLength),
+                RentalPricePeriod.Weeks => string.Format(_localizationService.GetResource("Products.Price.Rental.Weeks"), price, product.RentalPriceLength),
+                RentalPricePeriod.Months => string.Format(_localizationService.GetResource("Products.Price.Rental.Months"), price, product.RentalPriceLength),
+                RentalPricePeriod.Years => string.Format(_localizationService.GetResource("Products.Price.Rental.Years"), price, product.RentalPriceLength),
+                _ => throw new NopException("Not supported rental period"),
+            };
             return result;
         }
 
@@ -283,7 +271,7 @@ namespace Nop.Services.Catalog
         public virtual string FormatShippingPrice(decimal price, bool showCurrency)
         {
             var priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
-            return FormatShippingPrice(price, showCurrency, _workContext.WorkingCurrency, _workContext.WorkingLanguage, priceIncludesTax);
+            return FormatShippingPrice(price, showCurrency, _workContext.WorkingCurrency, _workContext.WorkingLanguage.Id, priceIncludesTax);
         }
 
         /// <summary>
@@ -292,14 +280,14 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="targetCurrency">Target currency</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
         public virtual string FormatShippingPrice(decimal price, bool showCurrency,
-            Currency targetCurrency, Language language, bool priceIncludesTax)
+            Currency targetCurrency, int languageId, bool priceIncludesTax)
         {
             var showTax = _taxSettings.ShippingIsTaxable && _taxSettings.DisplayTaxSuffix;
-            return FormatShippingPrice(price, showCurrency, targetCurrency, language, priceIncludesTax, showTax);
+            return FormatShippingPrice(price, showCurrency, targetCurrency, languageId, priceIncludesTax, showTax);
         }
 
         /// <summary>
@@ -308,14 +296,14 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="targetCurrency">Target currency</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
         /// <returns>Price</returns>
         public virtual string FormatShippingPrice(decimal price, bool showCurrency,
-            Currency targetCurrency, Language language, bool priceIncludesTax, bool showTax)
+            Currency targetCurrency, int languageId, bool priceIncludesTax, bool showTax)
         {
-            return FormatPrice(price, showCurrency, targetCurrency, language, priceIncludesTax, showTax);
+            return FormatPrice(price, showCurrency, targetCurrency, languageId, priceIncludesTax, showTax);
         }
 
         /// <summary>
@@ -324,18 +312,18 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="currencyCode">Currency code</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
         public virtual string FormatShippingPrice(decimal price, bool showCurrency,
-            string currencyCode, Language language, bool priceIncludesTax)
+            string currencyCode, int languageId, bool priceIncludesTax)
         {
             var currency = _currencyService.GetCurrencyByCode(currencyCode)
                 ?? new Currency
                 {
                     CurrencyCode = currencyCode
                 };
-            return FormatShippingPrice(price, showCurrency, currency, language, priceIncludesTax);
+            return FormatShippingPrice(price, showCurrency, currency, languageId, priceIncludesTax);
         }
 
         /// <summary>
@@ -348,7 +336,7 @@ namespace Nop.Services.Catalog
         {
             var priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return FormatPaymentMethodAdditionalFee(price, showCurrency, _workContext.WorkingCurrency,
-                _workContext.WorkingLanguage, priceIncludesTax);
+                _workContext.WorkingLanguage.Id, priceIncludesTax);
         }
 
         /// <summary>
@@ -357,14 +345,14 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="targetCurrency">Target currency</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
         public virtual string FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency,
-            Currency targetCurrency, Language language, bool priceIncludesTax)
+            Currency targetCurrency, int languageId, bool priceIncludesTax)
         {
             var showTax = _taxSettings.PaymentMethodAdditionalFeeIsTaxable && _taxSettings.DisplayTaxSuffix;
-            return FormatPaymentMethodAdditionalFee(price, showCurrency, targetCurrency, language, priceIncludesTax, showTax);
+            return FormatPaymentMethodAdditionalFee(price, showCurrency, targetCurrency, languageId, priceIncludesTax, showTax);
         }
 
         /// <summary>
@@ -373,14 +361,14 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="targetCurrency">Target currency</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
         /// <returns>Price</returns>
         public virtual string FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency,
-            Currency targetCurrency, Language language, bool priceIncludesTax, bool showTax)
+            Currency targetCurrency, int languageId, bool priceIncludesTax, bool showTax)
         {
-            return FormatPrice(price, showCurrency, targetCurrency, language,
+            return FormatPrice(price, showCurrency, targetCurrency, languageId,
                 priceIncludesTax, showTax);
         }
 
@@ -390,11 +378,11 @@ namespace Nop.Services.Catalog
         /// <param name="price">Price</param>
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="currencyCode">Currency code</param>
-        /// <param name="language">Language</param>
+        /// <param name="languageId">Language</param>
         /// <param name="priceIncludesTax">A value indicating whether price includes tax</param>
         /// <returns>Price</returns>
         public virtual string FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency,
-            string currencyCode, Language language, bool priceIncludesTax)
+            string currencyCode, int languageId, bool priceIncludesTax)
         {
             var currency = _currencyService.GetCurrencyByCode(currencyCode)
                 ?? new Currency
@@ -402,7 +390,7 @@ namespace Nop.Services.Catalog
                     CurrencyCode = currencyCode
                 };
             return FormatPaymentMethodAdditionalFee(price, showCurrency, currency,
-                language, priceIncludesTax);
+                languageId, priceIncludesTax);
         }
 
         /// <summary>
@@ -444,7 +432,7 @@ namespace Nop.Services.Catalog
             if (referenceUnit == null)
                 return null;
 
-            productPrice = productPrice ?? product.Price;
+            productPrice ??= product.Price;
 
             var basePrice = productPrice.Value /
                 //do not round. otherwise, it can cause issues

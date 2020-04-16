@@ -1,11 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq.Expressions;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
-using Nop.Core.Plugins;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Localization
 {
@@ -43,13 +44,6 @@ namespace Nop.Services.Localization
         /// <returns>Locale string resource</returns>
         LocaleStringResource GetLocaleStringResourceByName(string resourceName, int languageId,
             bool logIfNotFound = true);
-
-        /// <summary>
-        /// Gets all locale string resources by language identifier
-        /// </summary>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Locale string resources</returns>
-        IList<LocaleStringResource> GetAllResources(int languageId);
 
         /// <summary>
         /// Inserts a locale string resource
@@ -101,9 +95,9 @@ namespace Nop.Services.Localization
         /// Import language resources from XML file
         /// </summary>
         /// <param name="language">Language</param>
-        /// <param name="xml">XML</param>
+        /// <param name="xmlStreamReader">Stream reader of XML file</param>
         /// <param name="updateExistingResources">A value indicating whether to update existing resources</param>
-        void ImportResourcesFromXml(Language language, string xml, bool updateExistingResources = true);
+        void ImportResourcesFromXml(Language language, StreamReader xmlStreamReader, bool updateExistingResources = true);
 
         /// <summary>
         /// Get localized property of an entity

@@ -5,8 +5,8 @@ using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -60,7 +60,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
+        
         /// <summary>
         /// Prepare search model of products that use the specification attribute
         /// </summary>
@@ -119,12 +119,11 @@ namespace Nop.Web.Areas.Admin.Factories
                 .GetSpecificationAttributes(searchModel.Page - 1, searchModel.PageSize);
 
             //prepare list model
-            var model = new SpecificationAttributeListModel
+            var model = new SpecificationAttributeListModel().PrepareToGrid(searchModel, specificationAttributes, () =>
             {
                 //fill in model values from the entity
-                Data = specificationAttributes.Select(attribute => attribute.ToModel<SpecificationAttributeModel>()),
-                Total = specificationAttributes.TotalCount
-            };
+                return specificationAttributes.Select(attribute => attribute.ToModel<SpecificationAttributeModel>());
+            });
 
             return model;
         }
@@ -144,7 +143,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (specificationAttribute != null)
             {
                 //fill in model values from the entity
-                model = model ?? specificationAttribute.ToModel<SpecificationAttributeModel>();
+                model ??= specificationAttribute.ToModel<SpecificationAttributeModel>();
 
                 //prepare nested search models
                 PrepareSpecificationAttributeOptionSearchModel(model.SpecificationAttributeOptionSearchModel, specificationAttribute);
@@ -180,12 +179,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(specificationAttribute));
 
             //get specification attribute options
-            var options = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(specificationAttribute.Id);
+            var options = _specificationAttributeService
+                .GetSpecificationAttributeOptionsBySpecificationAttribute(specificationAttribute.Id).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new SpecificationAttributeOptionListModel
+            var model = new SpecificationAttributeOptionListModel().PrepareToGrid(searchModel, options, () =>
             {
-                Data = options.PaginationByRequestModel(searchModel).Select(option =>
+                return options.Select(option =>
                 {
                     //fill in model values from the entity
                     var optionModel = option.ToModel<SpecificationAttributeOptionModel>();
@@ -195,9 +195,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         .GetProductSpecificationAttributeCount(specificationAttributeOptionId: option.Id);
 
                     return optionModel;
-                }),
-                Total = options.Count
-            };
+                });
+            });
 
             return model;
         }
@@ -222,7 +221,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (specificationAttributeOption != null)
             {
                 //fill in model values from the entity
-                model = model ?? specificationAttributeOption.ToModel<SpecificationAttributeOptionModel>();
+                model ??= specificationAttributeOption.ToModel<SpecificationAttributeOptionModel>();
 
                 model.EnableColorSquaresRgb = !string.IsNullOrEmpty(specificationAttributeOption.ColorSquaresRgb);
 
@@ -263,10 +262,10 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new SpecificationAttributeProductListModel
+            var model = new SpecificationAttributeProductListModel().PrepareToGrid(searchModel, products, () =>
             {
                 //fill in model values from the entity
-                Data = products.Select(product => 
+                return products.Select(product =>
                 {
                     var specificationAttributeProductModel = product.ToModel<SpecificationAttributeProductModel>();
                     specificationAttributeProductModel.ProductId = product.Id;
@@ -274,9 +273,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     specificationAttributeProductModel.SpecificationAttributeId = specificationAttribute.Id;
 
                     return specificationAttributeProductModel;
-                }),
-                Total = products.TotalCount
-            };
+                });
+            });
 
             return model;
         }

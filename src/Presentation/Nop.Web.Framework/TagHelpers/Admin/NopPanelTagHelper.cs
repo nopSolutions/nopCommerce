@@ -10,7 +10,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
     /// <summary>
     /// "nop-panel tag helper
     /// </summary>
-    [HtmlTargetElement("nop-panel", ParentTag = "nop-panels", Attributes = NAME_ATTRIBUTE_NAME)]
+    [HtmlTargetElement("nop-panel", Attributes = NAME_ATTRIBUTE_NAME)]
     public class NopPanelTagHelper : TagHelper
     {
         private const string NAME_ATTRIBUTE_NAME = "asp-name";
@@ -100,6 +100,7 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             {
                 Attributes =
                 {
+                    new KeyValuePair<string, string>("id", Name),
                     new KeyValuePair<string, string>("data-panel-name", Name),
                 }
             };

@@ -1,4 +1,4 @@
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -81,11 +81,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the picture (identifier) associated with this value. This picture should replace a product main picture once clicked (selected).
         /// </summary>
         public int PictureId { get; set; }
-
-        /// <summary>
-        /// Gets the product attribute mapping
-        /// </summary>
-        public virtual ProductAttributeMapping ProductAttributeMapping { get; set; }
 
         /// <summary>
         /// Gets or sets the attribute value type

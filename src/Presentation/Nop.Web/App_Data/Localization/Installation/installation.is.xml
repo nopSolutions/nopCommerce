@@ -1,4 +1,5 @@
-﻿<Language Name="Íslenska" IsDefault="false" IsRightToLeft="false">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Íslenska" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Netfang kerfisstjóra</Value>
   </LocaleResource>
@@ -44,11 +45,11 @@
   <LocaleResource Name="CustomCollation">
     <Value>Velja röðunargildi SQL þjóns</Value>
   </LocaleResource>
-  <LocaleResource Name="DatabaseCreationError">
-    <Value>Villa kom upp við að búa til gagnagrunn: {0}</Value>
-  </LocaleResource>
   <LocaleResource Name="Database">
     <Value>Gagnagrunnur</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Villa kom upp við að búa til gagnagrunn: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Upplýsingar um gagnagrunn</Value>
@@ -80,6 +81,12 @@
   <LocaleResource Name="Installing">
     <Value>Set upp nopCommerce...</Value>
   </LocaleResource>
+  <LocaleResource Name="IntegratedAuthentication">
+    <Value>Nota Windows notanda</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>Lykilorðin eru ekki eins</Value>
   </LocaleResource>
@@ -95,6 +102,12 @@
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>Smellið hér til að endurræsa uppsetninguna (hreinsa öll vistuð gildi)</Value>
   </LocaleResource>
+  <LocaleResource Name="ServerName">
+    <Value>Nafn SQL þjóns</Value>
+  </LocaleResource>
+  <LocaleResource Name="ServerNameRequired">
+    <Value>Slá verður inn nafn á SQL þjóni</Value>
+  </LocaleResource>
   <LocaleResource Name="SetupFailed">
     <Value>Uppsetning tókst ekki: {0}</Value>
   </LocaleResource>
@@ -104,26 +117,20 @@
   <LocaleResource Name="SqlCompact">
     <Value>Nota innbyggðan gagnagrunn (SQL Server Compact)</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerName">
-    <Value>Nafn SQL þjóns</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerNameRequired">
-    <Value>Slá verður inn nafn á SQL þjóni</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlServerPassword">
+  <LocaleResource Name="SqlPassword">
     <Value>SQL lykilorð</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerPasswordRequired">
+  <LocaleResource Name="SqlPasswordRequired">
     <Value>Slá verður inn lykilorð að SQL þjóni</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsername">
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlUsername">
     <Value>SQL notandi</Value>
   </LocaleResource>
-  <LocaleResource Name="SqlServerUsernameRequired">
+  <LocaleResource Name="SqlUsernameRequired">
     <Value>Slá verður inn nafn SQL notanda</Value>
-  </LocaleResource>
-  <LocaleResource Name="SqlStandard">
-    <Value>Nota SQL (eða SQL Express) gagnaþjón</Value>
   </LocaleResource>
   <LocaleResource Name="StoreInformation">
     <Value>Vista upplýsingar</Value>
@@ -136,8 +143,5 @@
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
     <Value>Til að ljúka þessum álfi, þá þarftu að hafa upplýsingar um gagnaþjón ("tengistreng"). Hafðu samband við vistunaraðila ef þörf er. Ef þú ert að setja upp á eigin þjón þá gæti þig vantað upplýsingar frá kerfisstjóra.</Value>
-  </LocaleResource>
-  <LocaleResource Name="WindowsAuthentication">
-    <Value>Nota Windows notanda</Value>
   </LocaleResource>
 </Language>

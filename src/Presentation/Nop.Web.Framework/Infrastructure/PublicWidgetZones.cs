@@ -4,6 +4,7 @@
     {
         public static string AccountNavigationAfter => "account_navigation_after";
         public static string AccountNavigationBefore => "account_navigation_before";
+        public static string AdminHeaderLinksAfter => "admin_header_links_after";
         public static string ApplyVendorBottom => "applyvendor_bottom";
         public static string ApplyVendorTop => "applyvendor_top";
         public static string BlogListPageAfterPost => "bloglist_page_after_post";
@@ -65,6 +66,7 @@
         public static string CheckoutPaymentInfoTop => "checkout_payment_info_top";
         public static string CheckoutPaymentMethodBottom => "checkout_payment_method_bottom";
         public static string CheckoutPaymentMethodTop => "checkout_payment_method_top";
+        public static string CheckoutPickUpPointsAfter => "checkout_pickup_points_after";
         public static string CheckoutProgressAfter => "checkout_progress_after";
         public static string CheckoutProgressBefore => "checkout_progress_before";
         public static string CheckoutShippingAddressBottom => "checkout_shipping_address_bottom";
@@ -88,13 +90,13 @@
         public static string HeaderMiddle => "header_middle";
         public static string HeaderSelectors => "header_selectors";
         public static string HeadHtmlTag => "head_html_tag";
-        public static string HomePageBeforeBestSellers => "home_page_before_best_sellers";
-        public static string HomePageBeforeCategories => "home_page_before_categories";
-        public static string HomePageBeforeNews => "home_page_before_news";
-        public static string HomePageBeforePoll => "home_page_before_poll";
-        public static string HomePageBeforeProducts => "home_page_before_products";
-        public static string HomePageBottom => "home_page_bottom";
-        public static string HomePageTop => "home_page_top";
+        public static string HomepageBeforeBestSellers => "home_page_before_best_sellers";
+        public static string HomepageBeforeCategories => "home_page_before_categories";
+        public static string HomepageBeforeNews => "home_page_before_news";
+        public static string HomepageBeforePoll => "home_page_before_poll";
+        public static string HomepageBeforeProducts => "home_page_before_products";
+        public static string HomepageBottom => "home_page_bottom";
+        public static string HomepageTop => "home_page_top";
         public static string LeftSideColumnAfter => "left_side_column_after";
         public static string LeftSideColumnAfterBlogArchive => "left_side_column_after_blog_archive";
         public static string LeftSideColumnAfterCategoryNavigation => "left_side_column_after_category_navigation";
@@ -145,6 +147,7 @@
         public static string OrderSummaryContentAfter => "order_summary_content_after";
         public static string OrderSummaryContentBefore => "order_summary_content_before";
         public static string OrderSummaryContentDeals => "order_summary_content_deals";
+        public static string OrderSummaryTotals => "order_summary_totals";
         public static string ProductBoxAddinfoAfter => "productbox_addinfo_after";
         public static string ProductBoxAddinfoBefore => "productbox_addinfo_before";
         public static string ProductBoxAddinfoMiddle => "productbox_addinfo_middle";
@@ -156,6 +159,8 @@
         public static string ProductDetailsBeforeCollateral => "productdetails_before_collateral";
         public static string ProductDetailsBeforePictures => "productdetails_before_pictures";
         public static string ProductDetailsBottom => "productdetails_bottom";
+        public static string ProductDetailsEssentialBottom => "productdetails_essential_bottom";
+        public static string ProductDetailsEssentialTop => "productdetails_essential_top";
         public static string ProductDetailsInsideOverviewButtonsAfter => "productdetails_inside_overview_buttons_after";
         public static string ProductDetailsInsideOverviewButtonsBefore => "productdetails_inside_overview_buttons_before";
         public static string ProductDetailsOverviewBottom => "productdetails_overview_bottom";

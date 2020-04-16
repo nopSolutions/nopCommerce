@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -13,6 +14,8 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -112,10 +115,12 @@ namespace Nop.Web.Areas.Admin.Factories
                                                (topic.Body?.Contains(searchModel.SearchKeywords) ?? false)).ToList();
             }
 
+            var pagedTopics = topics.ToList().ToPagedList(searchModel);
+
             //prepare grid model
-            var model = new TopicListModel
+            var model = new TopicListModel().PrepareToGrid(searchModel, pagedTopics, () =>
             {
-                Data = topics.PaginationByRequestModel(searchModel).Select(topic =>
+                return pagedTopics.Select(topic =>
                 {
                     //fill in model values from the entity
                     var topicModel = topic.ToModel<TopicModel>();
@@ -125,10 +130,14 @@ namespace Nop.Web.Areas.Admin.Factories
 
                     topicModel.SeName = _urlRecordService.GetSeName(topic, 0, true, false);
 
+                    if (!string.IsNullOrEmpty(topicModel.SystemName))
+                        topicModel.TopicName = topicModel.SystemName;
+                    else
+                        topicModel.TopicName = topicModel.Title;
+
                     return topicModel;
-                }),
-                Total = topics.Count
-            };
+                });
+            });
 
             return model;
         }

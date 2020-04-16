@@ -111,7 +111,11 @@
                                 @*shipping methods content will be loaded here*@
                             </div>
                             <script asp-location="Footer">
-                                ShippingMethod.init('#co-shipping-method-form', '@(storeLocation)checkout/OpcSaveShippingMethod/');
+                                var localized_data = {
+                                    NotAvailableMethodsError: "@T("ShippingMethod.NotAvailableMethodsError")",
+                                    SpecifyMethodError: "@T("ShippingMethod.SpecifyMethodError")"
+                                };                                
+                                ShippingMethod.init('#co-shipping-method-form', '@(storeLocation)checkout/OpcSaveShippingMethod/', localized_data);
                             </script>
                             <div class="buttons" id="shipping-method-buttons-container">
                                 <p class="back-link">
@@ -135,7 +139,11 @@
                         </div>
                     </form>
                     <script asp-location="Footer">
-                        PaymentMethod.init('#co-payment-method-form', '@(storeLocation)checkout/OpcSavePaymentMethod/');
+                        var localized_data = {
+                            NotAvailableMethodsError: "@T("PaymentMethod.NotAvailableMethodsError")",
+                            SpecifyMethodError: "@T("PaymentMethod.SpecifyMethodError")"
+                        };
+                        PaymentMethod.init('#co-payment-method-form', '@(storeLocation)checkout/OpcSavePaymentMethod/', localized_data);
                     </script>
                     <div class="buttons" id="payment-method-buttons-container">
                         <p class="back-link">

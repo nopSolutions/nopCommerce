@@ -5,8 +5,8 @@ using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Directory;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -65,7 +65,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
+        
         #endregion
 
         #region Methods
@@ -97,21 +97,20 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get countries
-            var countries = _countryService.GetAllCountries(showHidden: true);
+            var countries = _countryService.GetAllCountries(showHidden: true).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new CountryListModel
+            var model = new CountryListModel().PrepareToGrid(searchModel, countries, () =>
             {
                 //fill in model values from the entity
-                Data = countries.PaginationByRequestModel(searchModel).Select(country =>
+                return countries.Select(country =>
                 {
                     var countryModel = country.ToModel<CountryModel>();
-                    countryModel.NumberOfStates = country.StateProvinces?.Count ?? 0;
+                    countryModel.NumberOfStates = _stateProvinceService.GetStateProvincesByCountryId(country.Id)?.Count ?? 0;
 
                     return countryModel;
-                }),
-                Total = countries.Count
-            };
+                });
+            });
 
             return model;
         }
@@ -133,7 +132,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 if (model == null)
                 {
                     model = country.ToModel<CountryModel>();
-                    model.NumberOfStates = country.StateProvinces?.Count ?? 0;
+                    model.NumberOfStates = _stateProvinceService.GetStateProvincesByCountryId(country.Id)?.Count ?? 0;
                 }
 
                 //prepare nested search model
@@ -179,15 +178,14 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(country));
 
             //get comments
-            var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true);
+            var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true).ToPagedList(searchModel);
 
             //prepare list model
-            var model = new StateProvinceListModel
+            var model = new StateProvinceListModel().PrepareToGrid(searchModel, states, ()=>
             {
                 //fill in model values from the entity
-                Data = states.PaginationByRequestModel(searchModel).Select(state => state.ToModel<StateProvinceModel>()),
-                Total = states.Count
-            };
+                return states.Select(state => state.ToModel<StateProvinceModel>());
+            });
 
             return model;
         }
@@ -208,7 +206,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (state != null)
             {
                 //fill in model values from the entity
-                model = model ?? state.ToModel<StateProvinceModel>();
+                model ??= state.ToModel<StateProvinceModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

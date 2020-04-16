@@ -109,9 +109,9 @@
                             $.ajax({
                                 cache: false,
                                 type: "POST",
-                                url: '@Url.Action("PostVote", "Boards")',
+                                url: "@Url.Action("PostVote", "Boards")",
                                 data: postData,
-                                success: function (data) {
+                                success: function (data, textStatus, jqXHR) {
                                     if (data.Error) {
                                         alert(data.Error);
                                     }
@@ -127,7 +127,7 @@
                                         }
                                     }
                                 },
-                                error: function (xhr, ajaxOptions, thrownError) {
+                                error: function (jqXHR, textStatus, errorThrown) {
                                     alert('Failed to vote');
                                 }
                             });
@@ -137,10 +137,10 @@
 
                 <div class="post-vote" id="@($"post-vote-{Model.Id}")">
                     <span class="vote up @if (Model.VoteIsUp.HasValue && (bool) Model.VoteIsUp){<text>selected</text>}"
-                          title="This post/answer is useful"></span>
+                          title="@T("Forum.Post.IsUseful")"></span>
                     <div class="vote-count-post"> @Model.VoteCount </div>
                     <span class="vote down @if (Model.VoteIsUp.HasValue && (bool)!Model.VoteIsUp) { <text>selected</text> }"
-                          title="This post/answer is not useful"></span>
+                          title="@T("Forum.Post.IsNotUseful")"></span>
                 </div>
             }
         </div>

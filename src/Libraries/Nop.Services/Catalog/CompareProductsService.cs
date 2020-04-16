@@ -1,9 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Http;
+using Nop.Core.Security;
 
 namespace Nop.Services.Catalog
 {
@@ -15,20 +17,26 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
+        private readonly CookieSettings _cookieSettings;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IProductService _productService;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
         #region Ctor
 
         public CompareProductsService(CatalogSettings catalogSettings,
+            CookieSettings cookieSettings,
             IHttpContextAccessor httpContextAccessor,
-            IProductService productService)
+            IProductService productService,
+            IWebHelper webHelper)
         {
             _catalogSettings = catalogSettings;
+            _cookieSettings = cookieSettings;
             _httpContextAccessor = httpContextAccessor;
             _productService = productService;
+            _webHelper = webHelper;
         }
 
         #endregion
@@ -71,11 +79,12 @@ namespace Nop.Services.Catalog
             var comparedProductIdsCookie = string.Join(",", comparedProductIds);
 
             //create cookie options 
-            var cookieExpires = 24 * 10; //TODO make configurable
+            var cookieExpires = _cookieSettings.CompareProductsCookieExpires;
             var cookieOptions = new CookieOptions
             {
                 Expires = DateTime.Now.AddHours(cookieExpires),
-                HttpOnly = true
+                HttpOnly = true,
+                Secure =  _webHelper.IsCurrentConnectionSecured()
             };
 
             //add cookie

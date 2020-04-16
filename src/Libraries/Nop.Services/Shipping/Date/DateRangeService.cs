@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
 using Nop.Core.Domain.Shipping;
+using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Shipping.Date
@@ -47,7 +48,7 @@ namespace Nop.Services.Shipping.Date
             if (deliveryDateId == 0)
                 return null;
 
-            return _deliveryDateRepository.GetById(deliveryDateId);
+            return _deliveryDateRepository.ToCachedGetById(deliveryDateId);
         }
 
         /// <summary>
@@ -59,7 +60,8 @@ namespace Nop.Services.Shipping.Date
             var query = from dd in _deliveryDateRepository.Table
                         orderby dd.DisplayOrder, dd.Id
                         select dd;
-            var deliveryDates = query.ToList();
+            var deliveryDates = query.ToCachedList(NopShippingDefaults.DeliveryDatesAllCacheKey);
+
             return deliveryDates;
         }
 
@@ -119,7 +121,7 @@ namespace Nop.Services.Shipping.Date
         /// <returns>Product availability range</returns>
         public virtual ProductAvailabilityRange GetProductAvailabilityRangeById(int productAvailabilityRangeId)
         {
-            return productAvailabilityRangeId != 0 ? _productAvailabilityRangeRepository.GetById(productAvailabilityRangeId) : null;
+            return productAvailabilityRangeId != 0 ? _productAvailabilityRangeRepository.ToCachedGetById(productAvailabilityRangeId) : null;
         }
 
         /// <summary>
@@ -131,7 +133,8 @@ namespace Nop.Services.Shipping.Date
             var query = from par in _productAvailabilityRangeRepository.Table
                         orderby par.DisplayOrder, par.Id
                         select par;
-            return query.ToList();
+
+            return query.ToCachedList(NopShippingDefaults.ProductAvailabilityAllCacheKey);
         }
 
         /// <summary>

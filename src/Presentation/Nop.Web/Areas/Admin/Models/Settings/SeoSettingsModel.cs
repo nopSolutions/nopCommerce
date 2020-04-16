@@ -50,15 +50,7 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.WwwRequirement")]
         public int WwwRequirement { get; set; }
         public bool WwwRequirement_OverrideForStore { get; set; }
-        public SelectList WwwRequirementValues { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableJsBundling")]
-        public bool EnableJsBundling { get; set; }
-        public bool EnableJsBundling_OverrideForStore { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableCssBundling")]
-        public bool EnableCssBundling { get; set; }
-        public bool EnableCssBundling_OverrideForStore { get; set; }
+        public SelectList WwwRequirementValues { get; set; }        
 
         [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.TwitterMetaTags")]
         public bool TwitterMetaTags { get; set; }
@@ -72,6 +64,9 @@ namespace Nop.Web.Areas.Admin.Models.Settings
         public string CustomHeadTags { get; set; }
         public bool CustomHeadTags_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.Microdata")]
+        public bool MicrodataEnabled { get; set; }
+        public bool MicrodataEnabled_OverrideForStore { get; set; }
         #endregion
     }
 }

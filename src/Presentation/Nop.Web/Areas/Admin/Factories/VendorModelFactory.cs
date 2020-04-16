@@ -13,8 +13,9 @@ using Nop.Services.Vendors;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Vendors;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -280,21 +281,21 @@ namespace Nop.Web.Areas.Admin.Factories
             //get vendors
             var vendors = _vendorService.GetAllVendors(showHidden: true,
                 name: searchModel.SearchName,
+                email: searchModel.SearchEmail,
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new VendorListModel
+            var model = new VendorListModel().PrepareToGrid(searchModel, vendors, () =>
             {
                 //fill in model values from the entity
-                Data = vendors.Select(vendor =>
+                return vendors.Select(vendor =>
                 {
                     var vendorModel = vendor.ToModel<VendorModel>();
                     vendorModel.SeName = _urlRecordService.GetSeName(vendor, 0, true, false);
 
                     return vendorModel;
-                }),
-                Total = vendors.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -377,16 +378,17 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(vendor));
 
             //get vendor notes
-            var vendorNotes = vendor.VendorNotes.OrderByDescending(note => note.CreatedOnUtc).ToList();
+            var vendorNotes = _vendorService.GetVendorNotesByVendor(vendor.Id, searchModel.Page - 1, searchModel.PageSize);
 
             //prepare list model
-            var model = new VendorNoteListModel
+            var model = new VendorNoteListModel().PrepareToGrid(searchModel, vendorNotes, () =>
             {
-                Data = vendorNotes.PaginationByRequestModel(searchModel).Select(note =>
+                //fill in model values from the entity
+                return vendorNotes.Select(note =>
                 {
                     //fill in model values from the entity        
                     var vendorNoteModel = note.ToModel<VendorNoteModel>();
-                    
+
                     //convert dates to the user time
                     vendorNoteModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(note.CreatedOnUtc, DateTimeKind.Utc);
 
@@ -394,9 +396,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     vendorNoteModel.Note = _vendorService.FormatVendorNoteText(note);
 
                     return vendorNoteModel;
-                }),
-                Total = vendorNotes.Count
-            };
+                });
+            });
 
             return model;
         }

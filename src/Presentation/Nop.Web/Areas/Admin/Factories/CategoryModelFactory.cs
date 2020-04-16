@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
@@ -11,6 +12,7 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -107,6 +109,23 @@ namespace Nop.Web.Areas.Admin.Factories
 
             searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
 
+            //prepare "published" filter (0 - all; 1 - published only; 2 - unpublished only)
+            searchModel.AvailablePublishedOptions.Add(new SelectListItem
+            {
+                Value = "0",
+                Text = _localizationService.GetResource("Admin.Catalog.Categories.List.SearchPublished.All")
+            });
+            searchModel.AvailablePublishedOptions.Add(new SelectListItem
+            {
+                Value = "1",
+                Text = _localizationService.GetResource("Admin.Catalog.Categories.List.SearchPublished.PublishedOnly")
+            });
+            searchModel.AvailablePublishedOptions.Add(new SelectListItem
+            {
+                Value = "2",
+                Text = _localizationService.GetResource("Admin.Catalog.Categories.List.SearchPublished.UnpublishedOnly")
+            });
+
             //prepare page parameters
             searchModel.SetGridPageSize();
 
@@ -122,17 +141,17 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             if (searchModel == null)
                 throw new ArgumentNullException(nameof(searchModel));
-
             //get categories
             var categories = _categoryService.GetAllCategories(categoryName: searchModel.SearchCategoryName,
                 showHidden: true,
                 storeId: searchModel.SearchStoreId,
-                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize,
+                overridePublished: searchModel.SearchPublishedId == 0 ? null : (bool?)(searchModel.SearchPublishedId == 1));
 
             //prepare grid model
-            var model = new CategoryListModel
+            var model = new CategoryListModel().PrepareToGrid(searchModel, categories, () =>
             {
-                Data = categories.Select(category =>
+                return categories.Select(category =>
                 {
                     //fill in model values from the entity
                     var categoryModel = category.ToModel<CategoryModel>();
@@ -142,9 +161,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     categoryModel.SeName = _urlRecordService.GetSeName(category, 0, true, false);
 
                     return categoryModel;
-                }),
-                Total = categories.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -238,9 +256,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new CategoryProductListModel
+            var model = new CategoryProductListModel().PrepareToGrid(searchModel, productCategories, () =>
             {
-                Data = productCategories.Select(productCategory => 
+                return productCategories.Select(productCategory =>
                 {
                     //fill in model values from the entity
                     var categoryProductModel = productCategory.ToModel<CategoryProductModel>();
@@ -248,10 +266,9 @@ namespace Nop.Web.Areas.Admin.Factories
                     //fill in additional values (not existing in the entity)
                     categoryProductModel.ProductName = _productService.GetProductById(productCategory.ProductId)?.Name;
 
-                    return categoryProductModel;                    
-                }),
-                Total = productCategories.TotalCount
-            };
+                    return categoryProductModel;
+                });
+            });
 
             return model;
         }
@@ -308,18 +325,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddProductToCategoryListModel
+            var model = new AddProductToCategoryListModel().PrepareToGrid(searchModel, products, () =>
             {
-                //fill in model values from the entity
-                Data = products.Select(product =>
+                return products.Select(product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
                     productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
 
                     return productModel;
-                }),
-                Total = products.TotalCount
-            };
+                });
+            });
 
             return model;
         }

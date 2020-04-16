@@ -48,10 +48,8 @@ namespace Nop.Core.Domain.Shipping
 
             try
             {
-                using (var tr = new StringReader(valueStr))
-                {
-                    pickupPoint = (PickupPoint)new XmlSerializer(typeof(PickupPoint)).Deserialize(tr);
-                }
+                using var tr = new StringReader(valueStr);
+                pickupPoint = (PickupPoint)new XmlSerializer(typeof(PickupPoint)).Deserialize(tr);
             }
             catch
             {
@@ -78,12 +76,10 @@ namespace Nop.Core.Domain.Shipping
                 return string.Empty;
 
             var sb = new StringBuilder();
-            using (var tw = new StringWriter(sb))
-            {
-                new XmlSerializer(typeof(PickupPoint)).Serialize(tw, value);
+            using var tw = new StringWriter(sb);
+            new XmlSerializer(typeof(PickupPoint)).Serialize(tw, value);
 
-                return sb.ToString();
-            }
+            return sb.ToString();
         }
     }
 }

@@ -4,12 +4,9 @@ using Nop.Services.Customers;
 using Nop.Services.Security;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.No)]
     public partial class ProfileController : BasePublicController
     {
         private readonly CustomerSettings _customerSettings;
@@ -32,7 +29,7 @@ namespace Nop.Web.Controllers
         {
             if (!_customerSettings.AllowViewingProfiles)
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             var customerId = 0;
@@ -42,9 +39,9 @@ namespace Nop.Web.Controllers
             }
 
             var customer = _customerService.GetCustomerById(customerId);
-            if (customer == null || customer.IsGuest())
+            if (customer == null || _customerService.IsGuest(customer))
             {
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
             }
 
             //display "edit" (manage) link

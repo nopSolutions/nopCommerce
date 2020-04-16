@@ -7,11 +7,11 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
@@ -25,7 +25,7 @@ namespace Nop.Services.Media
     public partial class AzurePictureService : PictureService
     {
         #region Fields
-        
+
         private static bool _azureBlobStorageAppendContainerName;
         private static bool _isInitialized;
         private static CloudBlobContainer _container;
@@ -41,8 +41,8 @@ namespace Nop.Services.Media
 
         #region Ctor
 
-        public AzurePictureService(IDataProvider dataProvider,
-            IDbContext dbContext,
+        public AzurePictureService(INopDataProvider dataProvider,
+            IDownloadService downloadService,
             IEventPublisher eventPublisher,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
@@ -57,7 +57,7 @@ namespace Nop.Services.Media
             MediaSettings mediaSettings,
             NopConfig config)
             : base(dataProvider,
-                  dbContext,
+                  downloadService,
                   eventPublisher,
                   httpContextAccessor,
                   fileProvider,
@@ -82,7 +82,7 @@ namespace Nop.Services.Media
 
         protected void OneTimeInit(NopConfig config)
         {
-            if (_isInitialized) 
+            if (_isInitialized)
                 return;
 
             if (string.IsNullOrEmpty(config.AzureBlobStorageConnectionString))
@@ -96,14 +96,14 @@ namespace Nop.Services.Media
 
             lock (_locker)
             {
-                if (_isInitialized) 
+                if (_isInitialized)
                     return;
 
                 _azureBlobStorageAppendContainerName = config.AzureBlobStorageAppendContainerName;
                 _azureBlobStorageConnectionString = config.AzureBlobStorageConnectionString;
                 _azureBlobStorageContainerName = config.AzureBlobStorageContainerName.Trim().ToLower();
                 _azureBlobStorageEndPoint = config.AzureBlobStorageEndPoint.Trim().ToLower().TrimEnd('/');
-                
+
                 CreateCloudBlobContainer();
 
                 _isInitialized = true;
@@ -211,7 +211,7 @@ namespace Nop.Services.Media
             }
             while (continuationToken != null);
 
-            _cacheManager.RemoveByPattern(NopMediaDefaults.ThumbsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefixCacheKey);
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace Nop.Services.Media
         {
             try
             {
-                var key = string.Format(NopMediaDefaults.ThumbExistsCacheKey, thumbFileName);
+                var key = NopMediaDefaults.ThumbExistsCacheKey.FillCacheKey(thumbFileName);
                 return await _cacheManager.GetAsync(key, async () =>
                 {
                     //GetBlockBlobReference doesn't need to be async since it doesn't contact the server yet
@@ -261,7 +261,7 @@ namespace Nop.Services.Media
 
             await blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length);
 
-            _cacheManager.RemoveByPattern(NopMediaDefaults.ThumbsPatternCacheKey);
+            _cacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefixCacheKey);
         }
 
         #endregion

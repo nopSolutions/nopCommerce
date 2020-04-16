@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Vendors;
+using Nop.Data;
+using Nop.Services.Caching;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
 namespace Nop.Services.Vendors
@@ -15,7 +16,6 @@ namespace Nop.Services.Vendors
     {
         #region Fields
 
-        private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<VendorAttribute> _vendorAttributeRepository;
         private readonly IRepository<VendorAttributeValue> _vendorAttributeValueRepository;
@@ -24,12 +24,10 @@ namespace Nop.Services.Vendors
 
         #region Ctor
 
-        public VendorAttributeService(ICacheManager cacheManager,
-            IEventPublisher eventPublisher,
+        public VendorAttributeService(IEventPublisher eventPublisher,
             IRepository<VendorAttribute> vendorAttributeRepository,
             IRepository<VendorAttributeValue> vendorAttributeValueRepository)
         {
-            _cacheManager = cacheManager;
             _eventPublisher = eventPublisher;
             _vendorAttributeRepository = vendorAttributeRepository;
             _vendorAttributeValueRepository = vendorAttributeValueRepository;
@@ -47,12 +45,9 @@ namespace Nop.Services.Vendors
         /// <returns>Vendor attributes</returns>
         public virtual IList<VendorAttribute> GetAllVendorAttributes()
         {
-            return _cacheManager.Get(NopVendorsServiceDefaults.VendorAttributesAllCacheKey, () =>
-            {
-                return _vendorAttributeRepository.Table
-                    .OrderBy(vendorAttribute => vendorAttribute.DisplayOrder).ThenBy(vendorAttribute => vendorAttribute.Id)
-                    .ToList();
-            });
+            return _vendorAttributeRepository.Table
+                .OrderBy(vendorAttribute => vendorAttribute.DisplayOrder).ThenBy(vendorAttribute => vendorAttribute.Id)
+                .ToCachedList(NopVendorDefaults.VendorAttributesAllCacheKey);
         }
 
         /// <summary>
@@ -65,8 +60,7 @@ namespace Nop.Services.Vendors
             if (vendorAttributeId == 0)
                 return null;
 
-            var key = string.Format(NopVendorsServiceDefaults.VendorAttributesByIdCacheKey, vendorAttributeId);
-            return _cacheManager.Get(key, () => _vendorAttributeRepository.GetById(vendorAttributeId));
+            return _vendorAttributeRepository.ToCachedGetById(vendorAttributeId);
         }
 
         /// <summary>
@@ -79,9 +73,6 @@ namespace Nop.Services.Vendors
                 throw new ArgumentNullException(nameof(vendorAttribute));
 
             _vendorAttributeRepository.Insert(vendorAttribute);
-
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributeValuesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(vendorAttribute);
@@ -98,9 +89,6 @@ namespace Nop.Services.Vendors
 
             _vendorAttributeRepository.Update(vendorAttribute);
 
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributeValuesPatternCacheKey);
-
             //event notification
             _eventPublisher.EntityUpdated(vendorAttribute);
         }
@@ -115,9 +103,6 @@ namespace Nop.Services.Vendors
                 throw new ArgumentNullException(nameof(vendorAttribute));
 
             _vendorAttributeRepository.Delete(vendorAttribute);
-
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributeValuesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(vendorAttribute);
@@ -134,14 +119,13 @@ namespace Nop.Services.Vendors
         /// <returns>Vendor attribute values</returns>
         public virtual IList<VendorAttributeValue> GetVendorAttributeValues(int vendorAttributeId)
         {
-            var key = string.Format(NopVendorsServiceDefaults.VendorAttributeValuesAllCacheKey, vendorAttributeId);
-            return _cacheManager.Get(key, () =>
-            {
-                return _vendorAttributeValueRepository.Table
-                    .OrderBy(vendorAttributeValue => vendorAttributeValue.DisplayOrder).ThenBy(vendorAttributeValue => vendorAttributeValue.Id)
-                    .Where(vendorAttributeValue => vendorAttributeValue.VendorAttributeId == vendorAttributeId)
-                    .ToList();
-            });
+            var key = NopVendorDefaults.VendorAttributeValuesAllCacheKey.FillCacheKey(vendorAttributeId);
+
+            return _vendorAttributeValueRepository.Table
+                .Where(vendorAttributeValue => vendorAttributeValue.VendorAttributeId == vendorAttributeId)
+                .OrderBy(vendorAttributeValue => vendorAttributeValue.DisplayOrder)
+                .ThenBy(vendorAttributeValue => vendorAttributeValue.Id)
+                .ToCachedList(key);
         }
 
         /// <summary>
@@ -154,8 +138,7 @@ namespace Nop.Services.Vendors
             if (vendorAttributeValueId == 0)
                 return null;
 
-            var key = string.Format(NopVendorsServiceDefaults.VendorAttributeValuesByIdCacheKey, vendorAttributeValueId);
-            return _cacheManager.Get(key, () => _vendorAttributeValueRepository.GetById(vendorAttributeValueId));
+            return _vendorAttributeValueRepository.ToCachedGetById(vendorAttributeValueId);
         }
 
         /// <summary>
@@ -168,9 +151,6 @@ namespace Nop.Services.Vendors
                 throw new ArgumentNullException(nameof(vendorAttributeValue));
 
             _vendorAttributeValueRepository.Insert(vendorAttributeValue);
-
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributeValuesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(vendorAttributeValue);
@@ -187,9 +167,6 @@ namespace Nop.Services.Vendors
 
             _vendorAttributeValueRepository.Update(vendorAttributeValue);
 
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributeValuesPatternCacheKey);
-
             //event notification
             _eventPublisher.EntityUpdated(vendorAttributeValue);
         }
@@ -204,9 +181,6 @@ namespace Nop.Services.Vendors
                 throw new ArgumentNullException(nameof(vendorAttributeValue));
 
             _vendorAttributeValueRepository.Delete(vendorAttributeValue);
-
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributesPatternCacheKey);
-            _cacheManager.RemoveByPattern(NopVendorsServiceDefaults.VendorAttributeValuesPatternCacheKey);
 
             //event notification
             _eventPublisher.EntityDeleted(vendorAttributeValue);

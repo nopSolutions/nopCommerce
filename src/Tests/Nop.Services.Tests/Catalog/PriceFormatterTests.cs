@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using FluentAssertions;
 using Moq;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
-using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Localization;
-using Nop.Services.Logging;
-using Nop.Services.Plugins;
 using Nop.Services.Stores;
+using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -30,18 +29,17 @@ namespace Nop.Services.Tests.Catalog
         private Mock<IEventPublisher> _eventPublisher;
         private Mock<IStoreMappingService> _storeMappingService;
         private Mock<IMeasureService> _measureService;
+        private IExchangeRatePluginManager _exchangeRatePluginManager;
         private ICurrencyService _currencyService;
         private CurrencySettings _currencySettings;
         private Mock<IWorkContext> _workContext;
         private Mock<ILocalizationService> _localizationService;
         private TaxSettings _taxSettings;
         private IPriceFormatter _priceFormatter;
-        
+
         [SetUp]
         public new void SetUp()
         {
-            var cacheManager = new NopNullCache();
-
             _workContext = new Mock<IWorkContext>();
             _workContext.Setup(w => w.WorkingCurrency).Returns(new Currency { RoundingType = RoundingType.Rounding001 });
 
@@ -51,12 +49,12 @@ namespace Nop.Services.Tests.Catalog
                 Id = 1,
                 Name = "Euro",
                 CurrencyCode = "EUR",
-                DisplayLocale =  "",
+                DisplayLocale = "",
                 CustomFormatting = "€0.00",
                 DisplayOrder = 1,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc= DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow
             };
             var currency2 = new Currency
             {
@@ -68,8 +66,8 @@ namespace Nop.Services.Tests.Catalog
                 DisplayOrder = 2,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc= DateTime.UtcNow
-            };            
+                UpdatedOnUtc = DateTime.UtcNow
+            };
             _currencyRepo = new Mock<IRepository<Currency>>();
             _currencyRepo.Setup(x => x.Table).Returns(new List<Currency> { currency1, currency2 }.AsQueryable());
 
@@ -79,25 +77,25 @@ namespace Nop.Services.Tests.Catalog
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var customerService = new Mock<ICustomerService>();
-            var loger = new Mock<ILogger>();
-            var webHelper = new Mock<IWebHelper>();
-
-            var pluginService = new PluginService(customerService.Object, loger.Object , CommonHelper.DefaultFileProvider, webHelper.Object);
-
-            _currencyService = new CurrencyService(_currencySettings, null, pluginService, _currencyRepo.Object, cacheManager, _storeMappingService.Object);
+            var pluginService = new FakePluginService();
+            _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, pluginService);
+            _currencyService = new CurrencyService(_currencySettings,
+                null,
+                _exchangeRatePluginManager,
+                _currencyRepo.Object,
+                _storeMappingService.Object);
 
             _taxSettings = new TaxSettings();
 
             _localizationService = new Mock<ILocalizationService>();
             _localizationService.Setup(x => x.GetResource("Products.InclTaxSuffix", 1, false, string.Empty, false)).Returns("{0} incl tax");
             _localizationService.Setup(x => x.GetResource("Products.ExclTaxSuffix", 1, false, string.Empty, false)).Returns("{0} excl tax");
-            
+
             _priceFormatter = new PriceFormatter(_currencySettings, _currencyService, _localizationService.Object,
                 _measureService.Object, _workContext.Object, _taxSettings);
 
             var nopEngine = new Mock<NopEngine>();
-           
+
             nopEngine.Setup(x => x.ServiceProvider).Returns(new TestServiceProvider());
             EngineContext.Replace(nopEngine.Object);
         }
@@ -118,7 +116,7 @@ namespace Nop.Services.Tests.Catalog
                 Id = 1,
                 Name = "Euro",
                 CurrencyCode = "EUR",
-                DisplayLocale =  "",
+                DisplayLocale = "",
                 CustomFormatting = "€0.00"
             };
             var language = new Language
@@ -127,7 +125,7 @@ namespace Nop.Services.Tests.Catalog
                 Name = "English",
                 LanguageCulture = "en-US"
             };
-            _priceFormatter.FormatPrice(1234.5M, false, currency, language, false, false).ShouldEqual("€1234.50");
+            _priceFormatter.FormatPrice(1234.5M, false, currency, language.Id, false, false).Should().Be("€1234.50");
         }
 
         [Test]
@@ -153,8 +151,8 @@ namespace Nop.Services.Tests.Catalog
                 Name = "English",
                 LanguageCulture = "en-US"
             };
-            _priceFormatter.FormatPrice(1234.5M, false, usd_currency, language, false, false).ShouldEqual("$1,234.50");
-            _priceFormatter.FormatPrice(1234.5M, false, gbp_currency, language, false, false).ShouldEqual("£1,234.50");
+            _priceFormatter.FormatPrice(1234.5M, false, usd_currency, language.Id, false, false).Should().Be("$1,234.50");
+            _priceFormatter.FormatPrice(1234.5M, false, gbp_currency, language.Id, false, false).Should().Be("£1,234.50");
         }
 
         [Test]
@@ -173,8 +171,8 @@ namespace Nop.Services.Tests.Catalog
                 Name = "English",
                 LanguageCulture = "en-US"
             };
-            _priceFormatter.FormatPrice(1234.5M, false, currency, language, true, true).ShouldEqual("$1,234.50 incl tax");
-            _priceFormatter.FormatPrice(1234.5M, false, currency, language, false, true).ShouldEqual("$1,234.50 excl tax");
+            _priceFormatter.FormatPrice(1234.5M, false, currency, language.Id, true, true).Should().Be("$1,234.50 incl tax");
+            _priceFormatter.FormatPrice(1234.5M, false, currency, language.Id, false, true).Should().Be("$1,234.50 excl tax");
 
         }
 
@@ -195,10 +193,10 @@ namespace Nop.Services.Tests.Catalog
                 LanguageCulture = "en-US"
             };
             _currencySettings.DisplayCurrencyLabel = true;
-            _priceFormatter.FormatPrice(1234.5M, true, currency, language, false, false).ShouldEqual("$1,234.50 (USD)");
-            
+            _priceFormatter.FormatPrice(1234.5M, true, currency, language.Id, false, false).Should().Be("$1,234.50 (USD)");
+
             _currencySettings.DisplayCurrencyLabel = false;
-            _priceFormatter.FormatPrice(1234.5M, true, currency, language, false, false).ShouldEqual("$1,234.50");
+            _priceFormatter.FormatPrice(1234.5M, true, currency, language.Id, false, false).Should().Be("$1,234.50");
         }
     }
 }

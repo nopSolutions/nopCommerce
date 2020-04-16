@@ -182,7 +182,7 @@ namespace Nop.Web.Models.ShoppingCart
 
             public bool IsShippable { get; set; }
             public AddressModel ShippingAddress { get; set; }
-            public bool SelectedPickUpInStore { get; set; }
+            public bool SelectedPickupInStore { get; set; }
             public AddressModel PickupAddress { get; set; }
             public string ShippingMethod { get; set; }
 

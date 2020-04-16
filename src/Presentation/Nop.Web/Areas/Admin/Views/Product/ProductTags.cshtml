@@ -2,9 +2,14 @@
 
 @{
     //page title
-    ViewBag.Title = T("Admin.Catalog.ProductTags").Text;
+    ViewBag.PageTitle = T("Admin.Catalog.ProductTags").Text;
     //active menu item (system name)
     Html.SetActiveMenuItemSystemName("Product tags");
+}
+
+@{
+    const string hideSearchBlockAttributeName = "ManufacturersPage.HideSearchBlock";
+    var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
 }
 
 <form asp-controller="Product" asp-action="ProductTags" method="post" id="product-tags-form">
@@ -15,114 +20,118 @@
         <div class="pull-right">
             &nbsp;
             @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ProductTagListButtons })
+            <button type="button" id="delete-selected" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete.Selected")
+            </button>
+            <nop-action-confirmation asp-button-id="delete-selected" />
         </div>
     </div>
 
     <div class="content">
-        <div class="panel-group">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default panel-search">
+                    <div class="panel-body">
+                        <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
+                            <div class="icon-search"><i class="fa fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+                        </div>
+                        <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchTagName" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchTagName" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-7 col-md-offset-5">
+                                    <button type="button" id="search-product-tags" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div id="product-tags-grid"></div>
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "product-tags-grid",
+                        UrlRead = new DataUrl("ProductTags", "Product", null),
+                        SearchButtonId = "search-product-tags",
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        Filters = new List<FilterParameter>
+                        {
+                            new FilterParameter(nameof(Model.SearchTagName))
+                        },
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(ProductTagModel.Id))
+                            {
+                                IsMasterCheckBox = true,
+                                Render = new RenderCheckBox("checkbox_producttags"),
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Width = "50"
+                            },
+                            new ColumnProperty(nameof(ProductTagModel.Name))
+                            {
+                                Title = T("Admin.Catalog.ProductTags.Fields.Name").Text
+                            },
+                            new ColumnProperty(nameof(ProductTagModel.ProductCount))
+                            {
+                                Title = T("Admin.Catalog.ProductTags.Fields.ProductCount").Text,
+                                Width = "150",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(ProductTagModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("EditProductTag"))
+                            }
+                        }
+                    })
 
                     <script>
                         $(document).ready(function() {
-                            $("#product-tags-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("ProductTags", "Product"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        },
-                                        destroy: {
-                                            url: "@Html.Raw(Url.Action("ProductTagDelete", "Product"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        }
+                            $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                                var postData = {
+                                    selectedIds: selectedIds
+                                };
+                                addAntiForgeryToken(postData);
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@(Url.Action("ProductTagsDelete", "Product"))",
+                                    data: postData,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#deleteSelectedFailed-info').text(errorThrown);
+                                        $('#deleteSelectedFailed').click();
                                     },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors",
-                                        model: {
-                                            id: "Id",
-                                            fields: {
-                                                Name: { editable: true, type: "string" },
-                                                Value: { editable: true, type: "string" },
-                                                Store: { editable: true, type: "string" },
-                                                StoreId: { editable: true, type: "number" },
-                                                Id: { editable: false, type: "number" }
-                                            }
-                                        }
-                                    },
-                                    requestEnd: function(e) {
-                                        if (e.type == "create" || e.type == "update") {
-                                            this.read();
-                                        }
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(Model.PageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(Model.AvailablePageSizes)],
-                                    @await Html.PartialAsync("_GridPagerMessages")
-                                },
-                                editable: {
-                                    confirmation: "@T("Admin.Common.DeleteConfirmation")",
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [
-                                    {
-                                        field: "Name",
-                                        title: "@T("Admin.Catalog.ProductTags.Fields.Name")",
-                                        width: 300
-                                    }, {
-                                        field: "ProductCount",
-                                        title: "@T("Admin.Catalog.ProductTags.Fields.ProductCount")",
-                                        width: 150
-                                    }, {
-                                        field: "Id",
-                                        title: "@T("Admin.Common.Edit")",
-                                        width: 150,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: "<button onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/EditProductTag/")#=Id#?btnId=btnRefresh&formId=product-tags-form', 800, 320, true); return false;\" class='btn btn-default'><i class=\"fa fa-pencil\"></i>@T("Admin.Common.Edit")</button>"
-                                    }, {
-                                        command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        title: "@T("Admin.Common.Delete")",
-                                        width: 100
+                                    complete: function (jqXHR, textStatus) {
+                                        updateTable('#product-tags-grid');
                                     }
-                                ]
-                            });
-                        });
-                    </script>
-                    <input type="submit" id="btnRefresh" style="display: none"/>
-                    <script>
-                        $(document).ready(function() {
-                            $('#btnRefresh').click(function() {
-                                //refresh grid
-                                var grid = $("#product-tags-grid").data('kendoGrid');
-                                grid.dataSource.read();
-
-                                //return false to don't reload a page
+                                });
+                                $('#delete-selected-action-confirmation').modal('toggle');
                                 return false;
                             });
                         });
                     </script>
+                    <nop-alert asp-alert-id="deleteSelectedFailed" />
                 </div>
             </div>
         </div>

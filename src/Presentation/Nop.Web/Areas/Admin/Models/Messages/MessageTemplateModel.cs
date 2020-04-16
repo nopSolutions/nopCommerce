@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Validators.Messages;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -11,7 +9,6 @@ namespace Nop.Web.Areas.Admin.Models.Messages
     /// <summary>
     /// Represents a message template model
     /// </summary>
-    [Validator(typeof(MessageTemplateValidator))]
     public partial class MessageTemplateModel : BaseNopEntityModel, ILocalizedModel<MessageTemplateLocalizedModel>, IStoreMappingSupportedModel
     {
         #region Ctor

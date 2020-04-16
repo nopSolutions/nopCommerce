@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Media
+﻿namespace Nop.Core.Domain.Media
 {
     /// <summary>
     /// Represents a picture
@@ -31,8 +31,8 @@ namespace Nop.Core.Domain.Media
         public bool IsNew { get; set; }
 
         /// <summary>
-        /// Gets or sets the picture binary
+        /// Gets or sets the picture virtual path
         /// </summary>
-        public virtual PictureBinary PictureBinary { get; set; }
+        public string VirtualPath { get; set; }
     }
 }

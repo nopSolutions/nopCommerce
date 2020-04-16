@@ -1,4 +1,5 @@
-﻿using Nop.Web.Framework.Models;
+﻿using Nop.Web.Areas.Admin.Models.Plugins.Marketplace;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Areas.Admin.Models.Plugins
 {

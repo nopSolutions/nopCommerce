@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="한국어" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>관리자 이메일</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>관리자 이메일을 입력하세요</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>관리자 비밀번호</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>관리자 비밀번호를 입력하세요</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>'{1}'폴더에 대한 수정 권한이있는 '{0}'계정이 부여되지 않았습니다. 이 권한을 구성하십시오.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>'{1}'파일에 대한 수정 권한이있는 '{0}'계정이 부여되지 않았습니다. 이 권한을 구성하십시오.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>비밀번호 확인</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>비밀번호 확인을 입력하세요</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>연결 문자열</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>SQL 연결 문자열이 필요합니다</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value>SQL 연결 값을 입력하십시오</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>잘못된 SQL 연결 문자열 형식</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>존재하지 않는 경우 데이터베이스 생성</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>샘플 데이터 생성</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>사용자 지정 SQL Server 데이터 정렬 지정</Value>
+  </LocaleResource>
+  <LocaleResource Name="Database">
+    <Value>데이터베이스</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>데이터베이스를 작성하는 중 오류가 발생했습니다: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>데이터베이스 정보</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>데이터베이스 이름</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>데이터베이스 이름이 필요합니다</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>데이터베이스가 존재하지 않거나 데이터베이스에 연결할 수 있는 권한이 없습니다</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>데이터 공급자 선택</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>nopCommerce 사용 방법에 대한 정보가 필요하면, </Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>nopCommerce.com의 문서 섹션을 방문하십시오</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>예</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>설치</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>nopCommerce 설치중...</Value>
+  </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>비밀번호가 일치하지 않습니다</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>원시 연결 문자열 입력 (고급)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[추천]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>설치 재시작</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>설치 프로세스를 다시 시작하려면 클릭하십시오 (캐시 된 모든 값 지우기)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>설치 실패: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>SQL Server 계정 사용</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlCompact">
+    <Value>기본 제공 데이터 저장소 사용 (SQL Server Compact)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerName">
+    <Value>SQL Server 이름</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerNameRequired">
+    <Value>SQL Server 이름이 필요합니다</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPassword">
+    <Value>SQL Server 비밀번호</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPasswordRequired">
+    <Value>SQL Server 비밀번호가 필요합니다</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsername">
+    <Value>SQL Server 사용자 이름</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsernameRequired">
+    <Value>SQL Server 사용자 이름이 필요합니다</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlStandard">
+    <Value>Microsoft SQL Server (또는 SQL Express) 데이터베이스 사용</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>상점 정보</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce 설치</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip1">
+    <Value>nopCommerce는 최고의 ASP.NET 온라인 상점 전자 상거래 솔루션입니다. 이 설치 마법사는 nopCommerce 구성 프로세스를 안내합니다.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>이 설치 마법사를 완료하려면 데이터베이스 서버와 관련된 일부 정보 ( "연결 문자열")를 알아야합니다. 필요한 경우 ISP에 문의하십시오. 로컬 컴퓨터나 서버에 설치하는 경우 시스템 관리자의 정보가 필요할 수 있습니다.</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value>통합 Windows 인증 사용</Value>
+  </LocaleResource>
+</Language>

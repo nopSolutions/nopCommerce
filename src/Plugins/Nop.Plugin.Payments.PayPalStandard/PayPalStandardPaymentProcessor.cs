@@ -1,25 +1,25 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Net.Http.Headers;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Plugins;
+using Nop.Plugin.Payments.PayPalStandard.Services;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Plugins;
 using Nop.Services.Tax;
 
 namespace Nop.Plugin.Payments.PayPalStandard
@@ -32,71 +32,70 @@ namespace Nop.Plugin.Payments.PayPalStandard
         #region Fields
 
         private readonly CurrencySettings _currencySettings;
+        private readonly IAddressService _addressService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
+        private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILocalizationService _localizationService;
+        private readonly IOrderService _orderService;
         private readonly IPaymentService _paymentService;
+        private readonly IProductService _productService;
         private readonly ISettingService _settingService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly ITaxService _taxService;
         private readonly IWebHelper _webHelper;
-        private readonly PayPalStandardPaymentSettings _paypalStandardPaymentSettings;
+        private readonly PayPalStandardHttpClient _payPalStandardHttpClient;
+        private readonly PayPalStandardPaymentSettings _payPalStandardPaymentSettings;
 
         #endregion
 
         #region Ctor
 
         public PayPalStandardPaymentProcessor(CurrencySettings currencySettings,
+            IAddressService addressService,
             ICheckoutAttributeParser checkoutAttributeParser,
+            ICountryService countryService,
             ICurrencyService currencyService,
+            ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             IHttpContextAccessor httpContextAccessor,
             ILocalizationService localizationService,
+            IOrderService orderService,
             IPaymentService paymentService,
+            IProductService productService,
             ISettingService settingService,
+            IStateProvinceService stateProvinceService,
             ITaxService taxService,
             IWebHelper webHelper,
-            PayPalStandardPaymentSettings paypalStandardPaymentSettings)
+            PayPalStandardHttpClient payPalStandardHttpClient,
+            PayPalStandardPaymentSettings payPalStandardPaymentSettings)
         {
             _currencySettings = currencySettings;
+            _addressService = addressService;
             _checkoutAttributeParser = checkoutAttributeParser;
+            _countryService = countryService;
             _currencyService = currencyService;
+            _customerService = customerService;
             _genericAttributeService = genericAttributeService;
             _httpContextAccessor = httpContextAccessor;
             _localizationService = localizationService;
+            _orderService = orderService;
             _paymentService = paymentService;
+            _productService = productService;
             _settingService = settingService;
+            _stateProvinceService = stateProvinceService;
             _taxService = taxService;
             _webHelper = webHelper;
-            _paypalStandardPaymentSettings = paypalStandardPaymentSettings;
+            _payPalStandardHttpClient = payPalStandardHttpClient;
+            _payPalStandardPaymentSettings = payPalStandardPaymentSettings;
         }
 
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Gets PayPal URL
-        /// </summary>
-        /// <returns></returns>
-        private string GetPaypalUrl()
-        {
-            return _paypalStandardPaymentSettings.UseSandbox ?
-                "https://www.sandbox.paypal.com/us/cgi-bin/webscr" :
-                "https://www.paypal.com/us/cgi-bin/webscr";
-        }
-
-        /// <summary>
-        /// Gets IPN PayPal URL
-        /// </summary>
-        /// <returns></returns>
-        private string GetIpnPaypalUrl()
-        {
-            return _paypalStandardPaymentSettings.UseSandbox ?
-                "https://ipnpb.sandbox.paypal.com/cgi-bin/webscr" :
-                "https://ipnpb.paypal.com/cgi-bin/webscr";
-        }
 
         /// <summary>
         /// Gets PDT details
@@ -107,20 +106,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// <returns>Result</returns>
         public bool GetPdtDetails(string tx, out Dictionary<string, string> values, out string response)
         {
-            var req = (HttpWebRequest)WebRequest.Create(GetPaypalUrl());
-            req.Method = WebRequestMethods.Http.Post;
-            req.ContentType = MimeTypes.ApplicationXWwwFormUrlencoded;
-            //now PayPal requires user-agent. otherwise, we can get 403 error
-            req.UserAgent = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.UserAgent];
-
-            var formContent = $"cmd=_notify-synch&at={_paypalStandardPaymentSettings.PdtToken}&tx={tx}";
-            req.ContentLength = formContent.Length;
-
-            using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))
-                sw.Write(formContent);
-
-            using (var sr = new StreamReader(req.GetResponse().GetResponseStream()))
-                response = WebUtility.UrlDecode(sr.ReadToEnd());
+            response = WebUtility.UrlDecode(_payPalStandardHttpClient.GetPdtDetailsAsync(tx).Result);
 
             values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             bool firstLine = true, success = false;
@@ -151,25 +137,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// <returns>Result</returns>
         public bool VerifyIpn(string formString, out Dictionary<string, string> values)
         {
-            var req = (HttpWebRequest)WebRequest.Create(GetIpnPaypalUrl());
-            req.Method = WebRequestMethods.Http.Post;
-            req.ContentType = MimeTypes.ApplicationXWwwFormUrlencoded;
-            //now PayPal requires user-agent. otherwise, we can get 403 error
-            req.UserAgent = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.UserAgent];
-
-            var formContent = $"cmd=_notify-validate&{formString}";
-            req.ContentLength = formContent.Length;
-
-            using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))
-            {
-                sw.Write(formContent);
-            }
-
-            string response;
-            using (var sr = new StreamReader(req.GetResponse().GetResponseStream()))
-            {
-                response = WebUtility.UrlDecode(sr.ReadToEnd());
-            }
+            var response = WebUtility.UrlDecode(_payPalStandardHttpClient.VerifyIpnAsync(formString).Result);
             var success = response.Trim().Equals("VERIFIED", StringComparison.OrdinalIgnoreCase);
 
             values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -195,15 +163,14 @@ namespace Nop.Plugin.Payments.PayPalStandard
             var storeLocation = _webHelper.GetStoreLocation();
 
             //choosing correct order address
-            var orderAddress = postProcessPaymentRequest.Order.PickUpInStore
-                    ? postProcessPaymentRequest.Order.PickupAddress
-                    : postProcessPaymentRequest.Order.ShippingAddress;
+            var orderAddress = _addressService.GetAddressById(
+                (postProcessPaymentRequest.Order.PickupInStore ? postProcessPaymentRequest.Order.PickupAddressId : postProcessPaymentRequest.Order.ShippingAddressId) ?? 0);
 
             //create query parameters
             return new Dictionary<string, string>
             {
                 //PayPal ID or an email address associated with your PayPal account
-                ["business"] = _paypalStandardPaymentSettings.BusinessEmail,
+                ["business"] = _payPalStandardPaymentSettings.BusinessEmail,
 
                 //the character set and character encoding
                 ["charset"] = "utf-8",
@@ -231,8 +198,8 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 ["address1"] = orderAddress?.Address1,
                 ["address2"] = orderAddress?.Address2,
                 ["city"] = orderAddress?.City,
-                ["state"] = orderAddress?.StateProvince?.Abbreviation,
-                ["country"] = orderAddress?.Country?.TwoLetterIsoCode,
+                ["state"] = _stateProvinceService.GetStateProvinceByAddress(orderAddress)?.Abbreviation,
+                ["country"] = _countryService.GetCountryByAddress(orderAddress)?.TwoLetterIsoCode,
                 ["zip"] = orderAddress?.ZipPostalCode,
                 ["email"] = orderAddress?.Email
             };
@@ -254,12 +221,14 @@ namespace Nop.Plugin.Payments.PayPalStandard
             var itemCount = 1;
 
             //add shopping cart items
-            foreach (var item in postProcessPaymentRequest.Order.OrderItems)
+            foreach (var item in _orderService.GetOrderItems(postProcessPaymentRequest.Order.Id))
             {
                 var roundedItemPrice = Math.Round(item.UnitPriceExclTax, 2);
 
+                var product = _productService.GetProductById(item.ProductId);
+
                 //add query parameters
-                parameters.Add($"item_name_{itemCount}", item.Product.Name);
+                parameters.Add($"item_name_{itemCount}", product.Name);
                 parameters.Add($"amount_{itemCount}", roundedItemPrice.ToString("0.00", CultureInfo.InvariantCulture));
                 parameters.Add($"quantity_{itemCount}", item.Quantity.ToString());
 
@@ -270,15 +239,20 @@ namespace Nop.Plugin.Payments.PayPalStandard
 
             //add checkout attributes as order items
             var checkoutAttributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(postProcessPaymentRequest.Order.CheckoutAttributesXml);
-            foreach (var attributeValue in checkoutAttributeValues)
-            {
-                var attributePrice = _taxService.GetCheckoutAttributePrice(attributeValue, false, postProcessPaymentRequest.Order.Customer);
-                var roundedAttributePrice = Math.Round(attributePrice, 2);
+            var customer = _customerService.GetCustomerById(postProcessPaymentRequest.Order.CustomerId);
 
-                //add query parameters
-                if (attributeValue.CheckoutAttribute != null)
+            foreach (var (attribute, values) in checkoutAttributeValues)
+            {
+                foreach (var attributeValue in values)
                 {
-                    parameters.Add($"item_name_{itemCount}", attributeValue.CheckoutAttribute.Name);
+                    var attributePrice = _taxService.GetCheckoutAttributePrice(attribute, attributeValue, false, customer);
+                    var roundedAttributePrice = Math.Round(attributePrice, 2);
+
+                    //add query parameters
+                    if (attribute == null)
+                        continue;
+
+                    parameters.Add($"item_name_{itemCount}", attribute.Name);
                     parameters.Add($"amount_{itemCount}", roundedAttributePrice.ToString("0.00", CultureInfo.InvariantCulture));
                     parameters.Add($"quantity_{itemCount}", "1");
 
@@ -324,7 +298,6 @@ namespace Nop.Plugin.Payments.PayPalStandard
 
                 cartTotal += postProcessPaymentRequest.Order.OrderTax;
                 roundedCartTotal += roundedTaxAmount;
-                itemCount++;
             }
 
             if (cartTotal > postProcessPaymentRequest.Order.OrderTotal)
@@ -379,11 +352,15 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
         public void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest)
         {
+            var baseUrl = _payPalStandardPaymentSettings.UseSandbox ?
+                "https://www.sandbox.paypal.com/us/cgi-bin/webscr" :
+                "https://www.paypal.com/us/cgi-bin/webscr";
+
             //create common query parameters for the request
             var queryParameters = CreateQueryParameters(postProcessPaymentRequest);
 
             //whether to include order items in a transaction
-            if (_paypalStandardPaymentSettings.PassProductNamesAndTotals)
+            if (_payPalStandardPaymentSettings.PassProductNamesAndTotals)
             {
                 //add order items query parameters to the request
                 var parameters = new Dictionary<string, string>(queryParameters);
@@ -394,7 +371,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                     .ToDictionary(parameter => parameter.Key, parameter => parameter.Value);
 
                 //ensure redirect URL doesn't exceed 2K chars to avoid "too long URL" exception
-                var redirectUrl = QueryHelpers.AddQueryString(GetPaypalUrl(), parameters);
+                var redirectUrl = QueryHelpers.AddQueryString(baseUrl, parameters);
                 if (redirectUrl.Length <= 2048)
                 {
                     _httpContextAccessor.HttpContext.Response.Redirect(redirectUrl);
@@ -409,7 +386,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             queryParameters = queryParameters.Where(parameter => !string.IsNullOrEmpty(parameter.Value))
                 .ToDictionary(parameter => parameter.Key, parameter => parameter.Value);
 
-            var url = QueryHelpers.AddQueryString(GetPaypalUrl(), queryParameters);
+            var url = QueryHelpers.AddQueryString(baseUrl, queryParameters);
             _httpContextAccessor.HttpContext.Response.Redirect(url);
         }
 
@@ -434,7 +411,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
             return _paymentService.CalculateAdditionalFee(cart,
-                _paypalStandardPaymentSettings.AdditionalFee, _paypalStandardPaymentSettings.AdditionalFeePercentage);
+                _payPalStandardPaymentSettings.AdditionalFee, _payPalStandardPaymentSettings.AdditionalFeePercentage);
         }
 
         /// <summary>
@@ -625,68 +602,42 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// <summary>
         /// Gets a value indicating whether capture is supported
         /// </summary>
-        public bool SupportCapture
-        {
-            get { return false; }
-        }
+        public bool SupportCapture => false;
 
         /// <summary>
         /// Gets a value indicating whether partial refund is supported
         /// </summary>
-        public bool SupportPartiallyRefund
-        {
-            get { return false; }
-        }
+        public bool SupportPartiallyRefund => false;
 
         /// <summary>
         /// Gets a value indicating whether refund is supported
         /// </summary>
-        public bool SupportRefund
-        {
-            get { return false; }
-        }
+        public bool SupportRefund => false;
 
         /// <summary>
         /// Gets a value indicating whether void is supported
         /// </summary>
-        public bool SupportVoid
-        {
-            get { return false; }
-        }
+        public bool SupportVoid => false;
 
         /// <summary>
         /// Gets a recurring payment type of payment method
         /// </summary>
-        public RecurringPaymentType RecurringPaymentType
-        {
-            get { return RecurringPaymentType.NotSupported; }
-        }
+        public RecurringPaymentType RecurringPaymentType => RecurringPaymentType.NotSupported;
 
         /// <summary>
         /// Gets a payment method type
         /// </summary>
-        public PaymentMethodType PaymentMethodType
-        {
-            get { return PaymentMethodType.Redirection; }
-        }
+        public PaymentMethodType PaymentMethodType => PaymentMethodType.Redirection;
 
         /// <summary>
         /// Gets a value indicating whether we should display a payment information page for this plugin
         /// </summary>
-        public bool SkipPaymentInfo
-        {
-            get { return false; }
-        }
+        public bool SkipPaymentInfo => false;
 
         /// <summary>
         /// Gets a payment method description that will be displayed on checkout pages in the public store
         /// </summary>
-        public string PaymentMethodDescription
-        {
-            //return description of this payment method to be display on "payment method" checkout step. good practice is to make it localizable
-            //for example, for a redirection payment method, description may be like this: "You will be redirected to PayPal site to complete the payment"
-            get { return _localizationService.GetResource("Plugins.Payments.PayPalStandard.PaymentMethodDescription"); }
-        }
+        public string PaymentMethodDescription => _localizationService.GetResource("Plugins.Payments.PayPalStandard.PaymentMethodDescription");
 
         #endregion
     }

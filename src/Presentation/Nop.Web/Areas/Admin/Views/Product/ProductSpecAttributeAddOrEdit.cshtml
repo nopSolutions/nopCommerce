@@ -83,11 +83,9 @@
                                 }
                                 else
                                 {
-                                    <nop-select asp-for="AttributeTypeId"
-                                                asp-items="@(((SpecificationAttributeType) Model.AttributeTypeId).ToSelectList())" />
+                                    <nop-select asp-for="AttributeTypeId" asp-items="@(((SpecificationAttributeType) Model.AttributeTypeId).ToSelectList())" />
                                 }
                                 <span asp-validation-for="AttributeTypeId"></span>
-
                             </div>
                         </div>
                         <div class="form-group">
@@ -105,15 +103,14 @@
                                 }
                             </div>
                         </div>
+
                         <script>
                             $(document).ready(function() {
                                 var valueContainers = {
                                     @((int) SpecificationAttributeType.Option): $('#AttributeValueOptionSection'),
-                                    @((int) SpecificationAttributeType.CustomText): $(
-                                        '#AttributeValueCustomTextSection'),
-                                    @((int) SpecificationAttributeType.CustomHtmlText): $(
-                                        '#AttributeValueCustomHtmlTextSection'),
-                                    @((int) SpecificationAttributeType.Hyperlink): $('#AttributeValueCustomTextSection')
+                                    @((int) SpecificationAttributeType.CustomText): $('#AttributeValueCustomTextSection'),
+                                    @((int) SpecificationAttributeType.CustomHtmlText): $('#AttributeValueCustomHtmlTextSection'),
+                                    @((int) SpecificationAttributeType.Hyperlink): $('#AttributeValueHyperlinkSection')
                                 }
 
                                 $('#@Html.IdFor(model => model.AttributeTypeId)').on('change',
@@ -121,10 +118,12 @@
                                         var attrTypeId = $('#@Html.IdFor(model => model.AttributeTypeId)').val();
 
                                         var values = Object.values(valueContainers);
-                                        for (var i = 0; i < values.length; ++i) {
-                                            values[i].hide();
-                                        }
+                                        values.forEach(function(value) {
+                                            value.hide();
+                                            value.find("input").prop("disabled", true);
+                                        });
                                         valueContainers[attrTypeId].show();
+                                        valueContainers[attrTypeId].find("input").prop("disabled", false);
 
                                         var allowFilteringSection = $('#AllowFilteringSection');
                                         var allowFilteringField = $('#@Html.IdFor(model => model.AllowFiltering)');
@@ -136,10 +135,11 @@
                                             allowFilteringSection.hide();
                                         }
                                     });
-                                $('#@Html.IdFor(model => model.AttributeTypeId)').trigger('change');
 
+                                $('#@Html.IdFor(model => model.AttributeTypeId)').trigger('change');
                             })
                         </script>
+
                         @if (Model.SpecificationId == 0)
                         {
                             <script>
@@ -154,9 +154,8 @@
                                             data: {
                                                 "attributeId": selectedAttributeId
                                             },
-                                            success: function(data) {
-                                                var ddlSpecOptions =
-                                                    $("#@Html.IdFor(model => model.SpecificationAttributeOptionId)");
+                                            success: function (data, textStatus, jqXHR) {
+                                                var ddlSpecOptions = $("#@Html.IdFor(model => model.SpecificationAttributeOptionId)");
                                                 ddlSpecOptions.html('');
                                                 $.each(data,
                                                     function(id, option) {
@@ -164,16 +163,16 @@
                                                             .html(option.name));
                                                     });
                                             },
-                                            error: function(xhr, ajaxOptions, thrownError) {
+                                            error: function (jqXHR, textStatus, errorThrown) {
                                                 $("#getOptionsByAttributeIdAlert").click();
                                             }
-
                                         });
                                     });
                                     $("#@Html.IdFor(model => model.AttributeId)").trigger('change');
                                 })
                             </script>
                         }
+
                         <div class="form-group" id="AttributeValueOptionSection">
                             <div class="col-md-3">
                                 <nop-label asp-for="SpecificationAttributeOptionId" />
@@ -183,18 +182,62 @@
                                 <span asp-validation-for="SpecificationAttributeOptionId"></span>
                             </div>
                         </div>
-
-                        <div class="form-group" id="AttributeValueCustomHtmlTextSection">
-                            <div class="col-md-3">
-                                <nop-label asp-for="ValueRaw" />
-                            </div>
-                            <div class="col-md-9">
-                                <nop-editor asp-for="ValueRaw" asp-template="RichEditor" />
-                                <span asp-validation-for="ValueRaw"></span>
-                            </div>
+                        
+                        <div id="AttributeValueCustomHtmlTextSection">
+                            @(Html.LocalizedEditor<AddSpecificationAttributeModel, AddSpecificationAttributeLocalizedModel>("AttributeValueCustomHtmlTextSection-localized",
+                            @<div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="@Model.Locales[item].ValueRaw" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-editor asp-for="@Model.Locales[item].ValueRaw" asp-template="RichEditor" />
+                                        <span asp-validation-for="@Model.Locales[item].ValueRaw"></span>
+                                    </div>
+                                </div>
+                                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                            </div>,
+                            @<div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="ValueRaw" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-editor asp-for="ValueRaw" asp-template="RichEditor" />
+                                        <span asp-validation-for="ValueRaw"></span>
+                                    </div>
+                                </div>
+                            </div>))
                         </div>
 
-                        <div class="form-group" id="AttributeValueCustomTextSection">
+                        <div id="AttributeValueCustomTextSection">
+                            @(Html.LocalizedEditor<AddSpecificationAttributeModel, AddSpecificationAttributeLocalizedModel>("AttributeValueCustomTextSection-localized",
+                            @<div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="@Model.Locales[item].Value" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-editor asp-for="@Model.Locales[item].Value" />
+                                        <span asp-validation-for="@Model.Locales[item].Value"></span>
+                                    </div>
+                                </div>
+                                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+                            </div>,
+                            @<div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        <nop-label asp-for="Value" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-editor asp-for="Value" />
+                                        <span asp-validation-for="Value"></span>
+                                    </div>
+                                </div>
+                            </div>))
+                        </div>
+                        
+                        <div class="form-group" id="AttributeValueHyperlinkSection">
                             <div class="col-md-3">
                                 <nop-label asp-for="Value" />
                             </div>

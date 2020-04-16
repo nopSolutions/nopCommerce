@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
@@ -104,7 +106,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(ProductAttributeSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _productAttributeModelFactory.PrepareProductAttributeListModel(searchModel);
@@ -143,10 +145,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = productAttribute.Id });
             }
 
@@ -199,10 +198,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = productAttribute.Id });
             }
 
@@ -235,6 +231,27 @@ namespace Nop.Web.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        [HttpPost]
+        public virtual IActionResult DeleteSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                var productAttributes = _productAttributeService.GetProductAttributeByIds(selectedIds.ToArray());
+                _productAttributeService.DeleteProductAttributes(productAttributes);
+
+                foreach (var productAttribute in productAttributes)
+                {
+                    _customerActivityService.InsertActivity("DeleteProductAttribute",
+                        string.Format(_localizationService.GetResource("ActivityLog.DeleteProductAttribute"), productAttribute.Name), productAttribute);
+                }
+            }
+
+            return Json(new { Result = true });
+        }
+
         #endregion
 
         #region Used by products
@@ -243,7 +260,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult UsedByProducts(ProductAttributeProductSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a product attribute with the specified id
             var productAttribute = _productAttributeService.GetProductAttributeById(searchModel.ProductAttributeId)
@@ -263,7 +280,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult PredefinedProductAttributeValueList(PredefinedProductAttributeValueSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a product attribute with the specified id
             var productAttribute = _productAttributeService.GetProductAttributeById(searchModel.ProductAttributeId)

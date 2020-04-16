@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Validators.Plugins;
 using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
@@ -10,7 +8,6 @@ namespace Nop.Web.Areas.Admin.Models.Plugins
     /// <summary>
     /// Represents a plugin model
     /// </summary>
-    [Validator(typeof(PluginValidator))]
     public partial class PluginModel : BaseNopModel, IAclSupportedModel, ILocalizedModel<PluginLocalizedModel>, IPluginModel, IStoreMappingSupportedModel
     {
         #region Ctor

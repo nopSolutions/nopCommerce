@@ -69,7 +69,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult QueuedEmailList(QueuedEmailSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _queuedEmailModelFactory.PrepareQueuedEmailListModel(searchModel);

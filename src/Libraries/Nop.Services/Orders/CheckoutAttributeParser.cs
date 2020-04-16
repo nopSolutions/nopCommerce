@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -99,19 +99,25 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Checkout attribute values</returns>
-        public virtual IList<CheckoutAttributeValue> ParseCheckoutAttributeValues(string attributesXml)
+        public virtual IEnumerable<(CheckoutAttribute attribute, IEnumerable<CheckoutAttributeValue> values)> ParseCheckoutAttributeValues(string attributesXml)
         {
-            var values = new List<CheckoutAttributeValue>();
             if (string.IsNullOrEmpty(attributesXml))
-                return values;
+                yield break;
 
             var attributes = ParseCheckoutAttributes(attributesXml);
+
             foreach (var attribute in attributes)
             {
                 if (!attribute.ShouldHaveValues())
                     continue;
 
                 var valuesStr = ParseValues(attributesXml, attribute.Id);
+
+                yield return (attribute, getValues(valuesStr));
+            }
+
+            IEnumerable<CheckoutAttributeValue> getValues(IList<string> valuesStr)
+            {
                 foreach (var valueStr in valuesStr)
                 {
                     if (string.IsNullOrEmpty(valueStr))
@@ -122,11 +128,9 @@ namespace Nop.Services.Orders
 
                     var value = _checkoutAttributeService.GetCheckoutAttributeValueById(id);
                     if (value != null)
-                        values.Add(value);
+                        yield return value;
                 }
             }
-
-            return values;
         }
 
         /// <summary>

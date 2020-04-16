@@ -1,0 +1,74 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+@import "../../mobile/common/popover.less";
+@import "base.less";
+
+// PopOver
+
+.km-popup-wrapper
+{
+    padding: 15px;
+}
+
+.km-popover-root .km-popup
+{
+    border: 5px solid transparent;
+}
+
+.km-popover-root .km-popup .km-view,
+.km-popover-root .km-popup .km-navbar,
+.km-popover-root .km-popup .km-toolbar,
+.km-popover-root .km-popup .km-tabstrip
+{
+    background: none;
+}
+
+.km-popover-root .km-popup .km-header
+{
+    padding: 0 5px;
+    margin: -5px -5px 2px;
+    -webkit-margin-collapse: separate;
+}
+
+.km-popup-arrow:after,
+.km-popup-arrow:before
+{
+    border-style: solid;
+    border-width: 0 15px 15px;
+}
+
+.km-down .km-popup-arrow:before
+{
+    margin-top: -1px;
+}
+
+.km-up .km-popup-arrow:after,
+.km-up .km-popup-arrow:before
+{
+    border-width: 15px 15px 0 15px;
+}
+
+.km-left .km-popup-arrow:after,
+.km-left .km-popup-arrow:before
+{
+    border-width: 15px 0 15px 15px;
+}
+
+.km-right .km-popup-arrow:after,
+.km-right .km-popup-arrow:before
+{
+    border-width: 15px 15px 15px 0;
+}

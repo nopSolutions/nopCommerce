@@ -7,8 +7,8 @@ using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Tax;
-using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -20,7 +20,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly ISettingService _settingService;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITaxModelFactory _taxModelFactory;
-        private readonly ITaxService _taxService;
+        private readonly ITaxPluginManager _taxPluginManager;
         private readonly TaxSettings _taxSettings;
 
         #endregion
@@ -31,21 +31,21 @@ namespace Nop.Web.Areas.Admin.Controllers
             ISettingService settingService,
             ITaxCategoryService taxCategoryService,
             ITaxModelFactory taxModelFactory,
-            ITaxService taxService,
+            ITaxPluginManager taxPluginManager,
             TaxSettings taxSettings)
         {
             _permissionService = permissionService;
             _settingService = settingService;
             _taxCategoryService = taxCategoryService;
             _taxModelFactory = taxModelFactory;
-            _taxService = taxService;
+            _taxPluginManager = taxPluginManager;
             _taxSettings = taxSettings;
         }
 
         #endregion
 
         #region Methods
-        
+
         #region Tax Providers
 
         public virtual IActionResult List()
@@ -68,7 +68,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult Providers(TaxProviderSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _taxModelFactory.PrepareTaxProviderListModel(searchModel);
@@ -84,7 +84,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(systemName))
                 return RedirectToAction("Providers");
 
-            var taxProvider = _taxService.LoadTaxProviderBySystemName(systemName);
+            var taxProvider = _taxPluginManager.LoadPluginBySystemName(systemName);
             if (taxProvider == null)
                 return RedirectToAction("Providers");
 
@@ -113,7 +113,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult Categories(TaxCategorySearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _taxModelFactory.PrepareTaxCategoryListModel(searchModel);
@@ -128,7 +128,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
 
             var taxCategory = _taxCategoryService.GetTaxCategoryById(model.Id);
             taxCategory = model.ToEntity(taxCategory);
@@ -144,13 +144,13 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                return ErrorJson(ModelState.SerializeErrors());
 
             var taxCategory = new TaxCategory();
             taxCategory = model.ToEntity(taxCategory);
             _taxCategoryService.InsertTaxCategory(taxCategory);
 
-            return new NullJsonResult();
+            return Json(new { Result = true });
         }
 
         [HttpPost]

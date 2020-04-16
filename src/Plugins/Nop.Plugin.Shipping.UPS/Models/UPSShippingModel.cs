@@ -1,22 +1,27 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Plugin.Shipping.UPS.Models
 {
     public class UPSShippingModel : BaseNopModel
     {
+        #region Ctor
+
         public UPSShippingModel()
         {
-            CarrierServicesOffered = new List<string>();
-            AvailableCarrierServices = new List<string>();
+            CarrierServices = new List<string>();
+            AvailableCarrierServices = new List<SelectListItem>();
             AvailableCustomerClassifications = new List<SelectListItem>();
             AvailablePickupTypes = new List<SelectListItem>();
             AvailablePackagingTypes = new List<SelectListItem>();
+            AvaliablePackingTypes = new List<SelectListItem>();
         }
-        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.Url")]
-        public string Url { get; set; }
+
+        #endregion
+
+        #region Properties
 
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.AccountNumber")]
         public string AccountNumber { get; set; }
@@ -30,6 +35,9 @@ namespace Nop.Plugin.Shipping.UPS.Models
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.Password")]
         public string Password { get; set; }
 
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.UseSandbox")]
+        public bool UseSandbox { get; set; }
+
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.AdditionalHandlingCharge")]
         public decimal AdditionalHandlingCharge { get; set; }
 
@@ -37,21 +45,23 @@ namespace Nop.Plugin.Shipping.UPS.Models
         public bool InsurePackage { get; set; }
 
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.CustomerClassification")]
-        public string CustomerClassification { get; set; }
+        public int CustomerClassification { get; set; }
         public IList<SelectListItem> AvailableCustomerClassifications { get; set; }
 
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.PickupType")]
-        public string PickupType { get; set; }
+        public int PickupType { get; set; }
         public IList<SelectListItem> AvailablePickupTypes { get; set; }
 
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.PackagingType")]
-        public string PackagingType { get; set; }
+        public int PackagingType { get; set; }
         public IList<SelectListItem> AvailablePackagingTypes { get; set; }
-        
-        public IList<string> CarrierServicesOffered { get; set; }
+
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.AvailableCarrierServices")]
-        public IList<string> AvailableCarrierServices { get; set; }
-        public string[] CheckedCarrierServices { get; set; }
+        public IList<SelectListItem> AvailableCarrierServices { get; set; }
+        public IList<string> CarrierServices { get; set; }
+
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.SaturdayDeliveryEnabled")]
+        public bool SaturdayDeliveryEnabled { get; set; }
 
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.PassDimensions")]
         public bool PassDimensions { get; set; }
@@ -59,11 +69,13 @@ namespace Nop.Plugin.Shipping.UPS.Models
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.PackingPackageVolume")]
         public int PackingPackageVolume { get; set; }
 
-        public int PackingType { get; set; }
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.PackingType")]
-        public SelectList PackingTypeValues { get; set; }
+        public int PackingType { get; set; }
+        public IList<SelectListItem> AvaliablePackingTypes { get; set; }
 
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.Tracing")]
         public bool Tracing { get; set; }
+
+        #endregion
     }
 }

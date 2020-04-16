@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
@@ -11,6 +12,7 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -88,7 +90,7 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return searchModel;
         }
-
+        
         #endregion
 
         #region Methods
@@ -107,6 +109,23 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory.PrepareStores(searchModel.AvailableStores);
 
             searchModel.HideStoresList = _catalogSettings.IgnoreStoreLimitations || searchModel.AvailableStores.SelectionIsNotPossible();
+
+            //prepare "published" filter (0 - all; 1 - published only; 2 - unpublished only)
+            searchModel.AvailablePublishedOptions.Add(new SelectListItem
+            {
+                Value = "0",
+                Text = _localizationService.GetResource("Admin.Catalog.Manufacturers.List.SearchPublished.All")
+            });
+            searchModel.AvailablePublishedOptions.Add(new SelectListItem
+            {
+                Value = "1",
+                Text = _localizationService.GetResource("Admin.Catalog.Manufacturers.List.SearchPublished.PublishedOnly")
+            });
+            searchModel.AvailablePublishedOptions.Add(new SelectListItem
+            {
+                Value = "2",
+                Text = _localizationService.GetResource("Admin.Catalog.Manufacturers.List.SearchPublished.UnpublishedOnly")
+            });
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -128,21 +147,21 @@ namespace Nop.Web.Areas.Admin.Factories
             var manufacturers = _manufacturerService.GetAllManufacturers(showHidden: true,
                 manufacturerName: searchModel.SearchManufacturerName,
                 storeId: searchModel.SearchStoreId,
-                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
+                pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize,
+                overridePublished: searchModel.SearchPublishedId == 0 ? null : (bool?)(searchModel.SearchPublishedId == 1));
 
             //prepare grid model
-            var model = new ManufacturerListModel
+            var model = new ManufacturerListModel().PrepareToGrid(searchModel, manufacturers, () =>
             {
                 //fill in model values from the entity
-                Data = manufacturers.Select(manufacturer =>
+                return manufacturers.Select(manufacturer =>
                 {
                     var manufacturerModel = manufacturer.ToModel<ManufacturerModel>();
                     manufacturerModel.SeName = _urlRecordService.GetSeName(manufacturer, 0, true, false);
 
                     return manufacturerModel;
-                }),
-                Total = manufacturers.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -233,10 +252,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new ManufacturerProductListModel
+            var model = new ManufacturerProductListModel().PrepareToGrid(searchModel, productManufacturers, () =>
             {
-                
-                Data = productManufacturers.Select(productManufacturer =>
+                return productManufacturers.Select(productManufacturer =>
                 {
                     //fill in model values from the entity
                     var manufacturerProductModel = productManufacturer.ToModel<ManufacturerProductModel>();
@@ -245,9 +263,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     manufacturerProductModel.ProductName = _productService.GetProductById(productManufacturer.ProductId)?.Name;
 
                     return manufacturerProductModel;
-                }),
-                Total = productManufacturers.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -304,18 +321,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare grid model
-            var model = new AddProductToManufacturerListModel
+            var model = new AddProductToManufacturerListModel().PrepareToGrid(searchModel, products, () =>
             {
-                //fill in model values from the entity
-                Data = products.Select(product =>
+                return products.Select(product =>
                 {
                     var productModel = product.ToModel<ProductModel>();
                     productModel.SeName = _urlRecordService.GetSeName(product, 0, true, false);
 
                     return productModel;
-                }),
-                Total = products.TotalCount
-            };
+                });
+            });
 
             return model;
         }

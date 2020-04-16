@@ -37,14 +37,14 @@ namespace Nop.Web.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            //add MiniProfiler
+            //use MiniProfiler
             application.UseMiniProfiler();
 
             //use WebMarkupMin
             application.UseNopWebMarkupMin();
 
-            //MVC routing
-            application.UseNopMvc();
+            //Endpoints routing
+            application.UseNopEndpoints();
         }
 
         /// <summary>

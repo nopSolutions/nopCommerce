@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
@@ -9,6 +10,7 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -87,15 +89,16 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get message templates
-            var messageTemplates = _messageTemplateService.GetAllMessageTemplates(storeId: searchModel.SearchStoreId);
+            var messageTemplates = _messageTemplateService
+                .GetAllMessageTemplates(storeId: searchModel.SearchStoreId).ToPagedList(searchModel);
 
             //prepare store names (to avoid loading for each message template)
             var stores = _storeService.GetAllStores().Select(store => new { store.Id, store.Name }).ToList();
 
             //prepare list model
-            var model = new MessageTemplateListModel
+            var model = new MessageTemplateListModel().PrepareToGrid(searchModel, messageTemplates, () =>
             {
-                Data = messageTemplates.PaginationByRequestModel(searchModel).Select(messageTemplate =>
+                return messageTemplates.Select(messageTemplate =>
                 {
                     //fill in model values from the entity
                     var messageTemplateModel = messageTemplate.ToModel<MessageTemplateModel>();
@@ -112,9 +115,8 @@ namespace Nop.Web.Areas.Admin.Factories
                     messageTemplateModel.ListOfStores = string.Join(", ", storeNames);
 
                     return messageTemplateModel;
-                }),
-                Total = messageTemplates.Count
-            };
+                });
+            });
 
             return model;
         }
@@ -134,7 +136,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (messageTemplate != null)
             {
                 //fill in model values from the entity
-                model = model ?? messageTemplate.ToModel<MessageTemplateModel>();
+                model ??= messageTemplate.ToModel<MessageTemplateModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -147,6 +149,13 @@ namespace Nop.Web.Areas.Admin.Factories
                     //prepare available email accounts
                     _baseAdminModelFactory.PrepareEmailAccounts(locale.AvailableEmailAccounts,
                         defaultItemText: _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.EmailAccount.Standard"));
+
+                    //PrepareEmailAccounts only gets available accounts, we need to set the item as selected manually
+                    if (locale.AvailableEmailAccounts?.FirstOrDefault(x => x.Value == locale.EmailAccountId.ToString()) is SelectListItem emailAccountListItem)
+                    {
+                        emailAccountListItem.Selected = true;
+                    }
+
                 };
             }
 

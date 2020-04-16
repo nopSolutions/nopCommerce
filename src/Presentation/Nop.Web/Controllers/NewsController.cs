@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Security;
+using Nop.Core.Rss;
+using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -13,31 +14,30 @@ using Nop.Services.Messages;
 using Nop.Services.News;
 using Nop.Services.Security;
 using Nop.Services.Seo;
+using Nop.Services.Stores;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Mvc.Rss;
-using Nop.Web.Framework.Security;
-using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.News;
 
 namespace Nop.Web.Controllers
 {
-    [HttpsRequirement(SslRequirement.No)]
     public partial class NewsController : BasePublicController
     {
         #region Fields
 
         private readonly CaptchaSettings _captchaSettings;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly INewsModelFactory _newsModelFactory;
         private readonly INewsService _newsService;
         private readonly IPermissionService _permissionService;
         private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
@@ -51,12 +51,14 @@ namespace Nop.Web.Controllers
 
         public NewsController(CaptchaSettings captchaSettings,
             ICustomerActivityService customerActivityService,
+            ICustomerService customerService,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             INewsModelFactory newsModelFactory,
             INewsService newsService,
             IPermissionService permissionService,
             IStoreContext storeContext,
+            IStoreMappingService storeMappingService,
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
             IWorkContext workContext,
@@ -66,12 +68,14 @@ namespace Nop.Web.Controllers
         {
             _captchaSettings = captchaSettings;
             _customerActivityService = customerActivityService;
+            _customerService = customerService;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
             _newsModelFactory = newsModelFactory;
             _newsService = newsService;
             _permissionService = permissionService;
             _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
             _urlRecordService = urlRecordService;
             _webHelper = webHelper;
             _workContext = workContext;
@@ -87,7 +91,7 @@ namespace Nop.Web.Controllers
         public virtual IActionResult List(NewsPagingFilteringModel command)
         {
             if (!_newsSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var model = _newsModelFactory.PrepareNewsItemListModel(command);
             return View(model);
@@ -118,16 +122,24 @@ namespace Nop.Web.Controllers
         public virtual IActionResult NewsItem(int newsItemId)
         {
             if (!_newsSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var newsItem = _newsService.GetNewsById(newsItemId);
             if (newsItem == null)
-                return RedirectToRoute("HomePage");
+                return InvokeHttp404();
 
+            var notAvailable =
+                //published?
+                !newsItem.Published ||
+                //availability dates
+                !_newsService.IsNewsAvailable(newsItem) ||
+                //Store mapping
+                !_storeMappingService.Authorize(newsItem);
+            //Check whether the current user has a "Manage news" permission (usually a store owner)
+            //We should allows him (her) to use "Preview" functionality
             var hasAdminAccess = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageNews);
-            //access to News preview
-            if ((!newsItem.Published || !_newsService.IsNewsAvailable(newsItem)) && !hasAdminAccess)
-                return RedirectToRoute("HomePage");
+            if (notAvailable && !hasAdminAccess)
+                return InvokeHttp404();
 
             var model = new NewsItemModel();
             model = _newsModelFactory.PrepareNewsItemModel(model, newsItem, true);
@@ -140,25 +152,25 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("NewsItem")]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         [FormValueRequired("add-comment")]
         [ValidateCaptcha]
         public virtual IActionResult NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)
         {
             if (!_newsSettings.Enabled)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             var newsItem = _newsService.GetNewsById(newsItemId);
             if (newsItem == null || !newsItem.Published || !newsItem.AllowComments)
-                return RedirectToRoute("HomePage");
+                return RedirectToRoute("Homepage");
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage && !captchaValid)
             {
-                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
-            if (_workContext.CurrentCustomer.IsGuest() && !_newsSettings.AllowNotRegisteredUsersToLeaveComments)
+            if (_customerService.IsGuest(_workContext.CurrentCustomer) && !_newsSettings.AllowNotRegisteredUsersToLeaveComments)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("News.Comments.OnlyRegisteredUsersLeaveComments"));
             }
@@ -175,8 +187,8 @@ namespace Nop.Web.Controllers
                     StoreId = _storeContext.CurrentStore.Id,
                     CreatedOnUtc = DateTime.UtcNow,
                 };
-                newsItem.NewsComments.Add(comment);
-                _newsService.UpdateNews(newsItem);
+
+                _newsService.InsertNewsComment(comment);
 
                 //notify a store owner;
                 if (_newsSettings.NotifyAboutNewNewsComments)

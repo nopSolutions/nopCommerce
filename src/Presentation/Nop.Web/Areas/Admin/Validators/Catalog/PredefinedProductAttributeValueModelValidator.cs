@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Services.Localization;
+using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Validators;
 
 namespace Nop.Web.Areas.Admin.Validators.Catalog

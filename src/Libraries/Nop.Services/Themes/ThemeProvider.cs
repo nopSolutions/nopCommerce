@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Nop.Core.Infrastructure;
-using Nop.Core.Plugins;
+using Nop.Services.Plugins;
 
 namespace Nop.Services.Themes
 {
@@ -21,10 +21,14 @@ namespace Nop.Services.Themes
 
         #endregion
 
+        #region Ctor
+
         public ThemeProvider(INopFileProvider fileProvider)
         {
             _fileProvider = fileProvider;
         }
+
+        #endregion
 
         #region Methods
         /// <summary>

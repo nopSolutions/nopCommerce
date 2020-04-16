@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation.Attributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Web.Areas.Admin.Validators.Discounts;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 
@@ -12,7 +10,6 @@ namespace Nop.Web.Areas.Admin.Models.Discounts
     /// <summary>
     /// Represents a discount model
     /// </summary>
-    [Validator(typeof(DiscountValidator))]
     public partial class DiscountModel : BaseNopEntityModel
     {
         #region Ctor
@@ -33,6 +30,9 @@ namespace Nop.Web.Areas.Admin.Models.Discounts
 
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.Name")]
         public string Name { get; set; }
+
+        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.AdminComment")]
+        public string AdminComment { get; set; }
 
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.DiscountType")]
         public int DiscountTypeId { get; set; }

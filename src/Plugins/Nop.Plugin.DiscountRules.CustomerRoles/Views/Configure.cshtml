@@ -18,11 +18,11 @@
             addAntiForgeryToken(postData);
 
             $.ajax({
-                cache:false,
+                cache: false,
                 type: "POST",
                 url: "@(Url.Action("Configure", "DiscountRulesCustomerRoles"))",
                 data: postData,
-                success: function (data) {
+                success: function (data, textStatus, jqXHR) {
                     $('#pnl-save-requirement-result@(Model.RequirementId)').fadeIn("slow").delay(1000).fadeOut("slow");
                     //notify parent if it's a new requirement
                     @if (Model.RequirementId == 0)
@@ -30,7 +30,7 @@
                         <text>$("#discountRequirementContainer").trigger('nopnewdiscountruleadded', [data.NewRequirementId]);</text>
                     }
                 },
-                error:function (xhr, ajaxOptions, thrownError){
+                error: function (jqXHR, textStatus, errorThrown) {
                     $("#savecustomerrolesrequirementAlert").click();
                 }
             });

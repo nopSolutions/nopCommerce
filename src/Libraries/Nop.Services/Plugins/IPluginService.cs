@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Plugins;
 
 namespace Nop.Services.Plugins
 {
@@ -18,9 +17,12 @@ namespace Nop.Services.Plugins
         /// <param name="customer">Filter by  customer; pass null to load all records</param>
         /// <param name="storeId">Filter by store; pass 0 to load all records</param>
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
+        /// <param name="friendlyName">Filter by plugin friendly name; pass null to load all records</param>
+        /// <param name="author">Filter by plugin author; pass null to load all records</param>
+        /// <param name="dependsOnSystemName">System name of the plugin to define dependencies</param>
         /// <returns>Plugin descriptors</returns>
         IEnumerable<PluginDescriptor> GetPluginDescriptors<TPlugin>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            Customer customer = null, int storeId = 0, string group = null) where TPlugin : class, IPlugin;
+            Customer customer = null, int storeId = 0, string group = null, string dependsOnSystemName = "", string friendlyName = null, string author = null) where TPlugin : class, IPlugin;
 
         /// <summary>
         /// Get a plugin descriptor by the system name
@@ -67,7 +69,8 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="systemName">Plugin system name</param>
         /// <param name="customer">Customer</param>
-        void PreparePluginToInstall(string systemName, Customer customer = null);
+        /// <param name="checkDependencies">Specifies whether to check plugin dependencies</param>
+        void PreparePluginToInstall(string systemName, Customer customer = null, bool checkDependencies = true);
 
         /// <summary>
         /// Prepare plugin to the uninstallation
@@ -105,6 +108,11 @@ namespace Nop.Services.Plugins
         /// Delete plugins
         /// </summary>
         void DeletePlugins();
+
+        /// <summary>
+        /// Update plugins
+        /// </summary>
+        void UpdatePlugins();
 
         /// <summary>
         /// Check whether application restart is required to apply changes to plugins

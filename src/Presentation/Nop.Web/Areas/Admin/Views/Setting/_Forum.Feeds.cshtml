@@ -1,0 +1,44 @@
+@model ForumSettingsModel
+
+<div class="panel-body">
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ForumFeedsEnabled_OverrideForStore" asp-input="ForumFeedsEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ForumFeedsEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ForumFeedsEnabled" />
+            <span asp-validation-for="ForumFeedsEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ForumFeedCount_OverrideForStore" asp-input="ForumFeedCount" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ForumFeedCount" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ForumFeedCount" />
+            <span asp-validation-for="ForumFeedCount"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ActiveDiscussionsFeedEnabled_OverrideForStore" asp-input="ActiveDiscussionsFeedEnabled" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ActiveDiscussionsFeedEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ActiveDiscussionsFeedEnabled" />
+            <span asp-validation-for="ActiveDiscussionsFeedEnabled"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ActiveDiscussionsFeedCount_OverrideForStore" asp-input="ActiveDiscussionsFeedCount" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ActiveDiscussionsFeedCount" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ActiveDiscussionsFeedCount" />
+            <span asp-validation-for="ActiveDiscussionsFeedCount"></span>
+        </div>
+    </div>
+</div>

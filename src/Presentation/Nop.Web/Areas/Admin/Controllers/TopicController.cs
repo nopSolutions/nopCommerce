@@ -106,6 +106,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveTopicAcl(Topic topic, TopicModel model)
         {
             topic.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
+            _topicService.UpdateTopic(topic);
 
             var existingAclRecords = _aclService.GetAclRecords(topic);
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
@@ -130,6 +131,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(Topic topic, TopicModel model)
         {
             topic.LimitedToStores = model.SelectedStoreIds.Any();
+            _topicService.UpdateTopic(topic);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(topic);
             var allStores = _storeService.GetAllStores();
@@ -175,7 +177,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(TopicSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _topicModelFactory.PrepareTopicListModel(searchModel);
@@ -233,10 +235,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = topic.Id });
             }
 
@@ -303,10 +302,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = topic.Id });
             }
 

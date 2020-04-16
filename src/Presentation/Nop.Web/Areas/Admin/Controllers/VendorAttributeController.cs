@@ -95,7 +95,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult List(VendorAttributeSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //prepare model
             var model = _vendorAttributeModelFactory.PrepareVendorAttributeListModel(searchModel);
@@ -136,10 +136,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = vendorAttribute.Id });
             }
 
@@ -192,10 +189,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Vendors.VendorAttributes.Updated"));
                 if (!continueEditing)
                     return RedirectToAction("List");
-
-                //selected tab
-                SaveSelectedTabName();
-
+                
                 return RedirectToAction("Edit", new { id = vendorAttribute.Id });
             }
 
@@ -236,7 +230,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         public virtual IActionResult ValueList(VendorAttributeValueSearchModel searchModel)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
-                return AccessDeniedKendoGridJson();
+                return AccessDeniedDataTablesJson();
 
             //try to get a vendor attribute with the specified id
             var vendorAttribute = _vendorAttributeService.GetVendorAttributeById(searchModel.VendorAttributeId)

@@ -1,6 +1,5 @@
 ﻿using System;
 using Nop.Core;
-using Nop.Plugin.Payments.Square.Domain;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -18,10 +17,11 @@ namespace Nop.Plugin.Payments.Square.Services
 
         private readonly ILocalizationService _localizationService;
         private readonly ILogger _logger;
-        private readonly IPaymentService _paymentService;
+        private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly ISettingService _settingService;
         private readonly SquarePaymentManager _squarePaymentManager;
         private readonly SquarePaymentSettings _squarePaymentSettings;
+        private readonly IStoreContext _storeContext;
 
         #endregion
 
@@ -29,17 +29,19 @@ namespace Nop.Plugin.Payments.Square.Services
 
         public RenewAccessTokenTask(ILocalizationService localizationService,
             ILogger logger,
-            IPaymentService paymentService,
+            IPaymentPluginManager paymentPluginManager,
             ISettingService settingService,
             SquarePaymentManager squarePaymentManager,
-            SquarePaymentSettings squarePaymentSettings)
+            SquarePaymentSettings squarePaymentSettings,
+            IStoreContext storeContext)
         {
             _localizationService = localizationService;
             _logger = logger;
-            _paymentService = paymentService;
+            _paymentPluginManager = paymentPluginManager;
             _settingService = settingService;
             _squarePaymentManager = squarePaymentManager;
             _squarePaymentSettings = squarePaymentSettings;
+            _storeContext = storeContext;
         }
 
         #endregion
@@ -52,7 +54,7 @@ namespace Nop.Plugin.Payments.Square.Services
         public void Execute()
         {
             //whether plugin is active
-            if (!_paymentService.IsPaymentMethodActive(_paymentService.LoadPaymentMethodBySystemName(SquarePaymentDefaults.SystemName)))
+            if (!_paymentPluginManager.IsPluginActive(SquarePaymentDefaults.SystemName))
                 return;
 
             //do not execute for sandbox environment
@@ -61,19 +63,21 @@ namespace Nop.Plugin.Payments.Square.Services
 
             try
             {
+                var storeId = _storeContext.CurrentStore.Id;
+
                 //get the new access token
-                var newAccessToken = _squarePaymentManager.RenewAccessToken(new RenewAccessTokenRequest
-                {
-                    ApplicationId = _squarePaymentSettings.ApplicationId,
-                    ApplicationSecret = _squarePaymentSettings.ApplicationSecret,
-                    ExpiredAccessToken = _squarePaymentSettings.AccessToken
-                });
-                if (string.IsNullOrEmpty(newAccessToken))
+                var (newAccessToken, refreshToken) = _squarePaymentManager.RenewAccessToken(storeId);
+                if (string.IsNullOrEmpty(newAccessToken) || string.IsNullOrEmpty(refreshToken))
                     throw new NopException("No service response");
 
                 //if access token successfully received, save it for the further usage
                 _squarePaymentSettings.AccessToken = newAccessToken;
-                _settingService.SaveSetting(_squarePaymentSettings);
+                _squarePaymentSettings.RefreshToken = refreshToken;
+
+                _settingService.SaveSetting(_squarePaymentSettings, x => x.AccessToken, storeId, false);
+                _settingService.SaveSetting(_squarePaymentSettings, x => x.RefreshToken, storeId, false);
+
+                _settingService.ClearCache();
 
                 //log information about the successful renew of the access token
                 _logger.Information(_localizationService.GetResource("Plugins.Payments.Square.RenewAccessToken.Success"));

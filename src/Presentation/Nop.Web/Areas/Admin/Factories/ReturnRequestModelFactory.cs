@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Catalog;
+using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Orders;
-using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
+using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -24,9 +25,11 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDownloadService _downloadService;
+        private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IOrderService _orderService;
+        private readonly IProductService _productService;
         private readonly IReturnRequestService _returnRequestService;
 
         #endregion
@@ -36,17 +39,21 @@ namespace Nop.Web.Areas.Admin.Factories
         public ReturnRequestModelFactory(IBaseAdminModelFactory baseAdminModelFactory,
             IDateTimeHelper dateTimeHelper,
             IDownloadService downloadService,
+            ICustomerService customerService,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
             IOrderService orderService,
+            IProductService productService,
             IReturnRequestService returnRequestService)
         {
             _baseAdminModelFactory = baseAdminModelFactory;
             _dateTimeHelper = dateTimeHelper;
             _downloadService = downloadService;
+            _customerService = customerService;
             _localizationService = localizationService;
             _localizedModelFactory = localizedModelFactory;
             _orderService = orderService;
+            _productService = productService;
             _returnRequestService = returnRequestService;
         }
 
@@ -107,34 +114,38 @@ namespace Nop.Web.Areas.Admin.Factories
                 pageIndex: searchModel.Page - 1, pageSize: searchModel.PageSize);
 
             //prepare list model
-            var model = new ReturnRequestListModel
+            var model = new ReturnRequestListModel().PrepareToGrid(searchModel, returnRequests, () =>
             {
-                Data = returnRequests.Select(returnRequest =>
+                return returnRequests.Select(returnRequest =>
                 {
                     //fill in model values from the entity
                     var returnRequestModel = returnRequest.ToModel<ReturnRequestModel>();
-                    
+
+                    var customer = _customerService.GetCustomerById(returnRequest.CustomerId);
+
                     //convert dates to the user time
                     returnRequestModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    returnRequestModel.CustomerInfo = returnRequest.Customer.IsRegistered()
-                        ? returnRequest.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+                    returnRequestModel.CustomerInfo = _customerService.IsRegistered(customer)
+                        ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     returnRequestModel.ReturnRequestStatusStr = _localizationService.GetLocalizedEnum(returnRequest.ReturnRequestStatus);
                     var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
                     if (orderItem == null)
                         return returnRequestModel;
 
+                    var order = _orderService.GetOrderById(orderItem.OrderId);
+                    var product = _productService.GetProductById(orderItem.ProductId);
+
                     returnRequestModel.ProductId = orderItem.ProductId;
-                    returnRequestModel.ProductName = orderItem.Product.Name;
-                    returnRequestModel.OrderId = orderItem.OrderId;
+                    returnRequestModel.ProductName = product.Name;
+                    returnRequestModel.OrderId = order.Id;
                     returnRequestModel.AttributeInfo = orderItem.AttributeDescription;
-                    returnRequestModel.CustomOrderNumber = orderItem.Order.CustomOrderNumber;
+                    returnRequestModel.CustomOrderNumber = order.CustomOrderNumber;
 
                     return returnRequestModel;
-                }),
-                Total = returnRequests.TotalCount
-            };
+                });
+            });
 
             return model;
         }
@@ -153,7 +164,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in model values from the entity
-            model = model ?? new ReturnRequestModel
+            model ??= new ReturnRequestModel
             {
                 Id = returnRequest.Id,
                 CustomNumber = returnRequest.CustomNumber,
@@ -161,19 +172,24 @@ namespace Nop.Web.Areas.Admin.Factories
                 Quantity = returnRequest.Quantity
             };
 
+            var customer = _customerService.GetCustomerById(returnRequest.CustomerId);
+
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc);
 
-            model.CustomerInfo = returnRequest.Customer.IsRegistered()
-                ? returnRequest.Customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+            model.CustomerInfo = _customerService.IsRegistered(customer)
+                ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
             model.UploadedFileGuid = _downloadService.GetDownloadById(returnRequest.UploadedFileId)?.DownloadGuid ?? Guid.Empty;
             var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
             if (orderItem != null)
             {
-                model.ProductId = orderItem.ProductId;
-                model.ProductName = orderItem.Product.Name;
-                model.OrderId = orderItem.OrderId;
+                var order = _orderService.GetOrderById(orderItem.OrderId);
+                var product = _productService.GetProductById(orderItem.ProductId);
+
+                model.ProductId = product.Id;
+                model.ProductName = product.Name;
+                model.OrderId = order.Id;
                 model.AttributeInfo = orderItem.AttributeDescription;
-                model.CustomOrderNumber = orderItem.Order.CustomOrderNumber;
+                model.CustomOrderNumber = order.CustomOrderNumber;
             }
 
             if (excludeProperties)
@@ -215,15 +231,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get return request reasons
-            var reasons = _returnRequestService.GetAllReturnRequestReasons();
+            var reasons = _returnRequestService.GetAllReturnRequestReasons().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ReturnRequestReasonListModel
+            var model = new ReturnRequestReasonListModel().PrepareToGrid(searchModel, reasons, () =>
             {
-                //fill in model values from the entity
-                Data = reasons.PaginationByRequestModel(searchModel).Select(reason => reason.ToModel<ReturnRequestReasonModel>()),
-                Total = reasons.Count
-            };
+                return reasons.Select(reason => reason.ToModel<ReturnRequestReasonModel>());
+            });
 
             return model;
         }
@@ -243,7 +257,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (returnRequestReason != null)
             {
                 //fill in model values from the entity
-                model = model ?? returnRequestReason.ToModel<ReturnRequestReasonModel>();
+                model ??= returnRequestReason.ToModel<ReturnRequestReasonModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -286,15 +300,13 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get return request actions
-            var actions = _returnRequestService.GetAllReturnRequestActions();
+            var actions = _returnRequestService.GetAllReturnRequestActions().ToPagedList(searchModel);
 
             //prepare list model
-            var model = new ReturnRequestActionListModel
+            var model = new ReturnRequestActionListModel().PrepareToGrid(searchModel, actions, () =>
             {
-                //fill in model values from the entity
-                Data = actions.PaginationByRequestModel(searchModel).Select(action => action.ToModel<ReturnRequestActionModel>()),
-                Total = actions.Count
-            };
+                return actions.Select(reason => reason.ToModel<ReturnRequestActionModel>());
+            });
 
             return model;
         }
@@ -314,7 +326,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (returnRequestAction != null)
             {
                 //fill in model values from the entity
-                model = model ?? returnRequestAction.ToModel<ReturnRequestActionModel>();
+                model ??= returnRequestAction.ToModel<ReturnRequestActionModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
