@@ -658,6 +658,12 @@ set @resources='
   <LocaleResource Name="Admin.Customers.ActivityLog.Clear">
     <Value>Clear activity log</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.RequireOtherProductsAddedToTheCart">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.RequireOtherProductsAddedToCart">
+    <Value>Require other products</Value>
+  </LocaleResource>
 </Language>
 '
 
