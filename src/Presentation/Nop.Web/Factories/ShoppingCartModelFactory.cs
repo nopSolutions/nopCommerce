@@ -1294,6 +1294,7 @@ namespace Nop.Web.Factories
                             model.Warnings.Add(error);
                 }
 
+                var pickupPointsNumber = 0;
                 if (_shippingSettings.AllowPickupInStore)
                 {
                     var pickupPointsResponse = _shippingService.GetPickupPoints(address.Id, _workContext.CurrentCustomer, storeId: _storeContext.CurrentStore.Id);
@@ -1301,6 +1302,7 @@ namespace Nop.Web.Factories
                     {
                         if (pickupPointsResponse.PickupPoints.Any())
                         {
+                            pickupPointsNumber = pickupPointsResponse.PickupPoints.Count();
                             var pickupPoint = pickupPointsResponse.PickupPoints.OrderBy(p => p.PickupFee).First();
 
                             rawShippingOptions.Add(new ShippingOption()
@@ -1345,6 +1347,9 @@ namespace Nop.Web.Factories
                             shippingRate = _taxService.GetShippingPrice(shippingRate, _workContext.CurrentCustomer);
                             shippingRate = _currencyService.ConvertFromPrimaryStoreCurrency(shippingRate, _workContext.WorkingCurrency);
                             var shippingRateString = _priceFormatter.FormatShippingPrice(shippingRate, true);
+
+                            if(option.IsPickupInStore && pickupPointsNumber > 1)
+                                shippingRateString = string.Format(_localizationService.GetResource("Shipping.EstimateShippingPopUp.Pickup.PriceFrom"), shippingRateString);
 
                             string deliveryDateFormat = null;
                             if (option.TransitDays.HasValue)

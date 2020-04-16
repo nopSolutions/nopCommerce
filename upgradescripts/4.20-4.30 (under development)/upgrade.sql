@@ -610,6 +610,9 @@ set @resources='
   <LocaleResource Name="Shipping.EstimateShippingPopUp.ShippingOption.IsNotFound">
     <Value>Selected shipping option is not found</Value>
   </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.Pickup.PriceFrom">
+    <Value>From {0}</Value>
+  </LocaleResource>
 </Language>
 '
 
