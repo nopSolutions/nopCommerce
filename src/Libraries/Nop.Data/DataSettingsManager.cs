@@ -32,59 +32,64 @@ namespace Nop.Data
             if (!reloadSettings && Singleton<DataSettings>.Instance != null)
                 return Singleton<DataSettings>.Instance;
 
-            fileProvider ??= CommonHelper.DefaultFileProvider;
-            filePath ??= fileProvider.MapPath(NopDataSettingsDefaults.FilePath);
+            var text = Environment.GetEnvironmentVariable("nop_datasettings_json");
 
-            //check whether file exists
-            if (!fileProvider.FileExists(filePath))
+            if (text == null)
             {
-                //if not, try to parse the file that was used in previous nopCommerce versions
-                filePath = fileProvider.MapPath(NopDataSettingsDefaults.ObsoleteFilePath);
+                fileProvider ??= CommonHelper.DefaultFileProvider;
+                filePath ??= fileProvider.MapPath(NopDataSettingsDefaults.FilePath);
+
+                //check whether file exists
                 if (!fileProvider.FileExists(filePath))
-                    return new DataSettings();
-
-                //get data settings from the old txt file
-                var dataSettings = new DataSettings();
-                using (var reader = new StringReader(fileProvider.ReadAllText(filePath, Encoding.UTF8)))
                 {
-                    string settingsLine;
-                    while ((settingsLine = reader.ReadLine()) != null)
+                    //if not, try to parse the file that was used in previous nopCommerce versions
+                    filePath = fileProvider.MapPath(NopDataSettingsDefaults.ObsoleteFilePath);
+                    if (!fileProvider.FileExists(filePath))
+                        return new DataSettings();
+
+                    //get data settings from the old txt file
+                    var dataSettings = new DataSettings();
+                    using (var reader = new StringReader(fileProvider.ReadAllText(filePath, Encoding.UTF8)))
                     {
-                        var separatorIndex = settingsLine.IndexOf(':');
-                        if (separatorIndex == -1)
-                            continue;
-
-                        var key = settingsLine.Substring(0, separatorIndex).Trim();
-                        var value = settingsLine.Substring(separatorIndex + 1).Trim();
-
-                        switch (key)
+                        string settingsLine;
+                        while ((settingsLine = reader.ReadLine()) != null)
                         {
-                            case "DataProvider":
-                                dataSettings.DataProvider = Enum.TryParse(value, true, out DataProviderType providerType) ? providerType : DataProviderType.Unknown;
+                            var separatorIndex = settingsLine.IndexOf(':');
+                            if (separatorIndex == -1)
                                 continue;
-                            case "DataConnectionString":
-                                dataSettings.ConnectionString = value;
-                                continue;
-                            default:
-                                dataSettings.RawDataSettings.Add(key, value);
-                                continue;
+
+                            var key = settingsLine.Substring(0, separatorIndex).Trim();
+                            var value = settingsLine.Substring(separatorIndex + 1).Trim();
+
+                            switch (key)
+                            {
+                                case "DataProvider":
+                                    dataSettings.DataProvider = Enum.TryParse(value, true, out DataProviderType providerType) ? providerType : DataProviderType.Unknown;
+                                    continue;
+                                case "DataConnectionString":
+                                    dataSettings.ConnectionString = value;
+                                    continue;
+                                default:
+                                    dataSettings.RawDataSettings.Add(key, value);
+                                    continue;
+                            }
                         }
                     }
+
+                    //save data settings to the new file
+                    SaveSettings(dataSettings, fileProvider);
+
+                    //and delete the old one
+                    fileProvider.DeleteFile(filePath);
+
+                    Singleton<DataSettings>.Instance = dataSettings;
+                    return Singleton<DataSettings>.Instance;
                 }
 
-                //save data settings to the new file
-                SaveSettings(dataSettings, fileProvider);
-
-                //and delete the old one
-                fileProvider.DeleteFile(filePath);
-
-                Singleton<DataSettings>.Instance = dataSettings;
-                return Singleton<DataSettings>.Instance;
+                text = fileProvider.ReadAllText(filePath, Encoding.UTF8);
+                if (string.IsNullOrEmpty(text))
+                    return new DataSettings();
             }
-
-            var text = fileProvider.ReadAllText(filePath, Encoding.UTF8);
-            if (string.IsNullOrEmpty(text))
-                return new DataSettings();
 
             //get data settings from the JSON file
             Singleton<DataSettings>.Instance = JsonConvert.DeserializeObject<DataSettings>(text);
