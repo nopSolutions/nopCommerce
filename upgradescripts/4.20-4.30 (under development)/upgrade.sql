@@ -608,7 +608,7 @@ set @resources='
     <Value>No products selected to add to cart.</Value>
   </LocaleResource>
   <LocaleResource Name="Shipping.EstimateShippingPopUp.ShippingOption.IsNotFound">
-    <Value>Selected shipping option couldn''t be found</Value>
+    <Value>Selected shipping option is not found</Value>
   </LocaleResource>
 </Language>
 '

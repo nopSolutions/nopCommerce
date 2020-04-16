@@ -414,10 +414,9 @@ namespace Nop.Web.Controllers
         public virtual IActionResult SelectShippingOption([FromQuery]string name, [FromQuery]EstimateShippingModel model, IFormCollection form)
         {
             if (model == null)
-                return BadRequest();
+                model = new EstimateShippingModel();
 
             var errors = new List<string>();
-
             if (string.IsNullOrEmpty(model.ZipPostalCode))
                 errors.Add(_localizationService.GetResource("Shipping.EstimateShipping.ZipPostalCode.Required"));
 
@@ -425,10 +424,12 @@ namespace Nop.Web.Controllers
                 errors.Add(_localizationService.GetResource("Shipping.EstimateShipping.Country.Required"));
 
             if (errors.Count > 0)
-                return BadRequest(new { Errors = errors });
+                return Json(new { 
+                    success = false,
+                    errors = errors 
+                });
 
             var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
-
             //parse and save checkout attributes
             ParseAndSaveCheckoutAttributes(cart, form);
 
@@ -463,13 +464,15 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            if (errors.Count > 0)
-                return BadRequest(new { Errors = errors });
-
             selectedShippingOption = shippingOptions.Find(so => !string.IsNullOrEmpty(so.Name) && so.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-
             if (selectedShippingOption == null)
-                return BadRequest(new { Errors = new List<string>() { _localizationService.GetResource("Shipping.EstimateShippingPopUp.ShippingOption.IsNotFound") } });
+                errors.Add(_localizationService.GetResource("Shipping.EstimateShippingPopUp.ShippingOption.IsNotFound"));
+
+            if (errors.Count > 0)
+                return Json(new { 
+                    success = false,
+                    errors = errors
+                });
 
             //reset pickup point
             _genericAttributeService.SaveAttribute<PickupPoint>(_workContext.CurrentCustomer,
@@ -483,6 +486,7 @@ namespace Nop.Web.Controllers
 
             return Json(new
             {
+                success = true,
                 ordertotalssectionhtml
             });
         }
@@ -1371,15 +1375,9 @@ namespace Nop.Web.Controllers
         public virtual IActionResult GetEstimateShipping(EstimateShippingModel model, IFormCollection form)
         {
             if (model == null)
-                return BadRequest();
-
-            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
-
-            //parse and save checkout attributes
-            ParseAndSaveCheckoutAttributes(cart, form);
+                model = new EstimateShippingModel();
 
             var errors = new List<string>();
-
             if (string.IsNullOrEmpty(model.ZipPostalCode))
                 errors.Add(_localizationService.GetResource("Shipping.EstimateShipping.ZipPostalCode.Required"));
 
@@ -1387,11 +1385,22 @@ namespace Nop.Web.Controllers
                 errors.Add(_localizationService.GetResource("Shipping.EstimateShipping.Country.Required"));
 
             if (errors.Count > 0)
-                return BadRequest(new { Errors = errors });
+                return Json(new { 
+                    success = false,
+                    errors = errors
+                });
+
+            var cart = _shoppingCartService.GetShoppingCart(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart, _storeContext.CurrentStore.Id);
+            //parse and save checkout attributes
+            ParseAndSaveCheckoutAttributes(cart, form);
 
             var result = _shoppingCartModelFactory.PrepareEstimateShippingResultModel(cart, model.CountryId, model.StateProvinceId, model.ZipPostalCode, true);
 
-            return Json(result);
+            return Json(new
+            {
+                success = true,
+                result = result
+            });
         }
 
         [HttpPost, ActionName("Cart")]
