@@ -27,24 +27,24 @@ namespace Nop.Tests
             LocalizationService = new Mock<ILocalizationService>();
             GenericAttributeService = new Mock<IGenericAttributeService>();
             WorkContext = new Mock<IWorkContext>();
-            
+
             DiscountCategoryMappingRepository = new Mock<IRepository<DiscountCategoryMapping>>();
             DiscountManufacturerMappingRepository = new Mock<IRepository<DiscountManufacturerMapping>>();
             DiscountProductMappingRepository = new Mock<IRepository<DiscountProductMapping>>();
 
-            PriceCalculationService = new PriceCalculationService(new CatalogSettings(), new CurrencySettings(), 
-                new Mock<ICacheKeyService>().Object, new Mock<ICategoryService>().Object, 
-                new Mock<ICurrencyService>().Object, new Mock<ICustomerService>().Object, 
-                new Mock<IDiscountService>().Object, new Mock<IManufacturerService>().Object, 
-                new Mock<IProductAttributeParser>().Object, new Mock<IProductService>().Object, 
+            PriceCalculationService = new PriceCalculationService(new CatalogSettings(), new CurrencySettings(),
+                new Mock<ICacheKeyService>().Object, new Mock<ICategoryService>().Object,
+                new Mock<ICurrencyService>().Object, new Mock<ICustomerService>().Object,
+                new Mock<IDiscountService>().Object, new Mock<IManufacturerService>().Object,
+                new Mock<IProductAttributeParser>().Object, new Mock<IProductService>().Object,
                 new TestCacheManager(), new Mock<IStoreContext>().Object, WorkContext.Object);
 
             LocalizationService.Setup(l => l.GetResource(It.IsAny<string>())).Returns("Invalid");
-            WorkContext.Setup(p => p.WorkingLanguage).Returns(new Language {Id = 1});
+            WorkContext.Setup(p => p.WorkingLanguage).Returns(new Language { Id = 1 });
             WorkContext.Setup(w => w.WorkingCurrency).Returns(new Currency { RoundingType = RoundingType.Rounding001 });
 
             CurrencyService = new Mock<ICurrencyService>();
-            CurrencyService.Setup(x => x.GetCurrencyById(1)).Returns(new Currency {Id = 1, RoundingTypeId = 0});
+            CurrencyService.Setup(x => x.GetCurrencyById(1)).Returns(new Currency { Id = 1, RoundingTypeId = 0 });
 
             GenericAttributeService.Setup(p => p.GetAttribute(It.IsAny<Customer>(), "product-advanced-mode", It.IsAny<int>(), false))
                 .Returns(true);
@@ -54,6 +54,9 @@ namespace Nop.Tests
 
             GenericAttributeService.Setup(p => p.GetAttribute(It.IsAny<Customer>(), "category-advanced-mode", It.IsAny<int>(), false))
                 .Returns(true);
+
+            GenericAttributeService.Setup(x => x.GetAttribute<string>(It.IsAny<Customer>(), NopCustomerDefaults.SelectedPaymentMethodAttribute, It.IsAny<int>(), null))
+                .Returns("test1");
         }
 
         public Mock<ILocalizationService> LocalizationService { get; }
@@ -78,7 +81,7 @@ namespace Nop.Tests
                 return WorkContext.Object;
 
             if (serviceType == typeof(CurrencySettings))
-                return new CurrencySettings {PrimaryStoreCurrencyId = 1};
+                return new CurrencySettings { PrimaryStoreCurrencyId = 1 };
 
             if (serviceType == typeof(CatalogSettings))
                 return new CatalogSettings();
@@ -98,7 +101,7 @@ namespace Nop.Tests
             if (serviceType == typeof(IStaticCacheManager))
                 return new TestCacheManager();
 
-            if(serviceType == typeof(IRepository<DiscountCategoryMapping>))
+            if (serviceType == typeof(IRepository<DiscountCategoryMapping>))
                 return DiscountCategoryMappingRepository.Object;
 
             if (serviceType == typeof(IRepository<DiscountManufacturerMapping>))

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -239,6 +240,18 @@ namespace Nop.Services.Tax
         /// <param name="customer">Customer</param>
         /// <returns>Result</returns>
         bool IsVatExempt(Address address, Customer customer);
+
+        #endregion
+
+        #region Tax total
+
+        /// <summary>
+        /// Get tax total for the passed shopping cart
+        /// </summary>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating tax</param>
+        /// <returns>Result</returns>
+        TaxTotalResult GetTaxTotal(IList<ShoppingCartItem> cart, bool usePaymentMethodAdditionalFee = true);
 
         #endregion
     }

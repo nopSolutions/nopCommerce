@@ -1,17 +1,17 @@
-﻿﻿using System.Linq;
-using FluentAssertions;
 ﻿using System.Collections.Generic;
+using System.Linq;
+using FluentAssertions;
 using Moq;
 using Nop.Core;
- using Nop.Core.Caching;
- using Nop.Data;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
- using Nop.Services.Common;
+using Nop.Data;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
@@ -86,7 +86,7 @@ namespace Nop.Services.Tests.Tax
             _customerCustomerRoleMappingRepo.Setup(r => r.Table).Returns(mappings.AsQueryable());
             _customerCustomerRoleMappingRepo.Setup(r => r.Insert(It.IsAny<CustomerCustomerRoleMapping>())).Callback(
                 (CustomerCustomerRoleMapping ccrm) => { mappings.Add(ccrm); });
-            
+
             _stateProvinceService = new Mock<IStateProvinceService>();
             _logger = new Mock<ILogger>();
             _webHelper = new Mock<IWebHelper>();
@@ -95,7 +95,7 @@ namespace Nop.Services.Tests.Tax
             _customerSettings = new CustomerSettings();
             _shippingSettings = new ShippingSettings();
             _addressSettings = new AddressSettings();
-            
+
             var pluginService = new FakePluginService();
             _taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
 
@@ -189,7 +189,7 @@ namespace Nop.Services.Tests.Tax
                 IsTaxExempt = false
             };
             _taxService.IsTaxExempt(null, customer).Should().BeFalse();
-            
+
             var customerRole = _customerRoleRepo.Object.Table.FirstOrDefault(cr => cr.Id == 1);
 
             customerRole.Should().NotBeNull();

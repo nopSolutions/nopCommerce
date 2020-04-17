@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Nop.Core;
@@ -164,22 +165,21 @@ namespace Nop.Services.Tax
                 ZipPostalCode = pickupPoint.ZipPostalCode
             };
         }
-        
+
         /// <summary>
-        /// Create request for tax calculation
+        /// Prepare request to get tax rate
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="taxCategoryId">Tax category identifier</param>
         /// <param name="customer">Customer</param>
         /// <param name="price">Price</param>
         /// <returns>Package for tax calculation</returns>
-        protected virtual CalculateTaxRequest CreateCalculateTaxRequest(Product product,
-            int taxCategoryId, Customer customer, decimal price)
+        protected virtual TaxRateRequest PrepareTaxRateRequest(Product product, int taxCategoryId, Customer customer, decimal price)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var calculateTaxRequest = new CalculateTaxRequest
+            var taxRateRequest = new TaxRateRequest
             {
                 Customer = customer,
                 Product = product,
@@ -214,8 +214,8 @@ namespace Nop.Services.Tax
                     NopCustomerDefaults.SelectedPickupPointAttribute, _storeContext.CurrentStore.Id);
                 if (pickupPoint != null)
                 {
-                    calculateTaxRequest.Address = LoadPickupPointTaxAddress(pickupPoint);
-                    return calculateTaxRequest;
+                    taxRateRequest.Address = LoadPickupPointTaxAddress(pickupPoint);
+                    return taxRateRequest;
                 }
             }
 
@@ -227,21 +227,21 @@ namespace Nop.Services.Tax
             {
                 case TaxBasedOn.BillingAddress:
                     var billingAddress = _customerService.GetCustomerBillingAddress(customer);
-                    calculateTaxRequest.Address = billingAddress;
+                    taxRateRequest.Address = billingAddress;
                     break;
                 case TaxBasedOn.ShippingAddress:
                     var shippingAddress = _customerService.GetCustomerShippingAddress(customer);
-                    calculateTaxRequest.Address = shippingAddress;
+                    taxRateRequest.Address = shippingAddress;
                     break;
                 case TaxBasedOn.DefaultAddress:
                 default:
-                    calculateTaxRequest.Address = LoadDefaultTaxAddress();
+                    taxRateRequest.Address = LoadDefaultTaxAddress();
                     break;
             }
 
-            return calculateTaxRequest;
+            return taxRateRequest;
         }
-        
+
         /// <summary>
         /// Calculated price
         /// </summary>
@@ -284,10 +284,10 @@ namespace Nop.Services.Tax
                 return;
 
             //tax request
-            var calculateTaxRequest = CreateCalculateTaxRequest(product, taxCategoryId, customer, price);
+            var taxRateRequest = PrepareTaxRateRequest(product, taxCategoryId, customer, price);
 
             //tax exempt
-            if (IsTaxExempt(product, calculateTaxRequest.Customer))
+            if (IsTaxExempt(product, taxRateRequest.Customer))
             {
                 isTaxable = false;
             }
@@ -295,26 +295,25 @@ namespace Nop.Services.Tax
             //make EU VAT exempt validation (the European Union Value Added Tax)
             if (isTaxable &&
                 _taxSettings.EuVatEnabled &&
-                IsVatExempt(calculateTaxRequest.Address, calculateTaxRequest.Customer))
+                IsVatExempt(taxRateRequest.Address, taxRateRequest.Customer))
             {
                 //VAT is not chargeable
                 isTaxable = false;
             }
 
             //get tax rate
-            var calculateTaxResult = activeTaxProvider.GetTaxRate(calculateTaxRequest);
-            if (calculateTaxResult.Success)
+            var taxRateResult = activeTaxProvider.GetTaxRate(taxRateRequest);
+            if (taxRateResult.Success)
             {
                 //ensure that tax is equal or greater than zero
-                if (calculateTaxResult.TaxRate < decimal.Zero)
-                    calculateTaxResult.TaxRate = decimal.Zero;
+                if (taxRateResult.TaxRate < decimal.Zero)
+                    taxRateResult.TaxRate = decimal.Zero;
 
-                taxRate = calculateTaxResult.TaxRate;
+                taxRate = taxRateResult.TaxRate;
             }
-            else
-                if (_taxSettings.LogErrors)
+            else if (_taxSettings.LogErrors)
             {
-                foreach (var error in calculateTaxResult.Errors)
+                foreach (var error in taxRateResult.Errors)
                 {
                     _logger.Error($"{activeTaxProvider.PluginDescriptor.FriendlyName} - {error}", null, customer);
                 }
@@ -588,7 +587,7 @@ namespace Nop.Services.Tax
         {
             return GetCheckoutAttributePrice(ca, cav, includingTax, customer, out var _);
         }
-        
+
         /// <summary>
         /// Gets checkout attribute value price
         /// </summary>
@@ -823,6 +822,43 @@ namespace Nop.Services.Tax
             return country.Id != _taxSettings.EuVatShopCountryId &&
                    customerVatStatus == VatNumberStatus.Valid &&
                    _taxSettings.EuVatAllowVatExemption;
+        }
+
+        #endregion
+
+        #region Tax total
+
+        /// <summary>
+        /// Get tax total for the passed shopping cart
+        /// </summary>
+        /// <param name="cart">Shopping cart</param>
+        /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating tax</param>
+        /// <returns>Result</returns>
+        public virtual TaxTotalResult GetTaxTotal(IList<ShoppingCartItem> cart, bool usePaymentMethodAdditionalFee = true)
+        {
+            var customer = _customerService.GetShoppingCartCustomer(cart);
+            var activeTaxProvider = _taxPluginManager.LoadPrimaryPlugin(customer, _storeContext.CurrentStore.Id);
+            if (activeTaxProvider == null)
+                return null;
+
+            //get result by using primary tax provider
+            var taxTotalResult = activeTaxProvider.GetTaxTotal(new TaxTotalRequest
+            {
+                ShoppingCart = cart,
+                Customer = customer,
+                StoreId = _storeContext.CurrentStore.Id,
+                UsePaymentMethodAdditionalFee = usePaymentMethodAdditionalFee
+            });
+
+            if (taxTotalResult != null && !taxTotalResult.Success && _taxSettings.LogErrors)
+            {
+                foreach (var error in taxTotalResult.Errors)
+                {
+                    _logger.Error($"{activeTaxProvider.PluginDescriptor.FriendlyName} - {error}", null, customer);
+                }
+            }
+
+            return taxTotalResult;
         }
 
         #endregion

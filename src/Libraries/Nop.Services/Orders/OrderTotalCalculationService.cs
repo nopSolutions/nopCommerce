@@ -1158,94 +1158,13 @@ namespace Nop.Services.Orders
             if (cart == null)
                 throw new ArgumentNullException(nameof(cart));
 
-            taxRates = new SortedDictionary<decimal, decimal>();
+            var taxTotalResult = _taxService.GetTaxTotal(cart, usePaymentMethodAdditionalFee);
+            taxRates = taxTotalResult?.TaxRates ?? new SortedDictionary<decimal, decimal>();
+            var taxTotal = taxTotalResult?.TaxTotal ?? decimal.Zero;
 
-            var customer = _customerService.GetShoppingCartCustomer(cart);
-
-            var paymentMethodSystemName = string.Empty;
-            if (customer != null)
-            {
-                paymentMethodSystemName = _genericAttributeService.GetAttribute<string>(customer,
-                    NopCustomerDefaults.SelectedPaymentMethodAttribute, _storeContext.CurrentStore.Id);
-            }
-
-            //order sub total (items + checkout attributes)
-            var subTotalTaxTotal = decimal.Zero;
-            GetShoppingCartSubTotal(cart, false, out _, out _, out _, out _, out var orderSubTotalTaxRates);
-            foreach (var kvp in orderSubTotalTaxRates)
-            {
-                var taxRate = kvp.Key;
-                var taxValue = kvp.Value;
-                subTotalTaxTotal += taxValue;
-
-                if (taxRate <= decimal.Zero || taxValue <= decimal.Zero)
-                    continue;
-
-                if (!taxRates.ContainsKey(taxRate))
-                    taxRates.Add(taxRate, taxValue);
-                else
-                    taxRates[taxRate] = taxRates[taxRate] + taxValue;
-            }
-
-            //shipping
-            var shippingTax = decimal.Zero;
-            if (_taxSettings.ShippingIsTaxable)
-            {
-                var shippingExclTax = GetShoppingCartShippingTotal(cart, false, out var taxRate);
-                var shippingInclTax = GetShoppingCartShippingTotal(cart, true, out taxRate);
-                if (shippingExclTax.HasValue && shippingInclTax.HasValue)
-                {
-                    shippingTax = shippingInclTax.Value - shippingExclTax.Value;
-                    //ensure that tax is equal or greater than zero
-                    if (shippingTax < decimal.Zero)
-                        shippingTax = decimal.Zero;
-
-                    //tax rates
-                    if (taxRate > decimal.Zero && shippingTax > decimal.Zero)
-                    {
-                        if (!taxRates.ContainsKey(taxRate))
-                            taxRates.Add(taxRate, shippingTax);
-                        else
-                            taxRates[taxRate] = taxRates[taxRate] + shippingTax;
-                    }
-                }
-            }
-
-            //payment method additional fee
-            var paymentMethodAdditionalFeeTax = decimal.Zero;
-            if (usePaymentMethodAdditionalFee && _taxSettings.PaymentMethodAdditionalFeeIsTaxable)
-            {
-                var paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, paymentMethodSystemName);
-                var paymentMethodAdditionalFeeExclTax = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, false, customer, out var taxRate);
-                var paymentMethodAdditionalFeeInclTax = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, true, customer, out taxRate);
-
-                paymentMethodAdditionalFeeTax = paymentMethodAdditionalFeeInclTax - paymentMethodAdditionalFeeExclTax;
-                //ensure that tax is equal or greater than zero
-                if (paymentMethodAdditionalFeeTax < decimal.Zero)
-                    paymentMethodAdditionalFeeTax = decimal.Zero;
-
-                //tax rates
-                if (taxRate > decimal.Zero && paymentMethodAdditionalFeeTax > decimal.Zero)
-                {
-                    if (!taxRates.ContainsKey(taxRate))
-                        taxRates.Add(taxRate, paymentMethodAdditionalFeeTax);
-                    else
-                        taxRates[taxRate] = taxRates[taxRate] + paymentMethodAdditionalFeeTax;
-                }
-            }
-
-            //add at least one tax rate (0%)
-            if (!taxRates.Any())
-                taxRates.Add(decimal.Zero, decimal.Zero);
-
-            //summarize taxes
-            var taxTotal = subTotalTaxTotal + shippingTax + paymentMethodAdditionalFeeTax;
-            //ensure that tax is equal or greater than zero
-            if (taxTotal < decimal.Zero)
-                taxTotal = decimal.Zero;
-            //round tax
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 taxTotal = _priceCalculationService.RoundPrice(taxTotal);
+
             return taxTotal;
         }
 

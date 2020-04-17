@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using System.Linq;
+using FluentAssertions;
 using Moq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -16,6 +15,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
+using Nop.Data;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -110,7 +110,7 @@ namespace Nop.Services.Tests.Orders
         public new void SetUp()
         {
             _productService = new Mock<IProductService>();
-            
+
             _discountService = new Mock<IDiscountService>();
             _categoryService = new Mock<ICategoryService>();
             _manufacturerService = new Mock<IManufacturerService>();
@@ -155,7 +155,7 @@ namespace Nop.Services.Tests.Orders
             _storeContext = new Mock<IStoreContext>();
             _store = new Store { Id = 1 };
             _storeContext.Setup(x => x.CurrentStore).Returns(_store);
-            
+
             _catalogSettings = new CatalogSettings();
             var staticCacheManager = new TestCacheManager();
             _currencySettings = new CurrencySettings();
@@ -188,7 +188,7 @@ namespace Nop.Services.Tests.Orders
             var shippingMethodCountryMappingRepository = new Mock<IRepository<ShippingMethodCountryMapping>>();
 
             _shippingService = new ShippingService(_addressService.Object,
-                new FakeCacheKeyService(), 
+                new FakeCacheKeyService(),
                 _checkoutAttributeParser.Object,
                 _countryService.Object,
                 _customerService.Object,
@@ -248,7 +248,7 @@ namespace Nop.Services.Tests.Orders
             _recurringPaymentHistoryRepository.Setup(r => r.Table).Returns(recurringPaymentHistory.AsQueryable());
 
             _orderService = new OrderService(new CachingSettings(), _eventPublisher.Object, null, null, null, null, null, null, null, null, _recurringPaymentRepository.Object, _recurringPaymentHistoryRepository.Object, _shipmentService.Object);
-            
+
 
             _orderTotalCalcService = new OrderTotalCalculationService(_catalogSettings,
                 _addressService.Object,
