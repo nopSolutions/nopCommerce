@@ -187,10 +187,10 @@ namespace Nop.Services.Plugins
             _migrationManager.ApplyDownMigrations(assembly);
         }
 
-        protected virtual void InsertPluginData(Type pluginType)
+        protected virtual void InsertPluginData(Type pluginType, bool isUpdateProcess = false)
         {
             var assembly = Assembly.GetAssembly(pluginType);
-            _migrationManager.ApplyUpMigrations(assembly);
+            _migrationManager.ApplyUpMigrations(assembly, isUpdateProcess);
         }
 
         #endregion
@@ -623,17 +623,9 @@ namespace Nop.Services.Plugins
 
                 if (installedPlugin.Version == newVersion.Version)
                     continue;
-
-                if (string.IsNullOrEmpty(installedPlugin.Version))
-                {
-                    //update installed plugin info
-                    installedPlugin.Version = newVersion.Version;
-
-                    continue;
-                }
-
+                
                 //run new migrations from the plugin if there are exists
-                InsertPluginData(newVersion.PluginType);
+                InsertPluginData(newVersion.PluginType, true);
 
                 //run the plugin update logic
                 newVersion.Instance<IPlugin>().Update(installedPlugin.Version, newVersion.Version);

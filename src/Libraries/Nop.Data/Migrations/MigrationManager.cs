@@ -172,12 +172,16 @@ namespace Nop.Data.Migrations
         /// </summary>
         /// <param name="assembly">Assembly to find the migration;
         /// leave null to search migration on the whole application pull</param>
-        public void ApplyUpMigrations(Assembly assembly = null)
+        /// <param name="isUpdateProcess">Indicates whether the upgrade or installation process is ongoing. True - if an upgrade process</param>
+        public void ApplyUpMigrations(Assembly assembly = null, bool isUpdateProcess = false)
         {
             var migrations = GetMigrations(assembly);
 
             foreach (var migrationInfo in migrations)
             {
+                if(isUpdateProcess && migrationInfo.Migration.GetType().GetCustomAttributes(typeof(SkipMigrationOnUpdateAttribute)).Any())
+                    continue;
+
                 _migrationRunner.MigrateUp(migrationInfo.Version);
             }
         }
