@@ -664,6 +664,36 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ProductEditor.RequireOtherProductsAddedToCart">
     <Value>Require other products</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.DisplayOrder.Required">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.DisplayOrder.Required">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name=" Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder.Required">
+    <Value></Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.Tax.Categories.Fields.DisplayOrder.Required">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Category.DisplayOrder.Required">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Manufacturer.DisplayOrder.Required">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.DisplayOrder.Required">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.DisplayOrder.Required">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Weights.Fields.Ratio.Required">
+    <Value></Value>
+  </LocaleResource> 
+  <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.Ratio.Required">
+    <Value></Value>
+  </LocaleResource>  
 </Language>
 '
 
