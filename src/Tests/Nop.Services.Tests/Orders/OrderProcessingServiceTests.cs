@@ -224,6 +224,7 @@ namespace Nop.Services.Tests.Orders
                 _addressService.Object,
                 _countryService.Object,
                 _customerService.Object,
+                _eventPublisher.Object,
                 _genericAttributeService.Object,
                 _geoLookupService.Object,
                 _logger,

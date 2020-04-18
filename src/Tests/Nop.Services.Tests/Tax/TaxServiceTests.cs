@@ -100,7 +100,7 @@ namespace Nop.Services.Tests.Tax
             _taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
 
 
-            _customerService = new CustomerService(new CachingSettings(), 
+            _customerService = new CustomerService(new CachingSettings(),
                 new CustomerSettings(),
                 new FakeCacheKeyService(),
                 _eventPublisher.Object,
@@ -122,6 +122,7 @@ namespace Nop.Services.Tests.Tax
                 _addressService.Object,
                 _countryService.Object,
                 _customerService,
+                _eventPublisher.Object,
                 _genericAttributeService.Object,
                 _geoLookupService.Object,
                 _logger.Object,

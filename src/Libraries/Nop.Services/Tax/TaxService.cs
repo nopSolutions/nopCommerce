@@ -13,7 +13,9 @@ using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Events;
 using Nop.Services.Logging;
+using Nop.Services.Tax.Events;
 
 namespace Nop.Services.Tax
 {
@@ -29,6 +31,7 @@ namespace Nop.Services.Tax
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
         private readonly ICustomerService _customerService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGeoLookupService _geoLookupService;
         private readonly ILogger _logger;
@@ -49,6 +52,7 @@ namespace Nop.Services.Tax
             IAddressService addressService,
             ICountryService countryService,
             ICustomerService customerService,
+            IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             IGeoLookupService geoLookupService,
             ILogger logger,
@@ -65,6 +69,7 @@ namespace Nop.Services.Tax
             _addressService = addressService;
             _countryService = countryService;
             _customerService = customerService;
+            _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _geoLookupService = geoLookupService;
             _logger = logger;
@@ -303,6 +308,10 @@ namespace Nop.Services.Tax
 
             //get tax rate
             var taxRateResult = activeTaxProvider.GetTaxRate(taxRateRequest);
+
+            //tax rate is calculated, now consumers can adjust it
+            _eventPublisher.Publish(new TaxRateCalculatedEvent(taxRateResult));
+
             if (taxRateResult.Success)
             {
                 //ensure that tax is equal or greater than zero
@@ -850,6 +859,10 @@ namespace Nop.Services.Tax
                 UsePaymentMethodAdditionalFee = usePaymentMethodAdditionalFee
             });
 
+            //tax total is calculated, now consumers can adjust it
+            _eventPublisher.Publish(new TaxTotalCalculatedEvent(taxTotalResult));
+
+            //error logging
             if (taxTotalResult != null && !taxTotalResult.Success && _taxSettings.LogErrors)
             {
                 foreach (var error in taxTotalResult.Errors)
