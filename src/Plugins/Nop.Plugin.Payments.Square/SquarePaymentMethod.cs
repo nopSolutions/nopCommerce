@@ -666,80 +666,83 @@ namespace Nop.Plugin.Payments.Square
             }
 
             //locales
-            _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Square.Domain.TransactionMode.Authorize", "Authorize only");
-            _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.Square.Domain.TransactionMode.Charge", "Charge (authorize and capture)");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.AccessTokenRenewalPeriod.Error", "Token renewal limit to {0} days max, but it is recommended that you specify {1} days for the period");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AccessToken", "Access token");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AccessToken.Hint", "Get the automatically renewed OAuth access token by pressing button 'Obtain access token'.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFee", "Additional fee");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFeePercentage", "Additional fee. Use percentage");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.ApplicationId", "Application ID");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.ApplicationId.Hint", "Enter your application ID, available from the application dashboard.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.ApplicationSecret", "Application secret");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.ApplicationSecret.Hint", "Enter your application secret, available from the application dashboard.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.CardNonce.Key", "Pay using card nonce");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Location", "Business location");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Location.Hint", "Choose your business location. Location is a required parameter for payment requests.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Location.NotExist", "No locations");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Location.Select", "Select location");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode", "Postal code");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode.Key", "Postal code");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxAccessToken", "Sandbox access token");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxAccessToken.Hint", "Enter your sandbox access token, available from the application dashboard.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxApplicationId", "Sandbox application ID");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxApplicationId.Hint", "Enter your sandbox application ID, available from the application dashboard.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.SaveCard", "Save the card data for future purchasing");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.SaveCard.Key", "Save card details");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard", "Use a previously saved card");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard.Key", "Pay using stored card token");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard.Mask", "*{0}");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard.SelectCard", "Select a card");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Token.Key", "Verification token");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.TransactionMode", "Transaction mode");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.TransactionMode.Hint", "Choose the transaction mode.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Use3ds", "Use 3D-Secure");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.Use3ds.Hint", "Determine whether to use 3D-Secure feature. Used for Strong customer authentication (SCA). SCA is generally friction-free for the buyer, but a card-issuing bank may require additional authentication for some payments. In those cases, the buyer must verify their identiy with the bank using an additional secure dialog.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.UseSandbox", "Use sandbox");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Fields.UseSandbox.Hint", "Determine whether to use sandbox credentials.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.Instructions", @"
-                <div style=""margin: 0 0 10px;"">
-                    <em><b>Warning: Square sandbox data has been changed. For more information visit our <a href=""https://docs.nopcommerce.com/user-guide/configuring/settingup/payments/methods/square.html"" target=""_blank"">documentation</a>.</em></b><br />
-                    <br />
-                    For plugin configuration, follow these steps:<br />
-                    <br />
-                    1. You will need a Square Merchant account. If you don't already have one, you can sign up here: <a href=""http://squ.re/nopcommerce"" target=""_blank"">https://squareup.com/signup/</a><br />
-                    2. Sign in to 'Square Merchant Dashboard'. Go to 'Account & Settings' &#8594; 'Locations' tab and create new location.<br />
-                    <em>   Important: Your merchant account must have at least one location with enabled credit card processing. Please refer to the Square customer support if you have any questions about how to set this up.</em><br />
-                    3. Sign in to your 'Square Developer Dashboard' at <a href=""http://squ.re/nopcommerce1"" target=""_blank"">https://connect.squareup.com/apps</a>; use the same login credentials as your merchant account.<br />
-                    4. Click on 'Create Your First Application' and fill in the 'Application Name'. This name is for you to recognize the application in the developer portal and is not used by the plugin. Click 'Create Application' at the bottom of the page.<br />
-                    5. Now you are on the details page of the previously created application. On the 'Credentials' tab click on the 'Change Version' button and choose '2019-09-25'.<br />
-                    6. Make sure you uncheck 'Use sandbox' below.<br />
-                    7. In the 'Square Developer Dashboard' go to the details page of the your previously created application:
-                       <ul>
-                          <li>On the 'Credentials' tab make sure the 'Application mode' setting value is 'Production'</li>
-                          <li>On the 'Credentials' tab copy the 'Application ID' and paste it into 'Application ID' below</li>
-                          <li>Go to 'OAuth' tab. Click 'Show' on the 'Application Secret' field. Copy the 'Application Secret' and paste it into 'Application Secret' below</li>
-                          <li>Copy this URL: <em>{0}</em>. On the 'OAuth' tab paste this URL into 'Redirect URL'. Click 'Save'</li>
-                       </ul>
-                    8. Click 'Save' below to save the plugin configuration.<br />
-                    9. Click 'Obtain access token' below; the Access token field should populate.<br />
-                    <em>Note: If for whatever reason you would like to disable an access to your accounts, simply 'Revoke access tokens' below.</em><br />
-                    10. Choose the previously created location. 'Location' is a required parameter for payment requests.<br />
-                    11. Fill in the remaining fields and click 'Save' to complete the configuration.<br />
-                    <br />
-                    <em>Note: The payment form must be generated only on a webpage that uses HTTPS.</em><br />
-                </div>");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.ObtainAccessToken", "Obtain access token");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.ObtainAccessToken.Error", "An error occurred while obtaining an access token");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.ObtainAccessToken.Success", "The access token was successfully obtained");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.PaymentMethodDescription", "Pay by credit card using Square");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.RenewAccessToken.Error", "Square payment error. An error occurred while renewing an access token");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.RenewAccessToken.Success", "Square payment info. The access token was successfully renewed");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens", "Revoke access tokens");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens.Error", "An error occurred while revoking access tokens");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens.Success", "All access tokens were successfully revoked");
+            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            {
+                ["Enums.Nop.Plugin.Payments.Square.Domain.TransactionMode.Authorize"] = "Authorize only",
+                ["Enums.Nop.Plugin.Payments.Square.Domain.TransactionMode.Charge"] = "Charge (authorize and capture)",
+                ["Plugins.Payments.Square.AccessTokenRenewalPeriod.Error"] = "Token renewal limit to {0} days max, but it is recommended that you specify {1} days for the period",
+                ["Plugins.Payments.Square.Fields.AccessToken"] = "Access token",
+                ["Plugins.Payments.Square.Fields.AccessToken.Hint"] = "Get the automatically renewed OAuth access token by pressing button 'Obtain access token'.",
+                ["Plugins.Payments.Square.Fields.AdditionalFee"] = "Additional fee",
+                ["Plugins.Payments.Square.Fields.AdditionalFee.Hint"] = "Enter additional fee to charge your customers.",
+                ["Plugins.Payments.Square.Fields.AdditionalFeePercentage"] = "Additional fee. Use percentage",
+                ["Plugins.Payments.Square.Fields.AdditionalFeePercentage.Hint"] = "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.",
+                ["Plugins.Payments.Square.Fields.ApplicationId"] = "Application ID",
+                ["Plugins.Payments.Square.Fields.ApplicationId.Hint"] = "Enter your application ID, available from the application dashboard.",
+                ["Plugins.Payments.Square.Fields.ApplicationSecret"] = "Application secret",
+                ["Plugins.Payments.Square.Fields.ApplicationSecret.Hint"] = "Enter your application secret, available from the application dashboard.",
+                ["Plugins.Payments.Square.Fields.CardNonce.Key"] = "Pay using card nonce",
+                ["Plugins.Payments.Square.Fields.Location"] = "Business location",
+                ["Plugins.Payments.Square.Fields.Location.Hint"] = "Choose your business location. Location is a required parameter for payment requests.",
+                ["Plugins.Payments.Square.Fields.Location.NotExist"] = "No locations",
+                ["Plugins.Payments.Square.Fields.Location.Select"] = "Select location",
+                ["Plugins.Payments.Square.Fields.PostalCode"] = "Postal code",
+                ["Plugins.Payments.Square.Fields.PostalCode.Key"] = "Postal code",
+                ["Plugins.Payments.Square.Fields.SandboxAccessToken"] = "Sandbox access token",
+                ["Plugins.Payments.Square.Fields.SandboxAccessToken.Hint"] = "Enter your sandbox access token, available from the application dashboard.",
+                ["Plugins.Payments.Square.Fields.SandboxApplicationId"] = "Sandbox application ID",
+                ["Plugins.Payments.Square.Fields.SandboxApplicationId.Hint"] = "Enter your sandbox application ID, available from the application dashboard.",
+                ["Plugins.Payments.Square.Fields.SaveCard"] = "Save the card data for future purchasing",
+                ["Plugins.Payments.Square.Fields.SaveCard.Key"] = "Save card details",
+                ["Plugins.Payments.Square.Fields.StoredCard"] = "Use a previously saved card",
+                ["Plugins.Payments.Square.Fields.StoredCard.Key"] = "Pay using stored card token",
+                ["Plugins.Payments.Square.Fields.StoredCard.Mask"] = "*{0}",
+                ["Plugins.Payments.Square.Fields.StoredCard.SelectCard"] = "Select a card",
+                ["Plugins.Payments.Square.Fields.Token.Key"] = "Verification token",
+                ["Plugins.Payments.Square.Fields.TransactionMode"] = "Transaction mode",
+                ["Plugins.Payments.Square.Fields.TransactionMode.Hint"] = "Choose the transaction mode.",
+                ["Plugins.Payments.Square.Fields.Use3ds"] = "Use 3D-Secure",
+                ["Plugins.Payments.Square.Fields.Use3ds.Hint"] = "Determine whether to use 3D-Secure feature. Used for Strong customer authentication (SCA). SCA is generally friction-free for the buyer, but a card-issuing bank may require additional authentication for some payments. In those cases, the buyer must verify their identiy with the bank using an additional secure dialog.",
+                ["Plugins.Payments.Square.Fields.UseSandbox"] = "Use sandbox",
+                ["Plugins.Payments.Square.Fields.UseSandbox.Hint"] = "Determine whether to use sandbox credentials.",
+                ["Plugins.Payments.Square.Instructions"] = @"
+                    <div style=""margin: 0 0 10px;"">
+                        <em><b>Warning: Square sandbox data has been changed. For more information visit our <a href=""https://docs.nopcommerce.com/user-guide/configuring/settingup/payments/methods/square.html"" target=""_blank"">documentation</a>.</em></b><br />
+                        <br />
+                        For plugin configuration, follow these steps:<br />
+                        <br />
+                        1. You will need a Square Merchant account. If you don't already have one, you can sign up here: <a href=""http://squ.re/nopcommerce"" target=""_blank"">https://squareup.com/signup/</a><br />
+                        2. Sign in to 'Square Merchant Dashboard'. Go to 'Account & Settings' &#8594; 'Locations' tab and create new location.<br />
+                        <em>   Important: Your merchant account must have at least one location with enabled credit card processing. Please refer to the Square customer support if you have any questions about how to set this up.</em><br />
+                        3. Sign in to your 'Square Developer Dashboard' at <a href=""http://squ.re/nopcommerce1"" target=""_blank"">https://connect.squareup.com/apps</a>; use the same login credentials as your merchant account.<br />
+                        4. Click on 'Create Your First Application' and fill in the 'Application Name'. This name is for you to recognize the application in the developer portal and is not used by the plugin. Click 'Create Application' at the bottom of the page.<br />
+                        5. Now you are on the details page of the previously created application. On the 'Credentials' tab click on the 'Change Version' button and choose '2019-09-25'.<br />
+                        6. Make sure you uncheck 'Use sandbox' below.<br />
+                        7. In the 'Square Developer Dashboard' go to the details page of the your previously created application:
+                           <ul>
+                              <li>On the 'Credentials' tab make sure the 'Application mode' setting value is 'Production'</li>
+                              <li>On the 'Credentials' tab copy the 'Application ID' and paste it into 'Application ID' below</li>
+                              <li>Go to 'OAuth' tab. Click 'Show' on the 'Application Secret' field. Copy the 'Application Secret' and paste it into 'Application Secret' below</li>
+                              <li>Copy this URL: <em>{0}</em>. On the 'OAuth' tab paste this URL into 'Redirect URL'. Click 'Save'</li>
+                           </ul>
+                        8. Click 'Save' below to save the plugin configuration.<br />
+                        9. Click 'Obtain access token' below; the Access token field should populate.<br />
+                        <em>Note: If for whatever reason you would like to disable an access to your accounts, simply 'Revoke access tokens' below.</em><br />
+                        10. Choose the previously created location. 'Location' is a required parameter for payment requests.<br />
+                        11. Fill in the remaining fields and click 'Save' to complete the configuration.<br />
+                        <br />
+                        <em>Note: The payment form must be generated only on a webpage that uses HTTPS.</em><br />
+                    </div>",
+                ["Plugins.Payments.Square.ObtainAccessToken"] = "Obtain access token",
+                ["Plugins.Payments.Square.ObtainAccessToken.Error"] = "An error occurred while obtaining an access token",
+                ["Plugins.Payments.Square.ObtainAccessToken.Success"] = "The access token was successfully obtained",
+                ["Plugins.Payments.Square.PaymentMethodDescription"] = "Pay by credit card using Square",
+                ["Plugins.Payments.Square.RenewAccessToken.Error"] = "Square payment error. An error occurred while renewing an access token",
+                ["Plugins.Payments.Square.RenewAccessToken.Success"] = "Square payment info. The access token was successfully renewed",
+                ["Plugins.Payments.Square.RevokeAccessTokens"] = "Revoke access tokens",
+                ["Plugins.Payments.Square.RevokeAccessTokens.Error"] = "An error occurred while revoking access tokens",
+                ["Plugins.Payments.Square.RevokeAccessTokens.Success"] = "All access tokens were successfully revoked"
+            });
 
             base.Install();
         }
@@ -758,53 +761,8 @@ namespace Nop.Plugin.Payments.Square
                 _scheduleTaskService.DeleteTask(task);
 
             //locales
-            _localizationService.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Square.Domain.TransactionMode.Authorize");
-            _localizationService.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.Square.Domain.TransactionMode.Charge");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.AccessTokenRenewalPeriod.Error");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AccessToken");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AccessToken.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFee");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFee.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFeePercentage");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.AdditionalFeePercentage.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.ApplicationId");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.ApplicationId.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.ApplicationSecret");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.ApplicationSecret.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.CardNonce.Key");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Location");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Location.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Location.NotExist");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Location.Select");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.PostalCode.Key");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxAccessToken");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxAccessToken.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxApplicationId");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.SandboxApplicationId.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.SaveCard");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.SaveCard.Key");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard.Key");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard.Mask");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.StoredCard.SelectCard");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Token.Key");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.TransactionMode");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.TransactionMode.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Use3ds");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.Use3ds.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.UseSandbox");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Fields.UseSandbox.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.Instructions");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.ObtainAccessToken");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.ObtainAccessToken.Error");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.ObtainAccessToken.Success");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.PaymentMethodDescription");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.RenewAccessToken.Error");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.RenewAccessToken.Success");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens.Error");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.Square.RevokeAccessTokens.Success");
+            _localizationService.DeletePluginLocaleResources("Enums.Nop.Plugin.Payments.Square");
+            _localizationService.DeletePluginLocaleResources("Plugins.Payments.Square");
 
             base.Uninstall();
         }

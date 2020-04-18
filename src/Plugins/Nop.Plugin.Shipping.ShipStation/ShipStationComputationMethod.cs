@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Shipping;
 using Nop.Plugin.Shipping.ShipStation.Services;
@@ -17,7 +18,7 @@ namespace Nop.Plugin.Shipping.ShipStation
     public class ShipStationComputationMethod : BasePlugin, IShippingRateComputationMethod, IMiscPlugin
     {
         #region Fields
-       
+
         private readonly ILocalizationService _localizationService;
         private readonly ISettingService _settingService;
         private readonly IShipStationService _shipStationService;
@@ -124,22 +125,25 @@ namespace Nop.Plugin.Shipping.ShipStation
             _settingService.SaveSetting(settings);
 
             //locales
-            _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Shipping.ShipStation.PackingType.PackByDimensions", "Pack by dimensions");
-            _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Shipping.ShipStation.PackingType.PackByVolume", "Pack by volume");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.ApiKey.Hint", "Specify ShipStation API key.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.ApiKey", "API key");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.ApiSecret.Hint", "Specify ShipStation API secret.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.ApiSecret", "API secret");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.PackingPackageVolume.Hint", "Enter your package volume.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.PackingPackageVolume", "Package volume");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.PackingType.Hint", "Choose preferred packing type.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.PackingType", "Packing type");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.Password.Hint", "Specify ShipStation password");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.Password", "Password");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.PassDimensions.Hint", "Check if need send dimensions to the ShipStation server");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.PassDimensions", "Pass dimensions");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.UserName", "User name");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.UserName.Hint", "Specify ShipStation user name");
+            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            {
+                ["Enums.Nop.Plugin.Shipping.ShipStation.PackingType.PackByDimensions"] = "Pack by dimensions",
+                ["Enums.Nop.Plugin.Shipping.ShipStation.PackingType.PackByVolume"] = "Pack by volume",
+                ["Plugins.Shipping.ShipStation.Fields.ApiKey.Hint"] = "Specify ShipStation API key.",
+                ["Plugins.Shipping.ShipStation.Fields.ApiKey"] = "API key",
+                ["Plugins.Shipping.ShipStation.Fields.ApiSecret.Hint"] = "Specify ShipStation API secret.",
+                ["Plugins.Shipping.ShipStation.Fields.ApiSecret"] = "API secret",
+                ["Plugins.Shipping.ShipStation.Fields.PackingPackageVolume.Hint"] = "Enter your package volume.",
+                ["Plugins.Shipping.ShipStation.Fields.PackingPackageVolume"] = "Package volume",
+                ["Plugins.Shipping.ShipStation.Fields.PackingType.Hint"] = "Choose preferred packing type.",
+                ["Plugins.Shipping.ShipStation.Fields.PackingType"] = "Packing type",
+                ["Plugins.Shipping.ShipStation.Fields.Password.Hint"] = "Specify ShipStation password",
+                ["Plugins.Shipping.ShipStation.Fields.Password"] = "Password",
+                ["Plugins.Shipping.ShipStation.Fields.PassDimensions.Hint"] = "Check if need send dimensions to the ShipStation server",
+                ["Plugins.Shipping.ShipStation.Fields.PassDimensions"] = "Pass dimensions",
+                ["Plugins.Shipping.ShipStation.Fields.UserName"] = "User name",
+                ["Plugins.Shipping.ShipStation.Fields.UserName.Hint"] = "Specify ShipStation user name"
+            });
 
             base.Install();
         }
@@ -153,22 +157,8 @@ namespace Nop.Plugin.Shipping.ShipStation
             _settingService.DeleteSetting<ShipStationSettings>();
 
             //locales
-            _localizationService.DeletePluginLocaleResource("Enums.Nop.Plugin.Shipping.ShipStation.PackingType.PackByDimensions");
-            _localizationService.DeletePluginLocaleResource("Enums.Nop.Plugin.Shipping.ShipStation.PackingType.PackByVolume");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.ApiKey.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.ApiKey");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.ApiSecret.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.ApiSecret");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.PackingPackageVolume.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.PackingPackageVolume");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.PackingType.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.PackingType");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.Password.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.Password");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.PassDimensions.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.PassDimensions");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.UserName.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Shipping.ShipStation.Fields.UserName");
+            _localizationService.DeletePluginLocaleResources("Enums.Nop.Plugin.Shipping.ShipStation");
+            _localizationService.DeletePluginLocaleResources("Plugins.Shipping.ShipStation");
 
             base.Uninstall();
         }

@@ -363,37 +363,40 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
             }
 
             //locales
-            _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.PayPalSmartPaymentButtons.Domain.PaymentType.Authorize", "Authorize");
-            _localizationService.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Payments.PayPalSmartPaymentButtons.Domain.PaymentType.Capture", "Capture");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Credentials.Valid", "The specified credentials are valid");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Credentials.Invalid", "The specified credentials are invalid (see details in the <a href=\"{0}\" target=\"_blank\">log</a>)");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnProductDetails", "Display buttons on product details");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnProductDetails.Hint", "Determine whether to display PayPal buttons on product details pages, clicking on them matches the behavior of the default 'Add to cart' button.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnShoppingCart", "Display buttons on shopping cart");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnShoppingCart.Hint", "Determine whether to display PayPal buttons on the shopping cart page instead of the default checkout button.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInFooter", "Display logo in footer");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInFooter.Hint", "Determine whether to display PayPal logo in the footer. These logos and banners are a great way to let your buyers know that you choose PayPal to securely process their payments.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInHeaderLinks", "Display logo in header links");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInHeaderLinks.Hint", "Determine whether to display PayPal logo in header links. These logos and banners are a great way to let your buyers know that you choose PayPal to securely process their payments.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.ClientId", "Client ID");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.ClientId.Hint", "Enter your PayPal REST client ID. This identifies your PayPal account and determines where transactions are paid. While you're testing in sandbox, you can use 'sb' as a shortcut.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.ClientId.Required", "Client ID is required");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInFooter", "Logo source code");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInFooter.Hint", "Enter source code of the logo. Find more logos and banners on PayPal Logo Center. You can also modify the code to fit correctly into your theme and site style.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInHeaderLinks", "Logo source code");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInHeaderLinks.Hint", "Enter source code of the logo. Find more logos and banners on PayPal Logo Center. You can also modify the code to fit correctly into your theme and site style.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.PaymentType", "Payment type");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.PaymentType.Hint", "Choose a payment type to either capture payment immediately or authorize a payment for an order after order creation.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.SecretKey", "Secret");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.SecretKey.Hint", "Enter secret for your app.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.SecretKey.Required", "Secret is required");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.UseSandbox", "Use sandbox");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.UseSandbox.Hint", "Determine whether to use the sandbox environment for testing purposes.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.OrderId", "PayPal order ID");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Prominently", "PayPal Prominently");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.PaymentMethodDescription", "PayPal Checkout with using methods like Venmo, PayPal Credit, credit card payments");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.RoundingWarning", "It looks like you have <a href=\"{0}\" target=\"_blank\">RoundPricesDuringCalculation</a> setting disabled. Keep in mind that this can lead to a discrepancy of the order total amount, as PayPal rounds to two decimals only.");
-            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.WebhookWarning", "Webhook was not created, so some functions may not work correctly (see details in the <a href=\"{0}\" target=\"_blank\">log</a>)");
+            _localizationService.AddPluginLocaleResource(new Dictionary<string, string>
+            {
+                ["Enums.Nop.Plugin.Payments.PayPalSmartPaymentButtons.Domain.PaymentType.Authorize"] = "Authorize",
+                ["Enums.Nop.Plugin.Payments.PayPalSmartPaymentButtons.Domain.PaymentType.Capture"] = "Capture",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Credentials.Valid"] = "The specified credentials are valid",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Credentials.Invalid"] = "The specified credentials are invalid (see details in the <a href=\"{0}\" target=\"_blank\">log</a>)",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnProductDetails"] = "Display buttons on product details",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnProductDetails.Hint"] = "Determine whether to display PayPal buttons on product details pages, clicking on them matches the behavior of the default 'Add to cart' button.",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnShoppingCart"] = "Display buttons on shopping cart",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnShoppingCart.Hint"] = "Determine whether to display PayPal buttons on the shopping cart page instead of the default checkout button.",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInFooter"] = "Display logo in footer",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInFooter.Hint"] = "Determine whether to display PayPal logo in the footer. These logos and banners are a great way to let your buyers know that you choose PayPal to securely process their payments.",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInHeaderLinks"] = "Display logo in header links",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInHeaderLinks.Hint"] = "Determine whether to display PayPal logo in header links. These logos and banners are a great way to let your buyers know that you choose PayPal to securely process their payments.",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.ClientId"] = "Client ID",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.ClientId.Hint"] = "Enter your PayPal REST client ID. This identifies your PayPal account and determines where transactions are paid. While you're testing in sandbox, you can use 'sb' as a shortcut.",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.ClientId.Required"] = "Client ID is required",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInFooter"] = "Logo source code",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInFooter.Hint"] = "Enter source code of the logo. Find more logos and banners on PayPal Logo Center. You can also modify the code to fit correctly into your theme and site style.",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInHeaderLinks"] = "Logo source code",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInHeaderLinks.Hint"] = "Enter source code of the logo. Find more logos and banners on PayPal Logo Center. You can also modify the code to fit correctly into your theme and site style.",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.PaymentType"] = "Payment type",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.PaymentType.Hint"] = "Choose a payment type to either capture payment immediately or authorize a payment for an order after order creation.",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.SecretKey"] = "Secret",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.SecretKey.Hint"] = "Enter secret for your app.",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.SecretKey.Required"] = "Secret is required",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.UseSandbox"] = "Use sandbox",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Fields.UseSandbox.Hint"] = "Determine whether to use the sandbox environment for testing purposes.",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.OrderId"] = "PayPal order ID",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.Prominently"] = "PayPal Prominently",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.PaymentMethodDescription"] = "PayPal Checkout with using methods like Venmo, PayPal Credit, credit card payments",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.RoundingWarning"] = "It looks like you have <a href=\"{0}\" target=\"_blank\">RoundPricesDuringCalculation</a> setting disabled. Keep in mind that this can lead to a discrepancy of the order total amount, as PayPal rounds to two decimals only.",
+                ["Plugins.Payments.PayPalSmartPaymentButtons.WebhookWarning"] = "Webhook was not created, so some functions may not work correctly (see details in the <a href=\"{0}\" target=\"_blank\">log</a>)"
+            });
 
             base.Install();
         }
@@ -420,37 +423,8 @@ namespace Nop.Plugin.Payments.PayPalSmartPaymentButtons
             _settingService.DeleteSetting<PayPalSmartPaymentButtonsSettings>();
 
             //locales
-            _localizationService.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.PayPalSmartPaymentButtons.Domain.PaymentType.Authorize");
-            _localizationService.DeletePluginLocaleResource("Enums.Nop.Plugin.Payments.PayPalSmartPaymentButtons.Domain.PaymentType.Capture");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Credentials.Valid");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Credentials.Invalid");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnProductDetails");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnProductDetails.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnShoppingCart");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayButtonsOnShoppingCart.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInFooter");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInFooter.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInHeaderLinks");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.DisplayLogoInHeaderLinks.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.ClientId");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.ClientId.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.ClientId.Required");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInFooter");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInFooter.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInHeaderLinks");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.LogoInHeaderLinks.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.PaymentType");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.PaymentType.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.SecretKey");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.SecretKey.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.SecretKey.Required");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.UseSandbox");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Fields.UseSandbox.Hint");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.OrderId");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.Prominently");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.PaymentMethodDescription");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.RoundingWarning");
-            _localizationService.DeletePluginLocaleResource("Plugins.Payments.PayPalSmartPaymentButtons.WebhookWarning");
+            _localizationService.DeletePluginLocaleResources("Enums.Nop.Plugin.Payments.PayPalSmartPaymentButtons");
+            _localizationService.DeletePluginLocaleResources("Plugins.Payments.PayPalSmartPaymentButtons");
 
             base.Uninstall();
         }

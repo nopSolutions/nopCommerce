@@ -38,7 +38,7 @@ namespace Nop.Services.Localization
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IWorkContext _workContext;
         private readonly LocalizationSettings _localizationSettings;
-        
+
         #endregion
 
         #region Ctor
@@ -132,7 +132,7 @@ namespace Nop.Services.Localization
             using (var xmlReader = XmlReader.Create(xmlStreamReader))
                 while (xmlReader.ReadToFollowing("Language"))
                 {
-                    if (xmlReader.NodeType != XmlNodeType.Element) 
+                    if (xmlReader.NodeType != XmlNodeType.Element)
                         continue;
 
                     using var languageReader = xmlReader.ReadSubtree();
@@ -140,7 +140,8 @@ namespace Nop.Services.Localization
                         if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.GetAttribute("Name") is string name)
                         {
                             using var lrReader = languageReader.ReadSubtree();
-                            if (lrReader.ReadToFollowing("Value") && lrReader.NodeType == XmlNodeType.Element) result.Add((name, lrReader.ReadString()));
+                            if (lrReader.ReadToFollowing("Value") && lrReader.NodeType == XmlNodeType.Element)
+                                result.Add((name, lrReader.ReadString()));
                         }
 
                     break;
@@ -295,7 +296,7 @@ namespace Nop.Services.Localization
 
             //performance optimization of the site startup
             key = _cacheKeyService.PrepareKeyForDefaultCache(
-                    loadPublicLocales.Value ? NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey :NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey,
+                    loadPublicLocales.Value ? NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey : NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey,
                     languageId);
 
             return _staticCacheManager.Get(key, () =>
@@ -707,6 +708,29 @@ namespace Nop.Services.Localization
         }
 
         /// <summary>
+        /// Add locale resources
+        /// </summary>
+        /// <param name="resources">Resource name-value pairs</param>
+        /// <param name="languageId">Language identifier; pass null to add the passed resources for all languages</param>
+        public virtual void AddPluginLocaleResource(IDictionary<string, string> resources, int? languageId = null)
+        {
+            //first delete all previous locales with the passed names if they exist
+            DeletePluginLocaleResources(resources.Keys.ToList(), languageId);
+
+            //insert new locale resources
+            var locales = _languageService.GetAllLanguages(true)
+                .Where(language => !languageId.HasValue || language.Id == languageId.Value)
+                .SelectMany(language => resources.Select(resource => new LocaleStringResource
+                {
+                    LanguageId = language.Id,
+                    ResourceName = resource.Key,
+                    ResourceValue = resource.Value
+                }))
+                .ToList();
+            _lsrRepository.Insert(locales);
+        }
+
+        /// <summary>
         /// Delete a locale resource
         /// </summary>
         /// <param name="resourceName">Resource name</param>
@@ -718,6 +742,29 @@ namespace Nop.Services.Localization
                 if (lsr != null)
                     DeleteLocaleStringResource(lsr);
             }
+        }
+
+        /// <summary>
+        /// Delete locale resources
+        /// </summary>
+        /// <param name="resourceNames">Resource names</param>
+        /// <param name="languageId">Language identifier; pass null to delete the passed resources from all languages</param>
+        public virtual void DeletePluginLocaleResources(IList<string> resourceNames, int? languageId = null)
+        {
+            _lsrRepository.Delete(locale => (!languageId.HasValue || locale.LanguageId == languageId.Value) &&
+                resourceNames.Contains(locale.ResourceName, StringComparer.InvariantCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// Delete locale resources by the passed name prefix
+        /// </summary>
+        /// <param name="resourceNamePrefix">Resource name prefix</param>
+        /// <param name="languageId">Language identifier; pass null to delete resources by prefix from all languages</param>
+        public virtual void DeletePluginLocaleResources(string resourceNamePrefix, int? languageId = null)
+        {
+            _lsrRepository.Delete(locale => (!languageId.HasValue || locale.LanguageId == languageId.Value) &&
+                !string.IsNullOrEmpty(locale.ResourceName) &&
+                locale.ResourceName.StartsWith(resourceNamePrefix, StringComparison.InvariantCultureIgnoreCase));
         }
 
         /// <summary>
