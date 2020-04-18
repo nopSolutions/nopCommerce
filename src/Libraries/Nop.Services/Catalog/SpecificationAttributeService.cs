@@ -101,7 +101,7 @@ namespace Nop.Services.Catalog
                 join sao in _specificationAttributeOptionRepository.Table on sa.Id equals sao.SpecificationAttributeId
                 select sa;
 
-            return query.ToCachedList(NopCatalogDefaults.SpecAttributesWithOptionsCacheKey);
+            return query.Distinct().ToCachedList(NopCatalogDefaults.SpecAttributesWithOptionsCacheKey);
         }
 
         /// <summary>
