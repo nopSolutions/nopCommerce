@@ -287,7 +287,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return RedirectToAction("Configure");
+                return Configure();
 
             //load settings for a chosen store scope
             var storeScope = _storeContext.ActiveStoreScopeConfiguration;
@@ -316,7 +316,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return RedirectToAction("Configure");
+            return Configure();
         }
 
         //action displaying notification (warning) to a store owner about inaccurate PayPal rounding

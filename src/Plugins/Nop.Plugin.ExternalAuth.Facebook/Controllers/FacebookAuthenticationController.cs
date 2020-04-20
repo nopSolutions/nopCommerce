@@ -90,7 +90,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return RedirectToAction("Configure");
+                return Configure();
 
             //save settings
             _facebookExternalAuthSettings.ClientKeyIdentifier = model.ClientId;
@@ -102,7 +102,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return RedirectToAction("Configure");
+            return Configure();
         }
 
         public IActionResult Login(string returnUrl)

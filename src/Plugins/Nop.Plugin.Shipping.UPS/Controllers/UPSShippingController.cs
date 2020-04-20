@@ -110,7 +110,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return RedirectToAction("Configure");
+                return Configure();
 
             //save settings
             _upsSettings.AccountNumber = model.AccountNumber;
@@ -146,7 +146,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return RedirectToAction("Configure");
+            return Configure();
         }
 
         #endregion

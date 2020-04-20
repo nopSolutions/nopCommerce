@@ -145,7 +145,7 @@ namespace Nop.Plugin.Payments.Square.Controllers
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
-                return RedirectToAction("Configure");
+                return Configure();
 
             //load settings for a chosen store scope
             var storeId = _storeContext.ActiveStoreScopeConfiguration;
@@ -186,7 +186,7 @@ namespace Nop.Plugin.Payments.Square.Controllers
 
             _notificationService.SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
-            return RedirectToAction("Configure");
+            return Configure();
         }
 
         [HttpPost, ActionName("Configure")]
@@ -297,7 +297,7 @@ namespace Nop.Plugin.Payments.Square.Controllers
                 _notificationService.ErrorNotification(exception.Message);
             }
 
-            return RedirectToAction("Configure");
+            return Configure();
         }
 
         #endregion
