@@ -16,7 +16,7 @@ namespace Nop.Services.Catalog.Caching
         {
             Remove(NopCatalogDefaults.ReviewTypeAllCacheKey);
 
-            var cacheKey = NopCatalogDefaults.ProductReviewReviewTypeMappingAllCacheKey.FillCacheKey(entity.ProductReviewId);
+            var cacheKey = _cacheKeyService.PrepareKey(NopCatalogDefaults.ProductReviewReviewTypeMappingAllCacheKey, entity.ProductReviewId);
             Remove(cacheKey);
         }
     }

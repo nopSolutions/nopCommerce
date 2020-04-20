@@ -23,7 +23,7 @@ namespace Nop.Services.Tests
         [SetUp]
         public virtual void SetUp()
         {
-
+           
         }
 
         public void RunWithTestServiceProvider(Action action)

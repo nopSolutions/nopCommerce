@@ -16,6 +16,7 @@ namespace Nop.Services.Vendors
     {
         #region Fields
 
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<VendorAttribute> _vendorAttributeRepository;
         private readonly IRepository<VendorAttributeValue> _vendorAttributeValueRepository;
@@ -24,10 +25,12 @@ namespace Nop.Services.Vendors
 
         #region Ctor
 
-        public VendorAttributeService(IEventPublisher eventPublisher,
+        public VendorAttributeService(ICacheKeyService cacheKeyService,
+            IEventPublisher eventPublisher,
             IRepository<VendorAttribute> vendorAttributeRepository,
             IRepository<VendorAttributeValue> vendorAttributeValueRepository)
         {
+            _cacheKeyService = cacheKeyService;
             _eventPublisher = eventPublisher;
             _vendorAttributeRepository = vendorAttributeRepository;
             _vendorAttributeValueRepository = vendorAttributeValueRepository;
@@ -119,7 +122,7 @@ namespace Nop.Services.Vendors
         /// <returns>Vendor attribute values</returns>
         public virtual IList<VendorAttributeValue> GetVendorAttributeValues(int vendorAttributeId)
         {
-            var key = NopVendorDefaults.VendorAttributeValuesAllCacheKey.FillCacheKey(vendorAttributeId);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopVendorDefaults.VendorAttributeValuesAllCacheKey, vendorAttributeId);
 
             return _vendorAttributeValueRepository.Table
                 .Where(vendorAttributeValue => vendorAttributeValue.VendorAttributeId == vendorAttributeId)

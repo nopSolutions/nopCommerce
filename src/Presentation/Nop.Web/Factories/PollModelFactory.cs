@@ -18,8 +18,9 @@ namespace Nop.Web.Factories
     {
         #region Fields
 
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IPollService _pollService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
 
@@ -27,13 +28,15 @@ namespace Nop.Web.Factories
 
         #region Ctor
 
-        public PollModelFactory(IPollService pollService,
-            IStaticCacheManager cacheManager,
+        public PollModelFactory(ICacheKeyService cacheKeyService,
+            IPollService pollService,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IWorkContext workContext)
         {
+            _cacheKeyService = cacheKeyService;
             _pollService = pollService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _workContext = workContext;
         }
@@ -87,10 +90,10 @@ namespace Nop.Web.Factories
             if (string.IsNullOrWhiteSpace(systemKeyword))
                 return null;
 
-            var cacheKey = NopModelCacheDefaults.PollBySystemNameModelKey.FillCacheKey(
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.PollBySystemNameModelKey, 
                 systemKeyword, _workContext.WorkingLanguage, _storeContext.CurrentStore);
 
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var cachedModel = _staticCacheManager.Get(cacheKey, () =>
             {
                 var poll = _pollService
                     .GetPolls(_storeContext.CurrentStore.Id, _workContext.WorkingLanguage.Id, systemKeyword: systemKeyword)
@@ -120,10 +123,10 @@ namespace Nop.Web.Factories
         /// <returns>List of the poll model</returns>
         public virtual List<PollModel> PrepareHomepagePollModels()
         {
-            var cacheKey = NopModelCacheDefaults.HomepagePollsModelKey.FillCacheKey(
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepagePollsModelKey, 
                 _workContext.WorkingLanguage, _storeContext.CurrentStore);
 
-            var cachedPolls = _cacheManager.Get(cacheKey, () =>
+            var cachedPolls = _staticCacheManager.Get(cacheKey, () =>
                 _pollService.GetPolls(_storeContext.CurrentStore.Id, _workContext.WorkingLanguage.Id, loadShownOnHomepageOnly: true)
                     .Select(poll => PreparePollModel(poll, false)).ToList());
 

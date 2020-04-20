@@ -15,7 +15,7 @@ namespace Nop.Services.Orders.Caching
         protected override void ClearCache(CheckoutAttribute entity)
         {
             RemoveByPrefix(NopOrderDefaults.CheckoutAttributesAllPrefixCacheKey);
-            var cacheKey = NopOrderDefaults.CheckoutAttributeValuesAllCacheKey.FillCacheKey(entity);
+            var cacheKey = _cacheKeyService.PrepareKey(NopOrderDefaults.CheckoutAttributeValuesAllCacheKey, entity);
             Remove(cacheKey);
         }
     }

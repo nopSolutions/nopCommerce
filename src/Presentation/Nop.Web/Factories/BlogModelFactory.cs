@@ -30,11 +30,12 @@ namespace Nop.Web.Factories
         private readonly CaptchaSettings _captchaSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly IBlogService _blogService;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IPictureService _pictureService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
@@ -48,11 +49,12 @@ namespace Nop.Web.Factories
             CaptchaSettings captchaSettings,
             CustomerSettings customerSettings,
             IBlogService blogService,
+            ICacheKeyService cacheKeyService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IGenericAttributeService genericAttributeService,
             IPictureService pictureService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IUrlRecordService urlRecordService,
             IWorkContext workContext,
@@ -62,11 +64,12 @@ namespace Nop.Web.Factories
             _captchaSettings = captchaSettings;
             _customerSettings = customerSettings;
             _blogService = blogService;
+            _cacheKeyService = cacheKeyService;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _genericAttributeService = genericAttributeService;
             _pictureService = pictureService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _urlRecordService = urlRecordService;
             _workContext = workContext;
@@ -239,8 +242,8 @@ namespace Nop.Web.Factories
         /// <returns>List of blog post year model</returns>
         public virtual List<BlogPostYearModel> PrepareBlogPostYearModel()
         {
-            var cacheKey = NopModelCacheDefaults.BlogMonthsModelKey.FillCacheKey(_workContext.WorkingLanguage, _storeContext.CurrentStore);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.BlogMonthsModelKey, _workContext.WorkingLanguage, _storeContext.CurrentStore);
+            var cachedModel = _staticCacheManager.Get(cacheKey, () =>
             {
                 var model = new List<BlogPostYearModel>();
 

@@ -24,10 +24,11 @@ namespace Nop.Services.Seo
         private static readonly object _lock = new object();
         private static Dictionary<string, string> _seoCharacterTable;
 
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILanguageService _languageService;
         private readonly IRepository<UrlRecord> _urlRecordRepository;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IWorkContext _workContext;
         private readonly LocalizationSettings _localizationSettings;
         private readonly SeoSettings _seoSettings;
@@ -36,18 +37,20 @@ namespace Nop.Services.Seo
 
         #region Ctor
 
-        public UrlRecordService(IEventPublisher eventPublisher,
+        public UrlRecordService(ICacheKeyService cacheKeyService,
+            IEventPublisher eventPublisher,
             ILanguageService languageService,
             IRepository<UrlRecord> urlRecordRepository,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IWorkContext workContext,
             LocalizationSettings localizationSettings,
             SeoSettings seoSettings)
         {
+            _cacheKeyService = cacheKeyService;
             _eventPublisher = eventPublisher;
             _languageService = languageService;
             _urlRecordRepository = urlRecordRepository;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _workContext = workContext;
             _localizationSettings = localizationSettings;
             _seoSettings = seoSettings;
@@ -1166,7 +1169,7 @@ namespace Nop.Services.Seo
         {
             var query = _urlRecordRepository.Table;
 
-            var key = NopSeoDefaults.UrlRecordByIdsCacheKey.FillCacheKey(urlRecordIds);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordByIdsCacheKey, urlRecordIds);
 
             return query.Where(p => urlRecordIds.Contains(p.Id)).ToCachedList(key);
         }
@@ -1224,10 +1227,11 @@ namespace Nop.Services.Seo
             if (string.IsNullOrEmpty(slug))
                 return null;
             
-            var key = NopSeoDefaults.UrlRecordBySlugCacheKey.FillCacheKey(slug);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordBySlugCacheKey, slug);
+
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
             {
-                return _cacheManager.Get(key, () =>
+                return _staticCacheManager.Get(key, () =>
                 {
                     //load all records (we know they are cached)
                     var source = GetAllUrlRecords();
@@ -1284,11 +1288,11 @@ namespace Nop.Services.Seo
         public virtual string GetActiveSlug(int entityId, string entityName, int languageId)
         {
             //gradual loading
-            var key = NopSeoDefaults.UrlRecordActiveByIdNameLanguageCacheKey.FillCacheKey(entityId, entityName, languageId);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordActiveByIdNameLanguageCacheKey, entityId, entityName, languageId);
 
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
             {
-                return _cacheManager.Get(key, () =>
+                return _staticCacheManager.Get(key, () =>
                 {
                     //load all records (we know they are cached)
                     var source = GetAllUrlRecords();

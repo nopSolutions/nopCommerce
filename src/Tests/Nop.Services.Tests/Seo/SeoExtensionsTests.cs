@@ -8,6 +8,7 @@ using Nop.Data;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
+using Nop.Services.Tests.FakeServices;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Seo
@@ -18,7 +19,7 @@ namespace Nop.Services.Tests.Seo
         private Mock<IEventPublisher> _eventPublisher;
         private Mock<ILanguageService> _languageService;
         private Mock<IRepository<UrlRecord>> _urlRecordRepository;
-        private Mock<IStaticCacheManager> _cacheManager;
+        private Mock<IStaticCacheManager> _staticCacheManager;
         private Mock<IWorkContext> _workContext;
         private LocalizationSettings _localizationSettings;
         private SeoSettings _seoSettings;
@@ -30,13 +31,13 @@ namespace Nop.Services.Tests.Seo
             _eventPublisher = new Mock<IEventPublisher>();
             _languageService = new Mock<ILanguageService>();
             _urlRecordRepository = new Mock<IRepository<UrlRecord>>();
-            _cacheManager = new Mock<IStaticCacheManager>();
+            _staticCacheManager = new Mock<IStaticCacheManager>();
             _workContext = new Mock<IWorkContext>();
             _localizationSettings = new LocalizationSettings();
             _seoSettings = new SeoSettings();
 
-            _urlRecordService = new UrlRecordService(_eventPublisher.Object, _languageService.Object, _urlRecordRepository.Object,
-                _cacheManager.Object, _workContext.Object, _localizationSettings, _seoSettings);
+            _urlRecordService = new UrlRecordService(new FakeCacheKeyService(), _eventPublisher.Object, _languageService.Object, _urlRecordRepository.Object,
+                _staticCacheManager.Object, _workContext.Object, _localizationSettings, _seoSettings);
         }
 
         [Test]

@@ -19,6 +19,7 @@ namespace Nop.Services.Directory
         #region Fields
 
         private readonly CurrencySettings _currencySettings;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IExchangeRatePluginManager _exchangeRatePluginManager;
         private readonly IRepository<Currency> _currencyRepository;
@@ -29,11 +30,13 @@ namespace Nop.Services.Directory
         #region Ctor
 
         public CurrencyService(CurrencySettings currencySettings,
+            ICacheKeyService cacheKeyService,
             IEventPublisher eventPublisher,
             IExchangeRatePluginManager exchangeRatePluginManager,
             IRepository<Currency> currencyRepository,
             IStoreMappingService storeMappingService)
         {
+            _cacheKeyService = cacheKeyService;
             _currencySettings = currencySettings;
             _eventPublisher = eventPublisher;
             _exchangeRatePluginManager = exchangeRatePluginManager;
@@ -103,8 +106,7 @@ namespace Nop.Services.Directory
 
             query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
 
-            //cacheable copy
-            var key = NopDirectoryDefaults.CurrenciesAllCacheKey.FillCacheKey(showHidden);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.CurrenciesAllCacheKey, showHidden);
 
             var currencies = query.ToCachedList(key);
 

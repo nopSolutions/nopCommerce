@@ -37,6 +37,7 @@ namespace Nop.Plugin.Tax.Avalara
         private readonly AvalaraTaxManager _avalaraTaxManager;
         private readonly AvalaraTaxSettings _avalaraTaxSettings;
         private readonly IAddressService _addressService;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICountryService _countryService;
@@ -47,7 +48,7 @@ namespace Nop.Plugin.Tax.Avalara
         private readonly IProductService _productService;
         private readonly ISettingService _settingService;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITaxPluginManager _taxPluginManager;
         private readonly IWebHelper _webHelper;
@@ -62,6 +63,7 @@ namespace Nop.Plugin.Tax.Avalara
         public AvalaraTaxProvider(AvalaraTaxManager avalaraTaxManager,
             AvalaraTaxSettings avalaraTaxSettings,
             IAddressService addressService,
+            ICacheKeyService cacheKeyService,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICheckoutAttributeService checkoutAttributeService,
             ICountryService countryService,
@@ -72,7 +74,7 @@ namespace Nop.Plugin.Tax.Avalara
             IProductService productService,
             ISettingService settingService,
             IStateProvinceService stateProvinceService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             ITaxCategoryService taxCategoryService,
             ITaxPluginManager taxPluginManager,
             IWebHelper webHelper,
@@ -83,6 +85,7 @@ namespace Nop.Plugin.Tax.Avalara
             _avalaraTaxManager = avalaraTaxManager;
             _avalaraTaxSettings = avalaraTaxSettings;
             _addressService = addressService;
+            _cacheKeyService = cacheKeyService;
             _checkoutAttributeParser = checkoutAttributeParser;
             _checkoutAttributeService = checkoutAttributeService;
             _countryService = countryService;
@@ -93,7 +96,7 @@ namespace Nop.Plugin.Tax.Avalara
             _productService = productService;
             _settingService = settingService;
             _stateProvinceService = stateProvinceService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _taxCategoryService = taxCategoryService;
             _taxPluginManager = taxPluginManager;
             _webHelper = webHelper;
@@ -519,16 +522,16 @@ namespace Nop.Plugin.Tax.Avalara
                 return new CalculateTaxResult { Errors = new[] { "Address is not set" } };
 
             //construct a cache key
-            var cacheKey = AvalaraTaxDefaults.TaxRateCacheKey.FillCacheKey(
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(AvalaraTaxDefaults.TaxRateCacheKey,
                 calculateTaxRequest.Address.Address1,
                 calculateTaxRequest.Address.City,
                 calculateTaxRequest.Address.StateProvinceId ?? 0,
                 calculateTaxRequest.Address.CountryId ?? 0,
                 calculateTaxRequest.Address.ZipPostalCode);
 
-            //we don't use standard way _cacheManager.Get() due the need write errors to CalculateTaxResult
-            if (_cacheManager.IsSet(cacheKey))
-                return new CalculateTaxResult { TaxRate = _cacheManager.Get(cacheKey, () => default(decimal)) };
+            //we don't use standard way _staticCacheManager.Get() due the need write errors to CalculateTaxResult
+            if (_staticCacheManager.IsSet(cacheKey))
+                return new CalculateTaxResult { TaxRate = _staticCacheManager.Get(cacheKey, () => default(decimal)) };
 
             //get estimated tax
             var address = _addressService.GetAddressById(calculateTaxRequest.Address.Id);
@@ -537,7 +540,7 @@ namespace Nop.Plugin.Tax.Avalara
                 return new CalculateTaxResult { Errors = new[] { "No response from the service" }.ToList() };
 
             //tax rate successfully received, so cache it
-            _cacheManager.Set(cacheKey, totalTax.Value);
+            _staticCacheManager.Set(cacheKey, totalTax.Value);
 
             return new CalculateTaxResult { TaxRate = totalTax.Value };
         }

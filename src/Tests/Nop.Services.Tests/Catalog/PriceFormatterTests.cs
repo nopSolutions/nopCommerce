@@ -80,6 +80,7 @@ namespace Nop.Services.Tests.Catalog
             var pluginService = new FakePluginService();
             _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, pluginService);
             _currencyService = new CurrencyService(_currencySettings,
+                new FakeCacheKeyService(),
                 null,
                 _exchangeRatePluginManager,
                 _currencyRepo.Object,

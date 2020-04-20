@@ -15,14 +15,14 @@ namespace Nop.Services.Catalog.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(Category entity)
         {
-            var prefix = NopCatalogDefaults.CategoriesByParentCategoryPrefixCacheKey.ToCacheKey(entity);
+            var prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefixCacheKey, entity);
             RemoveByPrefix(prefix);
-            prefix = NopCatalogDefaults.CategoriesByParentCategoryPrefixCacheKey.ToCacheKey(entity.ParentCategoryId);
+            prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.CategoriesByParentCategoryPrefixCacheKey, entity.ParentCategoryId);
             RemoveByPrefix(prefix);
 
-            prefix = NopCatalogDefaults.CategoriesChildIdentifiersPrefixCacheKey.ToCacheKey(entity);
+            prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.CategoriesChildIdentifiersPrefixCacheKey, entity);
             RemoveByPrefix(prefix);
-            prefix = NopCatalogDefaults.CategoriesChildIdentifiersPrefixCacheKey.ToCacheKey(entity.ParentCategoryId);
+            prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.CategoriesChildIdentifiersPrefixCacheKey, entity.ParentCategoryId);
             RemoveByPrefix(prefix);
             
             RemoveByPrefix(NopCatalogDefaults.CategoriesDisplayedOnHomepagePrefixCacheKey);

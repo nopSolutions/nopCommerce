@@ -16,6 +16,7 @@ namespace Nop.Services.Catalog
     {
         #region Fields
 
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<ProductReviewReviewTypeMapping> _productReviewReviewTypeMappingRepository;
         private readonly IRepository<ReviewType> _reviewTypeRepository;
@@ -24,10 +25,12 @@ namespace Nop.Services.Catalog
 
         #region Ctor
 
-        public ReviewTypeService(IEventPublisher eventPublisher,
+        public ReviewTypeService(ICacheKeyService cacheKeyService,
+            IEventPublisher eventPublisher,
             IRepository<ProductReviewReviewTypeMapping> productReviewReviewTypeMappingRepository,
             IRepository<ReviewType> reviewTypeRepository)
         {
+            _cacheKeyService = cacheKeyService;
             _eventPublisher = eventPublisher;
             _productReviewReviewTypeMappingRepository = productReviewReviewTypeMappingRepository;
             _reviewTypeRepository = reviewTypeRepository;
@@ -120,7 +123,7 @@ namespace Nop.Services.Catalog
         public IList<ProductReviewReviewTypeMapping> GetProductReviewReviewTypeMappingsByProductReviewId(
             int productReviewId)
         {
-            var key = NopCatalogDefaults.ProductReviewReviewTypeMappingAllCacheKey.FillCacheKey(productReviewId);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductReviewReviewTypeMappingAllCacheKey, productReviewId);
 
             var query = from pam in _productReviewReviewTypeMappingRepository.Table
                 orderby pam.Id

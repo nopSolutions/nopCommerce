@@ -9,6 +9,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
+using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -32,9 +33,11 @@ namespace Nop.Tests
             DiscountProductMappingRepository = new Mock<IRepository<DiscountProductMapping>>();
 
             PriceCalculationService = new PriceCalculationService(new CatalogSettings(), new CurrencySettings(), 
-                new Mock<ICategoryService>().Object, new Mock<ICurrencyService>().Object, new Mock<ICustomerService>().Object, new Mock<IDiscountService>().Object,
-                new Mock<IManufacturerService>().Object, new Mock<IProductAttributeParser>().Object,
-                new Mock<IProductService>().Object, new TestCacheManager(), new Mock<IStoreContext>().Object, WorkContext.Object);
+                new Mock<ICacheKeyService>().Object, new Mock<ICategoryService>().Object, 
+                new Mock<ICurrencyService>().Object, new Mock<ICustomerService>().Object, 
+                new Mock<IDiscountService>().Object, new Mock<IManufacturerService>().Object, 
+                new Mock<IProductAttributeParser>().Object, new Mock<IProductService>().Object, 
+                new TestCacheManager(), new Mock<IStoreContext>().Object, WorkContext.Object);
 
             LocalizationService.Setup(l => l.GetResource(It.IsAny<string>())).Returns("Invalid");
             WorkContext.Setup(p => p.WorkingLanguage).Returns(new Language {Id = 1});

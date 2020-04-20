@@ -16,6 +16,7 @@ namespace Nop.Services.Common
     {
         #region Fields
 
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<AddressAttribute> _addressAttributeRepository;
         private readonly IRepository<AddressAttributeValue> _addressAttributeValueRepository;
@@ -24,10 +25,12 @@ namespace Nop.Services.Common
 
         #region Ctor
 
-        public AddressAttributeService(IEventPublisher eventPublisher,
+        public AddressAttributeService(ICacheKeyService cacheKeyService,
+            IEventPublisher eventPublisher,
             IRepository<AddressAttribute> addressAttributeRepository,
             IRepository<AddressAttributeValue> addressAttributeValueRepository)
         {
+            _cacheKeyService = cacheKeyService;
             _eventPublisher = eventPublisher;
             _addressAttributeRepository = addressAttributeRepository;
             _addressAttributeValueRepository = addressAttributeValueRepository;
@@ -130,7 +133,7 @@ namespace Nop.Services.Common
         /// <returns>Address attribute values</returns>
         public virtual IList<AddressAttributeValue> GetAddressAttributeValues(int addressAttributeId)
         {
-            var key = NopCommonDefaults.AddressAttributeValuesAllCacheKey.FillCacheKey(addressAttributeId);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCommonDefaults.AddressAttributeValuesAllCacheKey, addressAttributeId);
 
             var query = from aav in _addressAttributeValueRepository.Table
                 orderby aav.DisplayOrder, aav.Id

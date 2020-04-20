@@ -38,7 +38,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IProductService _productService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly ITaxPluginManager _taxPluginManager;
 
         #endregion
@@ -52,7 +52,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
             ILocalizationService localizationService,
             IPermissionService permissionService,
             IProductService productService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             ITaxPluginManager taxPluginManager)
         {
             _avalaraTaxManager = avalaraTaxManager;
@@ -62,7 +62,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
             _localizationService = localizationService;
             _permissionService = permissionService;
             _productService = productService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _taxPluginManager = taxPluginManager;
         }
 
@@ -99,7 +99,7 @@ namespace Nop.Plugin.Tax.Avalara.Components
             }
 
             //get Avalara pre-defined entity use codes
-            var cachedEntityUseCodes = _cacheManager.Get(AvalaraTaxDefaults.EntityUseCodesCacheKey, () => _avalaraTaxManager.GetEntityUseCodes());
+            var cachedEntityUseCodes = _staticCacheManager.Get(AvalaraTaxDefaults.EntityUseCodesCacheKey, () => _avalaraTaxManager.GetEntityUseCodes());
             var entityUseCodes = cachedEntityUseCodes?.Select(useCode => new SelectListItem
             {
                 Value = useCode.code,

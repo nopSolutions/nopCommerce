@@ -28,38 +28,40 @@ namespace Nop.Services.Localization
     {
         #region Fields
 
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILogger _logger;
         private readonly IRepository<LocaleStringResource> _lsrRepository;
         private readonly ISettingService _settingService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IWorkContext _workContext;
         private readonly LocalizationSettings _localizationSettings;
-
+        
         #endregion
 
         #region Ctor
 
-        public LocalizationService(
+        public LocalizationService(ICacheKeyService cacheKeyService,
             IEventPublisher eventPublisher,
             ILanguageService languageService,
             ILocalizedEntityService localizedEntityService,
             ILogger logger,
             IRepository<LocaleStringResource> lsrRepository,
             ISettingService settingService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IWorkContext workContext,
             LocalizationSettings localizationSettings)
         {
+            _cacheKeyService = cacheKeyService;
             _eventPublisher = eventPublisher;
             _languageService = languageService;
             _localizedEntityService = localizedEntityService;
             _logger = logger;
             _lsrRepository = lsrRepository;
             _settingService = settingService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _workContext = workContext;
             _localizationSettings = localizationSettings;
         }
@@ -267,12 +269,12 @@ namespace Nop.Services.Localization
         /// <returns>Locale string resources</returns>
         public virtual Dictionary<string, KeyValuePair<int, string>> GetAllResourceValues(int languageId, bool? loadPublicLocales)
         {
-            var key = NopLocalizationDefaults.LocaleStringResourcesAllCacheKey.FillCacheKey(languageId);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocaleStringResourcesAllCacheKey, languageId);
 
             //get all locale string resources by language identifier
-            if (!loadPublicLocales.HasValue || _cacheManager.IsSet(key))
+            if (!loadPublicLocales.HasValue || _staticCacheManager.IsSet(key))
             {
-                var rez = _cacheManager.Get(key, () =>
+                var rez = _staticCacheManager.Get(key, () =>
                 {
                     //we use no tracking here for performance optimization
                     //anyway records are loaded only for read-only operations
@@ -285,17 +287,18 @@ namespace Nop.Services.Localization
                 });
 
                 //remove separated resource 
-                _cacheManager.Remove(NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey.FillCacheKey(languageId));
-                _cacheManager.Remove(NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey.FillCacheKey(languageId));
+                _staticCacheManager.Remove(_cacheKeyService.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey, languageId));
+                _staticCacheManager.Remove(_cacheKeyService.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey, languageId));
 
                 return rez;
             }
 
             //performance optimization of the site startup
-            key = (loadPublicLocales.Value ? NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey : 
-                NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey).FillCacheKey(languageId);
+            key = _cacheKeyService.PrepareKeyForDefaultCache(
+                    loadPublicLocales.Value ? NopLocalizationDefaults.LocaleStringResourcesAllPublicCacheKey :NopLocalizationDefaults.LocaleStringResourcesAllAdminCacheKey,
+                    languageId);
 
-            return _cacheManager.Get(key, () =>
+            return _staticCacheManager.Get(key, () =>
             {
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
@@ -349,8 +352,8 @@ namespace Nop.Services.Localization
             else
             {
                 //gradual loading
-                var key = NopLocalizationDefaults.LocaleStringResourcesByResourceNameCacheKey
-                    .FillCacheKey(languageId, resourceKey);
+                var key = _cacheKeyService.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocaleStringResourcesByResourceNameCacheKey
+                    , languageId, resourceKey);
 
                 var query = from l in _lsrRepository.Table
                     where l.ResourceName == resourceKey
@@ -462,7 +465,7 @@ namespace Nop.Services.Localization
             _lsrRepository.Insert(lrsToInsertList);
 
             //clear cache
-            _cacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
         }
 
         /// <summary>

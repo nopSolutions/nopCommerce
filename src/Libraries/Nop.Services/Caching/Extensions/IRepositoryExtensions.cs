@@ -13,12 +13,13 @@ namespace Nop.Services.Caching.Extensions
         /// <typeparam name="TEntity">Type of entity</typeparam>
         /// <param name="repository">Entity repository</param>
         /// <param name="id">Entity identifier</param>
+        /// <param name="cacheTime">Cache time in minutes; set null to use default time</param>
         /// <returns>Cached entity</returns>
-        public static TEntity ToCachedGetById<TEntity>(this IRepository<TEntity> repository, object id) where TEntity : BaseEntity
+        public static TEntity ToCachedGetById<TEntity>(this IRepository<TEntity> repository, object id, int? cacheTime=null) where TEntity : BaseEntity
         {
-            var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
+            var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
 
-            return cacheManager.Get(new CacheKey(BaseEntity.GetEntityCacheKey(typeof(TEntity), id)), () => repository.GetById(id));
+            return staticCacheManager.Get(new CacheKey(BaseEntity.GetEntityCacheKey(typeof(TEntity), id), cacheTime), () => repository.GetById(id));
         }
     }
 }

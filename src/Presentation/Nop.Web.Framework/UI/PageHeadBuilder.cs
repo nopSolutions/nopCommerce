@@ -33,7 +33,7 @@ namespace Nop.Web.Framework.UI
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly INopFileProvider _fileProvider;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlRecordService _urlRecordService;
         private readonly SeoSettings _seoSettings;
@@ -62,7 +62,7 @@ namespace Nop.Web.Framework.UI
             IActionContextAccessor actionContextAccessor,
             IWebHostEnvironment webHostEnvironment,
             INopFileProvider fileProvider,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IUrlHelperFactory urlHelperFactory,
             IUrlRecordService urlRecordService,
             SeoSettings seoSettings         
@@ -73,7 +73,7 @@ namespace Nop.Web.Framework.UI
             _actionContextAccessor = actionContextAccessor;
             _webHostEnvironment = webHostEnvironment;
             _fileProvider = fileProvider;
-            _cacheManager = cacheManager;            
+            _staticCacheManager = staticCacheManager;            
             _urlHelperFactory = urlHelperFactory;
             _urlRecordService = urlRecordService;
             _seoSettings = seoSettings;
@@ -387,7 +387,7 @@ namespace Nop.Web.Framework.UI
                     {
                         CacheTime = RECHECK_BUNDLED_FILES_PERIOD
                     };
-                    var shouldRebuild = _cacheManager.Get(cacheKey, () => true);
+                    var shouldRebuild = _staticCacheManager.Get(cacheKey, () => true);
 
                     if (shouldRebuild)
                     {
@@ -400,7 +400,7 @@ namespace Nop.Web.Framework.UI
                             _processor.Process(configFilePath, new List<Bundle> {bundle});
                         }
 
-                        _cacheManager.Set(cacheKey, false);
+                        _staticCacheManager.Set(cacheKey, false);
                     }
 
                     //render
@@ -610,7 +610,7 @@ namespace Nop.Web.Framework.UI
                     {
                         CacheTime = RECHECK_BUNDLED_FILES_PERIOD
                     };
-                    var shouldRebuild = _cacheManager.Get(cacheKey, () => true);
+                    var shouldRebuild = _staticCacheManager.Get(cacheKey, () => true);
 
                     if (shouldRebuild)
                     {
@@ -623,7 +623,7 @@ namespace Nop.Web.Framework.UI
                             _processor.Process(configFilePath, new List<Bundle> {bundle});
                         }
 
-                        _cacheManager.Set(cacheKey, false);
+                        _staticCacheManager.Set(cacheKey, false);
                     }
 
                     //render

@@ -15,7 +15,7 @@ namespace Nop.Services.Topics.Caching
         protected override void ClearCache(Topic entity)
         {
             RemoveByPrefix(NopTopicDefaults.TopicsAllPrefixCacheKey);
-            var prefix = NopTopicDefaults.TopicBySystemNamePrefixCacheKey.ToCacheKey(entity.SystemName);
+            var prefix = _cacheKeyService.PrepareKeyPrefix(NopTopicDefaults.TopicBySystemNamePrefixCacheKey, entity.SystemName);
             RemoveByPrefix(prefix);
         }
     }

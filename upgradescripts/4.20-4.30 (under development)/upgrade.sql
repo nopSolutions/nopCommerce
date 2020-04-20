@@ -2891,3 +2891,19 @@ GO
 IF EXISTS (SELECT *  FROM sys.foreign_keys  WHERE object_id = OBJECT_ID(N'FK_Topic_TopicTemplateId_TopicTemplate_Id') AND parent_object_id = OBJECT_ID(N'Topic'))
 	ALTER TABLE [Topic] DROP CONSTRAINT FK_Topic_TopicTemplateId_TopicTemplate_Id
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'cachingsettings.shorttermcachetime')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'cachingsettings.shorttermcachetime', N'5', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'cachingsettings.defaultcachetime')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'cachingsettings.defaultcachetime', N'60', 0)
+END
+GO

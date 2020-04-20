@@ -21,6 +21,7 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICustomerService _customerService;
         private readonly INopDataProvider _dataProvider;
         private readonly IEventPublisher _eventPublisher;
@@ -35,6 +36,7 @@ namespace Nop.Services.Catalog
         #region Ctor
 
         public ProductTagService(CatalogSettings catalogSettings,
+            ICacheKeyService cacheKeyService,
             ICustomerService customerService,
             INopDataProvider dataProvider,
             IEventPublisher eventPublisher,
@@ -45,6 +47,7 @@ namespace Nop.Services.Catalog
             IWorkContext workContext)
         {
             _catalogSettings = catalogSettings;
+            _cacheKeyService = cacheKeyService;
             _customerService = customerService;
             _dataProvider = dataProvider;
             _eventPublisher = eventPublisher;
@@ -93,7 +96,7 @@ namespace Nop.Services.Catalog
                 allowedCustomerRolesIds = string.Join(",", _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
             }
 
-            var key = NopCatalogDefaults.ProductTagCountCacheKey.FillCacheKey(storeId, 
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagCountCacheKey, storeId, 
                 _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer), 
                 showHidden);
            
@@ -171,7 +174,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product tags</returns>
         public virtual IList<ProductTag> GetAllProductTagsByProductId(int productId)
         {
-            var key = NopCatalogDefaults.ProductTagAllByProductIdCacheKey.FillCacheKey(productId);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagAllByProductIdCacheKey, productId);
 
             var query = from pt in _productTagRepository.Table
                 join ppt in _productProductTagMappingRepository.Table on pt.Id equals ppt.ProductTagId

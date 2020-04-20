@@ -23,7 +23,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ILogger _logger;
         private readonly IOrderModelFactory _orderModelFactory;
         private readonly ISettingService _settingService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IWorkContext _workContext;
         private readonly NopHttpClient _nopHttpClient;
 
@@ -36,7 +36,7 @@ namespace Nop.Web.Areas.Admin.Factories
             ILogger logger,
             IOrderModelFactory orderModelFactory,
             ISettingService settingService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IWorkContext workContext,
             NopHttpClient nopHttpClient)
         {
@@ -45,7 +45,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _logger = logger;
             _orderModelFactory = orderModelFactory;
             _settingService = settingService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _workContext = workContext;
             _nopHttpClient = nopHttpClient;
         }
@@ -88,7 +88,7 @@ namespace Nop.Web.Areas.Admin.Factories
             try
             {
                 //try to get news RSS feed
-                var rssData = _cacheManager.Get(NopModelCacheDefaults.OfficialNewsModelKey, () =>
+                var rssData = _staticCacheManager.Get(NopModelCacheDefaults.OfficialNewsModelKey, () =>
                 {
                     try
                     {

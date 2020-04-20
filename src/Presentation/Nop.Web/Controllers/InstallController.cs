@@ -207,8 +207,8 @@ namespace Nop.Web.Controllers
                 //reset cache
                 DataSettingsManager.ResetCache();
 
-                var cacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-                cacheManager.Clear();
+                var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
+                staticCacheManager.Clear();
 
                 //clear provider settings if something got wrong
                 DataSettingsManager.SaveSettings(new DataSettings(), _fileProvider);

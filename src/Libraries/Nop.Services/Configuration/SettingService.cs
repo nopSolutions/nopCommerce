@@ -23,7 +23,7 @@ namespace Nop.Services.Configuration
 
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Setting> _settingRepository;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -31,11 +31,11 @@ namespace Nop.Services.Configuration
 
         public SettingService(IEventPublisher eventPublisher,
             IRepository<Setting> settingRepository,
-            IStaticCacheManager cacheManager)
+            IStaticCacheManager staticCacheManager)
         {
             _eventPublisher = eventPublisher;
             _settingRepository = settingRepository;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -49,7 +49,7 @@ namespace Nop.Services.Configuration
         protected virtual IDictionary<string, IList<Setting>> GetAllSettingsDictionary()
         {
             //cache
-            return _cacheManager.Get(NopConfigurationDefaults.SettingsAllAsDictionaryCacheKey, () =>
+            return _staticCacheManager.Get(NopConfigurationDefaults.SettingsAllAsDictionaryCacheKey, () =>
             {
                 var settings = GetAllSettings();
 
@@ -499,7 +499,7 @@ namespace Nop.Services.Configuration
         /// </summary>
         public virtual void ClearCache()
         {
-            _cacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopConfigurationDefaults.SettingsPrefixCacheKey);
         }
 
         /// <summary>

@@ -65,7 +65,7 @@ namespace Nop.Services.Orders
             if (returnRequestId == 0)
                 return null;
 
-            return _returnRequestRepository.ToCachedGetById(returnRequestId);
+            return _returnRequestRepository.GetById(returnRequestId);
         }
 
         /// <summary>

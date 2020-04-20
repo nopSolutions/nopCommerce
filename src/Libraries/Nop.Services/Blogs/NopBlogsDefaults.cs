@@ -33,8 +33,9 @@ namespace Nop.Services.Blogs
         /// <remarks>
         /// {0} : language ID
         /// {1} : current store ID
+        /// {2} : show hidden?
         /// </remarks>
-        public static CacheKey BlogTagsModelCacheKey => new CacheKey("Nop.blog.tags-{0}-{1}", BlogTagsPrefixCacheKey);
+        public static CacheKey BlogTagsModelCacheKey => new CacheKey("Nop.blog.tags-{0}-{1}-{2}", BlogTagsPrefixCacheKey);
 
         /// <summary>
         /// Gets a key pattern to clear cache

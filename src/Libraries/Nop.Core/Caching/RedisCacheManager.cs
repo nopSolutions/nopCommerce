@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Nop.Core.Configuration;
 using Nop.Core.Redis;
@@ -20,27 +21,26 @@ namespace Nop.Core.Caching
         #region Fields
 
         private bool _disposed;
-        private readonly ICacheManager _perRequestCacheManager;
         private readonly IRedisConnectionWrapper _connectionWrapper;
         private readonly IDatabase _db;
+        private readonly MemoryCacheManager _memoryCacheManager;
 
         #endregion
 
         #region Ctor
 
-        public RedisCacheManager(ICacheManager perRequestCacheManager,
-            IRedisConnectionWrapper connectionWrapper,
+        public RedisCacheManager(IRedisConnectionWrapper connectionWrapper,
             NopConfig config)
         {
             if (string.IsNullOrEmpty(config.RedisConnectionString))
                 throw new Exception("Redis connection string is empty");
 
-            _perRequestCacheManager = perRequestCacheManager;
-
             // ConnectionMultiplexer.Connect should only be called once and shared between callers
             _connectionWrapper = connectionWrapper;
 
             _db = _connectionWrapper.GetDatabase(config.RedisDatabaseId ?? (int)RedisDatabaseNumber.Cache);
+
+            _memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions()));
         }
 
         #endregion
@@ -78,10 +78,10 @@ namespace Nop.Core.Caching
         protected virtual async Task<T> GetAsync<T>(CacheKey key)
         {
             //little performance workaround here:
-            //we use "PerRequestCacheManager" to cache a loaded object in memory for the current HTTP request.
+            //we use "MemoryCacheManager" to cache a loaded object in memory for the current HTTP request.
             //this way we won't connect to Redis server many times per HTTP request (e.g. each time to load a locale or setting)
-            if (_perRequestCacheManager.IsSet(key))
-                return _perRequestCacheManager.Get(key, () => default(T));
+            if (_memoryCacheManager.IsSet(key))
+                return _memoryCacheManager.Get(key, () => default(T));
 
             //get serialized item from cache
             var serializedItem = await _db.StringGetAsync(key.Key);
@@ -94,7 +94,7 @@ namespace Nop.Core.Caching
                 return default;
 
             //set item in the per-request cache
-            _perRequestCacheManager.Set(key, item);
+            _memoryCacheManager.Set(key, item);
 
             return item;
         }
@@ -128,9 +128,9 @@ namespace Nop.Core.Caching
         protected virtual async Task<bool> IsSetAsync(CacheKey key)
         {
             //little performance workaround here:
-            //we use "PerRequestCacheManager" to cache a loaded object in memory for the current HTTP request.
+            //we use "MemoryCacheManager" to cache a loaded object in memory for the current HTTP request.
             //this way we won't connect to Redis server many times per HTTP request (e.g. each time to load a locale or setting)
-            if (_perRequestCacheManager.IsSet(key))
+            if (_memoryCacheManager.IsSet(key))
                 return true;
 
             return await _db.KeyExistsAsync(key.Key);
@@ -172,10 +172,10 @@ namespace Nop.Core.Caching
         public virtual T Get<T>(CacheKey key)
         {
             //little performance workaround here:
-            //we use "PerRequestCacheManager" to cache a loaded object in memory for the current HTTP request.
+            //we use "MemoryCacheManager" to cache a loaded object in memory for the current HTTP request.
             //this way we won't connect to Redis server many times per HTTP request (e.g. each time to load a locale or setting)
-            if (_perRequestCacheManager.IsSet(key))
-                return _perRequestCacheManager.Get(key, () => default(T));
+            if (_memoryCacheManager.IsSet(key))
+                return _memoryCacheManager.Get(key, () => default(T));
 
             //get serialized item from cache
             var serializedItem = _db.StringGet(key.Key);
@@ -188,7 +188,7 @@ namespace Nop.Core.Caching
                 return default;
 
             //set item in the per-request cache
-            _perRequestCacheManager.Set(key, item);
+            _memoryCacheManager.Set(key, item);
 
             return item;
         }
@@ -244,9 +244,9 @@ namespace Nop.Core.Caching
         public virtual bool IsSet(CacheKey key)
         {
             //little performance workaround here:
-            //we use "PerRequestCacheManager" to cache a loaded object in memory for the current HTTP request.
+            //we use "MemoryCacheManager" to cache a loaded object in memory for the current HTTP request.
             //this way we won't connect to Redis server many times per HTTP request (e.g. each time to load a locale or setting)
-            if (_perRequestCacheManager.IsSet(key))
+            if (_memoryCacheManager.IsSet(key))
                 return true;
 
             return _db.KeyExists(key.Key);
@@ -264,7 +264,7 @@ namespace Nop.Core.Caching
 
             //remove item from caches
             _db.KeyDelete(key.Key);
-            _perRequestCacheManager.Remove(key);
+            _memoryCacheManager.Remove(key);
         }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace Nop.Core.Caching
         /// <param name="prefix">String key prefix</param>
         public virtual void RemoveByPrefix(string prefix)
         {
-            _perRequestCacheManager.RemoveByPrefix(prefix);
+            _memoryCacheManager.RemoveByPrefix(prefix);
 
             foreach (var endPoint in _connectionWrapper.GetEndPoints())
             {
@@ -292,13 +292,8 @@ namespace Nop.Core.Caching
             {
                 var keys = GetKeys(endPoint).ToArray();
                 
-                //we cant use _perRequestCacheManager.Clear(),
-                //because HttpContext stores some server data that we should not delete
-                foreach (var redisKey in keys)
-                {
-                    _perRequestCacheManager.Remove(new CacheKey(redisKey.ToString()));
-                }
-                
+                _memoryCacheManager.Clear();
+
                 _db.KeyDelete(keys);
             }
         }

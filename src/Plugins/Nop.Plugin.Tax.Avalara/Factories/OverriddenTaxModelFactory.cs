@@ -19,7 +19,7 @@ namespace Nop.Plugin.Tax.Avalara.Factories
 
         private readonly AvalaraTaxManager _avalaraTaxManager;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITaxPluginManager _taxPluginManager;
 
@@ -29,7 +29,7 @@ namespace Nop.Plugin.Tax.Avalara.Factories
 
         public OverriddenTaxModelFactory(AvalaraTaxManager avalaraTaxManager,
             IGenericAttributeService genericAttributeService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             ITaxCategoryService taxCategoryService,
             ITaxPluginManager taxPluginManager) : base(
                 taxCategoryService,
@@ -37,7 +37,7 @@ namespace Nop.Plugin.Tax.Avalara.Factories
         {
             _avalaraTaxManager = avalaraTaxManager;
             _genericAttributeService = genericAttributeService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _taxCategoryService = taxCategoryService;
             _taxPluginManager = taxPluginManager;
         }
@@ -64,7 +64,7 @@ namespace Nop.Plugin.Tax.Avalara.Factories
             var taxCategories = _taxCategoryService.GetAllTaxCategories().ToPagedList(searchModel);
 
             //get tax types and define the default value
-            var taxTypes = _cacheManager.Get(AvalaraTaxDefaults.TaxCodeTypesCacheKey, () => _avalaraTaxManager.GetTaxCodeTypes())
+            var taxTypes = _staticCacheManager.Get(AvalaraTaxDefaults.TaxCodeTypesCacheKey, () => _avalaraTaxManager.GetTaxCodeTypes())
                 ?.Select(taxType => new { Id = taxType.Key, Name = taxType.Value });
             var defaultType = taxTypes
                 ?.FirstOrDefault(taxType => taxType.Name.Equals("Unknown", StringComparison.InvariantCultureIgnoreCase))
