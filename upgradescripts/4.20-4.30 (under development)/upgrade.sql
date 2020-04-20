@@ -721,6 +721,120 @@ set @resources='
   <LocaleResource Name="Admin.Address.Other">
     <Value>Other</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.PluginNotEnabled">
+    <Value>Uninstall and delete the plugin(s) that you don''t use</Value>
+  </LocaleResource>
+  <LocaleResource Name="BackInStockSubscriptions.Notification.Subscribed">
+    <Value>You''ve successfully subscribed</Value>
+  </LocaleResource>
+  <LocaleResource Name="BackInStockSubscriptions.Notification.Unsubscribed">
+    <Value>You''ve successfully unsubscribed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog">
+    <Value>Activity log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.ActivityLogType">
+    <Value>Activity log type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.ActivityLogType.Hint">
+    <Value>The activity log type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogTypeColumn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.Comment">
+    <Value>Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.CreatedOn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.CreatedOn">
+    <Value>Created On</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.CreatedOnFrom">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.CreatedOnFrom">
+    <Value>Created from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.CreatedOnFrom.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.CreatedOnFrom.Hint">
+    <Value>The creation from date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.CreatedOnTo">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.CreatedOnTo">
+    <Value>Created to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.CreatedOnTo.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.CreatedOnTo.Hint">
+    <Value>The creation to date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.Customer">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.Customer">
+    <Value>Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.CustomerEmail">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.CustomerEmail">
+    <Value>Customer Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.CustomerEmail.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.CustomerEmail.Hint">
+    <Value>A customer Email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLog.Fields.IpAddress">
+    <Value>IP address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLogType">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLogType">
+    <Value>Activity Types</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLogType.Fields.Enabled">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLogType.Fields.Enabled">
+    <Value>Is Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLogType.Fields.Name">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLogType.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLogType.Updated">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.ActivityLogType.Updated">
+    <Value>The types have been updated successfully.</Value>
+  </LocaleResource>
 </Language>
 '
 
