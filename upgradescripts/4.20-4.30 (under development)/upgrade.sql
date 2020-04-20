@@ -693,7 +693,10 @@ set @resources='
   </LocaleResource> 
   <LocaleResource Name="Admin.Configuration.Shipping.Measures.Dimensions.Fields.Ratio.Required">
     <Value></Value>
-  </LocaleResource>  
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.Result.EmailValidation">
+    <Value>Your registration has been successfully completed. You have just been sent an email containing activation instructions.</Value>
+  </LocaleResource>
 </Language>
 '
 
