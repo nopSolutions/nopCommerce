@@ -250,8 +250,8 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 CountryId = model.TestAddress?.CountryId,
                 Address1 = model.TestAddress?.Address1,
                 ZipPostalCode = model.TestAddress?.ZipPostalCode,
-                StateProvinceId = model.TestAddress?.StateProvinceId
-            }, _workContext.CurrentCustomer.Id.ToString());
+                StateProvince = model.TestAddress?.StateProvinceId
+            }, _workContext.CurrentCustomer.Id.ToString(), "", "");
 
             if (transaction?.totalTax != null)
             {
