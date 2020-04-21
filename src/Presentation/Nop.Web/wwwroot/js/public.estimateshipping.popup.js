@@ -136,7 +136,7 @@
                 }
 
                 // if we have the already selected shipping options with the same address, reload it
-                if (this.selectedShippingOption && this.addressesAreEqual(this.selectedShippingOption.address, address))
+                if (!$.magnificPopup.instance.isOpen && this.selectedShippingOption && this.addressesAreEqual(this.selectedShippingOption.address, address))
                     this.selectShippingOption(activeOption);
 
                 this.setActiveShippingOption(activeOption);
