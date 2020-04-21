@@ -2222,9 +2222,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 products = products.Where(p => p.VendorId == _workContext.CurrentVendor.Id).ToList();
             }
 
-            var xml = _exportManager.ExportProductsToXml(products);
-
-            return File(Encoding.UTF8.GetBytes(xml), MimeTypes.ApplicationXml, "products.xml");
+            try
+            {
+                var xml = _exportManager.ExportProductsToXml(products);
+                return File(Encoding.UTF8.GetBytes(xml), MimeTypes.ApplicationXml, "products.xml");
+            }
+            catch (Exception exc)
+            {
+                _notificationService.ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         [HttpPost, ActionName("ExportToExcel")]
@@ -2268,7 +2275,6 @@ namespace Nop.Web.Areas.Admin.Controllers
             try
             {
                 var bytes = _exportManager.ExportProductsToXlsx(products);
-
                 return File(bytes, MimeTypes.TextXlsx, "products.xlsx");
             }
             catch (Exception exc)
@@ -2299,9 +2305,16 @@ namespace Nop.Web.Areas.Admin.Controllers
                 products = products.Where(p => p.VendorId == _workContext.CurrentVendor.Id).ToList();
             }
 
-            var bytes = _exportManager.ExportProductsToXlsx(products);
-
-            return File(bytes, MimeTypes.TextXlsx, "products.xlsx");
+            try
+            {
+                var bytes = _exportManager.ExportProductsToXlsx(products);
+                return File(bytes, MimeTypes.TextXlsx, "products.xlsx");
+            }
+            catch (Exception exc)
+            {
+                _notificationService.ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         [HttpPost]

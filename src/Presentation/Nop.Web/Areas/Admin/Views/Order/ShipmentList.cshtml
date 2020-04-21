@@ -368,24 +368,31 @@
         </div>
     </div>
 </form>
+<nop-alert asp-alert-id="statesAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />
+<nop-alert asp-alert-id="setAsShippedSelectedFailed" />
+<nop-alert asp-alert-id="setAsDeliveredSelectedFailed" />
 
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 <form asp-controller="Order" asp-action="PdfPackagingSlipSelected" method="post" id="pdf-packaging-slip-selected-form">
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 </form>
-<nop-alert asp-alert-id="statesAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />
-<nop-alert asp-alert-id="setAsShippedSelectedFailed" />
-<nop-alert asp-alert-id="setAsDeliveredSelectedFailed" />
 
 <script>
     $(document).ready(function () {
         $('#exportpackagingslips-selected').click(function (e) {
             e.preventDefault();
             var ids = selectedIds.join(",");
-            $('#pdf-packaging-slip-selected-form #selectedIds').val(ids);
-            $('#pdf-packaging-slip-selected-form').submit();
-            updateTable('#shipments-grid');
+            if (!ids) {
+                $('#exportPackagingSlipsSelected-info').text("@T("Admin.Orders.Shipments.NoShipmentsSelected")");
+                $("#exportPackagingSlipsSelected").click();
+            }
+            else {
+                $('#pdf-packaging-slip-selected-form #selectedIds').val(ids);
+                $('#pdf-packaging-slip-selected-form').submit();
+                updateTable('#shipments-grid');
+            }
             return false;
         });
     });
 </script>
+<nop-alert asp-alert-id="exportPackagingSlipsSelected" />

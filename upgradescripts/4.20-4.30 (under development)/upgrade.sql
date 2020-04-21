@@ -697,6 +697,18 @@ set @resources='
   <LocaleResource Name="Account.Register.Result.EmailValidation">
     <Value>Your registration has been successfully completed. You have just been sent an email containing activation instructions.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.PdfInvoice.NoOrders">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.NoOrders">
+    <Value>No orders selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Products.NoProducts">
+    <Value>No products selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.NoCustomers">
+    <Value>No customers selected</Value>
+  </LocaleResource>
 </Language>
 '
 
