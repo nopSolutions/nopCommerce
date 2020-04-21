@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using Nop.Core.Domain.Localization;
+﻿using System;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Stores;
 
@@ -11,8 +9,6 @@ namespace Nop.Core.Domain.Blogs
     /// </summary>
     public partial class BlogPost : BaseEntity, ISlugSupported, IStoreMappingSupported
     {
-        private ICollection<BlogComment> _blogComments;
-
         /// <summary>
         /// Gets or sets the language identifier
         /// </summary>
@@ -82,19 +78,5 @@ namespace Nop.Core.Domain.Blogs
         /// Gets or sets the date and time of entity creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-
-        /// <summary>
-        /// Gets or sets the blog comments
-        /// </summary>
-        public virtual ICollection<BlogComment> BlogComments
-        {
-            get => _blogComments ?? (_blogComments = new List<BlogComment>());
-            protected set => _blogComments = value;
-        }
-        
-        /// <summary>
-        /// Gets or sets the language
-        /// </summary>
-        public virtual Language Language { get; set; }
     }
 }

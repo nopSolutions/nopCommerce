@@ -1,17 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Copyright>Copyright © Nop Solutions, Ltd</Copyright> 
-    <Company>Nop Solutions, Ltd</Company> 
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Copyright>Copyright © Nop Solutions, Ltd</Copyright>
+    <Company>Nop Solutions, Ltd</Company>
     <Authors>Nop Solutions, Ltd</Authors>
-    <PackageLicenseUrl></PackageLicenseUrl> 
-    <PackageProjectUrl>http://www.nopcommerce.com/</PackageProjectUrl> 
-    <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl> 
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageProjectUrl>https://www.nopcommerce.com/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/nopSolutions/nopCommerce</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <OutputPath>..\..\Presentation\Nop.Web\Plugins\Payments.Square</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
-    <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project. You need to set this parameter to true if your plugin has a nuget package to ensure that the dlls copied from the NuGet cache to the output of your project-->
+    <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project. 
+    You need to set this parameter to true if your plugin has a nuget package 
+    to ensure that the dlls copied from the NuGet cache to the output of your project-->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
@@ -46,7 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Square.Connect" Version="2.23.0" />
+    <PackageReference Include="Square" Version="5.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -59,6 +61,6 @@
     <!-- Delete unnecessary libraries from plugins path -->
     <MSBuild Projects="@(ClearPluginAssemblies)" Properties="PluginPath=$(MSBuildProjectDirectory)\$(OutDir)" Targets="NopClear" />
   </Target>
- 
+
 
 </Project>

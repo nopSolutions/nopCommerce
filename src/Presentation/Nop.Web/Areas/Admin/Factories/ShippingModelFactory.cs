@@ -34,6 +34,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IPickupPluginManager _pickupPluginManager;
         private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IShippingService _shippingService;
+        private readonly IStateProvinceService _stateProvinceService;
 
         #endregion
 
@@ -47,7 +48,8 @@ namespace Nop.Web.Areas.Admin.Factories
             ILocalizedModelFactory localizedModelFactory,
             IPickupPluginManager pickupPluginManager,
             IShippingPluginManager shippingPluginManager,
-            IShippingService shippingService)
+            IShippingService shippingService,
+            IStateProvinceService stateProvinceService)
         {
             _addressService = addressService;
             _baseAdminModelFactory = baseAdminModelFactory;
@@ -58,6 +60,7 @@ namespace Nop.Web.Areas.Admin.Factories
             _pickupPluginManager = pickupPluginManager;
             _shippingPluginManager = shippingPluginManager;
             _shippingService = shippingService;
+            _stateProvinceService = stateProvinceService;
         }
 
         #endregion
@@ -279,7 +282,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (shippingMethod != null)
             {
                 //fill in model values from the entity
-                model = model ?? shippingMethod.ToModel<ShippingMethodModel>();
+                model ??= shippingMethod.ToModel<ShippingMethodModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -350,7 +353,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (deliveryDate != null)
             {
                 //fill in model values from the entity
-                model = model ?? deliveryDate.ToModel<DeliveryDateModel>();
+                model ??= deliveryDate.ToModel<DeliveryDateModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -404,7 +407,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (productAvailabilityRange != null)
             {
                 //fill in model values from the entity
-                model = model ?? productAvailabilityRange.ToModel<ProductAvailabilityRangeModel>();
+                model ??= productAvailabilityRange.ToModel<ProductAvailabilityRangeModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>
@@ -447,7 +450,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get warehouses
-            var warehouses = _shippingService.GetAllWarehouses().ToPagedList(searchModel);
+            var warehouses = _shippingService.GetAllWarehouses(
+                name : searchModel.SearchName)
+                .ToPagedList(searchModel);
 
             //prepare list model
             var model = new WarehouseListModel().PrepareToGrid(searchModel, warehouses, () =>
@@ -500,7 +505,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AvailableCountries = countries.Select(country =>
             {
                 var countryModel = country.ToModel<CountryModel>();
-                countryModel.NumberOfStates = country.StateProvinces?.Count ?? 0;
+                countryModel.NumberOfStates = _stateProvinceService.GetStateProvincesByCountryId(country.Id)?.Count ?? 0;
 
                 return countryModel;
             }).ToList();

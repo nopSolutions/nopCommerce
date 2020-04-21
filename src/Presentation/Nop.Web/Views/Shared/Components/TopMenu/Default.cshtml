@@ -104,8 +104,6 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.MobHeaderMenuAfter })
     </ul>
 
-
-
     @if (Model.UseAjaxMenu)
     {
         <script asp-location="Footer">
@@ -116,7 +114,7 @@
             var localized_data = {
                 AjaxFailure: "@T("MainMenu.AjaxFailure")"
             };
-            mainMenu.init('@Url.Action("GetCatalogRoot", "Catalog")', '@Url.Action("GetCatalogSubCategories", "Catalog")', 'ul.top-menu.notmobile', 'ul.top-menu.mobile', localized_data);
+            mainMenu.init('@Url.RouteUrl("GetCatalogRoot")', '@Url.RouteUrl("GetCatalogSubCategories")', 'ul.top-menu.notmobile', 'ul.top-menu.mobile', localized_data);
         });
         </script>
 

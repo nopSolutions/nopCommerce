@@ -43,26 +43,24 @@ namespace Nop.Web.Framework.Menu
 
             if (!string.IsNullOrEmpty(content))
             {
+                var doc = new XmlDocument();
                 using (var sr = new StringReader(content))
                 {
-                    using (var xr = XmlReader.Create(sr,
-                            new XmlReaderSettings
-                            {
-                                CloseInput = true,
-                                IgnoreWhitespace = true,
-                                IgnoreComments = true,
-                                IgnoreProcessingInstructions = true
-                            }))
-                    {
-                        var doc = new XmlDocument();
-                        doc.Load(xr);
-
-                        if ((doc.DocumentElement != null) && doc.HasChildNodes)
+                    using var xr = XmlReader.Create(sr,
+                        new XmlReaderSettings
                         {
-                            var xmlRootNode = doc.DocumentElement.FirstChild;
-                            Iterate(RootNode, xmlRootNode);
-                        }
-                    }
+                            CloseInput = true,
+                            IgnoreWhitespace = true,
+                            IgnoreComments = true,
+                            IgnoreProcessingInstructions = true
+                        });
+
+                    doc.Load(xr);
+                }
+                if ((doc.DocumentElement != null) && doc.HasChildNodes)
+                {
+                    var xmlRootNode = doc.DocumentElement.FirstChild;
+                    Iterate(RootNode, xmlRootNode);
                 }
             }
         }

@@ -1,13 +1,15 @@
 ﻿using FluentValidation;
-using Nop.Web.Areas.Admin.Models.Directory;
+using Nop.Core.Domain.Directory;
+using Nop.Data;
 using Nop.Services.Localization;
+using Nop.Web.Areas.Admin.Models.Directory;
 using Nop.Web.Framework.Validators;
 
 namespace Nop.Web.Areas.Admin.Validators.Directory
 {
     public partial class CountryValidator : BaseNopValidator<CountryModel>
     {
-        public CountryValidator(ILocalizationService localizationService)
+        public CountryValidator(ILocalizationService localizationService, INopDataProvider dataProvider)
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
@@ -27,6 +29,8 @@ namespace Nop.Web.Areas.Admin.Validators.Directory
             RuleFor(x => x.ThreeLetterIsoCode)
                 .Length(3)
                 .WithMessage(localizationService.GetResource("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode.Length"));
+
+            SetDatabaseValidationRules<Country>(dataProvider);
         }
     }
 }

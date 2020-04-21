@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
 
@@ -36,7 +37,10 @@ namespace Nop.Services.Events
                     {
                         EngineContext.Current.Resolve<ILogger>()?.Error(exception.Message, exception);
                     }
-                    catch { }
+                    catch
+                    {
+                        // ignored
+                    }
                 }
             }
         }

@@ -95,7 +95,7 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(searchModel));
 
             //get languages
-            var languages = _languageService.GetAllLanguages(showHidden: true, loadCacheableCopy: false).ToPagedList(searchModel);
+            var languages = _languageService.GetAllLanguages(showHidden: true).ToPagedList(searchModel);
 
             //prepare list model
             var model = new LanguageListModel().PrepareToGrid(searchModel, languages, () =>
@@ -121,7 +121,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (language != null)
             {
                 //fill in model values from the entity
-                model = model ?? language.ToModel<LanguageModel>();
+                model ??= language.ToModel<LanguageModel>();
 
                 //prepare nested search model
                 PrepareLocaleResourceSearchModel(model.LocaleResourceSearchModel, language);

@@ -6,10 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core;
-using Nop.Core.Data;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
+using Nop.Data;
+using Nop.Services.Caching;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -35,6 +39,7 @@ namespace Nop.Services.Orders
         private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly ICurrencyService _currencyService;
@@ -45,12 +50,14 @@ namespace Nop.Services.Orders
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
+        private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductService _productService;
         private readonly IRepository<ShoppingCartItem> _sciRepository;
         private readonly IShippingService _shippingService;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IUrlHelperFactory _urlHelperFactory;
@@ -66,6 +73,7 @@ namespace Nop.Services.Orders
         public ShoppingCartService(CatalogSettings catalogSettings,
             IAclService aclService,
             IActionContextAccessor actionContextAccessor,
+            ICacheKeyService cacheKeyService,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICheckoutAttributeService checkoutAttributeService,
             ICurrencyService currencyService,
@@ -76,12 +84,14 @@ namespace Nop.Services.Orders
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             IPermissionService permissionService,
+            IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
             IProductAttributeParser productAttributeParser,
             IProductAttributeService productAttributeService,
             IProductService productService,
             IRepository<ShoppingCartItem> sciRepository,
             IShippingService shippingService,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
             IUrlHelperFactory urlHelperFactory,
@@ -93,6 +103,7 @@ namespace Nop.Services.Orders
             _catalogSettings = catalogSettings;
             _aclService = aclService;
             _actionContextAccessor = actionContextAccessor;
+            _cacheKeyService = cacheKeyService;
             _checkoutAttributeParser = checkoutAttributeParser;
             _checkoutAttributeService = checkoutAttributeService;
             _currencyService = currencyService;
@@ -103,12 +114,14 @@ namespace Nop.Services.Orders
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _permissionService = permissionService;
+            _priceCalculationService = priceCalculationService;
             _priceFormatter = priceFormatter;
             _productAttributeParser = productAttributeParser;
             _productAttributeService = productAttributeService;
             _productService = productService;
             _sciRepository = sciRepository;
             _shippingService = shippingService;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
             _urlHelperFactory = urlHelperFactory;
@@ -148,7 +161,7 @@ namespace Nop.Services.Orders
                 return false;
 
             //gift cards
-            if (shoppingCartItem.Product.IsGiftCard)
+            if (product.IsGiftCard)
             {
                 _productAttributeParser.GetGiftCardAttribute(attributesXml, out var giftCardRecipientName1, out var _, out var giftCardSenderName1, out var _, out var _);
 
@@ -161,21 +174,31 @@ namespace Nop.Services.Orders
             }
 
             //price is the same (for products which require customers to enter a price)
-            if (shoppingCartItem.Product.CustomerEntersPrice)
+            if (product.CustomerEntersPrice)
             {
-                //TODO should we use PriceCalculationService.RoundPrice here?
+                //we use rounding to eliminate errors associated with storing real numbers in memory when comparing
                 var customerEnteredPricesEqual = Math.Round(shoppingCartItem.CustomerEnteredPrice, 2) == Math.Round(customerEnteredPrice, 2);
                 if (!customerEnteredPricesEqual)
                     return false;
             }
             
-            if (!shoppingCartItem.Product.IsRental) 
+            if (!product.IsRental) 
                 return true;
 
             //rental products
             var rentalInfoEqual = shoppingCartItem.RentalStartDateUtc == rentalStartDate && shoppingCartItem.RentalEndDateUtc == rentalEndDate;
             
             return rentalInfoEqual;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether customer shopping cart is empty
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        protected virtual bool IsCustomerShoppingCartEmpty(Customer customer)
+        {
+            return !_sciRepository.Table.Any(sci => sci.CustomerId == customer.Id);
         }
 
         #endregion
@@ -194,20 +217,20 @@ namespace Nop.Services.Orders
             if (shoppingCartItem == null)
                 throw new ArgumentNullException(nameof(shoppingCartItem));
 
-            var customer = shoppingCartItem.Customer;
+            var customer = _customerService.GetCustomerById(shoppingCartItem.CustomerId);
             var storeId = shoppingCartItem.StoreId;
 
             //reset checkout data
             if (resetCheckoutData)
             {
-                _customerService.ResetCheckoutData(shoppingCartItem.Customer, shoppingCartItem.StoreId);
+                _customerService.ResetCheckoutData(customer, shoppingCartItem.StoreId);
             }
 
             //delete item
             _sciRepository.Delete(shoppingCartItem);
 
             //reset "HasShoppingCartItems" property used for performance optimization
-            customer.HasShoppingCartItems = customer.ShoppingCartItems.Any();
+            customer.HasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
             _customerService.UpdateCustomer(customer);
 
             //validate checkout attributes
@@ -217,9 +240,13 @@ namespace Nop.Services.Orders
             {
                 var cart = GetShoppingCart(customer, ShoppingCartType.ShoppingCart, storeId);
 
-                var checkoutAttributesXml = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CheckoutAttributes, storeId);
-                checkoutAttributesXml = _checkoutAttributeParser.EnsureOnlyActiveAttributes(checkoutAttributesXml, cart);
-                _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.CheckoutAttributes, checkoutAttributesXml, storeId);
+                var checkoutAttributesXml =
+                    _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.CheckoutAttributes,
+                        storeId);
+                checkoutAttributesXml =
+                    _checkoutAttributeParser.EnsureOnlyActiveAttributes(checkoutAttributesXml, cart);
+                _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.CheckoutAttributes,
+                    checkoutAttributesXml, storeId);
             }
 
             //event notification
@@ -233,10 +260,10 @@ namespace Nop.Services.Orders
                 return;
 
             var requiredProductIds = _productService.ParseRequiredProductIds(product);
-            var requiredShoppingCartItems = customer.ShoppingCartItems
-                .Where(x => x.ShoppingCartType == shoppingCartItem.ShoppingCartType)
-                .Where(item => requiredProductIds.Any(id => id == item.ProductId))
-                .ToList();
+            var requiredShoppingCartItems =
+                GetShoppingCart(customer, shoppingCartType: shoppingCartItem.ShoppingCartType)
+                    .Where(item => requiredProductIds.Any(id => id == item.ProductId))
+                    .ToList();
 
             //update quantity of required products in the cart if the main one is removed
             foreach (var cartItem in requiredShoppingCartItems)
@@ -245,7 +272,8 @@ namespace Nop.Services.Orders
                 var requiredProductQuantity = 1;
 
                 UpdateShoppingCartItem(customer, cartItem.Id, cartItem.AttributesXml, cartItem.CustomerEnteredPrice,
-                    quantity: cartItem.Quantity - shoppingCartItem.Quantity * requiredProductQuantity, resetCheckoutData: false);
+                    quantity: cartItem.Quantity - shoppingCartItem.Quantity * requiredProductQuantity,
+                    resetCheckoutData: false);
             }
         }
 
@@ -276,8 +304,36 @@ namespace Nop.Services.Orders
 
             var cartItems = query.ToList();
             foreach (var cartItem in cartItems)
-                _sciRepository.Delete(cartItem);
+                DeleteShoppingCartItem(cartItem);
             return cartItems.Count;
+        }
+
+        /// <summary>
+        /// Get products from shopping cart whether requiring specific product
+        /// </summary>
+        /// <param name="cart">Shopping cart </param>
+        /// <param name="product">Product</param>
+        /// <returns>Result</returns>
+        public virtual IEnumerable<Product> GetProductsRequiringProduct(IList<ShoppingCartItem> cart, Product product)
+        {
+            if (cart is null)
+                throw new ArgumentNullException(nameof(cart));
+
+            if (product is null)
+                throw new ArgumentNullException(nameof(product));
+
+            if (cart.Count == 0)
+                yield break;
+
+            var productIds = cart.Select(ci => ci.ProductId).ToArray();
+
+            var cartProducts = _productService.GetProductsByIds(productIds);
+
+            foreach (var cartProduct in cartProducts)
+            {
+                if (!cartProduct.RequireOtherProducts && _productService.ParseRequiredProductIds(cartProduct).Contains(product.Id))
+                    yield return cartProduct;
+            }
         }
 
         /// <summary>
@@ -308,10 +364,12 @@ namespace Nop.Services.Orders
             //get customer shopping cart
             var cart = GetShoppingCart(customer, shoppingCartType, storeId);
 
+            var productsRequiringProduct = GetProductsRequiringProduct(cart, product);
+
             //whether other cart items require the passed product
-            var passedProductRequiredQuantity = cart
-                .Where(item => item.Product.RequireOtherProducts && _productService.ParseRequiredProductIds(item.Product).Contains(product.Id))
+            var passedProductRequiredQuantity = cart.Where(ci => productsRequiringProduct.Any(p => p.Id == ci.ProductId))
                 .Sum(item => item.Quantity * requiredProductQuantity);
+
             if (passedProductRequiredQuantity > quantity)
                 warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.RequiredProductUpdateWarning"), passedProductRequiredQuantity));
 
@@ -329,11 +387,14 @@ namespace Nop.Services.Orders
             var warningLocale = _localizationService.GetResource("ShoppingCart.RequiredProductWarning");
             foreach (var requiredProduct in requiredProducts)
             {
+                var productsRequiringRequiredProduct = GetProductsRequiringProduct(cart, requiredProduct);
+                
                 //get the required quantity of the required product
-                var requiredProductRequiredQuantity = quantity * requiredProductQuantity + cart
-                    .Where(item => item.Product.RequireOtherProducts && _productService.ParseRequiredProductIds(item.Product).Contains(requiredProduct.Id))
-                    .Where(item => item.Id != shoppingCartItemId)
-                    .Sum(item => item.Quantity * requiredProductQuantity);
+                var requiredProductRequiredQuantity = quantity * requiredProductQuantity +
+
+                    cart.Where(ci => productsRequiringRequiredProduct.Any(p => p.Id == ci.ProductId))
+                        .Where(item => item.Id != shoppingCartItemId)
+                        .Sum(item => item.Quantity * requiredProductQuantity);
 
                 //whether required product is already in the cart in the required quantity
                 var quantityToAdd = requiredProductRequiredQuantity - (cart.FirstOrDefault(item => item.ProductId == requiredProduct.Id)?.Quantity ?? 0);
@@ -582,11 +643,11 @@ namespace Nop.Services.Orders
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
-            var items = customer.ShoppingCartItems.AsEnumerable();
+            var items = _sciRepository.Table.Where(sci => sci.CustomerId == customer.Id);
 
             //filter by type
             if (shoppingCartType.HasValue)
-                items = items.Where(item => item.ShoppingCartType == shoppingCartType.Value);
+                items = items.Where(item => item.ShoppingCartTypeId == (int)shoppingCartType.Value);
 
             //filter shopping cart items by store
             if (storeId > 0 && !_shoppingCartSettings.CartsSharedBetweenStores)
@@ -602,7 +663,9 @@ namespace Nop.Services.Orders
             if (createdToUtc.HasValue)
                 items = items.Where(item => createdToUtc.Value >= item.CreatedOnUtc);
 
-            return items.ToList();
+            var key = _cacheKeyService.PrepareKeyForShortTermCache(NopOrderDefaults.ShoppingCartCacheKey, customer, shoppingCartType, storeId, productId, createdFromUtc, createdToUtc);
+
+            return _staticCacheManager.Get(key, () => items.ToList());
         }
 
         /// <summary>
@@ -638,17 +701,15 @@ namespace Nop.Services.Orders
 
             foreach (var attribute in attributes1)
             {
-                if (attribute.Product != null)
-                {
-                    if (attribute.Product.Id != product.Id)
-                    {
-                        warnings.Add("Attribute error");
-                    }
-                }
-                else
+                if (attribute.ProductId == 0)
                 {
                     warnings.Add("Attribute error");
                     return warnings;
+                }
+
+                if (attribute.ProductId != product.Id)
+                {
+                    warnings.Add("Attribute error");
                 }
             }
 
@@ -695,10 +756,12 @@ namespace Nop.Services.Orders
                     //if not found
                     if (!found)
                     {
+                        var productAttribute = _productAttributeService.GetProductAttributeById(a2.ProductAttributeId);
+
                         var textPrompt = _localizationService.GetLocalized(a2, x => x.TextPrompt);
                         var notFoundWarning = !string.IsNullOrEmpty(textPrompt) ?
                             textPrompt :
-                            string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), _localizationService.GetLocalized(a2.ProductAttribute, a => a.Name));
+                            string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), _localizationService.GetLocalized(productAttribute, a => a.Name));
 
                         warnings.Add(notFoundWarning);
                     }
@@ -733,6 +796,8 @@ namespace Nop.Services.Orders
                 string enteredText;
                 int enteredTextLength;
 
+                var productAttribute = _productAttributeService.GetProductAttributeById(pam.ProductAttributeId);
+
                 //minimum length
                 if (pam.ValidationMinLength.HasValue)
                 {
@@ -744,7 +809,7 @@ namespace Nop.Services.Orders
 
                         if (pam.ValidationMinLength.Value > enteredTextLength)
                         {
-                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMinimumLength"), _localizationService.GetLocalized(pam.ProductAttribute, a => a.Name), pam.ValidationMinLength.Value));
+                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMinimumLength"), _localizationService.GetLocalized(productAttribute, a => a.Name), pam.ValidationMinLength.Value));
                         }
                     }
                 }
@@ -761,7 +826,7 @@ namespace Nop.Services.Orders
 
                 if (pam.ValidationMaxLength.Value < enteredTextLength)
                 {
-                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMaximumLength"), _localizationService.GetLocalized(pam.ProductAttribute, a => a.Name), pam.ValidationMaxLength.Value));
+                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMaximumLength"), _localizationService.GetLocalized(productAttribute, a => a.Name), pam.ValidationMaxLength.Value));
                 }
             }
 
@@ -775,7 +840,9 @@ namespace Nop.Services.Orders
                 if (attributeValue.AttributeValueType != AttributeValueType.AssociatedToProduct)
                     continue;
 
-                if (ignoreNonCombinableAttributes && attributeValue.ProductAttributeMapping.IsNonCombinable())
+                var productAttributeMapping = _productAttributeService.GetProductAttributeMappingById(attributeValue.ProductAttributeMappingId);
+
+                if (ignoreNonCombinableAttributes && productAttributeMapping != null && productAttributeMapping.IsNonCombinable())
                     continue;
 
                 //associated product (bundle)
@@ -786,9 +853,12 @@ namespace Nop.Services.Orders
                     var associatedProductWarnings = GetShoppingCartItemWarnings(customer,
                         shoppingCartType, associatedProduct, _storeContext.CurrentStore.Id,
                         string.Empty, decimal.Zero, null, null, totalQty, false);
+
+                    var productAttribute = _productAttributeService.GetProductAttributeById(productAttributeMapping.ProductAttributeId);
+
                     foreach (var associatedProductWarning in associatedProductWarnings)
                     {
-                        var attributeName = _localizationService.GetLocalized(attributeValue.ProductAttributeMapping.ProductAttribute, a => a.Name);
+                        var attributeName = _localizationService.GetLocalized(productAttribute, a => a.Name);
                         var attributeValueName = _localizationService.GetLocalized(attributeValue, a => a.Name);
                         warnings.Add(string.Format(
                             _localizationService.GetResource("ShoppingCart.AssociatedAttributeWarning"),
@@ -977,7 +1047,7 @@ namespace Nop.Services.Orders
 
             foreach (var sci in shoppingCart)
             {
-                var product = sci.Product;
+                var product = _productService.GetProductById(sci.ProductId);
                 if (product == null)
                 {
                     warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.CannotLoadProduct"), sci.ProductId));
@@ -1097,6 +1167,233 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Gets the shopping cart item sub total
+        /// </summary>
+        /// <param name="shoppingCartItem">The shopping cart item</param>
+        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
+        /// <returns>Shopping cart item sub total</returns>
+        public virtual decimal GetSubTotal(ShoppingCartItem shoppingCartItem,
+            bool includeDiscounts = true)
+        {
+            return GetSubTotal(shoppingCartItem, includeDiscounts, out var _, out var _, out var _);
+        }
+
+        /// <summary>
+        /// Gets the shopping cart item sub total
+        /// </summary>
+        /// <param name="shoppingCartItem">The shopping cart item</param>
+        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
+        /// <param name="discountAmount">Applied discount amount</param>
+        /// <param name="appliedDiscounts">Applied discounts</param>
+        /// <param name="maximumDiscountQty">Maximum discounted qty. Return not nullable value if discount cannot be applied to ALL items</param>
+        /// <returns>Shopping cart item sub total</returns>
+        public virtual decimal GetSubTotal(ShoppingCartItem shoppingCartItem,
+            bool includeDiscounts,
+            out decimal discountAmount,
+            out List<Discount> appliedDiscounts,
+            out int? maximumDiscountQty)
+        {
+            if (shoppingCartItem == null)
+                throw new ArgumentNullException(nameof(shoppingCartItem));
+
+            decimal subTotal;
+            maximumDiscountQty = null;
+
+            //unit price
+            var unitPrice = GetUnitPrice(shoppingCartItem, includeDiscounts,
+                out discountAmount, out appliedDiscounts);
+
+            //discount
+            if (appliedDiscounts.Any())
+            {
+                //we can properly use "MaximumDiscountedQuantity" property only for one discount (not cumulative ones)
+                Discount oneAndOnlyDiscount = null;
+                if (appliedDiscounts.Count == 1)
+                    oneAndOnlyDiscount = appliedDiscounts.First();
+
+                if ((oneAndOnlyDiscount?.MaximumDiscountedQuantity.HasValue ?? false) &&
+                    shoppingCartItem.Quantity > oneAndOnlyDiscount.MaximumDiscountedQuantity.Value)
+                {
+                    maximumDiscountQty = oneAndOnlyDiscount.MaximumDiscountedQuantity.Value;
+                    //we cannot apply discount for all shopping cart items
+                    var discountedQuantity = oneAndOnlyDiscount.MaximumDiscountedQuantity.Value;
+                    var discountedSubTotal = unitPrice * discountedQuantity;
+                    discountAmount *= discountedQuantity;
+
+                    var notDiscountedQuantity = shoppingCartItem.Quantity - discountedQuantity;
+                    var notDiscountedUnitPrice = GetUnitPrice(shoppingCartItem, false);
+                    var notDiscountedSubTotal = notDiscountedUnitPrice * notDiscountedQuantity;
+
+                    subTotal = discountedSubTotal + notDiscountedSubTotal;
+                }
+                else
+                {
+                    //discount is applied to all items (quantity)
+                    //calculate discount amount for all items
+                    discountAmount *= shoppingCartItem.Quantity;
+
+                    subTotal = unitPrice * shoppingCartItem.Quantity;
+                }
+            }
+            else
+            {
+                subTotal = unitPrice * shoppingCartItem.Quantity;
+            }
+
+            return subTotal;
+        }
+
+        /// <summary>
+        /// Gets the shopping cart unit price (one item)
+        /// </summary>
+        /// <param name="shoppingCartItem">The shopping cart item</param>
+        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
+        /// <returns>Shopping cart unit price (one item)</returns>
+        public virtual decimal GetUnitPrice(ShoppingCartItem shoppingCartItem,
+            bool includeDiscounts = true)
+        {
+            return GetUnitPrice(shoppingCartItem, includeDiscounts, out _, out _);
+        }
+
+        /// <summary>
+        /// Gets the shopping cart unit price (one item)
+        /// </summary>
+        /// <param name="shoppingCartItem">The shopping cart item</param>
+        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
+        /// <param name="discountAmount">Applied discount amount</param>
+        /// <param name="appliedDiscounts">Applied discounts</param>
+        /// <returns>Shopping cart unit price (one item)</returns>
+        public virtual decimal GetUnitPrice(ShoppingCartItem shoppingCartItem,
+            bool includeDiscounts,
+            out decimal discountAmount,
+            out List<Discount> appliedDiscounts)
+        {
+            if (shoppingCartItem == null)
+                throw new ArgumentNullException(nameof(shoppingCartItem));
+
+            var customer = _customerService.GetCustomerById(shoppingCartItem.CustomerId);
+            var product = _productService.GetProductById(shoppingCartItem.ProductId);
+
+            return GetUnitPrice(product,
+                customer,
+                shoppingCartItem.ShoppingCartType,
+                shoppingCartItem.Quantity,
+                shoppingCartItem.AttributesXml,
+                shoppingCartItem.CustomerEnteredPrice,
+                shoppingCartItem.RentalStartDateUtc,
+                shoppingCartItem.RentalEndDateUtc,
+                includeDiscounts,
+                out discountAmount,
+                out appliedDiscounts);
+        }
+
+        /// <summary>
+        /// Gets the shopping cart unit price (one item)
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="shoppingCartType">Shopping cart type</param>
+        /// <param name="quantity">Quantity</param>
+        /// <param name="attributesXml">Product attributes (XML format)</param>
+        /// <param name="customerEnteredPrice">Customer entered price (if specified)</param>
+        /// <param name="rentalStartDate">Rental start date (null for not rental products)</param>
+        /// <param name="rentalEndDate">Rental end date (null for not rental products)</param>
+        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
+        /// <param name="discountAmount">Applied discount amount</param>
+        /// <param name="appliedDiscounts">Applied discounts</param>
+        /// <returns>Shopping cart unit price (one item)</returns>
+        public virtual decimal GetUnitPrice(Product product,
+            Customer customer,
+            ShoppingCartType shoppingCartType,
+            int quantity,
+            string attributesXml,
+            decimal customerEnteredPrice,
+            DateTime? rentalStartDate, DateTime? rentalEndDate,
+            bool includeDiscounts,
+            out decimal discountAmount,
+            out List<Discount> appliedDiscounts)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            discountAmount = decimal.Zero;
+            appliedDiscounts = new List<Discount>();
+
+            decimal finalPrice;
+
+            var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+            if (combination?.OverriddenPrice.HasValue ?? false)
+            {
+                finalPrice = _priceCalculationService.GetFinalPrice(product,
+                        customer,
+                        combination.OverriddenPrice.Value,
+                        decimal.Zero,
+                        includeDiscounts,
+                        quantity,
+                        product.IsRental ? rentalStartDate : null,
+                        product.IsRental ? rentalEndDate : null,
+                        out discountAmount, out appliedDiscounts);
+            }
+            else
+            {
+                //summarize price of all attributes
+                var attributesTotalPrice = decimal.Zero;
+                var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
+                if (attributeValues != null)
+                {
+                    foreach (var attributeValue in attributeValues)
+                    {
+                        attributesTotalPrice += _priceCalculationService.GetProductAttributeValuePriceAdjustment(product, attributeValue, customer, product.CustomerEntersPrice ? (decimal?)customerEnteredPrice : null);
+                    }
+                }
+
+                //get price of a product (with previously calculated price of all attributes)
+                if (product.CustomerEntersPrice)
+                {
+                    finalPrice = customerEnteredPrice;
+                }
+                else
+                {
+                    int qty;
+                    if (_shoppingCartSettings.GroupTierPricesForDistinctShoppingCartItems)
+                    {
+                        //the same products with distinct product attributes could be stored as distinct "ShoppingCartItem" records
+                        //so let's find how many of the current products are in the cart                        
+                        qty = GetShoppingCart(customer, shoppingCartType: shoppingCartType, productId: product.Id)
+                            .Sum(x => x.Quantity);
+
+                        if (qty == 0)
+                        {
+                            qty = quantity;
+                        }
+                    }
+                    else
+                    {
+                        qty = quantity;
+                    }
+
+                    finalPrice = _priceCalculationService.GetFinalPrice(product,
+                        customer,
+                        attributesTotalPrice,
+                        includeDiscounts,
+                        qty,
+                        product.IsRental ? rentalStartDate : null,
+                        product.IsRental ? rentalEndDate : null,
+                        out discountAmount, out appliedDiscounts);
+                }
+            }
+
+            //rounding
+            if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                finalPrice = _priceCalculationService.RoundPrice(finalPrice);
+
+            return finalPrice;
+        }
+
+        /// <summary>
         /// Finds a shopping cart item in the cart
         /// </summary>
         /// <param name="shoppingCart">Shopping cart</param>
@@ -1200,8 +1497,9 @@ namespace Nop.Services.Orders
                 shoppingCartItem.AttributesXml = attributesXml;
                 shoppingCartItem.Quantity = newQuantity;
                 shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
-                _customerService.UpdateCustomer(customer);
 
+                _sciRepository.Update(shoppingCartItem);
+                
                 //event notification
                 _eventPublisher.EntityUpdated(shoppingCartItem);
             }
@@ -1244,20 +1542,22 @@ namespace Nop.Services.Orders
                 {
                     ShoppingCartType = shoppingCartType,
                     StoreId = storeId,
-                    Product = product,
+                    ProductId = product.Id,
                     AttributesXml = attributesXml,
                     CustomerEnteredPrice = customerEnteredPrice,
                     Quantity = quantity,
                     RentalStartDateUtc = rentalStartDate,
                     RentalEndDateUtc = rentalEndDate,
                     CreatedOnUtc = now,
-                    UpdatedOnUtc = now
+                    UpdatedOnUtc = now,
+                    CustomerId = customer.Id
                 };
-                customer.ShoppingCartItems.Add(shoppingCartItem);
-                _customerService.UpdateCustomer(customer);
+
+                _sciRepository.Insert(shoppingCartItem);
 
                 //updated "HasShoppingCartItems" property used for performance optimization
-                customer.HasShoppingCartItems = customer.ShoppingCartItems.Any();
+                customer.HasShoppingCartItems = !IsCustomerShoppingCartEmpty(customer);
+
                 _customerService.UpdateCustomer(customer);
 
                 //event notification
@@ -1290,8 +1590,9 @@ namespace Nop.Services.Orders
 
             var warnings = new List<string>();
 
-            var shoppingCartItem = customer.ShoppingCartItems.FirstOrDefault(sci => sci.Id == shoppingCartItemId);
-            if (shoppingCartItem == null)
+            var shoppingCartItem = _sciRepository.ToCachedGetById(shoppingCartItemId);
+
+            if (shoppingCartItem == null || shoppingCartItem.CustomerId != customer.Id)
                 return warnings;
 
             if (resetCheckoutData)
@@ -1300,11 +1601,13 @@ namespace Nop.Services.Orders
                 _customerService.ResetCheckoutData(customer, shoppingCartItem.StoreId);
             }
 
+            var product = _productService.GetProductById(shoppingCartItem.ProductId);
+
             if (quantity > 0)
             {
                 //check warnings
                 warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartItem.ShoppingCartType,
-                    shoppingCartItem.Product, shoppingCartItem.StoreId,
+                    product, shoppingCartItem.StoreId,
                     attributesXml, customerEnteredPrice,
                     rentalStartDate, rentalEndDate, quantity, false, shoppingCartItemId));
                 if (warnings.Any())
@@ -1317,6 +1620,8 @@ namespace Nop.Services.Orders
                 shoppingCartItem.RentalStartDateUtc = rentalStartDate;
                 shoppingCartItem.RentalEndDateUtc = rentalEndDate;
                 shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
+
+                _sciRepository.Update(shoppingCartItem);
                 _customerService.UpdateCustomer(customer);
 
                 //event notification
@@ -1326,7 +1631,7 @@ namespace Nop.Services.Orders
             {
                 //check warnings for required products
                 warnings.AddRange(GetRequiredProductWarnings(customer, shoppingCartItem.ShoppingCartType,
-                    shoppingCartItem.Product, shoppingCartItem.StoreId, quantity, false, shoppingCartItemId));
+                    product, shoppingCartItem.StoreId, quantity, false, shoppingCartItemId));
                 if (warnings.Any())
                     return warnings;
 
@@ -1354,11 +1659,14 @@ namespace Nop.Services.Orders
                 return; //the same customer
 
             //shopping cart items
-            var fromCart = fromCustomer.ShoppingCartItems.ToList();
+            var fromCart = GetShoppingCart(fromCustomer);
+
             for (var i = 0; i < fromCart.Count; i++)
             {
                 var sci = fromCart[i];
-                AddToCart(toCustomer, sci.Product, sci.ShoppingCartType, sci.StoreId,
+                var product = _productService.GetProductById(sci.ProductId);
+
+                AddToCart(toCustomer, product, sci.ShoppingCartType, sci.StoreId,
                     sci.AttributesXml, sci.CustomerEnteredPrice,
                     sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false);
             }
@@ -1406,7 +1714,13 @@ namespace Nop.Services.Orders
         /// <returns>Result</returns>
         public virtual bool ShoppingCartIsRecurring(IList<ShoppingCartItem> shoppingCart)
         {
-            return shoppingCart.Any(item => item.Product?.IsRecurring ?? false);
+            if (shoppingCart is null)
+                throw new ArgumentNullException(nameof(shoppingCart));
+
+            if (!shoppingCart.Any())
+                return false;
+
+            return _productService.HasAnyRecurringProduct(shoppingCart.Select(sci => sci.ProductId).ToArray());
         }
 
         /// <summary>
@@ -1430,7 +1744,7 @@ namespace Nop.Services.Orders
 
             foreach (var sci in shoppingCart)
             {
-                var product = sci.Product;
+                var product = _productService.GetProductById(sci.ProductId);
                 if (product == null)
                 {
                     throw new NopException($"Product (Id={sci.ProductId}) cannot be loaded");

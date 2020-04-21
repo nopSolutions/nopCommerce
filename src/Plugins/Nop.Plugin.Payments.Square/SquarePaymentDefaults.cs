@@ -13,24 +13,24 @@ namespace Nop.Plugin.Payments.Square
         public const string VIEW_COMPONENT_NAME = "PaymentSquare";
 
         /// <summary>
-        /// Tender card details status "AUTHORIZED"
+        /// Payment status "APPROVED"
         /// </summary>
-        public const string TENDERCARDDETAILS_AUTHORIZED_STATUS = "AUTHORIZED";
+        public const string PAYMENT_APPROVED_STATUS = "APPROVED";
 
         /// <summary>
-        /// Tender card details status "CAPTURED"
+        /// Payment status "COMPLETED"
         /// </summary>
-        public const string TENDERCARDDETAILS_CAPTURED_STATUS = "CAPTURED";
+        public const string PAYMENT_COMPLETED_STATUS = "COMPLETED";
 
         /// <summary>
-        /// Tender card details status "FAILED"
+        /// Payment status "FAILED"
         /// </summary>
-        public const string TENDERCARDDETAILS_FAILED_STATUS = "FAILED";
+        public const string PAYMENT_FAILED_STATUS = "FAILED";
 
         /// <summary>
-        /// Tender card details status "VOIDED"
+        /// Payment status "CANCELED"
         /// </summary>
-        public const string TENDERCARDDETAILS_VOIDED_STATUS = "VOIDED";
+        public const string PAYMENT_CANCELED_STATUS = "CANCELED";
 
         /// <summary>
         /// Location status "ACTIVE"
@@ -48,9 +48,9 @@ namespace Nop.Plugin.Payments.Square
         public const string REFUND_STATUS_PENDING = "PENDING";
 
         /// <summary>
-        /// Refund status "APPROVED"
+        /// Refund status "COMPLETED"
         /// </summary>
-        public const string REFUND_STATUS_APPROVED = "APPROVED";
+        public const string REFUND_STATUS_COMPLETED = "COMPLETED";
 
         /// <summary>
         /// Square payment method system name

@@ -1,4 +1,4 @@
-namespace Nop.Core.Domain.Catalog
+﻿namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents a product category mapping
@@ -24,15 +24,5 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
-        
-        /// <summary>
-        /// Gets the category
-        /// </summary>
-        public virtual Category Category { get; set; }
-
-        /// <summary>
-        /// Gets the product
-        /// </summary>
-        public virtual Product Product { get; set; }
     }
 }

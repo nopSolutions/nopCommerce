@@ -3,7 +3,6 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Shipping;
-using Nop.Plugin.Pickup.PickupInStore.Data;
 using Nop.Plugin.Pickup.PickupInStore.Domain;
 using Nop.Plugin.Pickup.PickupInStore.Services;
 using Nop.Services.Common;
@@ -25,7 +24,6 @@ namespace Nop.Plugin.Pickup.PickupInStore
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStoreContext _storeContext;
         private readonly IStorePickupPointService _storePickupPointService;
-        private readonly StorePickupPointObjectContext _objectContext;
         private readonly IWebHelper _webHelper;
 
         #endregion
@@ -38,7 +36,6 @@ namespace Nop.Plugin.Pickup.PickupInStore
             IStateProvinceService stateProvinceService,
             IStoreContext storeContext,
             IStorePickupPointService storePickupPointService,
-            StorePickupPointObjectContext objectContext,
             IWebHelper webHelper)
         {
             _addressService = addressService;
@@ -47,7 +44,6 @@ namespace Nop.Plugin.Pickup.PickupInStore
             _stateProvinceService = stateProvinceService;
             _storeContext = storeContext;
             _storePickupPointService = storePickupPointService;
-            _objectContext = objectContext;
             _webHelper = webHelper;
         }
 
@@ -58,10 +54,7 @@ namespace Nop.Plugin.Pickup.PickupInStore
         /// <summary>
         /// Gets a shipment tracker
         /// </summary>
-        public IShipmentTracker ShipmentTracker
-        {
-            get { return null; }
-        }
+        public IShipmentTracker ShipmentTracker => null;
 
         #endregion
 
@@ -90,15 +83,16 @@ namespace Nop.Plugin.Pickup.PickupInStore
                     Address = pointAddress.Address1,
                     City = pointAddress.City,
                     County = pointAddress.County,
-                    StateAbbreviation = pointAddress.StateProvince?.Abbreviation ?? string.Empty,
-                    CountryCode = pointAddress.Country?.TwoLetterIsoCode ?? string.Empty,
+                    StateAbbreviation = _stateProvinceService.GetStateProvinceByAddress(pointAddress)?.Abbreviation ?? string.Empty,
+                    CountryCode = _countryService.GetCountryByAddress(pointAddress)?.TwoLetterIsoCode ?? string.Empty,
                     ZipPostalCode = pointAddress.ZipPostalCode,
                     OpeningHours = point.OpeningHours,
                     PickupFee = point.PickupFee,
                     DisplayOrder = point.DisplayOrder,
                     ProviderSystemName = PluginDescriptor.SystemName,
                     Latitude = point.Latitude,
-                    Longitude = point.Longitude
+                    Longitude = point.Longitude,
+                    TransitDays = point.TransitDays
                 });                
             }
 
@@ -121,9 +115,6 @@ namespace Nop.Plugin.Pickup.PickupInStore
         /// </summary>
         public override void Install()
         {
-            //database objects
-            _objectContext.Install();
-
             //sample pickup point
             var country = _countryService.GetCountryByThreeLetterIsoCode("USA");
             var state = _stateProvinceService.GetStateProvinceByAbbreviation("NY", country?.Id);
@@ -172,6 +163,8 @@ namespace Nop.Plugin.Pickup.PickupInStore
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.PickupFee.Hint", "Specify a fee for the shipping to the pickup point.");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.Store", "Store");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.Store.Hint", "A store name for which this pickup point will be available.");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.TransitDays", "Transit days");
+            _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.TransitDays.Hint", "The number of days of delivery of the goods to pickup point.");
             _localizationService.AddOrUpdatePluginLocaleResource("Plugins.Pickup.PickupInStore.NoPickupPoints", "No pickup points are available");
 
             base.Install();
@@ -182,9 +175,6 @@ namespace Nop.Plugin.Pickup.PickupInStore
         /// </summary>
         public override void Uninstall()
         {
-            //database objects
-            _objectContext.Uninstall();
-
             //locales
             _localizationService.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.AddNew");
             _localizationService.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.Description");
@@ -209,6 +199,8 @@ namespace Nop.Plugin.Pickup.PickupInStore
             _localizationService.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.PickupFee.Hint");
             _localizationService.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.Store");
             _localizationService.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.Store.Hint");
+            _localizationService.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.TransitDays");
+            _localizationService.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.Fields.TransitDays.Hint");
             _localizationService.DeletePluginLocaleResource("Plugins.Pickup.PickupInStore.NoPickupPoints");
 
             base.Uninstall();

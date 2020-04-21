@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Services.Customers;
 using Nop.Web.Framework.Components;
 
 namespace Nop.Plugin.Misc.SendinBlue.Components
@@ -14,6 +15,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Components
     {
         #region Fields
 
+        private readonly ICustomerService _customerService;
         private readonly IWorkContext _workContext;
         private readonly SendinBlueSettings _sendinBlueSettings;
 
@@ -21,9 +23,11 @@ namespace Nop.Plugin.Misc.SendinBlue.Components
 
         #region Ctor
 
-        public WidgetsSendinBlueViewComponent(IWorkContext workContext,
+        public WidgetsSendinBlueViewComponent(ICustomerService customerService,
+            IWorkContext workContext,
             SendinBlueSettings sendinBlueSettings)
         {
+            _customerService = customerService;
             _workContext = workContext;
             _sendinBlueSettings = sendinBlueSettings;
         }
@@ -47,7 +51,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Components
                 return Content(trackingScript);
 
             //get customer email
-            var customerEmail = !_workContext.CurrentCustomer.IsGuest()
+            var customerEmail = !_customerService.IsGuest(_workContext.CurrentCustomer)
                 ? _workContext.CurrentCustomer.Email?.Replace("'", "\\'")
                 : string.Empty;
 

@@ -124,6 +124,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [HttpPost]
         public virtual IActionResult ClearAll()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))

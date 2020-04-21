@@ -1,0 +1,69 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.k-drawer {
+    border-color: @drawer-border;
+    color: @drawer-text;
+    background-color: @drawer-bg;
+}
+
+.k-drawer-wrapper {
+    scrollbar-color: @drawer-scrollbar-color @drawer-scrollbar-bg;
+
+    &::-webkit-scrollbar-track {
+        background: @drawer-scrollbar-bg;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: @drawer-scrollbar-color;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+        background: @drawer-scrollbar-hovered-color;
+    }
+}
+.k-drawer-item {
+
+    &:hover,
+    &.k-state-hover {
+        color: @drawer-hovered-text;
+        background-color: @drawer-hovered-bg;
+        .composite-background(@drawer-hovered-gradient);
+    }
+
+    &:focus,
+    &.k-state-focused {
+        background-color: @drawer-focused-bg;
+        box-shadow: @drawer-focused-shadow;
+
+        &:hover,
+        &.k-state-hover {
+            color: @drawer-hovered-text;
+            background-color: @drawer-hovered-bg;
+        }
+    }
+
+    &.k-state-selected {
+        color: @drawer-selected-text;
+        background-color: @drawer-selected-bg;
+
+        &:hover,
+        &.k-state-hover {
+            color: @drawer-selected-hover-text;
+            background-color: @drawer-selected-hover-bg;
+        }
+    }
+}
+.k-drawer-separator {
+    background-color: @drawer-border;
+}

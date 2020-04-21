@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using Nop.Core.Domain.Localization;
+﻿using System;
 using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.Polls
@@ -10,8 +8,6 @@ namespace Nop.Core.Domain.Polls
     /// </summary>
     public partial class Poll : BaseEntity, IStoreMappingSupported
     {
-        private ICollection<PollAnswer> _pollAnswers;
-
         /// <summary>
         /// Gets or sets the language identifier
         /// </summary>
@@ -61,19 +57,5 @@ namespace Nop.Core.Domain.Polls
         /// Gets or sets the poll end date and time
         /// </summary>
         public DateTime? EndDateUtc { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the news comments
-        /// </summary>
-        public virtual ICollection<PollAnswer> PollAnswers
-        {
-            get => _pollAnswers ?? (_pollAnswers = new List<PollAnswer>());
-            protected set => _pollAnswers = value;
-        }
-        
-        /// <summary>
-        /// Gets or sets the language
-        /// </summary>
-        public virtual Language Language { get; set; }
     }
 }

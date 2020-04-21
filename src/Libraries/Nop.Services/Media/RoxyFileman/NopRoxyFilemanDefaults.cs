@@ -8,16 +8,16 @@
         /// <summary>
         /// Default path to root directory of uploaded files (if appropriate settings are not specified)
         /// </summary>
-        public static string DefaultRootDirectory = "/images/uploaded";
+        public static string DefaultRootDirectory { get; } = "/images/uploaded";
 
         /// <summary>
         /// Path to configuration file
         /// </summary>
-        public static string ConfigurationFile = "/lib/Roxy_Fileman/conf.json";
+        public static string ConfigurationFile { get; } = "/lib/Roxy_Fileman/conf.json";
 
         /// <summary>
         /// Path to directory of language files
         /// </summary>
-        public static string LanguageDirectory = "/lib/Roxy_Fileman/lang";
+        public static string LanguageDirectory { get; } = "/lib/Roxy_Fileman/lang";
     }
 }

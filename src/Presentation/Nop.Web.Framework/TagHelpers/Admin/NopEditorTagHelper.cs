@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Nop.Core;
-using Nop.Web.Framework.Extensions;
+using Nop.Web.Framework.Models;
 
 namespace Nop.Web.Framework.TagHelpers.Admin
 {
@@ -123,14 +121,14 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 htmlAttributes.Add("value", Value);
 
             //disabled attribute
-            bool.TryParse(IsDisabled, out bool disabled);
+            bool.TryParse(IsDisabled, out var disabled);
             if (disabled)
             {
                 htmlAttributes.Add("disabled", "disabled");
             }
 
             //required asterisk
-            bool.TryParse(IsRequired, out bool required);
+            bool.TryParse(IsRequired, out var required);
             if (required)
             {
                 output.PreElement.SetHtmlContent("<div class='input-group input-group-required'>");
@@ -142,36 +140,17 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             viewContextAware?.Contextualize(ViewContext);
 
             //add form-control class
-            bool.TryParse(RenderFormControlClass, out bool renderFormControlClass);
+            bool.TryParse(RenderFormControlClass, out var renderFormControlClass);
             if (string.IsNullOrEmpty(RenderFormControlClass) && For.Metadata.ModelType.Name.Equals("String") || renderFormControlClass)
                 htmlAttributes.Add("class", "form-control");
 
             //generate editor
+            var pattern = $"{nameof(ILocalizedModel<object>.Locales)}" + @"(?=\[\w+\]\.)";
+            if (!_htmlHelper.ViewData.ContainsKey(For.Name) && Regex.IsMatch(For.Name, pattern))
+                _htmlHelper.ViewData.Add(For.Name, For.Model);
 
-            //we have to invoke strong typed "EditorFor" method of HtmlHelper<TModel>
-            //but we cannot do it because we don't have access to Expression<Func<TModel, TValue>>
-            //more info at https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNetCore.Mvc.ViewFeatures/ViewFeatures/HtmlHelperOfT.cs
-
-            //so we manually invoke implementation of "GenerateEditor" method of HtmlHelper
-            //more info at https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNetCore.Mvc.ViewFeatures/ViewFeatures/HtmlHelper.cs
-
-            //little workaround here. we need to access private properties of HtmlHelper
-            //just ensure that they are not renamed by asp.net core team in future versions
-            var viewEngine = CommonHelper.GetPrivateFieldValue(_htmlHelper, "_viewEngine") as IViewEngine;
-            var bufferScope = CommonHelper.GetPrivateFieldValue(_htmlHelper, "_bufferScope") as IViewBufferScope;
-            var templateBuilder = new TemplateBuilder(
-                viewEngine,
-                bufferScope,
-                _htmlHelper.ViewContext,
-                _htmlHelper.ViewData,
-                For.ModelExplorer,
-                For.Name,
-                Template,
-                readOnly: false,
-                additionalViewData: new { htmlAttributes, postfix = Postfix });
-
-            var htmlOutput = templateBuilder.Build();
-            output.Content.SetHtmlContent(htmlOutput.RenderHtmlContent());
+            var htmlOutput = _htmlHelper.Editor(For.Name, Template, new { htmlAttributes, postfix = Postfix });
+            output.Content.SetHtmlContent(htmlOutput);
         }
     }
 }

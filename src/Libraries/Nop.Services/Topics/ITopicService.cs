@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Topics;
 
 namespace Nop.Services.Topics
@@ -36,8 +36,9 @@ namespace Nop.Services.Topics
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="ignorAcl">A value indicating whether to ignore ACL rules</param>
         /// <param name="showHidden">A value indicating whether to show hidden topics</param>
+        /// <param name="onlyIncludedInTopMenu">A value indicating whether to show only topics which include on the top menu</param>
         /// <returns>Topics</returns>
-        IList<Topic> GetAllTopics(int storeId, bool ignorAcl = false, bool showHidden = false);
+        IList<Topic> GetAllTopics(int storeId, bool ignorAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false);
 
         /// <summary>
         /// Inserts a topic

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -85,7 +85,7 @@ namespace Nop.Services.Orders
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             int billingCountryId = 0,
-            int orderBy = 1,
+            OrderByEnum orderBy = OrderByEnum.OrderByQuantity,
             int pageIndex = 0, int pageSize = int.MaxValue,
             bool showHidden = false);
 

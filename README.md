@@ -38,15 +38,6 @@ Front End | Admin area
 [![ScreenShot](https://www.nopcommerce.com/images/demo/demo3.png)](https://demo.nopcommerce.com/) | [![ScreenShot](https://www.nopcommerce.com/images/demo/admindemo_500.png)](https://admin-demo.nopcommerce.com/admin/)
 
 
-
-## Vote for nopCommerce: ##
-
-Do you like free open-source solution nopCommerce?
-
-[Vote for nopCommerce](https://ecommercegermanyawards.com/vote/105379) as the Best platform at E-commerce Germany Awards 2020 
-
-Voting ends on December 19, 2019.
-
 ## Survey for developers and product managers: ##
 
 We want to make sure our users get what they need from the platform. That is why we prepared a short survey to know you better. Your opinion really matters and we hope you can participate to give us food for thought for making nopCommerce even better! [Participate](https://www.surveymonkey.com/r/CDMQYHY)

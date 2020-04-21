@@ -10,6 +10,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
@@ -28,6 +29,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
         private readonly GoogleAnalyticsSettings _googleAnalyticsSettings;
         private readonly ICategoryService _categoryService;
         private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILogger _logger;
         private readonly IOrderService _orderService;
@@ -44,6 +46,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
             GoogleAnalyticsSettings googleAnalyticsSettings,
             ICategoryService categoryService,
             ICurrencyService currencyService,
+            ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             ILogger logger,
             IOrderService orderService,
@@ -56,6 +59,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
             _googleAnalyticsSettings = googleAnalyticsSettings;
             _categoryService = categoryService;
             _currencyService = currencyService;
+            _customerService = customerService;
             _genericAttributeService = genericAttributeService;
             _logger = logger;
             _orderService = orderService;
@@ -71,7 +75,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
         private string FixIllegalJavaScriptChars(string text)
         {
-            if (String.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
                 return text;
 
             //replace ' with \' (http://stackoverflow.com/questions/4292761/need-to-url-encode-labels-when-tracking-events-with-google-analytics)
@@ -97,7 +101,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
             //whether to include customer identifier
             var customerIdCode = string.Empty;
-            if (_googleAnalyticsSettings.IncludeCustomerId && !_workContext.CurrentCustomer.IsGuest())
+            if (_googleAnalyticsSettings.IncludeCustomerId && !_customerService.IsGuest(_workContext.CurrentCustomer))
                 customerIdCode = $"gtag('set', {{'user_id': '{_workContext.CurrentCustomer.Id}'}});{Environment.NewLine}";
             analyticsTrackingScript = analyticsTrackingScript.Replace("{CUSTOMER_TRACKING}", customerIdCode);
 
@@ -129,13 +133,13 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SHIP}", orderShipping.ToString("0.00", usCulture));
 
                 var sb = new StringBuilder();
-                int listingPosition = 1;
-                foreach (var item in order.OrderItems)
+                var listingPosition = 1;
+                foreach (var item in _orderService.GetOrderItems(order.Id))
                 {
-                    if (!String.IsNullOrEmpty(sb.ToString()))
+                    if (!string.IsNullOrEmpty(sb.ToString()))
                         sb.AppendLine(",");
 
-                    string analyticsEcommerceDetailScript = @"{
+                    var analyticsEcommerceDetailScript = @"{
                     'id': '{PRODUCTSKU}',
                     'name': '{PRODUCTNAME}',
                     'category': '{CATEGORYNAME}',
@@ -144,12 +148,17 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
                     'price': '{UNITPRICE}'
                     }
                     ";
-                    var sku = _productService.FormatSku(item.Product, item.AttributesXml);
-                    if (String.IsNullOrEmpty(sku))
-                        sku = item.Product.Id.ToString();
+
+                    var product = _productService.GetProductById(item.ProductId);
+
+                    var sku = _productService.FormatSku(product, item.AttributesXml);
+
+                    if (string.IsNullOrEmpty(sku))
+                        sku = product.Id.ToString();
+
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTSKU}", FixIllegalJavaScriptChars(sku));
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTNAME}", FixIllegalJavaScriptChars(item.Product.Name));
-                    string category = _categoryService.GetProductCategoriesByProductId(item.ProductId).FirstOrDefault()?.Category.Name;
+                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTNAME}", FixIllegalJavaScriptChars(product.Name));
+                    var category = _categoryService.GetCategoryById(_categoryService.GetProductCategoriesByProductId(item.ProductId).FirstOrDefault()?.CategoryId ?? 0)?.Name;
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{CATEGORYNAME}", FixIllegalJavaScriptChars(category));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{LISTPOSITION}", listingPosition.ToString());
                     var unitPrice = googleAnalyticsSettings.IncludingTax ? item.UnitPriceInclTax : item.UnitPriceExclTax;
@@ -180,7 +189,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Components
 
         public IViewComponentResult Invoke(string widgetZone, object additionalData)
         {
-            string script = "";
+            var script = "";
             var routeData = Url.ActionContext.RouteData;
 
             try

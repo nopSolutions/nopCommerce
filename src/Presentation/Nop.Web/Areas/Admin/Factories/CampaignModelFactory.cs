@@ -3,7 +3,6 @@ using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Helpers;
-using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
@@ -24,7 +23,6 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
         private readonly ICampaignService _campaignService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ILocalizationService _localizationService;
         private readonly IMessageTokenProvider _messageTokenProvider;
 
         #endregion
@@ -36,7 +34,6 @@ namespace Nop.Web.Areas.Admin.Factories
             IBaseAdminModelFactory baseAdminModelFactory,
             ICampaignService campaignService,
             IDateTimeHelper dateTimeHelper,
-            ILocalizationService localizationService,
             IMessageTokenProvider messageTokenProvider)
         {
             _catalogSettings = catalogSettings;
@@ -44,7 +41,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory = baseAdminModelFactory;
             _campaignService = campaignService;
             _dateTimeHelper = dateTimeHelper;
-            _localizationService = localizationService;
             _messageTokenProvider = messageTokenProvider;
         }
 
@@ -121,7 +117,7 @@ namespace Nop.Web.Areas.Admin.Factories
             //fill in model values from the entity
             if (campaign != null)
             {
-                model = model ?? campaign.ToModel<CampaignModel>();
+                model ??= campaign.ToModel<CampaignModel>();
                 if (campaign.DontSendBeforeDateUtc.HasValue)
                     model.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
             }

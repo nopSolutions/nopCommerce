@@ -142,6 +142,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveManufacturerAcl(Manufacturer manufacturer, ManufacturerModel model)
         {
             manufacturer.SubjectToAcl = model.SelectedCustomerRoleIds.Any();
+            _manufacturerService.UpdateManufacturer(manufacturer);
 
             var existingAclRecords = _aclService.GetAclRecords(manufacturer);
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
@@ -166,6 +167,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(Manufacturer manufacturer, ManufacturerModel model)
         {
             manufacturer.LimitedToStores = model.SelectedStoreIds.Any();
+            _manufacturerService.UpdateManufacturer(manufacturer);
 
             var existingStoreMappings = _storeMappingService.GetStoreMappings(manufacturer);
             var allStores = _storeService.GetAllStores();
@@ -260,7 +262,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                         //manufacturer.AppliedDiscounts.Add(discount);
-                        manufacturer.DiscountManufacturerMappings.Add(new DiscountManufacturerMapping { Discount = discount });
+                        _manufacturerService.InsertDiscountManufacturerMapping(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
+
                 }
 
                 _manufacturerService.UpdateManufacturer(manufacturer);
@@ -341,15 +344,14 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
                         //new discount
-                        if (manufacturer.DiscountManufacturerMappings.Count(mapping => mapping.DiscountId == discount.Id) == 0)
-                            manufacturer.DiscountManufacturerMappings.Add(new DiscountManufacturerMapping { Discount = discount });
+                        if (_manufacturerService.GetDiscountAppliedToManufacturer(manufacturer.Id, discount.Id) is null)
+                            _manufacturerService.InsertDiscountManufacturerMapping(new DiscountManufacturerMapping { EntityId = manufacturer.Id, DiscountId = discount.Id });
                     }
                     else
                     {
                         //remove discount
-                        if (manufacturer.DiscountManufacturerMappings.Count(mapping => mapping.DiscountId == discount.Id) > 0)
-                            manufacturer.DiscountManufacturerMappings
-                                .Remove(manufacturer.DiscountManufacturerMappings.FirstOrDefault(mapping => mapping.DiscountId == discount.Id));
+                        if (_manufacturerService.GetDiscountAppliedToManufacturer(manufacturer.Id, discount.Id) is DiscountManufacturerMapping discountManufacturerMapping)
+                            _manufacturerService.DeleteDiscountManufacturerMapping(discountManufacturerMapping);
                     }
                 }
 

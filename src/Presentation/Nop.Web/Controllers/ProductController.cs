@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Rss;
 using Nop.Services.Catalog;
+using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -23,12 +24,11 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
-using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Catalog;
 
 namespace Nop.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public partial class ProductController : BasePublicController
     {
         #region Fields
@@ -38,13 +38,17 @@ namespace Nop.Web.Controllers
         private readonly IAclService _aclService;
         private readonly ICompareProductsService _compareProductsService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
         private readonly IOrderService _orderService;
         private readonly IPermissionService _permissionService;
+        private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
         private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
+        private readonly IReviewTypeService _reviewTypeService;
+        private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
@@ -64,13 +68,17 @@ namespace Nop.Web.Controllers
             IAclService aclService,
             ICompareProductsService compareProductsService,
             ICustomerActivityService customerActivityService,
+            ICustomerService customerService,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             IOrderService orderService,
             IPermissionService permissionService,
+            IProductAttributeParser productAttributeParser,
             IProductModelFactory productModelFactory,
             IProductService productService,
             IRecentlyViewedProductsService recentlyViewedProductsService,
+            IReviewTypeService reviewTypeService,
+            IShoppingCartModelFactory shoppingCartModelFactory,
             IShoppingCartService shoppingCartService,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
@@ -86,13 +94,17 @@ namespace Nop.Web.Controllers
             _aclService = aclService;
             _compareProductsService = compareProductsService;
             _customerActivityService = customerActivityService;
+            _customerService = customerService;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
             _orderService = orderService;
             _permissionService = permissionService;
+            _productAttributeParser = productAttributeParser;
             _productModelFactory = productModelFactory;
             _productService = productService;
+            _reviewTypeService = reviewTypeService;
             _recentlyViewedProductsService = recentlyViewedProductsService;
+            _shoppingCartModelFactory = shoppingCartModelFactory;
             _shoppingCartService = shoppingCartService;
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
@@ -108,7 +120,6 @@ namespace Nop.Web.Controllers
 
         #region Product details page
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult ProductDetails(int productId, int updatecartitemid = 0)
         {
             var product = _productService.GetProductById(productId);
@@ -185,11 +196,61 @@ namespace Nop.Web.Controllers
             return View(productTemplateViewPath, model);
         }
 
+        [HttpPost]
+        public virtual IActionResult EstimateShipping([FromQuery] ProductEstimateShippingModel model, IFormCollection form)
+        {
+            if (model == null)
+                return BadRequest();
+            
+            var product = _productService.GetProductById(model.ProductId);
+            if (product == null || product.Deleted || !product.Published)
+                return NotFound();
+
+            var errors = new List<string>();
+
+            if (string.IsNullOrEmpty(model.ZipPostalCode))
+                errors.Add(_localizationService.GetResource("Shipping.EstimateShipping.ZipPostalCode.Required"));
+
+            if (model.CountryId == null || model.CountryId == 0)
+                errors.Add(_localizationService.GetResource("Shipping.EstimateShipping.Country.Required"));
+
+            if (errors.Count > 0)
+                return BadRequest(new { Errors = errors });
+
+            var wrappedProduct = new ShoppingCartItem()
+            {
+                StoreId = _storeContext.CurrentStore.Id,
+                ShoppingCartTypeId = (int)ShoppingCartType.ShoppingCart,
+                CustomerId = _workContext.CurrentCustomer.Id,
+                ProductId = product.Id,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+
+            var addToCartWarnings = new List<string>();
+
+            //customer entered price
+            wrappedProduct.CustomerEnteredPrice = _productAttributeParser.ParseCustomerEnteredPrice(product, form);
+
+            //entered quantity
+            wrappedProduct.Quantity = _productAttributeParser.ParseEnteredQuantity(product, form);
+
+            //product and gift card attributes
+            wrappedProduct.AttributesXml = _productAttributeParser.ParseProductAttributes(product, form, addToCartWarnings);
+
+            //rental attributes
+            _productAttributeParser.ParseRentalDates(product, form, out var rentalStartDate, out var rentalEndDate);
+            wrappedProduct.RentalStartDateUtc = rentalStartDate;
+            wrappedProduct.RentalEndDateUtc = rentalEndDate;
+
+            var modelResult = _shoppingCartModelFactory.PrepareEstimateShippingResultModel(new [] { wrappedProduct }, model.CountryId, model.StateProvinceId, model.ZipPostalCode);
+
+            return Json(modelResult);
+        }
+
         #endregion
 
         #region Recently viewed products
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult RecentlyViewedProducts()
         {
             if (!_catalogSettings.RecentlyViewedProductsEnabled)
@@ -207,7 +268,6 @@ namespace Nop.Web.Controllers
 
         #region New (recently added) products page
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult NewProducts()
         {
             if (!_catalogSettings.NewProductsEnabled)
@@ -269,7 +329,6 @@ namespace Nop.Web.Controllers
 
         #region Product reviews
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult ProductReviews(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -279,7 +338,7 @@ namespace Nop.Web.Controllers
             var model = new ProductReviewsModel();
             model = _productModelFactory.PrepareProductReviewsModel(model, product);
             //only registered users can leave reviews
-            if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
+            if (_customerService.IsGuest(_workContext.CurrentCustomer) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
                 ModelState.AddModelError("", _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
 
             if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing)
@@ -305,8 +364,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("ProductReviews")]
-        [PublicAntiForgery]
+        [HttpPost, ActionName("ProductReviews")]        
         [FormValueRequired("add-review")]
         [ValidateCaptcha]
         public virtual IActionResult ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
@@ -321,7 +379,7 @@ namespace Nop.Web.Controllers
                 ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaMessage"));
             }
 
-            if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
+            if (_customerService.IsGuest(_workContext.CurrentCustomer) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
             }
@@ -358,7 +416,7 @@ namespace Nop.Web.Controllers
                     StoreId = _storeContext.CurrentStore.Id,
                 };
 
-                product.ProductReviews.Add(productReview);
+                _productService.InsertProductReview(productReview);
 
                 //add product review and review type mapping                
                 foreach (var additionalReview in model.AddAdditionalProductReviewList)
@@ -369,7 +427,8 @@ namespace Nop.Web.Controllers
                         ReviewTypeId = additionalReview.ReviewTypeId,
                         Rating = additionalReview.Rating
                     };
-                    productReview.ProductReviewReviewTypeMappingEntries.Add(additionalProductReview);
+
+                    _reviewTypeService.InsertProductReviewReviewTypeMappings(additionalProductReview);
                 }
 
                 //update product totals
@@ -406,13 +465,14 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult SetProductReviewHelpfulness(int productReviewId, bool washelpful)
         {
             var productReview = _productService.GetProductReviewById(productReviewId);
             if (productReview == null)
                 throw new ArgumentException("No product review found with the specified id");
 
-            if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
+            if (_customerService.IsGuest(_workContext.CurrentCustomer) && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
             {
                 return Json(new
                 {
@@ -433,31 +493,10 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            //delete previous helpfulness
-            var prh = productReview.ProductReviewHelpfulnessEntries
-                .FirstOrDefault(x => x.CustomerId == _workContext.CurrentCustomer.Id);
-            if (prh != null)
-            {
-                //existing one
-                prh.WasHelpful = washelpful;
-            }
-            else
-            {
-                //insert new helpfulness
-                prh = new ProductReviewHelpfulness
-                {
-                    ProductReviewId = productReview.Id,
-                    CustomerId = _workContext.CurrentCustomer.Id,
-                    WasHelpful = washelpful,
-                };
-                productReview.ProductReviewHelpfulnessEntries.Add(prh);
-            }
-            _productService.UpdateProduct(productReview.Product);
+            _productService.SetProductReviewHelpfulness(productReview, washelpful);
 
             //new totals
-            productReview.HelpfulYesTotal = productReview.ProductReviewHelpfulnessEntries.Count(x => x.WasHelpful);
-            productReview.HelpfulNoTotal = productReview.ProductReviewHelpfulnessEntries.Count(x => !x.WasHelpful);
-            _productService.UpdateProduct(productReview.Product);
+            _productService.UpdateProductReviewHelpfulnessTotals(productReview);
 
             return Json(new
             {
@@ -469,7 +508,7 @@ namespace Nop.Web.Controllers
 
         public virtual IActionResult CustomerProductReviews(int? pageNumber)
         {
-            if (_workContext.CurrentCustomer.IsGuest())
+            if (_customerService.IsGuest(_workContext.CurrentCustomer))
                 return Challenge();
 
             if (!_catalogSettings.ShowProductReviewsTabOnAccountPage)
@@ -485,7 +524,6 @@ namespace Nop.Web.Controllers
 
         #region Email a friend
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult ProductEmailAFriend(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -498,7 +536,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("ProductEmailAFriend")]
-        [PublicAntiForgery]
         [FormValueRequired("send-email")]
         [ValidateCaptcha]
         public virtual IActionResult ProductEmailAFriendSend(ProductEmailAFriendModel model, bool captchaValid)
@@ -514,7 +551,7 @@ namespace Nop.Web.Controllers
             }
 
             //check whether the current customer is guest and ia allowed to email a friend
-            if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToEmailAFriend)
+            if (_customerService.IsGuest(_workContext.CurrentCustomer) && !_catalogSettings.AllowAnonymousUsersToEmailAFriend)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Products.EmailAFriend.OnlyRegisteredUsers"));
             }
@@ -544,6 +581,7 @@ namespace Nop.Web.Controllers
         #region Comparing products
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult AddProductToCompareList(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -590,7 +628,6 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("CompareProducts");
         }
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult CompareProducts()
         {
             if (!_catalogSettings.CompareProductsEnabled)

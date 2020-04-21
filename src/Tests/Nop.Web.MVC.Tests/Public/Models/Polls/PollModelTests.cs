@@ -1,4 +1,4 @@
-﻿using Nop.Tests;
+﻿using FluentAssertions;
 using Nop.Web.Models.Polls;
 using NUnit.Framework;
 
@@ -28,16 +28,16 @@ namespace Nop.Web.MVC.Tests.Public.Models.Polls
 
             //clone
             var model2 = (PollModel)model1.Clone();
-            model2.Id.ShouldEqual(1);
-            model2.Name.ShouldEqual("Name 1");
-            model2.AlreadyVoted.ShouldEqual(true);
-            model2.TotalVotes.ShouldEqual(2);
-            model2.Answers.ShouldNotBeNull();
-            model2.Answers.Count.ShouldEqual(1);
-            model2.Answers[0].Id.ShouldEqual(3);
-            model2.Answers[0].Name.ShouldEqual("answer 1");
-            model2.Answers[0].NumberOfVotes.ShouldEqual(4);
-            model2.Answers[0].PercentOfTotalVotes.ShouldEqual(5);
+            model2.Id.Should().Be(1);
+            model2.Name.Should().Be("Name 1");
+            model2.AlreadyVoted.Should().BeTrue();
+            model2.TotalVotes.Should().Be(2);
+            model2.Answers.Should().NotBeNull();
+            model2.Answers.Count.Should().Be(1);
+            model2.Answers[0].Id.Should().Be(3);
+            model2.Answers[0].Name.Should().Be("answer 1");
+            model2.Answers[0].NumberOfVotes.Should().Be(4);
+            model2.Answers[0].PercentOfTotalVotes.Should().Be(5);
         }
     }
 }

@@ -244,7 +244,6 @@ namespace Nop.Web.Framework.TagHelpers.Admin
             tabContent.InnerHtml.AppendHtml(output.GetChildContentAsync().Result.GetContent());
 
             //active class
-            var itemClass = string.Empty;
             if (tabNameToSelect == Name)
             {
                 tabTitle.AddCssClass("active");

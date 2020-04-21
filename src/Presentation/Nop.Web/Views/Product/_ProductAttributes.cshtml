@@ -2,8 +2,8 @@
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Media
 @using System.Text
+@using Nop.Services.Catalog
 @using Nop.Services.Media
-@using Nop.Web.Framework.Controllers;
 @inject IDownloadService downloadService
 @inject CatalogSettings catalogSettings
 @if (Model.Count > 0)
@@ -12,9 +12,9 @@
         <dl>
             @foreach (var attribute in Model)
             {
-                var controlId = $"{NopAttributePrefixDefaults.Product}{attribute.Id}";
+                var controlId = $"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}";
                 var textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
-                <dt id="@($"{NopAttributePrefixDefaults.Product}label_{attribute.Id}")">
+                <dt id="@($"{NopCatalogDefaults.ProductAttributePrefix}label_{attribute.Id}")">
                     <label class="text-prompt">
                         @textPrompt
                     </label>
@@ -29,7 +29,7 @@
                         </div>
                     }
                 </dt>
-                <dd id="@($"{NopAttributePrefixDefaults.Product}input_{attribute.Id}")">
+                <dd id="@($"{NopCatalogDefaults.ProductAttributePrefix}input_{attribute.Id}")">
                     @switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
@@ -127,12 +127,12 @@
                             break;
                         case AttributeControlType.TextBox:
                             {
-                                <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" value="@attribute.DefaultValue" />
+                                <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" value="@(attribute.DefaultValue)" />
                             }
                             break;
                         case AttributeControlType.MultilineTextbox:
                             {
-                                <textarea cols="20" id="@(controlId)" name="@(controlId)">@attribute.DefaultValue</textarea>
+                                <textarea cols="20" id="@(controlId)" name="@(controlId)">@(attribute.DefaultValue)</textarea>
                             }
                             break;
                         case AttributeControlType.Datepicker:
@@ -143,9 +143,9 @@
                                     asp-year-name="@(controlId + "_year")"
                                     asp-begin-year="@(DateTime.Now.Year)"
                                     asp-end-year="@(DateTime.Now.Year + catalogSettings.CountDisplayedYearsDatePicker)"
-                                    asp-selected-day="@attribute.SelectedDay"
-                                    asp-selected-month="@attribute.SelectedMonth"
-                                    asp-selected-year="@attribute.SelectedYear"
+                                    asp-selected-day="@(attribute.SelectedDay)"
+                                    asp-selected-month="@(attribute.SelectedMonth)"
+                                    asp-selected-year="@(attribute.SelectedYear)"
                                 />
                             }
                             break;
@@ -371,7 +371,7 @@
         //generate change event script
         foreach (var attribute in Model)
         {
-            var controlId = $"{NopAttributePrefixDefaults.Product}{attribute.Id}";
+            var controlId = $"{NopCatalogDefaults.ProductAttributePrefix}{attribute.Id}";
             switch (attribute.AttributeControlType)
             {
                 case AttributeControlType.DropdownList:
@@ -446,14 +446,14 @@
                         }
                         if (data.enabledattributemappingids) {
                             for (var i = 0; i < data.enabledattributemappingids.length; i++) {
-                                $('#@(NopAttributePrefixDefaults.Product)label_' + data.enabledattributemappingids[i]).show();
-                                $('#@(NopAttributePrefixDefaults.Product)input_' + data.enabledattributemappingids[i]).show();
+                                $('#@(NopCatalogDefaults.ProductAttributePrefix)label_' + data.enabledattributemappingids[i]).show();
+                                $('#@(NopCatalogDefaults.ProductAttributePrefix)input_' + data.enabledattributemappingids[i]).show();
                             }
                         }
                         if (data.disabledattributemappingids) {
                             for (var i = 0; i < data.disabledattributemappingids.length; i++) {
-                                $('#@(NopAttributePrefixDefaults.Product)label_' + data.disabledattributemappingids[i]).hide();
-                                $('#@(NopAttributePrefixDefaults.Product)input_' + data.disabledattributemappingids[i]).hide();
+                                $('#@(NopCatalogDefaults.ProductAttributePrefix)label_' + data.disabledattributemappingids[i]).hide();
+                                $('#@(NopCatalogDefaults.ProductAttributePrefix)input_' + data.disabledattributemappingids[i]).hide();
                             }
                         }
                         if (data.pictureDefaultSizeUrl) {

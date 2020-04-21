@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 
@@ -294,14 +295,6 @@ namespace Nop.Services.Catalog
         bool ProductIsAvailable(Product product, DateTime? dateTime = null);
 
         /// <summary>
-        /// Indicates whether a product tag exists
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="productTagId">Product tag identifier</param>
-        /// <returns>Result</returns>
-        bool ProductTagExists(Product product, int productTagId);
-
-        /// <summary>
         /// Get a list of allowed quantities (parse 'AllowedQuantities' property)
         /// </summary>
         /// <param name="product">Product</param>
@@ -378,6 +371,27 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="limitedToStoresIds">A list of store ids for mapping</param>
         void UpdateProductStoreMappings(Product product, IList<int> limitedToStoresIds);
+
+        /// <summary>
+        /// Gets the value whether the sequence contains downloadable products
+        /// </summary>
+        /// <param name="productIds">Product identifiers</param>
+        /// <returns>Result</returns>
+        bool HasAnyDownloadableProduct(int[] productIds);
+
+        /// <summary>
+        /// Gets the value whether the sequence contains gift card products
+        /// </summary>
+        /// <param name="productIds">Product identifiers</param>
+        /// <returns>Result</returns>
+        bool HasAnyGiftCardProduct(int[] productIds);
+
+        /// <summary>
+        /// Gets the value whether the sequence contains recurring products
+        /// </summary>
+        /// <param name="productIds">Product identifiers</param>
+        /// <returns>Result</returns>
+        bool HasAnyRecurringProduct(int[] productIds);
 
         #endregion
 
@@ -545,6 +559,20 @@ namespace Nop.Services.Catalog
         #region Tier prices
 
         /// <summary>
+        /// Gets a product tier prices for customer
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store identifier</param>
+        IList<TierPrice> GetTierPrices(Product product, Customer customer, int storeId);
+
+        /// <summary>
+        /// Gets a tier prices by product identifier
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        IList<TierPrice> GetTierPricesByProduct(int productId);
+
+        /// <summary>
         /// Deletes a tier price
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
@@ -622,6 +650,17 @@ namespace Nop.Services.Catalog
         /// <returns>All picture identifiers grouped by product ID</returns>
         IDictionary<int, int[]> GetProductsImagesIds(int[] productsIds);
 
+        /// <summary>
+        /// Get products to which a discount is applied
+        /// </summary>
+        /// <param name="discountId">Discount identifier; pass null to load all records</param>
+        /// <param name="showHidden">A value indicating whether to load deleted products</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>List of products</returns>
+        IPagedList<Product> GetProductsWithAppliedDiscount(int? discountId = null,
+            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue);
+
         #endregion
 
         #region Product reviews
@@ -641,7 +680,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Reviews</returns>
-        IPagedList<ProductReview> GetAllProductReviews(int customerId, bool? approved,
+        IPagedList<ProductReview> GetAllProductReviews(int customerId = 0, bool? approved = null,
             DateTime? fromUtc = null, DateTime? toUtc = null,
             string message = null, int storeId = 0, int productId = 0, int vendorId = 0, bool showHidden = false,
             int pageIndex = 0, int pageSize = int.MaxValue);
@@ -661,6 +700,12 @@ namespace Nop.Services.Catalog
         IList<ProductReview> GetProducReviewsByIds(int[] productReviewIds);
 
         /// <summary>
+        /// Inserts a product review
+        /// </summary>
+        /// <param name="productReview">Product review</param>
+        void InsertProductReview(ProductReview productReview);
+
+        /// <summary>
         /// Deletes a product review
         /// </summary>
         /// <param name="productReview">Product review</param>
@@ -672,15 +717,80 @@ namespace Nop.Services.Catalog
         /// <param name="productReviews">Product reviews</param>
         void DeleteProductReviews(IList<ProductReview> productReviews);
 
+        /// <summary>
+        /// Gets ratio of useful and not useful product review 
+        /// </summary>
+        /// <param name="productReview">Product review</param>
+        /// <returns>Result</returns>
+        (int usefulCount, int notUsefulCount) GetHelpfulnessCounts(ProductReview productReview);
+
+        /// <summary>
+        /// Inserts a product review helpfulness record
+        /// </summary>
+        /// <param name="productReviewHelpfulness">Product review helpfulness record</param>
+        void InsertProductReviewHelpfulness(ProductReviewHelpfulness productReviewHelpfulness);
+
+        /// <summary>
+        /// Sets or create a product review helpfulness record
+        /// </summary>
+        /// <param name="productReview">Product reviews</param>
+        /// <param name="helpfulness">Value indicating whether a review a helpful</param>
+        void SetProductReviewHelpfulness(ProductReview productReview, bool helpfulness);
+
+        /// <summary>
+        /// Updates a totals helpfulness count for product review
+        /// </summary>
+        /// <param name="productReview">Product review</param>
+        /// <returns>Result</returns>
+        void UpdateProductReviewHelpfulnessTotals(ProductReview productReview);
+
+        /// <summary>
+        /// Updates a product review
+        /// </summary>
+        /// <param name="productReview">Product review</param>
+        void UpdateProductReview(ProductReview productReview);
+
         #endregion
 
-        #region Product warehouse inventory
+        #region Product warehouses
+
+        /// <summary>
+        /// Get a product warehouse-inventory records by product identifier
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        IList<ProductWarehouseInventory> GetAllProductWarehouseInventoryRecords(int productId);
+
+        /// <summary>
+        /// Gets a warehouse by identifier
+        /// </summary>
+        /// <param name="warehouseId">Warehouse identifier</param>
+        /// <returns>Result</returns>
+        Warehouse GetWarehousesById(int warehouseId);
+
+        /// <summary>
+        /// Gets a warehouses by product identifier
+        /// </summary>
+        /// <param name="productId">The product identifier</param>
+        /// <returns>List of warehouses</returns>
+        IList<Warehouse> GetWarehousesByProductId(int productId);
 
         /// <summary>
         /// Deletes a ProductWarehouseInventory
         /// </summary>
         /// <param name="pwi">ProductWarehouseInventory</param>
         void DeleteProductWarehouseInventory(ProductWarehouseInventory pwi);
+
+        /// <summary>
+        /// Inserts a ProductWarehouseInventory
+        /// </summary>
+        /// <param name="pwi">ProductWarehouseInventory</param>
+        void InsertProductWarehouseInventory(ProductWarehouseInventory pwi);
+
+        /// <summary>
+        /// Updates a record to manage product inventory per warehouse
+        /// </summary>
+        /// <param name="pwi">Record to manage product inventory per warehouse</param>
+        void UpdateProductWarehouseInventory(ProductWarehouseInventory pwi);
 
         #endregion
 
@@ -709,6 +819,42 @@ namespace Nop.Services.Catalog
         /// <returns>List of stock quantity change entries</returns>
         IPagedList<StockQuantityHistory> GetStockQuantityHistory(Product product, int warehouseId = 0, int combinationId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue);
+
+        #endregion
+
+        #region Product discounts
+
+        /// <summary>
+        /// Clean up product references for a specified discount
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        void ClearDiscountProductMapping(Discount discount);
+
+        /// <summary>
+        /// Get a discount-product mapping records by product identifier
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        IList<DiscountProductMapping> GetAllDiscountsAppliedToProduct(int productId);
+
+        /// <summary>
+        /// Get a discount-product mapping record
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <param name="discountId">Discount identifier</param>
+        /// <returns>Result</returns>
+        DiscountProductMapping GetDiscountAppliedToProduct(int productId, int discountId);
+
+        /// <summary>
+        /// Inserts a discount-product mapping record
+        /// </summary>
+        /// <param name="discountProductMapping">Discount-product mapping</param>
+        void InsertDiscountProductMapping(DiscountProductMapping discountProductMapping);
+
+        /// <summary>
+        /// Deletes a discount-product mapping record
+        /// </summary>
+        /// <param name="discountProductMapping">Discount-product mapping</param>
+        void DeleteDiscountProductMapping(DiscountProductMapping discountProductMapping);
 
         #endregion
     }

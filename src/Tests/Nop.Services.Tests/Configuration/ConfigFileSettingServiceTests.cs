@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
+using FluentAssertions;
 using Nop.Services.Configuration;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Configuration
@@ -26,29 +26,29 @@ namespace Nop.Services.Tests.Configuration
         public void Can_get_all_settings()
         {
             var settings = config.GetAllSettings();
-            settings.ShouldNotBeNull();
-            (settings.Any()).ShouldBeTrue();
+            settings.Should().NotBeNull();
+            (settings.Any()).Should().BeTrue();
         }
 
         [Test]
         public void Can_get_setting_by_key()
         {
             var setting = config.GetSettingByKey<string>("Setting1");
-            setting.ShouldEqual("SomeValue");
+            setting.Should().Be("SomeValue");
         }
 
         [Test]
         public void Can_get_typed_setting_value_by_key()
         {
             var setting = config.GetSettingByKey<DateTime>("Setting3");
-            setting.ShouldEqual(new DateTime(2010, 12, 25));
+            setting.Should().Be(new DateTime(2010, 12, 25));
         }
 
         [Test]
         public void Default_value_returned_if_setting_does_not_exist()
         {
             var setting = config.GetSettingByKey("NonExistentKey", 100);
-            setting.ShouldEqual(100);
+            setting.Should().Be(100);
         }
     }
 }

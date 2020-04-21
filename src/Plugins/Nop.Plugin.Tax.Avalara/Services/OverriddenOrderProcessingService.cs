@@ -41,6 +41,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         #region Fields
 
         private readonly CurrencySettings _currencySettings;
+        private readonly IAddressService _addressService;
         private readonly IAffiliateService _affiliateService;
         private readonly ICheckoutAttributeFormatter _checkoutAttributeFormatter;
         private readonly ICountryService _countryService;
@@ -54,6 +55,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IPaymentService _paymentService;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IProductService _productService;
         private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -69,6 +71,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         #region Ctor
 
         public OverriddenOrderProcessingService(CurrencySettings currencySettings,
+            IAddressService addressService,
             IAffiliateService affiliateService,
             ICheckoutAttributeFormatter checkoutAttributeFormatter,
             ICountryService countryService,
@@ -113,6 +116,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
             TaxSettings taxSettings) : base(currencySettings,
+                addressService,
                 affiliateService,
                 checkoutAttributeFormatter,
                 countryService,
@@ -158,6 +162,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 taxSettings)
         {
             _currencySettings = currencySettings;
+            _addressService = addressService;
             _affiliateService = affiliateService;
             _checkoutAttributeFormatter = checkoutAttributeFormatter;
             _countryService = countryService;
@@ -171,6 +176,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
             _orderTotalCalculationService = orderTotalCalculationService;
             _paymentService = paymentService;
             _priceFormatter = priceFormatter;
+            _productService = productService;
             _shippingPluginManager = shippingPluginManager;
             _shoppingCartService = shoppingCartService;
             _stateProvinceService = stateProvinceService;
@@ -207,7 +213,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 details.AffiliateId = affiliate.Id;
 
             //check whether customer is guest
-            if (details.Customer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
+            if (_customerService.IsGuest(details.Customer) && !_orderSettings.AnonymousCheckoutAllowed)
                 throw new NopException("Anonymous checkout is not allowed");
 
             //customer currency
@@ -225,15 +231,17 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 details.CustomerLanguage = _workContext.WorkingLanguage;
 
             //billing address
-            if (details.Customer.BillingAddress == null)
+            if (details.Customer.BillingAddressId == null)
                 throw new NopException("Billing address is not provided");
 
-            if (!CommonHelper.IsValidEmail(details.Customer.BillingAddress.Email))
+            var customerBillingAddress = _customerService.GetCustomerBillingAddress(details.Customer);
+
+            if (!CommonHelper.IsValidEmail(customerBillingAddress?.Email))
                 throw new NopException("Email is not valid");
 
-            details.BillingAddress = (Address)details.Customer.BillingAddress.Clone();
-            if (details.BillingAddress.Country != null && !details.BillingAddress.Country.AllowsBilling)
-                throw new NopException($"Country '{details.BillingAddress.Country.Name}' is not allowed for billing");
+            details.BillingAddress = _addressService.CloneAddress(customerBillingAddress);
+            if (_countryService.GetCountryByAddress(details.BillingAddress) is Country countryBilling && !countryBilling.AllowsBilling)
+                throw new NopException($"Country '{countryBilling.Name}' is not allowed for billing");
 
             //checkout attributes
             details.CheckoutAttributesXml = _genericAttributeService.GetAttribute<string>(details.Customer, NopCustomerDefaults.CheckoutAttributes, processPaymentRequest.StoreId);
@@ -253,8 +261,10 @@ namespace Nop.Plugin.Tax.Avalara.Services
             //validate individual cart items
             foreach (var sci in details.Cart)
             {
+                var product = _productService.GetProductById(sci.ProductId);
+
                 var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(details.Customer,
-                    sci.ShoppingCartType, sci.Product, processPaymentRequest.StoreId, sci.AttributesXml,
+                    sci.ShoppingCartType, product, processPaymentRequest.StoreId, sci.AttributesXml,
                     sci.CustomerEnteredPrice, sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false, sci.Id);
                 if (sciWarnings.Any())
                     throw new NopException(sciWarnings.Aggregate(string.Empty, (current, next) => $"{current}{next};"));
@@ -313,24 +323,26 @@ namespace Nop.Plugin.Tax.Avalara.Services
                         Address1 = pickupPoint.Address,
                         City = pickupPoint.City,
                         County = pickupPoint.County,
-                        Country = country,
-                        StateProvince = state,
+                        CountryId = country?.Id,
+                        StateProvinceId = state?.Id,
                         ZipPostalCode = pickupPoint.ZipPostalCode,
                         CreatedOnUtc = DateTime.UtcNow
                     };
                 }
                 else
                 {
-                    if (details.Customer.ShippingAddress == null)
+                    if (details.Customer.ShippingAddressId == null)
                         throw new NopException("Shipping address is not provided");
 
-                    if (!CommonHelper.IsValidEmail(details.Customer.ShippingAddress.Email))
+                    var customerShippingAddress = _customerService.GetCustomerShippingAddress(details.Customer);
+
+                    if (!CommonHelper.IsValidEmail(customerShippingAddress?.Email))
                         throw new NopException("Email is not valid");
 
                     //clone shipping address
-                    details.ShippingAddress = (Address)details.Customer.ShippingAddress.Clone();
-                    if (details.ShippingAddress.Country != null && !details.ShippingAddress.Country.AllowsShipping)
-                        throw new NopException($"Country '{details.ShippingAddress.Country.Name}' is not allowed for shipping");
+                    details.ShippingAddress = _addressService.CloneAddress(customerShippingAddress);
+                    if (_countryService.GetCountryByAddress(details.ShippingAddress) is Country countryShipping && !countryShipping.AllowsShipping)
+                        throw new NopException($"Country '{countryShipping.Name}' is not allowed for shipping");
                 }
 
                 var shippingOption = _genericAttributeService.GetAttribute<ShippingOption>(details.Customer,

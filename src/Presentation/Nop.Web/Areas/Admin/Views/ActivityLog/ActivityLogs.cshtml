@@ -17,11 +17,14 @@
         @T("Admin.Configuration.ActivityLog.ActivityLog")
     </h1>
     <div class="pull-right">
-        <a asp-action="ClearAll" class="btn bg-red">
-            <i class="fa fa-trash-o"></i>
-            @T("Admin.Common.Clear")
-        </a>
-        @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ActivityLogListButtons })
+        <form asp-controller="ActivityLog" asp-action="ClearAll" method="post">
+            <button type="submit" id="clearall" name="clearall" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Customers.ActivityLog.Clear")
+            </button>
+            <nop-action-confirmation asp-button-id="clearall" />
+            @await Component.InvokeAsync("AdminWidget", new { widgetZone = AdminWidgetZones.ActivityLogListButtons })
+        </form>
     </div>
 
 </div>

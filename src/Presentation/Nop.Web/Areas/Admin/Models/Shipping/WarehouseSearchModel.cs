@@ -1,4 +1,5 @@
 ﻿using Nop.Web.Framework.Models;
+using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace Nop.Web.Areas.Admin.Models.Shipping
 {
@@ -7,5 +8,7 @@ namespace Nop.Web.Areas.Admin.Models.Shipping
     /// </summary>
     public partial class WarehouseSearchModel : BaseSearchModel
     {
+        [NopResourceDisplayName("Admin.Orders.Shipments.List.Warehouse.SearchName")]
+        public string SearchName { get; set; }
     }
 }

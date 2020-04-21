@@ -1,4 +1,5 @@
-﻿<Language Name="한국어" IsDefault="false" IsRightToLeft="false">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="한국어" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>관리자 이메일</Value>
   </LocaleResource>
@@ -44,11 +45,11 @@
   <LocaleResource Name="CustomCollation">
     <Value>사용자 지정 SQL Server 데이터 정렬 지정</Value>
   </LocaleResource>
-  <LocaleResource Name="DatabaseCreationError">
-    <Value>데이터베이스를 작성하는 중 오류가 발생했습니다: {0}</Value>
-  </LocaleResource>
   <LocaleResource Name="Database">
     <Value>데이터베이스</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>데이터베이스를 작성하는 중 오류가 발생했습니다: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>데이터베이스 정보</Value>
@@ -80,6 +81,9 @@
   <LocaleResource Name="Installing">
     <Value>nopCommerce 설치중...</Value>
   </LocaleResource>
+  <LocaleResource Name="MySql">
+    <Value>MySQL</Value>
+  </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>비밀번호가 일치하지 않습니다</Value>
   </LocaleResource>
@@ -103,6 +107,9 @@
   </LocaleResource>
   <LocaleResource Name="SqlCompact">
     <Value>기본 제공 데이터 저장소 사용 (SQL Server Compact)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServer">
+    <Value>Microsoft SQL Server</Value>
   </LocaleResource>
   <LocaleResource Name="SqlServerName">
     <Value>SQL Server 이름</Value>

@@ -9,10 +9,12 @@
         /// Success
         /// </summary>
         Success,
+
         /// <summary>
         /// Error
         /// </summary>
         Error,
+
         /// <summary>
         /// Warning
         /// </summary>

@@ -21,10 +21,14 @@ namespace Nop.Services.Themes
 
         #endregion
 
+        #region Ctor
+
         public ThemeProvider(INopFileProvider fileProvider)
         {
             _fileProvider = fileProvider;
         }
+
+        #endregion
 
         #region Methods
         /// <summary>

@@ -1,4 +1,6 @@
-﻿namespace Nop.Services.Common
+﻿using Nop.Core.Caching;
+
+namespace Nop.Services.Common
 {
     /// <summary>
     /// Represents default values related to common services
@@ -11,46 +13,7 @@
         public static string KeepAlivePath => "keepalive/index";
 
         #region Address attributes
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        public static string AddressAttributesAllCacheKey => "Nop.addressattribute.all";
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : address attribute ID
-        /// </remarks>
-        public static string AddressAttributesByIdCacheKey => "Nop.addressattribute.id-{0}";
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : address attribute ID
-        /// </remarks>
-        public static string AddressAttributeValuesAllCacheKey => "Nop.addressattributevalue.all-{0}";
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : address attribute value ID
-        /// </remarks>
-        public static string AddressAttributeValuesByIdCacheKey => "Nop.addressattributevalue.id-{0}";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string AddressAttributesPrefixCacheKey => "Nop.addressattribute.";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string AddressAttributeValuesPrefixCacheKey => "Nop.addressattributevalue.";
-
+        
         /// <summary>
         /// Gets a name of the custom address attribute control
         /// </summary>
@@ -60,42 +23,7 @@
         public static string AddressAttributeControlName => "address_attribute_{0}";
 
         #endregion
-
-        #region Addresses
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : address ID
-        /// </remarks>
-        public static string AddressesByIdCacheKey => "Nop.address.id-{0}";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string AddressesPrefixCacheKey => "Nop.address.";
-
-        #endregion
-
-        #region Generic attributes
-
-        /// <summary>
-        /// Gets a key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : entity ID
-        /// {1} : key group
-        /// </remarks>
-        public static string GenericAttributeCacheKey => "Nop.genericattribute.{0}-{1}";
-
-        /// <summary>
-        /// Gets a key pattern to clear cache
-        /// </summary>
-        public static string GenericAttributePrefixCacheKey => "Nop.genericattribute.";
-
-        #endregion
-
+        
         #region Maintenance
 
         /// <summary>
@@ -118,6 +46,11 @@
         public static string HeadCodeFileName => "html_code.html";
 
         /// <summary>
+        ///  Gets a head link for the favicon
+        /// </summary>
+        public static string SingleFaviconHeadLink => "<link rel=\"shortcut icon\" href=\"\\icons\\icons_{0}\\{1}\">";
+
+        /// <summary>
         /// Gets a path to the favicon and app icons
         /// </summary>
         public static string FaviconAndAppIconsPath => "icons\\icons_{0}";
@@ -126,6 +59,25 @@
         /// Gets a name of the old favicon icon for current store
         /// </summary>
         public static string OldFaviconIconName => "favicon-{0}.ico";
+
+        #endregion
+
+        #region Localization client-side validation
+
+        /// <summary>
+        /// Gets a path to the localization client-side validation 
+        /// </summary>
+        public static string LocalePatternPath => "lib\\cldr-data\\main\\{0}";
+
+        /// <summary>
+        /// Gets a name of the archive with localization of templates
+        /// </summary>
+        public static string LocalePatternArchiveName => "main.zip";
+
+        /// <summary>
+        /// Gets a name of the default pattern locale
+        /// </summary>
+        public static string DefaultLocalePattern => "en";
 
         #endregion
 
@@ -182,6 +134,40 @@
         /// {6} : language code
         /// </remarks>
         public static string NopExtensionsPath => "extensions-feed?category={0}&version={1}&price={2}&searchTerm={3}&pageIndex={4}&pageSize={5}&language={6}";
+
+        #endregion
+
+        #region Caching defaults
+
+        #region Address attributes
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        public static CacheKey AddressAttributesAllCacheKey => new CacheKey("Nop.addressattribute.all");
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : address attribute ID
+        /// </remarks>
+        public static CacheKey AddressAttributeValuesAllCacheKey => new CacheKey("Nop.addressattributevalue.all-{0}");
+
+        #endregion
+
+        #region Generic attributes
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : entity ID
+        /// {1} : key group
+        /// </remarks>
+        public static CacheKey GenericAttributeCacheKey => new CacheKey("Nop.genericattribute.{0}-{1}");
+
+        #endregion
 
         #endregion
     }

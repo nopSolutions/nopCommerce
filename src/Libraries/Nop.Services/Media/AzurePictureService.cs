@@ -7,11 +7,11 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
@@ -32,8 +32,8 @@ namespace Nop.Services.Media
         private static string _azureBlobStorageConnectionString;
         private static string _azureBlobStorageContainerName;
         private static string _azureBlobStorageEndPoint;
-
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly ICacheKeyService _cacheKeyService;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly MediaSettings _mediaSettings;
         private readonly object _locker = new object();
 
@@ -41,9 +41,9 @@ namespace Nop.Services.Media
 
         #region Ctor
 
-        public AzurePictureService(IDataProvider dataProvider,
-            IDbContext dbContext,
+        public AzurePictureService(INopDataProvider dataProvider,
             IDownloadService downloadService,
+            ICacheKeyService cacheKeyService,
             IEventPublisher eventPublisher,
             IHttpContextAccessor httpContextAccessor,
             INopFileProvider fileProvider,
@@ -52,13 +52,12 @@ namespace Nop.Services.Media
             IRepository<PictureBinary> pictureBinaryRepository,
             IRepository<ProductPicture> productPictureRepository,
             ISettingService settingService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IUrlRecordService urlRecordService,
             IWebHelper webHelper,
             MediaSettings mediaSettings,
             NopConfig config)
             : base(dataProvider,
-                  dbContext,
                   downloadService,
                   eventPublisher,
                   httpContextAccessor,
@@ -72,7 +71,8 @@ namespace Nop.Services.Media
                   webHelper,
                   mediaSettings)
         {
-            _cacheManager = cacheManager;
+            _cacheKeyService = cacheKeyService;
+            _staticCacheManager = staticCacheManager;
             _mediaSettings = mediaSettings;
 
             OneTimeInit(config);
@@ -213,7 +213,7 @@ namespace Nop.Services.Media
             }
             while (continuationToken != null);
 
-            _cacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefixCacheKey);
         }
 
         /// <summary>
@@ -226,8 +226,9 @@ namespace Nop.Services.Media
         {
             try
             {
-                var key = string.Format(NopMediaDefaults.ThumbExistsCacheKey, thumbFileName);
-                return await _cacheManager.GetAsync(key, async () =>
+                var key = _cacheKeyService.PrepareKeyForDefaultCache(NopMediaDefaults.ThumbExistsCacheKey, thumbFileName);
+
+                return await _staticCacheManager.GetAsync(key, async () =>
                 {
                     //GetBlockBlobReference doesn't need to be async since it doesn't contact the server yet
                     var blockBlob = _container.GetBlockBlobReference(thumbFileName);
@@ -263,7 +264,7 @@ namespace Nop.Services.Media
 
             await blockBlob.UploadFromByteArrayAsync(binary, 0, binary.Length);
 
-            _cacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsPrefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(NopMediaDefaults.ThumbsExistsPrefixCacheKey);
         }
 
         #endregion

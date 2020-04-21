@@ -29,7 +29,7 @@ namespace Nop.Plugin.Payments.Square.Services
         {
             //configure client
             client.BaseAddress = new Uri("https://connect.squareup.com/oauth2/");
-            client.Timeout = TimeSpan.FromMilliseconds(5000);
+            client.Timeout = TimeSpan.FromSeconds(20);
             client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, SquarePaymentDefaults.UserAgent);
             client.DefaultRequestHeaders.Add(HeaderNames.Accept, MimeTypes.ApplicationJson);
 

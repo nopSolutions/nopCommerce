@@ -193,6 +193,11 @@ namespace Nop.Core.Domain.Customers
         public bool StoreIpAddresses { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating the number of minutes for 'last activity' module
+        /// </summary>
+        public int LastActivityMinutes { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether deleted customer records should be prefixed suffixed with "-DELETED"
         /// </summary>
         public bool SuffixDeletedCustomers { get; set; }
@@ -218,6 +223,26 @@ namespace Nop.Core.Domain.Customers
         public int DeleteGuestTaskOlderThanMinutes { get; set; }
 
         #region Form fields
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'First Name' is enabled
+        /// </summary>
+        public bool FirstNameEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'First Name' is required
+        /// </summary>
+        public bool FirstNameRequired { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Last Name' is enabled
+        /// </summary>
+        public bool LastNameEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Last Name' is required
+        /// </summary>
+        public bool LastNameRequired { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Gender' is enabled
