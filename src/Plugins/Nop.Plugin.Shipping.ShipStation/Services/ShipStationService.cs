@@ -286,12 +286,12 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
         {
             var services = GetCarriers().SelectMany(carrier =>
             {
-                var apiUrl = _cacheKeyService.PrepareKeyForShortTermCache(_serviceCacheKey, carrier.Code);
+                var cacheKey = _cacheKeyService.PrepareKeyForShortTermCache(_serviceCacheKey, carrier.Code);
 
-                var data = _staticCacheManager.Get(apiUrl, () => SendGetRequest(string.Format($"{API_URL}{LIST_SERVICES_CMD}", carrier.Code)));
+                var data = _staticCacheManager.Get(cacheKey, () => SendGetRequest(string.Format($"{API_URL}{LIST_SERVICES_CMD}", carrier.Code)));
                 
                 if (!data.Any())
-                    _staticCacheManager.Remove(apiUrl);
+                    _staticCacheManager.Remove(cacheKey);
 
                 var serviceList = JsonConvert.DeserializeObject<List<Service>>(data);
                 

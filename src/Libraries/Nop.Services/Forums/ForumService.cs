@@ -276,7 +276,7 @@ namespace Nop.Services.Forums
                 orderby fg.DisplayOrder, fg.Id
                 select fg;
 
-            return query.ToCachedList(NopForumDefaults.ForumGroupAllCacheKey);
+            return query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopForumDefaults.ForumGroupAllCacheKey));
         }
 
         /// <summary>

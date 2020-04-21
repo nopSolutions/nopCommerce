@@ -7,6 +7,7 @@ using Nop.Core.Domain.Gdpr;
 using Nop.Data;
 using Nop.Services.Authentication.External;
 using Nop.Services.Blogs;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -30,6 +31,7 @@ namespace Nop.Services.Gdpr
         private readonly IAddressService _addressService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly IBlogService _blogService;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICustomerService _customerService;
         private readonly IExternalAuthenticationService _externalAuthenticationService;
         private readonly IEventPublisher _eventPublisher;
@@ -50,6 +52,7 @@ namespace Nop.Services.Gdpr
         public GdprService(IAddressService addressService,
             IBackInStockSubscriptionService backInStockSubscriptionService,
             IBlogService blogService,
+            ICacheKeyService cacheKeyService,
             ICustomerService customerService,
             IExternalAuthenticationService externalAuthenticationService,
             IEventPublisher eventPublisher,
@@ -66,6 +69,7 @@ namespace Nop.Services.Gdpr
             _addressService = addressService;
             _backInStockSubscriptionService = backInStockSubscriptionService;
             _blogService = blogService;
+            _cacheKeyService = cacheKeyService;
             _customerService = customerService;
             _externalAuthenticationService = externalAuthenticationService;
             _eventPublisher = eventPublisher;
@@ -109,7 +113,7 @@ namespace Nop.Services.Gdpr
                         orderby c.DisplayOrder, c.Id
                         select c;
 
-            var gdprConsents = query.ToCachedList(NopGdprDefaults.ConsentsAllCacheKey);
+            var gdprConsents = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopGdprDefaults.ConsentsAllCacheKey));
 
             return gdprConsents;
         }

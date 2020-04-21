@@ -50,7 +50,7 @@ namespace Nop.Services.Vendors
         {
             return _vendorAttributeRepository.Table
                 .OrderBy(vendorAttribute => vendorAttribute.DisplayOrder).ThenBy(vendorAttribute => vendorAttribute.Id)
-                .ToCachedList(NopVendorDefaults.VendorAttributesAllCacheKey);
+                .ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopVendorDefaults.VendorAttributesAllCacheKey));
         }
 
         /// <summary>

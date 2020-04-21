@@ -8,7 +8,6 @@ using Nop.Services.Configuration;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
-using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 using NUnit.Framework;
 

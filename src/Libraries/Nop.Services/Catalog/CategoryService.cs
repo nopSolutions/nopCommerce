@@ -314,7 +314,7 @@ namespace Nop.Services.Catalog
                         c.ShowOnHomepage
                         select c;
 
-            var categories = query.ToCachedList(NopCatalogDefaults.CategoriesAllDisplayedOnHomepageCacheKey);
+            var categories = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesAllDisplayedOnHomepageCacheKey));
 
             if (showHidden)
                 return categories;

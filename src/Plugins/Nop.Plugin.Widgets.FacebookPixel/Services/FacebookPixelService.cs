@@ -891,7 +891,7 @@ namespace Nop.Plugin.Widgets.FacebookPixel.Services
         /// <returns>List of widget zones names</returns>
         public IList<string> GetCustomEventsWidgetZones()
         {
-            return _staticCacheManager.Get(FacebookPixelDefaults.WidgetZonesCacheKey, () =>
+            return _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(FacebookPixelDefaults.WidgetZonesCacheKey), () =>
             {
                 //load custom events and their widget zones
                 var configurations = GetConfigurations();

@@ -9,7 +9,6 @@ using Nop.Services.Caching;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
-using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 
 namespace Nop.Services.Tests

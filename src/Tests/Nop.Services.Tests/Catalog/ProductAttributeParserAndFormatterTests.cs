@@ -15,7 +15,7 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Tax;
 using NUnit.Framework;
-using Nop.Services.Tests.FakeServices;
+using Nop.Tests;
 
 namespace Nop.Services.Tests.Catalog
 {

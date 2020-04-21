@@ -1270,7 +1270,7 @@ namespace Nop.Services.Seo
             var query = _urlRecordRepository.Table;
             query = query.OrderBy(ur => ur.Slug);
 
-            var urlRecords = query.ToCachedList(NopSeoDefaults.UrlRecordAllCacheKey);
+            var urlRecords = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordAllCacheKey));
 
             if (!string.IsNullOrWhiteSpace(slug))
                 urlRecords = urlRecords.Where(ur => ur.Slug.Contains(slug)).ToList();

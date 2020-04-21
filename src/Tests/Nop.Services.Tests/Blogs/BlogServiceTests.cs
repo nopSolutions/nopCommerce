@@ -3,7 +3,6 @@ using FluentAssertions;
  using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Blogs;
- using Nop.Services.Tests.FakeServices;
  using Nop.Tests;
  using NUnit.Framework;
 

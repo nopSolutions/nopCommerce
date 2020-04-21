@@ -10,6 +10,7 @@ using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Stores;
 using Nop.Services.Tests.FakeServices;
+using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Directory

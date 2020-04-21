@@ -78,7 +78,7 @@ namespace Nop.Services.Localization
             var query = from lp in _localizedPropertyRepository.Table
                 select lp;
 
-            return query.ToCachedList(NopLocalizationDefaults.LocalizedPropertyAllCacheKey);
+            return query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopLocalizationDefaults.LocalizedPropertyAllCacheKey));
         }
 
         #endregion

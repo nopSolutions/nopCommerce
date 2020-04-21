@@ -18,7 +18,6 @@ using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
-using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -289,13 +288,16 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_get_final_product_price()
         {
-            var product = _productService.GetProductById(1);
+            RunWithTestServiceProvider(() =>
+            {
+                var product = _productService.GetProductById(1);
 
-            //customer
-            var customer = new Customer();
+                //customer
+                var customer = new Customer();
 
-            _priceCalcService.GetFinalPrice(product, customer, 0, false).Should().Be(12.34M);
-            _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).Should().Be(12.34M);
+                _priceCalcService.GetFinalPrice(product, customer, 0, false).Should().Be(12.34M);
+                _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).Should().Be(12.34M);
+            });
         }
 
         [Test]
@@ -337,12 +339,15 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_get_final_product_price_with_additionalFee()
         {
-            var product = _productService.GetProductById(1);
+            RunWithTestServiceProvider(() =>
+            {
+                var product = _productService.GetProductById(1);
 
-            //customer
-            var customer = new Customer();
+                //customer
+                var customer = new Customer();
 
-            _priceCalcService.GetFinalPrice(product, customer, 5, false).Should().Be(17.34M);
+                _priceCalcService.GetFinalPrice(product, customer, 5, false).Should().Be(17.34M);
+            });
         }
 
         [Test]

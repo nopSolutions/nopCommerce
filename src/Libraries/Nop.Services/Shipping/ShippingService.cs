@@ -341,7 +341,7 @@ namespace Nop.Services.Shipping
                         orderby wh.Name
                         select wh;
 
-            var warehouses = query.ToCachedList(NopShippingDefaults.WarehousesAllCacheKey);
+            var warehouses = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopShippingDefaults.WarehousesAllCacheKey));
 
             if (!string.IsNullOrEmpty(name))
             {

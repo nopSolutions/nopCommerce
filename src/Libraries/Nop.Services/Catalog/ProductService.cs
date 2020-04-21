@@ -360,7 +360,7 @@ namespace Nop.Services.Catalog
                         p.ShowOnHomepage
                         select p;
 
-            var products = query.ToCachedList(NopCatalogDefaults.ProductsAllDisplayedOnHomepageCacheKey);
+            var products = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductsAllDisplayedOnHomepageCacheKey));
 
             return products;
         }
@@ -512,8 +512,8 @@ namespace Nop.Services.Catalog
                         select p;
             }
 
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryNumberOfProductsCacheKey
-                , allowedCustomerRolesIds, storeId, categoryIds);
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryNumberOfProductsCacheKey,
+                allowedCustomerRolesIds, storeId, categoryIds);
 
             //only distinct products
             var result = _staticCacheManager.Get(cacheKey, () => query.Select(p => p.Id).Distinct().Count());

@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Data;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -16,6 +17,7 @@ namespace Nop.Services.Directory
     {
         #region Fields
 
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<MeasureDimension> _measureDimensionRepository;
         private readonly IRepository<MeasureWeight> _measureWeightRepository;
@@ -25,11 +27,13 @@ namespace Nop.Services.Directory
 
         #region Ctor
 
-        public MeasureService(IEventPublisher eventPublisher,
+        public MeasureService(ICacheKeyService cacheKeyService,
+            IEventPublisher eventPublisher,
             IRepository<MeasureDimension> measureDimensionRepository,
             IRepository<MeasureWeight> measureWeightRepository,
             MeasureSettings measureSettings)
         {
+            _cacheKeyService = cacheKeyService;
             _eventPublisher = eventPublisher;
             _measureDimensionRepository = measureDimensionRepository;
             _measureWeightRepository = measureWeightRepository;
@@ -96,7 +100,7 @@ namespace Nop.Services.Directory
             var query = from md in _measureDimensionRepository.Table
                 orderby md.DisplayOrder, md.Id
                 select md;
-            var measureDimensions = query.ToCachedList(NopDirectoryDefaults.MeasureDimensionsAllCacheKey);
+            var measureDimensions = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.MeasureDimensionsAllCacheKey));
 
             return measureDimensions;
         }
@@ -269,7 +273,7 @@ namespace Nop.Services.Directory
             var query = from mw in _measureWeightRepository.Table
                 orderby mw.DisplayOrder, mw.Id
                 select mw;
-            var measureWeights = query.ToCachedList(NopDirectoryDefaults.MeasureWeightsAllCacheKey);
+            var measureWeights = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopDirectoryDefaults.MeasureWeightsAllCacheKey));
 
             return measureWeights;
         }

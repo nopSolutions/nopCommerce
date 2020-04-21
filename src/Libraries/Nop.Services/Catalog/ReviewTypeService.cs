@@ -50,7 +50,7 @@ namespace Nop.Services.Catalog
         {
             return _reviewTypeRepository.Table
                 .OrderBy(reviewType => reviewType.DisplayOrder).ThenBy(reviewType => reviewType.Id)
-                .ToCachedList(NopCatalogDefaults.ReviewTypeAllCacheKey);
+                .ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ReviewTypeAllCacheKey));
         }
 
         /// <summary>

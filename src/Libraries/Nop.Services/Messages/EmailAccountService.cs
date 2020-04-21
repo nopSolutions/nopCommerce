@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
+using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 
@@ -16,6 +17,7 @@ namespace Nop.Services.Messages
     {
         #region Fields
 
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<EmailAccount> _emailAccountRepository;
 
@@ -23,9 +25,11 @@ namespace Nop.Services.Messages
 
         #region Ctor
 
-        public EmailAccountService(IEventPublisher eventPublisher,
+        public EmailAccountService(ICacheKeyService cacheKeyService,
+            IEventPublisher eventPublisher,
             IRepository<EmailAccount> emailAccountRepository)
         {
+            _cacheKeyService = cacheKeyService;
             _eventPublisher = eventPublisher;
             _emailAccountRepository = emailAccountRepository;
         }
@@ -141,7 +145,7 @@ namespace Nop.Services.Messages
                         orderby ea.Id
                         select ea;
 
-            var emailAccounts = query.ToCachedList(NopMessageDefaults.EmailAccountsAllCacheKey);
+            var emailAccounts = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopMessageDefaults.EmailAccountsAllCacheKey));
 
             return emailAccounts;
         }

@@ -48,7 +48,8 @@ namespace Nop.Services.Configuration
         /// <returns>Settings</returns>
         protected virtual IDictionary<string, IList<Setting>> GetAllSettingsDictionary()
         {
-            //cache
+            //we can not use ICacheKeyService because it'll cause circular references.
+            //that's why we use the default cache time
             return _staticCacheManager.Get(NopConfigurationDefaults.SettingsAllAsDictionaryCacheKey, () =>
             {
                 var settings = GetAllSettings();
@@ -298,6 +299,8 @@ namespace Nop.Services.Configuration
                         orderby s.Name, s.StoreId
                         select s;
 
+            //we can not use ICacheKeyService because it'll cause circular references.
+            //that's why we use the default cache time
             var settings = query.ToCachedList(NopConfigurationDefaults.SettingsAllCacheKey);
 
             return settings;

@@ -2,7 +2,6 @@
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Infrastructure;
-using Nop.Data;
 using Nop.Data.Migrations;
 using Nop.Services.Customers;
 using Nop.Services.Logging;

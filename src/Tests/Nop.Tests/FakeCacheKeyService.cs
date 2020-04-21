@@ -1,7 +1,7 @@
 ﻿using Nop.Core.Caching;
 using Nop.Services.Caching;
 
-namespace Nop.Services.Tests.FakeServices
+namespace Nop.Tests
 {
     public class FakeCacheKeyService : ICacheKeyService
     {

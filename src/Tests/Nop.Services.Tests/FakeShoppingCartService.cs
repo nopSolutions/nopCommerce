@@ -20,7 +20,6 @@ using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
-using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 
 namespace Nop.Services.Tests

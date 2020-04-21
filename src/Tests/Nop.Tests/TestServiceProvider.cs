@@ -107,6 +107,9 @@ namespace Nop.Tests
             if (serviceType == typeof(IRepository<DiscountProductMapping>))
                 return DiscountProductMappingRepository.Object;
 
+            if (serviceType == typeof(ICacheKeyService))
+                return new FakeCacheKeyService();
+
             return null;
         }
     }

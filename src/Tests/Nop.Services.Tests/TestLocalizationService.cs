@@ -8,7 +8,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.Tests.FakeServices;
+using Nop.Tests;
 
 namespace Nop.Services.Tests
 {

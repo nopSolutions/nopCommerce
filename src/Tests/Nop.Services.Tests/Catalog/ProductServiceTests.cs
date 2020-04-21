@@ -8,7 +8,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Data;
 using Nop.Services.Catalog;
-using Nop.Services.Tests.FakeServices;
+using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Catalog

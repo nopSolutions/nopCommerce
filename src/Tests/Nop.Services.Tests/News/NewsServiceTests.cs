@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Nop.Core.Domain.News;
 using Nop.Services.News;
-using Nop.Services.Tests.FakeServices;
+using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.News

@@ -19,7 +19,17 @@ namespace Nop.Services.Caching.Extensions
         {
             var staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
 
-            return staticCacheManager.Get(new CacheKey(BaseEntity.GetEntityCacheKey(typeof(TEntity), id), cacheTime), () => repository.GetById(id));
+            var cacheKey = new CacheKey(BaseEntity.GetEntityCacheKey(typeof(TEntity), id));
+
+            if (cacheTime.HasValue) 
+                cacheKey.CacheTime = cacheTime.Value;
+            else
+            {
+                var cacheKeyService = EngineContext.Current.Resolve<ICacheKeyService>();
+                cacheKey = cacheKeyService.PrepareKeyForDefaultCache(cacheKey);
+            }
+
+            return staticCacheManager.Get(cacheKey, () => repository.GetById(id));
         }
     }
 }

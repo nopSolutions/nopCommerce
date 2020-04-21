@@ -12,7 +12,6 @@ using Nop.Services.Events;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tests.FakeServices;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Shipping

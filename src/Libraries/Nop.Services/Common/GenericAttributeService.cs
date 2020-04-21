@@ -122,7 +122,7 @@ namespace Nop.Services.Common
         /// <returns>Get attributes</returns>
         public virtual IList<GenericAttribute> GetAttributesForEntity(int entityId, string keyGroup)
         {
-            //we cannot inject CachingSettings into constructor because it'll cause circular references.
+            //we cannot inject ICacheKeyService into constructor because it'll cause circular references.
             //that's why we resolve it here this way
             var key = EngineContext.Current.Resolve<ICacheKeyService>()
                 .PrepareKeyForShortTermCache(NopCommonDefaults.GenericAttributeCacheKey, entityId, keyGroup);

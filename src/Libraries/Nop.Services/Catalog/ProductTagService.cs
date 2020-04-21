@@ -157,7 +157,7 @@ namespace Nop.Services.Catalog
         {
             var query = _productTagRepository.Table;
             
-            var allProductTags = query.ToCachedList(NopCatalogDefaults.ProductTagAllCacheKey);
+            var allProductTags = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagAllCacheKey));
 
             if(!string.IsNullOrEmpty(tagName))
             {

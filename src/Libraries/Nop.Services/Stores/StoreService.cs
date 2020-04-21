@@ -60,6 +60,8 @@ namespace Nop.Services.Stores
         {
             var query = from s in _storeRepository.Table orderby s.DisplayOrder, s.Id select s;
 
+            //we can not use ICacheKeyService because it'll cause circular references.
+            //that's why we use the default cache time
             var result = query.ToCachedList(NopStoreDefaults.StoresAllCacheKey);
 
             return result;
