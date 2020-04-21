@@ -1,8 +1,9 @@
-﻿@model Nop.Plugin.Tax.Avalara.Models.Log.TaxTransactionLogModel
+﻿@model TaxTransactionLogModel
 
 @{
     Layout = "_AdminLayout";
     ViewBag.PageTitle = T("Plugins.Tax.Avalara.Log.Hint").Text;
+    Html.SetActiveMenuItemSystemName("Tax providers");
 }
 
 <form asp-controller="TaxTransactionLog" asp-action="View" method="post">
@@ -11,7 +12,7 @@
             @T("Plugins.Tax.Avalara.Log.Hint")
             <small>
                 <i class="fa fa-arrow-circle-left"></i>
-                <a asp-action="Configure" asp-controller="AvalaraTax">@T("Plugins.Tax.Avalara.Log.BackToList")</a>
+                <a asp-action="Configure" asp-controller="Avalara">@T("Plugins.Tax.Avalara.Log.BackToList")</a>
             </small>
         </h1>
         <div class="pull-right">

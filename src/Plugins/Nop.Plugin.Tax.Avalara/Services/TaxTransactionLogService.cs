@@ -116,8 +116,7 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <param name="ids">Log items identifiers</param>
         public virtual void DeleteTaxTransactionLog(int[] ids)
         {
-            var log = _taxTransactionLogRepository.Table.Where(logItem => ids.Contains(logItem.Id));
-            _taxTransactionLogRepository.Delete(log);
+            _taxTransactionLogRepository.Delete(logItem => ids.Contains(logItem.Id));
         }
 
         #endregion

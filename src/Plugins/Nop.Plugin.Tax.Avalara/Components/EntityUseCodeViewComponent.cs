@@ -86,11 +86,11 @@ namespace Nop.Plugin.Tax.Avalara.Components
             if (!(additionalData is BaseNopEntityModel entityModel))
                 return Content(string.Empty);
 
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
-                return Content(string.Empty);
-
             //ensure that Avalara tax provider is active
             if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+                return Content(string.Empty);
+
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content(string.Empty);
 
             //ensure that it's a proper widget zone
@@ -103,11 +103,12 @@ namespace Nop.Plugin.Tax.Avalara.Components
             }
 
             //get Avalara pre-defined entity use codes
-            var cachedEntityUseCodes = _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(AvalaraTaxDefaults.EntityUseCodesCacheKey), () => _avalaraTaxManager.GetEntityUseCodes());
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(AvalaraTaxDefaults.EntityUseCodesCacheKey);
+            var cachedEntityUseCodes = _staticCacheManager.Get(cacheKey, () => _avalaraTaxManager.GetEntityUseCodes());
             var entityUseCodes = cachedEntityUseCodes?.Select(useCode => new SelectListItem
             {
                 Value = useCode.code,
-                Text = $"{useCode.name} ({useCode.validCountries.Aggregate(string.Empty, (list, country) => $"{list}{country},").TrimEnd(',')})"
+                Text = $"{useCode.name} ({string.Join(", ", useCode.validCountries)})"
             }).ToList() ?? new List<SelectListItem>();
 
             //add the special item for 'undefined' with empty guid value
