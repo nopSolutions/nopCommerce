@@ -57,6 +57,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         protected virtual void SaveStoreMappings(Poll poll, PollModel model)
         {
             poll.LimitedToStores = model.SelectedStoreIds.Any();
+            _pollService.UpdatePoll(poll);
 
             //manage store mappings
             var existingStoreMappings = _storeMappingService.GetStoreMappings(poll);
@@ -251,7 +252,8 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No poll answer found with the specified id");
 
             pollAnswer = model.ToEntity(pollAnswer);
-            _pollService.UpdatePoll(pollAnswer.Poll);
+
+            _pollService.UpdatePollAnswer(pollAnswer);
 
             return new NullJsonResult();
         }
@@ -266,13 +268,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (!ModelState.IsValid)
                 return ErrorJson(ModelState.SerializeErrors());
 
-            //try to get a poll with the specified id
-            var poll = _pollService.GetPollById(pollId)
-                ?? throw new ArgumentException("No poll found with the specified id", nameof(pollId));
-
             //fill entity from model
-            poll.PollAnswers.Add(model.ToEntity<PollAnswer>());
-            _pollService.UpdatePoll(poll);
+            _pollService.InsertPollAnswer(model.ToEntity<PollAnswer>());
 
             return Json(new { Result = true });
         }

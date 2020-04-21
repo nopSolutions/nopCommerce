@@ -2,9 +2,10 @@
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Plugin.Tax.FixedOrByCountryStateZip.Data;
+using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Services;
+using Nop.Services.Caching;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Plugins;
@@ -19,12 +20,12 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
     {
         #region Fields
 
-        private readonly CountryStateZipObjectContext _objectContext;
         private readonly FixedOrByCountryStateZipTaxSettings _countryStateZipSettings;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICountryStateZipService _taxRateService;
         private readonly ILocalizationService _localizationService;
         private readonly ISettingService _settingService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly IWebHelper _webHelper;
 
@@ -32,21 +33,21 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
 
         #region Ctor
 
-        public FixedOrByCountryStateZipTaxProvider(CountryStateZipObjectContext objectContext,
-            FixedOrByCountryStateZipTaxSettings countryStateZipSettings,
+        public FixedOrByCountryStateZipTaxProvider(FixedOrByCountryStateZipTaxSettings countryStateZipSettings,
+            ICacheKeyService cacheKeyService,
             ICountryStateZipService taxRateService,
             ILocalizationService localizationService,
             ISettingService settingService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             ITaxCategoryService taxCategoryService,
             IWebHelper webHelper)
         {
-            _objectContext = objectContext;
             _countryStateZipSettings = countryStateZipSettings;
+            _cacheKeyService = cacheKeyService;
             _taxRateService = taxRateService;
             _localizationService = localizationService;
             _settingService = settingService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _taxCategoryService = taxCategoryService;
             _webHelper = webHelper;
         }
@@ -79,8 +80,8 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
             }
 
             //first, load all tax rate records (cached) - loaded only once
-            var cacheKey = ModelCacheEventConsumer.ALL_TAX_RATES_MODEL_KEY;
-            var allTaxRates = _cacheManager.Get(cacheKey, () => _taxRateService.GetAllTaxRates().Select(taxRate => new TaxRateForCaching
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(ModelCacheEventConsumer.ALL_TAX_RATES_MODEL_KEY);
+            var allTaxRates = _staticCacheManager.Get(cacheKey, () => _taxRateService.GetAllTaxRates().Select(taxRate => new TaxRate
             {
                 Id = taxRate.Id,
                 StoreId = taxRate.StoreId,
@@ -132,9 +133,6 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
         /// </summary>
         public override void Install()
         {
-            //database objects
-            _objectContext.Install();
-
             //settings
             _settingService.SaveSetting(new FixedOrByCountryStateZipTaxSettings());
 
@@ -174,9 +172,6 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip
                 .Select(taxCategory => _settingService.GetSetting(string.Format(FixedOrByCountryStateZipDefaults.FixedRateSettingsKey, taxCategory.Id)))
                 .Where(setting => setting != null).ToList();
             _settingService.DeleteSettings(fixedRates);
-
-            //database objects
-            _objectContext.Uninstall();
 
             //locales
             _localizationService.DeletePluginLocaleResource("Plugins.Tax.FixedOrByCountryStateZip.Fixed");

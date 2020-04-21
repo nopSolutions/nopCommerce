@@ -92,33 +92,30 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 modelName += "-" + Action;
             var modalId = new HtmlString(modelName + "-delete-confirmation").ToHtmlString();
 
-            if (int.TryParse(ModelId, out int modelId))
+            var deleteConfirmationModel = new DeleteConfirmationModel
             {
-                var deleteConfirmationModel = new DeleteConfirmationModel
-                {
-                    Id = modelId,
-                    ControllerName = _htmlHelper.ViewContext.RouteData.Values["controller"].ToString(),
-                    ActionName = Action,
-                    WindowId = modalId
-                };
+                Id = ModelId,
+                ControllerName = _htmlHelper.ViewContext.RouteData.Values["controller"].ToString(),
+                ActionName = Action,
+                WindowId = modalId
+            };
 
-                //tag details
-                output.TagName = "div";
-                output.TagMode = TagMode.StartTagAndEndTag;
+            //tag details
+            output.TagName = "div";
+            output.TagMode = TagMode.StartTagAndEndTag;
 
-                output.Attributes.Add("id", modalId);
-                output.Attributes.Add("class", "modal fade");
-                output.Attributes.Add("tabindex", "-1");
-                output.Attributes.Add("role", "dialog");
-                output.Attributes.Add("aria-labelledby", $"{modalId}-title");
-                output.Content.SetHtmlContent(await _htmlHelper.PartialAsync("Delete", deleteConfirmationModel));
+            output.Attributes.Add("id", modalId);
+            output.Attributes.Add("class", "modal fade");
+            output.Attributes.Add("tabindex", "-1");
+            output.Attributes.Add("role", "dialog");
+            output.Attributes.Add("aria-labelledby", $"{modalId}-title");
+            output.Content.SetHtmlContent(await _htmlHelper.PartialAsync("Delete", deleteConfirmationModel));
 
-                //modal script
-                var script = new TagBuilder("script");
-                script.InnerHtml.AppendHtml("$(document).ready(function () {"+
-                                            $"$('#{ButtonId}').attr(\"data-toggle\", \"modal\").attr(\"data-target\", \"#{modalId}\")" + "});");
-                output.PostContent.SetHtmlContent(script.RenderHtmlContent());
-            }
+            //modal script
+            var script = new TagBuilder("script");
+            script.InnerHtml.AppendHtml("$(document).ready(function () {" +
+                                        $"$('#{ButtonId}').attr(\"data-toggle\", \"modal\").attr(\"data-target\", \"#{modalId}\")" + "});");
+            output.PostContent.SetHtmlContent(script.RenderHtmlContent());
         }
     }
 }

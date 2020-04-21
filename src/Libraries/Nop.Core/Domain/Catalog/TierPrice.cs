@@ -1,5 +1,4 @@
-using System;
-using Nop.Core.Domain.Customers;
+﻿using System;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -42,15 +41,5 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the end date and time in UTC
         /// </summary>
         public DateTime? EndDateTimeUtc { get; set; }
-
-        /// <summary>
-        /// Gets or sets the product
-        /// </summary>
-        public virtual Product Product { get; set; }
-
-        /// <summary>
-        /// Gets or sets the customer role
-        /// </summary>
-        public virtual CustomerRole CustomerRole { get; set; }
     }
 }

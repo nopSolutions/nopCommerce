@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Nop.Core.Domain.Messages;
-using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Messages;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -22,19 +17,16 @@ namespace Nop.Web.Areas.Admin.Factories
 
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly IEmailAccountService _emailAccountService;
-        private readonly ILocalizationService _localizationService;
 
         #endregion
 
         #region Ctor
 
         public EmailAccountModelFactory(EmailAccountSettings emailAccountSettings,
-            IEmailAccountService emailAccountService,
-            ILocalizationService localizationService)
+            IEmailAccountService emailAccountService)
         {
             _emailAccountSettings = emailAccountSettings;
             _emailAccountService = emailAccountService;
-            _localizationService = localizationService;
         }
 
         #endregion
@@ -100,7 +92,7 @@ namespace Nop.Web.Areas.Admin.Factories
         {
             //fill in model values from the entity
             if (emailAccount != null)
-                model = model ?? emailAccount.ToModel<EmailAccountModel>();
+                model ??= emailAccount.ToModel<EmailAccountModel>();
 
             //set default values for the new model
             if (emailAccount == null)

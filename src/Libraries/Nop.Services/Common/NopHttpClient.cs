@@ -40,7 +40,7 @@ namespace Nop.Services.Common
         {
             //configure client
             client.BaseAddress = new Uri("https://www.nopcommerce.com/");
-            client.Timeout = TimeSpan.FromMilliseconds(5000);
+            client.Timeout = TimeSpan.FromSeconds(20);
             client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CurrentVersion}");
 
             _adminAreaSettings = adminAreaSettings;
@@ -98,8 +98,8 @@ namespace Nop.Services.Common
                 language).ToLowerInvariant();
 
             //get news feed
-            using (var stream = await _httpClient.GetStreamAsync(url))
-                return await RssFeed.LoadAsync(stream);
+            using var stream = await _httpClient.GetStreamAsync(url);
+            return await RssFeed.LoadAsync(stream);
         }
 
         /// <summary>

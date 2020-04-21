@@ -2,8 +2,8 @@
 using System.Linq;
 using Nop.Core.Caching;
 using Nop.Plugin.Tax.Avalara.Services;
+using Nop.Services.Caching;
 using Nop.Services.Common;
-using Nop.Services.Localization;
 using Nop.Services.Tax;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Tax;
@@ -19,8 +19,9 @@ namespace Nop.Plugin.Tax.Avalara.Factories
         #region Fields
 
         private readonly AvalaraTaxManager _avalaraTaxManager;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITaxPluginManager _taxPluginManager;
 
@@ -29,17 +30,18 @@ namespace Nop.Plugin.Tax.Avalara.Factories
         #region Ctor
 
         public OverriddenTaxModelFactory(AvalaraTaxManager avalaraTaxManager,
+            ICacheKeyService cacheKeyService,
             IGenericAttributeService genericAttributeService,
-            ILocalizationService localizationService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             ITaxCategoryService taxCategoryService,
-            ITaxPluginManager taxPluginManager) : base(localizationService,
+            ITaxPluginManager taxPluginManager) : base(
                 taxCategoryService,
                 taxPluginManager)
         {
             _avalaraTaxManager = avalaraTaxManager;
+            _cacheKeyService = cacheKeyService;
             _genericAttributeService = genericAttributeService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _taxCategoryService = taxCategoryService;
             _taxPluginManager = taxPluginManager;
         }
@@ -66,7 +68,7 @@ namespace Nop.Plugin.Tax.Avalara.Factories
             var taxCategories = _taxCategoryService.GetAllTaxCategories().ToPagedList(searchModel);
 
             //get tax types and define the default value
-            var taxTypes = _cacheManager.Get(AvalaraTaxDefaults.TaxCodeTypesCacheKey, () => _avalaraTaxManager.GetTaxCodeTypes())
+            var taxTypes = _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(AvalaraTaxDefaults.TaxCodeTypesCacheKey), () => _avalaraTaxManager.GetTaxCodeTypes())
                 ?.Select(taxType => new { Id = taxType.Key, Name = taxType.Value });
             var defaultType = taxTypes
                 ?.FirstOrDefault(taxType => taxType.Name.Equals("Unknown", StringComparison.InvariantCultureIgnoreCase))

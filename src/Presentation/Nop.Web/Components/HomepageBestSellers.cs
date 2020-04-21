@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
+using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Orders;
 using Nop.Services.Security;
@@ -17,28 +18,31 @@ namespace Nop.Web.Components
     {
         private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IOrderReportService _orderReportService;
         private readonly IProductModelFactory _productModelFactory;
         private readonly IProductService _productService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
 
         public HomepageBestSellersViewComponent(CatalogSettings catalogSettings,
             IAclService aclService,
+            ICacheKeyService cacheKeyService,
             IOrderReportService orderReportService,
             IProductModelFactory productModelFactory,
             IProductService productService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService)
         {
             _catalogSettings = catalogSettings;
             _aclService = aclService;
+            _cacheKeyService = cacheKeyService;
             _orderReportService = orderReportService;
             _productModelFactory = productModelFactory;
             _productService = productService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
         }
@@ -49,7 +53,7 @@ namespace Nop.Web.Components
                 return Content("");
 
             //load and cache report
-            var report = _cacheManager.Get(string.Format(NopModelCacheDefaults.HomepageBestsellersIdsKey, _storeContext.CurrentStore.Id),
+            var report = _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageBestsellersIdsKey, _storeContext.CurrentStore),
                 () => _orderReportService.BestSellersReport(
                         storeId: _storeContext.CurrentStore.Id,
                         pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)

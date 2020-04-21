@@ -56,8 +56,12 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_have_error_when_firstName_is_null_or_empty()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
-                new CustomerSettings());
+            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
+                new CustomerSettings
+                {
+                    FirstNameEnabled = true,
+                    FirstNameRequired = true
+                });
 
             var model = new CustomerInfoModel
             {
@@ -70,8 +74,12 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_not_have_error_when_firstName_is_specified()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
-                new CustomerSettings());
+            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
+                new CustomerSettings
+                {
+                    FirstNameEnabled = true,
+                    FirstNameRequired = true
+                });
 
             var model = new CustomerInfoModel
             {
@@ -83,22 +91,41 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         [Test]
         public void Should_have_error_when_lastName_is_null_or_empty()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
-                new CustomerSettings());
+            var model = new CustomerInfoModel();
 
-            var model = new CustomerInfoModel
-            {
-                LastName = null
-            };
+            //required
+            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
+                new CustomerSettings
+                {
+                    LastNameEnabled = true,
+                    LastNameRequired = true
+                });
+            model.LastName = null;
             validator.ShouldHaveValidationErrorFor(x => x.LastName, model);
             model.LastName = "";
             validator.ShouldHaveValidationErrorFor(x => x.LastName, model);
+
+
+            //not required
+            validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
+                new CustomerSettings
+                {
+                    LastNameEnabled = true,
+                    LastNameRequired = false
+                });
+            model.LastName = null;
+            validator.ShouldNotHaveValidationErrorFor(x => x.LastName, model);
+            model.LastName = "";
+            validator.ShouldNotHaveValidationErrorFor(x => x.LastName, model);
         }
         [Test]
         public void Should_not_have_error_when_lastName_is_specified()
         {
-            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
-                new CustomerSettings());
+            var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
+                new CustomerSettings
+                {
+                    LastNameEnabled = true
+                });
 
             var model = new CustomerInfoModel
             {

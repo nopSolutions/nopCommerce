@@ -21,6 +21,7 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly ICountryService _countryService;
         private readonly ILocalizationService _localizationService;
         private readonly IPaymentPluginManager _paymentPluginManager;
+        private readonly IStateProvinceService _stateProvinceService;
 
         #endregion
 
@@ -28,11 +29,13 @@ namespace Nop.Web.Areas.Admin.Factories
 
         public PaymentModelFactory(ICountryService countryService,
             ILocalizationService localizationService,
-            IPaymentPluginManager paymentPluginManager)
+            IPaymentPluginManager paymentPluginManager,
+            IStateProvinceService stateProvinceService)
         {
             _countryService = countryService;
             _localizationService = localizationService;
             _paymentPluginManager = paymentPluginManager;
+            _stateProvinceService = stateProvinceService;
         }
 
         #endregion
@@ -120,7 +123,7 @@ namespace Nop.Web.Areas.Admin.Factories
             model.AvailableCountries = countries.Select(country =>
             {
                 var countryModel = country.ToModel<CountryModel>();
-                countryModel.NumberOfStates = country.StateProvinces?.Count ?? 0;
+                countryModel.NumberOfStates = _stateProvinceService.GetStateProvincesByCountryId(country.Id)?.Count ?? 0;
 
                 return countryModel;
             }).ToList();

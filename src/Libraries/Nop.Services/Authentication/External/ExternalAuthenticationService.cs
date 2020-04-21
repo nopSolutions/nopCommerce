@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -274,7 +275,7 @@ namespace Nop.Services.Authentication.External
                 return ErrorAuthentication(new[] { "External authentication method cannot be loaded" }, returnUrl);
 
             //get current logged-in user
-            var currentLoggedInUser = _workContext.CurrentCustomer.IsRegistered() ? _workContext.CurrentCustomer : null;
+            var currentLoggedInUser = _customerService.IsRegistered(_workContext.CurrentCustomer) ? _workContext.CurrentCustomer : null;
 
             //authenticate associated user if already exists
             var associatedUser = GetUserByExternalAuthenticationParameters(parameters);
@@ -326,6 +327,34 @@ namespace Nop.Services.Authentication.External
                 return null;
 
             return _customerService.GetCustomerById(associationRecord.CustomerId);
+        }
+
+        /// <summary>
+        /// Get the external authentication records by identifier
+        /// </summary>
+        /// <param name="externalAuthenticationRecordId">External authentication record identifier</param>
+        /// <returns>Result</returns>
+        public virtual ExternalAuthenticationRecord GetExternalAuthenticationRecordById(int externalAuthenticationRecordId)
+        {
+            if (externalAuthenticationRecordId == 0)
+                return null;
+
+            return _externalAuthenticationRecordRepository.ToCachedGetById(externalAuthenticationRecordId);
+        }
+
+        /// <summary>
+        /// Get list of the external authentication records by customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        public virtual IList<ExternalAuthenticationRecord> GetCustomerExternalAuthenticationRecords(Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var associationRecords = _externalAuthenticationRecordRepository.Table.Where(ear => ear.CustomerId == customer.Id);
+
+            return associationRecords.ToList();
         }
 
         /// <summary>

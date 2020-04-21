@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Data;
+using Nop.Data;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Infrastructure.Cache;
+using Nop.Services.Caching;
 using Nop.Services.Events;
 
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
@@ -16,9 +17,10 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
     {
         #region Fields
 
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<TaxRate> _taxRateRepository;
-        private readonly ICacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -27,16 +29,19 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         /// <summary>
         /// Ctor
         /// </summary>
+        /// <param name="cacheKeyService">Cache key service</param>
         /// <param name="eventPublisher">Event publisher</param>
-        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="staticCacheManager">Cache manager</param>
         /// <param name="taxRateRepository">Tax rate repository</param>
-        public CountryStateZipService(IEventPublisher eventPublisher,
-            ICacheManager cacheManager,
-            IRepository<TaxRate> taxRateRepository)
+        public CountryStateZipService(ICacheKeyService cacheKeyService,
+            IEventPublisher eventPublisher,            
+            IRepository<TaxRate> taxRateRepository,
+            IStaticCacheManager staticCacheManager)
         {
-            _eventPublisher = eventPublisher;
-            _cacheManager = cacheManager;
+            _cacheKeyService = cacheKeyService;
+            _eventPublisher = eventPublisher;            
             _taxRateRepository = taxRateRepository;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -64,15 +69,19 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         /// <returns>Tax rates</returns>
         public virtual IPagedList<TaxRate> GetAllTaxRates(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var key = string.Format(ModelCacheEventConsumer.TAXRATE_ALL_KEY, pageIndex, pageSize);
-            return _cacheManager.Get(key, () =>
+            var key = _cacheKeyService.PrepareKeyForShortTermCache(ModelCacheEventConsumer.TAXRATE_ALL_KEY);
+            var rez = _staticCacheManager.Get(key, () =>
             {
                 var query = from tr in _taxRateRepository.Table
                             orderby tr.StoreId, tr.CountryId, tr.StateProvinceId, tr.Zip, tr.TaxCategoryId
                             select tr;
-                var records = new PagedList<TaxRate>(query, pageIndex, pageSize);
-                return records;
+
+                return query.ToList();
             });
+
+            var records = new PagedList<TaxRate>(rez, pageIndex, pageSize);
+
+            return records;
         }
 
         /// <summary>
@@ -85,7 +94,7 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
             if (taxRateId == 0)
                 return null;
 
-           return _taxRateRepository.GetById(taxRateId);
+            return _taxRateRepository.GetById(taxRateId);
         }
 
         /// <summary>

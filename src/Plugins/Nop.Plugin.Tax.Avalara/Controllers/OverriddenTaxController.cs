@@ -8,6 +8,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Tax;
 using Nop.Plugin.Tax.Avalara.Services;
+using Nop.Services.Caching;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -28,11 +29,12 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         #region Fields
 
         private readonly AvalaraTaxManager _avalaraTaxManager;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITaxPluginManager _taxPluginManager;
 
@@ -41,12 +43,13 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         #region Ctor
 
         public OverriddenTaxController(AvalaraTaxManager avalaraTaxManager,
+            ICacheKeyService cacheKeyService,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
             INotificationService notificationService,
             IPermissionService permissionService,
             ISettingService settingService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             ITaxCategoryService taxCategoryService,
             ITaxModelFactory taxModelFactory,
             ITaxPluginManager taxPluginManager,
@@ -58,11 +61,12 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
                 taxSettings)
         {
             _avalaraTaxManager = avalaraTaxManager;
+            _cacheKeyService = cacheKeyService;
             _genericAttributeService = genericAttributeService;
             _localizationService = localizationService;
             _notificationService = notificationService;
             _permissionService = permissionService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _taxCategoryService = taxCategoryService;
             _taxPluginManager = taxPluginManager;
         }
@@ -86,7 +90,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
             //prepare model
             var model = new Models.Tax.TaxCategorySearchModel();
-            var taxCodeTypes = _cacheManager.Get(AvalaraTaxDefaults.TaxCodeTypesCacheKey, () => _avalaraTaxManager.GetTaxCodeTypes());
+            var taxCodeTypes = _staticCacheManager.Get(_cacheKeyService.PrepareKeyForDefaultCache(AvalaraTaxDefaults.TaxCodeTypesCacheKey), () => _avalaraTaxManager.GetTaxCodeTypes());
             if (taxCodeTypes != null)
                 model.AvailableTypes = taxCodeTypes.Select(type => new SelectListItem(type.Value, type.Key)).ToList();
             model.SetGridPageSize();

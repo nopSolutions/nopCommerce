@@ -133,6 +133,13 @@ else
                         }
                         continue;
                     }
+                    if (filter.Type == typeof(DateTime?))
+                    {
+                        <text>
+                        data.@filter.Name = $('#@filter.Name').val();
+                        </text>
+                        continue;
+                    }
                 }
             }
             addAntiForgeryToken(data);
@@ -167,7 +174,18 @@ ordering: @Model.Ordering.ToString().ToLower(),
             name: 'refresh',
             text: '<i class="fa fa-refresh" style="padding-left: 5px"></i>',
             action: function () {
-                updateTable('#@Model.Name');
+                @if (Model.ServerSide)
+                {
+                    <text>
+                    updateTable('#@Model.Name');
+                    </text>
+                }
+                else
+                {
+                    <text>
+                    updateTableSrc('#@Model.Name');
+                    </text>
+                }
             }
         }],
     </text>
@@ -229,7 +247,9 @@ columns: [
             @if (column.Encode && column.Render == null)
             {
                 <text>
-                render: $.fn.dataTable.render.text(),
+                render: function (data, type, row, meta) {                    
+                    return escapeHtml(data)
+                },
                 </text>
             }
             @switch (column.Render)
@@ -334,7 +354,9 @@ columns: [
                 case RenderCheckBox checkBox:
                     <text>
                     render: function (data, type, row, meta) {
-                        return '<input name="@checkBox.Name" value="' + row.@checkBox.PropertyKeyName + '" type="checkbox" class="checkboxGroups" />';
+                        return (data === true)
+                            ? '<input name="@checkBox.Name" value="' + row.@checkBox.PropertyKeyName + '" type="checkbox" class="checkboxGroups" checked="checked" />'
+                            : '<input name="@checkBox.Name" value="' + row.@checkBox.PropertyKeyName + '" type="checkbox" class="checkboxGroups" />';
                     },
                     </text>
                     break;

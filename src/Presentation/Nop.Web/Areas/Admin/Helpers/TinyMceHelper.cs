@@ -20,13 +20,13 @@ namespace Nop.Web.Areas.Admin.Helpers
             //Additional languages can be downloaded from the website TinyMCE(https://www.tinymce.com/download/language-packages/)
 
             var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            var hostingEnvironment = EngineContext.Current.Resolve<IHostingEnvironment>();
+            var webHostEnvironment = EngineContext.Current.Resolve<IWebHostEnvironment>();
             var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
 
             var languageCulture = workContext.WorkingLanguage.LanguageCulture;
 
             var langFile = $"{languageCulture}.js";
-            var directoryPath = fileProvider.Combine(hostingEnvironment.WebRootPath, @"lib\tinymce\langs");
+            var directoryPath = fileProvider.Combine(webHostEnvironment.WebRootPath, @"lib\tinymce\langs");
             var fileExists = fileProvider.FileExists($"{directoryPath}\\{langFile}");
 
             if (!fileExists)

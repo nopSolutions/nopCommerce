@@ -45,6 +45,10 @@ namespace Nop.Plugin.Pickup.PickupInStore.Models
         [DisplayFormat(DataFormatString = "{0:F8}", ApplyFormatInEditMode = true)]
         [NopResourceDisplayName("Plugins.Pickup.PickupInStore.Fields.Longitude")]
         public decimal? Longitude { get; set; }
+
+        [UIHint("Int32Nullable")]
+        [NopResourceDisplayName("Plugins.Pickup.PickupInStore.Fields.TransitDays")]
+        public int? TransitDays { get; set; }
     }
 
     public class AddressModel

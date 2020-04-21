@@ -5,8 +5,6 @@ using Nop.Services.Stores;
 using Nop.Services.Topics;
 using Nop.Web.Factories;
 using Nop.Web.Framework;
-using Nop.Web.Framework.Mvc.Filters;
-using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Controllers
 {
@@ -44,7 +42,6 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult TopicDetails(int topicId)
         {
             //allow administrators to preview any topic
@@ -77,7 +74,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
+        [AutoValidateAntiforgeryToken]
         public virtual IActionResult Authenticate(int id, string password)
         {
             var authResult = false;

@@ -22,6 +22,7 @@ using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class PaymentPayPalStandardController : BasePaymentController
     {
         #region Fields
@@ -106,18 +107,15 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     case PaymentStatus.Authorized:
                     case PaymentStatus.Paid:
                         {
-                            var recurringPaymentHistory = rp.RecurringPaymentHistory;
+                            var recurringPaymentHistory = _orderService.GetRecurringPaymentHistory(rp);
                             if (!recurringPaymentHistory.Any())
                             {
-                                //first payment
-                                var rph = new RecurringPaymentHistory
+                                _orderService.InsertRecurringPaymentHistory(new RecurringPaymentHistory
                                 {
                                     RecurringPaymentId = rp.Id,
                                     OrderId = order.Id,
                                     CreatedOnUtc = DateTime.UtcNow
-                                };
-                                rp.RecurringPaymentHistory.Add(rph);
-                                _orderService.UpdateRecurringPayment(rp);
+                                });
                             }
                             else
                             {
@@ -175,14 +173,13 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             }
 
             //order note
-            order.OrderNotes.Add(new OrderNote
+            _orderService.InsertOrderNote(new OrderNote
             {
+                OrderId = order.Id,
                 Note = ipnInfo,
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow
             });
-
-            _orderService.UpdateOrder(order);
 
             //validate order total
             if ((newPaymentStatus == PaymentStatus.Authorized || newPaymentStatus == PaymentStatus.Paid) && !Math.Round(mcGross, 2).Equals(Math.Round(order.OrderTotal, 2)))
@@ -191,13 +188,13 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 //log
                 _logger.Error(errorStr);
                 //order note
-                order.OrderNotes.Add(new OrderNote
+                _orderService.InsertOrderNote(new OrderNote
                 {
+                    OrderId = order.Id,
                     Note = errorStr,
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
-                _orderService.UpdateOrder(order);
 
                 return;
             }
@@ -283,7 +280,6 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
         [HttpPost]
         [AuthorizeAdmin]
-        [AdminAntiForgery]
         [Area(AreaNames.Admin)]
         public IActionResult Configure(ConfigurationModel model)
         {
@@ -403,13 +399,13 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 sb.AppendLine("New payment status: " + newPaymentStatus);
 
                 //order note
-                order.OrderNotes.Add(new OrderNote
+                _orderService.InsertOrderNote(new OrderNote
                 {
+                    OrderId = order.Id,
                     Note = sb.ToString(),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
-                _orderService.UpdateOrder(order);
 
                 //validate order total
                 var orderTotalSentToPayPal = _genericAttributeService.GetAttribute<decimal?>(order, PayPalHelper.OrderTotalSentToPayPal);
@@ -419,13 +415,13 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     //log
                     _logger.Error(errorStr);
                     //order note
-                    order.OrderNotes.Add(new OrderNote
+                    _orderService.InsertOrderNote(new OrderNote
                     {
+                        OrderId = order.Id,
                         Note = errorStr,
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow
                     });
-                    _orderService.UpdateOrder(order);
 
                     return RedirectToAction("Index", "Home", new { area = string.Empty });
                 }
@@ -468,13 +464,13 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     return RedirectToAction("Index", "Home", new { area = string.Empty });
 
                 //order note
-                order.OrderNotes.Add(new OrderNote
+                _orderService.InsertOrderNote(new OrderNote
                 {
+                    OrderId = order.Id,
                     Note = "PayPal PDT failed. " + response,
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
-                _orderService.UpdateOrder(order);
 
                 return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
             }

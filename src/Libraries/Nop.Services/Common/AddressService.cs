@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Common;
+using Nop.Data;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 
@@ -17,9 +18,9 @@ namespace Nop.Services.Common
         #region Fields
 
         private readonly AddressSettings _addressSettings;
+        private readonly CachingSettings _cachingSettings;
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
-        private readonly ICacheManager _cacheManager;
         private readonly ICountryService _countryService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Address> _addressRepository;
@@ -30,18 +31,18 @@ namespace Nop.Services.Common
         #region Ctor
 
         public AddressService(AddressSettings addressSettings,
+            CachingSettings cachingSettings,
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
-            ICacheManager cacheManager,
             ICountryService countryService,
             IEventPublisher eventPublisher,
             IRepository<Address> addressRepository,
             IStateProvinceService stateProvinceService)
         {
             _addressSettings = addressSettings;
+            _cachingSettings = cachingSettings;
             _addressAttributeParser = addressAttributeParser;
             _addressAttributeService = addressAttributeService;
-            _cacheManager = cacheManager;
             _countryService = countryService;
             _eventPublisher = eventPublisher;
             _addressRepository = addressRepository;
@@ -62,10 +63,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException(nameof(address));
 
             _addressRepository.Delete(address);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressesPrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityDeleted(address);
         }
@@ -83,6 +81,7 @@ namespace Nop.Services.Common
             var query = from a in _addressRepository.Table
                         where a.CountryId == countryId
                         select a;
+
             return query.Count();
         }
 
@@ -99,6 +98,7 @@ namespace Nop.Services.Common
             var query = from a in _addressRepository.Table
                         where a.StateProvinceId == stateProvinceId
                         select a;
+
             return query.Count();
         }
 
@@ -111,9 +111,8 @@ namespace Nop.Services.Common
         {
             if (addressId == 0)
                 return null;
-
-            var key = string.Format(NopCommonDefaults.AddressesByIdCacheKey, addressId);
-            return _cacheManager.Get(key, () => _addressRepository.GetById(addressId));
+            
+            return _addressRepository.ToCachedGetById(addressId, _cachingSettings.ShortTermCacheTime);
         }
 
         /// <summary>
@@ -134,10 +133,7 @@ namespace Nop.Services.Common
                 address.StateProvinceId = null;
 
             _addressRepository.Insert(address);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressesPrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityInserted(address);
         }
@@ -158,10 +154,7 @@ namespace Nop.Services.Common
                 address.StateProvinceId = null;
 
             _addressRepository.Update(address);
-
-            //cache
-            _cacheManager.RemoveByPrefix(NopCommonDefaults.AddressesPrefixCacheKey);
-
+            
             //event notification
             _eventPublisher.EntityUpdated(address);
         }
@@ -207,10 +200,7 @@ namespace Nop.Services.Common
 
             if (_addressSettings.CountryEnabled)
             {
-                if (address.CountryId == null || address.CountryId.Value == 0)
-                    return false;
-
-                var country = _countryService.GetCountryById(address.CountryId.Value);
+                var country = _countryService.GetCountryByAddress(address);
                 if (country == null)
                     return false;
 
@@ -252,10 +242,10 @@ namespace Nop.Services.Common
             var requiredAttributes = _addressAttributeService.GetAllAddressAttributes().Where(x => x.IsRequired);
 
             foreach (var requiredAttribute in requiredAttributes)
-            { 
-                var value  = _addressAttributeParser.ParseValues(address.CustomAttributes, requiredAttribute.Id);
+            {
+                var value = _addressAttributeParser.ParseValues(address.CustomAttributes, requiredAttribute.Id);
 
-                if (!value.Any() || (string.IsNullOrEmpty(value[0])))
+                if (!value.Any() || string.IsNullOrEmpty(value[0]))
                     return false;
             }
 
@@ -297,10 +287,38 @@ namespace Nop.Services.Common
             ((string.IsNullOrEmpty(a.County) && string.IsNullOrEmpty(county)) || a.County == county) &&
             ((a.StateProvinceId == null && (stateProvinceId == null || stateProvinceId == 0)) || (a.StateProvinceId != null && a.StateProvinceId == stateProvinceId)) &&
             ((string.IsNullOrEmpty(a.ZipPostalCode) && string.IsNullOrEmpty(zipPostalCode)) || a.ZipPostalCode == zipPostalCode) &&
-            ((a.CountryId == null && countryId == null) || (a.CountryId !=null && a.CountryId == countryId)) &&
+            ((a.CountryId == null && countryId == null) || (a.CountryId != null && a.CountryId == countryId)) &&
             //actually we should parse custom address attribute (in case if "Display order" is changed) and then compare
             //bu we simplify this process and simply compare their values in XML
             ((string.IsNullOrEmpty(a.CustomAttributes) && string.IsNullOrEmpty(customAttributes)) || a.CustomAttributes == customAttributes));
+        }
+
+        /// <summary>
+        /// Clone address
+        /// </summary>
+        /// <returns>A deep copy of address</returns>
+        public virtual Address CloneAddress(Address address)
+        {
+            var addr = new Address
+            {
+                FirstName = address.FirstName,
+                LastName = address.LastName,
+                Email = address.Email,
+                Company = address.Company,
+                CountryId = address.CountryId,
+                StateProvinceId = address.StateProvinceId,
+                County = address.County,
+                City = address.City,
+                Address1 = address.Address1,
+                Address2 = address.Address2,
+                ZipPostalCode = address.ZipPostalCode,
+                PhoneNumber = address.PhoneNumber,
+                FaxNumber = address.FaxNumber,
+                CustomAttributes = address.CustomAttributes,
+                CreatedOnUtc = address.CreatedOnUtc
+            };
+
+            return addr;
         }
 
         #endregion

@@ -1,4 +1,4 @@
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -41,16 +41,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the product
-        /// </summary>
-        public virtual Product Product { get; set; }
-
-        /// <summary>
-        /// Gets or sets the specification attribute option
-        /// </summary>
-        public virtual SpecificationAttributeOption SpecificationAttributeOption { get; set; }
 
         /// <summary>
         /// Gets the attribute control type

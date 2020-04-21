@@ -136,7 +136,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (messageTemplate != null)
             {
                 //fill in model values from the entity
-                model = model ?? messageTemplate.ToModel<MessageTemplateModel>();
+                model ??= messageTemplate.ToModel<MessageTemplateModel>();
 
                 //define localized model configuration action
                 localizedModelConfiguration = (locale, languageId) =>

@@ -11,7 +11,7 @@ namespace Nop.Web.Framework.Controllers
     /// <summary>
     /// Attribute to validate whether a certain form name (or value) was submitted
     /// </summary>
-    public class FormValueRequiredAttribute : ActionMethodSelectorAttribute
+    public sealed class FormValueRequiredAttribute : ActionMethodSelectorAttribute
     {
         private readonly string[] _submitButtonNames;
         private readonly FormValueRequirement _requirement;

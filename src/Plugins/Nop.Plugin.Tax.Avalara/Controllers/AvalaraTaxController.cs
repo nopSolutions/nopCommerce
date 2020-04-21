@@ -24,7 +24,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 {
     [Area(AreaNames.Admin)]
     [AuthorizeAdmin]
-    [AdminAntiForgery]
+    [AutoValidateAntiforgeryToken]
     public class AvalaraTaxController : BasePluginController
     {
         #region Fields
@@ -247,10 +247,10 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             var transaction = taxProvider.CreateEstimatedTaxTransaction(new Address
             {
                 City = model.TestAddress?.City,
-                Country = _countryService.GetCountryById(model.TestAddress?.CountryId ?? 0),
+                CountryId = model.TestAddress?.CountryId,
                 Address1 = model.TestAddress?.Address1,
                 ZipPostalCode = model.TestAddress?.ZipPostalCode,
-                StateProvince = _stateProvinceService.GetStateProvinceById(model.TestAddress?.StateProvinceId ?? 0)
+                StateProvinceId = model.TestAddress?.StateProvinceId
             }, _workContext.CurrentCustomer.Id.ToString());
 
             if (transaction?.totalTax != null)

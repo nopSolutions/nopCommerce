@@ -20,26 +20,23 @@ namespace Nop.Services.Directory
         /// Gets a currency
         /// </summary>
         /// <param name="currencyId">Currency identifier</param>
-        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Currency</returns>
-        Currency GetCurrencyById(int currencyId, bool loadCacheableCopy = true);
+        Currency GetCurrencyById(int currencyId);
 
         /// <summary>
         /// Gets a currency by code
         /// </summary>
         /// <param name="currencyCode">Currency code</param>
-        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Currency</returns>
-        Currency GetCurrencyByCode(string currencyCode, bool loadCacheableCopy = true);
+        Currency GetCurrencyByCode(string currencyCode);
 
         /// <summary>
         /// Gets all currencies
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
-        /// <param name="loadCacheableCopy">A value indicating whether to load a copy that could be cached (workaround until Entity Framework supports 2-level caching)</param>
         /// <returns>Currencies</returns>
-        IList<Currency> GetAllCurrencies(bool showHidden = false, int storeId = 0, bool loadCacheableCopy = true);
+        IList<Currency> GetAllCurrencies(bool showHidden = false, int storeId = 0);
 
         /// <summary>
         /// Inserts a currency

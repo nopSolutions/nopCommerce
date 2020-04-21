@@ -120,37 +120,37 @@
 </form>
 
 @*upload favicon and app icons form*@
-<div id="uploadiconsarchive-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="uploadiconsarchive-window-title">
+<div id="uploadicons-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="uploadicons-window-title">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="uploadiconsarchive-window-title">@T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIconsArchive")</h4>
+                <h4 class="modal-title" id="uploadicons-window-title">@T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIcons")</h4>
             </div>
-            <form asp-controller="Setting" asp-action="UploadIconsArchive" method="post" enctype="multipart/form-data">
+            <form asp-controller="Setting" asp-action="UploadIcons" method="post" enctype="multipart/form-data">
                 <div class="form-horizontal">
                     <div class="modal-body">
                         <ul class="common-list">
                             <li>
-                                @string.Format(T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIconsArchive.Hint").Text, Model.ActiveStoreScopeConfiguration)
+                                @string.Format(T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIcons.Hint").Text, Model.ActiveStoreScopeConfiguration)
                             </li>
                         </ul>
                         <div class="form-group">
                             <div class="col-md-2">
                                 <div class="label-wrapper">
                                     <label class="control-label">
-                                        @T("Admin.Common.ZipFile")
+                                        @T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIcons.FileExtensions")
                                     </label>
                                 </div>
                             </div>
                             <div class="col-md-10">
-                                <input type="file" id="archivefile" name="archivefile" class="form-control" />
+                                <input type="file" id="iconsfile" name="iconsfile" class="form-control" />
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary" id="upload-icons-archive">
-                            @T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIconsArchive")
+                        <button type="submit" class="btn btn-primary" id="upload-icons">
+                            @T("Admin.Configuration.Settings.GeneralCommon.FaviconAndAppIcons.UploadIcons")
                         </button>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-﻿using Nop.Tests;
+﻿using FluentAssertions;
 using NUnit.Framework;
 
 namespace Nop.Core.Tests
@@ -11,7 +11,7 @@ namespace Nop.Core.Tests
         {
             var ip = "123.123.123.123";
             var result = CommonHelper.IsValidIpAddress(ip);
-            result.ShouldEqual(true);
+            result.Should().BeTrue();
         }
 
         [Test]
@@ -19,7 +19,7 @@ namespace Nop.Core.Tests
         {
             var ip = "FE80:0000:0000:0000:0202:B3FF:FE1E:8329";
             var result = CommonHelper.IsValidIpAddress(ip);
-            result.ShouldEqual(true);
+            result.Should().BeTrue();
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace Nop.Core.Tests
         {
             var ip = "abc";
             var result = CommonHelper.IsValidIpAddress(ip);
-            result.ShouldEqual(false);
+            result.Should().BeFalse();
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace Nop.Core.Tests
         {
             var ip = "999.999.999.999";
             var result = CommonHelper.IsValidIpAddress(ip);
-            result.ShouldEqual(false);
+            result.Should().BeFalse();
         }
     }
 }

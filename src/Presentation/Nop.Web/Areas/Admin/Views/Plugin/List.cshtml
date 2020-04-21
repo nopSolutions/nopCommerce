@@ -18,9 +18,6 @@
         <h1 class="pull-left">
             @T("Admin.Configuration.Plugins.Local")
         </h1>
-    </div>
-
-    <div class="content-header clearfix">
         <div class="pull-right">
             @if (Model.NeedToRestart)
             {
@@ -117,6 +114,7 @@
                                     <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
                                     <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
                                     <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
+                                    <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
                                 </ol>
                             </p>
                             <p>
@@ -124,6 +122,14 @@
                             </p>
                             <div class="row">
                                 <div class="col-md-5">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchFriendlyName" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchFriendlyName" />
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <div class="col-md-4">
                                             <nop-label asp-for="SearchGroup" />
@@ -140,6 +146,16 @@
                                         </div>
                                         <div class="col-md-8">
                                             <nop-select asp-for="SearchLoadModeId" asp-items="Model.AvailableLoadModes" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchAuthor" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchAuthor" />
                                         </div>
                                     </div>
                                 </div>
@@ -168,7 +184,9 @@
                             Filters = new List<FilterParameter>
                             {
                                 new FilterParameter(nameof(Model.SearchLoadModeId)),
-                                new FilterParameter(nameof(Model.SearchGroup))
+                                 new FilterParameter(nameof(Model.SearchFriendlyName)),
+                                new FilterParameter(nameof(Model.SearchGroup)),
+                                new FilterParameter(nameof(Model.SearchAuthor))
                             },
                             ColumnCollection = new List<ColumnProperty>
                             {
