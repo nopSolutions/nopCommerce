@@ -32,7 +32,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ITaxPluginManager _taxPluginManager;
 
@@ -46,7 +46,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             INotificationService notificationService,
             IPermissionService permissionService,
             ISettingService settingService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             ITaxCategoryService taxCategoryService,
             ITaxModelFactory taxModelFactory,
             ITaxPluginManager taxPluginManager,
@@ -62,7 +62,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
             _localizationService = localizationService;
             _notificationService = notificationService;
             _permissionService = permissionService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _taxCategoryService = taxCategoryService;
             _taxPluginManager = taxPluginManager;
         }
@@ -86,7 +86,7 @@ namespace Nop.Plugin.Tax.Avalara.Controllers
 
             //prepare model
             var model = new Models.Tax.TaxCategorySearchModel();
-            var taxCodeTypes = _cacheManager.Get(AvalaraTaxDefaults.TaxCodeTypesCacheKey, () => _avalaraTaxManager.GetTaxCodeTypes());
+            var taxCodeTypes = _staticCacheManager.Get(AvalaraTaxDefaults.TaxCodeTypesCacheKey, () => _avalaraTaxManager.GetTaxCodeTypes());
             if (taxCodeTypes != null)
                 model.AvailableTypes = taxCodeTypes.Select(type => new SelectListItem(type.Value, type.Key)).ToList();
             model.SetGridPageSize();

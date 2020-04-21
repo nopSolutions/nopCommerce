@@ -18,6 +18,7 @@ using Nop.Data;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
+using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -44,7 +45,7 @@ namespace Nop.Services.Tests.Catalog
         private IProductService _productService;
         private IPriceCalculationService _priceCalcService;
         private CatalogSettings _catalogSettings;        
-        private IStaticCacheManager _cacheManager;
+        private IStaticCacheManager _staticCacheManager;
         private Mock<IWorkContext> _workContext;
         private Store _store;
         private TestServiceProvider _serviceProvider;
@@ -76,9 +77,9 @@ namespace Nop.Services.Tests.Catalog
                 .Callback(
                     (CustomerCustomerRoleMapping ccrm) => { customerCustomerRoleMapping.Add(ccrm); });
 
-            _customerService = new CustomerService(null, new TestCacheManager(),  null, null, null, null,
+            _customerService = new CustomerService(new CachingSettings(), null, new FakeCacheKeyService(),  null, null, null, null,
                 null, _customerCustomerRoleMappingRepository.Object, null, _customerRoleRepository.Object, null, null,
-                null, _storeContext.Object, null);
+                new TestCacheManager(), _storeContext.Object, null);
 
             _manufacturerService = new Mock<IManufacturerService>();
 
@@ -97,7 +98,7 @@ namespace Nop.Services.Tests.Catalog
 
             var shipmentRepository = new Mock<IRepository<Shipment>>();
 
-            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, _customerService,
+            _productService = new ProductService(new CatalogSettings(), new CommonSettings(), null, new FakeCacheKeyService(),  _customerService,
                 null, null, null, null, null, null, null, null, null, _discountProductMappingRepository.Object,
                 _productRepository.Object, null, null, null, null, null, null, null, null, shipmentRepository.Object,
                 null, null, _tierPriceRepository.Object, null,
@@ -107,7 +108,7 @@ namespace Nop.Services.Tests.Catalog
 
             _catalogSettings = new CatalogSettings();
 
-            _cacheManager = new TestCacheManager();
+            _staticCacheManager = new TestCacheManager();
             _workContext = new Mock<IWorkContext>();
 
             _discountService = TestDiscountService.Init(
@@ -125,10 +126,11 @@ namespace Nop.Services.Tests.Catalog
                 }.AsQueryable());
 
             _priceCalcService = new PriceCalculationService(_catalogSettings,
-                new CurrencySettings { PrimaryStoreCurrencyId = 1 }, _categoryService.Object,
+                new CurrencySettings { PrimaryStoreCurrencyId = 1 },
+                new FakeCacheKeyService(), _categoryService.Object,
                 _serviceProvider.CurrencyService.Object, _customerService, _discountService,
                 _manufacturerService.Object, _productAttributeParser.Object,
-                _productService, _cacheManager, _storeContext.Object, _workContext.Object);
+                _productService, _staticCacheManager, _storeContext.Object, _workContext.Object);
 
             var nopEngine = new Mock<NopEngine>();
 

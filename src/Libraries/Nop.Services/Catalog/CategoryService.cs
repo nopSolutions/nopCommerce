@@ -29,6 +29,7 @@ namespace Nop.Services.Catalog
 
         private readonly CatalogSettings _catalogSettings;
         private readonly IAclService _aclService;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
@@ -49,6 +50,7 @@ namespace Nop.Services.Catalog
 
         public CategoryService(CatalogSettings catalogSettings,
             IAclService aclService,
+            ICacheKeyService cacheKeyService,
             ICustomerService customerService,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
@@ -65,6 +67,7 @@ namespace Nop.Services.Catalog
         {
             _catalogSettings = catalogSettings;
             _aclService = aclService;
+            _cacheKeyService = cacheKeyService;
             _customerService = customerService;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
@@ -148,7 +151,7 @@ namespace Nop.Services.Catalog
         /// <returns>Categories</returns>
         public virtual IList<Category> GetAllCategories(int storeId = 0, bool showHidden = false)
         {
-            var key = NopCatalogDefaults.CategoriesAllCacheKey.FillCacheKey(
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesAllCacheKey,
                 storeId,
                 _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer),
                 showHidden);
@@ -231,8 +234,8 @@ namespace Nop.Services.Catalog
         public virtual IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
             bool showHidden = false)
         {
-            var key = NopCatalogDefaults.CategoriesByParentCategoryIdCacheKey.FillCacheKey(parentCategoryId,
-                showHidden, _workContext.CurrentCustomer, _storeContext.CurrentStore);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesByParentCategoryIdCacheKey,
+                parentCategoryId, showHidden, _workContext.CurrentCustomer, _storeContext.CurrentStore);
 
             var query = _categoryRepository.Table;
 
@@ -316,8 +319,8 @@ namespace Nop.Services.Catalog
             if (showHidden)
                 return categories;
 
-            var cacheKey = NopCatalogDefaults.CategoriesDisplayedOnHomepageWithoutHiddenCacheKey
-                .FillCacheKey(_storeContext.CurrentStore, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesDisplayedOnHomepageWithoutHiddenCacheKey,
+                _storeContext.CurrentStore, _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer));
 
             var result = _staticCacheManager.Get(cacheKey, () =>
             {
@@ -340,7 +343,7 @@ namespace Nop.Services.Catalog
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            var cacheKey = NopDiscountDefaults.DiscountCategoryIdsModelCacheKey.FillCacheKey(
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountCategoryIdsModelCacheKey,
                 discount,
                 _customerService.GetCustomerRoleIds(customer),
                 _storeContext.CurrentStore);
@@ -369,7 +372,7 @@ namespace Nop.Services.Catalog
         /// <returns>Category identifiers</returns>
         public virtual IList<int> GetChildCategoryIds(int parentCategoryId, int storeId = 0, bool showHidden = false)
         {
-            var cacheKey = NopCatalogDefaults.CategoriesChildIdentifiersCacheKey.FillCacheKey(
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesChildIdentifiersCacheKey,
                 parentCategoryId,
                 _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer),
                 _storeContext.CurrentStore,
@@ -633,8 +636,8 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return new List<ProductCategory>();
 
-            var key = NopCatalogDefaults.ProductCategoriesAllByProductIdCacheKey.FillCacheKey(productId,
-                showHidden, _workContext.CurrentCustomer, storeId);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductCategoriesAllByProductIdCacheKey,
+                productId, showHidden, _workContext.CurrentCustomer, storeId);
 
             var query = from pc in _productCategoryRepository.Table
                         join c in _categoryRepository.Table on pc.CategoryId equals c.Id
@@ -844,7 +847,7 @@ namespace Nop.Services.Catalog
             if (category == null)
                 throw new ArgumentNullException(nameof(category));
 
-            var breadcrumbCacheKey = NopCatalogDefaults.CategoryBreadcrumbCacheKey.FillCacheKey(
+            var breadcrumbCacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryBreadcrumbCacheKey,
                 category,
                 _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer),
                 _storeContext.CurrentStore,

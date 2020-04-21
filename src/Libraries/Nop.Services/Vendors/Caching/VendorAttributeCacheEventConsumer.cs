@@ -16,7 +16,7 @@ namespace Nop.Services.Vendors.Caching
         {
             base.Remove(NopVendorDefaults.VendorAttributesAllCacheKey);
 
-            var cacheKey = NopVendorDefaults.VendorAttributeValuesAllCacheKey.FillCacheKey(entity);
+            var cacheKey = _cacheKeyService.PrepareKey(NopVendorDefaults.VendorAttributeValuesAllCacheKey, entity);
 
             Remove(cacheKey);
         }

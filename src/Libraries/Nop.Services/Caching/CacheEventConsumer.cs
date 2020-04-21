@@ -10,13 +10,13 @@ namespace Nop.Services.Caching
         IConsumer<EntityUpdatedEvent<TEntity>>,
         IConsumer<EntityDeletedEvent<TEntity>> where TEntity : BaseEntity
     {
+        protected readonly ICacheKeyService _cacheKeyService;
         private readonly IStaticCacheManager _staticCacheManager;
-        private readonly ICacheManager _cacheManager;
 
         protected CacheEventConsumer()
         {
+            _cacheKeyService = EngineContext.Current.Resolve<ICacheKeyService>();
             _staticCacheManager = EngineContext.Current.Resolve<IStaticCacheManager>();
-            _cacheManager = EngineContext.Current.Resolve<ICacheManager>();
         }
 
         /// <summary>
@@ -41,26 +41,18 @@ namespace Nop.Services.Caching
         /// Removes items by key prefix
         /// </summary>
         /// <param name="prefixCacheKey">String key prefix</param>
-        /// <param name="useStaticCache">Indicates whether to use the statistical cache</param>
-        protected virtual void RemoveByPrefix(string prefixCacheKey, bool useStaticCache = true)
+        protected virtual void RemoveByPrefix(string prefixCacheKey)
         {
-            if (useStaticCache)
-                _staticCacheManager.RemoveByPrefix(prefixCacheKey);
-            else
-                _cacheManager.RemoveByPrefix(prefixCacheKey);
+            _staticCacheManager.RemoveByPrefix(prefixCacheKey);
         }
 
         /// <summary>
         /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="cacheKey">Key of cached item</param>
-        /// <param name="useStaticCache">Indicates whether to use the statistical cache</param>
-        protected virtual void Remove(CacheKey cacheKey, bool useStaticCache = true)
+        protected virtual void Remove(CacheKey cacheKey)
         {
-            if (useStaticCache)
-                _staticCacheManager.Remove(cacheKey);
-            else
-                _cacheManager.Remove(cacheKey);
+            _staticCacheManager.Remove(cacheKey);
         }
 
         /// <summary>

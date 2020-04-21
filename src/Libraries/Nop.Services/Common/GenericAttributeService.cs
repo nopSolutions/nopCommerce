@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Common;
+using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Caching;
 using Nop.Services.Caching.Extensions;
@@ -78,7 +79,7 @@ namespace Nop.Services.Common
             if (attributeId == 0)
                 return null;
 
-            return _genericAttributeRepository.ToCachedGetById(attributeId);
+            return _genericAttributeRepository.GetById(attributeId);
         }
 
         /// <summary>
@@ -121,8 +122,11 @@ namespace Nop.Services.Common
         /// <returns>Get attributes</returns>
         public virtual IList<GenericAttribute> GetAttributesForEntity(int entityId, string keyGroup)
         {
-            var key = NopCommonDefaults.GenericAttributeCacheKey.FillCacheKey(entityId, keyGroup);
-
+            //we cannot inject CachingSettings into constructor because it'll cause circular references.
+            //that's why we resolve it here this way
+            var key = EngineContext.Current.Resolve<ICacheKeyService>()
+                .PrepareKeyForShortTermCache(NopCommonDefaults.GenericAttributeCacheKey, entityId, keyGroup);
+            
             var query = from ga in _genericAttributeRepository.Table
                 where ga.EntityId == entityId &&
                       ga.KeyGroup == keyGroup

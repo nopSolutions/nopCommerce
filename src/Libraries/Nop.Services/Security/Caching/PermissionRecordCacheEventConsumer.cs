@@ -14,7 +14,7 @@ namespace Nop.Services.Security.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(PermissionRecord entity)
         {
-            var prefix = NopSecurityDefaults.PermissionsAllowedPrefixCacheKey.ToCacheKey(entity.SystemName);
+            var prefix = _cacheKeyService.PrepareKeyPrefix(NopSecurityDefaults.PermissionsAllowedPrefixCacheKey, entity.SystemName);
             RemoveByPrefix(prefix);
             RemoveByPrefix(NopSecurityDefaults.PermissionsAllByCustomerRoleIdPrefixCacheKey);
         }

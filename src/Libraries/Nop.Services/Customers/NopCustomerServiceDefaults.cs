@@ -129,5 +129,6 @@ namespace Nop.Services.Customers
         #endregion
 
         #endregion
+
     }
 }

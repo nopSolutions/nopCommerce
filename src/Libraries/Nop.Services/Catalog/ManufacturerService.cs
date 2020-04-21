@@ -24,6 +24,7 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<AclRecord> _aclRepository;
@@ -40,6 +41,7 @@ namespace Nop.Services.Catalog
         #region Ctor
 
         public ManufacturerService(CatalogSettings catalogSettings,
+            ICacheKeyService cacheKeyService,
             ICustomerService customerService,
             IEventPublisher eventPublisher,
             IRepository<AclRecord> aclRepository,
@@ -52,6 +54,7 @@ namespace Nop.Services.Catalog
             IWorkContext workContext)
         {
             _catalogSettings = catalogSettings;
+            _cacheKeyService = cacheKeyService;
             _customerService = customerService;
             _eventPublisher = eventPublisher;
             _aclRepository = aclRepository;
@@ -189,7 +192,7 @@ namespace Nop.Services.Catalog
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
-            var cacheKey = NopDiscountDefaults.DiscountManufacturerIdsModelCacheKey.FillCacheKey(
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopDiscountDefaults.DiscountManufacturerIdsModelCacheKey, 
                 discount,
                 _customerService.GetCustomerRoleIds(customer),
                 _storeContext.CurrentStore);
@@ -392,7 +395,7 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return new List<ProductManufacturer>();
 
-            var key = NopCatalogDefaults.ProductManufacturersAllByProductIdCacheKey.FillCacheKey(productId,
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductManufacturersAllByProductIdCacheKey, productId,
                 showHidden, _workContext.CurrentCustomer, _storeContext.CurrentStore);
 
             var query = from pm in _productManufacturerRepository.Table

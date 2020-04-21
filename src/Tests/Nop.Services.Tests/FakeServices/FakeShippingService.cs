@@ -3,6 +3,7 @@ using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Data;
+using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -21,6 +22,7 @@ namespace Nop.Services.Tests.FakeServices
     {
         public FakeShippingService(
             IAddressService addressService = null,
+            ICacheKeyService cacheKeyService = null,
             ICheckoutAttributeParser checkoutAttributeParser = null,
             ICountryService countryService = null,
             ICustomerService customerSerice = null,
@@ -41,6 +43,7 @@ namespace Nop.Services.Tests.FakeServices
             ShippingSettings shippingSettings = null,
             ShoppingCartSettings shoppingCartSettings = null) : base(
                 addressService ?? new Mock<IAddressService>().Object,
+                cacheKeyService ?? new FakeCacheKeyService(),
                 checkoutAttributeParser ?? new Mock<ICheckoutAttributeParser>().Object,
                 countryService ?? new Mock<ICountryService>().Object,
                 customerSerice ?? new Mock<ICustomerService>().Object,

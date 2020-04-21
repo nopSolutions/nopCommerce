@@ -18,7 +18,7 @@ namespace Nop.Services.News.Caching
             if (entityEventType != EntityEventType.Delete)
                 return;
 
-            var prefix = NopNewsDefaults.NewsCommentsNumberPrefixCacheKey.ToCacheKey(entity.NewsItemId);
+            var prefix = _cacheKeyService.PrepareKeyPrefix(NopNewsDefaults.NewsCommentsNumberPrefixCacheKey, entity.NewsItemId);
 
             RemoveByPrefix(prefix);
         }

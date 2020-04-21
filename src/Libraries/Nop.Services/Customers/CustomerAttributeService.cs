@@ -16,6 +16,7 @@ namespace Nop.Services.Customers
     {
         #region Fields
 
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<CustomerAttribute> _customerAttributeRepository;
         private readonly IRepository<CustomerAttributeValue> _customerAttributeValueRepository;
@@ -24,10 +25,12 @@ namespace Nop.Services.Customers
 
         #region Ctor
 
-        public CustomerAttributeService(IEventPublisher eventPublisher,
+        public CustomerAttributeService(ICacheKeyService cacheKeyService,
+            IEventPublisher eventPublisher,
             IRepository<CustomerAttribute> customerAttributeRepository,
             IRepository<CustomerAttributeValue> customerAttributeValueRepository)
         {
+            _cacheKeyService = cacheKeyService;
             _eventPublisher = eventPublisher;
             _customerAttributeRepository = customerAttributeRepository;
             _customerAttributeValueRepository = customerAttributeValueRepository;
@@ -130,7 +133,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer attribute values</returns>
         public virtual IList<CustomerAttributeValue> GetCustomerAttributeValues(int customerAttributeId)
         {
-            var key = NopCustomerServicesDefaults.CustomerAttributeValuesAllCacheKey.FillCacheKey(customerAttributeId);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopCustomerServicesDefaults.CustomerAttributeValuesAllCacheKey, customerAttributeId);
 
             var query = from cav in _customerAttributeValueRepository.Table
                 orderby cav.DisplayOrder, cav.Id

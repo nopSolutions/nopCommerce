@@ -14,10 +14,10 @@ namespace Nop.Services.Catalog.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(TierPrice entity)
         {
-            var cacheKey = NopCatalogDefaults.ProductTierPricesCacheKey.FillCacheKey(entity.ProductId);
+            var cacheKey = _cacheKeyService.PrepareKey(NopCatalogDefaults.ProductTierPricesCacheKey, entity.ProductId);
             Remove(cacheKey);
 
-            var prefix = NopCatalogDefaults.ProductPricePrefixCacheKey.ToCacheKey(entity.ProductId);
+            var prefix = _cacheKeyService.PrepareKeyPrefix(NopCatalogDefaults.ProductPricePrefixCacheKey, entity.ProductId);
             RemoveByPrefix(prefix);
         }
     }

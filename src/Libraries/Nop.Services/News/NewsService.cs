@@ -20,6 +20,7 @@ namespace Nop.Services.News
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<NewsComment> _newsCommentRepository;
         private readonly IRepository<NewsItem> _newsItemRepository;
@@ -30,12 +31,14 @@ namespace Nop.Services.News
         #region Ctor
 
         public NewsService(CatalogSettings catalogSettings,
+            ICacheKeyService cacheKeyService,
             IEventPublisher eventPublisher,
             IRepository<NewsComment> newsCommentRepository,
             IRepository<NewsItem> newsItemRepository,
             IRepository<StoreMapping> storeMappingRepository)
         {
             _catalogSettings = catalogSettings;
+            _cacheKeyService = cacheKeyService;
             _eventPublisher = eventPublisher;
             _newsCommentRepository = newsCommentRepository;
             _newsItemRepository = newsItemRepository;
@@ -286,7 +289,7 @@ namespace Nop.Services.News
             if (isApproved.HasValue)
                 query = query.Where(comment => comment.IsApproved == isApproved.Value);
 
-            var cacheKey = NopNewsDefaults.NewsCommentsNumberCacheKey.FillCacheKey(newsItem, storeId, isApproved);
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopNewsDefaults.NewsCommentsNumberCacheKey, newsItem, storeId, isApproved);
 
             return query.ToCachedCount(cacheKey);
         }

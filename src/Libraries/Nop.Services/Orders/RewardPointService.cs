@@ -249,7 +249,7 @@ namespace Nop.Services.Orders
             if (rewardPointsHistoryId == 0)
                 return null;
 
-            return _rewardPointsHistoryRepository.ToCachedGetById(rewardPointsHistoryId);
+            return _rewardPointsHistoryRepository.GetById(rewardPointsHistoryId);
         }
 
         /// <summary>

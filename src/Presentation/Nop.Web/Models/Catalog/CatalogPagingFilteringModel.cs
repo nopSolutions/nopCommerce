@@ -373,17 +373,18 @@ namespace Nop.Web.Models.Catalog
             /// <param name="localizationService">Localization service</param>
             /// <param name="webHelper">Web helper</param>
             /// <param name="workContext">Work context</param>
-            /// <param name="cacheManager">Cache manager</param>
+            /// <param name="staticCacheManager">Cache manager</param>
             public virtual void PrepareSpecsFilters(IList<int> alreadyFilteredSpecOptionIds,
                 int[] filterableSpecificationAttributeOptionIds,
+                ICacheKeyService cacheKeyService,
                 ISpecificationAttributeService specificationAttributeService, ILocalizationService localizationService,
-                IWebHelper webHelper, IWorkContext workContext, IStaticCacheManager cacheManager)
+                IWebHelper webHelper, IWorkContext workContext, IStaticCacheManager staticCacheManager)
             {
                 Enabled = false;
-                var cacheKey = NopModelCacheDefaults.SpecsFilterModelKey.FillCacheKey(filterableSpecificationAttributeOptionIds, workContext.WorkingLanguage);
+                var cacheKey = cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.SpecsFilterModelKey, filterableSpecificationAttributeOptionIds, workContext.WorkingLanguage);
 
                 var allOptions = specificationAttributeService.GetSpecificationAttributeOptionsByIds(filterableSpecificationAttributeOptionIds);
-                var allFilters = cacheManager.Get(cacheKey, () => allOptions.Select(sao =>
+                var allFilters = staticCacheManager.Get(cacheKey, () => allOptions.Select(sao =>
                 {
                     var specAttribute = specificationAttributeService.GetSpecificationAttributeById(sao.SpecificationAttributeId);
 

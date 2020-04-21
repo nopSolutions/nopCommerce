@@ -14,7 +14,7 @@ namespace Nop.Services.Orders.Caching
         /// <param name="entity">Entity</param>
         protected override void ClearCache(ShoppingCartItem entity)
         {
-            RemoveByPrefix(NopOrderDefaults.ShoppingCartPrefixCacheKey, false);
+            RemoveByPrefix(NopOrderDefaults.ShoppingCartPrefixCacheKey);
         }
     }
 }

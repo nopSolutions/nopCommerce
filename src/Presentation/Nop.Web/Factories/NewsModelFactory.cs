@@ -27,12 +27,13 @@ namespace Nop.Web.Factories
 
         private readonly CaptchaSettings _captchaSettings;
         private readonly CustomerSettings _customerSettings;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly INewsService _newsService;
         private readonly IPictureService _pictureService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
@@ -45,12 +46,13 @@ namespace Nop.Web.Factories
 
         public NewsModelFactory(CaptchaSettings captchaSettings,
             CustomerSettings customerSettings,
+            ICacheKeyService cacheKeyService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IGenericAttributeService genericAttributeService,
             INewsService newsService,
             IPictureService pictureService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IUrlRecordService urlRecordService,
             IWorkContext workContext,
@@ -59,12 +61,13 @@ namespace Nop.Web.Factories
         {
             _captchaSettings = captchaSettings;
             _customerSettings = customerSettings;
+            _cacheKeyService = cacheKeyService;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _genericAttributeService = genericAttributeService;
             _newsService = newsService;
             _pictureService = pictureService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _urlRecordService = urlRecordService;
             _workContext = workContext;
@@ -164,8 +167,8 @@ namespace Nop.Web.Factories
         /// <returns>Home page news items model</returns>
         public virtual HomepageNewsItemsModel PrepareHomepageNewsItemsModel()
         {
-            var cacheKey = NopModelCacheDefaults.HomepageNewsModelKey.FillCacheKey(_workContext.WorkingLanguage, _storeContext.CurrentStore);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.HomepageNewsModelKey, _workContext.WorkingLanguage, _storeContext.CurrentStore);
+            var cachedModel = _staticCacheManager.Get(cacheKey, () =>
             {
                 var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id, 0, _newsSettings.MainPageNewsCount);
                 return new HomepageNewsItemsModel

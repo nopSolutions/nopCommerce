@@ -21,6 +21,7 @@ namespace Nop.Services.Security
     {
         #region Fields
 
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILocalizationService _localizationService;
@@ -33,7 +34,8 @@ namespace Nop.Services.Security
 
         #region Ctor
 
-        public PermissionService(ICustomerService customerService,
+        public PermissionService(ICacheKeyService cacheKeyService,
+            ICustomerService customerService,
             IEventPublisher eventPublisher,
             ILocalizationService localizationService,
             IRepository<PermissionRecord> permissionRecordRepository,
@@ -41,6 +43,7 @@ namespace Nop.Services.Security
             IStaticCacheManager staticCacheManager,
             IWorkContext workContext)
         {
+            _cacheKeyService = cacheKeyService;
             _customerService = customerService;
             _eventPublisher = eventPublisher;
             _localizationService = localizationService;
@@ -61,7 +64,7 @@ namespace Nop.Services.Security
         /// <returns>Permissions</returns>
         protected virtual IList<PermissionRecord> GetPermissionRecordsByCustomerRoleId(int customerRoleId)
         {
-            var key = NopSecurityDefaults.PermissionsAllByCustomerRoleIdCacheKey.FillCacheKey(customerRoleId);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopSecurityDefaults.PermissionsAllByCustomerRoleIdCacheKey, customerRoleId);
 
             var query = from pr in _permissionRecordRepository.Table
                 join prcrm in _permissionRecordCustomerRoleMappingRepository.Table on pr.Id equals prcrm
@@ -320,7 +323,8 @@ namespace Nop.Services.Security
             if (string.IsNullOrEmpty(permissionRecordSystemName))
                 return false;
 
-            var key = NopSecurityDefaults.PermissionsAllowedCacheKey.FillCacheKey(permissionRecordSystemName, customerRoleId);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopSecurityDefaults.PermissionsAllowedCacheKey, permissionRecordSystemName, customerRoleId);
+
             return _staticCacheManager.Get(key, () =>
             {
                 var permissions = GetPermissionRecordsByCustomerRoleId(customerRoleId);

@@ -30,6 +30,7 @@ namespace Nop.Services.Shipping
         #region Fields
 
         private readonly IAddressService _addressService;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ICountryService _countryService;
         private readonly ICustomerService _customerService;
@@ -55,6 +56,7 @@ namespace Nop.Services.Shipping
         #region Ctor
 
         public ShippingService(IAddressService addressService,
+            ICacheKeyService cacheKeyService,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICountryService countryService,
             ICustomerService customerService,
@@ -76,6 +78,7 @@ namespace Nop.Services.Shipping
             ShoppingCartSettings shoppingCartSettings)
         {
             _addressService = addressService;
+            _cacheKeyService = cacheKeyService;
             _checkoutAttributeParser = checkoutAttributeParser;
             _countryService = countryService;
             _customerService = customerService;
@@ -177,7 +180,7 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping methods</returns>
         public virtual IList<ShippingMethod> GetAllShippingMethods(int? filterByCountryId = null)
         {
-            var key = NopShippingDefaults.ShippingMethodsAllCacheKey.FillCacheKey(filterByCountryId);
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopShippingDefaults.ShippingMethodsAllCacheKey, filterByCountryId);
             
             if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
             {

@@ -6,6 +6,7 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
+using Nop.Services.Caching;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -19,6 +20,7 @@ using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Date;
 using Nop.Services.Stores;
+using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 
 namespace Nop.Services.Tests
@@ -27,8 +29,8 @@ namespace Nop.Services.Tests
     {
         public FakeShoppingCartService(CatalogSettings catalogSettings = null,
             IAclService aclService = null,
-            IActionContextAccessor actionContextAccessor = null,
-            ICacheManager cacheManager = null,
+            IActionContextAccessor actionContextAccessor = null,  
+            ICacheKeyService cacheKeyService = null,
             ICheckoutAttributeParser checkoutAttributeParser = null,
             ICheckoutAttributeService checkoutAttributeService = null,
             ICurrencyService currencyService = null,
@@ -46,6 +48,7 @@ namespace Nop.Services.Tests
             IProductService productService = null,
             IRepository<ShoppingCartItem> sciRepository = null,
             IShippingService shippingService = null,
+            IStaticCacheManager staticCacheManager = null,
             IStoreContext storeContext = null,
             IStoreMappingService storeMappingService = null,
             IUrlHelperFactory urlHelperFactory = null,
@@ -53,10 +56,10 @@ namespace Nop.Services.Tests
             IWorkContext workContext = null,
             OrderSettings orderSettings = null,
             ShoppingCartSettings shoppingCartSettings = null) : base(
-                catalogSettings ?? new CatalogSettings(),
+            catalogSettings ?? new CatalogSettings(),
                 aclService ?? new Mock<IAclService>().Object,
-                actionContextAccessor ?? new Mock<IActionContextAccessor>().Object,
-                cacheManager ?? new TestCacheManager(),
+                actionContextAccessor ?? new Mock<IActionContextAccessor>().Object,    
+                cacheKeyService ?? new FakeCacheKeyService(),
                 checkoutAttributeParser ?? new Mock<ICheckoutAttributeParser>().Object,
                 checkoutAttributeService ?? new Mock<ICheckoutAttributeService>().Object,
                 currencyService ?? new Mock<ICurrencyService>().Object,
@@ -74,6 +77,7 @@ namespace Nop.Services.Tests
                 productService ?? new Mock<IProductService>().Object,
                 sciRepository.FakeRepoNullPropagation(),
                 shippingService ?? new Mock<IShippingService>().Object,
+                staticCacheManager ?? new TestCacheManager(),
                 storeContext ?? new Mock<IStoreContext>().Object,
                 storeMappingService ?? new Mock<IStoreMappingService>().Object,
                 urlHelperFactory ?? new Mock<IUrlHelperFactory>().Object,

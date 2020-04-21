@@ -231,7 +231,7 @@ namespace Nop.Services.Shipping
             if (shipmentId == 0)
                 return null;
 
-            return _shipmentRepository.ToCachedGetById(shipmentId);
+            return _shipmentRepository.GetById(shipmentId);
         }
 
         /// <summary>
@@ -324,7 +324,7 @@ namespace Nop.Services.Shipping
             if (shipmentItemId == 0)
                 return null;
 
-            return _siRepository.ToCachedGetById(shipmentItemId);
+            return _siRepository.GetById(shipmentItemId);
         }
 
         /// <summary>

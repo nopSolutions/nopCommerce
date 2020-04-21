@@ -74,13 +74,14 @@ namespace Nop.Services.Tests.Discounts
             _manufacturerRepo.Setup(x => x.Table).Returns(new List<Manufacturer>().AsQueryable());
             _productRepo.Setup(x => x.Table).Returns(new List<Product>().AsQueryable());
 
-            var cacheManager = new TestCacheManager();
+            var staticCacheManager = new TestCacheManager();
             _discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());
             
             var pluginService = new FakePluginService();
 
             _discountPluginManager = new DiscountPluginManager(pluginService);
             _discountService = new DiscountService(
+                new FakeCacheKeyService(),
                 _customerService.Object,
                 _discountPluginManager,
                 _eventPublisher.Object,
@@ -90,7 +91,7 @@ namespace Nop.Services.Tests.Discounts
                 _discountRequirementRepo.Object,
                 _discountUsageHistoryRepo.Object,
                 _orderRepo.Object,
-                cacheManager,
+                staticCacheManager,
                 _storeContext.Object);
         }
 
@@ -272,7 +273,7 @@ namespace Nop.Services.Tests.Discounts
 
         static DiscountExtensions()
         {
-            _discountService = new DiscountService(null, null, null,
+            _discountService = new DiscountService(new FakeCacheKeyService(), null, null, null,
                 null, null, null, null, null, null, null, null);
         }
 

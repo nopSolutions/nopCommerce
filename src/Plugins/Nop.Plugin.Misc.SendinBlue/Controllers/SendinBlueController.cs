@@ -38,7 +38,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         private readonly IMessageTokenProvider _messageTokenProvider;
         private readonly INotificationService _notificationService;
         private readonly ISettingService _settingService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IStoreService _storeService;
@@ -58,7 +58,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
             IMessageTokenProvider messageTokenProvider,
             INotificationService notificationService,
             ISettingService settingService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
             IStoreService storeService,
@@ -74,7 +74,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
             _messageTokenProvider = messageTokenProvider;
             _notificationService = notificationService;
             _settingService = settingService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
             _storeService = storeService;
@@ -295,8 +295,8 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
         [Area(AreaNames.Admin)]
         public string GetSynchronizationInfo()
         {
-            var res = _cacheManager.Get(SendinBlueDefaults.SyncKeyCache, () => string.Empty);
-            _cacheManager.Remove(SendinBlueDefaults.SyncKeyCache);
+            var res = _staticCacheManager.Get(SendinBlueDefaults.SyncKeyCache, () => string.Empty);
+            _staticCacheManager.Remove(SendinBlueDefaults.SyncKeyCache);
             return res;
         }
 
@@ -623,12 +623,12 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
                 _logger.Information(logInfo);
 
                 //display info on configuration page in case of the manually synchronization
-                _cacheManager.Set(SendinBlueDefaults.SyncKeyCache, logInfo);
+                _staticCacheManager.Set(SendinBlueDefaults.SyncKeyCache, logInfo);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex.Message, ex);
-                _cacheManager.Set(SendinBlueDefaults.SyncKeyCache, ex.Message);
+                _staticCacheManager.Set(SendinBlueDefaults.SyncKeyCache, ex.Message);
             }
 
             return Ok();
