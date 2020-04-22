@@ -2563,6 +2563,9 @@ label, label + * {
 	line-height: 22px;
 	color: #444;
 }
+.product-review-item .avatar {
+	margin: 0 0 10px;
+}
 .product-review-item .reply {
 	margin: 15px 0;
     border-top: 1px solid #ddd;
@@ -6756,6 +6759,22 @@ pre {
     width: 265px;
     margin: 0 5px 0 0;
     text-align: right
+}
+
+.product-review-item .review-text {
+	display: table;
+	width: 100%;
+}
+.product-review-item .avatar {
+	display: table-cell;
+	vertical-align: top;
+}
+.product-review-item .text-body {
+	display: table-cell;
+	vertical-align: top;
+}
+.product-review-item .avatar + .text-body {
+	padding: 0 20px 0 0;
 }
 
 
