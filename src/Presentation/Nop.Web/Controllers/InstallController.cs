@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
@@ -8,6 +9,7 @@ using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Services.Common;
 using Nop.Services.Installation;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
@@ -75,7 +77,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        public virtual IActionResult Index(InstallModel model)
+        public virtual async Task<IActionResult> Index(InstallModel model)
         {
             if (DataSettingsManager.DatabaseIsInstalled)
                 return RedirectToRoute("Homepage");
@@ -194,6 +196,15 @@ namespace Nop.Web.Controllers
                     var provider = (IPermissionProvider)Activator.CreateInstance(providerType);
                     EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
                 }
+
+                //installation completed notification
+                try
+                {
+                    var languageCode = _locService.GetCurrentLanguage().Code?.Substring(0, 2);
+                    var client = EngineContext.Current.Resolve<NopHttpClient>();
+                    await client.InstallationCompletedAsync(model.AdminEmail, languageCode);
+                }
+                catch { }
 
                 //restart application
                 webHelper.RestartAppDomain();
