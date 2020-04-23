@@ -709,6 +709,18 @@ set @resources='
   <LocaleResource Name="Admin.Customers.NoCustomers">
     <Value>No customers selected</Value>
   </LocaleResource>
+  <LocaleResource Name="Address.OtherNonUS">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Address.Other">
+    <Value>Other</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.OtherNonUS">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.Other">
+    <Value>Other</Value>
+  </LocaleResource>
 </Language>
 '
 

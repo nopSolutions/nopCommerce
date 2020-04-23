@@ -1212,8 +1212,8 @@
   <LocaleResource Name="Address.Fields.ZipPostalCode.Required">
     <Value>Zip / postal code is required.</Value>
   </LocaleResource>
-  <LocaleResource Name="Address.OtherNonUS">
-    <Value>Other (Non US)</Value>
+  <LocaleResource Name="Address.Other">
+    <Value>Other</Value>
   </LocaleResource>
   <LocaleResource Name="Address.SelectCountry">
     <Value>Select country</Value>
@@ -1437,8 +1437,8 @@
   <LocaleResource Name="Admin.Address.Fields.ZipPostalCode.Required">
     <Value>Zip / postal code is required.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Address.OtherNonUS">
-    <Value>Other (Non US)</Value>
+  <LocaleResource Name="Admin.Address.Other">
+    <Value>Other</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.SelectCountry">
     <Value>Select country</Value>
