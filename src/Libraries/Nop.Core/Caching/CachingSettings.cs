@@ -16,5 +16,10 @@ namespace Nop.Core.Caching
         /// Gets or sets the short term cache time in minutes
         /// </summary>
         public int ShortTermCacheTime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the bundled files cache time in minutes
+        /// </summary>
+        public int BundledFilesCacheTime { get; set; }
     }
 }
