@@ -101,8 +101,8 @@ namespace Nop.Services.Catalog
         public virtual IList<SpecificationAttribute> GetSpecificationAttributesWithOptions()
         {
             var query = from sa in _specificationAttributeRepository.Table
-                join sao in _specificationAttributeOptionRepository.Table on sa.Id equals sao.SpecificationAttributeId
-                select sa;
+                        where _specificationAttributeOptionRepository.Table.Any(o => o.SpecificationAttributeId == sa.Id)
+                        select sa;
 
             return query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopCatalogDefaults.SpecAttributesWithOptionsCacheKey));
         }
