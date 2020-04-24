@@ -2601,6 +2601,10 @@ label, label + * {
 .product-review-helpfulness .result {
 	margin: 0 10px 0 0;
 }
+.product-review-item .review-type-rating-ext {
+    overflow: hidden;
+    margin: 0 0 20px;
+}
 
 
 /********** WISHLIST & COMPARE LIST **********/
