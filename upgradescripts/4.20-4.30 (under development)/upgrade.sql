@@ -835,6 +835,12 @@ set @resources='
   <LocaleResource Name="Admin.Customers.ActivityLogType.Updated">
     <Value>The types have been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.DiscountRules.CustomerRoles.Fields.CustomerRoleId.Required">
+    <Value>Customer role is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.DiscountRules.CustomerRoles.Fields.DiscountId.Required">
+    <Value>Discount is required</Value>
+  </LocaleResource>
 </Language>
 '
 
