@@ -772,7 +772,7 @@ namespace Nop.Web.Factories
                 {
                     model.AvailableStates.Add(new SelectListItem
                     {
-                        Text = _localizationService.GetResource("Address.OtherNonUS"),
+                        Text = _localizationService.GetResource("Address.Other"),
                         Value = "0"
                     });
                 }

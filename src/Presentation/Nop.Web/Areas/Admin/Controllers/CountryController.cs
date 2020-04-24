@@ -515,7 +515,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     }
                     else
                     {
-                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.OtherNonUS") });
+                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.Other") });
                     }
                 }
                 else
@@ -524,7 +524,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                     if (!result.Any())
                     {
                         //country does not have states
-                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.OtherNonUS") });
+                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.Other") });
                     }
                     else
                     {

@@ -78,7 +78,7 @@ namespace Nop.Web.Factories
                     result.Insert(0, new StateProvinceModel
                     {
                         id = 0,
-                        name = _localizationService.GetResource("Address.OtherNonUS")
+                        name = _localizationService.GetResource("Address.Other")
                     });
                 }
             }
@@ -91,7 +91,7 @@ namespace Nop.Web.Factories
                     result.Insert(0, new StateProvinceModel
                     {
                         id = 0,
-                        name = _localizationService.GetResource("Address.OtherNonUS")
+                        name = _localizationService.GetResource("Address.Other")
                     });
                 }
                 else
