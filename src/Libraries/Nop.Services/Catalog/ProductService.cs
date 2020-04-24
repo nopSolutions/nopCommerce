@@ -2682,9 +2682,6 @@ namespace Nop.Services.Catalog
                 where dcm.DiscountId == discount.Id
                 select new { product = p, dcm };
 
-            if (!mappingsWithProducts.Any())
-                return;
-
             foreach (var pdcm in mappingsWithProducts.ToList())
             {
                 _discountProductMappingRepository.Delete(pdcm.dcm);

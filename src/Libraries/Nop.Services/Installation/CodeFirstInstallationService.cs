@@ -6827,7 +6827,8 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new CachingSettings
             {
                 ShortTermCacheTime = 5,
-                DefaultCacheTime = NopCachingDefaults.CacheTime
+                DefaultCacheTime = NopCachingDefaults.CacheTime,
+                BundledFilesCacheTime = 120
             });
         }
 

@@ -2922,3 +2922,11 @@ BEGIN
     VALUES (N'cachingsettings.defaultcachetime', N'60', 0)
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'cachingsettings.bundledfilescachetime')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'cachingsettings.bundledfilescachetime', N'120', 0)
+END
+GO

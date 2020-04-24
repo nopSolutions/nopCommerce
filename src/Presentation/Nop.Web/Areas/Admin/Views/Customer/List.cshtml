@@ -268,7 +268,7 @@
                                 IsMasterCheckBox = true,
                                 Render = new RenderCheckBox("checkbox_customers"),
                                 ClassName = NopColumnClassDefaults.CenterAll,
-                                Width = "50"
+                                Width = "30"
                             });
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Email))
                             {
@@ -279,7 +279,7 @@
                                 gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.AvatarUrl))
                                 {
                                     Title = T("Admin.Customers.Customers.Fields.Avatar").Text,
-                                    Width = "100",
+                                    Width = "140",
                                     Render = new RenderPicture()
                                 });
                             }
@@ -287,67 +287,59 @@
                             {
                                 gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Username))
                                 {
-                                    Title = T("Admin.Customers.Customers.Fields.Username").Text,
-                                    Width = "200"
+                                    Title = T("Admin.Customers.Customers.Fields.Username").Text
                                 });
                             }
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.FullName))
                             {
-                                Title = T("Admin.Customers.Customers.Fields.FullName").Text,
-                                Width = "200"
+                                Title = T("Admin.Customers.Customers.Fields.FullName").Text
                             });
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.CustomerRoleNames))
                             {
-                                Title = T("Admin.Customers.Customers.Fields.CustomerRoles").Text,
-                                Width = "200"
+                                Title = T("Admin.Customers.Customers.Fields.CustomerRoles").Text
                             });
                             if (Model.CompanyEnabled)
                             {
                                 gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Company))
                                 {
-                                    Title = T("Admin.Customers.Customers.Fields.Company").Text,
-                                    Width = "200"
+                                    Title = T("Admin.Customers.Customers.Fields.Company").Text
                                 });
                             }
                             if (Model.PhoneEnabled)
                             {
                                 gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Phone))
                                 {
-                                    Title = T("Admin.Customers.Customers.Fields.Phone").Text,
-                                    Width = "200"
+                                    Title = T("Admin.Customers.Customers.Fields.Phone").Text
                                 });
                             }
                             if (Model.ZipPostalCodeEnabled)
                             {
                                 gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.ZipPostalCode))
                                 {
-                                    Title = T("Admin.Customers.Customers.Fields.ZipPostalCode").Text,
-                                    Width = "200"
+                                    Title = T("Admin.Customers.Customers.Fields.ZipPostalCode").Text
                                 });
                             }
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Active))
                             {
                                 Title = T("Admin.Customers.Customers.Fields.Active").Text,
-                                Width = "100",
+                                Width = "70",
                                 ClassName = NopColumnClassDefaults.CenterAll,
                                 Render = new RenderBoolean()
                             });
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.CreatedOn))
                             {
                                 Title = T("Admin.Customers.Customers.Fields.CreatedOn").Text,
-                                Width = "200",
                                 Render = new RenderDate()
                             });
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.LastActivityDate))
                             {
                                 Title = T("Admin.Customers.Customers.Fields.LastActivityDate").Text,
-                                Width = "200",
                                 Render = new RenderDate()
                             });
                             gridModel.ColumnCollection.Add(new ColumnProperty(nameof(CustomerModel.Id))
                             {
                                 Title = T("Admin.Common.Edit").Text,
-                                Width = "100",
+                                Width = "80",
                                 ClassName = NopColumnClassDefaults.Button,
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             });
