@@ -432,7 +432,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 };
             }
 
-            //set saturday delivery details
+            //set Saturday delivery details
             if (saturdayDelivery)
             {
                 request.Shipment.ShipmentServiceOptions = new UPSRate.ShipmentServiceOptionsType
@@ -924,7 +924,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
             if (!string.IsNullOrEmpty(error))
                 response.Errors.Add(error);
 
-            //get rates for saturday delivery
+            //get rates for Saturday delivery
             if (_upsSettings.SaturdayDeliveryEnabled)
             {
                 var (saturdayShippingOptions, saturdayError) = GetShippingOptions(shippingOptionRequest, true);
@@ -932,8 +932,8 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 {
                     response.ShippingOptions.Add(shippingOption);
                 }
-                if (!string.IsNullOrEmpty(error))
-                    response.Errors.Add(error);
+                if (!string.IsNullOrEmpty(saturdayError))
+                    response.Errors.Add(saturdayError);
             }
 
             if (response.ShippingOptions.Any())
