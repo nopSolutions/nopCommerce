@@ -13,7 +13,7 @@ namespace Nop.Services.Common
         public static string KeepAlivePath => "keepalive/index";
 
         #region Address attributes
-        
+
         /// <summary>
         /// Gets a name of the custom address attribute control
         /// </summary>
@@ -23,7 +23,7 @@ namespace Nop.Services.Common
         public static string AddressAttributeControlName => "address_attribute_{0}";
 
         #endregion
-        
+
         #region Maintenance
 
         /// <summary>
@@ -104,6 +104,18 @@ namespace Nop.Services.Common
         /// {4} : language code
         /// </remarks>
         public static string NopNewsRssPath => "nopcommerce-news-rss?version={0}&localhost={1}&hideAdvertisements={2}&storeUrl={3}&language={4}";
+
+        /// <summary>
+        /// Gets a path to request the nopCommerce official site to notify about successful installation
+        /// </summary>
+        /// <remarks>
+        /// {0} : nopCommerce version
+        /// {1} : whether the store based is on the localhost
+        /// {2} : admin email
+        /// {3} : store URL
+        /// {4} : language code
+        /// </remarks>
+        public static string NopInstallationCompletedPath => "installation-completed?version={0}&local={1}&email={2}&url={3}&language={4}";
 
         /// <summary>
         /// Gets a path to request the nopCommerce official site for available categories of marketplace extensions
