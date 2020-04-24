@@ -37,6 +37,8 @@ namespace Nop.Web.Models.Install
         public bool IntegratedSecurity { get; set; }
 
         public string Username { get; set; }
+        [NoTrim]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
         public string ConnectionString { get; set; }
 
