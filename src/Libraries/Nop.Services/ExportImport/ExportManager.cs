@@ -350,11 +350,19 @@ namespace Nop.Services.ExportImport
         /// <returns>three first image</returns>
         protected virtual string[] GetPictures(Product product)
         {
-            //pictures (up to 3 pictures)
+            //pictures (up to 10 pictures) by Lancelot
             string picture1 = null;
             string picture2 = null;
             string picture3 = null;
-            var pictures = _pictureService.GetPicturesByProductId(product.Id, 3);
+            string picture4 = null;
+            string picture5 = null;
+            string picture6 = null;
+            string picture7 = null;
+            string picture8 = null;
+            string picture9 = null;
+            string picture10 = null;
+            var pictures = _pictureService.GetPicturesByProductId(product.Id, 10);
+            
             for (var i = 0; i < pictures.Count; i++)
             {
                 var pictureLocalPath = _pictureService.GetThumbLocalPath(pictures[i]);
@@ -369,10 +377,31 @@ namespace Nop.Services.ExportImport
                     case 2:
                         picture3 = pictureLocalPath;
                         break;
+                    case 3:
+                        picture4 = pictureLocalPath;
+                        break;
+                    case 4:
+                        picture5 = pictureLocalPath;
+                        break;
+                    case 5:
+                        picture6 = pictureLocalPath;
+                        break;
+                    case 6:
+                        picture7 = pictureLocalPath;
+                        break;
+                    case 7:
+                        picture8 = pictureLocalPath;
+                        break;
+                    case 8:
+                        picture9 = pictureLocalPath;
+                        break;
+                    case 9:
+                        picture10 = pictureLocalPath;
+                        break;
                 }
             }
 
-            return new[] { picture1, picture2, picture3 };
+            return new[] { picture1, picture2, picture3, picture4, picture5, picture6, picture7, picture8, picture9, picture10 };
         }
 
         protected virtual bool IgnoreExportPoductProperty(Func<ProductEditorSettings, bool> func)
@@ -1359,7 +1388,14 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("LimitedToStores", GetLimitedToStores, IgnoreExportLimitedToStore()),
                 new PropertyByName<Product>("Picture1", p => GetPictures(p)[0]),
                 new PropertyByName<Product>("Picture2", p => GetPictures(p)[1]),
-                new PropertyByName<Product>("Picture3", p => GetPictures(p)[2])
+                new PropertyByName<Product>("Picture3", p => GetPictures(p)[2]),
+                new PropertyByName<Product>("Picture4", p => GetPictures(p)[3]),
+                new PropertyByName<Product>("Picture5", p => GetPictures(p)[4]),
+                new PropertyByName<Product>("Picture6", p => GetPictures(p)[5]),
+                new PropertyByName<Product>("Picture7", p => GetPictures(p)[6]),
+                new PropertyByName<Product>("Picture8", p => GetPictures(p)[7]),
+                new PropertyByName<Product>("Picture9", p => GetPictures(p)[8]),
+                new PropertyByName<Product>("Picture10", p => GetPictures(p)[9])
             };
 
             var productList = products.ToList();
