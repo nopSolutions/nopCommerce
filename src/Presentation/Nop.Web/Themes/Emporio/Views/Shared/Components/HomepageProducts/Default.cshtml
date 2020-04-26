@@ -1,0 +1,53 @@
+﻿@inject IThemeContext themeContext
+@{
+    var themeName = themeContext.WorkingThemeName;
+}
+@model IList<ProductOverviewModel>
+@if (Model.Count > 0)
+{
+    Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/owl.carousel.css");
+    Html.AppendScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/js/owl.carousel.min.js");
+
+    <div class="product-grid home-page-product-grid">
+        <div class="title">
+            <strong>@T("Homepage.Products")</strong>
+        </div>
+        <div class="item-grid owl-carousel" id="feature-product">
+            @foreach (var item in Model)
+            {
+                <div class="item-box">
+                    @await Html.PartialAsync("_ProductBox", item)
+                </div>
+            }
+        </div>
+    </div>
+
+    <script type="text/javascript" asp-location="Footer">
+        $(document).ready(function () {
+            $('#feature-product').owlCarousel({
+                loop: true,
+                margin: 10,
+                dots: false,
+                nav: true,
+                autoplay: true,
+                autoplayTimeout: 5000,
+                autoplayHoverPause: true,
+                responsive: {
+                    0: {
+                        items: 1
+                    },
+                    481: {
+
+                        items: 2
+                    },
+                    769: {
+                        items: 3
+                    },
+                    1000: {
+                        items: 5
+                    }
+                }
+            })
+        });
+    </script>
+}

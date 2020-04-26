@@ -1,0 +1,137 @@
+﻿@model ProductDetailsModel
+@inject IThemeContext themeContext
+@{
+    var themeName = themeContext.WorkingThemeName;   
+}
+<div class="gallery">
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsBeforePictures, additionalData = Model })
+    <div class="picture">
+
+        @if (Model.DefaultPictureZoomEnabled)
+        {
+            Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/xzoom.css");
+            Html.AppendScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/js/xzoom.min.js");
+            <script asp-location="Footer">
+                $(document).ready(function () {
+                    $(".xzoom").xzoom({
+                        position: "inside",
+                        mposition: 'inside',
+                    });
+                });
+            </script>
+        }
+
+        @if (Model.PictureModels.Any())
+        {
+            <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" class="xzoom" xoriginal="@Model.DefaultPictureModel.FullSizeImageUrl" id="main-product-img-@Model.Id" />
+        }
+
+    </div>
+    @if (Model.PictureModels.Count > 1 && Model.DefaultPictureZoomEnabled)
+    {
+        <div id="picture-thumbs" class="picture-thumbs owl-carousel-small owl-carousel">
+            @foreach (var picture in Model.PictureModels)
+            {
+                <div class="thumb-item" href="@picture.FullSizeImageUrl" alt="@picture.AlternateText" title="@picture.Title">
+                    <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
+                </div>
+            }
+        </div>
+
+        <script asp-location="Footer">
+            $(document).ready(function () {
+                $(".thumb-item:first-of-type").addClass("active");
+                $('.thumb-item > img').on('click',
+                    function () {
+                        $(".thumb-item").removeClass("active");
+                        $(this).parent(".thumb-item").addClass("active");
+                        $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
+                            $('#main-product-img-@Model.Id').attr('title', $(this).attr('title'));
+                            $('#main-product-img-@Model.Id').attr('alt', $(this).attr('alt'));
+                            $('#main-product-img-@Model.Id').attr('xoriginal', $(this).attr('data-fullsize'));
+                    });
+                $('#picture-thumbs').owlCarousel({
+                    loop: false,
+                    margin: 10,
+                    dots: false,
+                    nav: true,
+                    responsive: {
+                        0: {
+                            items: 2
+                        },
+                        320: {
+
+                            items: 3
+                        },
+                        640: {
+                            items: 4
+                        },
+                        1000: {
+                            items: 3
+                        },
+                        1400: {
+                            items: 4
+
+                        }
+                    }
+                })
+            });
+        </script>
+    }
+    else
+    {
+        if (Model.PictureModels.Count > 1)
+        {
+            <div id="picture-thumbs-slider" class="picture-thumbs owl-carousel-small owl-carousel">
+                @foreach (var picture in Model.PictureModels)
+                {
+                    <div class="thumb-item">
+                        <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
+                    </div>
+                }
+            </div>
+            <script asp-location="Footer">
+                $(document).ready(function () {
+                    $(".thumb-item:first-of-type").addClass("active");
+                    $('.thumb-item img').on('click',
+                        function () {
+                            $(".thumb-item").removeClass("active");
+                            $(this).parent(".thumb-item").addClass("active");
+                            $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
+                            $('#main-product-img-@Model.Id').attr('title', $(this).attr('title'));
+                            $('#main-product-img-@Model.Id').attr('alt', $(this).attr('alt'));
+                            $('#main-product-img-@Model.Id').attr('xoriginal', $(this).attr('data-fullsize'));
+
+                        });
+                    $('#picture-thumbs-slider').owlCarousel({
+                        loop: false,
+                        margin: 10,
+                        dots: false,
+                        nav: true,
+                        responsive: {
+                            0: {
+                                items: 2
+                            },
+                            320: {
+
+                                items: 3
+                            },
+                            640: {
+                                items: 4
+                            },
+                            1000: {
+                                items: 3
+                            },
+                            1400: {
+                                items: 4
+
+                            }
+                        }
+                    })
+                });
+            </script>
+        }
+    }
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsAfterPictures, additionalData = Model })
+</div>
+

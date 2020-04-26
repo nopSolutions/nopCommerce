@@ -1,0 +1,25 @@
+June 20th 2018
+================
+
+1. Removed @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700'); from style.css
+2. Removed @import url('https://fonts.googleapis.com/css?family=Oswald:300,400,500,600,700'); from style.css
+3. Changed "background: url(../images/down-arrow-black.png)no-repeat;" to "background: url('../images/down-arrow-black.png')no-repeat;" in style.css
+4. Added "--ms-transition: all 300ms ease-in-out;" in ".product-grid .item-box .buttons" in style.css
+5. Added "toggleblack.png" to /Themes/Emporio/Content/images folder
+6. Added Font family Open Sans and Oswald CSS in style.css under Global Styles
+
+July 09th 2018
+================
+
+1. Designed by footer added
+2. License terms updated
+
+July 11th 2018
+================
+
+1. Bug solved that was creating log "add to cart" not found in resource strings
+
+May 29th 2019
+================
+
+1. Upgraded to nopCommerce 4.20

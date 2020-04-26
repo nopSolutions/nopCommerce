@@ -1,0 +1,65 @@
+﻿// *************************************************************************
+// *                                                                       *
+// * NopAdvance - Emporio Theme for nopCommerce				               *
+// * Copyright (c) NopAdvance. All Rights Reserved     	                   *
+// *                                                                       *
+// *************************************************************************
+// *                                                                       *
+// * Email: info@nopadvance.com                                            *
+// * Website: http://www.nopadvance.com                                    *
+// *                                                                       *
+// *************************************************************************
+// *                                                                       *
+// * This  theme is furnished  under a license  and  may  be  used  and    *
+// * modified  only in  accordance with the terms of such license and with *
+// * the  inclusion of the above  copyright notice.  This theme or  any    *
+// * other copies thereof may not be provided or  otherwise made available *
+// * to any  other  person.   No title to and ownership of the theme is    *
+// * hereby transferred.                                                   *
+// *                                                                       *
+// * You may not sell or distribute this theme in its default or modified  *
+// * condition. NopAdvance may not allow you to use this theme if you do   *
+// * not comply with  any  of  the  terms and conditions set forth in our  *
+// * end  user license agreement (EULA). In such event, licensee agrees to *
+// * destroy  all copies of theme upon termination of the agreement. 	   *
+// *                                                                       *
+// * Please see the License file for the full End User License Agreement.  *
+// * The  complete license agreement is also available on our  website at  *
+// * http://www.nopadvance.com/license-terms  		                       *
+// *                                                                       *
+// *************************************************************************
+@inherits Nop.Web.Framework.Mvc.Razor.NopRazorPage<TModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@*we remove the default InputTagHelper to prevent the checkbox duplicating: https://stackoverflow.com/questions/42544961/asp-net-core-custom-input-tag-helper-rendering-duplicate-checkboxes*@
+@removeTagHelper Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Nop.Web.Framework
+@addTagHelper *, MiniProfiler.AspNetCore.Mvc
+
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@using Nop.Web.Extensions
+@using Nop.Web.Framework
+@using Nop.Web.Framework.Extensions
+@using Nop.Web.Framework.Infrastructure
+@using Nop.Web.Framework.Models
+@using Nop.Web.Framework.Security.Captcha
+@using Nop.Web.Framework.Security.Honeypot
+@using Nop.Web.Framework.Themes
+@using Nop.Web.Framework.UI
+@using Nop.Web.Models.Blogs
+@using Nop.Web.Models.Boards
+@using Nop.Web.Models.Catalog
+@using Nop.Web.Models.Checkout
+@using Nop.Web.Models.Cms
+@using Nop.Web.Models.Common
+@using Nop.Web.Models.Customer
+@using Nop.Web.Models.Media
+@using Nop.Web.Models.News
+@using Nop.Web.Models.Newsletter
+@using Nop.Web.Models.Order
+@using Nop.Web.Models.Polls
+@using Nop.Web.Models.PrivateMessages
+@using Nop.Web.Models.Profile
+@using Nop.Web.Models.ShoppingCart
+@using Nop.Web.Models.Topics
+@using Nop.Web.Models.Vendors
+@using System.Text.Encodings.Web

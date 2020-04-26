@@ -1,0 +1,20 @@
+﻿@model ForumGroupModel
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    Html.AddTitleParts(Model.Name);
+    //page class
+    Html.AppendPageCssClassParts("html-forum-group-page");
+}
+<!--Forum breadcrumb-->
+@section Breadcrumb
+    {
+    @await Component.InvokeAsync("ForumBreadcrumb", new { forumGroupId = Model.Id })
+}
+<div class="page forum-group-page">
+    @await Html.PartialAsync("_ForumHeader")
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsForumGroupAfterHeader })
+    @await Html.PartialAsync("_ForumGroup", Model)
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsForumGroupBottom })
+</div>

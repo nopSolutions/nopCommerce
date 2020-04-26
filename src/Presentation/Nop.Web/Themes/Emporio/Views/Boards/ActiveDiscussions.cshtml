@@ -1,0 +1,20 @@
+﻿@model ActiveDiscussionsModel
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    Html.AddTitleParts(T("Forum.PageTitle.ActiveDiscussions").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-active-discussions-page");
+}
+<!--Forum breadcrumb-->
+@section Breadcrumb
+    {
+    @await Component.InvokeAsync("ForumBreadcrumb")
+}
+<div class="page active-discussions-page">
+    @await Html.PartialAsync("_ForumHeader")
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsActivediscussionsAfterHeader })
+    @await Html.PartialAsync("_ActiveTopics", Model)
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BoardsActivediscussionsAfterTopics })
+</div>

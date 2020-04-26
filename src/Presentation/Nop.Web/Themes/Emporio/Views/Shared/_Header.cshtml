@@ -1,0 +1,32 @@
+﻿@inject IThemeContext themeContext
+@{
+    var themeName = themeContext.WorkingThemeName;
+}
+<div class="header">
+    <div class="header-logo">
+        @await Component.InvokeAsync("Logo")
+    </div>
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderBefore })
+    <div class="header-upper">
+        <div class="header-selectors-wrapper">
+            <span class="menu-bar"><img src="~/Themes/@themeName/Content/images/menu.png" /></span>
+            @await Component.InvokeAsync("TaxTypeSelector")
+            @await Component.InvokeAsync("CurrencySelector")
+            @await Component.InvokeAsync("LanguageSelector")
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderSelectors })
+        </div>
+        <div class="header-lower">
+            <div class="search-icon">@T("Search.Button")</div>
+        </div>
+        <div class="header-links-wrapper">
+            @await Component.InvokeAsync("HeaderLinks")
+            @await Component.InvokeAsync("FlyoutShoppingCart")
+        </div>
+    </div>
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMiddle })
+
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderAfter })
+</div>
+<div class="search-box store-search-box">
+    @await Component.InvokeAsync("SearchBox")
+</div>

@@ -1,0 +1,310 @@
+﻿@model FooterModel
+@using Nop.Core
+@using Nop.Core.Domain.Tax
+@inject IStoreContext storeContext;
+@inject IWorkContext workContext;
+<div class="footer">
+    <div class="footer-upper-first">
+        <div class="footer-block about-us">
+            @await Component.InvokeAsync("TopicBlock", new { systemName = "AboutUs" })
+        </div>
+        <div class="footer-block">
+            <div class="title">
+                <strong>@T("contactus")</strong>
+            </div>
+            <div class="sub-title">@T("address")</div>
+            <p>
+                @storeContext.CurrentStore.CompanyAddress
+            </p>
+        </div>
+        <div class="footer-block">
+            <div class="sub-title">@T("account.fields.phone	")</div>
+            <ul class="list">
+                <li class="mobile-no">
+                    <a>@storeContext.CurrentStore.CompanyPhoneNumber </a>
+                </li>
+            </ul>
+            @*<div class="sub-title">@T("account.associatedexternalauth.email	")</div>
+                <ul class="list mrgBottom">
+                    <li>
+                        <a>mail@example.com</a>
+                    </li>
+                </ul>*@
+        </div>
+    </div>
+    <div class="footer-upper">
+
+        <div class="footer-block information">
+            <div class="title">
+                <strong>@T("Footer.Information")</strong>
+            </div>
+            <ul class="list">
+                @if (Model.SitemapEnabled && Model.DisplaySitemapFooterItem)
+                {
+                    <li><a href="@Url.RouteUrl("Sitemap")">@T("Sitemap")</a></li>
+                }
+                @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn1).ToList())
+                {
+                    <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+                }
+                @if (Model.DisplayContactUsFooterItem)
+                {
+                    <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
+                }
+            </ul>
+        </div>
+
+        <div class="footer-block customer-service">
+            <div class="title">
+                <strong>@T("Footer.CustomerService")</strong>
+            </div>
+            <ul class="list">
+                @if (Model.DisplayProductSearchFooterItem)
+                {
+                    <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a> </li>
+                }
+                @if (Model.NewsEnabled && Model.DisplayNewsFooterItem)
+                {
+                    <li><a href="@Url.RouteUrl("NewsArchive")">@T("News")</a></li>
+                }
+                @if (Model.BlogEnabled && Model.DisplayBlogFooterItem)
+                {
+                    <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+                }
+                @if (Model.ForumEnabled && Model.DisplayForumsFooterItem)
+                {
+                    <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+                }
+                @if (Model.RecentlyViewedProductsEnabled && Model.DisplayRecentlyViewedProductsFooterItem)
+                {
+                    <li><a href="@Url.RouteUrl("RecentlyViewedProducts")">@T("Products.RecentlyViewedProducts")</a></li>
+                }
+                @if (Model.CompareProductsEnabled && Model.DisplayCompareProductsFooterItem)
+                {
+                    <li><a href="@Url.RouteUrl("CompareProducts")">@T("Products.Compare.List")</a></li>
+                }
+                @if (Model.NewProductsEnabled && Model.DisplayNewProductsFooterItem)
+                {
+                    <li><a href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a></li>
+                }
+                @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn2).ToList())
+                {
+                    <li><a href="@Url.RouteUrl("Topic", new {SeName = topic.SeName})">@topic.Name</a></li>
+                }
+                @if (Model.AllowCustomersToCheckGiftCardBalance)
+                {
+                    <li><a href="@Url.RouteUrl("CheckGiftCardBalance")">@T("CheckGiftCardBalance")</a></li>
+                }
+            </ul>
+        </div>
+
+        <div class="footer-block my-account">
+            <div class="title">
+                <strong>@T("Footer.MyAccount")</strong>
+            </div>
+            <ul class="list">
+                @if (Model.DisplayCustomerInfoFooterItem)
+                {
+                    <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
+                }
+                @if (Model.DisplayCustomerOrdersFooterItem)
+                {
+                    <li><a href="@Url.RouteUrl("CustomerOrders")">@T("Account.CustomerOrders")</a></li>
+                }
+                @if (Model.DisplayCustomerAddressesFooterItem)
+                {
+                    <li><a href="@Url.RouteUrl("CustomerAddresses")">@T("Account.CustomerAddresses")</a></li>
+                }
+                @if (Model.ShoppingCartEnabled && Model.DisplayShoppingCartFooterItem)
+                {
+                    <li><a href="@Url.RouteUrl("ShoppingCart")">@T("ShoppingCart")</a></li>
+                }
+                @if (Model.WishlistEnabled && Model.DisplayWishlistFooterItem)
+                {
+                    <li><a href="@Url.RouteUrl("Wishlist")">@T("Wishlist")</a></li>
+                }
+                @if (Model.AllowCustomersToApplyForVendorAccount && Model.DisplayApplyVendorAccountFooterItem)
+                {
+                    <li><a href="@Url.RouteUrl("ApplyVendorAccount")">@T("Vendors.ApplyAccount")</a></li>
+                }
+                @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn3).ToList())
+                {
+                    <li><a href="@Url.RouteUrl("Topic", new {SeName = topic.SeName})">@topic.Name</a></li>
+                }
+            </ul>
+        </div>
+
+
+    </div>
+    <div class="footer-lower">
+        <div class="footer-left">
+            <div class="footer-info">
+                <span class="footer-disclaimer">@T("Content.CopyrightNotice", DateTime.Now.Year, Model.StoreName)</span>
+                @if (Model.DisplayTaxShippingInfoFooter)
+                {
+                    var inclTax = workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+                    <span class="footer-tax-shipping">
+                        @T(inclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
+                    </span>
+                }
+            </div>
+
+            @if (!Model.HidePoweredByNopCommerce)
+            {
+                <div class="footer-powered-by mr">
+                    @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
+                        Please find more info at https://www.nopcommerce.com/copyrightremoval.aspx*@
+                    Powered by <a href="https://www.nopcommerce.com/">nopCommerce</a>
+                </div>
+            }
+
+
+            @await Component.InvokeAsync("StoreThemeSelector")
+
+            @*NopAdvance designed by footer link*@
+            <div class="footer-powered-by">
+                @*Would you like to remove the "Designed by nopAdvance" link in the bottom of the footer?
+                    Please find more info at https://www.nopadvance.com/eula.aspx*@
+                Designed by <a href="https://www.nopadvance.com/">nopAdvance</a>
+            </div>
+
+        </div>
+
+
+        @await Component.InvokeAsync("NewsletterBox")
+
+        <div class="follow-us">
+            <div class="social">
+                <div class="title" style="display:none;">
+                    <strong>@T("Footer.FollowUs")</strong>
+                </div>
+                @await Component.InvokeAsync("SocialButtons")
+            </div>
+        </div>
+
+    </div>
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.Footer })
+    <a class="scrollToTop"></a>
+</div>
+
+<script asp-location="Footer">
+    $(document).ready(function () {
+        $('.footer-block .title').on('click', function () {
+            var e = window, a = 'inner';
+            if (!('innerWidth' in window)) {
+                a = 'client';
+                e = document.documentElement || document.body;
+            }
+            var result = { width: e[a + 'Width'], height: e[a + 'Height'] };
+            if (result.width < 769) {
+                $(this).siblings('.list').slideToggle('slow');
+            }
+        });
+    });
+</script>
+<script asp-location="Footer">
+    $(document).ready(function () {
+        $('.block .title').on('click', function () {
+            var $this = $(this);
+            var e = window, a = 'inner';
+            if (!('innerWidth' in window)) {
+                a = 'client';
+                e = document.documentElement || document.body;
+            }
+            var result = { width: e[a + 'Width'], height: e[a + 'Height'] };
+            if (result) {
+                $(this).siblings('.listbox').slideToggle('slow');
+                $this.toggleClass('plus');
+            }
+        });
+
+        // Product Filter Slider Start
+
+        var onClickShowProductSliderFilter = function () {
+            $(".block-main-layer").css("left", "0px");
+            $(".layer-overlay").css("visibility", "visible");
+        };
+        $(".filter-icon", ".side-2").click(onClickShowProductSliderFilter)
+
+        var onClickCloseProductSliderFilter = function () {
+            $(".block-main-layer").css("left", "-310px");
+            $(".layer-overlay").css("visibility", "hidden");
+        };
+        $(".close", ".side-2").click(onClickCloseProductSliderFilter);
+
+        var onClickLayerOverlay = function () {
+            onClickCloseProductSliderFilter();
+        };
+        $(".layer-overlay", ".side-2").click(onClickLayerOverlay);
+
+        // product slider end
+
+        // search block start
+
+        $(".search-icon").click(function (e) {
+            if ($('.header-wrapper').children('.search-box.store-search-box').hasClass("active")) {
+                $('.header-wrapper').children('.search-box.store-search-box').removeClass("active");
+            }
+            else
+                $('.header-wrapper').children('.search-box.store-search-box').addClass("active");
+            e.stopPropagation();
+        });
+
+        $(".master-wrapper-page").click(function (evt) {
+            if (evt.target.className == "search-box-text ui-autocomplete-input" || evt.target.className == "search-box-text ui-autocomplete-input valid" || evt.target.className == "search-icon") {
+                return;
+            } else if ($(".search-box.store-search-box").is(".active")) {
+                $(".search-box").removeClass("active");
+            }
+        });
+
+        // search block end
+
+
+        //scroll block start
+
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 400) {
+                $('.scrollToTop').fadeIn();
+            } else {
+                $('.scrollToTop').fadeOut();
+            }
+        });
+
+        $('.scrollToTop').click(function () {
+            $('html, body').animate({ scrollTop: 0 }, 400);
+            return false;
+        });
+
+        //scroll block end
+
+        //Detect mobile browser
+
+        function DetectMobileBrowser() {
+            var isMobile = {
+                Android: function () {
+                    return navigator.userAgent.match(/Android/i);
+                },
+                BlackBerry: function () {
+                    return navigator.userAgent.match(/BlackBerry/i);
+                },
+                iOS: function () {
+                    return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+                },
+                Opera: function () {
+                    return navigator.userAgent.match(/Opera Mini/i);
+                },
+                Windows: function () {
+                    return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
+                },
+                any: function () {
+                    return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+                }
+            };
+            if (isMobile.any()) {
+                $("head").append('<style type="text/css">:not(input):not(textarea){-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-tap-highlight-color:rgba(0,0,0,0);}</style>');
+            };
+        }
+        DetectMobileBrowser();
+    });
+</script>
