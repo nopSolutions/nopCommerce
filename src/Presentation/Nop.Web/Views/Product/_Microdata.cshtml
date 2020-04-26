@@ -37,7 +37,8 @@
         <meta itemprop="priceValidUntil" content="@Model.AvailableEndDate"/>
         @if (Model.ManageInventoryMethod == ManageInventoryMethod.ManageStock || Model.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
         {
-            @if (Model.StockAvailability == @T("Products.Availability.InStock").ToString() || Model.StockAvailability == @T("Products.Availability.InStockWithQuantity").ToString())
+          //Google Product seo fixed by Lancelot 26.04.2020
+            @if (Model.StockAvailability.Any(char.IsDigit) || Model.StockAvailability == @T("Products.Availability.InStockWithQuantity").ToString())
             {
                 <meta itemprop="availability" content="http://schema.org/InStock"/>
             }
