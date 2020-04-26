@@ -101,7 +101,9 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
             {
                 ["Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole"] = "Required customer role",
                 ["Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Hint"] = "Discount will be applied if customer is in the selected customer role.",
-                ["Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Select"] = "Select customer role"
+                ["Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Select"] = "Select customer role",
+                ["Plugins.DiscountRules.CustomerRoles.Fields.CustomerRoleId.Required"] = "Customer role is required",
+                ["Plugins.DiscountRules.CustomerRoles.Fields.DiscountId.Required"] = "Discount is required"
             });
 
             base.Install();
