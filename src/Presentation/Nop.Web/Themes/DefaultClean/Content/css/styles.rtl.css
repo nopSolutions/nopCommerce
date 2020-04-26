@@ -6768,10 +6768,15 @@ pre {
 .product-review-item .review-text {
 	display: table;
 	width: 100%;
+	table-layout: fixed;
 }
 .product-review-item .avatar {
 	display: table-cell;
 	vertical-align: top;
+	width: 120px;
+}
+.product-review-item .avatar img {
+	max-width: 100%;
 }
 .product-review-item .text-body {
 	display: table-cell;
