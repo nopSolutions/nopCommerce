@@ -1140,6 +1140,8 @@ namespace Nop.Web.Factories
                     Id = tag.Id,
                     Name = _localizationService.GetLocalized(tag, y => y.Name),
                     SeName = _urlRecordService.GetSeName(tag),
+                    MetaKeywords = _localizationService.GetLocalized(tag, x => x.MetaKeywords),
+                    MetaDescription = _localizationService.GetLocalized(tag, x => x.MetaDescription),
                     ProductCount = _productTagService.GetProductCount(tag.Id, _storeContext.CurrentStore.Id)
                 }));
 
@@ -1161,7 +1163,9 @@ namespace Nop.Web.Factories
             {
                 Id = productTag.Id,
                 TagName = _localizationService.GetLocalized(productTag, y => y.Name),
-                TagSeName = _urlRecordService.GetSeName(productTag)
+                TagSeName = _urlRecordService.GetSeName(productTag),
+                MetaKeywords = _localizationService.GetLocalized(productTag, x => x.MetaKeywords),
+                MetaDescription = _localizationService.GetLocalized(productTag, x => x.MetaDescription)
             };
 
             //sorting

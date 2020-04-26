@@ -2049,6 +2049,9 @@ namespace Nop.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 productTag.Name = model.Name;
+                //product tag seo update by Lancelot
+                productTag.MetaDescription = model.MetaDescription;
+                productTag.MetaKeywords = model.MetaKeywords;
                 _productTagService.UpdateProductTag(productTag);
 
                 //locales

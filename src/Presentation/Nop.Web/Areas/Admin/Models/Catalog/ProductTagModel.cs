@@ -25,7 +25,11 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.ProductCount")]
         public int ProductCount { get; set; }
-
+        //product tag seo update by Lancelot
+        [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.MetaKeywords")]
+        public string MetaKeywords { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.MetaDescription")]
+        public string MetaDescription { get; set; }
         public IList<ProductTagLocalizedModel> Locales { get; set; }
 
         #endregion
@@ -37,5 +41,10 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.Name")]
         public string Name { get; set; }
+        //product tag seo update by Lancelot
+        [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.MetaKeywords")]
+        public string MetaKeywords { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.MetaDescription")]
+        public string MetaDescription { get; set; }
     }
 }

@@ -4044,6 +4044,12 @@
   <LocaleResource Name="Admin.Catalog.ProductTags.Updated">
     <Value>The product tag has been updated successfully.</Value>
   </LocaleResource>
+   <LocaleResource Name="Admin.Catalog.ProductTags.Fields.MetaDescription">
+    <Value>Meta Description name</Value>
+   </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.ProductTags.Fields.MetaKeywords">
+        <Value>Meta Keywords name</Value>
+    </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ViewMode.Grid">
     <Value>Grid</Value>
   </LocaleResource>
