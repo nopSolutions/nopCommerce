@@ -17,6 +17,10 @@ namespace Nop.Data.Mapping.Builders.Catalog
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table.WithColumn(nameof(ProductTag.Name)).AsString(400).NotNullable();
+            //meta desc and keywords seo fix by Lancelot
+            table.WithColumn(nameof(ProductTag.MetaDescription)).AsString(200);
+            table.WithColumn(nameof(ProductTag.MetaKeywords)).AsString(255);
+
         }
 
         #endregion

@@ -183,6 +183,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             }
         }
 
+        //ProductTag meta description and keywords language settings is here by Lancelot
         protected virtual void UpdateLocales(ProductTag productTag, ProductTagModel model)
         {
             foreach (var localized in model.Locales)
@@ -194,6 +195,26 @@ namespace Nop.Web.Areas.Admin.Controllers
 
                 var seName = _urlRecordService.ValidateSeName(productTag, string.Empty, localized.Name, false);
                 _urlRecordService.SaveSlug(productTag, seName, localized.LanguageId);
+
+                //For metadesc by Lancelot
+                _localizedEntityService.SaveLocalizedValue(productTag,
+                    x => x.MetaDescription,
+                    localized.MetaDescription,
+                    localized.LanguageId);
+
+                var seMetaDesc = _urlRecordService.ValidateSeName(productTag, string.Empty, localized.MetaDescription, false);
+                _urlRecordService.SaveSlug(productTag, seMetaDesc, localized.LanguageId);
+
+                //For metakeyword by Lancelot
+                _localizedEntityService.SaveLocalizedValue(productTag,
+                    x => x.MetaKeywords,
+                    localized.MetaKeywords,
+                    localized.LanguageId);
+
+                var seMetaKeywrd = _urlRecordService.ValidateSeName(productTag, string.Empty, localized.MetaKeywords, false);
+                _urlRecordService.SaveSlug(productTag, seMetaKeywrd, localized.LanguageId);
+
+
             }
         }
 

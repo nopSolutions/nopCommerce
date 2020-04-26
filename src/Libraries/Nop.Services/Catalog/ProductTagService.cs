@@ -355,7 +355,9 @@ namespace Nop.Services.Catalog
                     //add new product tag
                     productTag = new ProductTag
                     {
-                        Name = productTagName
+                        Name = productTagName,
+                        MetaDescription = "",
+                        MetaKeywords = ""
                     };
                     InsertProductTag(productTag);
                 }

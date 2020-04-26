@@ -1596,6 +1596,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 localizedModelConfiguration = (locale, languageId) =>
                 {
                     locale.Name = _localizationService.GetLocalized(productTag, entity => entity.Name, languageId, false, false);
+                    //product tag seo update by Lancelot
+                    locale.MetaDescription = _localizationService.GetLocalized(productTag, entity => entity.MetaDescription, languageId, false, false);
+                    locale.MetaKeywords = _localizationService.GetLocalized(productTag, entity => entity.MetaKeywords, languageId, false, false);
                 };
             }
 
