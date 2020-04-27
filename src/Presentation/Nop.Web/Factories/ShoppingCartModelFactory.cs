@@ -30,6 +30,7 @@ using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
+using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using Nop.Web.Infrastructure.Cache;
@@ -83,6 +84,7 @@ namespace Nop.Web.Factories
         private readonly ITaxService _taxService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
@@ -134,6 +136,7 @@ namespace Nop.Web.Factories
             ITaxService taxService,
             IUrlRecordService urlRecordService,
             IVendorService vendorService,
+            IStoreMappingService storeMappingService,
             IWebHelper webHelper,
             IWorkContext workContext,
             MediaSettings mediaSettings,
@@ -181,6 +184,7 @@ namespace Nop.Web.Factories
             _taxService = taxService;
             _urlRecordService = urlRecordService;
             _vendorService = vendorService;
+            _storeMappingService = storeMappingService;
             _webHelper = webHelper;
             _workContext = workContext;
             _mediaSettings = mediaSettings;
@@ -729,6 +733,11 @@ namespace Nop.Web.Factories
             if (model.Enabled)
             {
                 var shippingAddress = _customerService.GetCustomerShippingAddress(_workContext.CurrentCustomer);
+                if (shippingAddress == null) {
+                    shippingAddress = _customerService.GetAddressesByCustomerId(_workContext.CurrentCustomer.Id)
+                    //enabled for the current store
+                    .FirstOrDefault(a => a.CountryId == null || _storeMappingService.Authorize(_countryService.GetCountryByAddress(a)));
+                }
 
                 //countries
                 var defaultEstimateCountryId = (setEstimateShippingDefaultAddress && shippingAddress != null)

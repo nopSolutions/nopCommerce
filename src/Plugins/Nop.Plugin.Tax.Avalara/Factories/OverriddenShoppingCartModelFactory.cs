@@ -28,6 +28,7 @@ using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
+using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using Nop.Web.Factories;
@@ -58,6 +59,7 @@ namespace Nop.Plugin.Tax.Avalara.Factories
         private readonly IStoreContext _storeContext;
         private readonly ITaxPluginManager _taxPluginManager;
         private readonly ITaxService _taxService;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly IWorkContext _workContext;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
@@ -106,6 +108,7 @@ namespace Nop.Plugin.Tax.Avalara.Factories
             ITaxService taxService,
             IUrlRecordService urlRecordService,
             IVendorService vendorService,
+            IStoreMappingService storeMappingService,
             IWebHelper webHelper,
             IWorkContext workContext,
             MediaSettings mediaSettings,
@@ -151,6 +154,7 @@ namespace Nop.Plugin.Tax.Avalara.Factories
                 taxService,
                 urlRecordService,
                 vendorService,
+                storeMappingService,
                 webHelper,
                 workContext,
                 mediaSettings,
