@@ -49,16 +49,6 @@ namespace Nop.Core.Domain.Common
         public string BreadcrumbDelimiter { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether we should render <meta http-equiv="X-UA-Compatible" content="IE=edge"/> tag
-        /// </summary>
-        public bool RenderXuaCompatible { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value of "X-UA-Compatible" META tag
-        /// </summary>
-        public string XuaCompatibleValue { get; set; }
-
-        /// <summary>
         /// Gets or sets ignore words (phrases) to be ignored when logging errors/messages
         /// </summary>
         public List<string> IgnoreLogWordlist { get; set; }

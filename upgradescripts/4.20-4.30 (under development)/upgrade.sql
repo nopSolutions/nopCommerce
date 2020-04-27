@@ -3062,3 +3062,19 @@ BEGIN
     VALUES (N'cachingsettings.bundledfilescachetime', N'120', 0)
 END
 GO
+
+--delete setting
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.renderxuacompatible')
+BEGIN
+    DELETE FROM [Setting]
+    WHERE [Name] = N'commonsettings.renderxuacompatible'
+END
+GO
+
+--delete setting
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.xuacompatiblevalue')
+BEGIN
+    DELETE FROM [Setting]
+    WHERE [Name] = N'commonsettings.xuacompatiblevalue'
+END
+GO
