@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Customers;
+using Nop.Services.Caching;
+using Nop.Services.Customers;
 
 namespace Nop.Services.Plugins
 {
@@ -13,22 +15,48 @@ namespace Nop.Services.Plugins
     {
         #region Constants
 
+        /// <summary>
+        /// Key format
+        /// <remarks>
+        /// {0} - system name of plugin
+        /// {1} - customer role IDs
+        /// {2} - store ID
+        /// </remarks>
+        /// </summary>
         private const string KEY_FORMAT = "{0}-{1}-{2}";
 
         #endregion
 
         #region Fields
 
+        private readonly ICacheKeyService _cacheKeyService;
+        private readonly ICustomerService _customerService;
         private readonly IPluginService _pluginService;
+
         private readonly Dictionary<string, IList<TPlugin>> _plugins = new Dictionary<string, IList<TPlugin>>();
 
         #endregion
 
         #region Ctor
 
-        public PluginManager(IPluginService pluginService)
+        public PluginManager(ICacheKeyService cacheKeyService, 
+            ICustomerService customerService, 
+            IPluginService pluginService)
         {
+            _cacheKeyService = cacheKeyService;
+            _customerService = customerService;
             _pluginService = pluginService;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        protected virtual string GetKey(string systemName, Customer customer, int storeId)
+        {
+            var roles = customer == null ? Array.Empty<int>() : _customerService.GetCustomerRoleIds(customer);
+
+            return _cacheKeyService.PrepareKeyPrefix(KEY_FORMAT, systemName, roles, storeId);
         }
 
         #endregion
@@ -44,7 +72,7 @@ namespace Nop.Services.Plugins
         public virtual IList<TPlugin> LoadAllPlugins(Customer customer = null, int storeId = 0)
         {
             //get plugins and put them into the dictionary to avoid further loading
-            var key = string.Format(KEY_FORMAT, null, customer?.CustomerGuid ?? default, storeId);
+            var key = GetKey(null, customer, storeId);
             if (!_plugins.ContainsKey(key))
                 _plugins.Add(key, _pluginService.GetPlugins<TPlugin>(customer: customer, storeId: storeId).ToList());
 
@@ -64,7 +92,7 @@ namespace Nop.Services.Plugins
                 return null;
 
             //try to get already loaded plugin
-            var key = string.Format(KEY_FORMAT, systemName, customer?.CustomerGuid ?? default, storeId);
+            var key = GetKey(systemName, customer, storeId);
             if (_plugins.ContainsKey(key))
                 return _plugins[key].FirstOrDefault();
 

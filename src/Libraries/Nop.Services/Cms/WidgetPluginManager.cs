@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Customers;
+using Nop.Services.Caching;
+using Nop.Services.Customers;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Cms
@@ -20,8 +22,10 @@ namespace Nop.Services.Cms
 
         #region Ctor
 
-        public WidgetPluginManager(WidgetSettings widgetSettings,
-            IPluginService pluginService) : base(pluginService)
+        public WidgetPluginManager(ICacheKeyService cacheKeyService, 
+            ICustomerService customerService,
+            IPluginService pluginService,
+            WidgetSettings widgetSettings) : base(cacheKeyService, customerService, pluginService)
         {
             _widgetSettings = widgetSettings;
         }

@@ -3,26 +3,10 @@ using Nop.Services.Caching;
 
 namespace Nop.Tests
 {
-    public class FakeCacheKeyService : ICacheKeyService
+    public class FakeCacheKeyService : CacheKeyService
     {
-        public CacheKey PrepareKey(CacheKey cacheKey, params object[] keyObjects)
+        public FakeCacheKeyService() : base(new CachingSettings())
         {
-            return cacheKey;
-        }
-
-        public CacheKey PrepareKeyForDefaultCache(CacheKey cacheKey, params object[] keyObjects)
-        {
-            return cacheKey;
-        }
-
-        public CacheKey PrepareKeyForShortTermCache(CacheKey cacheKey, params object[] keyObjects)
-        {
-            return cacheKey;
-        }
-
-        public string PrepareKeyPrefix(string keyFormatter, params object[] keyObjects)
-        {
-            return keyFormatter;
         }
     }
 }

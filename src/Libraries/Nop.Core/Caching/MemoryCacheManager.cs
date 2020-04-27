@@ -206,6 +206,12 @@ namespace Nop.Core.Caching
             _clearToken.Dispose();
 
             _clearToken = new CancellationTokenSource();
+
+            foreach (var prefix in _prefixes.Keys.ToList())
+            {
+                _prefixes.TryRemove(prefix, out var tokenSource);
+                tokenSource?.Dispose();
+            }
         }
 
         /// <summary>

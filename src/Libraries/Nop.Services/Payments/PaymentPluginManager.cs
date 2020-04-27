@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Payments;
+using Nop.Services.Caching;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Payments
@@ -22,9 +24,11 @@ namespace Nop.Services.Payments
 
         #region Ctor
 
-        public PaymentPluginManager(IPluginService pluginService,
+        public PaymentPluginManager(ICacheKeyService cacheKeyService,
+            ICustomerService customerService, 
+            IPluginService pluginService,
             ISettingService settingService,
-            PaymentSettings paymentSettings) : base(pluginService)
+            PaymentSettings paymentSettings) : base(cacheKeyService, customerService, pluginService)
         {
             _settingService = settingService;
             _paymentSettings = paymentSettings;

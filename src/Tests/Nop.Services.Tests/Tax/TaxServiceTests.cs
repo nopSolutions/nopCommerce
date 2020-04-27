@@ -96,10 +96,6 @@ namespace Nop.Services.Tests.Tax
             _shippingSettings = new ShippingSettings();
             _addressSettings = new AddressSettings();
 
-            var pluginService = new FakePluginService();
-            _taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
-
-
             _customerService = new CustomerService(new CachingSettings(),
                 new CustomerSettings(),
                 new FakeCacheKeyService(),
@@ -117,6 +113,9 @@ namespace Nop.Services.Tests.Tax
                 _storeContext.Object,
                 null);
 
+            var pluginService = new FakePluginService();
+            _taxPluginManager = new TaxPluginManager(new FakeCacheKeyService(), _customerService, pluginService, _taxSettings);
+            
             _taxService = new TaxService(_addressSettings,
                 _customerSettings,
                 _addressService.Object,

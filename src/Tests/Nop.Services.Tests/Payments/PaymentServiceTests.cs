@@ -6,9 +6,11 @@ using Moq;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Payments;
 using Nop.Services.Tests.FakeServices;
+using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Payments
@@ -41,7 +43,7 @@ namespace Nop.Services.Tests.Payments
             _shoppingCartSettings = new ShoppingCartSettings();
             _settingService = new Mock<ISettingService>();
             _httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _paymentPluginManager = new PaymentPluginManager(pluginService, _settingService.Object, _paymentSettings);
+            _paymentPluginManager = new PaymentPluginManager(new FakeCacheKeyService(), new Mock<ICustomerService>().Object, pluginService, _settingService.Object, _paymentSettings);
             _paymentService = new PaymentService(_httpContextAccessor.Object, _paymentPluginManager, _paymentSettings, _shoppingCartSettings);
         }
 

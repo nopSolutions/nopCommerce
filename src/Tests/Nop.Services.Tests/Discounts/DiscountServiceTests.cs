@@ -79,7 +79,7 @@ namespace Nop.Services.Tests.Discounts
             
             var pluginService = new FakePluginService();
 
-            _discountPluginManager = new DiscountPluginManager(pluginService);
+            _discountPluginManager = new DiscountPluginManager(new FakeCacheKeyService(), new Mock<ICustomerService>().Object, pluginService);
             _discountService = new DiscountService(
                 new FakeCacheKeyService(),
                 _customerService.Object,

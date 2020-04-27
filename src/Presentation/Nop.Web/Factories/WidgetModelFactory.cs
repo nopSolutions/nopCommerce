@@ -55,8 +55,8 @@ namespace Nop.Web.Factories
         /// <param name="additionalData">Additional data object</param>
         /// <returns>List of the render widget models</returns>
         public virtual List<RenderWidgetModel> PrepareRenderWidgetModel(string widgetZone, object additionalData = null)
-        {
-            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.WidgetModelKey, 
+        { 
+            var cacheKey = _cacheKeyService.PrepareKeyForShortTermCache(NopModelCacheDefaults.WidgetModelKey, 
                 _workContext.CurrentCustomer, _storeContext.CurrentStore, widgetZone, _themeContext.WorkingThemeName);
 
             var cachedModels = _staticCacheManager.Get(cacheKey, () =>
