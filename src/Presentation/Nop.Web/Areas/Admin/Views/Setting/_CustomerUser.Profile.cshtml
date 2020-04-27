@@ -34,10 +34,12 @@ $(document).ready(function () {
     $("#@Html.IdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)").click(toggleAvatar);
     $("#@Html.IdFor(model => model.CustomerSettings.UsernamesEnabled)").click(toggleUsername);
     $("#@Html.IdFor(model => model.CustomerSettings.UsernameValidationEnabled)").click(toggleUsernameValidation);
+    $("#@Html.IdFor(model => model.CustomerSettings.PhoneNumberValidationEnabled)").click(togglePhoneNumberValidation);
 
     toggleAvatar();
     toggleUsername();
     toggleUsernameValidation();
+    togglePhoneNumberValidation();
 });
 
 function toggleAvatar() {
@@ -60,13 +62,23 @@ function toggleUsername() {
     }
 }
 
-    function toggleUsernameValidation() {
+function toggleUsernameValidation() {
     if ($('#@Html.IdFor(model => model.CustomerSettings.UsernameValidationEnabled)').is(':checked')) {
         $('#pnlUsernameValidationRule').show();
         $('#pnlUsernameValidationUseRegex').show();
     } else {
         $('#pnlUsernameValidationRule').hide();
         $('#pnlUsernameValidationUseRegex').hide();
+    }
+}
+
+function togglePhoneNumberValidation() {
+    if ($('#@Html.IdFor(model => model.CustomerSettings.PhoneNumberValidationEnabled)').is(':checked')) {
+        $('#pnlPhoneNumberValidationRule').show();
+        $('#pnlPhoneNumberValidationUseRegex').show();
+    } else {
+        $('#pnlPhoneNumberValidationRule').hide();
+        $('#pnlPhoneNumberValidationUseRegex').hide();
     }
 }
 </script>

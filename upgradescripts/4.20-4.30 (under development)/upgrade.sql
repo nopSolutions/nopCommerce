@@ -841,6 +841,30 @@ set @resources='
   <LocaleResource Name="Plugins.DiscountRules.CustomerRoles.Fields.DiscountId.Required">
     <Value>Discount is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Fields.Phone.NotValid">
+    <Value>Phone number is not valid</Value>
+  </LocaleResource>
+   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationEnabled">
+    <Value>Phone number validation is enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationEnabled.Hint">
+    <Value>Check to enable phone number validation (when registering or changing on the "My Account" page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationRule">
+    <Value>Phone number validation rule</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationRule.Hint">
+    <Value>Set the validation rule for phone number. You can specify a list of allowed characters or a regular expression. If you use a regular expression check the "Use regex for phone number validation" setting.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationUseRegex">
+    <Value>Use regex for phone number validation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationUseRegex.Hint">
+    <Value>Check to use a regular expression for phone number validation (when registering or changing on the "My Account" page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerSettings.PhoneNumberRegexValidationRule.Error">
+    <Value>The regular expression for phone number validation is incorrect</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3076,5 +3100,29 @@ IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.xuacompatible
 BEGIN
     DELETE FROM [Setting]
     WHERE [Name] = N'commonsettings.xuacompatiblevalue'
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.phonenumbervalidationenabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.phonenumbervalidationenabled', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.phonenumbervalidationuseregex')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.phonenumbervalidationuseregex', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.phoneNumbervalidationrule')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.phonenumbervalidationrule', N'^[0-9]{1,14}?$', 0)
 END
 GO

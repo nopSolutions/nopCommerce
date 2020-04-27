@@ -6407,7 +6407,10 @@ namespace Nop.Services.Installation
                 EnteringEmailTwice = false,
                 RequireRegistrationForDownloadableProducts = false,
                 AllowCustomersToCheckGiftCardBalance = false,
-                DeleteGuestTaskOlderThanMinutes = 1440
+                DeleteGuestTaskOlderThanMinutes = 1440,
+                PhoneNumberValidationEnabled = false,
+                PhoneNumberValidationUseRegex = false,
+                PhoneNumberValidationRule = "^[0-9]{1,14}?$"
             });
 
             settingService.SaveSetting(new AddressSettings
