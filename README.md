@@ -38,6 +38,4 @@ Front End | Admin area
 [![ScreenShot](https://www.nopcommerce.com/images/demo/demo3.png)](https://demo.nopcommerce.com/) | [![ScreenShot](https://www.nopcommerce.com/images/demo/admindemo_500.png)](https://admin-demo.nopcommerce.com/admin/)
 
 
-## Survey for developers and product managers: ##
 
-We want to make sure our users get what they need from the platform. That is why we prepared a short survey to know you better. Your opinion really matters and we hope you can participate to give us food for thought for making nopCommerce even better! [Participate](https://www.surveymonkey.com/r/CDMQYHY)
