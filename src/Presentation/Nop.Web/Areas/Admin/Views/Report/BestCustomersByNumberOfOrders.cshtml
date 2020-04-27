@@ -1,4 +1,5 @@
 ﻿@model CustomerReportsSearchModel
+@using Nop.Services.Orders;
 
 @{
     //page title
@@ -100,7 +101,7 @@
                         LengthMenu = Model.BestCustomersByNumberOfOrders.AvailablePageSizes,
                         Filters = new List<FilterParameter>
                         {
-                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.OrderBy), 2),
+                            new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.OrderBy), (int)OrderByEnum.OrderByTotalAmount),
                             new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.StartDate), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
                             new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.EndDate), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),
                             new FilterParameter(nameof(Model.BestCustomersByNumberOfOrders.OrderStatusId), nameof(CustomerReportsSearchModel.BestCustomersByNumberOfOrders)),

@@ -48,14 +48,24 @@
                                         <nop-editor asp-for="SearchName" />
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <div class="col-md-8 col-md-offset-4">
-                                        <button type="button" id="search-vendors" class="btn btn-primary btn-search">
-                                            <i class="fa fa-search"></i>
-                                            @T("Admin.Common.Search")
-                                        </button>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchEmail" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchEmail" />
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7 col-md-offset-5">
+                                <button type="button" id="search-vendors" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -73,7 +83,8 @@
                         LengthMenu = Model.AvailablePageSizes,
                         Filters = new List<FilterParameter>
                         {
-                            new FilterParameter(nameof(Model.SearchName))
+                            new FilterParameter(nameof(Model.SearchName)),
+                            new FilterParameter(nameof(Model.SearchEmail))
                         },
                         ColumnCollection = new List<ColumnProperty>
                         {
@@ -102,7 +113,7 @@
                                 Render = new RenderButtonEdit(new DataUrl("Edit"))
                             }
                         }
-                    })                    
+                    })
                 </div>
             </div>
         </div>

@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Services.Media;
-using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Web.Areas.Admin.Controllers
 {
@@ -26,7 +25,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         [HttpPost]
         //do not validate request token (XSRF)
-        [AdminAntiForgery(true)]
+        [IgnoreAntiforgeryToken]
         public virtual IActionResult AsyncUpload()
         {
             //if (!_permissionService.Authorize(StandardPermissionProvider.UploadPictures))
@@ -56,7 +55,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             {
                 success = true,
                 pictureId = picture.Id,
-                imageUrl = _pictureService.GetPictureUrl(picture, 100)
+                imageUrl = _pictureService.GetPictureUrl(ref picture, 100)
             });
         }
 

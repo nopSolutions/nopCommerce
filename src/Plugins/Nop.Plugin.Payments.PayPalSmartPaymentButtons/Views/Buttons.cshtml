@@ -1,0 +1,43 @@
+﻿@model (string WidgetZone, int ProductId)
+
+@if (Model.ProductId > 0)
+{
+    <div>
+        <div class="add-to-cart-panel" id="paypal-button-container@($"-{Model.ProductId}")"></div>
+    </div>
+}
+else
+{
+    <script asp-location="Footer">
+        $(document).ready(function () {
+            $('#checkout').after('<div id="paypal-button-container"></div>');
+            $('#checkout').hide();
+        });
+    </script>
+}
+
+<script asp-location="Footer">
+    $(document).ready(function() {
+        var paymentForm = paypal.Buttons({
+            onClick: function (e, n) {
+                if ($('#checkout').length > 0) {
+                    $('#checkout').click();
+                }
+                if ($('#add-to-cart-button-@Model.ProductId').length > 0) {
+                    $('#add-to-cart-button-@Model.ProductId').click();
+                }
+                return false;
+            },
+            style: {
+                layout: '@settings.StyleLayout',
+                color: '@settings.StyleColor',
+                shape: '@settings.StyleShape',
+                label: '@settings.StyleLabel',
+                tagline: '@settings.StyleTagline'
+            }
+        });
+        if (paymentForm) {
+            paymentForm.render('#paypal-button-container@(Model.ProductId > 0 ? $"-{Model.ProductId}" : null)');
+        }
+    });
+</script>

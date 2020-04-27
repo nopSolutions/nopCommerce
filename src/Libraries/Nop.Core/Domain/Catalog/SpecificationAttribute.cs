@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -8,8 +7,6 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class SpecificationAttribute : BaseEntity, ILocalizedEntity
     {
-        private ICollection<SpecificationAttributeOption> _specificationAttributeOptions;
-
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -19,14 +16,5 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
-
-        /// <summary>
-        /// Gets or sets the specification attribute options
-        /// </summary>
-        public virtual ICollection<SpecificationAttributeOption> SpecificationAttributeOptions
-        {
-            get => _specificationAttributeOptions ?? (_specificationAttributeOptions = new List<SpecificationAttributeOption>());
-            protected set => _specificationAttributeOptions = value;
-        }
     }
 }

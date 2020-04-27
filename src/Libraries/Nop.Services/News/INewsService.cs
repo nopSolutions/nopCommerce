@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.News;
@@ -40,9 +40,10 @@ namespace Nop.Services.News
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="title">Filter by news item title</param>
         /// <returns>News items</returns>
         IPagedList<NewsItem> GetAllNews(int languageId = 0, int storeId = 0,
-            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string title = null);
 
         /// <summary>
         /// Inserts a news item
@@ -116,6 +117,18 @@ namespace Nop.Services.News
         /// </summary>
         /// <param name="newsComments">News comments</param>
         void DeleteNewsComments(IList<NewsComment> newsComments);
+
+        /// <summary>
+        /// Inserts a news comment
+        /// </summary>
+        /// <param name="comment">News comment</param>
+        void InsertNewsComment(NewsComment comment);
+
+        /// <summary>
+        /// Update a news comment
+        /// </summary>
+        /// <param name="comment">News comment</param>
+        void UpdateNewsComment(NewsComment comment);
 
         #endregion
     }

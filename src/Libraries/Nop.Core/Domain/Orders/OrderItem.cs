@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using Nop.Core.Domain.Catalog;
+﻿using System;
 
 namespace Nop.Core.Domain.Orders
 {
@@ -9,8 +7,6 @@ namespace Nop.Core.Domain.Orders
     /// </summary>
     public partial class OrderItem : BaseEntity
     {
-        private ICollection<GiftCard> _associatedGiftCards;
-
         /// <summary>
         /// Gets or sets the order item identifier
         /// </summary>
@@ -106,24 +102,5 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the rental product end date (null if it's not a rental product)
         /// </summary>
         public DateTime? RentalEndDateUtc { get; set; }
-
-        /// <summary>
-        /// Gets the order
-        /// </summary>
-        public virtual Order Order { get; set; }
-
-        /// <summary>
-        /// Gets the product
-        /// </summary>
-        public virtual Product Product { get; set; }
-
-        /// <summary>
-        /// Gets or sets the associated gift card
-        /// </summary>
-        public virtual ICollection<GiftCard> AssociatedGiftCards
-        {
-            get => _associatedGiftCards ?? (_associatedGiftCards = new List<GiftCard>());
-            protected set => _associatedGiftCards = value;
-        }
     }
 }

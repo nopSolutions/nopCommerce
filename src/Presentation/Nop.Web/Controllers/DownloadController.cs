@@ -46,9 +46,11 @@ namespace Nop.Web.Controllers
             if (download == null)
                 return Content("Sample download is not available any more.");
 
+            //A warning (SCS0027 - Open Redirect) from the "Security Code Scan" analyzer may appear at this point. 
+            //In this case, it is not relevant. Url may not be local.
             if (download.UseDownloadUrl)
                 return new RedirectResult(download.DownloadUrl);
-            
+
             if (download.DownloadBinary == null)
                 return Content("Download data is not available any more.");
             
@@ -63,9 +65,9 @@ namespace Nop.Web.Controllers
             if (orderItem == null)
                 return InvokeHttp404();
 
-            var order = orderItem.Order;
-            var product = orderItem.Product;
-            if (!_downloadService.IsDownloadAllowed(orderItem))
+            var order = _orderService.GetOrderById(orderItem.OrderId);
+            
+            if (!_orderService.IsDownloadAllowed(orderItem))
                 return Content("Downloads are not allowed");
 
             if (_customerSettings.DownloadableProductsValidateUser)
@@ -76,6 +78,8 @@ namespace Nop.Web.Controllers
                 if (order.CustomerId != _workContext.CurrentCustomer.Id)
                     return Content("This is not your order");
             }
+
+            var product = _productService.GetProductById(orderItem.ProductId);
 
             var download = _downloadService.GetDownloadById(product.DownloadId);
             if (download == null)
@@ -92,9 +96,11 @@ namespace Nop.Web.Controllers
             {
                 //increase download
                 orderItem.DownloadCount++;
-                _orderService.UpdateOrder(order);
+                _orderService.UpdateOrderItem(orderItem);
 
                 //return result
+                //A warning (SCS0027 - Open Redirect) from the "Security Code Scan" analyzer may appear at this point. 
+                //In this case, it is not relevant. Url may not be local.
                 return new RedirectResult(download.DownloadUrl);
             }
             
@@ -104,7 +110,7 @@ namespace Nop.Web.Controllers
 
             //increase download
             orderItem.DownloadCount++;
-            _orderService.UpdateOrder(order);
+            _orderService.UpdateOrderItem(orderItem);
 
             //return result
             var fileName = !string.IsNullOrWhiteSpace(download.Filename) ? download.Filename : product.Id.ToString();
@@ -118,9 +124,9 @@ namespace Nop.Web.Controllers
             if (orderItem == null)
                 return InvokeHttp404();
 
-            var order = orderItem.Order;
-            var product = orderItem.Product;
-            if (!_downloadService.IsLicenseDownloadAllowed(orderItem))
+            var order = _orderService.GetOrderById(orderItem.OrderId);
+
+            if (!_orderService.IsLicenseDownloadAllowed(orderItem))
                 return Content("Downloads are not allowed");
 
             if (_customerSettings.DownloadableProductsValidateUser)
@@ -129,19 +135,21 @@ namespace Nop.Web.Controllers
                     return Challenge();
             }
 
-            var download = _downloadService.GetDownloadById(orderItem.LicenseDownloadId.HasValue ? orderItem.LicenseDownloadId.Value : 0);
+            var download = _downloadService.GetDownloadById(orderItem.LicenseDownloadId ?? 0);
             if (download == null)
                 return Content("Download is not available any more.");
-            
+
+            //A warning (SCS0027 - Open Redirect) from the "Security Code Scan" analyzer may appear at this point. 
+            //In this case, it is not relevant. Url may not be local.
             if (download.UseDownloadUrl)
                 return new RedirectResult(download.DownloadUrl);
 
-            //binary download
+                //binary download
             if (download.DownloadBinary == null)
                 return Content("Download data is not available any more.");
-                
+
             //return result
-            var fileName = !string.IsNullOrWhiteSpace(download.Filename) ? download.Filename : product.Id.ToString();
+            var fileName = !string.IsNullOrWhiteSpace(download.Filename) ? download.Filename : orderItem.ProductId.ToString();
             var contentType = !string.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : MimeTypes.ApplicationOctetStream;
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
@@ -152,10 +160,12 @@ namespace Nop.Web.Controllers
             if (download == null)
                 return Content("Download is not available any more.");
 
+            //A warning (SCS0027 - Open Redirect) from the "Security Code Scan" analyzer may appear at this point. 
+            //In this case, it is not relevant. Url may not be local.
             if (download.UseDownloadUrl)
                 return new RedirectResult(download.DownloadUrl);
 
-            //binary download
+                //binary download
             if (download.DownloadBinary == null)
                 return Content("Download data is not available any more.");
 
@@ -171,7 +181,7 @@ namespace Nop.Web.Controllers
             if (orderNote == null)
                 return InvokeHttp404();
 
-            var order = orderNote.Order;
+            var order = _orderService.GetOrderById(orderNote.OrderId);
 
             if (_workContext.CurrentCustomer == null || order.CustomerId != _workContext.CurrentCustomer.Id)
                 return Challenge();
@@ -179,11 +189,13 @@ namespace Nop.Web.Controllers
             var download = _downloadService.GetDownloadById(orderNote.DownloadId);
             if (download == null)
                 return Content("Download is not available any more.");
-
+            
+            //A warning (SCS0027 - Open Redirect) from the "Security Code Scan" analyzer may appear at this point. 
+            //In this case, it is not relevant. Url may not be local.
             if (download.UseDownloadUrl)
                 return new RedirectResult(download.DownloadUrl);
 
-            //binary download
+                //binary download
             if (download.DownloadBinary == null)
                 return Content("Download data is not available any more.");
 

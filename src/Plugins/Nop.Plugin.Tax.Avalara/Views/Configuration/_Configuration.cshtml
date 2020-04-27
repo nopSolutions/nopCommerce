@@ -1,4 +1,4 @@
-﻿@model Nop.Plugin.Tax.Avalara.Models.Configuration.ConfigurationModel
+﻿@model ConfigurationModel
 
 <div class="panel-group">
     <div class="panel panel-default">
@@ -6,15 +6,10 @@
             <p>
                 To enable this tax provider, you'll need to:<br />
                 <br />
-                1. <a href="https://www.avalara.com" target="_blank">Create an Avalara account</a><br />
-                2. Log in at the <a href="https://admin-avatax.avalara.net/login.aspx" target="_blank">production service</a>
-                or at the <a href="https://admin-development.avalara.net/login.aspx" target="_blank"> development service</a><br />
+                1. <a href="https://avlr.co/3bw9ixk" target="_blank">Create an Avalara account</a><br />
+                2. Log in at the production or development Avalara portal</a><br />
                 3. Add a company and some nexus jurisdiction selections to get any tax results<br />
                 4. Fill in your Avalara account details below<br />
-                <br />
-                <em>
-                    Disclaimer: By enabling this plugin you transfer the checkout data of your store to Avalara for accurate tax counting and reporting. The pre-counted tax might vary with tax displayed after checkout.<br />
-                </em>
             </p>
             <div class="form-group">
                 <div class="col-md-3">
@@ -68,6 +63,35 @@
                 <div class="col-md-9">
                     <nop-editor asp-for="ValidateAddress" />
                     <span asp-validation-for="ValidateAddress"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="TaxOriginAddressTypeId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="TaxOriginAddressTypeId" asp-items="@Model.TaxOriginAddressTypes" />
+                    <span asp-validation-for="TaxOriginAddressTypeId"></span>
+                </div>
+                <script>
+	                $(document).ready(function () {
+                        $("#@Html.IdFor(model => model.TaxOriginAddressTypeId)").click(changeOriginAddressType);
+                        changeOriginAddressType();
+	                });
+
+                    function changeOriginAddressType() {
+                        warningValidation('@Url.Action("ChangeOriginAddressType", "Avalara")', '@Html.NameFor(model => model.TaxOriginAddressTypeId)',
+                            { typeId: $('#@Html.IdFor(model => model.TaxOriginAddressTypeId)').val() });
+                    }
+                </script>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <nop-label asp-for="EnableLogging" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="EnableLogging" />
+                    <span asp-validation-for="EnableLogging"></span>
                 </div>
             </div>
             <div class="form-group">

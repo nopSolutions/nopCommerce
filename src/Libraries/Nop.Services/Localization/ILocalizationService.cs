@@ -46,13 +46,6 @@ namespace Nop.Services.Localization
             bool logIfNotFound = true);
 
         /// <summary>
-        /// Gets all locale string resources by language identifier
-        /// </summary>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Locale string resources</returns>
-        IList<LocaleStringResource> GetAllResources(int languageId);
-
-        /// <summary>
         /// Inserts a locale string resource
         /// </summary>
         /// <param name="localeStringResource">Locale string resource</param>
@@ -187,10 +180,31 @@ namespace Nop.Services.Localization
         void AddOrUpdatePluginLocaleResource(string resourceName, string resourceValue, string languageCulture = null);
 
         /// <summary>
+        /// Add locale resources
+        /// </summary>
+        /// <param name="resources">Resource name-value pairs</param>
+        /// <param name="languageId">Language identifier; pass null to add the passed resources for all languages</param>
+        void AddPluginLocaleResource(IDictionary<string, string> resources, int? languageId = null);
+
+        /// <summary>
         /// Delete a locale resource
         /// </summary>
         /// <param name="resourceName">Resource name</param>
         void DeletePluginLocaleResource(string resourceName);
+
+        /// <summary>
+        /// Delete locale resources
+        /// </summary>
+        /// <param name="resourceNames">Resource names</param>
+        /// <param name="languageId">Language identifier; pass null to delete the passed resources from all languages</param>
+        void DeletePluginLocaleResources(IList<string> resourceNames, int? languageId = null);
+
+        /// <summary>
+        /// Delete locale resources by the passed name prefix
+        /// </summary>
+        /// <param name="resourceNamePrefix">Resource name prefix</param>
+        /// <param name="languageId">Language identifier; pass null to delete resources by prefix from all languages</param>
+        void DeletePluginLocaleResources(string resourceNamePrefix, int? languageId = null);
 
         /// <summary>
         /// Get localized friendly name of a plugin

@@ -1,11 +1,5 @@
 ﻿@model InstallModel
-@using Nop.Core.Data
-@using Nop.Web.Models.Install
-@using Nop.Web.Infrastructure.Installation
-@*localization service for installation service
-    we do not use standard nopCommerce localization because database is not installed yet
-    locale resources for installation process are stored into \App_Data\Localization\Installation directory*@
-@inject IInstallationLocalizationService ILS
+
 @{
     Layout = null;
 }
@@ -29,7 +23,6 @@
         <link href="@Url.Content("~/css/install/styles.css")" type="text/css" rel="stylesheet" />
     }
     <script src="@Url.Content("~/lib/jquery/jquery-3.4.1.min.js")"></script>
-    <script src="@Url.Content("~/lib/jquery-migrate/jquery-migrate-3.1.0.js")"></script>
     <script src="@Url.Content("~/lib/jquery-validate/jquery.validate-v1.19.1/jquery.validate.min.js")"></script>
     <script src="@Url.Content("~/lib/jquery-validate/jquery.validate.unobtrusive-v3.2.11/jquery.validate.unobtrusive.min.js")"></script>
     <script src="@Url.Content("~/js/public.common.js")"></script>
@@ -50,7 +43,7 @@
                 </div>
             </div>
         </div>
-        <form asp-action="Index" asp-controller="Install" id="installation-form" method="post" autocomplete="off">
+        <form asp-action="Index" asp-controller="Install" id="installation-form" method="post">
             <div class="content">
                 <div asp-validation-summary="All" class="message-error"></div>
 
@@ -85,53 +78,47 @@
                     });
 
                     $(document).ready(function () {
-                        $('input:radio[name=DataProvider]').click(toggleProvider);
-                        $('input:radio[name=SqlConnectionInfo]').click(toggleSqlConnectionInfo);
-                        $('input:radio[name=SqlAuthenticationType]').click(toggleSqlAuthenticationType);
+                        $('#@Html.IdFor(x => x.ConnectionStringRaw)').click(toggleSqlConnectionInfo);
+
                         $("input:checkbox[name=UseCustomCollation]").click(toggleCollation);
 
-                        toggleProvider();
                         toggleSqlConnectionInfo();
-                        toggleSqlAuthenticationType();
                         toggleCollation();
                     });
 
-
-                    function toggleProvider() {
-                        var selectedProvider = $("input[name=DataProvider]:checked").attr('id');
-                        if (selectedProvider == 'provider_sqlce') {
-                            $('#sqlConnectionInfo').hide();
-                        } else if (selectedProvider == 'provider_sqlserver') {
-                            $('#sqlConnectionInfo').show();
-                        }
-                    }
+                    $(document).ready(function () {
+                        $('#@Html.IdFor(m => m.DataProvider)').on('change', function() {
+                            var integratedSecurityProviders = ['@((int)DataProviderType.SqlServer)']
+                            if(!integratedSecurityProviders.includes($(this).val())) {
+                                $('#@Html.IdFor(x => x.IntegratedSecurity)').prop('checked', false);
+                                $('#@Html.IdFor(x => x.IntegratedSecurity)').prop('disabled', true)
+                                
+                                toggleSqlAuthenticationType();
+                            } else {
+                                $('#@Html.IdFor(x => x.IntegratedSecurity)').prop('disabled', false)
+                            }
+                        });
+                    });
 
                     function toggleSqlConnectionInfo() {
-                        var selectedProvider = $("input[name=SqlConnectionInfo]:checked").attr('id');
-                        if (selectedProvider == 'sqlconnectioninfo_values') {
-                            $('#sqlDatabaseInfo').show();
-                            $('#sqlDatabaseConnectionString').hide();
-                        } else if (selectedProvider == 'sqlconnectioninfo_raw') {
+                        var connectionStringRaw = $("#@Html.IdFor(x => x.ConnectionStringRaw)").is(':checked');
+                        if (connectionStringRaw) {
                             $('#sqlDatabaseInfo').hide();
                             $('#sqlDatabaseConnectionString').show();
+                        } else {
+                            $('#sqlDatabaseInfo').show();
+                            $('#sqlDatabaseConnectionString').hide();
                         }
                     }
-
-                    function toggleSqlAuthenticationType() {
-                        var selectedProvider = $("input[name=SqlAuthenticationType]:checked").attr('id');
-                        if (selectedProvider == 'sqlauthenticationtype_sql') {
-                            $('#pnlSqlServerCredentials').show();
-                        } else if (selectedProvider == 'sqlauthenticationtype_windows') {
-                            $('#pnlSqlServerCredentials').hide();
-                        }
-                    }
-
 
                     function toggleCollation() {
-                        if ($('#UseCustomCollation').is(':checked')) {
-                            $('#Collation').show();
+                        
+                        var connectionStringRaw = $("#@Html.IdFor(x => x.UseCustomCollation)").is(':checked');
+                        var collationInput = $("#@Html.IdFor(x => x.Collation)")
+                        if (connectionStringRaw) {
+                            collationInput.show();
                         } else {
-                            $('#Collation').hide();
+                            collationInput.hide();
                         }
                     }
                 </script>
@@ -153,7 +140,7 @@
                                     </label>
                                 </div>
                                 <div class="col-xs-7">
-                                    <input asp-for="AdminEmail" class="form-control"/>
+                                    <input asp-for="AdminEmail" class="form-control" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -208,125 +195,32 @@
                                     </label>
                                 </div>
                                 <div class="col-xs-7">
-                                    @*
-                                        starting version 4.10 we support MS SQL Server only. SQL Server Compact is not supported anymore
-                                        but we leave this code because we plan to support other databases soon (e.g. MySQL)
-                                        <div class="radio">
-                                            <label>
-                                                <input asp-for="DataProvider" value="sqlce" type="radio" checked="@(Model.DataProvider == "sqlce")" id="provider_sqlce"/>
-                                                @ILS.GetResource("SqlCompact")
-                                            </label>
-                                        </div>
-                                    *@
-                                    <div class="radio">
+                                    <nop-select asp-for="DataProvider" asp-items="Model.AvailableDataProviders" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-7 col-xs-offset-4">
+                                    <div class="checkbox">
                                         <label>
-                                            <input asp-for="DataProvider" value="sqlserver" type="radio" checked="@(Model.DataProvider == DataProviderType.SqlServer)" id="provider_sqlserver" />
-                                            @ILS.GetResource("SqlStandard") @*<strong>@ILS.GetResource("Recommended")</strong>*@
+                                            <nop-editor asp-for="CreateDatabaseIfNotExists" />
+                                            @ILS.GetResource("CreateDatabaseIfDoesNotExist")
                                         </label>
                                     </div>
                                 </div>
                             </div>
-
-                            <div id="sqlConnectionInfo">
-                                <hr />
-                                <div class="form-group">
-                                    <div class="col-xs-7 col-xs-offset-4">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input asp-for="SqlServerCreateDatabase"/>
-                                                @ILS.GetResource("CreateDatabaseIfDoesNotExist")
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-xs-4">
-                                        <label class="control-label">
-                                            @ILS.GetResource("ConnectionString")
+                            <div class="form-group">
+                                <div class="col-xs-7 col-xs-offset-4">
+                                    <div class="checkbox">
+                                        <label>
+                                            <nop-editor asp-for="ConnectionStringRaw" />
+                                            @ILS.GetResource("RawConnectionString")
                                         </label>
                                     </div>
-                                    <div class="col-xs-7">
-                                        <div class="radio">
-                                            <label>
-                                                <input asp-for="SqlConnectionInfo" value="sqlconnectioninfo_values" type="radio" checked="@(Model.SqlConnectionInfo == "sqlconnectioninfo_values")" id="sqlconnectioninfo_values" />
-                                                @ILS.GetResource("ConnectionStringValues")
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input asp-for="SqlConnectionInfo" value="sqlconnectioninfo_raw" type="radio" checked="@(Model.SqlConnectionInfo == "sqlconnectioninfo_raw")" id="sqlconnectioninfo_raw" />
-                                                @ILS.GetResource("RawConnectionString")
-                                            </label>
-                                        </div>
-                                    </div>
                                 </div>
-                                <div id="sqlDatabaseInfo">
-                                    <div class="credentials">
-                                        <div class="form-group">
-                                            <div class="col-xs-4">
-                                                <label class="control-label">
-                                                    @ILS.GetResource("SqlServerName")
-                                                </label>
-                                            </div>
-                                            <div class="col-xs-7">
-                                                <input asp-for="SqlServerName" class="form-control"/>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-xs-4">
-                                                <label class="control-label">
-                                                    @ILS.GetResource("DatabaseName")
-                                                </label>
-                                            </div>
-                                            <div class="col-xs-7">
-                                                <input asp-for="SqlDatabaseName" class="form-control" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-xs-4">
-                                            <label class="control-label">
-                                                @ILS.GetResource("SqlServerName")
-                                            </label>
-                                        </div>
-                                        <div class="col-xs-7">
-                                            <div class="radio">
-                                                <label>
-                                                    <input asp-for="SqlAuthenticationType" value="sqlauthentication" type="radio" checked="@(Model.SqlAuthenticationType == "sqlauthentication")" id="sqlauthenticationtype_sql" />
-                                                    @ILS.GetResource("SqlAuthentication")
-                                                </label>
-                                            </div>
-                                            <div class="radio">
-                                                <label>
-                                                    <input asp-for="SqlAuthenticationType" value="windowsauthentication" type="radio" checked="@(Model.SqlAuthenticationType == "windowsauthentication")" id="sqlauthenticationtype_windows" />
-                                                    @ILS.GetResource("WindowsAuthentication")
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="credentials" id="pnlSqlServerCredentials">
-                                        <div class="form-group">
-                                            <div class="col-xs-4">
-                                                <label class="control-label">
-                                                    @ILS.GetResource("SqlServerUsername")
-                                                </label>
-                                            </div>
-                                            <div class="col-xs-7">
-                                                <input asp-for="SqlServerUsername" class="form-control" />
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-xs-4">
-                                                <label class="control-label">
-                                                    @ILS.GetResource("SqlServerPassword")
-                                                </label>
-                                            </div>
-                                            <div class="col-xs-7">
-                                                <input asp-for="SqlServerPassword" class="form-control" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            </div>
+                            <div id="sqlConnectionInfo">
+                                <hr />
+                                @await Html.PartialAsync("_Install.ConnectionString", Model)
                                 <div class="form-group" id="sqlDatabaseConnectionString">
                                     <div class="col-xs-4">
                                         <label class="control-label">
@@ -334,7 +228,7 @@
                                         </label>
                                     </div>
                                     <div class="col-xs-7">
-                                        <input asp-for="DatabaseConnectionString" class="form-control" />
+                                        <input asp-for="ConnectionString" class="form-control" />
                                         <span class="hint">
                                             @ILS.GetResource("Example"):<br />
                                             Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User
@@ -351,7 +245,7 @@
                                                 <input asp-for="UseCustomCollation" />
                                                 @ILS.GetResource("CustomCollation")
                                             </label>
-                                            <input asp-for="Collation" class="form-control margin-t-10"/>
+                                            <input asp-for="Collation" class="form-control margin-t-10" />
                                         </div>
                                     </div>
                                 </div>

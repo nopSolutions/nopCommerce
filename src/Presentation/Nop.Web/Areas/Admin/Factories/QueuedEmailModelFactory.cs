@@ -18,6 +18,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Fields
 
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IEmailAccountService _emailAccountService;
         private readonly ILocalizationService _localizationService;
         private readonly IQueuedEmailService _queuedEmailService;
 
@@ -26,16 +27,36 @@ namespace Nop.Web.Areas.Admin.Factories
         #region Ctor
 
         public QueuedEmailModelFactory(IDateTimeHelper dateTimeHelper,
+            IEmailAccountService emailAccountService,
             ILocalizationService localizationService,
             IQueuedEmailService queuedEmailService)
         {
             _dateTimeHelper = dateTimeHelper;
+            _emailAccountService = emailAccountService;
             _localizationService = localizationService;
             _queuedEmailService = queuedEmailService;
         }
 
         #endregion
-        
+
+        #region Utilities
+
+        /// <summary>
+        /// Gets a friendly email account name
+        /// </summary>
+        protected virtual string GetEmailAccountName(EmailAccount emailAccount)
+        {
+            if (emailAccount == null)
+                return string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(emailAccount.DisplayName))
+                return emailAccount.Email + " (" + emailAccount.DisplayName + ")";
+
+            return emailAccount.Email;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -99,7 +120,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     queuedEmailModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(queuedEmail.CreatedOnUtc, DateTimeKind.Utc);
 
                     //fill in additional values (not existing in the entity)
-                    queuedEmailModel.EmailAccountName = queuedEmail.EmailAccount?.FriendlyName ?? string.Empty;
+                    queuedEmailModel.EmailAccountName = GetEmailAccountName(_emailAccountService.GetEmailAccountById(queuedEmail.EmailAccountId));
                     queuedEmailModel.PriorityName = _localizationService.GetLocalizedEnum(queuedEmail.Priority);
                     if (queuedEmail.DontSendBeforeDateUtc.HasValue)
                     {
@@ -130,9 +151,9 @@ namespace Nop.Web.Areas.Admin.Factories
                 return model;
 
             //fill in model values from the entity
-            model = model ?? queuedEmail.ToModel<QueuedEmailModel>();
+            model ??= queuedEmail.ToModel<QueuedEmailModel>();
 
-            model.EmailAccountName = queuedEmail.EmailAccount?.FriendlyName ?? string.Empty;
+            model.EmailAccountName = GetEmailAccountName(_emailAccountService.GetEmailAccountById(queuedEmail.EmailAccountId));
             model.PriorityName = _localizationService.GetLocalizedEnum(queuedEmail.Priority);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(queuedEmail.CreatedOnUtc, DateTimeKind.Utc);
 

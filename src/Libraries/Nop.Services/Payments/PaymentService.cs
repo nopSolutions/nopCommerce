@@ -4,9 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
+using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
+using Nop.Core.Http.Extensions;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Orders;
@@ -20,6 +22,7 @@ namespace Nop.Services.Payments
     {
         #region Fields
 
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -28,10 +31,12 @@ namespace Nop.Services.Payments
 
         #region Ctor
 
-        public PaymentService(IPaymentPluginManager paymentPluginManager,
+        public PaymentService(IHttpContextAccessor httpContextAccessor,
+            IPaymentPluginManager paymentPluginManager,
             PaymentSettings paymentSettings,
             ShoppingCartSettings shoppingCartSettings)
         {
+            _httpContextAccessor = httpContextAccessor;
             _paymentPluginManager = paymentPluginManager;
             _paymentSettings = paymentSettings;
             _shoppingCartSettings = shoppingCartSettings;
@@ -361,16 +366,14 @@ namespace Nop.Services.Payments
             var ds = new DictionarySerializer(request.CustomValues);
             var xs = new XmlSerializer(typeof(DictionarySerializer));
 
-            using (var textWriter = new StringWriter())
+            using var textWriter = new StringWriter();
+            using (var xmlWriter = XmlWriter.Create(textWriter))
             {
-                using (var xmlWriter = XmlWriter.Create(textWriter))
-                {
-                    xs.Serialize(xmlWriter, ds);
-                }
-
-                var result = textWriter.ToString();
-                return result;
+                xs.Serialize(xmlWriter, ds);
             }
+
+            var result = textWriter.ToString();
+            return result;
         }
 
         /// <summary>
@@ -388,14 +391,42 @@ namespace Nop.Services.Payments
 
             var serializer = new XmlSerializer(typeof(DictionarySerializer));
 
-            using (var textReader = new StringReader(order.CustomValuesXml))
+            using var textReader = new StringReader(order.CustomValuesXml);
+            using var xmlReader = XmlReader.Create(textReader);
+            if (serializer.Deserialize(xmlReader) is DictionarySerializer ds)
+                return ds.Dictionary;
+            return new Dictionary<string, object>();
+        }
+
+        /// <summary>
+        /// Generate an order GUID
+        /// </summary>
+        /// <param name="processPaymentRequest">Process payment request</param>
+        public virtual void GenerateOrderGuid(ProcessPaymentRequest processPaymentRequest)
+        {
+            if (processPaymentRequest == null)
+                return;
+
+            //we should use the same GUID for multiple payment attempts
+            //this way a payment gateway can prevent security issues such as credit card brute-force attacks
+            //in order to avoid any possible limitations by payment gateway we reset GUID periodically
+            var previousPaymentRequest = _httpContextAccessor.HttpContext.Session.Get<ProcessPaymentRequest>("OrderPaymentInfo");
+            if (_paymentSettings.RegenerateOrderGuidInterval > 0 &&
+                previousPaymentRequest != null &&
+                previousPaymentRequest.OrderGuidGeneratedOnUtc.HasValue)
             {
-                using (var xmlReader = XmlReader.Create(textReader))
+                var interval = DateTime.UtcNow - previousPaymentRequest.OrderGuidGeneratedOnUtc.Value;
+                if (interval.TotalSeconds < _paymentSettings.RegenerateOrderGuidInterval)
                 {
-                    if (serializer.Deserialize(xmlReader) is DictionarySerializer ds)
-                        return ds.Dictionary;
-                    return new Dictionary<string, object>();
+                    processPaymentRequest.OrderGuid = previousPaymentRequest.OrderGuid;
+                    processPaymentRequest.OrderGuidGeneratedOnUtc = previousPaymentRequest.OrderGuidGeneratedOnUtc;
                 }
+            }
+
+            if (processPaymentRequest.OrderGuid == Guid.Empty)
+            {
+                processPaymentRequest.OrderGuid = Guid.NewGuid();
+                processPaymentRequest.OrderGuidGeneratedOnUtc = DateTime.UtcNow;
             }
         }
 

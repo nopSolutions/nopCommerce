@@ -87,11 +87,21 @@
                                         <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <div class="col-md-8 col-md-offset-4">
-                                        <button type="button" id="search-categories" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchPublishedId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchPublishedId" asp-items="Model.AvailablePublishedOptions" />
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-7 col-md-offset-5">
+                                <button type="button" id="search-categories" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
                             </div>
                         </div>
                     </div>
@@ -110,7 +120,8 @@
                         Filters = new List<FilterParameter>
                         {
                             new FilterParameter(nameof(Model.SearchCategoryName)),
-                            new FilterParameter(nameof(Model.SearchStoreId))
+                            new FilterParameter(nameof(Model.SearchStoreId)),
+                            new FilterParameter(nameof(Model.SearchPublishedId))
                         },
                         ColumnCollection = new List<ColumnProperty>
                         {
@@ -172,9 +183,8 @@
                                 return false;
                             });
                         });
-
-                </script>
-                <nop-alert asp-alert-id="deleteSelectedFailed" />
+                    </script>
+                    <nop-alert asp-alert-id="deleteSelectedFailed" />
                 </div>
             </div>
         </div>

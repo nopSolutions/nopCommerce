@@ -277,27 +277,28 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="returnRequest">Return request</param>
         /// <param name="orderItem">Order item</param>
+        /// <param name="order">Order</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        IList<int> SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, OrderItem orderItem, int languageId);
+        IList<int> SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, OrderItem orderItem, Order order, int languageId);
 
         /// <summary>
         /// Sends 'New Return Request' message to a customer
         /// </summary>
         /// <param name="returnRequest">Return request</param>
         /// <param name="orderItem">Order item</param>
-        /// <param name="languageId">Message language identifier</param>
+        /// <param name="order">Order</param>
         /// <returns>Queued email identifier</returns>
-        IList<int> SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, int languageId);
+        IList<int> SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, Order order);
 
         /// <summary>
         /// Sends 'Return Request status changed' message to a customer
         /// </summary>
         /// <param name="returnRequest">Return request</param>
         /// <param name="orderItem">Order item</param>
-        /// <param name="languageId">Message language identifier</param>
+        /// <param name="order">Order</param>
         /// <returns>Queued email identifier</returns>
-        IList<int> SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, int languageId);
+        IList<int> SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, Order order);
 
         #endregion
 

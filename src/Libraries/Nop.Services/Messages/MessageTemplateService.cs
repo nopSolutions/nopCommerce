@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Stores;
+using Nop.Data;
+using Nop.Services.Caching;
+using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
@@ -20,7 +22,8 @@ namespace Nop.Services.Messages
         #region Fields
 
         private readonly CatalogSettings _catalogSettings;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheKeyService _cacheKeyService;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -34,7 +37,8 @@ namespace Nop.Services.Messages
         #region Ctor
 
         public MessageTemplateService(CatalogSettings catalogSettings,
-            ICacheManager cacheManager,
+            ICacheKeyService cacheKeyService,
+            IStaticCacheManager staticCacheManager,
             IEventPublisher eventPublisher,
             ILanguageService languageService,
             ILocalizationService localizationService,
@@ -44,7 +48,8 @@ namespace Nop.Services.Messages
             IStoreMappingService storeMappingService)
         {
             _catalogSettings = catalogSettings;
-            _cacheManager = cacheManager;
+            _cacheKeyService = cacheKeyService;
+            _staticCacheManager = staticCacheManager;
             _eventPublisher = eventPublisher;
             _languageService = languageService;
             _localizationService = localizationService;
@@ -69,8 +74,6 @@ namespace Nop.Services.Messages
 
             _messageTemplateRepository.Delete(messageTemplate);
 
-            _cacheManager.RemoveByPrefix(NopMessageDefaults.MessageTemplatesPrefixCacheKey);
-
             //event notification
             _eventPublisher.EntityDeleted(messageTemplate);
         }
@@ -85,8 +88,6 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException(nameof(messageTemplate));
 
             _messageTemplateRepository.Insert(messageTemplate);
-
-            _cacheManager.RemoveByPrefix(NopMessageDefaults.MessageTemplatesPrefixCacheKey);
 
             //event notification
             _eventPublisher.EntityInserted(messageTemplate);
@@ -103,8 +104,6 @@ namespace Nop.Services.Messages
 
             _messageTemplateRepository.Update(messageTemplate);
 
-            _cacheManager.RemoveByPrefix(NopMessageDefaults.MessageTemplatesPrefixCacheKey);
-
             //event notification
             _eventPublisher.EntityUpdated(messageTemplate);
         }
@@ -119,7 +118,7 @@ namespace Nop.Services.Messages
             if (messageTemplateId == 0)
                 return null;
 
-            return _messageTemplateRepository.GetById(messageTemplateId);
+            return _messageTemplateRepository.ToCachedGetById(messageTemplateId);
         }
 
         /// <summary>
@@ -133,8 +132,9 @@ namespace Nop.Services.Messages
             if (string.IsNullOrWhiteSpace(messageTemplateName))
                 throw new ArgumentException(nameof(messageTemplateName));
 
-            var key = string.Format(NopMessageDefaults.MessageTemplatesByNameCacheKey, messageTemplateName, storeId ?? 0);
-            return _cacheManager.Get(key, () =>
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesByNameCacheKey, messageTemplateName, storeId);
+
+            return _staticCacheManager.Get(key, () =>
             {
                 //get message templates with the passed name
                 var templates = _messageTemplateRepository.Table
@@ -156,27 +156,35 @@ namespace Nop.Services.Messages
         /// <returns>Message template list</returns>
         public virtual IList<MessageTemplate> GetAllMessageTemplates(int storeId)
         {
-            var key = string.Format(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = _messageTemplateRepository.Table;
-                query = query.OrderBy(t => t.Name);
-                
-                if (storeId <= 0 || _catalogSettings.IgnoreStoreLimitations) 
-                    return query.ToList();
-                
-                //store mapping
-                query = from t in query
-                    join sm in _storeMappingRepository.Table
-                        on new { c1 = t.Id, c2 = nameof(MessageTemplate) } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into tSm
-                    from sm in tSm.DefaultIfEmpty()
-                    where !t.LimitedToStores || storeId == sm.StoreId
-                    select t;
+            var key = _cacheKeyService.PrepareKeyForDefaultCache(NopMessageDefaults.MessageTemplatesAllCacheKey, storeId);
 
-                query = query.Distinct().OrderBy(t => t.Name);
+            var query = _messageTemplateRepository.Table;
+            query = query.OrderBy(t => t.Name);
 
-                return query.ToList();
-            });
+            if (storeId <= 0 || _catalogSettings.IgnoreStoreLimitations)
+                return query.ToCachedList(key);
+
+            //store mapping
+            query = from t in query
+                join sm in _storeMappingRepository.Table
+                    on new
+                    {
+                        c1 = t.Id,
+                        c2 = nameof(MessageTemplate)
+                    } 
+                    equals new
+                    {
+                        c1 = sm.EntityId,
+                        c2 = sm.EntityName
+                    } 
+                    into tSm
+                from sm in tSm.DefaultIfEmpty()
+                where !t.LimitedToStores || storeId == sm.StoreId
+                select t;
+
+            query = query.Distinct().OrderBy(t => t.Name);
+
+            return query.ToCachedList(key);
         }
 
         /// <summary>

@@ -1,0 +1,25 @@
+@model FacebookPixelModel
+
+@{
+    Layout = "_AdminLayout";
+    ViewBag.PageTitle = T("Admin.Common.AddNew").Text;
+}
+
+<form asp-controller="FacebookPixel" asp-action="Create" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Common.AddNew")
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="Configure" asp-controller="FacebookPixel">@T("Common.Back")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+    @await Html.PartialAsync("~/Plugins/Widgets.FacebookPixel/Views/Configuration/_CreateOrUpdate.cshtml", Model)
+</form>

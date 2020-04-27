@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nop.Core;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 
@@ -54,75 +53,16 @@ namespace Nop.Services.Discounts
         void UpdateDiscount(Discount discount);
 
         /// <summary>
-        /// Get categories for which a discount is applied
+        /// Gets discounts applied to entity
         /// </summary>
-        /// <param name="discountId">Discount identifier; pass null to load all records</param>
-        /// <param name="showHidden">A value indicating whether to load deleted categories</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns>List of categories</returns>
-        IPagedList<Category> GetCategoriesWithAppliedDiscount(int? discountId = null,
-            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue);
-
-        /// <summary>
-        /// Get manufacturers for which a discount is applied
-        /// </summary>
-        /// <param name="discountId">Discount identifier; pass null to load all records</param>
-        /// <param name="showHidden">A value indicating whether to load deleted manufacturers</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns>List of manufacturers</returns>
-        IPagedList<Manufacturer> GetManufacturersWithAppliedDiscount(int? discountId = null,
-            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue);
-
-        /// <summary>
-        /// Get products to which a discount is applied
-        /// </summary>
-        /// <param name="discountId">Discount identifier; pass null to load all records</param>
-        /// <param name="showHidden">A value indicating whether to load deleted products</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns>List of products</returns>
-        IPagedList<Product> GetProductsWithAppliedDiscount(int? discountId = null,
-            bool showHidden = false, int pageIndex = 0, int pageSize = int.MaxValue);
+        /// <typeparam name="T">Type based on <see cref="DiscountMapping" /></typeparam>
+        /// <param name="entity">Entity which supports discounts (<see cref="IDiscountSupported{T}" />)</param>
+        /// <returns>List of discounts</returns>
+        IList<Discount> GetAppliedDiscounts<T>(IDiscountSupported<T> entity) where T : DiscountMapping;
 
         #endregion
 
         #region Discounts (caching)
-
-        /// <summary>
-        /// Gets all discounts (cacheable models)
-        /// </summary>
-        /// <param name="discountType">Discount type; pass null to load all records</param>
-        /// <param name="couponCode">Coupon code to find (exact match); pass null or empty to load all records</param>
-        /// <param name="discountName">Discount name; pass null or empty to load all records</param>
-        /// <param name="showHidden">A value indicating whether to show expired and not started discounts</param>
-        /// <returns>Discounts</returns>
-        IList<DiscountForCaching> GetAllDiscountsForCaching(DiscountType? discountType = null,
-            string couponCode = null, string discountName = null, bool showHidden = false);
-
-        /// <summary>
-        /// Get category identifiers to which a discount is applied
-        /// </summary>
-        /// <param name="discount">Discount</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Category identifiers</returns>
-        IList<int> GetAppliedCategoryIds(DiscountForCaching discount, Customer customer);
-
-        /// <summary>
-        /// Get manufacturer identifiers to which a discount is applied
-        /// </summary>
-        /// <param name="discount">Discount</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Manufacturer identifiers</returns>
-        IList<int> GetAppliedManufacturerIds(DiscountForCaching discount, Customer customer);
-
-        /// <summary>
-        /// Map a discount to the same class for caching
-        /// </summary>
-        /// <param name="discount">Discount</param>
-        /// <returns>Result</returns>
-        DiscountForCaching MapDiscount(Discount discount);
 
         /// <summary>
         /// Gets the discount amount for the specified value
@@ -130,7 +70,7 @@ namespace Nop.Services.Discounts
         /// <param name="discount">Discount</param>
         /// <param name="amount">Amount</param>
         /// <returns>The discount amount</returns>
-        decimal GetDiscountAmount(DiscountForCaching discount, decimal amount);
+        decimal GetDiscountAmount(Discount discount, decimal amount);
 
         /// <summary>
         /// Get preferred discount (with maximum discount value)
@@ -139,7 +79,7 @@ namespace Nop.Services.Discounts
         /// <param name="amount">Amount (initial value)</param>
         /// <param name="discountAmount">Discount amount</param>
         /// <returns>Preferred discount</returns>
-        List<DiscountForCaching> GetPreferredDiscount(IList<DiscountForCaching> discounts,
+        List<Discount> GetPreferredDiscount(IList<Discount> discounts,
             decimal amount, out decimal discountAmount);
 
         /// <summary>
@@ -148,7 +88,7 @@ namespace Nop.Services.Discounts
         /// <param name="discounts">A list of discounts</param>
         /// <param name="discount">Discount to check</param>
         /// <returns>Result</returns>
-        bool ContainsDiscount(IList<DiscountForCaching> discounts, DiscountForCaching discount);
+        bool ContainsDiscount(IList<Discount> discounts, Discount discount);
 
         #endregion
 
@@ -163,10 +103,35 @@ namespace Nop.Services.Discounts
         IList<DiscountRequirement> GetAllDiscountRequirements(int discountId = 0, bool topLevelOnly = false);
 
         /// <summary>
+        /// Get a discount requirement
+        /// </summary>
+        /// <param name="discountRequirementId">Discount requirement identifier</param>
+        DiscountRequirement GetDiscountRequirementById(int discountRequirementId);
+
+        /// <summary>
+        /// Gets child discount requirements
+        /// </summary>
+        /// <param name="discountRequirement">Parent discount requirement</param>
+        IList<DiscountRequirement> GetDiscountRequirementsByParent(DiscountRequirement discountRequirement);
+
+        /// <summary>
         /// Delete discount requirement
         /// </summary>
         /// <param name="discountRequirement">Discount requirement</param>
-        void DeleteDiscountRequirement(DiscountRequirement discountRequirement);
+        /// <param name="recursively">A value indicating whether to recursively delete child requirements</param>
+        void DeleteDiscountRequirement(DiscountRequirement discountRequirement, bool recursively);
+
+        /// <summary>
+        /// Inserts a discount requirement
+        /// </summary>
+        /// <param name="discountRequirement">Discount requirement</param>
+        void InsertDiscountRequirement(DiscountRequirement discountRequirement);
+
+        /// <summary>
+        /// Updates a discount requirement
+        /// </summary>
+        /// <param name="discountRequirement">Discount requirement</param>
+        void UpdateDiscountRequirement(DiscountRequirement discountRequirement);
 
         #endregion
 
@@ -188,23 +153,6 @@ namespace Nop.Services.Discounts
         /// <param name="couponCodesToValidate">Coupon codes to validate</param>
         /// <returns>Discount validation result</returns>
         DiscountValidationResult ValidateDiscount(Discount discount, Customer customer, string[] couponCodesToValidate);
-
-        /// <summary>
-        /// Validate discount
-        /// </summary>
-        /// <param name="discount">Discount</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Discount validation result</returns>
-        DiscountValidationResult ValidateDiscount(DiscountForCaching discount, Customer customer);
-
-        /// <summary>
-        /// Validate discount
-        /// </summary>
-        /// <param name="discount">Discount</param>
-        /// <param name="customer">Customer</param>
-        /// <param name="couponCodesToValidate">Coupon codes to validate</param>
-        /// <returns>Discount validation result</returns>
-        DiscountValidationResult ValidateDiscount(DiscountForCaching discount, Customer customer, string[] couponCodesToValidate);
 
         #endregion
 

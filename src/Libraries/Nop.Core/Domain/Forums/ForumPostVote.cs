@@ -26,10 +26,5 @@ namespace Nop.Core.Domain.Forums
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-
-        /// <summary>
-        /// Gets the post
-        /// </summary>
-        public virtual ForumPost ForumPost { get; set; }
     }
 }

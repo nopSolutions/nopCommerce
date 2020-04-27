@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
 using Nop.Core;
-using Nop.Core.Data;
 using Nop.Core.Domain.Security;
+using Nop.Data;
 using Nop.Services.Logging;
 
 namespace Nop.Web.Framework.Mvc.Filters
@@ -12,7 +12,7 @@ namespace Nop.Web.Framework.Mvc.Filters
     /// <summary>
     /// Represents a filter attribute enabling honeypot validation
     /// </summary>
-    public class ValidateHoneypotAttribute : TypeFilterAttribute
+    public sealed class ValidateHoneypotAttribute : TypeFilterAttribute
     {
         #region Ctor
 

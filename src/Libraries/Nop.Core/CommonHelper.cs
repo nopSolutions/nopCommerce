@@ -1,11 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Nop.Core.Infrastructure;
 
@@ -19,7 +18,7 @@ namespace Nop.Core
         #region Fields
 
         //we use EmailValidator from FluentValidation. So let's keep them sync - https://github.com/JeremySkinner/FluentValidation/blob/master/src/FluentValidation/Validators/EmailValidator.cs
-        private const string _emailExpression = @"^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-||_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+([a-z]+|\d|-|\.{0,1}|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])?([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$";
+        private const string EMAIL_EXPRESSION = @"^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-||_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+([a-z]+|\d|-|\.{0,1}|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])?([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$";
 
         private static readonly Regex _emailRegex;
 
@@ -29,7 +28,7 @@ namespace Nop.Core
 
         static CommonHelper()
         {
-            _emailRegex = new Regex(_emailExpression, RegexOptions.IgnoreCase);
+            _emailRegex = new Regex(EMAIL_EXPRESSION, RegexOptions.IgnoreCase);
         }
 
         #endregion
@@ -77,7 +76,7 @@ namespace Nop.Core
         /// <returns>true if the string is a valid IpAddress and false if it's not</returns>
         public static bool IsValidIpAddress(string ipAddress)
         {
-            return IPAddress.TryParse(ipAddress, out IPAddress _);
+            return IPAddress.TryParse(ipAddress, out var _);
         }
 
         /// <summary>
@@ -87,7 +86,7 @@ namespace Nop.Core
         /// <returns>Result string</returns>
         public static string GenerateRandomDigitCode(int length)
         {
-            var random = new Random();
+            using var random = new SecureRandomNumberGenerator();
             var str = string.Empty;
             for (var i = 0; i < length; i++)
                 str = string.Concat(str, random.Next(10).ToString());
@@ -102,9 +101,8 @@ namespace Nop.Core
         /// <returns>Result</returns>
         public static int GenerateRandomInteger(int min = 0, int max = int.MaxValue)
         {
-            var randomNumberBuffer = new byte[10];
-            new RNGCryptoServiceProvider().GetBytes(randomNumberBuffer);
-            return new Random(BitConverter.ToInt32(randomNumberBuffer, 0)).Next(min, max);
+            using var random = new SecureRandomNumberGenerator();
+            return random.Next(min, max);
         }
 
         /// <summary>
@@ -205,7 +203,7 @@ namespace Nop.Core
                 throw new NopException("The property '{0}' on the instance of type '{1}' does not have a setter.", propertyName, instanceType);
             if (value != null && !value.GetType().IsAssignableFrom(pi.PropertyType))
                 value = To(value, pi.PropertyType);
-            pi.SetValue(instance, value, new object[0]);
+            pi.SetValue(instance, value, Array.Empty<object>());
         }
 
         /// <summary>
@@ -283,18 +281,6 @@ namespace Nop.Core
         }
 
         /// <summary>
-        /// Set Telerik (Kendo UI) culture
-        /// </summary>
-        public static void SetTelerikCulture()
-        {
-            //little hack here
-            //always set culture to 'en-US' (Kendo UI has a bug related to editing decimal values in other cultures)
-            var culture = new CultureInfo("en-US");
-            CultureInfo.CurrentCulture = culture;
-            CultureInfo.CurrentUICulture = culture;
-        }
-
-        /// <summary>
         /// Get difference in years
         /// </summary>
         /// <param name="startDate"></param>
@@ -320,7 +306,7 @@ namespace Nop.Core
         {
             if (target == null)
             {
-                throw new ArgumentNullException("target", "The assignment target cannot be null.");
+                throw new ArgumentNullException(nameof(target), "The assignment target cannot be null.");
             }
 
             if (string.IsNullOrEmpty(fieldName))
@@ -335,7 +321,8 @@ namespace Nop.Core
             {
                 fi = t.GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
 
-                if (fi != null) break;
+                if (fi != null)
+                    break;
 
                 t = t.BaseType;
             }

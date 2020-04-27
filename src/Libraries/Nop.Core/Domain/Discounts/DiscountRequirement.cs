@@ -1,14 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace Nop.Core.Domain.Discounts
+﻿namespace Nop.Core.Domain.Discounts
 {
     /// <summary>
     /// Represents a discount requirement
     /// </summary>
     public partial class DiscountRequirement : BaseEntity
     {
-        private ICollection<DiscountRequirement> _childRequirements;
-
         /// <summary>
         /// Gets or sets the discount identifier
         /// </summary>
@@ -41,20 +37,6 @@ namespace Nop.Core.Domain.Discounts
         {
             get => (RequirementGroupInteractionType?)InteractionTypeId;
             set => InteractionTypeId = (int?)value;
-        }
-
-        /// <summary>
-        /// Gets or sets the discount
-        /// </summary>
-        public virtual Discount Discount { get; set; }
-
-        /// <summary>
-        /// Gets or sets the child discount requirements
-        /// </summary>
-        public virtual ICollection<DiscountRequirement> ChildRequirements
-        {
-            get => _childRequirements ?? (_childRequirements = new List<DiscountRequirement>());
-            protected set => _childRequirements = value;
         }
     }
 }

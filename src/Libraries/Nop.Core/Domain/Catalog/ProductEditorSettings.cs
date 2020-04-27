@@ -48,11 +48,6 @@ namespace Nop.Core.Domain.Catalog
         public bool ShowOnHomepage { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether 'Display order 'field is shown
-        /// </summary>
-        public bool DisplayOrder { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether 'Allow customer reviews' field is shown
         /// </summary>
         public bool AllowCustomerReviews { get; set; }
@@ -125,7 +120,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets a value indicating whether 'Require other products added to the cart' field is shown
         /// </summary>
-        public bool RequireOtherProductsAddedToTheCart { get; set; }
+        public bool RequireOtherProductsAddedToCart { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Is gift card' field is shown
@@ -191,11 +186,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether 'Display stock availability' field is shown
         /// </summary>
         public bool DisplayStockAvailability { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether 'Display stock quantity' field is shown
-        /// </summary>
-        public bool DisplayStockQuantity { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Minimum stock quantity' field is shown
@@ -271,16 +261,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether 'Mark as new' field is shown
         /// </summary>
         public bool MarkAsNew { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether 'Mark as new. Start date' field is shown
-        /// </summary>
-        public bool MarkAsNewStartDate { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether 'Mark as new. End date' field is shown
-        /// </summary>
-        public bool MarkAsNewEndDate { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Published' field is shown

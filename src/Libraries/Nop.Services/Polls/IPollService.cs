@@ -1,4 +1,4 @@
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Polls;
 
 namespace Nop.Services.Polls
@@ -26,8 +26,8 @@ namespace Nop.Services.Polls
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Polls</returns>
-        IPagedList<Poll> GetPolls(int storeId, int languageId = 0, bool
-            showHidden = false, bool loadShownOnHomepageOnly = false, string systemKeyword = null,
+        IPagedList<Poll> GetPolls(int storeId, int languageId = 0, bool showHidden = false,
+            bool loadShownOnHomepageOnly = false, string systemKeyword = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -47,19 +47,40 @@ namespace Nop.Services.Polls
         /// </summary>
         /// <param name="poll">Poll</param>
         void UpdatePoll(Poll poll);
-        
+
         /// <summary>
         /// Gets a poll answer
         /// </summary>
         /// <param name="pollAnswerId">Poll answer identifier</param>
         /// <returns>Poll answer</returns>
         PollAnswer GetPollAnswerById(int pollAnswerId);
-        
+
+        /// <summary>
+        /// Gets a poll answers by parent poll
+        /// </summary>
+        /// <param name="pollId">The poll identifier</param>
+        /// <returns>Poll answer</returns>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        IPagedList<PollAnswer> GetPollAnswerByPoll(int pollId, int pageIndex = 0, int pageSize = int.MaxValue);
+
         /// <summary>
         /// Deletes a poll answer
         /// </summary>
         /// <param name="pollAnswer">Poll answer</param>
         void DeletePollAnswer(PollAnswer pollAnswer);
+
+        /// <summary>
+        /// Inserts a poll answer
+        /// </summary>
+        /// <param name="pollAnswer">Poll answer</param>
+        void InsertPollAnswer(PollAnswer pollAnswer);
+
+        /// <summary>
+        /// Updates the poll answer
+        /// </summary>
+        /// <param name="pollAnswer">Poll answer</param>
+        void UpdatePollAnswer(PollAnswer pollAnswer);
 
         /// <summary>
         /// Gets a value indicating whether customer already voted for this poll
@@ -68,5 +89,20 @@ namespace Nop.Services.Polls
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Result</returns>
         bool AlreadyVoted(int pollId, int customerId);
+
+        /// <summary>
+        /// Inserts a poll voting record
+        /// </summary>
+        /// <param name="pollVotingRecord">Voting record</param>
+        void InsertPollVotingRecord(PollVotingRecord pollVotingRecord);
+
+        /// <summary>
+        /// Gets a poll voting records by parent answer
+        /// </summary>
+        /// <param name="pollAnswerId">Poll answer identifier</param>
+        /// <returns>Poll answer</returns>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        IPagedList<PollVotingRecord> GetPollVotingRecordsByPollAnswer(int pollAnswerId, int pageIndex = 0, int pageSize = int.MaxValue);
     }
 }

@@ -1,0 +1,594 @@
+/*!
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// common mobile css
+
+.k-pane-wrapper {
+    position: relative;
+    font-size: 14px;
+
+    .k-pane {
+        width: 100%;
+        height: 100%;
+        user-select: none;
+        box-sizing: border-box;
+        font-family: sans-serif;
+        overflow-x: hidden;
+    }
+
+    .k-view {
+        top: 0;
+        left: 0;
+        position: relative;
+        border: 0;
+        .flexbox();
+        height: 100%;
+        width: 100%;
+        .flex-direction(column);
+        .flex-align-items(stretch);
+        .flex-align-content(stretch);
+        vertical-align: top;
+    }
+
+    .k-content {
+        min-height: 1px;
+        .flex(1);
+        .flex-align-items(stretch);
+        display: block;
+        width: auto;
+        overflow: hidden;
+        position: relative;
+    }
+}
+
+// /common mobile css
+
+.k-pane-wrapper {
+
+    .k-grid-edit-form,
+    .k-grid-column-menu,
+    .k-grid-filter-menu,
+    .k-scheduler-edit-form {
+
+        > .k-header {
+            display: flex;
+            justify-content: space-between;
+            padding: .3em .6em;
+            width: auto;
+            line-height: 2em;
+
+            .k-header-done,
+            .k-header-cancel {
+
+                .k-icon {
+                    font-size: 1.5em;
+                }
+            }
+        }
+    }
+
+    .k-grid-edit-row .k-textbox {
+        box-sizing: border-box;
+    }
+
+    .k-ie & {
+        .k-scheduler {
+            .k-scheduler-toolbar,
+            .k-scheduler-footer {
+                line-height: 2em;
+            }
+        }
+    }
+}
+
+// Adaptive Grid
+
+.k-pane-wrapper {
+
+    > div.k-pane {
+        .box-shadow(none);
+        font-weight: normal;
+    }
+
+    .k-popup-edit-form,
+    .k-grid-edit-form,
+    .k-grid-column-menu,
+    .k-grid-filter-menu {
+
+        .k-content {
+            overflow-y: auto;
+
+            > .k-scroll-container {
+                position: absolute;
+                width: 100%;
+                min-height: 100%;
+                .box-sizing(border-box);
+            }
+        }
+    }
+
+    .k-grid-filter-menu {
+
+        .k-filter-selected-items {
+            margin: 1em;
+            font-weight: normal;
+        }
+    }
+
+    .k-grid-edit-form {
+
+        .k-popup-edit-form,
+        .k-edit-form-container {
+            width: auto;
+        }
+    }
+
+    .k-grid .k-grid-search {
+        width: 100%;
+        margin-left: 0;
+        margin-top: @grid-header-padding-y;
+
+        // Remove top margin if search is the first child within the grid toolbar
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+}
+
+.k-grid-mobile {
+    border-width: 0;
+
+    .k-resize-handle-inner::before {
+        content: "\e01e";
+        position: absolute;
+        // The Calc is needed due to the the negative margin
+        // that removes the double bottom border of the header
+        top: calc(50% - 1px);
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: .2em;
+    }
+
+    .k-edit-cell > input,
+    .k-edit-cell > select,
+    .k-grid-edit-row > td > input,
+    .k-grid-edit-row > td > select {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .k-header a {
+        -webkit-touch-callout: none;
+
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+
+        -webkit-user-drag: none;
+        -moz-user-drag: none;
+    }
+}
+
+// Adaptive Scheduler
+
+.k-pane-wrapper {
+
+    .k-scheduler-edit-form {
+
+        .k-recur-view {
+            padding: 0;
+            flex-direction: column;
+            align-items: stretch;
+
+            > .k-listgroup-form-row {
+                margin: 0;
+            }
+        }
+
+        .k-recur-items-wrap {
+            width: 100%;
+            margin: -1px 0;
+        }
+
+        .k-scheduler-recur-end-wrap {
+            white-space: nowrap;
+        }
+    }
+}
+
+.k-scheduler-mobile {
+    border-width: 0;
+
+    th {
+        font-weight: normal;
+    }
+
+    .k-scheduler-toolbar {
+        display: flex;
+        justify-content: space-between;
+
+        .k-scheduler-tools {
+            margin: 0;
+
+            .k-button {
+                padding: 4px;
+
+                span {
+                    margin: 0;
+                }
+            }
+        }
+
+        .k-i-calendar {
+            display: inline-block;
+        }
+
+        .k-scheduler-navigation {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin: 0;
+
+            .k-nav-prev,
+            .k-nav-current,
+            .k-nav-next {
+                border: 0;
+                background: none;
+                display: flex;
+                line-height: 1.5;
+                align-items: center;
+                justify-content: space-evenly;
+            }
+
+            .k-y-date-format {
+                font-size: 9px;
+            }
+
+            .k-nav-current {
+                flex-direction: column;
+            }
+        }
+    }
+
+    .k-scheduler-footer {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .k-scheduler-monthview {
+
+        .k-hidden {
+            height: 40px;
+        }
+
+        .k-scheduler-table td {
+            height: 40px;
+            vertical-align: top;
+            text-align: center;
+        }
+
+        .k-events-container {
+            position: absolute;
+            text-align: center;
+            height: 6px;
+            line-height: 6px;
+        }
+
+        .k-event {
+            position: static;
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            min-height: 0;
+            margin: 1px;
+        }
+    }
+
+    // Removing the "Days" header from the Mobile Scheduler will break the Web Scheduler
+    // Thus, the below selector is needed
+    .k-scheduler-dayview .k-mobile-header {
+
+        &.k-mobile-horizontal-header .k-scheduler-times table tr:first-child {
+            display: none;
+        }
+
+        .k-scheduler-header .k-scheduler-date-group {
+            display: none;
+        }
+    }
+
+    .k-scheduler-agendaview {
+        .k-mobile-header {
+            display: none;
+        }
+
+        .k-scheduler-table {
+            table-layout: auto;
+
+            .k-scheduler-groupcolumn {
+                width: 1%;
+            }
+        }
+    }
+
+    .k-mobile-header {
+        .k-scheduler-table td,
+        .k-scheduler-table th {
+            height: 1.5em;
+        }
+    }
+
+    .k-scheduler-table td,
+    .k-scheduler-table th {
+        height: 2em;
+        vertical-align: middle;
+    }
+
+    .k-scheduler-times th {
+        font-size: 1em;
+    }
+
+    .k-scheduler-datecolumn-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .k-task {
+        display: flex;
+        align-items: center;
+
+        .k-scheduler-mark {
+            border-radius: 50%;
+        }
+
+        .k-i-reload {
+            font-size: 1em;
+            margin-right: .5em;
+        }
+
+        .k-scheduler-task-text {
+            flex: 1 1 0%;
+        }
+    }
+
+    .k-scheduler-times,
+    .k-scheduler-agenda {
+
+        .k-scheduler-group-cell,
+        .k-scheduler-groupcolumn {
+            vertical-align: top;
+
+            .k-scheduler-group-text {
+                writing-mode: vertical-lr;
+                transform: rotate(180deg);
+                white-space: nowrap;
+            }
+        }
+    }
+
+    .k-scrollbar-h tr + tr .k-scheduler-times {
+        border-bottom-width: 0;
+    }
+}
+
+// Adaptive Grid & Scheduler
+
+.k-pane-wrapper {
+    .k-pane * {
+        background-clip: border-box;
+    }
+
+    .k-list-title,
+    .k-filter-help-text {
+        padding: @listgroup-item-padding-y @listgroup-item-padding-x;
+        display: block;
+    }
+
+    .k-listgroup {
+
+        .k-listgroup-item {
+            border-color: inherit;
+        }
+
+    }
+    .k-listgroup + .k-listgroup {
+        margin-top: 2em;
+    }
+
+
+    // Column menu
+    .k-column-menu {
+
+
+        .k-filter-item .k-filterable * {
+            pointer-events: none;
+        }
+    }
+
+
+    // Filter menu
+    .k-filter-menu {
+        padding: 0;
+
+        .k-space-right {
+            border: 0;
+            padding: 0 10px;
+            background: 0;
+
+            > input {
+                width: 100%;
+                height: 2em;
+                padding: 1px 0;
+                margin: 0;
+                border-radius: 3px;
+                text-indent: 1em;
+                border-width: 1px;
+                border-style: solid;
+            }
+
+            > .k-i-zoom {
+                right: 15px;
+                z-index: 2;
+            }
+        }
+
+        .k-filter-tools {
+            margin: 1em;
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+
+    .k-popup-edit-form {
+
+        .k-recur-editor-wrap {
+            display: flex;
+        }
+
+        .k-mobiletimezoneeditor {
+            width: 100;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            position: relative;
+            flex: 1 1 auto;
+        }
+    }
+
+    .k-multicheck-wrap.k-listgroup {
+        overflow-y: auto;
+    }
+
+    .k-state-disabled {
+        opacity: 1;
+
+        > * {
+            opacity: .7;
+        }
+    }
+}
+
+.k-pane-wrapper {
+
+    .k-ie & {
+
+        .k-grid {
+
+            .k-icon {
+                text-indent: 0;
+            }
+        }
+    }
+}
+
+// Pager
+
+.k-pane-wrapper .k-pager-wrap.k-pager-sm {
+    justify-content: center;
+
+    .k-pager-refresh {
+        display: none;
+    }
+
+}
+
+// Mobile Scroller
+
+.km-scroll-container {
+    .prohibit-selection;
+    -webkit-margin-collapse: separate;
+    -webkit-transform: translatez(0);
+}
+
+.k-widget .km-scroll-wrapper {
+    position: relative;
+    padding-bottom: 0;
+}
+
+.km-touch-scrollbar {
+    position: absolute;
+    visibility: hidden;
+    z-index: 200000;
+    height: .3em;
+    width: .3em;
+    background-color: rgba(0,0,0,.7);
+    opacity: 0;
+    transition: opacity 0.3s linear;
+}
+
+.km-vertical-scrollbar {
+    height: 100%;
+    right: 2px;
+    top: 2px;
+}
+
+.km-horizontal-scrollbar {
+    width: 100%;
+    left: 2px;
+    bottom: 2px;
+}
+
+// RTL
+
+.k-pane-wrapper {
+
+    .k-rtl &,
+    &[dir="rtl"],
+    [dir="rtl"] & {
+
+        .k-grid-edit-form,
+        .k-grid-column-menu,
+        .k-grid-filter-menu,
+        .k-scheduler-edit-form {
+
+            > .k-header {
+                flex-direction: row-reverse;
+            }
+        }
+
+        .k-filter-menu {
+
+            .k-space-right > .k-i-zoom {
+                left: 15px;
+                right: auto;
+            }
+        }
+
+        .k-scheduler-mobile {
+
+            .k-scheduler-toolbar {
+
+                > ul > li {
+                    border: 0;
+                }
+
+                .k-nav-prev,
+                .k-nav-next {
+                    transform: scaleX(-1);
+                }
+            }
+
+            .k-task .k-i-reload {
+                margin-left: .5em;
+                margin-right: 0;
+            }
+        }
+
+        .k-scheduler-edit-form .k-item .k-i-arrow-chevron-right {
+            transform: scaleX(-1);
+        }
+    }
+}

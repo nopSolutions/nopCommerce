@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Services.Authentication.External;
+using Nop.Services.Caching;
 using Nop.Services.Cms;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
@@ -31,13 +32,14 @@ namespace Nop.Web.Areas.Admin.Factories
         private readonly IAclSupportedModelFactory _aclSupportedModelFactory;
         private readonly IAuthenticationPluginManager _authenticationPluginManager;
         private readonly IBaseAdminModelFactory _baseAdminModelFactory;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly IPaymentPluginManager _paymentPluginManager;
         private readonly IPickupPluginManager _pickupPluginManager;
         private readonly IPluginService _pluginService;
         private readonly IShippingPluginManager _shippingPluginManager;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreMappingSupportedModelFactory _storeMappingSupportedModelFactory;
         private readonly ITaxPluginManager _taxPluginManager;
         private readonly IWidgetPluginManager _widgetPluginManager;
@@ -51,14 +53,14 @@ namespace Nop.Web.Areas.Admin.Factories
         public PluginModelFactory(IAclSupportedModelFactory aclSupportedModelFactory,
             IAuthenticationPluginManager authenticationPluginManager,
             IBaseAdminModelFactory baseAdminModelFactory,
+            ICacheKeyService cacheKeyService,
             ILocalizationService localizationService,
             ILocalizedModelFactory localizedModelFactory,
             IPaymentPluginManager paymentPluginManager,
             IPickupPluginManager pickupPluginManager,
             IPluginService pluginService,
             IShippingPluginManager shippingPluginManager,
-            IShippingService shippingService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IStoreMappingSupportedModelFactory storeMappingSupportedModelFactory,
             ITaxPluginManager taxPluginManager,
             IWidgetPluginManager widgetPluginManager,
@@ -68,13 +70,14 @@ namespace Nop.Web.Areas.Admin.Factories
             _aclSupportedModelFactory = aclSupportedModelFactory;
             _authenticationPluginManager = authenticationPluginManager;
             _baseAdminModelFactory = baseAdminModelFactory;
+            _cacheKeyService = cacheKeyService;
             _localizationService = localizationService;
             _localizedModelFactory = localizedModelFactory;
             _paymentPluginManager = paymentPluginManager;
             _pickupPluginManager = pickupPluginManager;
             _pluginService = pluginService;
             _shippingPluginManager = shippingPluginManager;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _storeMappingSupportedModelFactory = storeMappingSupportedModelFactory;
             _taxPluginManager = taxPluginManager;
             _widgetPluginManager = widgetPluginManager;
@@ -177,9 +180,11 @@ namespace Nop.Web.Areas.Admin.Factories
             //get parameters to filter plugins
             var group = string.IsNullOrEmpty(searchModel.SearchGroup) || searchModel.SearchGroup.Equals("0") ? null : searchModel.SearchGroup;
             var loadMode = (LoadPluginsMode)searchModel.SearchLoadModeId;
+            var friendlyName = string.IsNullOrEmpty(searchModel.SearchFriendlyName) ? null : searchModel.SearchFriendlyName;
+            var author = string.IsNullOrEmpty(searchModel.SearchAuthor) ? null : searchModel.SearchAuthor;
 
             //filter visible plugins
-            var plugins = _pluginService.GetPluginDescriptors<IPlugin>(group: group, loadMode: loadMode)
+            var plugins = _pluginService.GetPluginDescriptors<IPlugin>(group: group, loadMode: loadMode, friendlyName: friendlyName, author: author)
                 .Where(p => p.ShowInPluginsList)
                 .OrderBy(plugin => plugin.Group).ToList()
                 .ToPagedList(searchModel);
@@ -218,7 +223,7 @@ namespace Nop.Web.Areas.Admin.Factories
             if (pluginDescriptor != null)
             {
                 //fill in model values from the entity
-                model = model ?? pluginDescriptor.ToPluginModel(model);
+                model ??= pluginDescriptor.ToPluginModel(model);
 
                 model.LogoUrl = _pluginService.GetPluginLogoUrl(pluginDescriptor);
                 model.SelectedStoreIds = pluginDescriptor.LimitedToStores;
@@ -375,8 +380,8 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>List of models</returns>
         public virtual IList<AdminNavigationPluginModel> PrepareAdminNavigationPluginModels()
         {
-            var cacheKey = string.Format(NopPluginDefaults.AdminNavigationPluginsCacheKey, _workContext.CurrentCustomer.Id);
-            return _cacheManager.Get(cacheKey, () =>
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopPluginDefaults.AdminNavigationPluginsCacheKey, _workContext.CurrentCustomer);
+            return _staticCacheManager.Get(cacheKey, () =>
             {
                 //get installed plugins
                 return _pluginService.GetPluginDescriptors<IPlugin>(LoadPluginsMode.InstalledOnly, _workContext.CurrentCustomer)

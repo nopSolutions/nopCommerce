@@ -4,13 +4,10 @@ using System.IO;
 using System.Net;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -71,27 +68,25 @@ namespace Nop.Web.Framework.Controllers
                 //TODO tempData = _tempDataDictionaryFactory.GetTempData(context.HttpContext);
             }
 
-            using (var writer = new StringWriter())
-            {
-                var viewContext = new ViewContext(
-                    context,
-                    NullView.Instance,
-                    viewData,
-                    tempData,
-                    writer,
-                    new HtmlHelperOptions());
+            using var writer = new StringWriter();
+            var viewContext = new ViewContext(
+                context,
+                NullView.Instance,
+                viewData,
+                tempData,
+                writer,
+                new HtmlHelperOptions());
 
-                // IViewComponentHelper is stateful, we want to make sure to retrieve it every time we need it.
-                var viewComponentHelper = context.HttpContext.RequestServices.GetRequiredService<IViewComponentHelper>();
-                (viewComponentHelper as IViewContextAware)?.Contextualize(viewContext);
+            // IViewComponentHelper is stateful, we want to make sure to retrieve it every time we need it.
+            var viewComponentHelper = context.HttpContext.RequestServices.GetRequiredService<IViewComponentHelper>();
+            (viewComponentHelper as IViewContextAware)?.Contextualize(viewContext);
 
-                var result = viewComponentResult.ViewComponentType == null ? 
-                    viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentName, viewComponentResult.Arguments):
-                    viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentType, viewComponentResult.Arguments);
+            var result = viewComponentResult.ViewComponentType == null ? 
+                viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentName, viewComponentResult.Arguments):
+                viewComponentHelper.InvokeAsync(viewComponentResult.ViewComponentType, viewComponentResult.Arguments);
 
-                result.Result.WriteTo(writer, HtmlEncoder.Default);
-                return writer.ToString();
-            }
+            result.Result.WriteTo(writer, HtmlEncoder.Default);
+            return writer.ToString();
         }
 
         /// <summary>
@@ -153,14 +148,12 @@ namespace Nop.Web.Framework.Controllers
                 if (viewResult.View == null)
                     throw new ArgumentNullException($"{viewName} view was not found");
             }
-            using (var stringWriter = new StringWriter())
-            {
-                var viewContext = new ViewContext(actionContext, viewResult.View, ViewData, TempData, stringWriter, new HtmlHelperOptions());
+            using var stringWriter = new StringWriter();
+            var viewContext = new ViewContext(actionContext, viewResult.View, ViewData, TempData, stringWriter, new HtmlHelperOptions());
 
-                var t = viewResult.View.RenderAsync(viewContext);
-                t.Wait();
-                return stringWriter.GetStringBuilder().ToString();
-            }
+            var t = viewResult.View.RenderAsync(viewContext);
+            t.Wait();
+            return stringWriter.GetStringBuilder().ToString();
         }
 
         #endregion
@@ -245,23 +238,6 @@ namespace Nop.Web.Framework.Controllers
         #endregion
 
         #region Security
-
-        /// <summary>
-        /// Security check URL
-        /// </summary>
-        /// <param name="filterContext">The action executing context</param>
-        /// <remarks>Since the name of the optional URL parameter is copied into the response in the query string of the URL, 
-        /// you cannot enter arbitrary parameters of the query string in the application URL</remarks>
-        public override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            var path = Request.Path.HasValue ? Request.Path.ToString() : "";
-            var queryString = Request.QueryString.HasValue ? Request.QueryString.ToString() : "";
-            if (string.Concat(path, queryString).Contains("%26") || string.Concat(path, queryString).Contains("%3"))
-            {
-                var routeValueDictionary = new RouteValueDictionary { { "controller", "Error" }, { "action", "Error" } };
-                filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(routeValueDictionary));
-            }
-        }
 
         /// <summary>
         /// Access denied view
@@ -375,6 +351,9 @@ namespace Nop.Web.Framework.Controllers
         /// <typeparam name="T">Model type</typeparam>
         /// <param name="model">The model to serialize.</param>
         /// <returns>The created object that serializes the specified data to JSON format for the response.</returns>
+        /// <remarks>
+        /// See also https://datatables.net/manual/server-side#Returned-data
+        /// </remarks>
         public JsonResult Json<T>(BasePagedListModel<T> model) where T : BaseNopModel
         {
             return Json(new
@@ -382,10 +361,6 @@ namespace Nop.Web.Framework.Controllers
                 draw = model.Draw,
                 recordsTotal = model.RecordsTotal,
                 recordsFiltered = model.RecordsFiltered,
-                data = model.Data,
-
-                //TODO: remove after moving to DataTables grids
-                Total = model.Total,
                 Data = model.Data
             });
         }

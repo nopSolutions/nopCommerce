@@ -90,8 +90,8 @@ dotnet_naming_style.camel_case_style.capitalization                = camel_case
 dotnet_naming_style.upper_case_style.capitalization                = all_upper
 dotnet_naming_style.upper_case_style.word_separator                = _
 
-dotnet_naming_style.I_prefix_style.required_prefix                 = I
-dotnet_naming_style.I_prefix_style.capitalization                  = pascal_case
+dotnet_naming_style.prefix_interface_with_i_style.required_prefix  = I
+dotnet_naming_style.prefix_interface_with_i_style.capitalization   = pascal_case
 
 dotnet_naming_style.private_field_style.required_prefix            = _
 dotnet_naming_style.private_field_style.capitalization             = camel_case
@@ -112,11 +112,10 @@ dotnet_naming_symbols.public_fields.applicable_kinds               = field
 dotnet_naming_symbols.public_fields.applicable_accessibilities     = public
 
 # Interfaces must be PascalCase and have an I prefix
-dotnet_naming_rule.interfaces_start_with_I.severity                = warning
-dotnet_naming_rule.interfaces_start_with_I.symbols                 = any_interface
-dotnet_naming_rule.interfaces_start_with_I.style                   = I_prefix_style
-dotnet_naming_symbols.any_interface.applicable_accessibilities     = *
-dotnet_naming_symbols.any_interface.applicable_kinds               = interface
+dotnet_naming_rule.interface_rule.severity                         = warning
+dotnet_naming_rule.interface_rule.symbols                          = interface_group
+dotnet_naming_rule.interface_rule.style                            = prefix_interface_with_i_style
+dotnet_naming_symbols.interface_group.applicable_kinds             = interface
 
 # Private fields must be camelCase and have an _ prefix
 dotnet_naming_rule.private_field_with_.severity                     = warning

@@ -8,6 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Security;
 using Nop.Services.Blogs;
+using Nop.Services.Caching;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
@@ -29,11 +30,12 @@ namespace Nop.Web.Factories
         private readonly CaptchaSettings _captchaSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly IBlogService _blogService;
+        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IPictureService _pictureService;
-        private readonly IStaticCacheManager _cacheManager;
+        private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
@@ -47,11 +49,12 @@ namespace Nop.Web.Factories
             CaptchaSettings captchaSettings,
             CustomerSettings customerSettings,
             IBlogService blogService,
+            ICacheKeyService cacheKeyService,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IGenericAttributeService genericAttributeService,
             IPictureService pictureService,
-            IStaticCacheManager cacheManager,
+            IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
             IUrlRecordService urlRecordService,
             IWorkContext workContext,
@@ -61,11 +64,12 @@ namespace Nop.Web.Factories
             _captchaSettings = captchaSettings;
             _customerSettings = customerSettings;
             _blogService = blogService;
+            _cacheKeyService = cacheKeyService;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _genericAttributeService = genericAttributeService;
             _pictureService = pictureService;
-            _cacheManager = cacheManager;
+            _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
             _urlRecordService = urlRecordService;
             _workContext = workContext;
@@ -86,19 +90,22 @@ namespace Nop.Web.Factories
             if (blogComment == null)
                 throw new ArgumentNullException(nameof(blogComment));
 
+            var customer = _customerService.GetCustomerById(blogComment.CustomerId);
+
             var model = new BlogCommentModel
             {
                 Id = blogComment.Id,
                 CustomerId = blogComment.CustomerId,
-                CustomerName = _customerService.FormatUsername(blogComment.Customer),
+                CustomerName = _customerService.FormatUsername(customer),
                 CommentText = blogComment.CommentText,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc),
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && blogComment.Customer != null && !blogComment.Customer.IsGuest()
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !_customerService.IsGuest(customer)
             };
+
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
                 model.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                    _genericAttributeService.GetAttribute<int>(blogComment.Customer, NopCustomerDefaults.AvatarPictureIdAttribute),
+                    _genericAttributeService.GetAttribute<int>(customer, NopCustomerDefaults.AvatarPictureIdAttribute),
                     _mediaSettings.AvatarPictureSize, _customerSettings.DefaultAvatarEnabled, defaultPictureType: PictureType.Avatar);
             }
 
@@ -134,16 +141,17 @@ namespace Nop.Web.Factories
 
             //number of blog comments
             var storeId = _blogSettings.ShowBlogCommentsPerStore ? _storeContext.CurrentStore.Id : 0;
-            var cacheKey = string.Format(NopModelCacheDefaults.BlogCommentsNumberKey, blogPost.Id, storeId, true);
-            model.NumberOfComments = _cacheManager.Get(cacheKey, () => _blogService.GetBlogCommentsCount(blogPost, storeId, true));
+            
+            model.NumberOfComments = _blogService.GetBlogCommentsCount(blogPost, storeId, true);
 
             if (prepareComments)
-            {
-                var blogComments = blogPost.BlogComments.Where(comment => comment.IsApproved);
-                if (_blogSettings.ShowBlogCommentsPerStore)
-                    blogComments = blogComments.Where(comment => comment.StoreId == _storeContext.CurrentStore.Id);
+            {                
+                var blogComments = _blogService.GetAllComments(
+                    blogPostId: blogPost.Id, 
+                    approved: true,
+                    storeId: storeId);
 
-                foreach (var bc in blogComments.OrderBy(comment => comment.CreatedOnUtc))
+                foreach (var bc in blogComments)
                 {
                     var commentModel = PrepareBlogPostCommentModel(bc);
                     model.Comments.Add(commentModel);
@@ -161,10 +169,15 @@ namespace Nop.Web.Factories
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var model = new BlogPostListModel();
-            model.PagingFilteringContext.Tag = command.Tag;
-            model.PagingFilteringContext.Month = command.Month;
-            model.WorkingLanguageId = _workContext.WorkingLanguage.Id;
+            var model = new BlogPostListModel
+            {
+                PagingFilteringContext =
+                {
+                    Tag = command.Tag,
+                    Month = command.Month
+                },
+                WorkingLanguageId = _workContext.WorkingLanguage.Id
+            };
 
             if (command.PageSize <= 0) command.PageSize = _blogSettings.PostsPageSize;
             if (command.PageNumber <= 0) command.PageNumber = 1;
@@ -205,29 +218,22 @@ namespace Nop.Web.Factories
         /// <returns>Blog post tag list model</returns>
         public virtual BlogPostTagListModel PrepareBlogPostTagListModel()
         {
-            var cacheKey = string.Format(NopModelCacheDefaults.BlogTagsModelKey, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var model = new BlogPostTagListModel();
+
+            //get tags
+            var tags = _blogService
+                .GetAllBlogPostTags(_storeContext.CurrentStore.Id, _workContext.WorkingLanguage.Id)
+                .OrderByDescending(x => x.BlogPostCount)
+                .Take(_blogSettings.NumberOfTags);
+
+            //sorting and setting into the model
+            model.Tags.AddRange(tags.OrderBy(x => x.Name).Select(tag => new BlogPostTagModel
             {
-                var model = new BlogPostTagListModel();
+                Name = tag.Name,
+                BlogPostCount = tag.BlogPostCount
+            }));
 
-                //get tags
-                var tags = _blogService.GetAllBlogPostTags(_storeContext.CurrentStore.Id, _workContext.WorkingLanguage.Id)
-                    .OrderByDescending(x => x.BlogPostCount)
-                    .Take(_blogSettings.NumberOfTags)
-                    .ToList();
-                //sorting
-                tags = tags.OrderBy(x => x.Name).ToList();
-
-                foreach (var tag in tags)
-                    model.Tags.Add(new BlogPostTagModel
-                    {
-                        Name = tag.Name,
-                        BlogPostCount = tag.BlogPostCount
-                    });
-                return model;
-            });
-
-            return cachedModel;
+            return model;
         }
 
         /// <summary>
@@ -236,8 +242,8 @@ namespace Nop.Web.Factories
         /// <returns>List of blog post year model</returns>
         public virtual List<BlogPostYearModel> PrepareBlogPostYearModel()
         {
-            var cacheKey = string.Format(NopModelCacheDefaults.BlogMonthsModelKey, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var cacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.BlogMonthsModelKey, _workContext.WorkingLanguage, _storeContext.CurrentStore);
+            var cachedModel = _staticCacheManager.Get(cacheKey, () =>
             {
                 var model = new List<BlogPostYearModel>();
 
@@ -261,7 +267,6 @@ namespace Nop.Web.Factories
 
                         first = first.AddMonths(1);
                     }
-
 
                     var current = 0;
                     foreach (var kvp in months)
@@ -289,8 +294,10 @@ namespace Nop.Web.Factories
                         current = date.Year;
                     }
                 }
+
                 return model;
             });
+
             return cachedModel;
         }
 
