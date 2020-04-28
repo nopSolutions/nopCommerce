@@ -364,6 +364,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException("Group name should not be empty");
 
             var defaultGroup = _discountService.GetAllDiscountRequirements(discount.Id, true).FirstOrDefault(requirement => requirement.IsGroup);
             if (defaultGroup == null)
@@ -390,11 +392,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             _discountService.InsertDiscountRequirement(discountRequirementGroup);
 
-            if (!string.IsNullOrEmpty(name))
-                return Json(new { Result = true, NewRequirementId = discountRequirementGroup.Id });
-
-            //set identifier as group name (if not specified)
-            discountRequirementGroup.DiscountRequirementRuleSystemName = $"#{discountRequirementGroup.Id}";
             _discountService.UpdateDiscount(discount);
 
             return Json(new { Result = true, NewRequirementId = discountRequirementGroup.Id });
