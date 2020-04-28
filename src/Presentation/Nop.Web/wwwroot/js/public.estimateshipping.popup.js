@@ -22,7 +22,8 @@
 
         $('#apply-shipping-button').on('click', function () {
             let option = self.getActiveShippingOption();
-            self.selectShippingOption(option);
+          self.selectShippingOption(option);
+          self.closePopup();
         });
 
         $('#open-estimate-shipping-popup').magnificPopup({
@@ -183,8 +184,6 @@
     selectShippingOption: function (option) {
         if (option && option.provider && option.price && this.validateAddress(option.address))
           this.selectedShippingOption = option;
-        else
-          return false;      
 
         if (this.handlers && this.handlers.selectedOption)
             this.handlers.selectedOption(option);
