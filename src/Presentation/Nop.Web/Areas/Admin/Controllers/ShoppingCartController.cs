@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Nop.Core;
-using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Orders;
 using Nop.Services.Security;
@@ -18,27 +15,21 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         private readonly ICustomerService _customerService;
         private readonly IPermissionService _permissionService;
-        private readonly IProductService _productService;
         private readonly IShoppingCartModelFactory _shoppingCartModelFactory;
         private readonly IShoppingCartService _shoppingCartService;
-        private readonly IWorkContext _workContext;
         #endregion
 
         #region Ctor
 
         public ShoppingCartController(ICustomerService customerService,
             IPermissionService permissionService,
-            IProductService productService,
             IShoppingCartService shoppingCartService,
-            IShoppingCartModelFactory shoppingCartModelFactory,
-            IWorkContext workContext)
+            IShoppingCartModelFactory shoppingCartModelFactory)
         {
             _customerService = customerService;
             _permissionService = permissionService;
-            _productService = productService;
             _shoppingCartModelFactory = shoppingCartModelFactory;
             _shoppingCartService = shoppingCartService;
-            _workContext = workContext;
         }
 
         #endregion

@@ -315,7 +315,7 @@ namespace Nop.Core.Caching
 
             if (disposing)
             {
-                //nothing special
+                _memoryCacheManager.Dispose();
             }
 
             _disposed = true;

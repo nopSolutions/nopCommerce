@@ -172,48 +172,72 @@ namespace Nop.Services.Topics
                     //ACL (access control list)
                     var allowedCustomerRolesIds = _customerService.GetCustomerRoleIds(_workContext.CurrentCustomer);
                     query = from c in query
-                        join acl in _aclRepository.Table
-                            on new
-                            {
-                                c1 = c.Id,
-                                c2 = nameof(Topic)
-                            } 
-                            equals new
-                            {
-                                c1 = acl.EntityId,
-                                c2 = acl.EntityName
-                            } 
-                            into cAcl
-                        from acl in cAcl.DefaultIfEmpty()
-                        where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
-                        select c;
+                            join acl in _aclRepository.Table
+                                on new
+                                {
+                                    c1 = c.Id,
+                                    c2 = nameof(Topic)
+                                }
+                                equals new
+                                {
+                                    c1 = acl.EntityId,
+                                    c2 = acl.EntityName
+                                }
+                                into cAcl
+                            from acl in cAcl.DefaultIfEmpty()
+                            where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
+                            select c;
                 }
 
                 if (!_catalogSettings.IgnoreStoreLimitations && storeId > 0)
                 {
                     //Store mapping
                     query = from c in query
-                        join sm in _storeMappingRepository.Table
-                            on new
-                            {
-                                c1 = c.Id,
-                                c2 = nameof(Topic)
-                            } 
-                            equals new
-                            {
-                                c1 = sm.EntityId,
-                                c2 = sm.EntityName
-                            } 
-                            into cSm
-                        from sm in cSm.DefaultIfEmpty()
-                        where !c.LimitedToStores || storeId == sm.StoreId
-                        select c;
+                            join sm in _storeMappingRepository.Table
+                                on new
+                                {
+                                    c1 = c.Id,
+                                    c2 = nameof(Topic)
+                                }
+                                equals new
+                                {
+                                    c1 = sm.EntityId,
+                                    c2 = sm.EntityName
+                                }
+                                into cSm
+                            from sm in cSm.DefaultIfEmpty()
+                            where !c.LimitedToStores || storeId == sm.StoreId
+                            select c;
                 }
 
                 query = query.Distinct().OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
             }
 
             return query.ToCachedList(key);
+        }
+
+        /// <summary>
+        /// Gets all topics
+        /// </summary>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="keywords">Keywords to search into body or title</param>
+        /// <param name="ignorAcl">A value indicating whether to ignore ACL rules</param>
+        /// <param name="showHidden">A value indicating whether to show hidden topics</param>
+        /// <param name="onlyIncludedInTopMenu">A value indicating whether to show only topics which include on the top menu</param>
+        /// <returns>Topics</returns>
+        public virtual IList<Topic> GetAllTopics(int storeId, string keywords, bool ignorAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false)
+        {
+            var topics = GetAllTopics(storeId, ignorAcl: ignorAcl, showHidden: showHidden, onlyIncludedInTopMenu: onlyIncludedInTopMenu);
+
+            if (!string.IsNullOrWhiteSpace(keywords))
+            {
+                return topics
+                        .Where(topic => (topic.Title?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false) ||
+                                        (topic.Body?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false))
+                        .ToList();
+            }
+
+            return topics;
         }
 
         /// <summary>
