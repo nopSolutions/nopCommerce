@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Services.Caching;
-using Nop.Services.Customers;
+using Nop.Core.Infrastructure;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Directory
@@ -12,24 +11,6 @@ namespace Nop.Services.Directory
     /// </summary>
     public partial class ExchangeRatePluginManager : PluginManager<IExchangeRateProvider>, IExchangeRatePluginManager
     {
-        #region Fields
-
-        private readonly CurrencySettings _currencySettings;
-
-        #endregion
-
-        #region Ctor
-
-        public ExchangeRatePluginManager(CurrencySettings currencySettings,
-            ICacheKeyService cacheKeyService,
-            ICustomerService customerService,
-            IPluginService pluginService) : base(cacheKeyService, customerService, pluginService)
-        {
-            _currencySettings = currencySettings;
-        }
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -40,7 +21,9 @@ namespace Nop.Services.Directory
         /// <returns>Exchange rate provider</returns>
         public virtual IExchangeRateProvider LoadPrimaryPlugin(Customer customer = null, int storeId = 0)
         {
-            return LoadPrimaryPlugin(_currencySettings.ActiveExchangeRateProviderSystemName, customer, storeId);
+            var currencySettings = EngineContext.Current.Resolve<CurrencySettings>();
+
+            return LoadPrimaryPlugin(currencySettings.ActiveExchangeRateProviderSystemName, customer, storeId);
         }
 
         /// <summary>
@@ -50,7 +33,9 @@ namespace Nop.Services.Directory
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(IExchangeRateProvider exchangeRateProvider)
         {
-            return IsPluginActive(exchangeRateProvider, new List<string> { _currencySettings.ActiveExchangeRateProviderSystemName });
+            var currencySettings = EngineContext.Current.Resolve<CurrencySettings>();
+
+            return IsPluginActive(exchangeRateProvider, new List<string> { currencySettings.ActiveExchangeRateProviderSystemName });
         }
 
         #endregion

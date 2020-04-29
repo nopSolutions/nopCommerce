@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
-using Nop.Services.Caching;
-using Nop.Services.Customers;
+using Nop.Core.Infrastructure;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Shipping
@@ -14,25 +13,7 @@ namespace Nop.Services.Shipping
     /// </summary>
     public partial class ShippingPluginManager : PluginManager<IShippingRateComputationMethod>, IShippingPluginManager
     {
-        #region Fields
-
-        private readonly ShippingSettings _shippingSettings;
-
-        #endregion
-
-        #region Ctor
-
-        public ShippingPluginManager(ICacheKeyService cacheKeyService,
-            ICustomerService customerService, 
-            IPluginService pluginService,
-            ShippingSettings shippingSettings) : base(cacheKeyService, customerService, pluginService)
-        {
-            _shippingSettings = shippingSettings;
-        }
-
-        #endregion
-
-        #region Methods
+       #region Methods
 
         /// <summary>
         /// Load active shipping providers
@@ -43,7 +24,9 @@ namespace Nop.Services.Shipping
         /// <returns>List of active shipping providers</returns>
         public virtual IList<IShippingRateComputationMethod> LoadActivePlugins(Customer customer = null, int storeId = 0, string systemName = null)
         {
-            var shippingProviders = LoadActivePlugins(_shippingSettings.ActiveShippingRateComputationMethodSystemNames, customer, storeId);
+            var shippingSettings = EngineContext.Current.Resolve<ShippingSettings>();
+
+            var shippingProviders = LoadActivePlugins(shippingSettings.ActiveShippingRateComputationMethodSystemNames, customer, storeId);
 
             //filter by passed system name
             if (!string.IsNullOrEmpty(systemName))
@@ -63,7 +46,9 @@ namespace Nop.Services.Shipping
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(IShippingRateComputationMethod shippingProvider)
         {
-            return IsPluginActive(shippingProvider, _shippingSettings.ActiveShippingRateComputationMethodSystemNames);
+            var shippingSettings = EngineContext.Current.Resolve<ShippingSettings>();
+
+            return IsPluginActive(shippingProvider, shippingSettings.ActiveShippingRateComputationMethodSystemNames);
         }
 
         /// <summary>

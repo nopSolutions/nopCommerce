@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
-using Nop.Services.Caching;
-using Nop.Services.Customers;
+using Nop.Core.Infrastructure;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Shipping.Pickup
@@ -14,24 +13,6 @@ namespace Nop.Services.Shipping.Pickup
     /// </summary>
     public partial class PickupPluginManager : PluginManager<IPickupPointProvider>, IPickupPluginManager
     {
-        #region Fields
-
-        private readonly ShippingSettings _shippingSettings;
-
-        #endregion
-
-        #region Ctor
-
-        public PickupPluginManager(ICacheKeyService cacheKeyService,
-            ICustomerService customerService, 
-            IPluginService pluginService,
-            ShippingSettings shippingSettings) : base(cacheKeyService, customerService, pluginService)
-        {
-            _shippingSettings = shippingSettings;
-        }
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -43,7 +24,9 @@ namespace Nop.Services.Shipping.Pickup
         /// <returns>List of active pickup point providers</returns>
         public virtual IList<IPickupPointProvider> LoadActivePlugins(Customer customer = null, int storeId = 0, string systemName = null)
         {
-            var pickupPointProviders = LoadActivePlugins(_shippingSettings.ActivePickupPointProviderSystemNames, customer, storeId);
+            var shippingSettings = EngineContext.Current.Resolve<ShippingSettings>();
+
+            var pickupPointProviders = LoadActivePlugins(shippingSettings.ActivePickupPointProviderSystemNames, customer, storeId);
 
             //filter by passed system name
             if (!string.IsNullOrEmpty(systemName))
@@ -63,7 +46,9 @@ namespace Nop.Services.Shipping.Pickup
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(IPickupPointProvider pickupPointProvider)
         {
-            return IsPluginActive(pickupPointProvider, _shippingSettings.ActivePickupPointProviderSystemNames);
+            var shippingSettings = EngineContext.Current.Resolve<ShippingSettings>();
+
+            return IsPluginActive(pickupPointProvider, shippingSettings.ActivePickupPointProviderSystemNames);
         }
 
         /// <summary>

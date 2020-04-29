@@ -15,7 +15,6 @@ using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Localization;
-using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 
 namespace Nop.Services.Tests
@@ -111,9 +110,7 @@ namespace Nop.Services.Tests
 
             var eventPublisher = new Mock<IEventPublisher>();
            
-            var pluginService = new FakePluginService();
-
-            var discountPluginManager = new DiscountPluginManager(new FakeCacheKeyService(), customerService.Object, pluginService);
+            var discountPluginManager = new DiscountPluginManager();
             var store = new Store { Id = 1 };
             var storeContext = new Mock<IStoreContext>();
             storeContext.Setup(x => x.CurrentStore).Returns(store);

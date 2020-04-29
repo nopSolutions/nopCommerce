@@ -8,12 +8,10 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Catalog;
-using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tests.FakeServices;
-using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Shipping
@@ -44,9 +42,8 @@ namespace Nop.Services.Tests.Shipping
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var pluginService = new FakePluginService();
-            _pickupPluginManager = new PickupPluginManager(new FakeCacheKeyService(), new Mock<ICustomerService>().Object, pluginService, _shippingSettings);
-            _shippingPluginManager = new ShippingPluginManager(new FakeCacheKeyService(), new Mock<ICustomerService>().Object, pluginService, _shippingSettings);
+            _pickupPluginManager = new PickupPluginManager();
+            _shippingPluginManager = new ShippingPluginManager();
 
             _storeContext = new Mock<IStoreContext>();
             _storeContext.Setup(x => x.CurrentStore).Returns(new Store { Id = 1 });
