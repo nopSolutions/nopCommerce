@@ -231,10 +231,9 @@ namespace Nop.Services.Topics
 
             if (!string.IsNullOrWhiteSpace(keywords))
             {
-                var lowerCaseKeywords = keywords.ToLower();
                 return topics
-                        .Where(topic => (topic.Title?.ToLower().Contains(lowerCaseKeywords) ?? false) ||
-                                        (topic.Body?.ToLower().Contains(lowerCaseKeywords) ?? false))
+                        .Where(topic => (topic.Title?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false) ||
+                                        (topic.Body?.Contains(keywords, StringComparison.InvariantCultureIgnoreCase) ?? false))
                         .ToList();
             }
 
