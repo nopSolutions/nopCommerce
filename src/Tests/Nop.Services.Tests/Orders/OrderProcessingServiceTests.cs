@@ -316,7 +316,6 @@ namespace Nop.Services.Tests.Orders
                 _productService.Object,
                 _rewardPointService.Object,
                 _shipmentService.Object,
-                _shippingPluginManager,
                 _shippingService,
                 _shoppingCartService.Object,
                 _stateProvinceService.Object,

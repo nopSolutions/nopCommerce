@@ -36,7 +36,6 @@ using Nop.Services.Events;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
-using Nop.Services.Media;
 using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
@@ -65,7 +64,6 @@ namespace Nop.Services.Messages
         private readonly ICustomerAttributeFormatter _customerAttributeFormatter;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IDownloadService _downloadService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IGiftCardService _giftCardService;
@@ -108,7 +106,6 @@ namespace Nop.Services.Messages
             ICustomerAttributeFormatter customerAttributeFormatter,
             ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
-            IDownloadService downloadService,
             IEventPublisher eventPublisher,
             IGenericAttributeService genericAttributeService,
             IGiftCardService giftCardService,
@@ -145,7 +142,6 @@ namespace Nop.Services.Messages
             _customerAttributeFormatter = customerAttributeFormatter;
             _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
-            _downloadService = downloadService;
             _eventPublisher = eventPublisher;
             _genericAttributeService = genericAttributeService;
             _giftCardService = giftCardService;
