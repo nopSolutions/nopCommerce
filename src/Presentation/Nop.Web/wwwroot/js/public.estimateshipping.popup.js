@@ -9,6 +9,7 @@
     countryErrorMessage: '',
     zipPostalCodeErrorMessage: '',
     noShippingOptionsErrorMessage: '',
+    isShown: false,
 
     init: function (form, urlFactory, handlers, localizedData) {
         this.form = form;
@@ -22,8 +23,10 @@
 
         $('#apply-shipping-button').on('click', function () {
             let option = self.getActiveShippingOption();
-          self.selectShippingOption(option);
-          self.closePopup();
+            if (option && option.provider && option.price) {
+              self.selectShippingOption(option);
+              self.closePopup();
+            }
         });
 
         $('#open-estimate-shipping-popup').magnificPopup({
@@ -35,7 +38,8 @@
                 },
                 open: function () {
                     if (self.handlers && self.handlers.openPopUp)
-                        self.handlers.openPopUp();
+                    self.handlers.openPopUp();
+                    self.isShown = true;
                 }
             }
         });
@@ -175,10 +179,12 @@
     },
 
     showErrorMessage: function (errors) {
-      let errorMessageBox = $(this.errorMessageBoxSelector);
-      $.each(errors, function (i, error) {
-        errorMessageBox.append($('<div/>').text(error));
-      });
+      if (this.isShown) {
+        let errorMessageBox = $(this.errorMessageBoxSelector);
+        $.each(errors, function (i, error) {
+          errorMessageBox.append($('<div/>').text(error));
+        });
+      }
     },
 
     selectShippingOption: function (option) {
