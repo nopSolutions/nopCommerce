@@ -27,7 +27,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         private readonly CurrencySettings _currencySettings;
         private readonly ICurrencyService _currencyService;
         private readonly ILogger _logger;
-        private const string POLY_COMMERCE_BASE_URL = "https://localhost:44340";
+        private const string POLY_COMMERCE_BASE_URL = "https://portal.polycommerce.com";
         private const int NOP_COMMERCE = 2;
 
         public PolyCommerceController(IDbContext dbContext,
@@ -97,7 +97,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
 
 
 
-                var request = new LoginModel
+                var request = new PolyCommerceLoginModel
                 {
                     StoreName = _storeContext.CurrentStore.Name,
                     CustomerGuid = _workContext.CurrentCustomer.CustomerGuid.ToString(),

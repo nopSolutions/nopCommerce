@@ -10,6 +10,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Plugin.Misc.PolyCommerce.Models;
+using Nop.Services.Media;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Controllers;
@@ -21,11 +22,13 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
     {
         private readonly IRepository<Product> _productRepository;
         private readonly IWebHelper _webHelper;
+        private readonly IPictureService _pictureService;
 
-        public ProductsController(IRepository<Product> productRepository, IWebHelper webHelper)
+        public ProductsController(IRepository<Product> productRepository, IWebHelper webHelper, IPictureService pictureService)
         {
             _productRepository = productRepository;
             _webHelper = webHelper;
+            _pictureService = pictureService;
         }
 
         [Route("api/polycommerce/products")]
@@ -102,24 +105,6 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
             return Ok(response);
         }
 
-        private string GetPictureUrl(Picture picture)
-        {
-            if (picture == null)
-                return "";
-            var seName = picture.SeoFilename;
-            var pictureId = picture.Id;
-            var mimeType = picture.MimeType;
-
-            var sb = new StringBuilder();
-            sb.Append(_webHelper.GetStoreLocation());
-            sb.Append("images/thumbs/");
-            sb.Append(pictureId.ToString().PadLeft(7, '0'));
-            sb.Append("_" + seName);
-            sb.Append("." + mimeType.Replace("image/", ""));
-
-            return sb.ToString();
-        }
-
         private PolyCommerceProduct PreparePolyCommerceModel(Product product) =>
          new PolyCommerceProduct
          {
@@ -142,7 +127,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
              MinInventoryLevel = product.MinStockQuantity,
              Condition = "NEW",
              Gtin = product.Gtin,
-             Images = string.Join(",", product.ProductPictures.Select(x => GetPictureUrl(x.Picture))),
+             Images = string.Join(",", product.ProductPictures.Select(x => _pictureService.GetPictureUrl(x.Picture))),
              ProductAttributes = product.ProductSpecificationAttributes.Select(x => new PolyCommerceProductAttribute { Name = x.SpecificationAttributeOption.SpecificationAttribute.Name, Value = x.SpecificationAttributeOption.Name })
          };
     }
