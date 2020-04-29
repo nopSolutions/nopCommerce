@@ -772,7 +772,7 @@ namespace Nop.Web.Factories
                 {
                     model.AvailableStates.Add(new SelectListItem
                     {
-                        Text = _localizationService.GetResource("Address.OtherNonUS"),
+                        Text = _localizationService.GetResource("Address.Other"),
                         Value = "0"
                     });
                 }
@@ -794,11 +794,8 @@ namespace Nop.Web.Factories
         /// <returns>Picture model</returns>
         public virtual PictureModel PrepareCartItemPictureModel(ShoppingCartItem sci, int pictureSize, bool showDefaultPicture, string productName)
         {
-            var pictureCacheKey = _cacheKeyService.PrepareKeyForDefaultCache(NopModelCacheDefaults.CartPictureModelKey
+            var pictureCacheKey = _cacheKeyService.PrepareKeyForShortTermCache(NopModelCacheDefaults.CartPictureModelKey
                 , sci, pictureSize, true, _workContext.WorkingLanguage, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore);
-            //as we cache per user (shopping cart item identifier)
-            //let's cache just for 3 minutes
-            pictureCacheKey.CacheTime = 3;
             
             var model = _staticCacheManager.Get(pictureCacheKey, () =>
             {

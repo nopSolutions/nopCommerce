@@ -6130,8 +6130,6 @@ namespace Nop.Services.Installation
                 FullTextMode = FulltextSearchMode.ExactMatch,
                 Log404Errors = true,
                 BreadcrumbDelimiter = "/",
-                RenderXuaCompatible = false,
-                XuaCompatibleValue = "IE=edge",
                 BbcodeEditorOpenLinksInNewWindow = false,
                 PopupForTermsOfServiceLinks = true,
                 JqueryMigrateScriptLoggingActive = false,
@@ -6409,7 +6407,10 @@ namespace Nop.Services.Installation
                 EnteringEmailTwice = false,
                 RequireRegistrationForDownloadableProducts = false,
                 AllowCustomersToCheckGiftCardBalance = false,
-                DeleteGuestTaskOlderThanMinutes = 1440
+                DeleteGuestTaskOlderThanMinutes = 1440,
+                PhoneNumberValidationEnabled = false,
+                PhoneNumberValidationUseRegex = false,
+                PhoneNumberValidationRule = "^[0-9]{1,14}?$"
             });
 
             settingService.SaveSetting(new AddressSettings
@@ -6827,7 +6828,8 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new CachingSettings
             {
                 ShortTermCacheTime = 5,
-                DefaultCacheTime = NopCachingDefaults.CacheTime
+                DefaultCacheTime = NopCachingDefaults.CacheTime,
+                BundledFilesCacheTime = 120
             });
         }
 

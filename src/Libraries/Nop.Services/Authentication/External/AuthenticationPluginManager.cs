@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
+using Nop.Services.Caching;
+using Nop.Services.Customers;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Authentication.External
@@ -18,7 +20,9 @@ namespace Nop.Services.Authentication.External
         #region Ctor
 
         public AuthenticationPluginManager(ExternalAuthenticationSettings externalAuthenticationSettings,
-            IPluginService pluginService) : base(pluginService)
+            ICacheKeyService cacheKeyService,
+            ICustomerService customerService,
+            IPluginService pluginService) : base(cacheKeyService, customerService, pluginService)
         {
             _externalAuthenticationSettings = externalAuthenticationSettings;
         }

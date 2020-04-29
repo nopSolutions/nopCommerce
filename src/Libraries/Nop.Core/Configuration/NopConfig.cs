@@ -118,11 +118,6 @@ namespace Nop.Core.Configuration
         public bool UsePluginsShadowCopy { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to use backwards compatibility with SQL Server 2008 and SQL Server 2008R2
-        /// </summary>
-        public bool UseRowNumberForPaging { get; set; }
-
-        /// <summary>
         /// Gets or sets the wait time (in seconds) before terminating the attempt to execute a command and generating an error
         /// </summary>
         public int? SQLCommandTimeout { get; set; }

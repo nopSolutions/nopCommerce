@@ -10,10 +10,10 @@ namespace Nop.Web.Areas.Admin.Models.Logging
     {
         #region Properties
 
-        [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Name")]
+        [NopResourceDisplayName("Admin.Customers.ActivityLogType.Fields.Name")]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Enabled")]
+        [NopResourceDisplayName("Admin.Customers.ActivityLogType.Fields.Enabled")]
         public bool Enabled { get; set; }
 
         #endregion

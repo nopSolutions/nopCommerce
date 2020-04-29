@@ -113,7 +113,7 @@ namespace Nop.Services.Tests
            
             var pluginService = new FakePluginService();
 
-            var discountPluginManager = new DiscountPluginManager(pluginService);
+            var discountPluginManager = new DiscountPluginManager(new FakeCacheKeyService(), customerService.Object, pluginService);
             var store = new Store { Id = 1 };
             var storeContext = new Mock<IStoreContext>();
             storeContext.Setup(x => x.CurrentStore).Returns(store);

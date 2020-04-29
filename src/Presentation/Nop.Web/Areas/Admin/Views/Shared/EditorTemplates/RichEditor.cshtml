@@ -12,7 +12,6 @@
     // tinyMCE language
     var language = TinyMceHelper.GetTinyMceLanguage();
 
-    var allowJbimages = false;
     var allowRoxyFileman = permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures);
 
     var random = CommonHelper.GenerateRandomInteger();
@@ -93,10 +92,9 @@
             plugins: [
                 "advlist autolink autoresize directionality lists link image charmap preview anchor",
                 "searchreplace visualblocks code fullscreen textcolor",
-                "insertdatetime media table contextmenu paste@(allowJbimages ? " jbimages" : null)@(enableFullPage ? " fullpage" : null)"
+                "insertdatetime media table contextmenu paste@(enableFullPage ? " fullpage" : null)"
             ],
-            toolbar: "ltr rtl | insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(allowJbimages ? " jbimages" : null)",
-            //"relative_urls" required by jbimages plugin to be set to "false"
+            toolbar: "ltr rtl | insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
             relative_urls: false,
             @if (allowRoxyFileman)
             {

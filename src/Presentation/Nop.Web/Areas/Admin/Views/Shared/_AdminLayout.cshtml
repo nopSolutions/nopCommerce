@@ -124,12 +124,6 @@
     //has "Manage Maintenance" permission?
     var canManageMaintenance = permissionService.Authorize(StandardPermissionProvider.ManageMaintenance);
 
-    //X-UA-Compatible tag
-    if (commonSettings.RenderXuaCompatible)
-    {
-        Html.AppendHeadCustomParts($"<meta http-equiv=\"X-UA-Compatible\" content=\"{commonSettings.XuaCompatibleValue}\"/>");
-    }
-
     //avatar
     var currentCustomer = workContext.CurrentCustomer;
 
