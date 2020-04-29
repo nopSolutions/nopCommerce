@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using FluentMigrator.Infrastructure;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Conventions;
 
@@ -12,8 +11,8 @@ namespace Nop.Data.Migrations
     {
         #region Ctor
 
-        public NopConventionSet(INopDataProvider dataProvider, IMigrationContext context)
-            : this(new DefaultConventionSet(), new NopForeignKeyConvention(dataProvider, context), new NopIndexConvention(dataProvider))
+        public NopConventionSet(INopDataProvider dataProvider)
+            : this(new DefaultConventionSet(), new NopForeignKeyConvention(dataProvider), new NopIndexConvention(dataProvider))
         {
         }
 

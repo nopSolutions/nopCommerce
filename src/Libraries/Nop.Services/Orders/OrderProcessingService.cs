@@ -69,7 +69,6 @@ namespace Nop.Services.Orders
         private readonly IProductService _productService;
         private readonly IRewardPointService _rewardPointService;
         private readonly IShipmentService _shipmentService;
-        private readonly IShippingPluginManager _shippingPluginManager;
         private readonly IShippingService _shippingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IStateProvinceService _stateProvinceService;
@@ -118,7 +117,6 @@ namespace Nop.Services.Orders
             IProductService productService,
             IRewardPointService rewardPointService,
             IShipmentService shipmentService,
-            IShippingPluginManager shippingPluginManager,
             IShippingService shippingService,
             IShoppingCartService shoppingCartService,
             IStateProvinceService stateProvinceService,
@@ -163,7 +161,6 @@ namespace Nop.Services.Orders
             _productService = productService;
             _rewardPointService = rewardPointService;
             _shipmentService = shipmentService;
-            _shippingPluginManager = shippingPluginManager;
             _shippingService = shippingService;
             _shoppingCartService = shoppingCartService;
             _stateProvinceService = stateProvinceService;
@@ -1056,7 +1053,7 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //order notes, notifications
-            AddOrderNote(order, $"Order status has been changed to {os.ToString()}");
+            AddOrderNote(order, $"Order status has been changed to {os}");
 
             if (prevOrderStatus != OrderStatus.Complete &&
                 os == OrderStatus.Complete
