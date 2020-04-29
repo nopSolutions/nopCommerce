@@ -32,6 +32,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         }
 
         [Route("api/polycommerce/products")]
+        [HttpGet]
         public async Task<IActionResult> GetProducts(int page = 1, int pageSize = 100, DateTime? minModifiedDate = null, DateTime? maxModifiedDate = null)
         {
             var storeToken = Request.Headers.TryGetValue("Store-Token", out var values) ? values.First() : null;
