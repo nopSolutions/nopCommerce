@@ -73,7 +73,7 @@ namespace Nop.Services.Payments
 
             var settingKey = string.Format(NopPaymentDefaults.RestrictedCountriesSettingName, paymentMethod.PluginDescriptor.SystemName);
 
-            var settingService = EngineContext.Current.Resolve<SettingService>();
+            var settingService = EngineContext.Current.Resolve<ISettingService>();
 
             return settingService.GetSettingByKey<List<int>>(settingKey) ?? new List<int>();
         }
@@ -90,7 +90,7 @@ namespace Nop.Services.Payments
 
             var settingKey = string.Format(NopPaymentDefaults.RestrictedCountriesSettingName, paymentMethod.PluginDescriptor.SystemName);
 
-            var settingService = EngineContext.Current.Resolve<SettingService>();
+            var settingService = EngineContext.Current.Resolve<ISettingService>();
             settingService.SetSetting(settingKey, countryIds.ToList());
         }
 
