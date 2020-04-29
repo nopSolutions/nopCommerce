@@ -24,6 +24,7 @@ using Nop.Core.Domain.Tasks;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Domain.Weixin;
 
 namespace Nop.Data.Migrations
 {
@@ -209,6 +210,37 @@ namespace Nop.Data.Migrations
             _migrationManager.BuildTable<VendorAttribute>(Create);
             _migrationManager.BuildTable<VendorAttributeValue>(Create);
             _migrationManager.BuildTable<VendorNote>(Create);
+
+            //Weixin
+            _migrationManager.BuildTable<WConfig>(Create);
+
+            _migrationManager.BuildTable<WUser>(Create);
+            _migrationManager.BuildTable<WUserAddress>(Create);
+            _migrationManager.BuildTable<WUserAsset>(Create);
+            _migrationManager.BuildTable<WUserAssetSchedule>(Create);
+            _migrationManager.BuildTable<WUserRefereeMapping>(Create);
+            _migrationManager.BuildTable<WUserTag>(Create);
+
+            _migrationManager.BuildTable<WLocation>(Create);
+            _migrationManager.BuildTable<WMenu>(Create);
+            _migrationManager.BuildTable<WMessage>(Create);
+            _migrationManager.BuildTable<WOauth>(Create);
+
+            _migrationManager.BuildTable<WPageShareList>(Create);
+            _migrationManager.BuildTable<WPageShareCount>(Create);
+            
+            _migrationManager.BuildTable<WQrCodeCategory>(Create);
+            _migrationManager.BuildTable<WQrCodeChannel>(Create);
+            _migrationManager.BuildTable<WQrCodeLimit>(Create);
+
+            _migrationManager.BuildTable<WQrCodeImage>(Create);
+            _migrationManager.BuildTable<WQrCodeImageProductMapping>(Create);
+
+            _migrationManager.BuildTable<WQrCodeLimitMsgMapping>(Create);
+            _migrationManager.BuildTable<WQrCodeLimitUserMapping>(Create);
+
+            _migrationManager.BuildTable<WQrCodeTemp>(Create);
+            _migrationManager.BuildTable<WShareLink>(Create);
         }
     }
 }

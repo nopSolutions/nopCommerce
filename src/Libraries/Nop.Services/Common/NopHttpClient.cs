@@ -39,7 +39,7 @@ namespace Nop.Services.Common
             IWorkContext workContext)
         {
             //configure client
-            client.BaseAddress = new Uri("https://www.nopcommerce.com/");
+            client.BaseAddress = new Uri("https://www.yourdomain.com/");//https://www.nopcommerce.com/
             client.Timeout = TimeSpan.FromSeconds(5);
             client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, $"nopCommerce-{NopVersion.CurrentVersion}");
 

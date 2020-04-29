@@ -18,6 +18,16 @@ namespace Nop.Core.Domain.Customers
         public Guid CustomerGuid { get; set; }
 
         /// <summary>
+        /// 当前用户OpenId
+        /// </summary>
+        public string OpenId { get; set; }
+
+        /// <summary>
+        /// 推荐用户OpenId
+        /// </summary>
+        public string OpenIdReferee { get; set; }
+
+        /// <summary>
         /// Gets or sets the username
         /// </summary>
         public string Username { get; set; }

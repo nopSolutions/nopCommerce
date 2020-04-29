@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using Nop.Core.Infrastructure;
 
@@ -34,6 +35,20 @@ namespace Nop.Core
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// 字符串转LONG数字
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static long StringToLong(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+                return 0L;
+
+            var strBytes = Encoding.UTF8.GetBytes(str);
+            return BitConverter.ToInt64(strBytes, 0);
+        }
 
         /// <summary>
         /// Ensures the subscriber email or throw.

@@ -20,6 +20,8 @@ namespace Nop.Data.Mapping.Builders.Customers
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
+                .WithColumn(nameof(Customer.OpenId)).AsAnsiString(32).Nullable()
+                .WithColumn(nameof(Customer.OpenIdReferee)).AsAnsiString(32).Nullable()
                 .WithColumn(nameof(Customer.Username)).AsString(1000).Nullable()
                 .WithColumn(nameof(Customer.Email)).AsString(1000).Nullable()
                 .WithColumn(nameof(Customer.EmailToRevalidate)).AsString(1000).Nullable()
