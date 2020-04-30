@@ -687,7 +687,6 @@ namespace Nop.Services.Shipping
 
                 var product = _productService.GetProductById(sci.ProductId);
 
-                //TODO properly create requests for the associated products
                 if (product == null || !product.IsShipEnabled)
                 {
                     var associatedProducts = _productAttributeParser.ParseProductAttributeValues(sci.AttributesXml)
