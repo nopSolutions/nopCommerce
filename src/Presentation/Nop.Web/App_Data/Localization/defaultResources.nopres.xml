@@ -4122,6 +4122,9 @@
   <LocaleResource Name="Admin.Common.Edit">
     <Value>Edit</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.EmptyItemText">
+    <Value>---</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.ExcelFile">
     <Value>Excel file</Value>
   </LocaleResource>
@@ -8933,9 +8936,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage">
     <Value>Default language</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage.DefaultItemText">
-    <Value>---</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage.Hint">
     <Value>This property allows a store owner to specify a default language for a store. If not specified, then the default language display order will be used.</Value>

@@ -874,6 +874,12 @@ set @resources='
   <LocaleResource Name="Account.AssociatedExternalAuth.AccountAlreadyAssigned">
     <Value>Account is already assigned</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage.DefaultItemText">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.EmptyItemText">
+    <Value>---</Value>
+  </LocaleResource>
 </Language>
 '
 

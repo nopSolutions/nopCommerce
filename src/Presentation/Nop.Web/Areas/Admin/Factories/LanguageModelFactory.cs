@@ -135,8 +135,8 @@ namespace Nop.Web.Areas.Admin.Factories
             }
 
             //prepare available currencies
-            //TODO: add locale resource for "---"
-            _baseAdminModelFactory.PrepareCurrencies(model.AvailableCurrencies, defaultItemText: "---");
+            _baseAdminModelFactory.PrepareCurrencies(model.AvailableCurrencies, 
+                defaultItemText: _localizationService.GetResource("Admin.Common.EmptyItemText"));
 
             //prepare available stores
             _storeMappingSupportedModelFactory.PrepareModelStores(model, language, excludeProperties);
