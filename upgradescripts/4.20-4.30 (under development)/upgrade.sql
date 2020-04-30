@@ -871,6 +871,9 @@ set @resources='
   <LocaleResource Name="Shipping.EstimateShippingPopUp.Pickup.PriceFrom">
     <Value>From {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.AccountAlreadyAssigned">
+    <Value>Account is already assigned</Value>
+  </LocaleResource>
 </Language>
 '
 
