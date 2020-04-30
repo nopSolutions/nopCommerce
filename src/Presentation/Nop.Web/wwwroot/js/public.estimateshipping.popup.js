@@ -2,24 +2,31 @@
     jqXHR: false,
     delayTimer: false,
     form: false,
-    localizedData: false,
     selectedShippingOption: false,
     urlFactory: false,
     handlers: false,
+    errorMessageBoxSelector: '#estimate-shipping-popup .message-failure', 
+    countryErrorMessage: '',
+    zipPostalCodeErrorMessage: '',
+    noShippingOptionsErrorMessage: '',
+    isShown: false,
 
     init: function (form, urlFactory, handlers, localizedData) {
         this.form = form;
-        this.localizedData = localizedData;
         this.urlFactory = urlFactory;
         this.handlers = handlers;
+        this.countryErrorMessage = localizedData.countryErrorMessage;
+        this.zipPostalCodeErrorMessage = localizedData.zipPostalCodeErrorMessage;
+        this.noShippingOptionsErrorMessage = localizedData.NoShippingOptions;
 
         let self = this;
 
         $('#apply-shipping-button').on('click', function () {
             let option = self.getActiveShippingOption();
-            self.selectShippingOption(option);
-
-            $.magnificPopup.close();
+            if (option && option.provider && option.price) {
+              self.selectShippingOption(option);
+              self.closePopup();
+            }
         });
 
         $('#open-estimate-shipping-popup').magnificPopup({
@@ -31,12 +38,14 @@
                 },
                 open: function () {
                     if (self.handlers && self.handlers.openPopUp)
-                        self.handlers.openPopUp();
+                    self.handlers.openPopUp();
+                    self.isShown = true;
                 }
             }
         });
 
         let addressChangedHandler = function () {
+            self.clearShippingOptions();
             let address = self.getShippingAddress();
             self.getShippingOptions(address);
         };
@@ -48,8 +57,12 @@
         $('#ZipPostalCode').on('input propertychange paste', addressChangedHandler);
     },
 
+    closePopup: function () {
+      $.magnificPopup.close();
+    },
+
     getShippingOptions: function (address) {
-        if (!this.addressIsValid(address))
+        if (!this.validateAddress(address))
             return;
 
         let self = this;
@@ -87,25 +100,26 @@
     },
 
     setLoadWaiting: function () {
-        $('#estimate-shipping-popup .message-failure').empty();
+        this.clearErrorMessage();
         $('#shipping-options-body').html($('<div/>').addClass('shipping-options-loading'));
     },
 
     successHandler: function (address, response) {
-        if (response) {
+      $('#shipping-options-body').empty();
+
+        if (response.success) {
             let activeOption;
 
-            let options = response.ShippingOptions;
+            let options = response.result.ShippingOptions;
             if (options && options.length > 0) {
-                $('#shipping-options-body').empty();
-
                 let self = this;
 
                 $.each(options, function (i, option) {
                     // try select the shipping option with the same provider and address
-                    if (self.selectedShippingOption &&
-                          self.selectedShippingOption.provider === option.Name &&
-                            self.addressesAreEqual(self.selectedShippingOption.address, address)) {
+                  if (option.Selected ||
+                        (self.selectedShippingOption &&
+                        self.selectedShippingOption.provider === option.Name &&
+                        self.addressesAreEqual(self.selectedShippingOption.address, address))) {
                         activeOption = {
                             provider: option.Name,
                             price: option.Price,
@@ -127,12 +141,14 @@
                 }
 
                 // if we have the already selected shipping options with the same address, reload it
-                if (this.selectedShippingOption && this.addressesAreEqual(this.selectedShippingOption.address, address))
+                if (!$.magnificPopup.instance.isOpen && this.selectedShippingOption && this.addressesAreEqual(this.selectedShippingOption.address, address))
                     this.selectShippingOption(activeOption);
 
                 this.setActiveShippingOption(activeOption);
-            } else
-                this.clearShippingOptions();
+            }
+        } else {
+          this.clearErrorMessage();
+          this.showErrorMessage(response.errors);
         }
 
         if (this.handlers && this.handlers.success)
@@ -158,11 +174,22 @@
             this.handlers.error(jqXHR, textStatus, errorThrown);
     },
 
+    clearErrorMessage: function () {
+      $(this.errorMessageBoxSelector).empty();
+    },
+
+    showErrorMessage: function (errors) {
+      if (this.isShown) {
+        let errorMessageBox = $(this.errorMessageBoxSelector);
+        $.each(errors, function (i, error) {
+          errorMessageBox.append($('<div/>').text(error));
+        });
+      }
+    },
+
     selectShippingOption: function (option) {
-        if (option && option.provider && option.price && this.addressIsValid(option.address))
-            this.selectedShippingOption = option;
-        else
-            this.selectedShippingOption = undefined;      
+        if (option && option.provider && option.price && this.validateAddress(option.address))
+          this.selectedShippingOption = option;
 
         if (this.handlers && this.handlers.selectedOption)
             this.handlers.selectedOption(option);
@@ -191,7 +218,7 @@
     },
 
     clearShippingOptions: function () {
-        $('#shipping-options-body').html($('<div/>').addClass('no-shipping-options').text(this.localizedData.NoShippingOptions));
+      $('#shipping-options-body').html($('<div/>').addClass('no-shipping-options').text(this.noShippingOptionsErrorMessage));
     },
 
     setActiveShippingOption: function (option) {
@@ -219,26 +246,26 @@
     },
 
     getShippingAddress: function () {
-        let address = {};
+      let address = {};
+      let selectedCountryId = $('#CountryId').find(':selected');
+      let selectedStateProvinceId = $('#StateProvinceId').find(':selected');
+      let selectedZipPostalCode = $('#ZipPostalCode');
 
-        let selectedCountryId = $('#CountryId').find(':selected');
-        if (selectedCountryId && selectedCountryId.val() > 0) {
-            address.countryId = selectedCountryId.val();
-            address.countryName = selectedCountryId.text();
-        }
+      if (selectedCountryId && selectedCountryId.val() > 0) {
+        address.countryId = selectedCountryId.val();
+        address.countryName = selectedCountryId.text();
+      }
 
-        let selectedStateProvinceId = $('#StateProvinceId').find(':selected');
-        if (selectedStateProvinceId && selectedStateProvinceId.val() > 0) {
-            address.stateProvinceId = selectedStateProvinceId.val();
-            address.stateProvinceName = selectedStateProvinceId.text();
-        }
+      if (selectedStateProvinceId && selectedStateProvinceId.val() > 0) {
+          address.stateProvinceId = selectedStateProvinceId.val();
+          address.stateProvinceName = selectedStateProvinceId.text();
+      }
 
-        let selectedZipPostalCode = $('#ZipPostalCode');
-        if (selectedZipPostalCode && selectedZipPostalCode.val()) {
-            address.zipPostalCode = selectedZipPostalCode.val();
-        }
+      if (selectedZipPostalCode && selectedZipPostalCode.val()) {
+          address.zipPostalCode = selectedZipPostalCode.val();
+      }
 
-        return address;
+      return address;
     },
 
     addressesAreEqual: function (address1, address2) {
@@ -247,8 +274,18 @@
                    address1.zipPostalCode === address2.zipPostalCode;
     },
 
-    addressIsValid: function (address) {
-        return address &&
+    validateAddress: function (address) {
+      this.clearErrorMessage();
+
+      if (!(address.countryName && address.countryId > 0)) {
+        this.showErrorMessage([this.countryErrorMessage]);
+      }
+
+      if (!address.zipPostalCode) {
+        this.showErrorMessage([this.zipPostalCodeErrorMessage]);
+      }
+
+      return address &&
                  address.countryName &&
                    address.countryId > 0 &&
                      address.zipPostalCode;

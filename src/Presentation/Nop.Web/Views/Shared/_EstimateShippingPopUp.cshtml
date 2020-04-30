@@ -1,10 +1,8 @@
 ﻿@model EstimateShippingModel
 @{
-    Html.AddCssFileParts("~/Themes/DefaultClean/Content/css/public.estimateshipping.popup.css");
     Html.AddScriptParts(ResourceLocation.Footer, "~/js/public.estimateshipping.popup.js");
-
-    Html.AddCssFileParts("~/lib/magnific-popup/magnific-popup.css");
     Html.AddScriptParts(ResourceLocation.Footer, "~/lib/magnific-popup/jquery.magnific-popup.min.js");
+    Html.AddCssFileParts("~/lib/magnific-popup/magnific-popup.css");
 }
 
 <div id="estimate-shipping-popup" class="mfp-with-anim mfp-hide">
