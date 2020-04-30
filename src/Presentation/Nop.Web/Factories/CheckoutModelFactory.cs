@@ -127,6 +127,7 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepares the checkout pickup points model
         /// </summary>
+        /// <param name="cart">Cart</param>
         /// <returns>The checkout pickup points model</returns>
         protected virtual CheckoutPickupPointsModel PrepareCheckoutPickupPointsModel(IList<ShoppingCartItem> cart)
         {
@@ -276,6 +277,7 @@ namespace Nop.Web.Factories
         /// <summary>
         /// Prepare shipping address model
         /// </summary>
+        /// <param name="cart">Cart</param>
         /// <param name="selectedCountryId">Selected country identifier</param>
         /// <param name="prePopulateNewAddressWithCustomerFields">Pre populate new address with customer fields</param>
         /// <param name="overrideAttributesXml">Override attributes xml</param>

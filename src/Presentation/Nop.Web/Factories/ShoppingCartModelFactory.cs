@@ -82,10 +82,10 @@ namespace Nop.Web.Factories
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly ITaxService _taxService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IVendorService _vendorService;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly MediaSettings _mediaSettings;
@@ -134,10 +134,10 @@ namespace Nop.Web.Factories
             IStateProvinceService stateProvinceService,
             IStaticCacheManager staticCacheManager,
             IStoreContext storeContext,
+            IStoreMappingService storeMappingService,
             ITaxService taxService,
             IUrlRecordService urlRecordService,
             IVendorService vendorService,
-            IStoreMappingService storeMappingService,
             IWebHelper webHelper,
             IWorkContext workContext,
             MediaSettings mediaSettings,
@@ -182,10 +182,10 @@ namespace Nop.Web.Factories
             _stateProvinceService = stateProvinceService;
             _staticCacheManager = staticCacheManager;
             _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
             _taxService = taxService;
             _urlRecordService = urlRecordService;
             _vendorService = vendorService;
-            _storeMappingService = storeMappingService;
             _webHelper = webHelper;
             _workContext = workContext;
             _mediaSettings = mediaSettings;
