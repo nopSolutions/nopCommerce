@@ -42,7 +42,6 @@ namespace Nop.Web.Framework.Controllers
             //original implementation: https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNetCore.Mvc.ViewFeatures/Internal/ViewComponentResultExecutor.cs
             //we customized it to allow running from controllers
 
-            //TODO add support for parameters (pass ViewComponent as input parameter)
             if (string.IsNullOrEmpty(componentName))
                 throw new ArgumentNullException(nameof(componentName));
 
@@ -58,14 +57,12 @@ namespace Nop.Web.Framework.Controllers
             if (viewData == null)
             {
                 throw new NotImplementedException();
-                //TODO viewData = new ViewDataDictionary(_modelMetadataProvider, context.ModelState);
             }
 
             var tempData = TempData;
             if (tempData == null)
             {
                 throw new NotImplementedException();
-                //TODO tempData = _tempDataDictionaryFactory.GetTempData(context.HttpContext);
             }
 
             using var writer = new StringWriter();
