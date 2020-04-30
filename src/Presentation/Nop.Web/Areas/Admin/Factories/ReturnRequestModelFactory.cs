@@ -75,7 +75,6 @@ namespace Nop.Web.Areas.Admin.Factories
             _baseAdminModelFactory.PrepareReturnRequestStatuses(searchModel.ReturnRequestStatusList, false);
 
             //for some reason, the standard default value (0) for the "All" item is already used for the "Pending" status, so here we use -1
-            //TODO: move away from using 0 in ReturnRequestStatus enum
             searchModel.ReturnRequestStatusId = -1;
             searchModel.ReturnRequestStatusList.Insert(0, new SelectListItem
             {
