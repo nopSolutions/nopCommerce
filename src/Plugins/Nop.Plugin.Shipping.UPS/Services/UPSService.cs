@@ -524,11 +524,6 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 if (_upsSettings.InsurePackage)
                 {
                     //The maximum declared amount per package: 50000 USD.
-                    //TODO: Currently using Product.Price - should we use GetUnitPrice() instead?
-                    // Convert.ToInt32(_priceCalculationService.GetUnitPrice(sci, includeDiscounts:false))
-                    //One could argue that the insured value should be based on Cost rather than Price.
-                    //GetUnitPrice handles Attribute Adjustments and also Customer Entered Price.
-                    //But, even with includeDiscounts:false, it could apply a "discount" from Tier pricing.
                     insuranceAmount = Convert.ToInt32(packageItem.Product.Price);
                 }
 

@@ -709,7 +709,6 @@ namespace Nop.Services.Shipping
                         //multiple warehouses supported
                         foreach (var pwi in _productService.GetAllProductWarehouseInventoryRecords(product.Id))
                         {
-                            //TODO validate stock quantity when backorder is not allowed?
                             var tmpWarehouse = GetWarehouseById(pwi.WarehouseId);
                             if (tmpWarehouse != null)
                                 allWarehouses.Add(tmpWarehouse);

@@ -1500,19 +1500,6 @@ namespace Nop.Services.Catalog
                     AdjustInventory(associatedProduct, quantityToChange * attributeValue.Quantity, message);
                 }
             }
-
-            //TODO send back in stock notifications?
-            //also do not forget to uncomment some code above ("prevStockQuantity")
-            //if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
-            //    product.BackorderMode == BackorderMode.NoBackorders &&
-            //    product.AllowBackInStockSubscriptions &&
-            //    product.GetTotalStockQuantity() > 0 &&
-            //    prevStockQuantity <= 0 &&
-            //    product.Published &&
-            //    !product.Deleted)
-            //{
-            //    //_backInStockSubscriptionService.SendNotificationsToSubscribers(product);
-            //}
         }
 
         /// <summary>
