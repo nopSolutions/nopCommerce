@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Nop.Core.Data;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
@@ -13,19 +12,21 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Plugin.Misc.PolyCommerce.Models;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Web.Areas.Admin.Factories;
+using Nop.Services.Orders;
 
 namespace Nop.Plugin.Misc.PolyCommerce.Controllers
 {
     public class OrdersController : Controller
     {
+        private readonly IOrderService _orderService;
         private readonly IRepository<Order> _orderRepository;
-        private readonly IOrderModelFactory _orderModelFactory;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerService _customerService;
@@ -35,9 +36,11 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICountryService _countryService;
         private readonly ILogger _logger;
+        private readonly ICustomNumberFormatter _customNumberFormatter;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IProductService _productService;
 
         public OrdersController(IRepository<Order> orderRepository,
-            IOrderModelFactory orderModelFactory,
             ICustomerActivityService customerActivityService,
             ILocalizationService localizationService,
             ICustomerService customerService,
@@ -46,10 +49,13 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
             IRepository<OrderNote> orderNoteRepository,
             IGenericAttributeService genericAttributeService,
             ILogger logger,
-            ICountryService countryService)
+            IEventPublisher eventPublisher,
+            ICustomNumberFormatter customNumberFormatter,
+            ICountryService countryService,
+            IOrderService orderService,
+            IProductService productService)
         {
             _orderRepository = orderRepository;
-            _orderModelFactory = orderModelFactory;
             _customerActivityService = customerActivityService;
             _localizationService = localizationService;
             _customerService = customerService;
@@ -59,12 +65,17 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
             _genericAttributeService = genericAttributeService;
             _countryService = countryService;
             _logger = logger;
+            _orderService = orderService;
+            _customNumberFormatter = customNumberFormatter;
+            _eventPublisher = eventPublisher;
+            _productService = productService;
         }
 
         [HttpPost]
         [Route("api/polycommerce/orders/add")]
         public async Task<IActionResult> AddOrder([FromBody]PolyCommerceOrder model)
         {
+            Order order = null;
             try
             {
                 var storeToken = Request.Headers.TryGetValue("Store-Token", out var values) ? values.First() : null;
@@ -90,7 +101,20 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     throw new Exception("At least one OrderItem is required");
                 }
 
+                if (!Enum.IsDefined(typeof(PaymentStatus), model.PaymentStatusId))
+                {
+                    throw new Exception($"PaymentStatusId: {model.PaymentStatusId} not recognised");
+                }
+
+                if (!Enum.IsDefined(typeof(OrderStatus), model.OrderStatusId))
+                {
+                    throw new Exception($"OrderStatusId: {model.OrderStatusId} not recognised");
+                }
+
                 var country = _countryService.GetCountryByTwoLetterIsoCode(model.Address.TwoLetterCountryCode);
+
+                // only english supported
+                var englishLanguage = _languageRepository.Table.First(x => x.Name == "English");
 
                 var customer = new Customer
                 {
@@ -123,27 +147,25 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                 var guestRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
                 customer.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRole = guestRole });
 
-                // save FirstName and LastName to user.
-
-                if (!string.IsNullOrEmpty(model.Address.FirstName))
+                try
                 {
-                    _genericAttributeService.SaveAttribute(customer, "FirstName", model.Address.FirstName);
+                    // save FirstName and LastName to user.
+                    if (!string.IsNullOrEmpty(model.Address.FirstName))
+                    {
+                        _genericAttributeService.SaveAttribute(customer, "FirstName", model.Address.FirstName);
+                    }
+
+                    if (!string.IsNullOrEmpty(model.Address.LastName))
+                    {
+                        _genericAttributeService.SaveAttribute(customer, "LastName", model.Address.LastName);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    _logger.Warning("Could not save generic attributes: FirstName, LastName", ex);
                 }
 
-                if (!string.IsNullOrEmpty(model.Address.LastName))
-                {
-                    _genericAttributeService.SaveAttribute(customer, "LastName", model.Address.LastName);
-                }
-
-                if (!Enum.IsDefined(typeof(PaymentStatus), model.PaymentStatusId))
-                {
-                    throw new Exception($"PaymentStatusId: {model.PaymentStatusId} not recognised");
-                }
-
-                // only english supported
-                var englishLanguage = _languageRepository.Table.First(x => x.Name == "English");
-
-                var order = new Order
+                order = new Order
                 {
                     StoreId = store.Id,
                     OrderGuid = Guid.NewGuid(),
@@ -154,8 +176,6 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     OrderSubtotalExclTax = model.OrderSubtotalExclTax,
                     OrderSubTotalDiscountInclTax = decimal.Zero,
                     OrderSubTotalDiscountExclTax = decimal.Zero,
-                    OrderShippingInclTax = decimal.Zero,
-                    OrderShippingExclTax = decimal.Zero,
                     PaymentMethodAdditionalFeeInclTax = decimal.Zero,
                     PaymentMethodAdditionalFeeExclTax = decimal.Zero,
                     TaxRates = "0:0;",
@@ -167,7 +187,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     CheckoutAttributesXml = string.Empty,
                     CustomerCurrencyCode = model.CurrencyCode,
                     AffiliateId = 0,
-                    OrderStatus = OrderStatus.Pending,
+                    OrderStatus = (OrderStatus)model.OrderStatusId,
                     AllowStoringCreditCardNumber = false,
                     CardType = string.Empty,
                     CardName = string.Empty,
@@ -193,19 +213,27 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     CustomValuesXml = string.Empty,
                     VatNumber = string.Empty,
                     CreatedOnUtc = DateTime.UtcNow,
-                    CustomOrderNumber = model.OrderNumber
+                    CurrencyRate = 1,
+                    OrderShippingInclTax = model.OrderShippingTotalInclTax,
+                    OrderShippingExclTax = model.OrderShippingTotalExclTax,
                 };
 
-                _orderRepository.Insert(order);
+                _orderService.InsertOrder(order);
+
+                //generate and set custom order number
+                order.CustomOrderNumber = _customNumberFormatter.GenerateOrderCustomNumber(order);
+                _orderService.UpdateOrder(order);
 
                 // insert order items...
                 foreach (var orderItem in model.OrderItems)
                 {
+                    var product = _productService.GetProductById(orderItem.ExternalProductId);
+
                     var newItem = new OrderItem
                     {
                         OrderItemGuid = Guid.NewGuid(),
                         Order = order,
-                        ProductId = orderItem.ExternalProductId,
+                        ProductId = product.Id,
                         UnitPriceInclTax = orderItem.UnitPriceInclTax,
                         UnitPriceExclTax = orderItem.UnitPriceExclTax,
                         PriceInclTax = orderItem.PriceInclTax,
@@ -222,21 +250,38 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     };
 
                     _orderItemRepository.Insert(newItem);
+                    _productService.AdjustInventory(product, orderItem.Quantity * -1);
                 }
 
-                //order notes
-                if (model.Notes != null && model.Notes.Any())
+                try
                 {
-                    foreach(var note in model.Notes)
+                    //order notes
+                    if (model.Notes != null && model.Notes.Any())
                     {
-                        _orderNoteRepository.Insert(new OrderNote
+                        foreach (var note in model.Notes)
                         {
-                            CreatedOnUtc = DateTime.UtcNow,
-                            Note = note,
-                            Order = order
-                        });
+                            _orderNoteRepository.Insert(new OrderNote
+                            {
+                                CreatedOnUtc = DateTime.UtcNow,
+                                Note = note,
+                                Order = order
+                            });
+                        }
                     }
+                }
+                catch(Exception ex)
+                {
+                    _logger.Warning("Could not save order notes", ex);
+                }
 
+                try
+                {
+                    _customerActivityService.InsertActivity("PublicStore.PlaceOrder", string.Format(_localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"), order.Id), order);
+                    _eventPublisher.Publish(new OrderPlacedEvent(order));
+                }
+                catch(Exception ex)
+                {
+                    _logger.Warning("Could not publish order events", ex);
                 }
 
                 return Ok(new { OrderId = order.Id });
@@ -244,14 +289,19 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
             catch (Exception ex)
             {
                 _logger.Error($"Error saving PolyCommerce order. {(model != null ? Environment.NewLine + JsonConvert.SerializeObject(model) : string.Empty)}", ex);
+
+                if (order != null && order.Id > 0)
+                {
+                    _orderService.DeleteOrder(order);
+                }
+
                 return BadRequest(ex.ToString());
             }
         }
 
-
-        [HttpGet]
-        [Route("api/polycommerce/orders/get_new_orders")]
-        public async Task<IActionResult> GetNewOrders(int page, int pageSize, DateTime minCreatedDate)
+        [HttpPost]
+        [Route("api/polycommerce/orders/check_for_shipped_orders")]
+        public async Task<IActionResult> CheckForShippedOrders([FromBody]PolyCommerceCheckForShippedOrdersModel model)
         {
             var storeToken = Request.Headers.TryGetValue("Store-Token", out var values) ? values.First() : null;
 
@@ -262,41 +312,22 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                 return Unauthorized();
             }
 
-            var skipRecords = (page - 1) * pageSize;
+            if (model == null)
+            {
+                throw new Exception("Model can't be null");
+            }
+
+            if (model.OrderIds == null || !model.OrderIds.Any())
+            {
+                throw new Exception("Expected at least one CommaSeparatedOrderIds element.");
+            }
 
             var orders = await _orderRepository.Table
-                .Where(x => x.CreatedOnUtc >= minCreatedDate)
-                .Skip(skipRecords)
-                .Take(pageSize)
+                .Where(x => model.OrderIds.Any(y => y == x.Id) && x.ShippingStatusId > (int)ShippingStatus.NotYetShipped)
+                .Select(x => new PolyCommerceCheckForShippedOrdersResult { OrderId = x.Id, Shipped = true })
                 .ToListAsync();
 
             return Ok(orders);
-        }
-
-        [HttpGet]
-        [Route("api/polycommerce/orders/get_orders_by_id")]
-        public async Task<IActionResult> GetOrdersById(string commaSeparatedOrderIds)
-        {
-            var storeToken = Request.Headers.TryGetValue("Store-Token", out var values) ? values.First() : null;
-
-            var store = await PolyCommerceHelper.GetPolyCommerceStoreByToken(storeToken);
-
-            if (store == null)
-            {
-                return Unauthorized();
-            }
-
-            commaSeparatedOrderIds = commaSeparatedOrderIds.Trim().Replace(" ", string.Empty);
-
-            var orderIds = commaSeparatedOrderIds.Split(',').Select(x => int.Parse(x));
-
-            var orders = await _orderRepository.Table
-                .Where(x => orderIds.Any(y => y == x.Id))
-                .ToListAsync();
-
-            var mappedOrders = orders.ConvertAll(x => _orderModelFactory.PrepareOrderModel(null, x));
-
-            return Ok(mappedOrders);
         }
 
     }

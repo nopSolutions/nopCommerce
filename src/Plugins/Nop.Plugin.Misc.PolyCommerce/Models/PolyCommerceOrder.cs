@@ -17,6 +17,9 @@ namespace Nop.Plugin.Misc.PolyCommerce.Models
         public string PaymentMethodName { get; set; } // e.g. Payments.AfterPay
         public string ShippingMethod { get; set; }
         public int PaymentStatusId { get; set; }
+        public int OrderStatusId { get; set; }
+        public decimal OrderShippingTotalInclTax { get; set; }
+        public decimal OrderShippingTotalExclTax { get; set; }
         public PolyCommerceAddress Address { get; set; }
         public List<PolyCommerceOrderItem> OrderItems { get; set; }
     }
