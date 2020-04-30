@@ -163,7 +163,6 @@ namespace Nop.Web.Areas.Admin.Factories
                 .OrderBy(localeResource => localeResource.Key).AsQueryable();
 
             //filter locale resources
-            //TODO: move filter to language service
             if (!string.IsNullOrEmpty(searchModel.SearchResourceName))
                 localeResources = localeResources.Where(l => l.Key.ToLowerInvariant().Contains(searchModel.SearchResourceName.ToLowerInvariant()));
             if (!string.IsNullOrEmpty(searchModel.SearchResourceValue))
