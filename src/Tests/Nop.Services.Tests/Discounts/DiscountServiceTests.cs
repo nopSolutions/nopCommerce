@@ -148,13 +148,6 @@ namespace Nop.Services.Tests.Discounts
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
             };
 
-
-            //UNDONE: little workaround here
-            //we have to register "nop_cache_static" cache manager (null manager) from DependencyRegistrar.cs
-            //because DiscountService right now dynamically Resolve<ICacheManager>("nop_cache_static")
-            //we cannot inject it because DiscountService already has "per-request" cache manager injected 
-            //EngineContext.Initialize(false);
-
             _discountService.ValidateDiscount(discount, customer, new[] { "CouponCode 1" }).IsValid.Should().BeTrue();
         }
 

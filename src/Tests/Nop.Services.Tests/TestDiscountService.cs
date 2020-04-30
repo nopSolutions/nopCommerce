@@ -63,7 +63,6 @@ namespace Nop.Services.Tests
             return _discounts
                 .Where(x => !discountType.HasValue || x.DiscountType == discountType.Value)
                 .Where(x => string.IsNullOrEmpty(couponCode) || x.CouponCode == couponCode)
-                //UNDONE other filtering such as discountName, showHidden (not actually required in unit tests)
                 .ToList();
         }
 
