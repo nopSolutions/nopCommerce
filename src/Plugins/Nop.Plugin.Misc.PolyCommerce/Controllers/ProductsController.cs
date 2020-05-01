@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
 
         [Route("api/polycommerce/products")]
         [HttpGet]
-        public async Task<IActionResult> GetProducts(int page = 1, int pageSize = 100, DateTime? minModifiedDate = null, DateTime? maxModifiedDate = null)
+        public async Task<IActionResult> GetProducts(int page = 1, int pageSize = 100, string minModifiedDateStr = null, string maxModifiedDateStr = null)
         {
             var storeToken = Request.Headers.TryGetValue("Store-Token", out var values) ? values.First() : null;
 
@@ -43,6 +44,9 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
             {
                 return Unauthorized();
             }
+
+            var minModifiedDate = DateTime.TryParseExact(minModifiedDateStr, "o", CultureInfo.InvariantCulture, DateTimeStyles.None, out var minModifiedDateVal) ? minModifiedDateVal.ToUniversalTime() : (DateTime?)null;
+            var maxModifiedDate = DateTime.TryParseExact(maxModifiedDateStr, "o", CultureInfo.InvariantCulture, DateTimeStyles.None, out var maxModifiedDateVal) ? maxModifiedDateVal.ToUniversalTime() : (DateTime?)null;        
 
             var skipRecords = (page - 1) * pageSize;
 

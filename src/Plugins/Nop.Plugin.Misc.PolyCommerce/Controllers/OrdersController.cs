@@ -214,6 +214,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
                     VatNumber = string.Empty,
                     CreatedOnUtc = DateTime.UtcNow,
                     CurrencyRate = 1,
+                    CustomOrderNumber = string.Empty,
                     OrderShippingInclTax = model.OrderShippingTotalInclTax,
                     OrderShippingExclTax = model.OrderShippingTotalExclTax,
                 };
@@ -251,6 +252,10 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
 
                     _orderItemRepository.Insert(newItem);
                     _productService.AdjustInventory(product, orderItem.Quantity * -1);
+
+                    // NopCommerce Core does not update UpdatedOnUtc date inside AdjustInventory() method
+                    product.UpdatedOnUtc = DateTime.UtcNow;
+                    _productService.UpdateProduct(product);
                 }
 
                 try
@@ -319,7 +324,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Controllers
 
             if (model.OrderIds == null || !model.OrderIds.Any())
             {
-                throw new Exception("Expected at least one CommaSeparatedOrderIds element.");
+                throw new Exception("Expected at least one OrderIds element.");
             }
 
             var orders = await _orderRepository.Table

@@ -109,6 +109,7 @@ namespace Nop.Plugin.Misc.PolyCommerce.Factories
                 productModel.ManageInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
                 productModel.MinStockQuantity = 1;
                 productModel.LowStockActivityId = (int)LowStockActivity.Unpublish;
+                productModel.DisplayStockQuantity = true;
             }
             
             return productModel;
