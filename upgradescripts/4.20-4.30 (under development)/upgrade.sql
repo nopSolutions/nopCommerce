@@ -3141,3 +3141,16 @@ BEGIN
     VALUES (N'customersettings.phonenumbervalidationrule', N'^[0-9]{1,14}?$', 0)
 END
 GO
+ 
+--update fluent migration versions
+DELETE FROM [MigrationVersionInfo] WHERE [Description] in ('AddPCMProductIdExtendedIX', 'AddPMMProductIdExtendedIX', 'AddPSAMAllowFilteringIX', 'AddPSAMSpecificationAttributeOptionIdAllowFilteringIX', 'AddQueuedEmailSentOnUtcDontSendBeforeDateUtcExtendedIX', 'AddProductVisibleIndividuallyPublishedDeletedExtendedIX', 'AddCategoryDeletedExtendedIX', 'Widgets.FacebookPixel base schema');
+
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280389, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddPCMProductIdExtendedIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280390, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddPMMProductIdExtendedIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280391, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddPSAMAllowFilteringIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280392, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddPSAMSpecificationAttributeOptionIdAllowFilteringIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280393, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddQueuedEmailSentOnUtcDontSendBeforeDateUtcExtendedIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280394, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddProductVisibleIndividuallyPublishedDeletedExtendedIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280395, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddCategoryDeletedExtendedIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637207344000000000, CAST(N'2020-04-30T13:54:21.000' AS DateTime), N'Widgets.FacebookPixel base schema')
+GO
