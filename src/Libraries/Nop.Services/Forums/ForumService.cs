@@ -1466,8 +1466,6 @@ namespace Nop.Services.Forums
                     }
 
                     break;
-                default:
-                    break;
             }
 
             return text;

@@ -768,8 +768,6 @@ namespace Nop.Services.Customers
                 case CustomerNameFormat.ShowFirstName:
                     result = _genericAttributeService.GetAttribute<string>(customer, NopCustomerDefaults.FirstNameAttribute);
                     break;
-                default:
-                    break;
             }
 
             if (stripTooLong && maxLength > 0)

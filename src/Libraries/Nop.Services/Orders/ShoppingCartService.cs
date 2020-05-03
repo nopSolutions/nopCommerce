@@ -598,8 +598,6 @@ namespace Nop.Services.Orders
                         }
 
                         break;
-                    default:
-                        break;
                 }
             }
 
@@ -1532,8 +1530,6 @@ namespace Nop.Services.Orders
                             return warnings;
                         }
 
-                        break;
-                    default:
                         break;
                 }
 
