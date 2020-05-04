@@ -926,20 +926,17 @@ namespace Nop.Plugin.Tax.Avalara.Services
         /// <returns>Validated address</returns>
         public AddressResolutionModel ValidateAddress(Address address)
         {
-            return HandleFunction(() =>
+            //return result
+            return HandleFunction(() => ServiceClient.ResolveAddressPost(new AddressValidationInfo
             {
-                //return result
-                return ServiceClient.ResolveAddressPost(new AddressValidationInfo
-                {
-                    city = CommonHelper.EnsureMaximumLength(address.City, 50),
-                    country = CommonHelper.EnsureMaximumLength(_countryService.GetCountryByAddress(address)?.TwoLetterIsoCode, 2),
-                    line1 = CommonHelper.EnsureMaximumLength(address.Address1, 50),
-                    line2 = CommonHelper.EnsureMaximumLength(address.Address2, 100),
-                    postalCode = CommonHelper.EnsureMaximumLength(address.ZipPostalCode, 11),
-                    region = CommonHelper.EnsureMaximumLength(_stateProvinceService.GetStateProvinceByAddress(address)?.Abbreviation, 3),
-                    textCase = TextCase.Mixed
-                }) ?? throw new NopException("No response from the service");
-            });
+                city = CommonHelper.EnsureMaximumLength(address.City, 50),
+                country = CommonHelper.EnsureMaximumLength(_countryService.GetCountryByAddress(address)?.TwoLetterIsoCode, 2),
+                line1 = CommonHelper.EnsureMaximumLength(address.Address1, 50),
+                line2 = CommonHelper.EnsureMaximumLength(address.Address2, 100),
+                postalCode = CommonHelper.EnsureMaximumLength(address.ZipPostalCode, 11),
+                region = CommonHelper.EnsureMaximumLength(_stateProvinceService.GetStateProvinceByAddress(address)?.Abbreviation, 3),
+                textCase = TextCase.Mixed
+            }) ?? throw new NopException("No response from the service"));
         }
 
         #endregion
@@ -1027,11 +1024,14 @@ namespace Nop.Plugin.Tax.Avalara.Services
             {
                 //create dummy order to create tax transaction
                 var customer = taxTotalRequest.Customer;
-                var order = new Order { CustomerId = customer.Id };
+                var order = new Order
+                {
+                    CustomerId = customer.Id,
+                    //addresses
+                    BillingAddressId = customer.BillingAddressId ?? 0,
+                    ShippingAddressId = customer.ShippingAddressId
+                };
 
-                //addresses
-                order.BillingAddressId = customer.BillingAddressId ?? 0;
-                order.ShippingAddressId = customer.ShippingAddressId;
                 if (_shippingSettings.AllowPickupInStore)
                 {
                     var pickupPoint = _genericAttributeService
