@@ -33,7 +33,11 @@
             openPopUp: function () {
                 if (reloadPopUp) {
                     let address = popUp.getShippingAddress();
-                    popUp.getShippingOptions(address);
+                    if (popUp.validateAddress(address)) {
+                        popUp.getShippingOptions(address);
+                    } else {
+                        popUp.clearShippingOptions();
+                    }
 
                     reloadPopUp = false;
                 }
