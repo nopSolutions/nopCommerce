@@ -880,6 +880,9 @@ set @resources='
   <LocaleResource Name="Admin.Common.EmptyItemText">
     <Value>---</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RentalPriceLength.ShouldBeGreaterThanZero">
+    <Value>Rental period length should be greater 0.</Value>
+  </LocaleResource>
 </Language>
 '
 
