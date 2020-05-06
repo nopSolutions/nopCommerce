@@ -43,6 +43,11 @@ namespace Nop.Core.Caching
             _memoryCacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions()));
         }
 
+        ~RedisCacheManager()
+        {
+            _memoryCacheManager.Dispose();
+        }
+
         #endregion
         
         #region Utilities
@@ -312,11 +317,6 @@ namespace Nop.Core.Caching
         {
             if (_disposed)
                 return;
-
-            if (disposing)
-            {
-                _memoryCacheManager.Dispose();
-            }
 
             _disposed = true;
         }
