@@ -3154,3 +3154,8 @@ INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (63
 INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280395, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddCategoryDeletedExtendedIX')
 INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637207344000000000, CAST(N'2020-04-30T13:54:21.000' AS DateTime), N'Widgets.FacebookPixel base schema')
 GO
+
+--delete FK
+IF EXISTS (SELECT *  FROM sys.foreign_keys  WHERE object_id = OBJECT_ID(N'FK_StockQuantityHistory_WarehouseId_Warehouse_Id') AND parent_object_id = OBJECT_ID(N'StockQuantityHistory'))
+	ALTER TABLE [StockQuantityHistory] DROP CONSTRAINT FK_StockQuantityHistory_WarehouseId_Warehouse_Id
+GO
