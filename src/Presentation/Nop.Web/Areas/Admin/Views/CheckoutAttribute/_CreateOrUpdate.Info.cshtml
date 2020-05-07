@@ -250,6 +250,11 @@
             $('#pnlValidationFileAllowedExtensions').show();
             $('#pnlDefaultValueLocalized').hide();
             $('#pnlDefaultValue').hide();
+            $("#@Html.IdFor(model => model.DefaultValue)").val('');
+            @for (var item = 0; item < Model.Locales.Count; item++)
+            {
+                <text>$("#@Html.IdFor(model => model.Locales[item].DefaultValue)").val('');</text>
+            }
         } else {
             $('#pnlValidationMinLength').hide();
             $('#pnlValidationMaxLength').hide();
@@ -257,6 +262,11 @@
             $('#pnlValidationFileAllowedExtensions').hide();
             $('#pnlDefaultValueLocalized').hide();
             $('#pnlDefaultValue').hide();
+            $("#@Html.IdFor(model => model.DefaultValue)").val('');
+            @for (var item = 0; item < Model.Locales.Count; item++)
+            {
+                <text>$("#@Html.IdFor(model => model.Locales[item].DefaultValue)").val('');</text>
+            }
         }
 
         //values
