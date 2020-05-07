@@ -19,24 +19,28 @@
             $('#pnlValidationFileMaximumSize').hide();
             $('#pnlValidationFileAllowedExtensions').hide();
             $('#pnlDefaultValueLocalized').show();
+            $('#pnlDefaultValue').show();
         } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
             $('#pnlValidationMinLength').show();
             $('#pnlValidationMaxLength').show();
             $('#pnlValidationFileMaximumSize').hide();
             $('#pnlValidationFileAllowedExtensions').hide();
             $('#pnlDefaultValueLocalized').show();
+            $('#pnlDefaultValue').show();
         } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
             $('#pnlValidationMinLength').hide();
             $('#pnlValidationMaxLength').hide();
             $('#pnlValidationFileMaximumSize').show();
             $('#pnlValidationFileAllowedExtensions').show();
             $('#pnlDefaultValueLocalized').hide();
+            $('#pnlDefaultValue').hide();
         } else {
             $('#pnlValidationMinLength').hide();
             $('#pnlValidationMaxLength').hide();
             $('#pnlValidationFileMaximumSize').hide();
             $('#pnlValidationFileAllowedExtensions').hide();
             $('#pnlDefaultValueLocalized').hide();
+            $('#pnlDefaultValue').hide();
         }
 
         //values
@@ -123,7 +127,7 @@
     </div>
 ,
     @<div>
-        <div class="form-group advanced-setting">
+        <div class="form-group advanced-setting" id="pnlDefaultValue">
             <div class="col-md-3">
                 <nop-label asp-for="DefaultValue"/>
             </div>
