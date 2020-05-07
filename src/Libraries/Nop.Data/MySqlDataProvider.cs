@@ -336,11 +336,10 @@ namespace Nop.Data
         /// </summary>
         /// <param name="targetTable">Target table name</param>
         /// <param name="targetColumn">Target column name</param>
-        /// <param name="isShort">Indicates whether to use short form</param>
         /// <returns>Name of an index</returns>
-        public virtual string GetIndexName(string targetTable, string targetColumn, bool isShort = true)
+        public virtual string GetIndexName(string targetTable, string targetColumn)
         {
-            return $"IX_{Guid.NewGuid():D}";
+            return "IX_" + HashHelper.CreateHash(Encoding.UTF8.GetBytes($"{targetTable}_{targetColumn}"), HASH_ALGORITHM);
         }
 
         #endregion

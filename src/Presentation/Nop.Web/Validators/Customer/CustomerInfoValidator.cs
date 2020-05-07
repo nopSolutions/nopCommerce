@@ -110,6 +110,10 @@ namespace Nop.Web.Validators.Customer
             {
                 RuleFor(x => x.Phone).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Phone.Required"));
             }
+            if (customerSettings.PhoneEnabled)
+            {
+                RuleFor(x => x.Phone).IsPhoneNumber(customerSettings).WithMessage(localizationService.GetResource("Account.Fields.Phone.NotValid"));
+            }
             if (customerSettings.FaxRequired && customerSettings.FaxEnabled)
             {
                 RuleFor(x => x.Fax).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Fax.Required"));

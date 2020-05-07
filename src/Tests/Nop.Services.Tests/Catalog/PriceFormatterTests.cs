@@ -16,7 +16,6 @@ using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
-using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -77,8 +76,7 @@ namespace Nop.Services.Tests.Catalog
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            var pluginService = new FakePluginService();
-            _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, pluginService);
+            _exchangeRatePluginManager = new ExchangeRatePluginManager();
             _currencyService = new CurrencyService(_currencySettings,
                 new FakeCacheKeyService(),
                 null,

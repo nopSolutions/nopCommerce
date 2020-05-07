@@ -90,7 +90,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterGeneric(typeof(EntityRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
 
             //plugins
-            builder.RegisterType<PluginService>().As<IPluginService>().InstancePerLifetimeScope();
+            builder.RegisterType<PluginService>().As<IPluginService>().InstancePerDependency();
             builder.RegisterType<OfficialFeedManager>().AsSelf().InstancePerLifetimeScope();
 
             //redis connection wrapper
@@ -233,15 +233,15 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterType<SettingService>().As<ISettingService>().InstancePerLifetimeScope();
 
             //plugin managers
-            builder.RegisterGeneric(typeof(PluginManager<>)).As(typeof(IPluginManager<>)).InstancePerLifetimeScope();
-            builder.RegisterType<AuthenticationPluginManager>().As<IAuthenticationPluginManager>().InstancePerLifetimeScope();
-            builder.RegisterType<WidgetPluginManager>().As<IWidgetPluginManager>().InstancePerLifetimeScope();
-            builder.RegisterType<ExchangeRatePluginManager>().As<IExchangeRatePluginManager>().InstancePerLifetimeScope();
-            builder.RegisterType<DiscountPluginManager>().As<IDiscountPluginManager>().InstancePerLifetimeScope();
-            builder.RegisterType<PaymentPluginManager>().As<IPaymentPluginManager>().InstancePerLifetimeScope();
-            builder.RegisterType<PickupPluginManager>().As<IPickupPluginManager>().InstancePerLifetimeScope();
-            builder.RegisterType<ShippingPluginManager>().As<IShippingPluginManager>().InstancePerLifetimeScope();
-            builder.RegisterType<TaxPluginManager>().As<ITaxPluginManager>().InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(PluginManager<>)).As(typeof(IPluginManager<>)).SingleInstance();
+            builder.RegisterType<AuthenticationPluginManager>().As<IAuthenticationPluginManager>().SingleInstance();
+            builder.RegisterType<WidgetPluginManager>().As<IWidgetPluginManager>().SingleInstance();
+            builder.RegisterType<ExchangeRatePluginManager>().As<IExchangeRatePluginManager>().SingleInstance();
+            builder.RegisterType<DiscountPluginManager>().As<IDiscountPluginManager>().SingleInstance();
+            builder.RegisterType<PaymentPluginManager>().As<IPaymentPluginManager>().SingleInstance();
+            builder.RegisterType<PickupPluginManager>().As<IPickupPluginManager>().SingleInstance();
+            builder.RegisterType<ShippingPluginManager>().As<IShippingPluginManager>().SingleInstance();
+            builder.RegisterType<TaxPluginManager>().As<ITaxPluginManager>().SingleInstance();
 
             builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().InstancePerLifetimeScope();
 

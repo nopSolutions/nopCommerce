@@ -510,7 +510,7 @@ namespace Nop.Services.Media
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
                 if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                 {
-                    using var image = Image.Load(filePath, out var imageFormat);
+                    using var image = Image.Load<Rgba32>(filePath, out var imageFormat);
                     image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
                     {
                         Mode = ResizeMode.Max,
@@ -622,7 +622,7 @@ namespace Nop.Services.Media
                     if (targetSize != 0)
                     {
                         //resizing required
-                        using var image = Image.Load(pictureBinary, out var imageFormat);
+                        using var image = Image.Load<Rgba32>(pictureBinary, out var imageFormat);
                         image.Mutate(imageProcess => imageProcess.Resize(new ResizeOptions
                         {
                             Mode = ResizeMode.Max,
@@ -999,7 +999,7 @@ namespace Nop.Services.Media
         /// <returns>Picture binary or throws an exception</returns>
         public virtual byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
         {
-            using var image = Image.Load(pictureBinary, out var imageFormat);
+            using var image = Image.Load<Rgba32>(pictureBinary, out var imageFormat);
             //resize the image in accordance with the maximum size
             if (Math.Max(image.Height, image.Width) > _mediaSettings.MaximumImageSize)
             {

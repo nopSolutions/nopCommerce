@@ -841,6 +841,45 @@ set @resources='
   <LocaleResource Name="Plugins.DiscountRules.CustomerRoles.Fields.DiscountId.Required">
     <Value>Discount is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Fields.Phone.NotValid">
+    <Value>Phone number is not valid</Value>
+  </LocaleResource>
+   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationEnabled">
+    <Value>Phone number validation is enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationEnabled.Hint">
+    <Value>Check to enable phone number validation (when registering or changing on the "My Account" page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationRule">
+    <Value>Phone number validation rule</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationRule.Hint">
+    <Value>Set the validation rule for phone number. You can specify a list of allowed characters or a regular expression. If you use a regular expression check the "Use regex for phone number validation" setting.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationUseRegex">
+    <Value>Use regex for phone number validation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneNumberValidationUseRegex.Hint">
+    <Value>Check to use a regular expression for phone number validation (when registering or changing on the "My Account" page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerSettings.PhoneNumberRegexValidationRule.Error">
+    <Value>The regular expression for phone number validation is incorrect</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.ShippingOption.IsNotFound">
+    <Value>Selected shipping option is not found</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.Pickup.PriceFrom">
+    <Value>From {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.AccountAlreadyAssigned">
+    <Value>Account is already assigned</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage.DefaultItemText">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.EmptyItemText">
+    <Value>---</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3061,4 +3100,62 @@ BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'cachingsettings.bundledfilescachetime', N'120', 0)
 END
+GO
+
+--delete setting
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.renderxuacompatible')
+BEGIN
+    DELETE FROM [Setting]
+    WHERE [Name] = N'commonsettings.renderxuacompatible'
+END
+GO
+
+--delete setting
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'commonsettings.xuacompatiblevalue')
+BEGIN
+    DELETE FROM [Setting]
+    WHERE [Name] = N'commonsettings.xuacompatiblevalue'
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.phonenumbervalidationenabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.phonenumbervalidationenabled', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.phonenumbervalidationuseregex')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.phonenumbervalidationuseregex', N'False', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.phoneNumbervalidationrule')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'customersettings.phonenumbervalidationrule', N'^[0-9]{1,14}?$', 0)
+END
+GO
+ 
+--update fluent migration versions
+DELETE FROM [MigrationVersionInfo] WHERE [Description] in ('AddPCMProductIdExtendedIX', 'AddPMMProductIdExtendedIX', 'AddPSAMAllowFilteringIX', 'AddPSAMSpecificationAttributeOptionIdAllowFilteringIX', 'AddQueuedEmailSentOnUtcDontSendBeforeDateUtcExtendedIX', 'AddProductVisibleIndividuallyPublishedDeletedExtendedIX', 'AddCategoryDeletedExtendedIX', 'Widgets.FacebookPixel base schema');
+
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280389, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddPCMProductIdExtendedIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280390, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddPMMProductIdExtendedIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280391, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddPSAMAllowFilteringIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280392, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddPSAMSpecificationAttributeOptionIdAllowFilteringIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280393, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddQueuedEmailSentOnUtcDontSendBeforeDateUtcExtendedIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280394, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddProductVisibleIndividuallyPublishedDeletedExtendedIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280395, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddCategoryDeletedExtendedIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637207344000000000, CAST(N'2020-04-30T13:54:21.000' AS DateTime), N'Widgets.FacebookPixel base schema')
+GO
+
+--delete FK
+IF EXISTS (SELECT *  FROM sys.foreign_keys  WHERE object_id = OBJECT_ID(N'FK_StockQuantityHistory_WarehouseId_Warehouse_Id') AND parent_object_id = OBJECT_ID(N'StockQuantityHistory'))
+	ALTER TABLE [StockQuantityHistory] DROP CONSTRAINT FK_StockQuantityHistory_WarehouseId_Warehouse_Id
 GO

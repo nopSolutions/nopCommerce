@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using Nop.Core;
@@ -8,6 +9,9 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Payments;
+using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Tax;
 using Nop.Data;
 using Nop.Services.Caching;
 using Nop.Services.Catalog;
@@ -16,6 +20,7 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
+using Nop.Services.Plugins;
 using Nop.Services.Seo;
 
 namespace Nop.Tests
@@ -112,6 +117,37 @@ namespace Nop.Tests
 
             if (serviceType == typeof(ICacheKeyService))
                 return new FakeCacheKeyService();
+
+            if (serviceType == typeof(ICustomerService))
+                return new Mock<ICustomerService>().Object;
+
+            if (serviceType == typeof(IPluginService))
+                return new FakePluginService();
+
+            if (serviceType == typeof(PaymentSettings))
+            {
+                var paymentSettings = new PaymentSettings
+                {
+                    ActivePaymentMethodSystemNames = new List<string>()
+                };
+                paymentSettings.ActivePaymentMethodSystemNames.Add("Payments.TestMethod");
+                
+                return paymentSettings;
+            }
+
+            if (serviceType == typeof(TaxSettings))
+                return new TaxSettings();
+
+            if (serviceType == typeof(ShippingSettings))
+            {
+                var shippingSettings = new ShippingSettings
+                {
+                    ActiveShippingRateComputationMethodSystemNames =
+                        new List<string> {"FixedRateTestShippingRateComputationMethod"}
+                };
+
+                return shippingSettings;
+            }
 
             return null;
         }

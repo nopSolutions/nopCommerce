@@ -520,7 +520,7 @@ BEGIN
 	IF `MarkedAsNewOnly` then
 		SET  @sql_command = concat(@sql_command, '
 			AND p.MarkAsNew = 1
-			AND (utc_date() BETWEEN IFNULL(p.MarkAsNewStartDateTimeUtc, ''1/1/1900'') and IFNULL(p.MarkAsNewEndDateTimeUtc, ''1/1/2999''))');
+			AND (utc_date() BETWEEN IFNULL(p.MarkAsNewStartDateTimeUtc, ''1900-1-1'') and IFNULL(p.MarkAsNewEndDateTimeUtc, ''2999-1-1''))');
 	END if;
     
     #filter by product tag

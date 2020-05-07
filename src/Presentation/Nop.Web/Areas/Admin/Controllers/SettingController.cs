@@ -1003,6 +1003,11 @@ namespace Nop.Web.Areas.Admin.Controllers
             var lastUsernameValidationEnabledValue = customerSettings.UsernameValidationEnabled;
             var lastUsernameValidationUseRegexValue = customerSettings.UsernameValidationUseRegex;
 
+            //Phone number validation settings
+            var lastPhoneNumberValidationRule = customerSettings.PhoneNumberValidationRule;
+            var lastPhoneNumberValidationEnabledValue = customerSettings.PhoneNumberValidationEnabled;
+            var lastPhoneNumberValidationUseRegexValue = customerSettings.PhoneNumberValidationUseRegex;
+
             var addressSettings = _settingService.LoadSetting<AddressSettings>(storeScope);
             var dateTimeSettings = _settingService.LoadSetting<DateTimeSettings>(storeScope);
             var externalAuthenticationSettings = _settingService.LoadSetting<ExternalAuthenticationSettings>(storeScope);
@@ -1024,6 +1029,24 @@ namespace Nop.Web.Areas.Admin.Controllers
                     customerSettings.UsernameValidationUseRegex = lastUsernameValidationUseRegexValue;
 
                     _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Configuration.Settings.CustomerSettings.RegexValidationRule.Error"));
+                }
+            }
+
+            if (customerSettings.PhoneNumberValidationEnabled && customerSettings.PhoneNumberValidationUseRegex)
+            {
+                try
+                {
+                    //validate regex rule
+                    var unused = Regex.IsMatch("123456789", customerSettings.PhoneNumberValidationRule);
+                }
+                catch (ArgumentException)
+                {
+                    //restoring previous settings
+                    customerSettings.PhoneNumberValidationRule = lastPhoneNumberValidationRule;
+                    customerSettings.PhoneNumberValidationEnabled = lastPhoneNumberValidationEnabledValue;
+                    customerSettings.PhoneNumberValidationUseRegex = lastPhoneNumberValidationUseRegexValue;
+
+                    _notificationService.ErrorNotification(_localizationService.GetResource("Admin.Configuration.Settings.CustomerSettings.PhoneNumberRegexValidationRule.Error"));
                 }
             }
 

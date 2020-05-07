@@ -72,13 +72,6 @@ namespace Nop.Services.Tests.Orders
                 DefaultTaxAddressId = 10
             };
 
-            var pluginService = new FakePluginService();
-
-            var pickupPluginManager = new PickupPluginManager(pluginService, _shippingSettings);
-            _shippingPluginManager = new ShippingPluginManager(pluginService, _shippingSettings);
-            var taxPluginManager = new TaxPluginManager(pluginService, _taxSettings);
-            var discountPluginManager = new DiscountPluginManager(pluginService);
-
             var products = new List<Product>
             {
                 new Product
@@ -156,6 +149,11 @@ namespace Nop.Services.Tests.Orders
                 customerCustomerRoleMappingRepository: customerCustomerRoleMappingRepository,
                 storeContext: _storeContext.Object);
 
+            var pickupPluginManager = new PickupPluginManager();
+            _shippingPluginManager = new ShippingPluginManager();
+            var taxPluginManager = new TaxPluginManager();
+            var discountPluginManager = new DiscountPluginManager();
+
             var currencySettings = new CurrencySettings { PrimaryStoreCurrencyId = 1 };
 
             var discountRepository = _fakeDataStore.RegRepository<Discount>();
@@ -220,11 +218,9 @@ namespace Nop.Services.Tests.Orders
             var serviceProvider = new FakeServiceProvider(_shoppingCartService, _paymentService.Object,
                 _genericAttributeService.Object, _orderTotalCalcService, _taxService, _taxSettings);
 
-            var nopEngine = new Mock<NopEngine>();
+            var nopEngine = new FakeNopEngine(serviceProvider);
 
-            nopEngine.Setup(x => x.ServiceProvider).Returns(serviceProvider);
-            nopEngine.Setup(x => x.ResolveUnregistered(It.IsAny<Type>())).Returns((Type type) => Activator.CreateInstance(type));
-            EngineContext.Replace(nopEngine.Object);
+            EngineContext.Replace(nopEngine);
         }
 
         [SetUp]
@@ -273,37 +269,23 @@ namespace Nop.Services.Tests.Orders
             //shopping cart
             var product1 = new Product
             {
-                Name = "Product name 1",
-                Price = 12.34M,
-                CustomerEntersPrice = false,
-                Published = true
+                Name = "Product name 1", Price = 12.34M, CustomerEntersPrice = false, Published = true
             };
 
             _productService.InsertProduct(product1);
 
-            var sci1 = new ShoppingCartItem
-            {
-                ProductId = product1.Id,
-                Quantity = 2
-            };
+            var sci1 = new ShoppingCartItem {ProductId = product1.Id, Quantity = 2};
 
             var product2 = new Product
             {
-                Name = "Product name 2",
-                Price = 21.57M,
-                CustomerEntersPrice = false,
-                Published = true
+                Name = "Product name 2", Price = 21.57M, CustomerEntersPrice = false, Published = true
             };
 
             _productService.InsertProduct(product2);
 
-            var sci2 = new ShoppingCartItem
-            {
-                ProductId = product2.Id,
-                Quantity = 3
-            };
+            var sci2 = new ShoppingCartItem {ProductId = product2.Id, Quantity = 3};
 
-            var cart = new List<ShoppingCartItem> { sci1, sci2 };
+            var cart = new List<ShoppingCartItem> {sci1, sci2};
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
             //10% - default tax rate
@@ -376,47 +358,31 @@ namespace Nop.Services.Tests.Orders
         [Test]
         public void Can_get_shopping_cart_subTotal_discount_excluding_tax()
         {
+            Customer customer = null;
+
             //customer
-            var customer = _customerService.GetCustomerById(1);
+            customer = _customerService.GetCustomerById(1);
 
             //shopping cart
             var product1 = new Product
             {
-                Name = "Product name 1",
-                Price = 12.34M,
-                CustomerEntersPrice = false,
-                Published = true
+                Name = "Product name 1", Price = 12.34M, CustomerEntersPrice = false, Published = true
             };
 
             _productService.InsertProduct(product1);
 
-            var sci1 = new ShoppingCartItem
-            {
-                ProductId = product1.Id,
-                Quantity = 2
-            };
+            var sci1 = new ShoppingCartItem {ProductId = product1.Id, Quantity = 2};
 
             var product2 = new Product
             {
-                Name = "Product name 2",
-                Price = 21.57M,
-                CustomerEntersPrice = false,
-                Published = true
+                Name = "Product name 2", Price = 21.57M, CustomerEntersPrice = false, Published = true
             };
 
             _productService.InsertProduct(product2);
 
-            var sci2 = new ShoppingCartItem
-            {
-                ProductId = product2.Id,
-                Quantity = 3
-            };
+            var sci2 = new ShoppingCartItem {ProductId = product2.Id, Quantity = 3};
 
-            var cart = new List<ShoppingCartItem>
-            {
-                sci1,
-                sci2
-            };
+            var cart = new List<ShoppingCartItem> {sci1, sci2};
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
             _discountService.InsertDiscount(new Discount
@@ -535,18 +501,8 @@ namespace Nop.Services.Tests.Orders
 
             _productService.InsertProduct(product2);
 
-            var sci1 = new ShoppingCartItem
-            {
-                AttributesXml = string.Empty,
-                Quantity = 3,
-                ProductId = product1.Id
-            };
-            var sci2 = new ShoppingCartItem
-            {
-                AttributesXml = string.Empty,
-                Quantity = 4,
-                ProductId = product2.Id
-            };
+            var sci1 = new ShoppingCartItem {AttributesXml = string.Empty, Quantity = 3, ProductId = product1.Id};
+            var sci2 = new ShoppingCartItem {AttributesXml = string.Empty, Quantity = 4, ProductId = product2.Id};
 
             //sci3 is not shippable
 
@@ -562,14 +518,9 @@ namespace Nop.Services.Tests.Orders
 
             _productService.InsertProduct(product3);
 
-            var sci3 = new ShoppingCartItem
-            {
-                AttributesXml = string.Empty,
-                Quantity = 5,
-                ProductId = product3.Id
-            };
+            var sci3 = new ShoppingCartItem {AttributesXml = string.Empty, Quantity = 5, ProductId = product3.Id};
 
-            var cart = new List<ShoppingCartItem> { sci1, sci2, sci3 };
+            var cart = new List<ShoppingCartItem> {sci1, sci2, sci3};
             _orderTotalCalcService.GetShoppingCartAdditionalShippingCharge(cart).Should().Be(42.5M);
         }
 
@@ -753,18 +704,8 @@ namespace Nop.Services.Tests.Orders
 
             _productService.InsertProduct(product2);
 
-            var sci1 = new ShoppingCartItem
-            {
-                AttributesXml = string.Empty,
-                Quantity = 3,
-                ProductId = product1.Id
-            };
-            var sci2 = new ShoppingCartItem
-            {
-                AttributesXml = string.Empty,
-                Quantity = 4,
-                ProductId = product2.Id
-            };
+            var sci1 = new ShoppingCartItem {AttributesXml = string.Empty, Quantity = 3, ProductId = product1.Id};
+            var sci2 = new ShoppingCartItem {AttributesXml = string.Empty, Quantity = 4, ProductId = product2.Id};
 
             //sci3 is not shippable
 
@@ -780,18 +721,15 @@ namespace Nop.Services.Tests.Orders
 
             _productService.InsertProduct(product3);
 
-            var sci3 = new ShoppingCartItem
-            {
-                AttributesXml = string.Empty,
-                Quantity = 5,
-                ProductId = product3.Id
-            };
+            var sci3 = new ShoppingCartItem {AttributesXml = string.Empty, Quantity = 5, ProductId = product3.Id};
 
-            var cart = new List<ShoppingCartItem> { sci1, sci2, sci3 };
+            var cart = new List<ShoppingCartItem> {sci1, sci2, sci3};
             var customer = _customerService.GetCustomerById(1);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-            var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, false, out var taxRate, out var appliedDiscounts);
+            var shipping =
+                _orderTotalCalcService.GetShoppingCartShippingTotal(cart, false, out var taxRate,
+                    out var appliedDiscounts);
             shipping.Should().NotBeNull();
             //10 - default fixed shipping rate, 42.5 - additional shipping change
             shipping.Should().Be(52.5M);
@@ -826,18 +764,8 @@ namespace Nop.Services.Tests.Orders
 
             _productService.InsertProduct(product2);
 
-            var sci1 = new ShoppingCartItem
-            {
-                AttributesXml = string.Empty,
-                Quantity = 3,
-                ProductId = product1.Id
-            };
-            var sci2 = new ShoppingCartItem
-            {
-                AttributesXml = string.Empty,
-                Quantity = 4,
-                ProductId = product2.Id
-            };
+            var sci1 = new ShoppingCartItem {AttributesXml = string.Empty, Quantity = 3, ProductId = product1.Id};
+            var sci2 = new ShoppingCartItem {AttributesXml = string.Empty, Quantity = 4, ProductId = product2.Id};
 
             //sci3 is not shippable
 
@@ -853,18 +781,15 @@ namespace Nop.Services.Tests.Orders
 
             _productService.InsertProduct(product3);
 
-            var sci3 = new ShoppingCartItem
-            {
-                AttributesXml = string.Empty,
-                Quantity = 5,
-                ProductId = product3.Id
-            };
+            var sci3 = new ShoppingCartItem {AttributesXml = string.Empty, Quantity = 5, ProductId = product3.Id};
 
-            var cart = new List<ShoppingCartItem> { sci1, sci2, sci3 };
+            var cart = new List<ShoppingCartItem> {sci1, sci2, sci3};
             var customer = _customerService.GetCustomerById(1);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-            var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, true, out var taxRate, out var appliedDiscounts);
+            var shipping =
+                _orderTotalCalcService.GetShoppingCartShippingTotal(cart, true, out var taxRate,
+                    out var appliedDiscounts);
             shipping.Should().NotBeNull();
             //10 - default fixed shipping rate, 42.5 - additional shipping change
             shipping.Should().Be(57.75M);
@@ -899,18 +824,8 @@ namespace Nop.Services.Tests.Orders
 
             _productService.InsertProduct(product2);
 
-            var sci1 = new ShoppingCartItem
-            {
-                AttributesXml = string.Empty,
-                Quantity = 3,
-                ProductId = product1.Id
-            };
-            var sci2 = new ShoppingCartItem
-            {
-                AttributesXml = string.Empty,
-                Quantity = 4,
-                ProductId = product2.Id
-            };
+            var sci1 = new ShoppingCartItem {AttributesXml = string.Empty, Quantity = 3, ProductId = product1.Id};
+            var sci2 = new ShoppingCartItem {AttributesXml = string.Empty, Quantity = 4, ProductId = product2.Id};
 
             //sci3 is not shippable
 
@@ -926,14 +841,9 @@ namespace Nop.Services.Tests.Orders
 
             _productService.InsertProduct(product3);
 
-            var sci3 = new ShoppingCartItem
-            {
-                AttributesXml = string.Empty,
-                Quantity = 5,
-                ProductId = product3.Id
-            };
+            var sci3 = new ShoppingCartItem {AttributesXml = string.Empty, Quantity = 5, ProductId = product3.Id};
 
-            var cart = new List<ShoppingCartItem> { sci1, sci2, sci3 };
+            var cart = new List<ShoppingCartItem> {sci1, sci2, sci3};
 
             var customer = new Customer();
             _customerService.InsertCustomer(customer);
@@ -948,7 +858,9 @@ namespace Nop.Services.Tests.Orders
                 DiscountLimitation = DiscountLimitationType.Unlimited
             });
 
-            var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, false, out var taxRate, out var appliedDiscounts);
+            var shipping =
+                _orderTotalCalcService.GetShoppingCartShippingTotal(cart, false, out var taxRate,
+                    out var appliedDiscounts);
             appliedDiscounts.Count.Should().Be(1);
             appliedDiscounts.First().Name.Should().Be("Discount 1");
             shipping.Should().NotBeNull();
@@ -984,18 +896,8 @@ namespace Nop.Services.Tests.Orders
 
             _productService.InsertProduct(product2);
 
-            var sci1 = new ShoppingCartItem
-            {
-                AttributesXml = string.Empty,
-                Quantity = 3,
-                ProductId = product1.Id
-            };
-            var sci2 = new ShoppingCartItem
-            {
-                AttributesXml = string.Empty,
-                Quantity = 4,
-                ProductId = product2.Id
-            };
+            var sci1 = new ShoppingCartItem {AttributesXml = string.Empty, Quantity = 3, ProductId = product1.Id};
+            var sci2 = new ShoppingCartItem {AttributesXml = string.Empty, Quantity = 4, ProductId = product2.Id};
 
             //sci3 is not shippable
 
@@ -1011,14 +913,9 @@ namespace Nop.Services.Tests.Orders
 
             _productService.InsertProduct(product3);
 
-            var sci3 = new ShoppingCartItem
-            {
-                AttributesXml = string.Empty,
-                Quantity = 5,
-                ProductId = product3.Id
-            };
+            var sci3 = new ShoppingCartItem {AttributesXml = string.Empty, Quantity = 5, ProductId = product3.Id};
 
-            var cart = new List<ShoppingCartItem> { sci1, sci2, sci3 };
+            var cart = new List<ShoppingCartItem> {sci1, sci2, sci3};
             var customer = _customerService.GetCustomerById(1);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
@@ -1030,7 +927,9 @@ namespace Nop.Services.Tests.Orders
                 DiscountLimitation = DiscountLimitationType.Unlimited
             });
 
-            var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, true, out var taxRate, out var appliedDiscounts);
+            var shipping =
+                _orderTotalCalcService.GetShoppingCartShippingTotal(cart, true, out var taxRate,
+                    out var appliedDiscounts);
             appliedDiscounts.Count.Should().Be(1);
             appliedDiscounts.First().Name.Should().Be("Discount 1");
             shipping.Should().NotBeNull();
@@ -1318,99 +1217,6 @@ namespace Nop.Services.Tests.Orders
             resultPrice.Should().Be(expectedPrice);
         }
 
-        /*TODO temporary disabled
-        [Test]
-        public void Can_get_shopping_cart_total_with_applied_reward_points()
-        {
-            //customer
-            var customer = new Customer
-            {
-                Id = 10,
-            };
-
-            //shopping cart
-            var product1 = new Product
-            {
-                Id = 1,
-                Name = "Product name 1",
-                Price = 10M,
-                Published = true,
-                IsShipEnabled = true,
-            };
-            var sci1 = new ShoppingCartItem
-            {
-                Product = product1,
-                ProductId = product1.Id,
-                Quantity = 2,
-            };
-            var product2 = new Product
-            {
-                Id = 2,
-                Name = "Product name 2",
-                Price = 12M,
-                Published = true,
-                IsShipEnabled = true,
-            };
-            var sci2 = new ShoppingCartItem
-            {
-                Product = product2,
-                ProductId = product2.Id,
-                Quantity = 3
-            };
-
-            var cart = new List<ShoppingCartItem> { sci1, sci2 };
-            cart.ForEach(sci => sci.Customer = customer);
-            cart.ForEach(sci => sci.CustomerId = customer.Id);
-
-            _genericAttributeService.Returns(x => x.GetAttributesForEntity(customer.Id, "Customer"))
-                .Returns(new List<GenericAttribute>
-                            {
-                                new GenericAttribute
-                                    {
-                                        StoreId = _store.Id,
-                                        EntityId = customer.Id,
-                                        Key = SystemCustomerAttributeNames.SelectedPaymentMethod,
-                                        KeyGroup = "Customer",
-                                        Value = "test1"
-                                    },
-                                new GenericAttribute
-                                        {
-                                        StoreId = 1,
-                                        EntityId = customer.Id,
-                                        Key = SystemCustomerAttributeNames.UseRewardPointsDuringCheckout,
-                                        KeyGroup = "Customer",
-                                        Value = true.ToString()
-                                        }
-                            });
-            _paymentService.Returns(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Returns(20);
-
-
-            _discountService.Returns(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToCategories)).Returns(new List<DiscountForCaching>());
-            _discountService.Returns(ds => ds.GetAllDiscountsForCaching(DiscountType.AssignedToManufacturers)).Returns(new List<DiscountForCaching>());
-
-            decimal discountAmount;
-            Discount appliedDiscount;
-            List<AppliedGiftCard> appliedGiftCards;
-            int redeemedRewardPoints;
-            decimal redeemedRewardPointsAmount;
-
-
-            //shipping is taxable, payment fee is taxable
-            _taxSettings.ShippingIsTaxable = true;
-            _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
-
-            //reward points
-            _rewardPointsSettings.Enabled = true;
-            _rewardPointsSettings.ExchangeRate = 2; //1 reward point = 2
-            
-            customer.AddRewardPointsHistoryEntry(15, 0); //15*2=30
-
-            //56 - items, 10 - shipping (fixed), 20 - payment fee, 8.6 - tax, -30 (reward points)
-             _orderTotalCalcService.GetShoppingCartTotal(cart, out discountAmount, out appliedDiscount,
-                out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount)
-                .Should().Be(64.6M);
-        }*/
-
         [Test]
         public void Can_get_shopping_cart_total_discount()
         {
@@ -1464,7 +1270,7 @@ namespace Nop.Services.Tests.Orders
             //shipping is taxable, payment fee is taxable
             _taxSettings.ShippingIsTaxable = true;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
-
+            
             //56 - items, 10 - shipping (fixed), 20 - payment fee, 8.6 - tax, [-3] - discount
             _orderTotalCalcService.GetShoppingCartTotal(cart, out var discountAmount, out var appliedDiscounts, out _, out _, out _)
                 .Should().Be(91.6M);

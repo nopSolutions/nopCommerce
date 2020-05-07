@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Infrastructure;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Cms
@@ -12,21 +13,6 @@ namespace Nop.Services.Cms
     /// </summary>
     public partial class WidgetPluginManager : PluginManager<IWidgetPlugin>, IWidgetPluginManager
     {
-        #region Fields
-
-        private readonly WidgetSettings _widgetSettings;
-
-        #endregion
-
-        #region Ctor
-
-        public WidgetPluginManager(WidgetSettings widgetSettings,
-            IPluginService pluginService) : base(pluginService)
-        {
-            _widgetSettings = widgetSettings;
-        }
-
-        #endregion
 
         #region Methods
 
@@ -39,14 +25,14 @@ namespace Nop.Services.Cms
         /// <returns>List of active widget</returns>
         public virtual IList<IWidgetPlugin> LoadActivePlugins(Customer customer = null, int storeId = 0, string widgetZone = null)
         {
-            var widgets = LoadActivePlugins(_widgetSettings.ActiveWidgetSystemNames, customer, storeId);
+            var widgetSettings = EngineContext.Current.Resolve<WidgetSettings>();
+
+            var widgets = LoadActivePlugins(widgetSettings.ActiveWidgetSystemNames, customer, storeId);
 
             //filter by widget zone
             if (!string.IsNullOrEmpty(widgetZone))
-            {
                 widgets = widgets.Where(widget =>
                     widget.GetWidgetZones().Contains(widgetZone, StringComparer.InvariantCultureIgnoreCase)).ToList();
-            }
 
             return widgets;
         }
@@ -58,7 +44,9 @@ namespace Nop.Services.Cms
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(IWidgetPlugin widget)
         {
-            return IsPluginActive(widget, _widgetSettings.ActiveWidgetSystemNames);
+            var widgetSettings = EngineContext.Current.Resolve<WidgetSettings>();
+
+            return IsPluginActive(widget, widgetSettings.ActiveWidgetSystemNames);
         }
 
         /// <summary>
@@ -71,6 +59,7 @@ namespace Nop.Services.Cms
         public virtual bool IsPluginActive(string systemName, Customer customer = null, int storeId = 0)
         {
             var widget = LoadPluginBySystemName(systemName, customer, storeId);
+
             return IsPluginActive(widget);
         }
 

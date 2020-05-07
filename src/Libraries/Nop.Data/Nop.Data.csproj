@@ -14,10 +14,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentMigrator" Version="3.2.1" />
-    <PackageReference Include="FluentMigrator.Runner" Version="3.2.1" />
-    <PackageReference Include="linq2db" Version="2.9.7" />
-    <PackageReference Include="MySql.Data" Version="8.0.19" />
+    <PackageReference Include="FluentMigrator" Version="3.2.6" />
+    <PackageReference Include="FluentMigrator.Runner" Version="3.2.6" />
+    <PackageReference Include="linq2db" Version="2.9.8" />
+    <PackageReference Include="MySql.Data" Version="8.0.20" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,7 +9,7 @@ namespace Nop.Data.Migrations
     /// </summary>
     public partial class NopMigrationAttribute : MigrationAttribute
     {
-        private static readonly string[] _dateFormats = { "yyyy-MM-dd hh:mm:ss", "yyyy.MM.dd hh:mm:ss", "yyyy/MM/dd hh:mm:ss", "yyyy-MM-dd hh:mm:ss:fffffff", "yyyy.MM.dd hh:mm:ss:fffffff", "yyyy/MM/dd hh:mm:ss:fffffff" };
+        private static readonly string[] _dateFormats = { "yyyy-MM-dd HH:mm:ss", "yyyy.MM.dd HH:mm:ss", "yyyy/MM/dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss:fffffff", "yyyy.MM.dd HH:mm:ss:fffffff", "yyyy/MM/dd HH:mm:ss:fffffff" };
 
         /// <summary>
         /// Initializes a new instance of the NopMigrationAttribute class

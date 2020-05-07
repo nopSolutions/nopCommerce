@@ -99,8 +99,7 @@ namespace Nop.Services.Authentication.External
 
             //account is already assigned to another user
             if (currentLoggedInUser.Id != associatedUser.Id)
-                //TODO create locale for error
-                return ErrorAuthentication(new[] { "Account is already assigned" }, returnUrl);
+                return ErrorAuthentication(new[] { _localizationService.GetResource("Account.AssociatedExternalAuth.AccountAlreadyAssigned") }, returnUrl);
 
             //or the user try to log in as himself. bit weird
             return SuccessfulAuthentication(returnUrl);

@@ -558,7 +558,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                         //update existing record
                         existingPwI.StockQuantity = stockQuantity;
                         existingPwI.ReservedQuantity = reservedQuantity;
-                        _productService.UpdateProduct(product);
+                        _productService.UpdateProductWarehouseInventory(existingPwI);
 
                         //quantity change history
                         _productService.AddStockQuantityHistoryEntry(product, existingPwI.StockQuantity - previousStockQuantity, existingPwI.StockQuantity,
@@ -588,8 +588,6 @@ namespace Nop.Web.Areas.Admin.Controllers
                     };
 
                     _productService.InsertProductWarehouseInventory(existingPwI);
-
-                    _productService.UpdateProduct(product);
 
                     //quantity change history
                     _productService.AddStockQuantityHistoryEntry(product, existingPwI.StockQuantity, existingPwI.StockQuantity,

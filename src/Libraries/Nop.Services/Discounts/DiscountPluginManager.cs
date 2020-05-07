@@ -7,12 +7,5 @@ namespace Nop.Services.Discounts
     /// </summary>
     public partial class DiscountPluginManager : PluginManager<IDiscountRequirementRule>, IDiscountPluginManager
     {
-        #region Ctor
-
-        public DiscountPluginManager(IPluginService pluginService) : base(pluginService)
-        {
-        }
-
-        #endregion
     }
 }

@@ -1542,7 +1542,6 @@ namespace Nop.Web.Areas.Admin.Factories
             var settings = _settingService.GetAllSettings().AsQueryable();
 
             //filter settings
-            //TODO: move filter to setting service
             if (!string.IsNullOrEmpty(searchModel.SearchSettingName))
                 settings = settings.Where(setting => setting.Name.ToLowerInvariant().Contains(searchModel.SearchSettingName.ToLowerInvariant()));
             if (!string.IsNullOrEmpty(searchModel.SearchSettingValue))

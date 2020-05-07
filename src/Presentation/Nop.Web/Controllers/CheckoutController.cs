@@ -177,7 +177,8 @@ namespace Nop.Web.Controllers
                 Name = string.Format(_localizationService.GetResource("Checkout.PickupPoints.Name"), pickupPoint.Name),
                 Rate = pickupPoint.PickupFee,
                 Description = pickupPoint.Description,
-                ShippingRateComputationMethodSystemName = pickupPoint.ProviderSystemName
+                ShippingRateComputationMethodSystemName = pickupPoint.ProviderSystemName,
+                IsPickupInStore = true
             };
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedShippingOptionAttribute, pickUpInStoreShippingOption, _storeContext.CurrentStore.Id);
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, NopCustomerDefaults.SelectedPickupPointAttribute, pickupPoint, _storeContext.CurrentStore.Id);
@@ -472,7 +473,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutShippingMethod");        
 
             //model
-            var model = _checkoutModelFactory.PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
+            var model = _checkoutModelFactory.PrepareShippingAddressModel(cart, prePopulateNewAddressWithCustomerFields: true);
             return View(model);
         }
 
@@ -581,7 +582,7 @@ namespace Nop.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model = _checkoutModelFactory.PrepareShippingAddressModel(
+            model = _checkoutModelFactory.PrepareShippingAddressModel(cart,
                 selectedCountryId: newAddress.CountryId,
                 overrideAttributesXml: customAttributes);
             return View(model);
@@ -1275,7 +1276,7 @@ namespace Nop.Web.Controllers
                     }
 
                     //do not ship to the same address
-                    var shippingAddressModel = _checkoutModelFactory.PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
+                    var shippingAddressModel = _checkoutModelFactory.PrepareShippingAddressModel(cart, prePopulateNewAddressWithCustomerFields: true);
 
                     return Json(new
                     {
@@ -1368,7 +1369,7 @@ namespace Nop.Web.Controllers
                     if (!ModelState.IsValid)
                     {
                         //model is not valid. redisplay the form with errors
-                        var shippingAddressModel = _checkoutModelFactory.PrepareShippingAddressModel(
+                        var shippingAddressModel = _checkoutModelFactory.PrepareShippingAddressModel(cart,
                             selectedCountryId: newAddress.CountryId,
                             overrideAttributesXml: customAttributes);
                         shippingAddressModel.NewAddressPreselected = true;

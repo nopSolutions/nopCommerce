@@ -20,8 +20,7 @@ namespace Nop.Data.Mapping.Builders.Catalog
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(StockQuantityHistory.ProductId)).AsInt32().ForeignKey<Product>()
-                .WithColumn(nameof(StockQuantityHistory.WarehouseId)).AsInt32().Nullable().ForeignKey<Warehouse>(onDelete: Rule.None);
+                .WithColumn(nameof(StockQuantityHistory.ProductId)).AsInt32().ForeignKey<Product>();
         }
 
         #endregion

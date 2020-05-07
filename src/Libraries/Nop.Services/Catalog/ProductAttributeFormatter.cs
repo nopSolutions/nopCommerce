@@ -133,7 +133,6 @@ namespace Nop.Services.Catalog
                                     if (htmlEncode)
                                         fileName = WebUtility.HtmlEncode(fileName);
 
-                                    //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
                                     var attributeText = allowHyperlinks ? $"<a href=\"{_webHelper.GetStoreLocation(false)}download/getfileupload/?downloadId={download.DownloadGuid}\" class=\"fileuploadattribute\">{fileName}</a>"
                                         : fileName;
 

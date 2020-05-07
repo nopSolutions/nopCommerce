@@ -39,6 +39,6 @@ namespace Nop.Web.Infrastructure.Installation
         /// <param name="valuesToExclude">Values to exclude</param>
         /// <param name="useLocalization">Localize</param>
         /// <returns>SelectList</returns>
-        SelectList GetAvailableProviderTypes(int[] valuesToExclude = null, bool useLocalization = true);
+        Dictionary<int, string> GetAvailableProviderTypes(int[] valuesToExclude = null, bool useLocalization = true);
     }
 }

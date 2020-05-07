@@ -58,9 +58,16 @@ namespace Nop.Web.Controllers
                 DisableSampleDataOption = _config.DisableSampleDataDuringInstallation,
                 CreateDatabaseIfNotExists = false,
                 ConnectionStringRaw = false,
-                DataProvider = DataProviderType.SqlServer,
-                AvailableDataProviders = _locService.GetAvailableProviderTypes()?.ToList()
+                DataProvider = DataProviderType.SqlServer
             };
+            
+            model.AvailableDataProviders.AddRange(
+                _locService.GetAvailableProviderTypes()
+                .OrderBy(v => v.Value)
+                .Select(pt => new SelectListItem { 
+                    Value = pt.Key.ToString(),
+                    Text = pt.Value
+                }));
 
             foreach (var lang in _locService.GetAvailableLanguages())
             {
@@ -91,9 +98,15 @@ namespace Nop.Web.Controllers
                     Text = lang.Name,
                     Selected = _locService.GetCurrentLanguage().Code == lang.Code
                 });
-
-                model.AvailableDataProviders = _locService.GetAvailableProviderTypes()?.ToList();
             }
+
+            model.AvailableDataProviders.AddRange(
+                _locService.GetAvailableProviderTypes()
+                    .OrderBy(v => v.Value)
+                    .Select(pt => new SelectListItem { 
+                        Value = pt.Key.ToString(),
+                        Text = pt.Value
+                    }));
 
             model.DisableSampleDataOption = _config.DisableSampleDataDuringInstallation;
 

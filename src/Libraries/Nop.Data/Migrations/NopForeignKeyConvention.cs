@@ -1,5 +1,4 @@
 ﻿using FluentMigrator.Expressions;
-using FluentMigrator.Infrastructure;
 using FluentMigrator.Model;
 using FluentMigrator.Runner.Conventions;
 
@@ -13,16 +12,14 @@ namespace Nop.Data.Migrations
         #region Fields
 
         private readonly INopDataProvider _dataProvider;
-        private readonly IMigrationContext _context;
 
         #endregion
 
         #region Ctor
 
-        public NopForeignKeyConvention(INopDataProvider dataProvider, IMigrationContext context)
+        public NopForeignKeyConvention(INopDataProvider dataProvider)
         {
             _dataProvider = dataProvider;
-            _context = context;
         }
 
         #endregion

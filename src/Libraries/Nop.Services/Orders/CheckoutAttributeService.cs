@@ -100,7 +100,7 @@ namespace Nop.Services.Orders
                 if (storeId > 0)
                 {
                     //store mapping
-                    checkoutAttributes = checkoutAttributes.Where(ca => _storeMappingService.Authorize(ca)).ToList();
+                    checkoutAttributes = checkoutAttributes.Where(ca => _storeMappingService.Authorize(ca, storeId)).ToList();
                 }
 
                 if (excludeShippableAttributes)
