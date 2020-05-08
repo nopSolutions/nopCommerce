@@ -1400,7 +1400,9 @@ namespace Nop.Services.Orders
             var skipPaymentWorkflow = details.OrderTotal == decimal.Zero;
             if (!skipPaymentWorkflow)
             {
-                var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(processPaymentRequest.PaymentMethodSystemName)
+                var customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
+                var paymentMethod = _paymentPluginManager
+                    .LoadPluginBySystemName(processPaymentRequest.PaymentMethodSystemName, customer, processPaymentRequest.StoreId)
                     ?? throw new NopException("Payment method couldn't be loaded");
 
                 //ensure that payment method is active
@@ -1856,7 +1858,8 @@ namespace Nop.Services.Orders
                 var skipPaymentWorkflow = details.OrderTotal == decimal.Zero;
                 if (!skipPaymentWorkflow)
                 {
-                    var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(processPaymentRequest.PaymentMethodSystemName)
+                    var paymentMethod = _paymentPluginManager
+                        .LoadPluginBySystemName(processPaymentRequest.PaymentMethodSystemName, customer, initialOrder.StoreId)
                         ?? throw new NopException("Payment method couldn't be loaded");
 
                     if (!_paymentPluginManager.IsPluginActive(paymentMethod))

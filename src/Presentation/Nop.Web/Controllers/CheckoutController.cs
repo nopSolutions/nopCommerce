@@ -837,7 +837,8 @@ namespace Nop.Web.Controllers
             //load payment method
             var paymentMethodSystemName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
                 NopCustomerDefaults.SelectedPaymentMethodAttribute, _storeContext.CurrentStore.Id);
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
+            var paymentMethod = _paymentPluginManager
+                .LoadPluginBySystemName(paymentMethodSystemName, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
             if (paymentMethod == null)
                 return RedirectToRoute("CheckoutPaymentMethod");
 
@@ -888,7 +889,8 @@ namespace Nop.Web.Controllers
             //load payment method
             var paymentMethodSystemName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
                 NopCustomerDefaults.SelectedPaymentMethodAttribute, _storeContext.CurrentStore.Id);
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName);
+            var paymentMethod = _paymentPluginManager
+                .LoadPluginBySystemName(paymentMethodSystemName, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
             if (paymentMethod == null)
                 return RedirectToRoute("CheckoutPaymentMethod");
 
@@ -1591,7 +1593,8 @@ namespace Nop.Web.Controllers
 
                 var paymentMethodSystemName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
                     NopCustomerDefaults.SelectedPaymentMethodAttribute, _storeContext.CurrentStore.Id);
-                var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(paymentMethodSystemName)
+                var paymentMethod = _paymentPluginManager
+                    .LoadPluginBySystemName(paymentMethodSystemName, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
                     ?? throw new Exception("Payment method is not selected");
 
                 var warnings = paymentMethod.ValidatePaymentForm(form);
@@ -1688,7 +1691,8 @@ namespace Nop.Web.Controllers
                         Order = placeOrderResult.PlacedOrder
                     };
 
-                    var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(placeOrderResult.PlacedOrder.PaymentMethodSystemName);
+                    var paymentMethod = _paymentPluginManager
+                        .LoadPluginBySystemName(placeOrderResult.PlacedOrder.PaymentMethodSystemName, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
                     if (paymentMethod == null)
                         //payment method could be null if order total is 0
                         //success
@@ -1751,7 +1755,8 @@ namespace Nop.Web.Controllers
                 if (order == null)
                     return RedirectToRoute("Homepage");
 
-                var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(order.PaymentMethodSystemName);
+                var paymentMethod = _paymentPluginManager
+                    .LoadPluginBySystemName(order.PaymentMethodSystemName, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
                 if (paymentMethod == null)
                     return RedirectToRoute("Homepage");
                 if (paymentMethod.PaymentMethodType != PaymentMethodType.Redirection)

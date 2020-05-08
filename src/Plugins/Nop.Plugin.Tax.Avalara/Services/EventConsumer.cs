@@ -113,7 +113,8 @@ namespace Nop.Plugin.Tax.Avalara.Services
                 return;
 
             //ensure that Avalara tax provider is active
-            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName))
+            var customer = _customerService.GetCustomerById(eventMessage.Order.CustomerId);
+            if (!_taxPluginManager.IsPluginActive(AvalaraTaxDefaults.SystemName, customer, eventMessage.Order.StoreId))
                 return;
 
             //create tax transaction
