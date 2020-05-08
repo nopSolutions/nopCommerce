@@ -28,6 +28,7 @@ using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
 using Nop.Services.Tests.FakeServices;
 using Nop.Services.Tests.FakeServices.Providers;
+using Nop.Tests;
 using NUnit.Framework;
 
 namespace Nop.Services.Tests.Orders
@@ -149,10 +150,12 @@ namespace Nop.Services.Tests.Orders
                 customerCustomerRoleMappingRepository: customerCustomerRoleMappingRepository,
                 storeContext: _storeContext.Object);
 
-            var pickupPluginManager = new PickupPluginManager();
-            _shippingPluginManager = new ShippingPluginManager();
-            var taxPluginManager = new TaxPluginManager();
-            var discountPluginManager = new DiscountPluginManager();
+            var pluginService = new FakePluginService();
+
+            var pickupPluginManager = new PickupPluginManager(new FakeCacheKeyService(), _customerService, pluginService, _shippingSettings);
+            _shippingPluginManager = new ShippingPluginManager(new FakeCacheKeyService(), _customerService, pluginService, _shippingSettings);
+            var taxPluginManager = new TaxPluginManager(new FakeCacheKeyService(), _customerService, pluginService, _taxSettings);
+            var discountPluginManager = new DiscountPluginManager(new FakeCacheKeyService(), _customerService, pluginService);
 
             var currencySettings = new CurrencySettings { PrimaryStoreCurrencyId = 1 };
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Infrastructure;
+using Nop.Services.Caching;
+using Nop.Services.Customers;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Authentication.External
@@ -10,6 +11,24 @@ namespace Nop.Services.Authentication.External
     /// </summary>
     public partial class AuthenticationPluginManager : PluginManager<IExternalAuthenticationMethod>, IAuthenticationPluginManager
     {
+        #region Fields
+
+        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
+
+        #endregion
+
+        #region Ctor
+
+        public AuthenticationPluginManager(ExternalAuthenticationSettings externalAuthenticationSettings,
+            ICacheKeyService cacheKeyService,
+            ICustomerService customerService,
+            IPluginService pluginService) : base(cacheKeyService, customerService, pluginService)
+        {
+            _externalAuthenticationSettings = externalAuthenticationSettings;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -20,9 +39,7 @@ namespace Nop.Services.Authentication.External
         /// <returns>List of active authentication methods</returns>
         public virtual IList<IExternalAuthenticationMethod> LoadActivePlugins(Customer customer = null, int storeId = 0)
         {
-            var externalAuthenticationSettings = EngineContext.Current.Resolve<ExternalAuthenticationSettings>();
-            
-            return LoadActivePlugins(externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames, customer, storeId);
+            return LoadActivePlugins(_externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames, customer, storeId);
         }
 
         /// <summary>
@@ -32,9 +49,7 @@ namespace Nop.Services.Authentication.External
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(IExternalAuthenticationMethod authenticationMethod)
         {
-            var externalAuthenticationSettings = EngineContext.Current.Resolve<ExternalAuthenticationSettings>();
-
-            return IsPluginActive(authenticationMethod, externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames);
+            return IsPluginActive(authenticationMethod, _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames);
         }
 
         /// <summary>

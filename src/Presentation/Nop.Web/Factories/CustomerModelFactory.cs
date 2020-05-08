@@ -421,7 +421,8 @@ namespace Nop.Web.Factories
                 .Count;
             foreach (var record in _externalAuthenticationService.GetCustomerExternalAuthenticationRecords(customer))
             {
-                var authMethod = _authenticationPluginManager.LoadPluginBySystemName(record.ProviderSystemName);
+                var authMethod = _authenticationPluginManager
+                    .LoadPluginBySystemName(record.ProviderSystemName, _workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
                 if (!_authenticationPluginManager.IsPluginActive(authMethod))
                     continue;
 

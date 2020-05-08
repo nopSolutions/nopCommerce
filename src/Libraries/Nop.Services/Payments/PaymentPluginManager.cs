@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Infrastructure;
+using Nop.Services.Caching;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Payments
@@ -14,6 +15,27 @@ namespace Nop.Services.Payments
     /// </summary>
     public partial class PaymentPluginManager : PluginManager<IPaymentMethod>, IPaymentPluginManager
     {
+        #region Fields
+
+        private readonly ISettingService _settingService;
+        private readonly PaymentSettings _paymentSettings;
+
+        #endregion
+
+        #region Ctor
+
+        public PaymentPluginManager(ICacheKeyService cacheKeyService,
+            ICustomerService customerService,
+            IPluginService pluginService,
+            ISettingService settingService,
+            PaymentSettings paymentSettings) : base(cacheKeyService, customerService, pluginService)
+        {
+            _settingService = settingService;
+            _paymentSettings = paymentSettings;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -25,9 +47,7 @@ namespace Nop.Services.Payments
         /// <returns>List of active payment methods</returns>
         public virtual IList<IPaymentMethod> LoadActivePlugins(Customer customer = null, int storeId = 0, int countryId = 0)
         {
-            var paymentSettings = EngineContext.Current.Resolve<PaymentSettings>();
-
-            var paymentMethods = LoadActivePlugins(paymentSettings.ActivePaymentMethodSystemNames, customer, storeId);
+            var paymentMethods = LoadActivePlugins(_paymentSettings.ActivePaymentMethodSystemNames, customer, storeId);
 
             //filter by country
             if (countryId > 0)
@@ -43,9 +63,7 @@ namespace Nop.Services.Payments
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(IPaymentMethod paymentMethod)
         {
-            var paymentSettings = EngineContext.Current.Resolve<PaymentSettings>();
-
-            return IsPluginActive(paymentMethod, paymentSettings.ActivePaymentMethodSystemNames);
+            return IsPluginActive(paymentMethod, _paymentSettings.ActivePaymentMethodSystemNames);
         }
 
         /// <summary>
@@ -73,9 +91,7 @@ namespace Nop.Services.Payments
 
             var settingKey = string.Format(NopPaymentDefaults.RestrictedCountriesSettingName, paymentMethod.PluginDescriptor.SystemName);
 
-            var settingService = EngineContext.Current.Resolve<ISettingService>();
-
-            return settingService.GetSettingByKey<List<int>>(settingKey) ?? new List<int>();
+            return _settingService.GetSettingByKey<List<int>>(settingKey) ?? new List<int>();
         }
 
         /// <summary>
@@ -90,8 +106,7 @@ namespace Nop.Services.Payments
 
             var settingKey = string.Format(NopPaymentDefaults.RestrictedCountriesSettingName, paymentMethod.PluginDescriptor.SystemName);
 
-            var settingService = EngineContext.Current.Resolve<ISettingService>();
-            settingService.SetSetting(settingKey, countryIds.ToList());
+            _settingService.SetSetting(settingKey, countryIds.ToList());
         }
 
         #endregion
