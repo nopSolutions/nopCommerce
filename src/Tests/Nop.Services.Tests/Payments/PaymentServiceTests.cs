@@ -41,7 +41,7 @@ namespace Nop.Services.Tests.Payments
             var settingService = new Mock<ISettingService>();
             var pluginService = new FakePluginService();
             _paymentPluginManager = new PaymentPluginManager(new FakeCacheKeyService(), new Mock<ICustomerService>().Object, pluginService, settingService.Object, _paymentSettings);
-            _paymentService = new PaymentService(_httpContextAccessor.Object, _paymentPluginManager, _paymentSettings, _shoppingCartSettings);
+            _paymentService = new PaymentService(new Mock<ICustomerService>().Object, _httpContextAccessor.Object, _paymentPluginManager, _paymentSettings, _shoppingCartSettings);
         }
 
         [Test]
