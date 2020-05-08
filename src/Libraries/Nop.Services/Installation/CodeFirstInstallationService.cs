@@ -1479,7 +1479,7 @@ namespace Nop.Services.Installation
                     AllowsBilling = true,
                     AllowsShipping = true,
                     TwoLetterIsoCode = "RO",
-                    ThreeLetterIsoCode = "ROM",
+                    ThreeLetterIsoCode = "ROU",
                     NumericIsoCode = 642,
                     SubjectToVat = true,
                     DisplayOrder = 100,
@@ -2891,18 +2891,6 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
-                    Name = "Netherlands Antilles",
-                    AllowsBilling = true,
-                    AllowsShipping = true,
-                    TwoLetterIsoCode = "AN",
-                    ThreeLetterIsoCode = "ANT",
-                    NumericIsoCode = 530,
-                    SubjectToVat = false,
-                    DisplayOrder = 100,
-                    Published = true
-                },
-                new Country
-                {
                     Name = "New Caledonia",
                     AllowsBilling = true,
                     AllowsShipping = true,
@@ -3299,7 +3287,7 @@ namespace Nop.Services.Installation
                 },
                 new Country
                 {
-                    Name = "Swaziland",
+                    Name = "Eswatini",
                     AllowsBilling = true,
                     AllowsShipping = true,
                     TwoLetterIsoCode = "SZ",

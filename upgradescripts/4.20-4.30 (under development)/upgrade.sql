@@ -3159,3 +3159,9 @@ GO
 IF EXISTS (SELECT *  FROM sys.foreign_keys  WHERE object_id = OBJECT_ID(N'FK_StockQuantityHistory_WarehouseId_Warehouse_Id') AND parent_object_id = OBJECT_ID(N'StockQuantityHistory'))
 	ALTER TABLE [StockQuantityHistory] DROP CONSTRAINT FK_StockQuantityHistory_WarehouseId_Warehouse_Id
 GO
+
+--update country
+UPDATE [Country]
+SET [ThreeLetterIsoCode] = 'ROU'
+WHERE [TwoLetterIsoCode] = 'RO' AND [ThreeLetterIsoCode] = 'ROM'
+GO
