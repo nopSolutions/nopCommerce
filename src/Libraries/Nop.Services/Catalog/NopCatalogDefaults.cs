@@ -365,7 +365,7 @@ namespace Nop.Services.Catalog
         /// <remarks>
         /// {0} : product ID
         /// </remarks>
-        public static string ProductSpecificationAttributeAllByProductPrefixCacheKey => "Nop.Nop.productspecificationattribute.allbyproductid-{0}";
+        public static string ProductSpecificationAttributeAllByProductPrefixCacheKey => "Nop.productspecificationattribute.allbyproductid-{0}";
 
         /// <summary>
         /// Key for specification attributes caching (product details page)
