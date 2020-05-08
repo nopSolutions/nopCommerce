@@ -97,7 +97,7 @@
     <Value>[推荐]</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallation">
-    <Value>重新安装</Value>
+    <Value>重启安装</Value>
   </LocaleResource>
   <LocaleResource Name="RestartInstallationTooltip">
     <Value>点击以重新启动安装过程(清除所有缓存值)</Value>
