@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Infrastructure;
 using Nop.Services.Caching;
 using Nop.Services.Customers;
 
@@ -31,20 +29,34 @@ namespace Nop.Services.Plugins
 
         #region Fields
 
-        private readonly ConcurrentDictionary<string, IList<TPlugin>> _plugins = new ConcurrentDictionary<string, IList<TPlugin>>();
+        private readonly Dictionary<string, IList<TPlugin>> _plugins = new Dictionary<string, IList<TPlugin>>();
+
+        private readonly ICacheKeyService _cacheKeyService;
+        private readonly ICustomerService _customerService;
+        private readonly IPluginService _pluginService;
 
         #endregion
+
+        #region Ctor
+
+        public PluginManager(ICacheKeyService cacheKeyService,
+            ICustomerService customerService,
+            IPluginService pluginService)
+        {
+            _cacheKeyService = cacheKeyService;
+            _customerService = customerService;
+            _pluginService = pluginService;
+        }
         
+        #endregion
+
         #region Utilities
 
         protected virtual string GetKey(string systemName, Customer customer, int storeId)
         {
-            var customerService = EngineContext.Current.Resolve<ICustomerService>();
-            var cacheKeyService = EngineContext.Current.Resolve<ICacheKeyService>();
+            var roles = customer == null ? Array.Empty<int>() : _customerService.GetCustomerRoleIds(customer);
 
-            var roles = customer == null ? Array.Empty<int>() : customerService.GetCustomerRoleIds(customer);
-
-            return cacheKeyService.PrepareKeyPrefix(KEY_FORMAT, systemName, roles, storeId);
+            return _cacheKeyService.PrepareKeyPrefix(KEY_FORMAT, systemName, roles, storeId);
         }
 
         #endregion
@@ -65,8 +77,7 @@ namespace Nop.Services.Plugins
             if (_plugins.ContainsKey(key)) 
                 return _plugins[key];
 
-            var pluginService = EngineContext.Current.Resolve<IPluginService>();
-            _plugins.TryAdd(key, pluginService.GetPlugins<TPlugin>(customer: customer, storeId: storeId).ToList());
+            _plugins.Add(key, _pluginService.GetPlugins<TPlugin>(customer: customer, storeId: storeId).ToList());
 
             return _plugins[key];
         }
@@ -94,15 +105,11 @@ namespace Nop.Services.Plugins
 
             //or load it for the first time
             if (pluginBySystemName == null)
-            {
-                var pluginService = EngineContext.Current.Resolve<IPluginService>();
-
-                pluginBySystemName = pluginService
+                pluginBySystemName = _pluginService
                     .GetPluginDescriptorBySystemName<TPlugin>(systemName, customer: customer, storeId: storeId)
                     ?.Instance<TPlugin>();
-            }
 
-            _plugins.TryAdd(key, new List<TPlugin> { pluginBySystemName });
+            _plugins.Add(key, new List<TPlugin> { pluginBySystemName });
 
             return pluginBySystemName;
         }
@@ -164,9 +171,7 @@ namespace Nop.Services.Plugins
         /// <returns>Logo URL</returns>
         public virtual string GetPluginLogoUrl(TPlugin plugin)
         {
-            var pluginService = EngineContext.Current.Resolve<IPluginService>();
-
-            return pluginService.GetPluginLogoUrl(plugin.PluginDescriptor);
+            return _pluginService.GetPluginLogoUrl(plugin.PluginDescriptor);
         }
 
         #endregion

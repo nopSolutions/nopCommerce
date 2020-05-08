@@ -5,6 +5,7 @@ using FluentAssertions;
 using Moq;
 using Nop.Data;
 using Nop.Core.Domain.Directory;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Stores;
@@ -87,7 +88,8 @@ namespace Nop.Services.Tests.Directory
             _eventPublisher = new Mock<IEventPublisher>();
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
-            _exchangeRatePluginManager = new ExchangeRatePluginManager();
+            var pluginService = new FakePluginService();
+            _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, new FakeCacheKeyService(), new Mock<ICustomerService>().Object, pluginService);
             _currencyService = new CurrencyService(_currencySettings,
                 new FakeCacheKeyService(),
                 _eventPublisher.Object,

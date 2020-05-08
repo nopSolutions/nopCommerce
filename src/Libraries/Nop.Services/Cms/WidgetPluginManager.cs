@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Infrastructure;
+using Nop.Services.Caching;
+using Nop.Services.Customers;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Cms
@@ -13,6 +14,23 @@ namespace Nop.Services.Cms
     /// </summary>
     public partial class WidgetPluginManager : PluginManager<IWidgetPlugin>, IWidgetPluginManager
     {
+        #region Fields
+
+        private readonly WidgetSettings _widgetSettings;
+
+        #endregion
+
+        #region Ctor
+
+        public WidgetPluginManager(ICacheKeyService cacheKeyService,
+            ICustomerService customerService,
+            IPluginService pluginService,
+            WidgetSettings widgetSettings) : base(cacheKeyService, customerService, pluginService)
+        {
+            _widgetSettings = widgetSettings;
+        }
+
+        #endregion
 
         #region Methods
 
@@ -25,9 +43,7 @@ namespace Nop.Services.Cms
         /// <returns>List of active widget</returns>
         public virtual IList<IWidgetPlugin> LoadActivePlugins(Customer customer = null, int storeId = 0, string widgetZone = null)
         {
-            var widgetSettings = EngineContext.Current.Resolve<WidgetSettings>();
-
-            var widgets = LoadActivePlugins(widgetSettings.ActiveWidgetSystemNames, customer, storeId);
+            var widgets = LoadActivePlugins(_widgetSettings.ActiveWidgetSystemNames, customer, storeId);
 
             //filter by widget zone
             if (!string.IsNullOrEmpty(widgetZone))
@@ -44,9 +60,7 @@ namespace Nop.Services.Cms
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(IWidgetPlugin widget)
         {
-            var widgetSettings = EngineContext.Current.Resolve<WidgetSettings>();
-
-            return IsPluginActive(widget, widgetSettings.ActiveWidgetSystemNames);
+            return IsPluginActive(widget, _widgetSettings.ActiveWidgetSystemNames);
         }
 
         /// <summary>

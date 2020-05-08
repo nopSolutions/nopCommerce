@@ -108,8 +108,10 @@ namespace Nop.Services.Tests
             var productService = new Mock<IProductService>();
 
             var eventPublisher = new Mock<IEventPublisher>();
-           
-            var discountPluginManager = new DiscountPluginManager();
+
+            var pluginService = new FakePluginService();
+
+            var discountPluginManager = new DiscountPluginManager(new FakeCacheKeyService(), customerService.Object, pluginService);
             var store = new Store { Id = 1 };
             var storeContext = new Mock<IStoreContext>();
             storeContext.Setup(x => x.CurrentStore).Returns(store);

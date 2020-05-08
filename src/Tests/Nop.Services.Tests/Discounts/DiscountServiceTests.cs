@@ -74,8 +74,10 @@ namespace Nop.Services.Tests.Discounts
 
             var staticCacheManager = new TestCacheManager();
             _discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());
-            
-            _discountPluginManager = new DiscountPluginManager();
+
+            var pluginService = new FakePluginService();
+
+            _discountPluginManager = new DiscountPluginManager(new FakeCacheKeyService(), new Mock<ICustomerService>().Object, pluginService);
             _discountService = new DiscountService(
                 new FakeCacheKeyService(),
                 _customerService.Object,

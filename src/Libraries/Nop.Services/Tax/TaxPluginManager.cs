@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Infrastructure;
+using Nop.Services.Caching;
+using Nop.Services.Customers;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Tax
@@ -11,6 +12,24 @@ namespace Nop.Services.Tax
     /// </summary>
     public partial class TaxPluginManager : PluginManager<ITaxProvider>, ITaxPluginManager
     {
+        #region Fields
+
+        private readonly TaxSettings _taxSettings;
+
+        #endregion
+
+        #region Ctor
+
+        public TaxPluginManager(ICacheKeyService cacheKeyService,
+            ICustomerService customerService,
+            IPluginService pluginService,
+            TaxSettings taxSettings) : base(cacheKeyService, customerService, pluginService)
+        {
+            _taxSettings = taxSettings;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -21,9 +40,7 @@ namespace Nop.Services.Tax
         /// <returns>Tax provider</returns>
         public virtual ITaxProvider LoadPrimaryPlugin(Customer customer = null, int storeId = 0)
         {
-            var taxSettings = EngineContext.Current.Resolve<TaxSettings>();
-
-            return LoadPrimaryPlugin(taxSettings.ActiveTaxProviderSystemName, customer, storeId);
+            return LoadPrimaryPlugin(_taxSettings.ActiveTaxProviderSystemName, customer, storeId);
         }
 
         /// <summary>
@@ -33,9 +50,7 @@ namespace Nop.Services.Tax
         /// <returns>Result</returns>
         public virtual bool IsPluginActive(ITaxProvider taxProvider)
         {
-            var taxSettings = EngineContext.Current.Resolve<TaxSettings>();
-
-            return IsPluginActive(taxProvider, new List<string> { taxSettings.ActiveTaxProviderSystemName });
+            return IsPluginActive(taxProvider, new List<string> { _taxSettings.ActiveTaxProviderSystemName });
         }
 
         /// <summary>
