@@ -411,7 +411,8 @@ namespace Nop.Services.Catalog
         {
             var query = from product in _productRepository.Table
                 join psa in _productSpecificationAttributeRepository.Table on product.Id equals psa.ProductId
-                where psa.Id == specificationAttributeId
+                join spao in _specificationAttributeOptionRepository.Table on psa.SpecificationAttributeOptionId equals spao.Id 
+                where spao.SpecificationAttributeId == specificationAttributeId
                 orderby product.Name
                 select product;
 
