@@ -16,6 +16,8 @@ namespace Nop.Services.Catalog.Caching
         {
             Remove(NopCatalogDefaults.SpecAttributesWithOptionsCacheKey);
             Remove(_cacheKeyService.PrepareKey(NopCatalogDefaults.SpecAttributesOptionsCacheKey, entity.SpecificationAttributeId));
+
+            RemoveByPrefix(NopCatalogDefaults.ProductSpecificationAttributeAllByProductIdsPrefixCacheKey);
         }
     }
 }
