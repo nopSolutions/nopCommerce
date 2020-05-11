@@ -152,10 +152,10 @@ namespace Nop.Services.Tests.Orders
 
             var pluginService = new FakePluginService();
 
-            var pickupPluginManager = new PickupPluginManager(new FakeCacheKeyService(), _customerService, pluginService, _shippingSettings);
-            _shippingPluginManager = new ShippingPluginManager(new FakeCacheKeyService(), _customerService, pluginService, _shippingSettings);
-            var taxPluginManager = new TaxPluginManager(new FakeCacheKeyService(), _customerService, pluginService, _taxSettings);
-            var discountPluginManager = new DiscountPluginManager(new FakeCacheKeyService(), _customerService, pluginService);
+            var pickupPluginManager = new PickupPluginManager(_customerService, pluginService, _shippingSettings);
+            _shippingPluginManager = new ShippingPluginManager(_customerService, pluginService, _shippingSettings);
+            var taxPluginManager = new TaxPluginManager(_customerService, pluginService, _taxSettings);
+            var discountPluginManager = new DiscountPluginManager(_customerService, pluginService);
 
             var currencySettings = new CurrencySettings { PrimaryStoreCurrencyId = 1 };
 

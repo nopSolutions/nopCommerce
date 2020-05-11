@@ -70,8 +70,8 @@ namespace Nop.Services.Tests.Shipping
 
             var pluginService = new FakePluginService();
 
-            _pickupPluginManager = new PickupPluginManager(new FakeCacheKeyService(), new Mock<ICustomerService>().Object, pluginService, _shippingSettings);
-            _shippingPluginManager = new ShippingPluginManager(new FakeCacheKeyService(), new Mock<ICustomerService>().Object, pluginService, _shippingSettings);
+            _pickupPluginManager = new PickupPluginManager(new Mock<ICustomerService>().Object, pluginService, _shippingSettings);
+            _shippingPluginManager = new ShippingPluginManager(new Mock<ICustomerService>().Object, pluginService, _shippingSettings);
 
             _storeContext = new Mock<IStoreContext>();
             _storeContext.Setup(x => x.CurrentStore).Returns(new Store { Id = 1 });

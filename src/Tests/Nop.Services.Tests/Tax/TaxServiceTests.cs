@@ -115,7 +115,7 @@ namespace Nop.Services.Tests.Tax
                 null);
 
             var pluginService = new FakePluginService();
-            _taxPluginManager = new TaxPluginManager(new FakeCacheKeyService(), _customerService, pluginService, _taxSettings);
+            _taxPluginManager = new TaxPluginManager(_customerService, pluginService, _taxSettings);
 
             _taxService = new TaxService(_addressSettings,
                 _customerSettings,

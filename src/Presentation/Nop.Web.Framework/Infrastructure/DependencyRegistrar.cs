@@ -90,7 +90,7 @@ namespace Nop.Web.Framework.Infrastructure
             builder.RegisterGeneric(typeof(EntityRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
 
             //plugins
-            builder.RegisterType<PluginService>().As<IPluginService>().InstancePerDependency();
+            builder.RegisterType<PluginService>().As<IPluginService>().InstancePerLifetimeScope();
             builder.RegisterType<OfficialFeedManager>().AsSelf().InstancePerLifetimeScope();
 
             //redis connection wrapper
