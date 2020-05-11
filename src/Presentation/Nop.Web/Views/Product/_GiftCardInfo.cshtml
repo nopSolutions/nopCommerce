@@ -18,12 +18,14 @@
         <div>
             <label asp-for="SenderName" asp-postfix=":"></label>
             <input asp-for="SenderName" class="sender-name"/>
+                <nop-required />
         </div>
         @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
         {
             <div>
                 <label asp-for="SenderEmail" asp-postfix=":"></label>
                 <input asp-for="SenderEmail" class="sender-email"/>
+                <nop-required />
             </div>
         }
         <div>
