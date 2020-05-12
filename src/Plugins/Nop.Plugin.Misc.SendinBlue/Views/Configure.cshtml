@@ -470,23 +470,9 @@
                                                         if (data.Result) {
                                                             updateTable('#sms-grid');
 
-                                                            @{ 
-                                                              var defaultSelectedMessageId = "0";
-                                                              var defaultSelectedMessage = Model.AddSms.AvailableMessages.Where(item => item.Selected).FirstOrDefault()?? Model.AddSms.AvailableMessages.FirstOrDefault();
-                                                              if (defaultSelectedMessage != null) {
-                                                                  defaultSelectedMessageId = defaultSelectedMessage.Value.ToString();
-                                                              }
-
-                                                              var defaultSelectedPhoneTypeId = "0";
-                                                              var defaultSelectedPhoneType = Model.AddSms.AvailablePhoneTypes.Where(item => item.Selected).FirstOrDefault()?? Model.AddSms.AvailablePhoneTypes.FirstOrDefault();
-                                                              if (defaultSelectedPhoneType != null) {
-                                                                  defaultSelectedPhoneTypeId = defaultSelectedPhoneType.Value.ToString();
-                                                              }
-                                                            }
-
                                                             //clear input value
-                                                            $("#@Html.IdFor(model => model.AddSms.MessageId)").val(@(defaultSelectedMessageId));
-                                                            $("#@Html.IdFor(model => model.AddSms.PhoneTypeId)").val(@(defaultSelectedPhoneTypeId));
+                                                            $("#@Html.IdFor(model => model.AddSms.MessageId)").val(@(Model.AddSms.DefaultSelectedMessageId));
+                                                            $("#@Html.IdFor(model => model.AddSms.PhoneTypeId)").val(@(Model.AddSms.DefaultSelectedPhoneTypeId));
                                                             $("#@Html.IdFor(model => model.AddSms.Text)").val('');
 
                                                         } else {
