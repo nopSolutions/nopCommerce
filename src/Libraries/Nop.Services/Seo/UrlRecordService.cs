@@ -1262,20 +1262,33 @@ namespace Nop.Services.Seo
         /// Gets all URL records
         /// </summary>
         /// <param name="slug">Slug</param>
+        /// <param name="languageId">Language ID; "null" to load records with any language; "0" to load records with standard language only; otherwise to load records with specify language ID only</param>
+        /// <param name="isActive">A value indicating whether to get active records; "null" to load all records; "false" to load only inactive records; "true" to load only active records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>URL records</returns>
-        public virtual IPagedList<UrlRecord> GetAllUrlRecords(string slug = "", int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual IPagedList<UrlRecord> GetAllUrlRecords(
+            string slug = "", int? languageId = null, bool? isActive = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _urlRecordRepository.Table;
             query = query.OrderBy(ur => ur.Slug);
 
-            var urlRecords = query.ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordAllCacheKey));
+            var urlRecords = query
+                .ToCachedList(_cacheKeyService.PrepareKeyForDefaultCache(NopSeoDefaults.UrlRecordAllCacheKey))
+                .AsEnumerable();
 
             if (!string.IsNullOrWhiteSpace(slug))
-                urlRecords = urlRecords.Where(ur => ur.Slug.Contains(slug)).ToList();
+                urlRecords = urlRecords.Where(ur => ur.Slug.Contains(slug));
 
-            return new PagedList<UrlRecord>(urlRecords, pageIndex, pageSize);
+            if (languageId.HasValue)
+                urlRecords = urlRecords.Where(ur => ur.LanguageId == languageId);
+
+            if (isActive.HasValue)
+                urlRecords = urlRecords.Where(ur => ur.IsActive == isActive);
+
+            var result = urlRecords.ToList();
+
+            return new PagedList<UrlRecord>(result, pageIndex, pageSize);
         }
 
         /// <summary>

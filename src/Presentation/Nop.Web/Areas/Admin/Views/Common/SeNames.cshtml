@@ -50,6 +50,22 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="LanguageId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="LanguageId" asp-items="Model.AvailableLanguages" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="IsActiveId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="IsActiveId" asp-items="Model.AvailableActiveOptions" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <div class="col-md-8 col-md-offset-4">
                                         <button type="button" id="search-senames" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
                                     </div>
@@ -71,7 +87,9 @@
                         LengthMenu = Model.AvailablePageSizes,
                         Filters = new List<FilterParameter>
                         {
-                            new FilterParameter(nameof(Model.SeName))
+                            new FilterParameter(nameof(Model.SeName)),
+                            new FilterParameter(nameof(Model.LanguageId)),
+                            new FilterParameter(nameof(Model.IsActiveId))
                         },
                         ColumnCollection = new List<ColumnProperty>
                         {
