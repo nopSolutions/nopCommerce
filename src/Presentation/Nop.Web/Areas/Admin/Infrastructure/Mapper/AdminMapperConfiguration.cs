@@ -424,6 +424,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ProductAttributeCombinationSearchModel, options => options.Ignore())
                 .ForMember(model => model.ProductAttributeMappingSearchModel, options => options.Ignore())
                 .ForMember(model => model.ProductAttributesExist, options => options.Ignore())
+                .ForMember(model => model.CanCreateCombinations, options => options.Ignore())
                 .ForMember(model => model.ProductEditorSettingsModel, options => options.Ignore())
                 .ForMember(model => model.ProductOrderSearchModel, options => options.Ignore())
                 .ForMember(model => model.ProductPictureModels, options => options.Ignore())
