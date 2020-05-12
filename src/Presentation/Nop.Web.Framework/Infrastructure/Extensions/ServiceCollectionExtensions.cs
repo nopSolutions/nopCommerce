@@ -178,7 +178,7 @@ namespace Nop.Web.Framework.Infrastructure.Extensions
             if (nopConfig.RedisEnabled && nopConfig.UseRedisToStoreDataProtectionKeys)
             {
                 //store keys in Redis
-                services.AddDataProtection().PersistKeysToRedis(() =>
+                services.AddDataProtection().PersistKeysToStackExchangeRedis(() =>
                 {
                     var redisConnectionWrapper = EngineContext.Current.Resolve<IRedisConnectionWrapper>();
                     return redisConnectionWrapper.GetDatabase(nopConfig.RedisDatabaseId ?? (int)RedisDatabaseNumber.DataProtectionKeys);
