@@ -94,7 +94,9 @@ namespace Nop.Plugin.Shipping.UPS
                 PackagingType = PackagingType.ExpressBox,
                 PackingPackageVolume = 5184,
                 PackingType = PackingType.PackByDimensions,
-                PassDimensions = true
+                PassDimensions = true,
+                WeightType = "LBS",
+                DimensionsType = "IN"
             });
 
             //locales
@@ -113,6 +115,8 @@ namespace Nop.Plugin.Shipping.UPS
                 ["Plugins.Shipping.UPS.Fields.AvailableCarrierServices.Hint"] = "Select the services you want to offer to customers.",
                 ["Plugins.Shipping.UPS.Fields.CustomerClassification"] = "UPS Customer Classification",
                 ["Plugins.Shipping.UPS.Fields.CustomerClassification.Hint"] = "Choose customer classification.",
+                ["Plugins.Shipping.UPS.Fields.DimensionsType"] = "Dimensions type",
+                ["Plugins.Shipping.UPS.Fields.DimensionsType.Hint"] = "Choose dimensions type (inches or centimeters).",
                 ["Plugins.Shipping.UPS.Fields.InsurePackage"] = "Insure package",
                 ["Plugins.Shipping.UPS.Fields.InsurePackage.Hint"] = "Check to insure packages.",
                 ["Plugins.Shipping.UPS.Fields.PackagingType"] = "UPS Packaging Type",
@@ -135,6 +139,8 @@ namespace Nop.Plugin.Shipping.UPS
                 ["Plugins.Shipping.UPS.Fields.Username.Hint"] = "Specify UPS username.",
                 ["Plugins.Shipping.UPS.Fields.UseSandbox"] = "Use sandbox",
                 ["Plugins.Shipping.UPS.Fields.UseSandbox.Hint"] = "Check to use sandbox (testing environment).",
+                ["Plugins.Shipping.UPS.Fields.WeightType"] = "Weight type",
+                ["Plugins.Shipping.UPS.Fields.WeightType.Hint"] = "Choose the weight type (pounds or kilograms).",
                 ["Plugins.Shipping.UPS.Tracker.Arrived"] = "Arrived",
                 ["Plugins.Shipping.UPS.Tracker.Booked"] = "Booked",
                 ["Plugins.Shipping.UPS.Tracker.Delivered"] = "Delivered",
