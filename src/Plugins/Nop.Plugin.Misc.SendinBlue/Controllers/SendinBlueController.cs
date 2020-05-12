@@ -146,10 +146,7 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
                 return new SelectListItem(name, messageTemplate.Id.ToString());
             }).ToList();
             var defaultSelectedMessage = model.AddSms.AvailableMessages.FirstOrDefault();
-            if (defaultSelectedMessage != null)
-                model.AddSms.DefaultSelectedMessageId = defaultSelectedMessage.Value.ToString();
-            else
-                model.AddSms.DefaultSelectedMessageId = "0";
+            model.AddSms.DefaultSelectedMessageId = defaultSelectedMessage?.Value ?? "0";
 
             //check whether email account exists
             if (sendinBlueSettings.UseSmtp && _emailAccountService.GetEmailAccountById(sendinBlueSettings.EmailAccountId) != null)
