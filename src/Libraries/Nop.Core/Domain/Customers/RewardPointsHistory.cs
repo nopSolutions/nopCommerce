@@ -51,5 +51,10 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the number of valid points that have not yet spent (only for positive amount of points)
         /// </summary>
         public int? ValidPoints { get; set; }
+
+        /// <summary>
+        /// Used with order
+        /// </summary>
+        public Guid? UsedWithOrder { get; set; }
     }
 }
