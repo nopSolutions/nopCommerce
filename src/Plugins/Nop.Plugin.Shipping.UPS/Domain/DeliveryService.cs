@@ -80,11 +80,12 @@
         [UPSCode("65")]
         WorldwideSaver,
 
-        /// <summary>
-        /// Access Point Economy
-        /// </summary>
-        [UPSCode("70")]
-        AccessPointEconomy,
+        //Currently not available. Actually this is a pickup point service, so you need implement IPickupPointProvider to use this feature.
+        ///// <summary>
+        ///// Access Point Economy
+        ///// </summary>
+        //[UPSCode("70")]
+        //AccessPointEconomy,
 
         /// <summary>
         /// Worldwide Express Freight Midday
