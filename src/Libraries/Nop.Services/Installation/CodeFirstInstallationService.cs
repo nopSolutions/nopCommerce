@@ -364,7 +364,6 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallStores()
         {
-            //var storeUrl = "http://www.yourStore.com/";
             var storeUrl = _webHelper.GetStoreLocation();
             var stores = new List<Store>
             {
