@@ -977,17 +977,13 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException(nameof(order));
 
-            //were some points redeemed when placing an order?
-            if (order.RedeemedRewardPointsEntryId is null)
-                return;
-
             var customer = _customerService.GetCustomerById(order.CustomerId);
 
-            var redeemedRewardPointsEntry = _rewardPointService.GetRewardPointsHistoryEntryById(order.RedeemedRewardPointsEntryId.Value);
-
-            //return back
-            _rewardPointService.AddRewardPointsHistoryEntry(customer, -redeemedRewardPointsEntry.Points, order.StoreId,
-                string.Format(_localizationService.GetResource("RewardPoints.Message.ReturnedForOrder"), order.CustomOrderNumber));
+            //were some reward points spend on the order
+            foreach (var rewardPoints in _rewardPointService.GetRewardPointsHistory(order.CustomerId, order.StoreId, orderGuid: order.OrderGuid))
+                //return back
+                _rewardPointService.AddRewardPointsHistoryEntry(customer, -rewardPoints.Points, order.StoreId,
+                    string.Format(_localizationService.GetResource("RewardPoints.Message.ReturnedForOrder"), order.CustomOrderNumber));
         }
 
         /// <summary>

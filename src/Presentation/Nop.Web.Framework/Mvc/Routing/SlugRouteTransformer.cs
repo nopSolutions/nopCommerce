@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Domain.Localization;
+using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
+using Nop.Web.Framework.Events;
 
 namespace Nop.Web.Framework.Mvc.Routing
 {
@@ -15,18 +17,31 @@ namespace Nop.Web.Framework.Mvc.Routing
     /// </summary>
     public class SlugRouteTransformer : DynamicRouteValueTransformer
     {
-        private readonly ILanguageService _languageService;
-        private readonly LocalizationSettings _localizationSettings;
-        private readonly IUrlRecordService _urlRecordService;
+        #region Fields
 
-        public SlugRouteTransformer(ILanguageService languageService,
-            LocalizationSettings localizationSettings,
-            IUrlRecordService urlRecordService)
+        private readonly IEventPublisher _eventPublisher;
+        private readonly ILanguageService _languageService;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly LocalizationSettings _localizationSettings;
+
+        #endregion
+
+        #region Ctor
+
+        public SlugRouteTransformer(IEventPublisher eventPublisher,
+            ILanguageService languageService,
+            IUrlRecordService urlRecordService,
+            LocalizationSettings localizationSettings)
         {
+            _eventPublisher = eventPublisher;
             _languageService = languageService;
-            _localizationSettings = localizationSettings;
             _urlRecordService = urlRecordService;
+            _localizationSettings = localizationSettings;
         }
+
+        #endregion
+
+        #region Methods
 
         public override ValueTask<RouteValueDictionary> TransformAsync(HttpContext httpContext, RouteValueDictionary values)
         {
@@ -37,8 +52,6 @@ namespace Nop.Web.Framework.Mvc.Routing
                 return new ValueTask<RouteValueDictionary>(values);
 
             var slug = slugValue as string;
-
-            //performance optimization, we load a cached verion here. It reduces number of SQL requests for each page load
             var urlRecord = _urlRecordService.GetBySlug(slug);
 
             //no URL record found
@@ -47,7 +60,7 @@ namespace Nop.Web.Framework.Mvc.Routing
 
             //virtual directory path
             var pathBase = httpContext.Request.PathBase;
-            
+
             //if URL record is not active let's find the latest one
             if (!urlRecord.IsActive)
             {
@@ -146,10 +159,13 @@ namespace Nop.Web.Framework.Mvc.Routing
                     break;
                 default:
                     //no record found, thus generate an event this way developers could insert their own types
+                    _eventPublisher.Publish(new GenericRoutingEvent(values, urlRecord));
                     break;
             }
 
             return new ValueTask<RouteValueDictionary>(values);
         }
+
+        #endregion
     }
 }

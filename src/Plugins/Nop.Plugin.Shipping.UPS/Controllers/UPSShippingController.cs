@@ -8,6 +8,7 @@ using Nop.Plugin.Shipping.UPS.Models;
 using Nop.Plugin.Shipping.UPS.Services;
 using Nop.Services;
 using Nop.Services.Configuration;
+using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
@@ -25,6 +26,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
         #region Fields
 
         private readonly ILocalizationService _localizationService;
+        private readonly IMeasureService _measureService;
         private readonly INotificationService _notificationService;
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
@@ -36,6 +38,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
         #region Ctor
 
         public UPSShippingController(ILocalizationService localizationService,
+            IMeasureService measureService,
             INotificationService notificationService,
             IPermissionService permissionService,
             ISettingService settingService,
@@ -43,6 +46,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             UPSSettings upsSettings)
         {
             _localizationService = localizationService;
+            _measureService = measureService;
             _notificationService = notificationService;
             _permissionService = permissionService;
             _settingService = settingService;
@@ -77,7 +81,9 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                 PassDimensions = _upsSettings.PassDimensions,
                 PackingPackageVolume = _upsSettings.PackingPackageVolume,
                 PackingType = (int)_upsSettings.PackingType,
-                Tracing = _upsSettings.Tracing
+                Tracing = _upsSettings.Tracing,
+                WeightType = _upsSettings.WeightType,
+                DimensionsType = _upsSettings.DimensionsType
             };
 
             //prepare offered delivery services
@@ -98,6 +104,17 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                 var serviceCode = _upsService.GetUpsCode((DeliveryService)int.Parse(item.Value));
                 return new SelectListItem($"UPS {item.Text?.TrimStart('_')}", serviceCode, servicesCodes.Contains(serviceCode));
             }).ToList();
+            model.AvaliableWeightTypes = new List<SelectListItem> { new SelectListItem("LBS", "LBS"), new SelectListItem("KGS", "KGS") };
+            model.AvaliableDimensionsTypes = new List<SelectListItem> { new SelectListItem("IN", "IN"), new SelectListItem("CM", "CM") };
+
+            //check measures
+            var weightSystemName = _upsSettings.WeightType switch { "LBS" => "lb", "KGS" => "kg", _ => null };
+            if (_measureService.GetMeasureWeightBySystemKeyword(weightSystemName) == null)
+                _notificationService.ErrorNotification($"Could not load '{weightSystemName}' <a href=\"{Url.Action("List", "Measure")}\" target=\"_blank\">measure weight</a>", false);
+
+            var dimensionSystemName = _upsSettings.DimensionsType switch { "IN" => "inches", "CM" => "centimeters", _ => null };
+            if (_measureService.GetMeasureDimensionBySystemKeyword(dimensionSystemName) == null)
+                _notificationService.ErrorNotification($"Could not load '{dimensionSystemName}' <a href=\"{Url.Action("List", "Measure")}\" target=\"_blank\">measure dimension</a>", false);
 
             return View("~/Plugins/Shipping.UPS/Views/Configure.cshtml", model);
         }
@@ -128,6 +145,8 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             _upsSettings.PackingPackageVolume = model.PackingPackageVolume;
             _upsSettings.PackingType = (PackingType)model.PackingType;
             _upsSettings.Tracing = model.Tracing;
+            _upsSettings.WeightType = model.WeightType;
+            _upsSettings.DimensionsType = model.DimensionsType;
 
             //use default services if no one is selected 
             if (!model.CarrierServices.Any())

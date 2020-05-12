@@ -364,15 +364,14 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallStores()
         {
-            //var storeUrl = "http://www.yourStore.com/";
-            var storeUrl = _webHelper.GetStoreLocation(false);
+            var storeUrl = _webHelper.GetStoreLocation();
             var stores = new List<Store>
             {
                 new Store
                 {
                     Name = "Your store name",
                     Url = storeUrl,
-                    SslEnabled = false,
+                    SslEnabled = _webHelper.IsCurrentConnectionSecured(),
                     Hosts = "yourstore.com,www.yourstore.com",
                     DisplayOrder = 1,
                     //should we set some default company info?

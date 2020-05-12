@@ -916,6 +916,18 @@ set @resources='
   <LocaleResource Name="Admin.System.SeNames.Name.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.DimensionsType">
+    <Value>Dimensions type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.DimensionsType.Hint">
+    <Value>Choose dimensions type (inches or centimeters).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.WeightType">
+    <Value>Weight type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.WeightType.Hint">
+    <Value>Choose the weight type (pounds or kilograms).</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3200,4 +3212,27 @@ GO
 UPDATE [Country]
 SET [ThreeLetterIsoCode] = 'ROU'
 WHERE [TwoLetterIsoCode] = 'RO' AND [ThreeLetterIsoCode] = 'ROM'
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[RewardPointsHistory]') and NAME='UsedWithOrder')
+BEGIN
+	ALTER TABLE dbo.RewardPointsHistory ADD UsedWithOrder uniqueidentifier NULL
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'upssettings.weighttype')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'upssettings.weighttype', N'LBS', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'upssettings.dimensionstype')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'upssettings.dimensionstype', N'IN', 0)
+END
 GO
