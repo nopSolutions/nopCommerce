@@ -60,8 +60,12 @@
                                         @foreach (var sm in Model.AvailableShippingMethods)
                                         {
                                             <th scope="col">
-                                                <input type="checkbox" id="selectall-@(sm.Id)" />
-                                                <strong>@sm.Name</strong>                                                
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" id="selectall-@(sm.Id)" />
+                                                        <strong>@sm.Name</strong>
+                                                    </label>
+                                                </div>                                                                                                
                                             </th>
                                         }
                                     </tr>
