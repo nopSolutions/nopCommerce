@@ -928,6 +928,9 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.UPS.Fields.WeightType.Hint">
     <Value>Choose the weight type (pounds or kilograms).</Value>
   </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.Product.IsNotFound">
+    <Value>Product is not found</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -17859,6 +17859,9 @@
   <LocaleResource Name="Shipping.EstimateShippingPopUp.Pickup.PriceFrom">
     <Value>From {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.Product.IsNotFound">
+    <Value>Product is not found</Value>
+  </LocaleResource>
   <LocaleResource Name="Shipping.EstimateShippingPopUp.SelectShippingOption.Button">
     <Value>Apply</Value>
   </LocaleResource>
