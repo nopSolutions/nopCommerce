@@ -237,7 +237,7 @@ $(document).ready(function () {
 });
 
 function WrapAndSaveBlockData() {
-    $(this).parents(".panel").find(">.panel-container").slideToggle();
+    $(this).parents(".panel").find(">.panel-container").slideToggle(null, null, function () { $(this).trigger("panel:toggle"); });
     $("#ajaxBusy span").addClass("no-ajax-loader");
     var icon = $(this).find("i.toggle-icon");
     if ($(this).hasClass("opened")) {
@@ -259,7 +259,7 @@ $(document).ready(function () {
 });
 
 function ToggleSearchBlockAndSavePreferences() {
-    $(this).parents(".panel-search").find(".search-body").slideToggle();
+    $(this).parents(".panel-search").find(".search-body").slideToggle(null, null, function () { $(this).trigger("panel:toggle"); });
     var icon = $(this).find(".icon-collapse i");
     if ($(this).hasClass("opened")) {
       icon.removeClass("fa-angle-up");

@@ -156,6 +156,10 @@
             </text>
         }
         $('#@Model.Name').DataTable().columns.adjust();
+
+        $('.panel').on('panel:toggle', function (e) {
+            updateTableWidth('#@Model.Name');
+        })
     });
 </script>
 
