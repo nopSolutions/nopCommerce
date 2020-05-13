@@ -33,19 +33,12 @@
                             {
                                 new ColumnProperty(nameof(PickupPointProviderModel.FriendlyName))
                                 {
-                                    Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.FriendlyName").Text,
-                                    Width = "250"
+                                    Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.FriendlyName").Text
                                 },
                                 new ColumnProperty(nameof(PickupPointProviderModel.SystemName))
                                 {
                                     Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.SystemName").Text,
                                     Width = "250"
-                                },
-                                new ColumnProperty(nameof(PickupPointProviderModel.LogoUrl))
-                                {
-                                    Title = T("Admin.Configuration.Shipping.PickupPointProviders.Fields.Logo").Text,
-                                    Width = "100",
-                                    Render = new RenderPicture()
                                 },
                                 new ColumnProperty(nameof(PickupPointProviderModel.DisplayOrder))
                                 {
@@ -67,14 +60,14 @@
                                 new ColumnProperty(nameof(PickupPointProviderModel.SystemName))
                                 {
                                     Title = T("Admin.Configuration.Shipping.PickupPointProviders.Configure").Text,
-                                    Width = "150",
+                                    Width = "200",
                                     ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderCustom("renderColumnConfigure")
                                 },
                                 new ColumnProperty(nameof(PickupPointProviderModel.SystemName))
                                 {
                                     Title = T("Admin.Common.Edit").Text,
-                                    Width = "200",
+                                    Width = "150",
                                     ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderButtonsInlineEdit()
                                 }
