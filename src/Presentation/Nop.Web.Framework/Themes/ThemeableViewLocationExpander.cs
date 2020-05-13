@@ -39,7 +39,9 @@ namespace Nop.Web.Framework.Themes
             {
                 viewLocations = new[] {
                         $"/Themes/{theme}/Views/{{1}}/{{0}}.cshtml",
+                        $"/Themes/Shared/Views/{{1}}/{{0}}.cshtml",
                         $"/Themes/{theme}/Views/Shared/{{0}}.cshtml",
+                        $"/Themes/Shared/Views/Shared/{{0}}.cshtml",
                     }
                     .Concat(viewLocations);
             }
