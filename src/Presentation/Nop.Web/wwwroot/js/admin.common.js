@@ -49,25 +49,35 @@ function checkAllOverriddenStoreValue(item) {
 function checkOverriddenStoreValue(obj, selector) {
     var elementsArray = selector.split(",");
     if (!$(obj).is(':checked')) {
+        //first enable appropriate hidden iputs for checkboxes
+        if ($(selector + '[type=checkbox]')) {
+            var name = $(selector).attr('name');
+            $('[name=' + name + ']').removeAttr('disabled');
+        }
         $(selector).attr('disabled', true);
         //Kendo UI elements are enabled/disabled some other way
-        $.each(elementsArray, function(key, value) {
+        $.each(elementsArray, function (key, value) {
             var kenoduiElement = $(value).data("kendoNumericTextBox") || $(value).data("kendoMultiSelect");
             if (kenoduiElement !== undefined && kenoduiElement !== null) {
                 kenoduiElement.enable(false);
             }
-        }); 
+        });
     }
     else {
+        //first disable appropriate hidden iputs for checkboxes
+        if ($(selector + '[type=checkbox]')) {
+            var name = $(selector).attr('name');
+            $('[name=' + name + ']').attr('disabled', true);
+        }
         $(selector).removeAttr('disabled');
         //Kendo UI elements are enabled/disabled some other way
-        $.each(elementsArray, function(key, value) {
+        $.each(elementsArray, function (key, value) {
             var kenoduiElement = $(value).data("kendoNumericTextBox") || $(value).data("kendoMultiSelect");
             if (kenoduiElement !== undefined && kenoduiElement !== null) {
                 kenoduiElement.enable();
             }
         });
-    };
+    }
 }
 
 function bindBootstrapTabSelectEvent(tabsId, inputId) {
