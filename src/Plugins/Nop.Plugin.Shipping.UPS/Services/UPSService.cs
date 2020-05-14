@@ -488,14 +488,14 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 width = length = height = 0;
             package.Dimensions = new UPSRate.DimensionsType
             {
-                Width = width.ToString(),
-                Length = length.ToString(),
-                Height = height.ToString(),
+                Width = width.ToString("0.00", CultureInfo.InvariantCulture),
+                Length = length.ToString("0.00", CultureInfo.InvariantCulture),
+                Height = height.ToString("0.00", CultureInfo.InvariantCulture),
                 UnitOfMeasurement = new UPSRate.CodeDescriptionType { Code = _upsSettings.DimensionsType }
             };
             package.PackageWeight = new UPSRate.PackageWeightType
             {
-                Weight = weight.ToString(),
+                Weight = weight.ToString("0.00", CultureInfo.InvariantCulture),
                 UnitOfMeasurement = new UPSRate.CodeDescriptionType { Code = _upsSettings.WeightType },
             };
 
@@ -510,7 +510,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
                         BasicFlexibleParcelIndicator = new UPSRate.InsuranceValueType
                         {
                             CurrencyCode = currencyCode,
-                            MonetaryValue = insuranceAmount.ToString()
+                            MonetaryValue = insuranceAmount.ToString("0.00", CultureInfo.InvariantCulture)
                         }
                     }
                 };
@@ -844,8 +844,12 @@ namespace Nop.Plugin.Shipping.UPS.Services
                     continue;
 
                 //get rate value
-                var regularValue = decimal.TryParse(rate.TotalCharges?.MonetaryValue, out var value) ? (decimal?)value : null;
-                var negotiatedValue = decimal.TryParse(rate.NegotiatedRateCharges?.TotalCharge?.MonetaryValue, out value) ? (decimal?)value : null;
+                var regularValue = decimal.TryParse(rate.TotalCharges?.MonetaryValue, NumberStyles.Any, new CultureInfo("en-US"), out var value)
+                    ? (decimal?)value
+                    : null;
+                var negotiatedValue = decimal.TryParse(rate.NegotiatedRateCharges?.TotalCharge?.MonetaryValue, NumberStyles.Any, new CultureInfo("en-US"), out value)
+                    ? (decimal?)value
+                    : null;
                 var monetaryValue = negotiatedValue ?? regularValue;
                 if (!monetaryValue.HasValue)
                     continue;
