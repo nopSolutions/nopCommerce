@@ -22,10 +22,24 @@
         "previous":"&#8249;"
     },*@
     "paginate": {
-        "first":"<i class='k-icon k-i-seek-w'></i>",
-        "last":"<i class='k-icon k-i-seek-e'></i>",
-        "next":"<i class='k-icon k-i-arrow-e'></i>",
-        "previous":"<i class='k-icon k-i-arrow-w'></i>"
+        @if (System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft)
+        {
+            <text>
+                "first":"<i class='k-icon k-i-seek-e'></i>",
+                "last":"<i class='k-icon k-i-seek-w'></i>",
+                "next":"<i class='k-icon k-i-arrow-w'></i>",
+                "previous":"<i class='k-icon k-i-arrow-e'></i>"
+            </text>
+        }
+        else
+        { 
+            <text>
+                "first":"<i class='k-icon k-i-seek-w'></i>",
+                "last":"<i class='k-icon k-i-seek-e'></i>",
+                "next":"<i class='k-icon k-i-arrow-e'></i>",
+                "previous":"<i class='k-icon k-i-arrow-w'></i>"
+            </text>        
+        }
     },
     "aria": {
         "sortAscending":  "@JavaScriptEncoder.Default.Encode(T("Admin.DT.Aria.SortAscending").Text)",
