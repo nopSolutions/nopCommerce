@@ -49,7 +49,7 @@ function checkAllOverriddenStoreValue(item) {
 function checkOverriddenStoreValue(obj, selector) {
     var elementsArray = selector.split(",");
     if (!$(obj).is(':checked')) {
-        //first enable appropriate hidden iputs for checkboxes
+        //first enable appropriate hidden inputs for checkboxes
         if ($(selector + '[type=checkbox]')) {
             var name = $(selector).attr('name');
             $('[name=' + name + ']').removeAttr('disabled');
@@ -64,7 +64,7 @@ function checkOverriddenStoreValue(obj, selector) {
         });
     }
     else {
-        //first disable appropriate hidden iputs for checkboxes
+        //first disable appropriate hidden inputs for checkboxes
         if ($(selector + '[type=checkbox]')) {
             var name = $(selector).attr('name');
             $('[name=' + name + ']').attr('disabled', true);
