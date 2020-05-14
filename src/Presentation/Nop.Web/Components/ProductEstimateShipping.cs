@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Shipping;
 using Nop.Services.Catalog;
 using Nop.Web.Factories;
 using Nop.Web.Framework.Components;
@@ -18,20 +19,26 @@ namespace Nop.Web.Components
         private readonly IProductService _productService;
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
+        private readonly ShippingSettings _shippingSettings;
 
         public ProductEstimateShippingViewComponent(IShoppingCartModelFactory shoppingCartModelFactory,
             IProductService productService,
             IStoreContext storeContext,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            ShippingSettings shippingSettings)
         {
             _shoppingCartModelFactory = shoppingCartModelFactory;
             _productService = productService;
             _storeContext = storeContext;
             _workContext = workContext;
+            _shippingSettings = shippingSettings;
         }
 
         public IViewComponentResult Invoke(int productId)
         {
+            if (!_shippingSettings.EstimateShippingProductPageEnabled)
+                return Content("");
+
             var product = _productService.GetProductById(productId);
             if (product == null)
                 return Content("");

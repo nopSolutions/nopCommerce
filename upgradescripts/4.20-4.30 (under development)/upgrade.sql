@@ -928,6 +928,27 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.UPS.Fields.WeightType.Hint">
     <Value>Choose the weight type (pounds or kilograms).</Value>
   </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.Product.IsNotFound">
+    <Value>Product is not found</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingCartPageEnabled">
+    <Value>Estimate shipping enabled (cart page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingCartPageEnabled.Hint">
+    <Value>Check to allow customers to estimate shipping on the shopping cart page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingProductPageEnabled">
+    <Value>Estimate shipping enabled (product page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingProductPageEnabled.Hint">
+    <Value>Check to allow customers to estimate shipping on the product details pages. Please note that all the shipping provider APIs will be called on the product details page. Also the final shipping rate in the cart may not be exactly equal to the sum of all the individual estimates.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingEnabled">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingEnabled.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3234,5 +3255,22 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'upssettings.dimensionsty
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'upssettings.dimensionstype', N'IN', 0)
+END
+GO
+
+--rename setting
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'shippingsettings.estimateshippingenabled')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = N'shippingsettings.estimateshippingcartpageenabled'
+	WHERE [Name] = N'shippingsettings.estimateshippingenabled'
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'shippingsettings.estimateshippingproductpageenabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'shippingsettings.estimateshippingproductpageenabled', N'True', 0)
 END
 GO

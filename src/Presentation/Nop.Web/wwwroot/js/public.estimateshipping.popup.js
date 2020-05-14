@@ -147,7 +147,9 @@
                 this.setActiveShippingOption(activeOption);
             }
         } else {
+          this.isShown = true;
           this.clearErrorMessage();
+          this.clearShippingOptions();
           this.showErrorMessage(response.errors);
         }
 
@@ -157,16 +159,6 @@
 
     errorHandler: function (jqXHR, textStatus, errorThrown) {
         if (textStatus === 'abort') return;
-
-        if (jqXHR.status >= 400) {
-            let response = jqXHR.responseJSON;
-            if (response instanceof Object && response.hasOwnProperty('Errors')) {
-                let errorBox = $('#estimate-shipping-popup .message-failure').empty();
-                $.each(response.Errors, function (i, error) {
-                    errorBox.append($('<div/>').text(error));
-                });
-            }
-        }
 
         this.clearShippingOptions();
 

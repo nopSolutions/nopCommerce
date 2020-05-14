@@ -730,7 +730,7 @@ namespace Nop.Web.Factories
 
             var model = new EstimateShippingModel
             {
-                Enabled = cart.Any() && _shoppingCartService.ShoppingCartRequiresShipping(cart) && _shippingSettings.EstimateShippingEnabled
+                Enabled = cart.Any() && _shoppingCartService.ShoppingCartRequiresShipping(cart)
             };
             if (model.Enabled)
             {
