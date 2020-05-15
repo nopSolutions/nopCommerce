@@ -1,4 +1,5 @@
-﻿{
+﻿@inject IWorkContext workContext
+{
     "emptyTable":     "@JavaScriptEncoder.Default.Encode(T("Admin.DT.EmptyTable").Text)",
     "info":           "@JavaScriptEncoder.Default.Encode(T("Admin.DT.Info").Text)",
     "infoEmpty":      "@JavaScriptEncoder.Default.Encode(T("Admin.DT.InfoEmpty").Text)",
@@ -22,7 +23,7 @@
         "previous":"&#8249;"
     },*@
     "paginate": {
-        @if (System.Globalization.CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft)
+        @if (workContext.WorkingLanguage.Rtl)
         {
             <text>
                 "first":"<i class='k-icon k-i-seek-e'></i>",
