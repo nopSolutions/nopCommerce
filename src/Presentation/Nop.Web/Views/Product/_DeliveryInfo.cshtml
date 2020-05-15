@@ -5,16 +5,16 @@
         <script asp-location="Footer">
             $(document).on("product_attributes_changed", function (data) {
                 if (data.changedData.isFreeShipping) {
-                    $(".free-shipping").removeClass("invisible");
+                    $("#free-shipping-"+data.changedData.productId).removeClass("invisible");
                 } else {
-                    $(".free-shipping").addClass("invisible");
+                    $("#free-shipping-"+data.changedData.productId).addClass("invisible");
                 }
             });
         </script>
 
         @if (Model.FreeShippingNotificationEnabled && Model.IsFreeShipping)
         {
-            <div class="free-shipping">@T("Products.FreeShipping")</div>
+            <div id="free-shipping-@Model.Id" class="free-shipping">@T("Products.FreeShipping")</div>
         }
         @if (!string.IsNullOrWhiteSpace(Model.DeliveryDate))
         {
