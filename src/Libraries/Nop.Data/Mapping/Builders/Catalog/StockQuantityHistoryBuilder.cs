@@ -1,7 +1,5 @@
-﻿using System.Data;
-using FluentMigrator.Builders.Create.Table;
+﻿using FluentMigrator.Builders.Create.Table;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Shipping;
 using Nop.Data.Extensions;
 
 namespace Nop.Data.Mapping.Builders.Catalog

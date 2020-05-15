@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace Nop.Web.Framework.UI
+﻿namespace Nop.Web.Framework.UI
 {
     /// <summary>
     /// Page head builder
