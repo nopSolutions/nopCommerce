@@ -1128,7 +1128,6 @@ table td .form-group {
 }
 .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th,
 .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td {
-    text-align: right;
     overflow: hidden;
     border-style: solid;
     border-width: 0 1px 1px 0;
@@ -1212,7 +1211,7 @@ table td .form-group {
 
 /*grid color statuses*/
 span.grid-report-item {
-    padding: .2em 0 .3em .6em;
+    padding: .2em .6em .3em .6em;
     border-radius: .25em;
     color: #2e2e2e;
 }

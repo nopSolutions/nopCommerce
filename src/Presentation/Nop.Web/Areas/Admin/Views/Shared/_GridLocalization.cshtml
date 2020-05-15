@@ -1,4 +1,5 @@
-﻿{
+﻿@inject IWorkContext workContext
+{
     "emptyTable":     "@JavaScriptEncoder.Default.Encode(T("Admin.DT.EmptyTable").Text)",
     "info":           "@JavaScriptEncoder.Default.Encode(T("Admin.DT.Info").Text)",
     "infoEmpty":      "@JavaScriptEncoder.Default.Encode(T("Admin.DT.InfoEmpty").Text)",
@@ -22,10 +23,24 @@
         "previous":"&#8249;"
     },*@
     "paginate": {
-        "first":"<i class='k-icon k-i-seek-w'></i>",
-        "last":"<i class='k-icon k-i-seek-e'></i>",
-        "next":"<i class='k-icon k-i-arrow-e'></i>",
-        "previous":"<i class='k-icon k-i-arrow-w'></i>"
+        @if (workContext.WorkingLanguage.Rtl)
+        {
+            <text>
+                "first":"<i class='k-icon k-i-seek-e'></i>",
+                "last":"<i class='k-icon k-i-seek-w'></i>",
+                "next":"<i class='k-icon k-i-arrow-w'></i>",
+                "previous":"<i class='k-icon k-i-arrow-e'></i>"
+            </text>
+        }
+        else
+        { 
+            <text>
+                "first":"<i class='k-icon k-i-seek-w'></i>",
+                "last":"<i class='k-icon k-i-seek-e'></i>",
+                "next":"<i class='k-icon k-i-arrow-e'></i>",
+                "previous":"<i class='k-icon k-i-arrow-w'></i>"
+            </text>        
+        }
     },
     "aria": {
         "sortAscending":  "@JavaScriptEncoder.Default.Encode(T("Admin.DT.Aria.SortAscending").Text)",
