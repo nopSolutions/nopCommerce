@@ -10,6 +10,7 @@
     countryEl: false,
     stateProvinceEl: false,
     zipPostalCodeEl: false,
+    errorMessageBoxClass: 'message-failure'
   };
 
   return {
@@ -173,13 +174,13 @@
     },
 
     clearErrorMessage: function () {
-      $('.error-messages-container', $(this.settings.contentEl)).empty();
+      $('.' + this.settings.errorMessageBoxClass, $(this.settings.contentEl)).empty();
     },
 
     showErrorMessage: function (errors) {
       console.log(this.params.displayErrors);
       if (this.params.displayErrors) {
-        var errorMessagesContainer = $('.message-failure', $(this.settings.contentEl));
+        var errorMessagesContainer = $('.' + this.settings.errorMessageBoxClass, $(this.settings.contentEl));
         $.each(errors, function (i, error) {
           errorMessagesContainer.append($('<div/>').text(error));
         });
