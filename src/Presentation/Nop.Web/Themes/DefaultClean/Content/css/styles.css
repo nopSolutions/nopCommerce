@@ -3630,7 +3630,7 @@ label, label + * {
 /*** ESTIMATE SHIPPING POPUP COMMON ***/
 
 
-#estimate-shipping-popup {
+.estimate-shipping-popup {
   position: relative;
   background: #FFF;
   padding: 25px 10px;
@@ -3826,7 +3826,7 @@ label, label + * {
   margin: 4% 0;
 }
 
-#estimate-shipping-popup .message-failure {
+.estimate-shipping-popup .message-failure {
   margin: 5px 0 -5px;
   font-size: 12px;
   color: #e4434b;
@@ -3886,7 +3886,7 @@ label, label + * {
   display: inline-block;
 }
 
-.product-estimate-shipping #open-estimate-shipping-popup .arrow-down {
+.product-estimate-shipping .open-estimate-shipping-popup .arrow-down {
   transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
   margin: 0 0 3px 6px;
@@ -5861,7 +5861,7 @@ pre {
 
 /*** ESTIMATE SHIPPING POPUP ***/
 
-#estimate-shipping-popup {
+.estimate-shipping-popup {
   padding: 25px;
 }
 }

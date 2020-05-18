@@ -1,247 +1,258 @@
-﻿let EstimateShippingPopUp = {
-    jqXHR: false,
-    delayTimer: false,
+﻿function createEstimateShippingPopUp(settings) {
+  var defaultSettings = {
+    opener: false,
     form: false,
-    selectedShippingOption: false,
+    requestDelay: 300,
     urlFactory: false,
-    handlers: false,
-    errorMessageBoxSelector: '#estimate-shipping-popup .message-failure', 
-    countryErrorMessage: '',
-    zipPostalCodeErrorMessage: '',
-    noShippingOptionsErrorMessage: '',
-    isShown: false,
+    handlers: {},
+    localizedData: false,
+    contentEl: false,
+    countryEl: false,
+    stateProvinceEl: false,
+    zipPostalCodeEl: false,
+  };
 
-    init: function (form, urlFactory, handlers, localizedData) {
-        this.form = form;
-        this.urlFactory = urlFactory;
-        this.handlers = handlers;
-        this.countryErrorMessage = localizedData.countryErrorMessage;
-        this.zipPostalCodeErrorMessage = localizedData.zipPostalCodeErrorMessage;
-        this.noShippingOptionsErrorMessage = localizedData.NoShippingOptions;
+  return {
+    settings: $.extend({}, defaultSettings, settings),
+    params: {
+      jqXHR: false,
+      displayErrors: false,
+      delayTimer: false,
+      selectedShippingOption: false
+    },
 
-        let self = this;
+    init: function () {
+      var self = this;
+      var $content = $(this.settings.contentEl);
 
-        $('#apply-shipping-button').on('click', function () {
-            let option = self.getActiveShippingOption();
-            if (option && option.provider && option.price) {
-              self.selectShippingOption(option);
-              self.closePopup();
-            }
-        });
+      $('.apply-shipping-button', $content).on('click', function () {
+        var option = self.getActiveShippingOption();
+        if (option && option.provider && option.price) {
+          self.selectShippingOption(option);
+          self.closePopup();
+        }
+      });
 
-        $('#open-estimate-shipping-popup').magnificPopup({
-            type: 'inline',
-            removalDelay: 500,
-            callbacks: {
-                beforeOpen: function () {
-                    this.st.mainClass = this.st.el.attr('data-effect');
-                },
-                open: function () {
-                    if (self.handlers && self.handlers.openPopUp)
-                    self.handlers.openPopUp();
-                    self.isShown = true;
-                }
-            }
-        });
+      $(this.settings.opener).magnificPopup({
+        type: 'inline',
+        removalDelay: 500,
+        callbacks: {
+          beforeOpen: function () {
+            this.st.mainClass = this.st.el.attr('data-effect');
+          },
+          open: function () {
+            if (self.settings.handlers.openPopUp)
+              self.settings.handlers.openPopUp();
 
-        let addressChangedHandler = function () {
-            self.clearShippingOptions();
-            let address = self.getShippingAddress();
-            self.getShippingOptions(address);
-        };
-        $('#CountryId').on('change', function () {
-            $("#StateProvinceId").val(0);
-            addressChangedHandler();
-        });
-        $('#StateProvinceId').on('change', addressChangedHandler);
-        $('#ZipPostalCode').on('input propertychange paste', addressChangedHandler);
+            self.params.displayErrors = true;
+          }
+        }
+      });
+
+      var addressChangedHandler = function () {
+        self.clearShippingOptions();
+        var address = self.getShippingAddress();
+        self.getShippingOptions(address);
+      };
+      $(this.settings.countryEl, $content).on('change', function () {
+        $(self.settings.stateProvinceEl, $content).val(0);
+        addressChangedHandler();
+      });
+      $(this.settings.stateProvinceEl, $content).on('change', addressChangedHandler);
+      $(this.settings.zipPostalCodeEl, $content).on('input propertychange paste', addressChangedHandler);
     },
 
     closePopup: function () {
       $.magnificPopup.close();
     },
-
+    
     getShippingOptions: function (address) {
-        if (!this.validateAddress(address))
-            return;
+      if (!this.validateAddress(address))
+        return;
 
-        let self = this;
+      var self = this;
 
-        self.setLoadWaiting();
+      self.setLoadWaiting();
 
-        if (self.handlers && self.handlers.load)
-            self.handlers.load();
+      if (self.settings.handlers.load)
+        self.settings.handlers.load();
 
-        clearTimeout(self.delayTimer);
-        self.delayTimer = setTimeout(function () {
-            if (self.jqXHR && self.jqXHR.readyState !== 4)
-                self.jqXHR.abort();
+      clearTimeout(self.params.delayTimer);
+      self.params.delayTimer = setTimeout(function () {
+        if (self.params.jqXHR && self.params.jqXHR.readyState !== 4)
+          self.params.jqXHR.abort();
 
-            let url = self.urlFactory(address);
-            if (url) {
-                self.jqXHR = $.ajax({
-                    cache: false,
-                    url: url,
-                    data: $(self.form).serialize(),
-                    type: 'POST',
-                    success: function (response) {
-                        self.successHandler(address, response);
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        self.errorHandler(jqXHR, textStatus, errorThrown);
-                    },
-                    complete: function (jqXHR, textStatus) {
-                        if (self.handlers && self.handlers.complete)
-                            self.handlers.complete(jqXHR, textStatus);
-                    }
-                });
+        var url = self.settings.urlFactory(address);
+        if (url) {
+          self.params.jqXHR = $.ajax({
+            cache: false,
+            url: url,
+            data: $(self.settings.form).serialize(),
+            type: 'POST',
+            success: function (response) {
+              self.successHandler(address, response);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+              self.errorHandler(jqXHR, textStatus, errorThrown);
+            },
+            complete: function (jqXHR, textStatus) {
+              if (self.settings.handlers.complete)
+                self.settings.handlers.complete(jqXHR, textStatus);
             }
-        }, 300);
+          });
+        }
+      }, self.settings.requestDelay);
     },
 
     setLoadWaiting: function () {
-        this.clearErrorMessage();
-        $('#shipping-options-body').html($('<div/>').addClass('shipping-options-loading'));
+      this.clearErrorMessage();
+      $('.shipping-options-body', $(this.settings.contentEl)).html($('<div/>').addClass('shipping-options-loading'));
     },
 
     successHandler: function (address, response) {
-      $('#shipping-options-body').empty();
+      $('.shipping-options-body', $(this.settings.contentEl)).empty();
 
-        if (response.success) {
-            let activeOption;
+      if (response.success) {
+        var activeOption;
 
-            let options = response.result.ShippingOptions;
-            if (options && options.length > 0) {
-                let self = this;
+        var options = response.result.ShippingOptions;
+        if (options && options.length > 0) {
+          var self = this;
+          var selectedShippingOption = this.params.selectedShippingOption;
 
-                $.each(options, function (i, option) {
-                    // try select the shipping option with the same provider and address
-                  if (option.Selected ||
-                        (self.selectedShippingOption &&
-                        self.selectedShippingOption.provider === option.Name &&
-                        self.addressesAreEqual(self.selectedShippingOption.address, address))) {
-                        activeOption = {
-                            provider: option.Name,
-                            price: option.Price,
-                            address: address,
-                            deliveryDate: option.DeliveryDateFormat
-                        };
-                    }
-                    self.addShippingOption(option.Name, option.DeliveryDateFormat, option.Price);
-                });
-
-                // select the first option
-                if (!activeOption) {
-                    activeOption = {
-                        provider: options[0].Name,
-                        price: options[0].Price,
-                        deliveryDate: options[0].DeliveryDateFormat,
-                        address: address
-                    };
-                }
-
-                // if we have the already selected shipping options with the same address, reload it
-                if (!$.magnificPopup.instance.isOpen && this.selectedShippingOption && this.addressesAreEqual(this.selectedShippingOption.address, address))
-                    this.selectShippingOption(activeOption);
-
-                this.setActiveShippingOption(activeOption);
+          $.each(options, function (i, option) {
+            // try select the shipping option with the same provider and address
+            if (option.Selected ||
+                 (selectedShippingOption &&
+                  selectedShippingOption.provider === option.Name &&
+                  self.addressesAreEqual(selectedShippingOption.address, address))) {
+              activeOption = {
+                provider: option.Name,
+                price: option.Price,
+                address: address,
+                deliveryDate: option.DeliveryDateFormat
+              };
             }
-        } else {
-          this.isShown = true;
-          this.clearErrorMessage();
-          this.clearShippingOptions();
-          this.showErrorMessage(response.errors);
-        }
+            self.addShippingOption(option.Name, option.DeliveryDateFormat, option.Price);
+          });
 
-        if (this.handlers && this.handlers.success)
-            this.handlers.success(address, response);
+          // select the first option
+          if (!activeOption) {
+            activeOption = {
+              provider: options[0].Name,
+              price: options[0].Price,
+              deliveryDate: options[0].DeliveryDateFormat,
+              address: address
+            };
+          }
+
+          // if we have the already selected shipping options with the same address, reload it
+          if (!$.magnificPopup.instance.isOpen && selectedShippingOption && this.addressesAreEqual(selectedShippingOption.address, address))
+            this.selectShippingOption(activeOption);
+
+          this.setActiveShippingOption(activeOption);
+        }
+      } else {
+        this.params.displayErrors = true;
+        this.clearErrorMessage();
+        this.clearShippingOptions();
+        this.showErrorMessage(response.errors);
+      }
+
+      if (this.settings.handlers.success)
+        this.settings.handlers.success(address, response);
     },
 
     errorHandler: function (jqXHR, textStatus, errorThrown) {
-        if (textStatus === 'abort') return;
+      if (textStatus === 'abort') return;
 
-        this.clearShippingOptions();
+      this.clearShippingOptions();
 
-        if (this.handlers && this.handlers.error)
-            this.handlers.error(jqXHR, textStatus, errorThrown);
+      if (this.settings.handlers.error)
+        this.settings.handlers.error(jqXHR, textStatus, errorThrown);
     },
 
     clearErrorMessage: function () {
-      $(this.errorMessageBoxSelector).empty();
+      $('.error-messages-container', $(this.settings.contentEl)).empty();
     },
 
     showErrorMessage: function (errors) {
-      if (this.isShown) {
-        let errorMessageBox = $(this.errorMessageBoxSelector);
+      console.log(this.params.displayErrors);
+      if (this.params.displayErrors) {
+        var errorMessagesContainer = $('.message-failure', $(this.settings.contentEl));
         $.each(errors, function (i, error) {
-          errorMessageBox.append($('<div/>').text(error));
+          errorMessagesContainer.append($('<div/>').text(error));
         });
       }
     },
 
     selectShippingOption: function (option) {
-        if (option && option.provider && option.price && this.validateAddress(option.address))
-          this.selectedShippingOption = option;
+      if (option && option.provider && option.price && this.validateAddress(option.address))
+        this.params.selectedShippingOption = option;
 
-        if (this.handlers && this.handlers.selectedOption)
-            this.handlers.selectedOption(option);
+      if (this.settings.handlers.selectedOption)
+        this.settings.handlers.selectedOption(option);
     },
 
     addShippingOption: function (name, deliveryDate, price) {
-        if (!name || !price) return;
+      if (!name || !price) return;
 
-        let shippingOption = $('<div/>').addClass('estimate-shipping-row shipping-option');
+      var shippingOption = $('<div/>').addClass('estimate-shipping-row shipping-option');
 
-        shippingOption
-            .append($('<div/>').addClass('estimate-shipping-row-item-radio')
-                .append($('<input/>').addClass('estimate-shipping-radio').attr({ 'type': 'radio', 'name': 'shipping-option' }))
-                .append($('<label/>')))
-            .append($('<div/>').addClass('estimate-shipping-row-item shipping-item').text(name))
-            .append($('<div/>').addClass('estimate-shipping-row-item shipping-item').text(deliveryDate ? deliveryDate : '-'))
-            .append($('<div/>').addClass('estimate-shipping-row-item shipping-item').text(price));
+      shippingOption
+        .append($('<div/>').addClass('estimate-shipping-row-item-radio')
+          .append($('<input/>').addClass('estimate-shipping-radio').attr({ 'type': 'radio', 'name': 'shipping-option' + '-' + this.settings.contentEl }))
+          .append($('<label/>')))
+        .append($('<div/>').addClass('estimate-shipping-row-item shipping-item').text(name))
+        .append($('<div/>').addClass('estimate-shipping-row-item shipping-item').text(deliveryDate ? deliveryDate : '-'))
+        .append($('<div/>').addClass('estimate-shipping-row-item shipping-item').text(price));
 
-        shippingOption.on('click', function () {
-            $('input[name="shipping-option"]', this).prop('checked', true);
-            $('.shipping-option.active').removeClass('active');
-            $(this).addClass('active');
-        });
+      var self = this;
 
-        $('#shipping-options-body').append(shippingOption);
+      shippingOption.on('click', function () {
+        $('input[name="shipping-option' + '-' + self.settings.contentEl + '"]', $(this)).prop('checked', true);
+        $('.shipping-option.active', $(self.settings.contentEl)).removeClass('active');
+        $(this).addClass('active');
+      });
+
+      $('.shipping-options-body', $(this.settings.contentEl)).append(shippingOption);
     },
 
     clearShippingOptions: function () {
-      $('#shipping-options-body').html($('<div/>').addClass('no-shipping-options').text(this.noShippingOptionsErrorMessage));
+      var noShippingOptionsMsg = this.settings.localizedData.noShippingOptionsMessage;
+      $('.shipping-options-body', $(this.settings.contentEl)).html($('<div/>').addClass('no-shipping-options').text(noShippingOptionsMsg));
     },
 
     setActiveShippingOption: function (option) {
-        $.each($('.shipping-option'), function (i, shippingOption) {
-            let shippingItems = $('.shipping-item', shippingOption);
+      $.each($('.shipping-option', $(this.settings.contentEl)), function (i, shippingOption) {
+        var shippingItems = $('.shipping-item', shippingOption);
 
-            let provider = shippingItems.eq(0).text().trim();
-            let price = shippingItems.eq(2).text().trim();
-            if (provider === option.provider && price === option.price) {
-                $(shippingOption).trigger('click');
-                return;
-            }
-        });
+        var provider = shippingItems.eq(0).text().trim();
+        var price = shippingItems.eq(2).text().trim();
+        if (provider === option.provider && price === option.price) {
+          $(shippingOption).trigger('click');
+          return;
+        }
+      });
     },
 
     getActiveShippingOption: function () {
-        let shippingItems = $('.shipping-item', $('.shipping-option.active'));
+      var shippingItems = $('.shipping-item', $('.shipping-option.active', $(this.settings.contentEl)));
 
-        return {
-            provider: shippingItems.eq(0).text().trim(),
-            deliveryDate: shippingItems.eq(1).text().trim(),
-            price: shippingItems.eq(2).text().trim(),
-            address: this.getShippingAddress()
-        };
+      return {
+        provider: shippingItems.eq(0).text().trim(),
+        deliveryDate: shippingItems.eq(1).text().trim(),
+        price: shippingItems.eq(2).text().trim(),
+        address: this.getShippingAddress()
+      };
     },
 
     getShippingAddress: function () {
-      let address = {};
-      let selectedCountryId = $('#CountryId').find(':selected');
-      let selectedStateProvinceId = $('#StateProvinceId').find(':selected');
-      let selectedZipPostalCode = $('#ZipPostalCode');
+      var address = {};
+      var $content = $(this.settings.contentEl);
+      var selectedCountryId = $(this.settings.countryEl, $content).find(':selected');
+      var selectedStateProvinceId = $(this.settings.stateProvinceEl, $content).find(':selected');
+      var selectedZipPostalCode = $(this.settings.zipPostalCodeEl, $content);
 
       if (selectedCountryId && selectedCountryId.val() > 0) {
         address.countryId = selectedCountryId.val();
@@ -249,37 +260,40 @@
       }
 
       if (selectedStateProvinceId && selectedStateProvinceId.val() > 0) {
-          address.stateProvinceId = selectedStateProvinceId.val();
-          address.stateProvinceName = selectedStateProvinceId.text();
+        address.stateProvinceId = selectedStateProvinceId.val();
+        address.stateProvinceName = selectedStateProvinceId.text();
       }
 
       if (selectedZipPostalCode && selectedZipPostalCode.val()) {
-          address.zipPostalCode = selectedZipPostalCode.val();
+        address.zipPostalCode = selectedZipPostalCode.val();
       }
 
       return address;
     },
 
     addressesAreEqual: function (address1, address2) {
-        return address1.countryId === address2.countryId &&
-                 address1.stateProvinceId === address2.stateProvinceId &&
-                   address1.zipPostalCode === address2.zipPostalCode;
+      return address1.countryId === address2.countryId &&
+        address1.stateProvinceId === address2.stateProvinceId &&
+        address1.zipPostalCode === address2.zipPostalCode;
     },
 
     validateAddress: function (address) {
       this.clearErrorMessage();
 
+      var localizedData = this.settings.localizedData;
+
       if (!(address.countryName && address.countryId > 0)) {
-        this.showErrorMessage([this.countryErrorMessage]);
+        this.showErrorMessage([localizedData.countryErrorMessage]);
       }
 
       if (!address.zipPostalCode) {
-        this.showErrorMessage([this.zipPostalCodeErrorMessage]);
+        this.showErrorMessage([localizedData.zipPostalCodeErrorMessage]);
       }
 
       return address &&
-                 address.countryName &&
-                   address.countryId > 0 &&
-                     address.zipPostalCode;
+        address.countryName &&
+          address.countryId > 0 &&
+            address.zipPostalCode;
     }
+  }
 }

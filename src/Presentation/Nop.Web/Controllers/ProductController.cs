@@ -197,10 +197,10 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public virtual IActionResult EstimateShipping([FromQuery] ProductEstimateShippingModel model, IFormCollection form)
+        public virtual IActionResult EstimateShipping([FromQuery] ProductDetailsModel.ProductEstimateShippingModel model, IFormCollection form)
         {
             if (model == null)
-                model = new ProductEstimateShippingModel();
+                model = new ProductDetailsModel.ProductEstimateShippingModel();
 
             var errors = new List<string>();
             if (string.IsNullOrEmpty(model.ZipPostalCode))
