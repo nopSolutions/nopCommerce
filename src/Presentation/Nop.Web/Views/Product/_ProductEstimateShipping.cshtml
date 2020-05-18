@@ -92,7 +92,7 @@
 
                             shippingContent.append(estimatedDelivery);
                         } else {
-                            $('#open-estimate-shipping-popup')
+                            $('#open-estimate-shipping-popup-@Model.ProductId')
                                 .html($('<span/>').text('@T("Products.EstimateShipping.NoSelectedShippingOption")'))
                                 .append($('<i/>').addClass('arrow-down'));
                         }
