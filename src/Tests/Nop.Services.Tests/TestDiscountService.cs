@@ -15,7 +15,6 @@ using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Localization;
-using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 
 namespace Nop.Services.Tests
@@ -64,7 +63,6 @@ namespace Nop.Services.Tests
             return _discounts
                 .Where(x => !discountType.HasValue || x.DiscountType == discountType.Value)
                 .Where(x => string.IsNullOrEmpty(couponCode) || x.CouponCode == couponCode)
-                //UNDONE other filtering such as discountName, showHidden (not actually required in unit tests)
                 .ToList();
         }
 
@@ -110,10 +108,10 @@ namespace Nop.Services.Tests
             var productService = new Mock<IProductService>();
 
             var eventPublisher = new Mock<IEventPublisher>();
-           
+
             var pluginService = new FakePluginService();
 
-            var discountPluginManager = new DiscountPluginManager(new FakeCacheKeyService(), customerService.Object, pluginService);
+            var discountPluginManager = new DiscountPluginManager(customerService.Object, pluginService);
             var store = new Store { Id = 1 };
             var storeContext = new Mock<IStoreContext>();
             storeContext.Setup(x => x.CurrentStore).Returns(store);

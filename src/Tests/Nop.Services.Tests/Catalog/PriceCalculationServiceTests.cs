@@ -296,7 +296,7 @@ namespace Nop.Services.Tests.Catalog
                 var customer = new Customer();
 
                 _priceCalcService.GetFinalPrice(product, customer, 0, false).Should().Be(12.34M);
-                _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).Should().Be(12.34M);
+                _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).Should().Be(9M);
             });
         }
 

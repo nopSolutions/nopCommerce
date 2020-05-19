@@ -865,6 +865,90 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.CustomerSettings.PhoneNumberRegexValidationRule.Error">
     <Value>The regular expression for phone number validation is incorrect</Value>
   </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.ShippingOption.IsNotFound">
+    <Value>Selected shipping option is not found</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.Pickup.PriceFrom">
+    <Value>From {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.AccountAlreadyAssigned">
+    <Value>Account is already assigned</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage.DefaultItemText">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.EmptyItemText">
+    <Value>---</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RentalPriceLength.ShouldBeGreaterThanZero">
+    <Value>Rental period length should be greater 0.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.IsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.IsActive.Hint">
+    <Value>Search by a "IsActive" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.IsActive.ActiveOnly">
+    <Value>Active only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.IsActive.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.IsActive.InactiveOnly">
+    <Value>Inactive only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.Language">
+    <Value>Language</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.Language.Hint">
+    <Value>Search by a "Language" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.Language.Standard">
+    <Value>Standard</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.List.Name.Hint">
+    <Value>A name to find.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Name.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.DimensionsType">
+    <Value>Dimensions type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.DimensionsType.Hint">
+    <Value>Choose dimensions type (inches or centimeters).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.WeightType">
+    <Value>Weight type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.WeightType.Hint">
+    <Value>Choose the weight type (pounds or kilograms).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.Product.IsNotFound">
+    <Value>Product is not found</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingCartPageEnabled">
+    <Value>Estimate shipping enabled (cart page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingCartPageEnabled.Hint">
+    <Value>Check to allow customers to estimate shipping on the shopping cart page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingProductPageEnabled">
+    <Value>Estimate shipping enabled (product page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingProductPageEnabled.Hint">
+    <Value>Check to allow customers to estimate shipping on the product details pages. Please note that all the shipping provider APIs will be called on the product details page. Also the final shipping rate in the cart may not be exactly equal to the sum of all the individual estimates.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingEnabled">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingEnabled.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3124,5 +3208,69 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'customersettings.phoneNu
 BEGIN
     INSERT [Setting] ([Name], [Value], [StoreId])
     VALUES (N'customersettings.phonenumbervalidationrule', N'^[0-9]{1,14}?$', 0)
+END
+GO
+ 
+--update fluent migration versions
+DELETE FROM [MigrationVersionInfo] WHERE [Description] in ('AddPCMProductIdExtendedIX', 'AddPMMProductIdExtendedIX', 'AddPSAMAllowFilteringIX', 'AddPSAMSpecificationAttributeOptionIdAllowFilteringIX', 'AddQueuedEmailSentOnUtcDontSendBeforeDateUtcExtendedIX', 'AddProductVisibleIndividuallyPublishedDeletedExtendedIX', 'AddCategoryDeletedExtendedIX', 'Widgets.FacebookPixel base schema');
+
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280389, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddPCMProductIdExtendedIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280390, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddPMMProductIdExtendedIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280391, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddPSAMAllowFilteringIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280392, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddPSAMSpecificationAttributeOptionIdAllowFilteringIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280393, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddQueuedEmailSentOnUtcDontSendBeforeDateUtcExtendedIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280394, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddProductVisibleIndividuallyPublishedDeletedExtendedIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196977559280395, CAST(N'2020-04-30T13:53:20.000' AS DateTime), N'AddCategoryDeletedExtendedIX')
+INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637207344000000000, CAST(N'2020-04-30T13:54:21.000' AS DateTime), N'Widgets.FacebookPixel base schema')
+GO
+
+--delete FK
+IF EXISTS (SELECT *  FROM sys.foreign_keys  WHERE object_id = OBJECT_ID(N'FK_StockQuantityHistory_WarehouseId_Warehouse_Id') AND parent_object_id = OBJECT_ID(N'StockQuantityHistory'))
+	ALTER TABLE [StockQuantityHistory] DROP CONSTRAINT FK_StockQuantityHistory_WarehouseId_Warehouse_Id
+GO
+
+--update country
+UPDATE [Country]
+SET [ThreeLetterIsoCode] = 'ROU'
+WHERE [TwoLetterIsoCode] = 'RO' AND [ThreeLetterIsoCode] = 'ROM'
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[RewardPointsHistory]') and NAME='UsedWithOrder')
+BEGIN
+	ALTER TABLE dbo.RewardPointsHistory ADD UsedWithOrder uniqueidentifier NULL
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'upssettings.weighttype')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'upssettings.weighttype', N'LBS', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'upssettings.dimensionstype')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'upssettings.dimensionstype', N'IN', 0)
+END
+GO
+
+--rename setting
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'shippingsettings.estimateshippingenabled')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = N'shippingsettings.estimateshippingcartpageenabled'
+	WHERE [Name] = N'shippingsettings.estimateshippingenabled'
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [Name] = N'shippingsettings.estimateshippingproductpageenabled')
+BEGIN
+    INSERT [Setting] ([Name], [Value], [StoreId])
+    VALUES (N'shippingsettings.estimateshippingproductpageenabled', N'True', 0)
 END
 GO

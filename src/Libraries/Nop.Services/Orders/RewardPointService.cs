@@ -4,7 +4,6 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
-using Nop.Services.Caching.Extensions;
 using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -138,14 +137,20 @@ namespace Nop.Services.Orders
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="storeId">Store identifier; pass null to load all records</param>
         /// <param name="showNotActivated">A value indicating whether to show reward points that did not yet activated</param>
+        /// <param name="orderGuid">Order Guid; pass null to load all record</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Reward point history records</returns>
         public virtual IPagedList<RewardPointsHistory> GetRewardPointsHistory(int customerId = 0, int? storeId = null,
-            bool showNotActivated = false, int pageIndex = 0, int pageSize = int.MaxValue)
+            bool showNotActivated = false, Guid? orderGuid = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            var query = GetRewardPointsQuery(customerId, storeId, showNotActivated)
-                .OrderByDescending(historyEntry => historyEntry.CreatedOnUtc).ThenByDescending(historyEntry => historyEntry.Id);
+            var query = GetRewardPointsQuery(customerId, storeId, showNotActivated);
+
+            if (orderGuid.HasValue)
+                query = query.Where(historyEntry => historyEntry.UsedWithOrder == orderGuid.Value);
+
+            query = query.OrderByDescending(historyEntry => historyEntry.CreatedOnUtc)
+                .ThenByDescending(historyEntry => historyEntry.Id);
 
             //return paged reward points history
             return new PagedList<RewardPointsHistory>(query, pageIndex, pageSize);
@@ -215,7 +220,8 @@ namespace Nop.Services.Orders
                 Message = message,
                 CreatedOnUtc = activatingDate ?? DateTime.UtcNow,
                 EndDateUtc = endDate,
-                ValidPoints = points > 0 ? (int?)points : null
+                ValidPoints = points > 0 ? (int?)points : null,
+                UsedWithOrder = usedWithOrder?.OrderGuid
             };
             InsertRewardPointsHistoryEntry(newHistoryEntry);
 

@@ -1,5 +1,4 @@
-﻿using Nop.Services.Caching;
-using Nop.Services.Customers;
+﻿using Nop.Services.Customers;
 using Nop.Services.Plugins;
 
 namespace Nop.Services.Discounts
@@ -11,9 +10,8 @@ namespace Nop.Services.Discounts
     {
         #region Ctor
 
-        public DiscountPluginManager(ICacheKeyService cacheKeyService,
-            ICustomerService customerService, 
-            IPluginService pluginService) : base(cacheKeyService, customerService, pluginService)
+        public DiscountPluginManager(ICustomerService customerService,
+            IPluginService pluginService) : base(customerService, pluginService)
         {
         }
 

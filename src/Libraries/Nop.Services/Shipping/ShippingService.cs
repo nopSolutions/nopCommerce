@@ -687,7 +687,6 @@ namespace Nop.Services.Shipping
 
                 var product = _productService.GetProductById(sci.ProductId);
 
-                //TODO properly create requests for the associated products
                 if (product == null || !product.IsShipEnabled)
                 {
                     var associatedProducts = _productAttributeParser.ParseProductAttributeValues(sci.AttributesXml)
@@ -710,7 +709,6 @@ namespace Nop.Services.Shipping
                         //multiple warehouses supported
                         foreach (var pwi in _productService.GetAllProductWarehouseInventoryRecords(product.Id))
                         {
-                            //TODO validate stock quantity when backorder is not allowed?
                             var tmpWarehouse = GetWarehouseById(pwi.WarehouseId);
                             if (tmpWarehouse != null)
                                 allWarehouses.Add(tmpWarehouse);

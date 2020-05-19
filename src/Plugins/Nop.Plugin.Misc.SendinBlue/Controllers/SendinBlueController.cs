@@ -131,6 +131,8 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
             model.AddSms.AvailablePhoneTypes.Add(new SelectListItem(_localizationService.GetResource("Plugins.Misc.SendinBlue.MyPhone"), "0"));
             model.AddSms.AvailablePhoneTypes.Add(new SelectListItem(_localizationService.GetResource("Plugins.Misc.SendinBlue.CustomerPhone"), "1"));
             model.AddSms.AvailablePhoneTypes.Add(new SelectListItem(_localizationService.GetResource("Plugins.Misc.SendinBlue.BillingAddressPhone"), "2"));
+            model.AddSms.DefaultSelectedPhoneTypeId = model.AddSms.AvailablePhoneTypes.First().Value;
+
             model.AddSms.AvailableMessages = _messageTemplateService.GetAllMessageTemplates(storeId).Select(messageTemplate =>
             {
                 var name = messageTemplate.Name;
@@ -143,6 +145,8 @@ namespace Nop.Plugin.Misc.SendinBlue.Controllers
 
                 return new SelectListItem(name, messageTemplate.Id.ToString());
             }).ToList();
+            var defaultSelectedMessage = model.AddSms.AvailableMessages.FirstOrDefault();
+            model.AddSms.DefaultSelectedMessageId = defaultSelectedMessage?.Value ?? "0";
 
             //check whether email account exists
             if (sendinBlueSettings.UseSmtp && _emailAccountService.GetEmailAccountById(sendinBlueSettings.EmailAccountId) != null)

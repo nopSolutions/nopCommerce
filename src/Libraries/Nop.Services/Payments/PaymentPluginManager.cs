@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Payments;
-using Nop.Services.Caching;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Plugins;
@@ -24,11 +23,10 @@ namespace Nop.Services.Payments
 
         #region Ctor
 
-        public PaymentPluginManager(ICacheKeyService cacheKeyService,
-            ICustomerService customerService, 
+        public PaymentPluginManager(ICustomerService customerService,
             IPluginService pluginService,
             ISettingService settingService,
-            PaymentSettings paymentSettings) : base(cacheKeyService, customerService, pluginService)
+            PaymentSettings paymentSettings) : base(customerService, pluginService)
         {
             _settingService = settingService;
             _paymentSettings = paymentSettings;
@@ -90,6 +88,7 @@ namespace Nop.Services.Payments
                 throw new ArgumentNullException(nameof(paymentMethod));
 
             var settingKey = string.Format(NopPaymentDefaults.RestrictedCountriesSettingName, paymentMethod.PluginDescriptor.SystemName);
+
             return _settingService.GetSettingByKey<List<int>>(settingKey) ?? new List<int>();
         }
 
@@ -104,6 +103,7 @@ namespace Nop.Services.Payments
                 throw new ArgumentNullException(nameof(paymentMethod));
 
             var settingKey = string.Format(NopPaymentDefaults.RestrictedCountriesSettingName, paymentMethod.PluginDescriptor.SystemName);
+
             _settingService.SetSetting(settingKey, countryIds.ToList());
         }
 

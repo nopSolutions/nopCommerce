@@ -9,13 +9,11 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Localization;
-using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -76,10 +74,10 @@ namespace Nop.Services.Tests.Discounts
 
             var staticCacheManager = new TestCacheManager();
             _discountRequirementRepo.Setup(x => x.Table).Returns(new List<DiscountRequirement>().AsQueryable());
-            
+
             var pluginService = new FakePluginService();
 
-            _discountPluginManager = new DiscountPluginManager(new FakeCacheKeyService(), new Mock<ICustomerService>().Object, pluginService);
+            _discountPluginManager = new DiscountPluginManager(new Mock<ICustomerService>().Object, pluginService);
             _discountService = new DiscountService(
                 new FakeCacheKeyService(),
                 _customerService.Object,
@@ -109,17 +107,22 @@ namespace Nop.Services.Tests.Discounts
         [Test]
         public void Can_load_discountRequirementRules()
         {
-            var rules = _discountPluginManager.LoadAllPlugins();
-            rules.Should().NotBeNull();
-            rules.Any().Should().BeTrue();
+            RunWithTestServiceProvider(() =>
+            {
+                var rules = _discountPluginManager.LoadAllPlugins();
+                rules.Should().NotBeNull();
+                rules.Any().Should().BeTrue();
+            });
         }
 
         [Test]
         public void Can_load_discountRequirementRuleBySystemKeyword()
         {
-            EngineContext.Replace(null);
-            var rule = _discountPluginManager.LoadPluginBySystemName("TestDiscountRequirementRule");
-            rule.Should().NotBeNull();
+            RunWithTestServiceProvider(() =>
+            {
+                var rule = _discountPluginManager.LoadPluginBySystemName("TestDiscountRequirementRule");
+                rule.Should().NotBeNull();
+            });
         }
 
         [Test]
@@ -146,13 +149,6 @@ namespace Nop.Services.Tests.Discounts
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
             };
-
-
-            //UNDONE: little workaround here
-            //we have to register "nop_cache_static" cache manager (null manager) from DependencyRegistrar.cs
-            //because DiscountService right now dynamically Resolve<ICacheManager>("nop_cache_static")
-            //we cannot inject it because DiscountService already has "per-request" cache manager injected 
-            //EngineContext.Initialize(false);
 
             _discountService.ValidateDiscount(discount, customer, new[] { "CouponCode 1" }).IsValid.Should().BeTrue();
         }

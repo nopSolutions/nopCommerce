@@ -154,12 +154,11 @@ namespace Nop.Services.Affiliates
                 ordersQuery = ordersQuery.Where(o => !o.Deleted);
 
                 query = from a in query
-                        join o in ordersQuery on a.Id equals o.AffiliateId into a_o
-                        where a_o.Any()
+                        join o in ordersQuery on a.Id equals o.AffiliateId
                         select a;
             }
 
-            query = query.OrderByDescending(a => a.Id);
+            query = query.Distinct().OrderByDescending(a => a.Id);
 
             var affiliates = new PagedList<Affiliate>(query, pageIndex, pageSize);
 

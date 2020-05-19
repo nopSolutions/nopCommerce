@@ -10,6 +10,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -17,7 +18,7 @@ using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Logging;
 using Nop.Services.Tax;
-using Nop.Services.Tests.FakeServices;
+using Nop.Services.Tests.FakeServices.Providers;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -114,8 +115,8 @@ namespace Nop.Services.Tests.Tax
                 null);
 
             var pluginService = new FakePluginService();
-            _taxPluginManager = new TaxPluginManager(new FakeCacheKeyService(), _customerService, pluginService, _taxSettings);
-            
+            _taxPluginManager = new TaxPluginManager(_customerService, pluginService, _taxSettings);
+
             _taxService = new TaxService(_addressSettings,
                 _customerSettings,
                 _addressService.Object,
@@ -137,23 +138,35 @@ namespace Nop.Services.Tests.Tax
         [Test]
         public void Can_load_taxProviders()
         {
-            var providers = _taxPluginManager.LoadAllPlugins();
-            providers.Should().NotBeNull();
-            providers.Any().Should().BeTrue();
+            RunWithTestServiceProvider(() =>
+            {
+                var providers = _taxPluginManager.LoadAllPlugins();
+                providers.Should().NotBeNull();
+                providers.Any().Should().BeTrue();
+            });
         }
 
         [Test]
         public void Can_load_taxProvider_by_systemKeyword()
         {
-            var provider = _taxPluginManager.LoadPluginBySystemName("FixedTaxRateTest");
-            provider.Should().NotBeNull();
+            RunWithTestServiceProvider(() =>
+            {
+                var provider = _taxPluginManager.LoadPluginBySystemName("FixedTaxRateTest");
+                provider.Should().NotBeNull();
+            });
         }
 
         [Test]
         public void Can_load_active_taxProvider()
         {
+            var serviceProvider = new FakeServiceProvider(_genericAttributeService.Object, _taxService, _taxSettings);
+            var nopEngine = new FakeNopEngine(serviceProvider);
+            EngineContext.Replace(nopEngine);
+
             var provider = _taxPluginManager.LoadPrimaryPlugin();
             provider.Should().NotBeNull();
+
+            EngineContext.Replace(null);
         }
 
         [Test]
@@ -212,10 +225,17 @@ namespace Nop.Services.Tests.Tax
             var customer = new Customer();
             var product = new Product();
 
+            var serviceProvider = new FakeServiceProvider(_genericAttributeService.Object, _taxService, _taxSettings);
+            var nopEngine = new FakeNopEngine(serviceProvider);
+            EngineContext.Replace(nopEngine);
+            
             _taxService.GetProductPrice(product, 0, 1000M, true, customer, true, out _).Should().Be(1000);
             _taxService.GetProductPrice(product, 0, 1000M, true, customer, false, out _).Should().Be(1100);
-            _taxService.GetProductPrice(product, 0, 1000M, false, customer, true, out _).Should().Be(909.0909090909090909090909091M);
+            _taxService.GetProductPrice(product, 0, 1000M, false, customer, true, out _).Should()
+                .Be(909.0909090909090909090909091M);
             _taxService.GetProductPrice(product, 0, 1000M, false, customer, false, out _).Should().Be(1000);
+            
+            EngineContext.Replace(null);
         }
 
         [Test]
@@ -227,10 +247,18 @@ namespace Nop.Services.Tests.Tax
             //not taxable
             customer.IsTaxExempt = true;
 
-            _taxService.GetProductPrice(product, 0, 1000M, true, customer, true, out _).Should().Be(909.0909090909090909090909091M);
+            var serviceProvider = new FakeServiceProvider(_genericAttributeService.Object, _taxService, _taxSettings);
+            var nopEngine = new FakeNopEngine(serviceProvider);
+            EngineContext.Replace(nopEngine);
+
+            _taxService.GetProductPrice(product, 0, 1000M, true, customer, true, out _).Should()
+                .Be(909.0909090909090909090909091M);
             _taxService.GetProductPrice(product, 0, 1000M, true, customer, false, out _).Should().Be(1000);
-            _taxService.GetProductPrice(product, 0, 1000M, false, customer, true, out _).Should().Be(909.0909090909090909090909091M);
+            _taxService.GetProductPrice(product, 0, 1000M, false, customer, true, out _).Should()
+                .Be(909.0909090909090909090909091M);
             _taxService.GetProductPrice(product, 0, 1000M, false, customer, false, out _).Should().Be(1000);
+
+            EngineContext.Replace(null);
         }
 
         [Test]

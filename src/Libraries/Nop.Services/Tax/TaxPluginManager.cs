@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Tax;
-using Nop.Services.Caching;
 using Nop.Services.Customers;
 using Nop.Services.Plugins;
 
@@ -20,10 +19,9 @@ namespace Nop.Services.Tax
 
         #region Ctor
 
-        public TaxPluginManager(ICacheKeyService cacheKeyService,
-            ICustomerService customerService, 
+        public TaxPluginManager(ICustomerService customerService,
             IPluginService pluginService,
-            TaxSettings taxSettings) : base(cacheKeyService, customerService, pluginService)
+            TaxSettings taxSettings) : base(customerService, pluginService)
         {
             _taxSettings = taxSettings;
         }

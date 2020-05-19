@@ -10,6 +10,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -36,6 +37,7 @@ namespace Nop.Web.Factories
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
         private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IGiftCardService _giftCardService;
         private readonly ILocalizationService _localizationService;
@@ -69,6 +71,7 @@ namespace Nop.Web.Factories
             IAddressService addressService,
             ICountryService countryService,
             ICurrencyService currencyService,
+            ICustomerService customerService,
             IDateTimeHelper dateTimeHelper,
             IGiftCardService giftCardService,
             ILocalizationService localizationService,
@@ -98,6 +101,7 @@ namespace Nop.Web.Factories
             _addressService = addressService;
             _countryService = countryService;
             _currencyService = currencyService;
+            _customerService = customerService;
             _dateTimeHelper = dateTimeHelper;
             _giftCardService = giftCardService;
             _localizationService = localizationService;
@@ -260,7 +264,9 @@ namespace Nop.Web.Factories
             var languageId = _workContext.WorkingLanguage.Id;
 
             //payment method
-            var paymentMethod = _paymentPluginManager.LoadPluginBySystemName(order.PaymentMethodSystemName);
+            var customer = _customerService.GetCustomerById(order.CustomerId);
+            var paymentMethod = _paymentPluginManager
+                .LoadPluginBySystemName(order.PaymentMethodSystemName, customer, order.StoreId);
             model.PaymentMethod = paymentMethod != null ? _localizationService.GetLocalizedFriendlyName(paymentMethod, languageId) : order.PaymentMethodSystemName;
             model.PaymentMethodStatus = _localizationService.GetLocalizedEnum(order.PaymentStatus);
             model.CanRePostProcessPayment = _paymentService.CanRePostProcessPayment(order);

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -14,7 +13,6 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Framework.Extensions;
 using Nop.Web.Framework.Factories;
-using Nop.Web.Framework.Models.DataTables;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Web.Areas.Admin.Factories
@@ -104,18 +102,11 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //get topics
             var topics = _topicService.GetAllTopics(showHidden: true,
+                keywords: searchModel.SearchKeywords,
                 storeId: searchModel.SearchStoreId,
                 ignorAcl: true);
 
-            //filter topics
-            //TODO: move filter to topic service
-            if (!string.IsNullOrEmpty(searchModel.SearchKeywords))
-            {
-                topics = topics.Where(topic => (topic.Title?.Contains(searchModel.SearchKeywords) ?? false) ||
-                                               (topic.Body?.Contains(searchModel.SearchKeywords) ?? false)).ToList();
-            }
-
-            var pagedTopics = topics.ToList().ToPagedList(searchModel);
+            var pagedTopics = topics.ToPagedList(searchModel);
 
             //prepare grid model
             var model = new TopicListModel().PrepareToGrid(searchModel, pagedTopics, () =>

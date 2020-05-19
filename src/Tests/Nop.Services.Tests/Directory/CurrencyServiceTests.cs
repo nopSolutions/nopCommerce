@@ -5,12 +5,10 @@ using FluentAssertions;
 using Moq;
 using Nop.Data;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Infrastructure;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Stores;
-using Nop.Services.Tests.FakeServices;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -91,7 +89,7 @@ namespace Nop.Services.Tests.Directory
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
             var pluginService = new FakePluginService();
-            _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, new FakeCacheKeyService(), new Mock<ICustomerService>().Object, pluginService);
+            _exchangeRatePluginManager = new ExchangeRatePluginManager(_currencySettings, new Mock<ICustomerService>().Object, pluginService);
             _currencyService = new CurrencyService(_currencySettings,
                 new FakeCacheKeyService(),
                 _eventPublisher.Object,
@@ -103,25 +101,32 @@ namespace Nop.Services.Tests.Directory
         [Test]
         public void Can_load_exchangeRateProviders()
         {
-            var providers = _exchangeRatePluginManager.LoadAllPlugins();
-            providers.Should().NotBeNull();
-            providers.Any().Should().BeTrue();
+            RunWithTestServiceProvider(() =>
+            {
+                var providers = _exchangeRatePluginManager.LoadAllPlugins();
+                providers.Should().NotBeNull();
+                providers.Any().Should().BeTrue();
+            });
         }
 
         [Test]
         public void Can_load_exchangeRateProvider_by_systemKeyword()
         {
-            EngineContext.Replace(null);
-            var provider = _exchangeRatePluginManager.LoadPluginBySystemName("CurrencyExchange.TestProvider");
-            provider.Should().NotBeNull();
+            RunWithTestServiceProvider(() =>
+            {
+                var provider = _exchangeRatePluginManager.LoadPluginBySystemName("CurrencyExchange.TestProvider");
+                provider.Should().NotBeNull();
+            });
         }
 
         [Test]
         public void Can_load_active_exchangeRateProvider()
         {
-            EngineContext.Replace(null);
-            var provider = _exchangeRatePluginManager.LoadPrimaryPlugin();
-            provider.Should().NotBeNull();
+            RunWithTestServiceProvider(() =>
+            {
+                var provider = _exchangeRatePluginManager.LoadPrimaryPlugin();
+                provider.Should().NotBeNull();
+            });
         }
 
         [Test]

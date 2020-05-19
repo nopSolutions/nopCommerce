@@ -24,8 +24,9 @@ namespace Nop.Data
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            var mAssemblies = new AppDomainTypeFinder().FindClassesOfType<AutoReversingMigration>()
+            var mAssemblies = new AppDomainTypeFinder().FindClassesOfType<MigrationBase>()
                 .Select(t => t.Assembly)
+                .Where(assembly => !assembly.FullName.Contains("FluentMigrator.Runner"))
                 .Distinct()
                 .ToArray();
 

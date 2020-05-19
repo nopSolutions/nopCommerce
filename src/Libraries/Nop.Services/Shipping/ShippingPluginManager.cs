@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Shipping;
-using Nop.Services.Caching;
 using Nop.Services.Customers;
 using Nop.Services.Plugins;
 
@@ -22,10 +21,9 @@ namespace Nop.Services.Shipping
 
         #region Ctor
 
-        public ShippingPluginManager(ICacheKeyService cacheKeyService,
-            ICustomerService customerService, 
+        public ShippingPluginManager(ICustomerService customerService,
             IPluginService pluginService,
-            ShippingSettings shippingSettings) : base(cacheKeyService, customerService, pluginService)
+            ShippingSettings shippingSettings) : base(customerService, pluginService)
         {
             _shippingSettings = shippingSettings;
         }

@@ -35,20 +35,13 @@
                                 new ColumnProperty(nameof(PaymentMethodModel.FriendlyName))
                                 {
                                     Title = T("Admin.Configuration.Payment.Methods.Fields.FriendlyName").Text,
-                                    Width = "250",
                                     Editable = true,
                                     EditType = EditType.String
                                 },
                                 new ColumnProperty(nameof(PaymentMethodModel.SystemName))
                                 {
                                     Title = T("Admin.Configuration.Payment.Methods.Fields.SystemName").Text,
-                                    Width = "200"
-                                },
-                                new ColumnProperty(nameof(PaymentMethodModel.LogoUrl))
-                                {
-                                    Title = T("Admin.Configuration.Payment.Methods.Fields.Logo").Text,
-                                    Width = "100",
-                                    Render = new RenderPicture()
+                                    Width = "100"
                                 },
                                 new ColumnProperty(nameof(PaymentMethodModel.SupportCapture))
                                 {
@@ -81,7 +74,7 @@
                                 new ColumnProperty(nameof(PaymentMethodModel.RecurringPaymentType))
                                 {
                                     Title = T("Admin.Configuration.Payment.Methods.Fields.RecurringPaymentType").Text,
-                                    Width = "200"
+                                    Width = "150"
                                 },
                                 new ColumnProperty(nameof(PaymentMethodModel.DisplayOrder))
                                 {
@@ -103,14 +96,14 @@
                                 new ColumnProperty(nameof(PaymentMethodModel.SystemName))
                                 {
                                     Title = T("Admin.Configuration.Payment.Methods.Configure").Text,
-                                    Width = "150",
+                                    Width = "120",
                                     ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderCustom("renderColumnConfigure")
                                 },
                                 new ColumnProperty(nameof(PaymentMethodModel.SystemName))
                                 {
                                     Title = T("Admin.Common.Edit").Text,
-                                    Width = "200",
+                                    Width = "80",
                                     ClassName =  NopColumnClassDefaults.Button,
                                     Render = new RenderButtonsInlineEdit()
                                 }

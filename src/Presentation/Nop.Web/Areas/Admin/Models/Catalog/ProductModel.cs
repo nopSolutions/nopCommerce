@@ -430,6 +430,7 @@ namespace Nop.Web.Areas.Admin.Models.Catalog
 
         //product attributes
         public bool ProductAttributesExist { get; set; }
+        public bool CanCreateCombinations { get; set; }
 
         //multiple warehouses
         [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory")]

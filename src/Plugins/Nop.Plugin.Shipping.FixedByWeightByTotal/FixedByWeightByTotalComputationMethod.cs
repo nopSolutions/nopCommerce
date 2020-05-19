@@ -151,7 +151,6 @@ namespace Nop.Plugin.Shipping.FixedByWeightByTotal
                     if (_shippingService.IsFreeShipping(packageItem.ShoppingCartItem))
                         continue;
 
-                    //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal
                     subTotal += _shoppingCartService.GetSubTotal(packageItem.ShoppingCartItem);
                 }
 

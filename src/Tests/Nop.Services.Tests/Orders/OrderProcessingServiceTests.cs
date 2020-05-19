@@ -32,7 +32,6 @@ using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Pickup;
 using Nop.Services.Tax;
-using Nop.Services.Tests.FakeServices;
 using Nop.Services.Vendors;
 using Nop.Tests;
 using NUnit.Framework;
@@ -168,10 +167,10 @@ namespace Nop.Services.Tests.Orders
             _eventPublisher.Setup(x => x.Publish(It.IsAny<object>()));
 
             var pluginService = new FakePluginService(_catalogSettings);
-            _paymentPluginManager = new PaymentPluginManager(new FakeCacheKeyService(), _customerService.Object, pluginService, null, _paymentSettings);
-            _pickupPluginManager = new PickupPluginManager(new FakeCacheKeyService(), _customerService.Object, pluginService, _shippingSettings);
-            _shippingPluginManager = new ShippingPluginManager(new FakeCacheKeyService(), _customerService.Object, pluginService, _shippingSettings);
-            _taxPluginManager = new TaxPluginManager(new FakeCacheKeyService(), _customerService.Object, pluginService, _taxSettings);
+            _paymentPluginManager = new PaymentPluginManager(_customerService.Object, pluginService, null, _paymentSettings);
+            _pickupPluginManager = new PickupPluginManager(_customerService.Object, pluginService, _shippingSettings);
+            _shippingPluginManager = new ShippingPluginManager(_customerService.Object, pluginService, _shippingSettings);
+            _taxPluginManager = new TaxPluginManager(_customerService.Object, pluginService, _taxSettings);
 
             _shoppingCartSettings = new ShoppingCartSettings();
             //shipping
@@ -316,7 +315,6 @@ namespace Nop.Services.Tests.Orders
                 _productService.Object,
                 _rewardPointService.Object,
                 _shipmentService.Object,
-                _shippingPluginManager,
                 _shippingService,
                 _shoppingCartService.Object,
                 _stateProvinceService.Object,

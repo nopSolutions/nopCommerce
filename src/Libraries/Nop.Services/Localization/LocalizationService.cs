@@ -438,32 +438,33 @@ namespace Nop.Services.Localization
                 .ToDictionary(lsr => lsr.ResourceName, lsr => lsr);
 
             var lrsToUpdateList = new List<LocaleStringResource>();
-            var lrsToInsertList = new List<LocaleStringResource>();
+            var lrsToInsertList = new Dictionary<string, LocaleStringResource>();
 
             foreach (var (name, value) in LoadLocaleResourcesFromStream(xmlStreamReader, language.Name))
             {
                 if (lsNamesList.ContainsKey(name))
                 {
-                    if (updateExistingResources)
-                    {
-                        var lsr = lsNamesList[name];
-                        lsr.ResourceValue = value;
-                        lrsToUpdateList.Add(lsr);
-                    }
+                    if (!updateExistingResources) 
+                        continue;
+
+                    var lsr = lsNamesList[name];
+                    lsr.ResourceValue = value;
+                    lrsToUpdateList.Add(lsr);
                 }
                 else
                 {
                     var lsr = new LocaleStringResource { LanguageId = language.Id, ResourceName = name, ResourceValue = value };
-                    lrsToInsertList.Add(lsr);
+                    if (lrsToInsertList.ContainsKey(name))
+                        lrsToInsertList[name] = lsr;
+                    else
+                        lrsToInsertList.Add(name, lsr);
                 }
             }
 
-            foreach (var lrsToUpdate in lrsToUpdateList)
-            {
+            foreach (var lrsToUpdate in lrsToUpdateList) 
                 _lsrRepository.Update(lrsToUpdate);
-            }
 
-            _lsrRepository.Insert(lrsToInsertList);
+            _lsrRepository.Insert(lrsToInsertList.Values);
 
             //clear cache
             _staticCacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
@@ -728,6 +729,9 @@ namespace Nop.Services.Localization
                 }))
                 .ToList();
             _lsrRepository.Insert(locales);
+
+            //clear cache
+            _staticCacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
         }
 
         /// <summary>
@@ -753,6 +757,9 @@ namespace Nop.Services.Localization
         {
             _lsrRepository.Delete(locale => (!languageId.HasValue || locale.LanguageId == languageId.Value) &&
                 resourceNames.Contains(locale.ResourceName, StringComparer.InvariantCultureIgnoreCase));
+
+            //clear cache
+            _staticCacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
         }
 
         /// <summary>
@@ -765,6 +772,9 @@ namespace Nop.Services.Localization
             _lsrRepository.Delete(locale => (!languageId.HasValue || locale.LanguageId == languageId.Value) &&
                 !string.IsNullOrEmpty(locale.ResourceName) &&
                 locale.ResourceName.StartsWith(resourceNamePrefix, StringComparison.InvariantCultureIgnoreCase));
+
+            //clear cache
+            _staticCacheManager.RemoveByPrefix(NopLocalizationDefaults.LocaleStringResourcesPrefixCacheKey);
         }
 
         /// <summary>

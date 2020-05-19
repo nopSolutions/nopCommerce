@@ -80,6 +80,9 @@
 }
 else
 {
+    //check using MasterCheckBox
+    var isMasterCheckBoxUsed = Model.ColumnCollection.Any(x => x.IsMasterCheckBox);
+
     <text>
     ajax:
     {
@@ -87,6 +90,14 @@ else
         type: "@WebRequestMethods.Http.Post",
         dataType: "json",
         dataSrc: "Data",
+        beforeSend: function() {
+        @if (isMasterCheckBoxUsed)
+        {
+            <text>
+            clearMasterCheckbox();
+            </text>
+        }
+        },
         data: function(data) {
             @if (Model.Filters != null)
             {

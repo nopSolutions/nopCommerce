@@ -915,7 +915,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 model.FreeShippingOverXEnabled_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.FreeShippingOverXEnabled, storeId);
                 model.FreeShippingOverXValue_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.FreeShippingOverXValue, storeId);
                 model.FreeShippingOverXIncludingTax_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.FreeShippingOverXIncludingTax, storeId);
-                model.EstimateShippingEnabled_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.EstimateShippingEnabled, storeId);
+                model.EstimateShippingCartPageEnabled_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.EstimateShippingCartPageEnabled, storeId);
+                model.EstimateShippingProductPageEnabled_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.EstimateShippingProductPageEnabled, storeId);
                 model.DisplayShipmentEventsToCustomers_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.DisplayShipmentEventsToCustomers, storeId);
                 model.DisplayShipmentEventsToStoreOwner_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.DisplayShipmentEventsToStoreOwner, storeId);
                 model.HideShippingTotal_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.HideShippingTotal, storeId);
@@ -1542,7 +1543,6 @@ namespace Nop.Web.Areas.Admin.Factories
             var settings = _settingService.GetAllSettings().AsQueryable();
 
             //filter settings
-            //TODO: move filter to setting service
             if (!string.IsNullOrEmpty(searchModel.SearchSettingName))
                 settings = settings.Where(setting => setting.Name.ToLowerInvariant().Contains(searchModel.SearchSettingName.ToLowerInvariant()));
             if (!string.IsNullOrEmpty(searchModel.SearchSettingValue))

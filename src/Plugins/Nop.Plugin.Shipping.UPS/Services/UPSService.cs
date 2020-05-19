@@ -46,26 +46,6 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// </summary>
         private const int LENGTH_LIMIT = 108;
 
-        /// <summary>
-        /// Used measure weight code
-        /// </summary>
-        private const string LBS_WEIGHT_CODE = "LBS";
-
-        /// <summary>
-        /// Used measure weight system keyword
-        /// </summary>
-        private const string LBS_WEIGHT_SYSTEM_KEYWORD = "lb";
-
-        /// <summary>
-        /// Used measure dimension code
-        /// </summary>
-        private const string INCHES_DIMENSION_CODE = "IN";
-
-        /// <summary>
-        /// Used measure dimension system keyword
-        /// </summary>
-        private const string INCHES_DIMENSION_SYSTEM_KEYWORD = "inches";
-
         #endregion
 
         #region Fields
@@ -81,6 +61,11 @@ namespace Nop.Plugin.Shipping.UPS.Services
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IWorkContext _workContext;
         private readonly UPSSettings _upsSettings;
+
+        private MeasureDimension _measureDimension;
+        private MeasureWeight _measureWeight;
+        private MeasureDimension _inchesDimension;
+        private MeasureWeight _lbWeight;
 
         #endregion
 
@@ -114,6 +99,33 @@ namespace Nop.Plugin.Shipping.UPS.Services
         #endregion
 
         #region Utilities
+
+        /// <summary>
+        /// Get the weight limit for the selected weight measure
+        /// </summary>
+        /// <returns>Value</returns>
+        private decimal GetWeightLimit()
+        {
+            return _measureService.ConvertWeight(WEIGHT_LIMIT, _lbWeight, _measureWeight);
+        }
+
+        /// <summary>
+        /// Get the size limit for the selected dimension measure
+        /// </summary>
+        /// <returns>Value</returns>
+        private decimal GetSizeLimit()
+        {
+            return _measureService.ConvertDimension(SIZE_LIMIT, _inchesDimension, _measureDimension);
+        }
+
+        /// <summary>
+        /// Get the length limit for the selected dimension measure
+        /// </summary>
+        /// <returns>Value</returns>
+        private decimal GetLengthLimit()
+        {
+            return _measureService.ConvertDimension(LENGTH_LIMIT, _inchesDimension, _measureDimension);
+        }
 
         /// <summary>
         /// Gets an attribute value on an enum field value
@@ -157,7 +169,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 var trackPort = _upsSettings.UseSandbox
                     ? UPSTrack.TrackPortTypeClient.EndpointConfiguration.TrackPort
                     : UPSTrack.TrackPortTypeClient.EndpointConfiguration.ProductionTrackPort;
-                
+
                 using var client = new UPSTrack.TrackPortTypeClient(trackPort);
                 //create object to authenticate request
                 var security = new UPSTrack.UPSSecurity
@@ -304,7 +316,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 var ratePort = _upsSettings.UseSandbox
                     ? UPSRate.RatePortTypeClient.EndpointConfiguration.RatePort
                     : UPSRate.RatePortTypeClient.EndpointConfiguration.ProductionRatePort;
-                
+
                 using var client = new UPSRate.RatePortTypeClient(ratePort);
                 //create object to authenticate request
                 var security = new UPSRate.UPSSecurity
@@ -476,15 +488,15 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 width = length = height = 0;
             package.Dimensions = new UPSRate.DimensionsType
             {
-                Width = width.ToString(),
-                Length = length.ToString(),
-                Height = height.ToString(),
-                UnitOfMeasurement = new UPSRate.CodeDescriptionType { Code = INCHES_DIMENSION_CODE }
+                Width = width.ToString("0.00", CultureInfo.InvariantCulture),
+                Length = length.ToString("0.00", CultureInfo.InvariantCulture),
+                Height = height.ToString("0.00", CultureInfo.InvariantCulture),
+                UnitOfMeasurement = new UPSRate.CodeDescriptionType { Code = _upsSettings.DimensionsType }
             };
             package.PackageWeight = new UPSRate.PackageWeightType
             {
-                Weight = weight.ToString(),
-                UnitOfMeasurement = new UPSRate.CodeDescriptionType { Code = LBS_WEIGHT_CODE },
+                Weight = weight.ToString("0.00", CultureInfo.InvariantCulture),
+                UnitOfMeasurement = new UPSRate.CodeDescriptionType { Code = _upsSettings.WeightType },
             };
 
             //set insurance details
@@ -498,7 +510,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
                         BasicFlexibleParcelIndicator = new UPSRate.InsuranceValueType
                         {
                             CurrencyCode = currencyCode,
-                            MonetaryValue = insuranceAmount.ToString()
+                            MonetaryValue = insuranceAmount.ToString("0.00", CultureInfo.InvariantCulture)
                         }
                     }
                 };
@@ -524,11 +536,6 @@ namespace Nop.Plugin.Shipping.UPS.Services
                 if (_upsSettings.InsurePackage)
                 {
                     //The maximum declared amount per package: 50000 USD.
-                    //TODO: Currently using Product.Price - should we use GetUnitPrice() instead?
-                    // Convert.ToInt32(_priceCalculationService.GetUnitPrice(sci, includeDiscounts:false))
-                    //One could argue that the insured value should be based on Cost rather than Price.
-                    //GetUnitPrice handles Attribute Adjustments and also Customer Entered Price.
-                    //But, even with includeDiscounts:false, it could apply a "discount" from Tier pricing.
                     insuranceAmount = Convert.ToInt32(packageItem.Product.Price);
                 }
 
@@ -550,7 +557,9 @@ namespace Nop.Plugin.Shipping.UPS.Services
             var weight = GetWeight(shippingOptionRequest);
 
             //whether the package doesn't exceed the weight and size limits
-            if (weight <= WEIGHT_LIMIT && GetPackageSize(width, length, height) <= SIZE_LIMIT)
+            var weightLimit = GetWeightLimit();
+            var sizeLimit = GetSizeLimit();
+            if (weight <= weightLimit && GetPackageSize(width, length, height) <= sizeLimit)
             {
                 var insuranceAmount = 0;
                 if (_upsSettings.InsurePackage)
@@ -571,11 +580,11 @@ namespace Nop.Plugin.Shipping.UPS.Services
             }
 
             //get total packages number according to package limits
-            var totalPackagesByWeightLimit = weight > WEIGHT_LIMIT
-                ? Convert.ToInt32(Math.Ceiling(weight / WEIGHT_LIMIT))
+            var totalPackagesByWeightLimit = weight > weightLimit
+                ? Convert.ToInt32(Math.Ceiling(weight / weightLimit))
                 : 1;
-            var totalPackagesBySizeLimit = GetPackageSize(width, length, height) > SIZE_LIMIT
-                ? Convert.ToInt32(Math.Ceiling(GetPackageSize(width, length, height) / LENGTH_LIMIT))
+            var totalPackagesBySizeLimit = GetPackageSize(width, length, height) > sizeLimit
+                ? Convert.ToInt32(Math.Ceiling(GetPackageSize(width, length, height) / GetLengthLimit()))
                 : 1;
             var totalPackages = Math.Max(Math.Max(totalPackagesBySizeLimit, totalPackagesByWeightLimit), 1);
 
@@ -648,7 +657,7 @@ namespace Nop.Plugin.Shipping.UPS.Services
 
                     //calculate cube root (floor)
                     dimension = Convert.ToInt32(Math.Floor(Math.Pow(Convert.ToDouble(packageVolume), 1.0 / 3.0)));
-                    if (GetPackageSize(dimension, dimension, dimension) > SIZE_LIMIT)
+                    if (GetPackageSize(dimension, dimension, dimension) > GetSizeLimit())
                         throw new NopException("PackingPackageVolume exceeds max package size");
 
                     //adjust package volume for dimensions calculated
@@ -662,8 +671,9 @@ namespace Nop.Plugin.Shipping.UPS.Services
 
             //get total packages number according to package limits
             var weight = GetWeight(shippingOptionRequest);
-            var totalPackagesByWeightLimit = weight > WEIGHT_LIMIT
-                ? Convert.ToInt32(Math.Ceiling(weight / WEIGHT_LIMIT))
+            var weightLimit = GetWeightLimit();
+            var totalPackagesByWeightLimit = weight > weightLimit
+                ? Convert.ToInt32(Math.Ceiling(weight / weightLimit))
                 : 1;
             var totalPackages = Math.Max(Math.Max(totalPackagesBySizeLimit, totalPackagesByWeightLimit), 1);
 
@@ -705,12 +715,9 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// <returns>Dimensions values</returns>
         private (decimal width, decimal length, decimal height) GetDimensions(IList<GetShippingOptionRequest.PackageItem> items)
         {
-            var measureDimension = _measureService.GetMeasureDimensionBySystemKeyword(INCHES_DIMENSION_SYSTEM_KEYWORD)
-                ?? throw new NopException($"UPS shipping service. Could not load \"{INCHES_DIMENSION_SYSTEM_KEYWORD}\" measure dimension");
-
             decimal convertAndRoundDimension(decimal dimension)
             {
-                dimension = _measureService.ConvertFromPrimaryMeasureDimension(dimension, measureDimension);
+                dimension = _measureService.ConvertFromPrimaryMeasureDimension(dimension, _measureDimension);
                 dimension = Convert.ToInt32(Math.Ceiling(dimension));
                 return Math.Max(dimension, 1);
             }
@@ -745,11 +752,8 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// <returns>Weight value</returns>
         private decimal GetWeight(GetShippingOptionRequest shippingOptionRequest)
         {
-            var measureWeight = _measureService.GetMeasureWeightBySystemKeyword(LBS_WEIGHT_SYSTEM_KEYWORD)
-                ?? throw new NopException($"UPS shipping service. Could not load \"{LBS_WEIGHT_SYSTEM_KEYWORD}\" measure weight");
-
             var weight = _shippingService.GetTotalWeight(shippingOptionRequest, ignoreFreeShippedItems: true);
-            weight = _measureService.ConvertFromPrimaryMeasureWeight(weight, measureWeight);
+            weight = _measureService.ConvertFromPrimaryMeasureWeight(weight, _measureWeight);
             weight = Convert.ToInt32(Math.Ceiling(weight));
             return Math.Max(weight, 1);
         }
@@ -840,8 +844,12 @@ namespace Nop.Plugin.Shipping.UPS.Services
                     continue;
 
                 //get rate value
-                var regularValue = decimal.TryParse(rate.TotalCharges?.MonetaryValue, out var value) ? (decimal?)value : null;
-                var negotiatedValue = decimal.TryParse(rate.NegotiatedRateCharges?.TotalCharge?.MonetaryValue, out value) ? (decimal?)value : null;
+                var regularValue = decimal.TryParse(rate.TotalCharges?.MonetaryValue, NumberStyles.Any, new CultureInfo("en-US"), out var value)
+                    ? (decimal?)value
+                    : null;
+                var negotiatedValue = decimal.TryParse(rate.NegotiatedRateCharges?.TotalCharge?.MonetaryValue, NumberStyles.Any, new CultureInfo("en-US"), out value)
+                    ? (decimal?)value
+                    : null;
                 var monetaryValue = negotiatedValue ?? regularValue;
                 if (!monetaryValue.HasValue)
                     continue;
@@ -916,6 +924,20 @@ namespace Nop.Plugin.Shipping.UPS.Services
         /// <returns>Represents a response of getting shipping rate options</returns>
         public virtual GetShippingOptionResponse GetRates(GetShippingOptionRequest shippingOptionRequest)
         {
+            var weightSystemName = _upsSettings.WeightType switch { "LBS" => "lb", "KGS" => "kg", _ => null };
+            _measureWeight = _measureService.GetMeasureWeightBySystemKeyword(weightSystemName)
+                ?? throw new NopException($"UPS shipping service. Could not load \"{weightSystemName}\" measure weight");
+
+            _lbWeight = _measureService.GetMeasureWeightBySystemKeyword("lb")
+                ?? throw new NopException($"UPS shipping service. Could not load 'lb' measure weight (used to find limits)");
+
+            var dimensionSystemName = _upsSettings.DimensionsType switch { "IN" => "inches", "CM" => "centimeters", _ => null };
+            _measureDimension = _measureService.GetMeasureDimensionBySystemKeyword(dimensionSystemName)
+                ?? throw new NopException($"UPS shipping service. Could not load \"{dimensionSystemName}\" measure dimension");
+
+            _inchesDimension = _measureService.GetMeasureDimensionBySystemKeyword("inches")
+                ?? throw new NopException($"UPS shipping service. Could not load 'inches' measure dimension (used to find limits)");
+
             var response = new GetShippingOptionResponse();
 
             //get regular rates

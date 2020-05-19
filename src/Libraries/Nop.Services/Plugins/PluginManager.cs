@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Customers;
-using Nop.Services.Caching;
 using Nop.Services.Customers;
 
 namespace Nop.Services.Plugins
@@ -13,23 +12,8 @@ namespace Nop.Services.Plugins
     /// <typeparam name="TPlugin">Type of plugin</typeparam>
     public partial class PluginManager<TPlugin> : IPluginManager<TPlugin> where TPlugin : class, IPlugin
     {
-        #region Constants
-
-        /// <summary>
-        /// Key format
-        /// <remarks>
-        /// {0} - system name of plugin
-        /// {1} - customer role IDs
-        /// {2} - store ID
-        /// </remarks>
-        /// </summary>
-        private const string KEY_FORMAT = "{0}-{1}-{2}";
-
-        #endregion
-
         #region Fields
 
-        private readonly ICacheKeyService _cacheKeyService;
         private readonly ICustomerService _customerService;
         private readonly IPluginService _pluginService;
 
@@ -39,11 +23,9 @@ namespace Nop.Services.Plugins
 
         #region Ctor
 
-        public PluginManager(ICacheKeyService cacheKeyService, 
-            ICustomerService customerService, 
+        public PluginManager(ICustomerService customerService,
             IPluginService pluginService)
         {
-            _cacheKeyService = cacheKeyService;
             _customerService = customerService;
             _pluginService = pluginService;
         }
@@ -52,11 +34,16 @@ namespace Nop.Services.Plugins
 
         #region Utilities
 
-        protected virtual string GetKey(string systemName, Customer customer, int storeId)
+        /// <summary>
+        /// Prepare the dictionary key to store loaded plugins
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="systemName">Plugin system name</param>
+        /// <returns>Key</returns>
+        protected virtual string GetKey(Customer customer, int storeId, string systemName = null)
         {
-            var roles = customer == null ? Array.Empty<int>() : _customerService.GetCustomerRoleIds(customer);
-
-            return _cacheKeyService.PrepareKeyPrefix(KEY_FORMAT, systemName, roles, storeId);
+            return $"{storeId}-{(customer != null ? string.Join(',', _customerService.GetCustomerRoleIds(customer)) : null)}-{systemName}";
         }
 
         #endregion
@@ -72,7 +59,7 @@ namespace Nop.Services.Plugins
         public virtual IList<TPlugin> LoadAllPlugins(Customer customer = null, int storeId = 0)
         {
             //get plugins and put them into the dictionary to avoid further loading
-            var key = GetKey(null, customer, storeId);
+            var key = GetKey(customer, storeId);
             if (!_plugins.ContainsKey(key))
                 _plugins.Add(key, _pluginService.GetPlugins<TPlugin>(customer: customer, storeId: storeId).ToList());
 
@@ -92,14 +79,17 @@ namespace Nop.Services.Plugins
                 return null;
 
             //try to get already loaded plugin
-            var key = GetKey(systemName, customer, storeId);
+            var key = GetKey(customer, storeId, systemName);
             if (_plugins.ContainsKey(key))
                 return _plugins[key].FirstOrDefault();
 
-            //or get it from list of all loaded plugins, or load it for the first time
-            var pluginBySystemName = LoadAllPlugins(customer, storeId)
-                .FirstOrDefault(plugin => plugin.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
-                ?? _pluginService.GetPluginDescriptorBySystemName<TPlugin>(systemName, customer: customer, storeId: storeId)?.Instance<TPlugin>();
+            //or get it from list of all loaded plugins or load it for the first time
+            var pluginBySystemName = _plugins.TryGetValue(GetKey(customer, storeId), out var plugins)
+                && plugins.FirstOrDefault(plugin =>
+                    plugin.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase)) is TPlugin loadedPlugin
+                ? loadedPlugin
+                : _pluginService.GetPluginDescriptorBySystemName<TPlugin>(systemName, customer: customer, storeId: storeId)?.Instance<TPlugin>();
+
             _plugins.Add(key, new List<TPlugin> { pluginBySystemName });
 
             return pluginBySystemName;
