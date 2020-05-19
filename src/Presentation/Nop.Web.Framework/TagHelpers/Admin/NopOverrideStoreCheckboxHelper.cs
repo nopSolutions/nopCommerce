@@ -123,7 +123,8 @@ namespace Nop.Web.Framework.TagHelpers.Admin
                 output.Content.SetHtmlContent(htmlOutput.RenderHtmlContent());
 
                 //render an extra hidden input before a checkbox to be able to send a value even if the checkbox is disabled 
-                if (Input.ModelExplorer.ModelType == typeof(bool))
+                var inputModelType = Input?.ModelExplorer?.ModelType;
+                if (inputModelType == typeof(bool))
                 {
                     var hiddenCheckbox = $"<input type='hidden' name='{Input.Name}' value='{Input.Model}'>";
                     output.PostContent.SetHtmlContent(hiddenCheckbox);
